@@ -14,6 +14,21 @@ import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
+function convertToPUT(data: AssociationFormType | AttributeFormType): object {
+  if (!data.concept) {
+    return data;
+  }
+
+  const retVal = {
+    ...data,
+    subject: data.concept.conceptURI,
+  };
+
+  delete retVal['concept'];
+
+  return retVal;
+}
+
 export const resourceApi = createApi({
   reducerPath: 'resourceApi',
   baseQuery: getDatamodelApiBaseQuery((headers) => ({
@@ -40,12 +55,12 @@ export const resourceApi = createApi({
         data:
           value.data.type === ResourceType.ATTRIBUTE
             ? {
-                ...value.data,
+                ...convertToPUT(value.data),
                 domain: value.data.domain ? value.data.domain.id : '',
-                resource: 'rdfs:Literal',
+                range: '',
               }
             : {
-                ...value.data,
+                ...convertToPUT(value.data),
                 domain: value.data.domain ? value.data.domain.id : '',
                 range: value.data.range ? value.data.range.id : '',
               },
@@ -74,17 +89,31 @@ export const resourceApi = createApi({
 
 function resourceInitialData(
   type: ResourceType,
+  languages?: string[],
   initialSubResourceOf?: string
 ): AssociationFormType | AttributeFormType {
+  let retValue = {} as AssociationFormType | AttributeFormType;
+
   if (!initialSubResourceOf) {
-    return type === ResourceType.ASSOCIATION
-      ? { ...initialAssociation, subResourceOf: ['owl:TopObjectProperty'] }
-      : { ...initialAttribute, subResourceOf: ['owl:topDataProperty'] };
+    retValue =
+      type === ResourceType.ASSOCIATION
+        ? { ...initialAssociation, subResourceOf: ['owl:TopObjectProperty'] }
+        : { ...initialAttribute, subResourceOf: ['owl:topDataProperty'] };
+  } else {
+    retValue =
+      type === ResourceType.ASSOCIATION
+        ? { ...initialAssociation, subResourceOf: [initialSubResourceOf] }
+        : { ...initialAttribute, subResourceOf: [initialSubResourceOf] };
   }
 
-  return type === ResourceType.ASSOCIATION
-    ? { ...initialAssociation, subResourceOf: [initialSubResourceOf] }
-    : { ...initialAttribute, subResourceOf: [initialSubResourceOf] };
+  if (languages) {
+    retValue = {
+      ...retValue,
+      label: Object.fromEntries(languages.map((lang) => [lang, ''])),
+    };
+  }
+
+  return retValue;
 }
 
 export const resourceSlice = createSlice({
@@ -112,12 +141,13 @@ export function setResource(
 
 export function initializeResource(
   type: ResourceType,
+  langs: string[],
   initialSubResourceOf?: string
 ): AppThunk {
   return (dispatch) =>
     dispatch(
       resourceSlice.actions.setResource(
-        resourceInitialData(type, initialSubResourceOf)
+        resourceInitialData(type, langs, initialSubResourceOf)
       )
     );
 }

@@ -9,6 +9,19 @@ import {
   initialClassForm,
 } from '@app/common/interfaces/class-form.interface';
 
+function convertToPUT(data: ClassFormType): object {
+  // Dropping inheritedAttributes and ownAttributes for the time being
+  const { inheritedAttributes, ownAttributes, concept, ...retVal } = data;
+  const conceptURI = concept?.conceptURI;
+
+  return {
+    ...retVal,
+    equivalentClass: data.equivalentClass.map((eq) => eq.identifier),
+    subClassOf: data.subClassOf.map((sco) => sco.identifier),
+    subject: conceptURI,
+  };
+}
+
 export const classApi = createApi({
   reducerPath: 'classApi',
   baseQuery: getDatamodelApiBaseQuery(),
@@ -19,11 +32,14 @@ export const classApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putClass: builder.mutation<string, { modelId: string; data: ClassType }>({
+    putClass: builder.mutation<
+      string,
+      { modelId: string; data: ClassFormType }
+    >({
       query: (value) => ({
         url: `/class/${value.modelId}`,
         method: 'PUT',
-        data: value.data,
+        data: convertToPUT(value.data),
       }),
     }),
     getClass: builder.query<ClassType, { modelId: string; classId: string }>({

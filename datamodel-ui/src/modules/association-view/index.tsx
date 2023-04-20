@@ -22,9 +22,11 @@ import { useStoreDispatch } from '@app/store';
 export default function AssociationView({
   modelId,
   languages,
+  terminologies,
 }: {
   modelId: string;
   languages: string[];
+  terminologies: string[];
 }) {
   const { t, i18n } = useTranslation('common');
   const [view, setView] = useState('listing');
@@ -50,7 +52,9 @@ export default function AssociationView({
   }, [ref]);
 
   const handleFollowUp = (value?: { label: string; uri: string }) => {
-    dispatch(initializeResource(ResourceType.ASSOCIATION, value?.label));
+    dispatch(
+      initializeResource(ResourceType.ASSOCIATION, languages, value?.label)
+    );
     setView('form');
   };
 
@@ -166,6 +170,7 @@ export default function AssociationView({
         type={ResourceType.ASSOCIATION}
         modelId={modelId}
         languages={languages}
+        terminologies={terminologies}
       />
     );
   }

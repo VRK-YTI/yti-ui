@@ -23,6 +23,7 @@ export interface ClassFormType {
 
 export const initialClassForm: ClassFormType = {
   editorialNote: '',
+  concept: undefined,
   equivalentClass: [],
   identifier: '',
   label: {},

@@ -51,9 +51,14 @@ import ConceptView from '../concept-view';
 interface ClassViewProps {
   modelId: string;
   languages: string[];
+  terminologies: string[];
 }
 
-export default function ClassView({ modelId, languages }: ClassViewProps) {
+export default function ClassView({
+  modelId,
+  languages,
+  terminologies,
+}: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
   const [showTooltip, setShowTooltip] = useState(false);
@@ -214,6 +219,7 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
         handleFollowUp={handleFollowUp}
         languages={languages}
         modelId={modelId}
+        terminologies={terminologies}
       />
     );
   }

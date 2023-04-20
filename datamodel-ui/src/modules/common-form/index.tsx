@@ -8,7 +8,7 @@ import {
   Textarea,
   TextInput,
 } from 'suomifi-ui-components';
-import ConceptBlock from '../class-form/concept-block';
+import ConceptBlock from '../concept-block';
 import { LanguageVersionedWrapper } from '../class-form/class-form.styles';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
@@ -39,6 +39,7 @@ import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
+import { ConceptType } from '@app/common/interfaces/concept-interface';
 
 interface CommonFormProps {
   handleReturn: () => void;
@@ -46,6 +47,7 @@ interface CommonFormProps {
   type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
   modelId: string;
   languages: string[];
+  terminologies: string[];
 }
 
 export default function CommonForm({
@@ -54,6 +56,7 @@ export default function CommonForm({
   type,
   modelId,
   languages,
+  terminologies,
 }: CommonFormProps) {
   const { t, i18n } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -91,6 +94,31 @@ export default function CommonForm({
     }
 
     dispatch(setResource(value));
+  };
+
+  const handleSetConcept = (value?: ConceptType) => {
+    const label =
+      value && 'label' in value
+        ? Object.fromEntries(
+            Object.entries(data.label)
+              .map((obj) => {
+                if (value.label[obj[0]] != null) {
+                  return [[obj[0]], value.label[obj[0]]];
+                }
+                return [[obj[0]], data.label[obj[0]]];
+              })
+              .filter(
+                (obj) =>
+                  data.label[Array.isArray(obj[0]) ? obj[0][0] : obj[0]] === ''
+              )
+          )
+        : undefined;
+
+    handleUpdate({
+      ...data,
+      concept: value ? value : undefined,
+      label: label ? { ...data.label, ...label } : data.label,
+    });
   };
 
   const handleDomainFollowUp = (value?: InternalClass) => {
@@ -151,10 +179,13 @@ export default function CommonForm({
 
   useEffect(() => {
     if (result.isError && result.error && 'data' in result.error) {
-      const backendErrorFields =
-        (result.error as AxiosQueryErrorFields).data?.details?.map(
-          (d) => d.field
-        ) ?? [];
+      const backendErrorFields = Array.isArray(
+        (result.error as AxiosQueryErrorFields).data?.details
+      )
+        ? (result.error as AxiosQueryErrorFields).data?.details?.map(
+            (d) => d.field
+          )
+        : [];
 
       if (backendErrorFields.length > 0) {
         setErrors({
@@ -193,7 +224,10 @@ export default function CommonForm({
           </Button>
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Text variant="bold">{translateCommonForm('name', type, t)}</Text>
+          <Text variant="bold">
+            {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
+              translateCommonForm('name', type, t)}
+          </Text>
 
           <div>
             <Button
@@ -232,7 +266,11 @@ export default function CommonForm({
 
       <DrawerContent height={headerHeight}>
         <FormWrapper>
-          <ConceptBlock setConcept={() => null} />
+          <ConceptBlock
+            concept={data.concept}
+            setConcept={handleSetConcept}
+            terminologies={terminologies}
+          />
 
           <LanguageVersionedWrapper>
             {languages.map((lang) => (
@@ -240,7 +278,7 @@ export default function CommonForm({
                 key={`label-${lang}`}
                 className="wide-text"
                 labelText={`${translateCommonForm('name', type, t)}, ${lang}`}
-                defaultValue={data.label[lang] ?? ''}
+                value={data.label[lang] ?? ''}
                 onChange={(e) =>
                   handleUpdate({
                     ...data,

@@ -27,22 +27,26 @@ import {
   SearchResultWrapper,
   SelectedConceptsGroup,
 } from './concept-block.styles';
+import { useGetConceptsQuery } from '@app/common/components/concept-search/concept-search.slice';
+import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
+import { ConceptType } from '@app/common/interfaces/concept-interface';
 
 interface ConceptBlockProps {
-  concept?: ClassFormType['equivalentClass'][0];
-  setConcept: (value: ClassFormType['equivalentClass'][0] | undefined) => void;
+  concept?: ConceptType;
+  setConcept: (value: ConceptType | undefined) => void;
+  terminologies: string[];
 }
 
 export default function ConceptBlock({
   concept,
   setConcept,
+  terminologies,
 }: ConceptBlockProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
-  const [selected, setSelected] = useState<
-    ClassFormType['equivalentClass'][0] | undefined
-  >(concept);
+  const [keyword, setKeyword] = useState('');
+  const [selected, setSelected] = useState<ConceptType | undefined>(concept);
   const [terminologyOptions] = useState([
     {
       labelText: t('terminologies-linked-to-data-model'),
@@ -53,42 +57,16 @@ export default function ConceptBlock({
       uniqueItemId: 'all',
     },
   ]);
+  const [selectedOption, setSelectedOption] = useState(
+    terminologyOptions.find((o) => o.uniqueItemId === 'linked')
+  );
 
-  // TODO: Change this to use API
-  const [data] = useState([
-    {
-      title: {
-        fi: 'Rakennelma',
-        en: 'Structure',
-      },
-      identifier: 'Rakennelma',
-      terminologyLabel: {
-        fi: 'Rakentamisen sanasto',
-      },
-      status: 'VALID',
-      description: {
-        fi: 'Omalla sisäänkäynnillä varustettu rakennuskohde, joka on erillinen, kiinteä tai tarkoitettu paikallaan pidettäväksi ja joka sisältää eri toimintoihin tarkoitettua katettua ja yleensä ulkoseinien tai muista rakennelmista erottavien seinien rajoittamaa tilaa',
-        en: 'English description',
-      },
-      uri: 'http://uri.suomi.fi/rakennelma',
-    },
-    {
-      title: {
-        fi: 'Rakennus',
-        en: 'Building',
-      },
-      identifier: 'Rakennus',
-      terminologyLabel: {
-        fi: 'Rakentamisen sanasto',
-      },
-      status: 'DRAFT',
-      description: {
-        fi: 'Omalla sisäänkäynnillä varustettu rakennuskohde, joka on erillinen, kiinteä tai tarkoitettu paikallaan pidettäväksi ja joka sisältää eri toimintoihin tarkoitettua katettua ja yleensä ulkoseinien tai muista rakennelmista erottavien seinien rajoittamaa tilaa',
-        en: 'English description',
-      },
-      uri: 'http://uri.suomi.fi/rakennus',
-    },
-  ]);
+  const { data } = useGetConceptsQuery({
+    keyword: keyword,
+    terminologies:
+      selectedOption?.uniqueItemId === 'linked' ? terminologies : [],
+    highlight: false,
+  });
 
   const handleOpen = () => {
     setVisible(true);
@@ -100,17 +78,19 @@ export default function ConceptBlock({
   const handleClose = () => {
     setSelected(undefined);
     setVisible(false);
+    setKeyword('');
+    setSelectedOption(
+      terminologyOptions.find((o) => o.uniqueItemId === 'linked')
+    );
   };
 
-  const handleRadioButtonClick = (
-    value: ClassFormType['equivalentClass'][0]
-  ) => {
+  const handleRadioButtonClick = (value: ClassFormType['concept']) => {
     setSelected(value);
   };
 
   const handleSubmit = () => {
     setConcept(selected);
-    handleClose();
+    setVisible(false);
   };
 
   return (
@@ -128,13 +108,10 @@ export default function ConceptBlock({
           >
             <Expander>
               <ExpanderTitleButton>
-                {t('concept-definition')}
-                <HintText>
-                  {getLanguageVersion({
-                    data: concept.label,
-                    lang: i18n.language,
-                  })}
-                </HintText>
+                {getLanguageVersion({
+                  data: concept.label,
+                  lang: i18n.language,
+                })}
               </ExpanderTitleButton>
             </Expander>
           </SelectedConceptsGroup>
@@ -151,7 +128,7 @@ export default function ConceptBlock({
           appElementId="__next"
           visible={visible}
           variant={isSmall ? 'smallScreen' : 'default'}
-          onEscKeyDown={() => setVisible(false)}
+          onEscKeyDown={() => handleClose()}
         >
           <ModalContent>
             <ModalTitle>{t('select-concept')}</ModalTitle>
@@ -160,6 +137,8 @@ export default function ConceptBlock({
                 labelText={t('search-concept')}
                 clearButtonLabel={t('clear-selection')}
                 searchButtonLabel={t('search-concept')}
+                onChange={(e) => setKeyword(e?.toString() ?? '')}
+                debounce={300}
               />
               <SingleSelect
                 clearButtonLabel={t('clear-selection')}
@@ -167,73 +146,96 @@ export default function ConceptBlock({
                 noItemsText={t('no-terminologies-available')}
                 ariaOptionsAvailableText={t('terminologies-available')}
                 allowItemAddition={false}
-                defaultSelectedItem={terminologyOptions.find(
-                  (o) => o.uniqueItemId === 'linked'
-                )}
+                selectedItem={selectedOption}
                 items={terminologyOptions}
+                onItemSelectionChange={(e) =>
+                  setSelectedOption(
+                    e
+                      ? e
+                      : terminologyOptions.find(
+                          (o) => o.uniqueItemId === 'linked'
+                        )
+                  )
+                }
               />
             </SearchBlock>
 
-            {data.length < 1 ? (
+            {!data || data.totalHitCount < 1 ? (
               <Text>{t('search-concept-by-keyword')}</Text>
             ) : (
               <>
                 <Text variant="bold">
-                  {t('concept-counts', { count: data.length })}
+                  {t('concept-counts', { count: data?.totalHitCount })}
                 </Text>
                 <SearchResultWrapper>
-                  {data.map((d, idx) => (
+                  {data.concepts.map((c, idx) => (
                     <div
                       key={`concept-result-${idx}`}
                       className={
-                        selected?.identifier === d.uri
+                        typeof c.uri !== 'undefined' &&
+                        selected &&
+                        'identifier' in selected &&
+                        selected?.identifier === c.uri
                           ? 'item-wrapper selected'
                           : 'item-wrapper'
                       }
                     >
                       <RadioButton
-                        value={d.uri}
-                        checked={selected?.identifier === d.uri}
+                        value={c.uri ?? ''}
+                        checked={
+                          typeof c.uri !== 'undefined' &&
+                          selected &&
+                          selected?.conceptURI === c.uri
+                            ? true
+                            : false
+                        }
                         onChange={() =>
                           handleRadioButtonClick({
-                            label: d.title,
-                            identifier: d.uri,
+                            label: c.label,
+                            conceptURI: c.uri,
+                            definition: c.definition,
+                            status: c.status,
+                            terminology: c.terminology,
                           })
                         }
                       />
                       <div>
                         <Text>
-                          {getLanguageVersion({
-                            data: d.title,
-                            lang: i18n.language,
-                            appendLocale: true,
-                          })}
+                          {renderHighlighted(
+                            getLanguageVersion({
+                              data: c.label,
+                              lang: i18n.language,
+                              appendLocale: true,
+                            })
+                          )}
                         </Text>
                         <div className="subtitle">
                           <Text>
                             {getLanguageVersion({
-                              data: d.terminologyLabel,
+                              data: c.terminology.label,
                               lang: i18n.language,
                               appendLocale: true,
                             })}
                           </Text>
                           <StaticChip
-                            className={d.status === 'VALID' ? 'valid' : 'other'}
+                            className={c.status === 'VALID' ? 'valid' : 'other'}
                           >
-                            {translateStatus(d.status, t)}
+                            {translateStatus(c.status, t)}
                           </StaticChip>
                         </div>
 
                         <Text className="description">
-                          {getLanguageVersion({
-                            data: d.description,
-                            lang: i18n.language,
-                            appendLocale: true,
-                          })}
+                          {renderHighlighted(
+                            getLanguageVersion({
+                              data: c.definition,
+                              lang: i18n.language,
+                              appendLocale: true,
+                            })
+                          )}
                         </Text>
-                        <br />
-                        <ExternalLink href={d.uri} labelNewWindow="">
-                          {d.uri}
+
+                        <ExternalLink href={c.uri} labelNewWindow="">
+                          {c.uri}
                         </ExternalLink>
                       </div>
                     </div>
@@ -255,4 +257,48 @@ export default function ConceptBlock({
       </BasicBlock>
     </>
   );
+
+  function renderHighlighted(text: string) {
+    if (
+      keyword === '' ||
+      (keyword !== '' && !text.toLowerCase().includes(keyword.toLowerCase()))
+    ) {
+      return <SanitizedTextContent text={text} />;
+    }
+
+    return <SanitizedTextContent text={getHighlighted(text)} />;
+  }
+
+  function getHighlighted(text: string): string {
+    if (!text.toLowerCase().includes(keyword.toLowerCase())) {
+      return text;
+    }
+
+    if (
+      (text.includes('<a') || text.includes('</a')) &&
+      text.includes('>') &&
+      (text.indexOf('<a') < text.indexOf('>') ||
+        text.indexOf('</a') < text.indexOf('>'))
+    ) {
+      return text;
+    }
+
+    if (text.toLowerCase().indexOf(keyword.toLowerCase()) === 0) {
+      return `<span class="highlighted-content">${text.substring(
+        0,
+        keyword.length
+      )}</span>${getHighlighted(text.substring(keyword.length))}`;
+    }
+
+    const indexOfTerm = text.toLowerCase().indexOf(keyword.toLowerCase());
+    const endOfTerm = indexOfTerm + keyword.length;
+
+    return `${text.substring(
+      0,
+      indexOfTerm
+    )}<span class="highlighted-content">${text.substring(
+      indexOfTerm,
+      endOfTerm
+    )}</span>${getHighlighted(text.substring(endOfTerm))}`;
+  }
 }

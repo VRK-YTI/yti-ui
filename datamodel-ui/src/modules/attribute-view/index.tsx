@@ -22,9 +22,11 @@ import { useStoreDispatch } from '@app/store';
 export default function AttributeView({
   modelId,
   languages,
+  terminologies,
 }: {
   modelId: string;
   languages: string[];
+  terminologies: string[];
 }) {
   const { t, i18n } = useTranslation('common');
   const [view, setView] = useState('listing');
@@ -50,7 +52,9 @@ export default function AttributeView({
   }, [ref]);
 
   const handleFollowUp = (value?: { label: string; uri: string }) => {
-    dispatch(initializeResource(ResourceType.ATTRIBUTE, value?.label));
+    dispatch(
+      initializeResource(ResourceType.ATTRIBUTE, languages, value?.label)
+    );
     setView('form');
   };
 
@@ -161,6 +165,7 @@ export default function AttributeView({
         type={ResourceType.ATTRIBUTE}
         modelId={modelId}
         languages={languages}
+        terminologies={terminologies}
       />
     );
   }

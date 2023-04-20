@@ -17,6 +17,7 @@ import {
 } from '@app/common/components/resource/resource.slice';
 import { searchTerminologyApi } from '@app/common/components/terminology-search/search-terminology.slice';
 import { countApi } from '@app/common/components/counts/counts.slice';
+import { conceptSearchApi } from '@app/common/components/concept-search/concept-search.slice';
 import { graphSlice } from '@app/common/components/graph/graph.slice';
 import { visualizationApi } from '@app/common/components/visualization/visualization.slice';
 import { activeSlice } from '@app/common/components/active/active.slice';
@@ -44,6 +45,7 @@ export function makeStore(ctx: NextIronContext) {
       [resourceSlice.name]: resourceSlice.reducer,
       [searchTerminologyApi.reducerPath]: searchTerminologyApi.reducer,
       [countApi.reducerPath]: countApi.reducer,
+      [conceptSearchApi.reducerPath]: conceptSearchApi.reducer,
       [graphSlice.name]: graphSlice.reducer,
       [visualizationApi.reducerPath]: visualizationApi.reducer,
       [activeSlice.name]: activeSlice.reducer,
@@ -63,6 +65,7 @@ export function makeStore(ctx: NextIronContext) {
         resourceApi.middleware,
         searchTerminologyApi.middleware,
         countApi.middleware,
+        conceptSearchApi.middleware,
         visualizationApi.middleware
       ),
 

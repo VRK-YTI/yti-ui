@@ -17,7 +17,7 @@ import { LanguageVersionedWrapper } from './class-form.styles';
 import AttributeModal from '../attribute-modal';
 import { useTranslation } from 'next-i18next';
 import { Status } from '@app/common/interfaces/status.interface';
-import ConceptBlock from './concept-block';
+import ConceptBlock from '../concept-block';
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { ClassFormErrors, classFormToClass, validateClassForm } from './utils';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
@@ -41,12 +41,14 @@ import {
 } from 'yti-common-ui/interfaces/axios-base-query.interface';
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '@app/store';
+import { ConceptType } from '@app/common/interfaces/concept-interface';
 
 export interface ClassFormProps {
   handleReturn: () => void;
   handleFollowUp: (value: string) => void;
   languages: string[];
   modelId: string;
+  terminologies: string[];
 }
 
 export default function ClassForm({
@@ -54,6 +56,7 @@ export default function ClassForm({
   handleFollowUp,
   languages,
   modelId,
+  terminologies,
 }: ClassFormProps) {
   const { t } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -88,9 +91,32 @@ export default function ClassForm({
       return;
     }
 
-    const convertedData = classFormToClass(data);
+    putClass({ modelId: modelId, data: data });
+  };
 
-    putClass({ modelId: modelId, data: convertedData });
+  const handleSetConcept = (value?: ConceptType) => {
+    const label =
+      value && 'label' in value
+        ? Object.fromEntries(
+            Object.entries(data.label)
+              .map((obj) => {
+                if (value.label[obj[0]] != null) {
+                  return [[obj[0]], value.label[obj[0]]];
+                }
+                return [[obj[0]], data.label[obj[0]]];
+              })
+              .filter(
+                (obj) =>
+                  data.label[Array.isArray(obj[0]) ? obj[0][0] : obj[0]] === ''
+              )
+          )
+        : undefined;
+
+    handleUpdate({
+      ...data,
+      concept: value ? value : undefined,
+      label: label ? { ...data.label, ...label } : data.label,
+    });
   };
 
   const handleSubClassOfRemoval = (id: string) => {
@@ -124,10 +150,13 @@ export default function ClassForm({
       putClassResult.error &&
       'data' in putClassResult.error
     ) {
-      const backendErrorFields =
-        (putClassResult.error as AxiosQueryErrorFields).data?.details?.map(
-          (d) => d.field
-        ) ?? [];
+      const backendErrorFields = Array.isArray(
+        (putClassResult.error as AxiosQueryErrorFields).data?.details
+      )
+        ? (putClassResult.error as AxiosQueryErrorFields).data.details.map(
+            (d) => d.field
+          )
+        : [];
 
       if (backendErrorFields.length > 0) {
         setErrors({
@@ -198,31 +227,9 @@ export default function ClassForm({
 
       <DrawerContent height={headerHeight} spaced>
         <ConceptBlock
-          concept={
-            data.equivalentClass.length > 0
-              ? data.equivalentClass[0]
-              : undefined
-          }
-          setConcept={(
-            value: ClassFormType['equivalentClass'][0] | undefined
-          ) => {
-            const label = value
-              ? Object.fromEntries(
-                  Object.entries(data.label).map((obj) => {
-                    if (value.label[obj[0]] != null) {
-                      return [[obj[0]], value.label[obj[0]]];
-                    }
-                    return [[obj[0]], data.label[obj[0]]];
-                  })
-                )
-              : undefined;
-
-            handleUpdate({
-              ...data,
-              equivalentClass: value ? [value] : [],
-              label: label ? label : data.label,
-            });
-          }}
+          concept={data.concept}
+          setConcept={handleSetConcept}
+          terminologies={terminologies}
         />
 
         <LanguageVersionedWrapper>

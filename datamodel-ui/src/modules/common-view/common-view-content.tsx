@@ -3,17 +3,11 @@ import { Resource } from '@app/common/interfaces/resource.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateCommonForm } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import {
-  Button,
-  Expander,
-  ExpanderGroup,
-  ExpanderTitleButton,
-  ExternalLink,
-  Link,
-} from 'suomifi-ui-components';
+import { Button, ExternalLink, Link } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import Separator from 'yti-common-ui/separator';
+import ConceptView from '../concept-view';
 
 export default function CommonViewContent({
   modelId,
@@ -41,15 +35,7 @@ export default function CommonViewContent({
       )}
 
       <BasicBlock title={t('concept')}>
-        <ExpanderGroup
-          closeAllText=""
-          openAllText=""
-          showToggleAllButton={false}
-        >
-          <Expander>
-            <ExpanderTitleButton>Käsitteen määritelmä</ExpanderTitleButton>
-          </Expander>
-        </ExpanderGroup>
+        <ConceptView data={data.subject} />
       </BasicBlock>
 
       <BasicBlock title={translateCommonForm('identifier', data.type, t)}>
