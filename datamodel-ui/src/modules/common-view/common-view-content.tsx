@@ -18,12 +18,10 @@ import Separator from 'yti-common-ui/separator';
 export default function CommonViewContent({
   modelId,
   data,
-  type,
   displayLabel,
 }: {
   modelId: string;
   data: Resource;
-  type: ResourceType;
   displayLabel?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
@@ -31,7 +29,7 @@ export default function CommonViewContent({
   return (
     <>
       {displayLabel && (
-        <BasicBlock title={`${type} nimi`}>
+        <BasicBlock title={`${data.type} nimi`}>
           {getLanguageVersion({
             data: data.label,
             lang: i18n.language,
@@ -64,7 +62,7 @@ export default function CommonViewContent({
         </Button>
       </BasicBlock>
 
-      {type === ResourceType.ATTRIBUTE && (
+      {data.type === ResourceType.ATTRIBUTE && (
         <>
           <BasicBlock title={t('range', { ns: 'admin' })}>
             {t('literal', { ns: 'admin' })} (rdfs:Literal)
@@ -78,7 +76,7 @@ export default function CommonViewContent({
         </>
       )}
 
-      {type === ResourceType.ASSOCIATION && (
+      {data.type === ResourceType.ASSOCIATION && (
         <>
           <BasicBlock title={t('source-class', { ns: 'admin' })}>
             {data.range

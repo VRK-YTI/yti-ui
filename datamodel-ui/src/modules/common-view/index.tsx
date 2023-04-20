@@ -110,7 +110,7 @@ export default function CommonView({
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
-        <CommonViewContent modelId={modelId} data={data} type={type} />
+        <CommonViewContent modelId={modelId} data={data} />
       </DrawerContent>
     </>
   );
