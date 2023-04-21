@@ -19,6 +19,7 @@ export interface ClassFormType {
     attributes: string[];
   }[];
   status: Status;
+  targetClass?: { label: string; id: string };
 }
 
 export const initialClassForm: ClassFormType = {

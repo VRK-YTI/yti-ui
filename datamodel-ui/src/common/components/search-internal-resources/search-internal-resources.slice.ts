@@ -4,6 +4,7 @@ import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { Status } from '@app/common/interfaces/status.interface';
 import { SearchInternalClasses } from '@app/common/interfaces/search-internal-classes.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { Type } from '@app/common/interfaces/type.interface';
 
 export interface InternalResourcesSearchParams {
   query: string;
@@ -15,6 +16,7 @@ export interface InternalResourcesSearchParams {
   sortLang?: string;
   pageSize?: number;
   pageFrom?: number;
+  limitToModelType?: Type;
 }
 
 function createUrl(obj: InternalResourcesSearchParams): string {
@@ -50,6 +52,10 @@ function createUrl(obj: InternalResourcesSearchParams): string {
     baseQuery = baseQuery.concat(
       `&resourceTypes=${obj.resourceTypes.join(',')}`
     );
+  }
+
+  if (obj.limitToModelType) {
+    baseQuery = baseQuery.concat(`&limitToModelType=${obj.limitToModelType}`);
   }
 
   return baseQuery;

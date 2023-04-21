@@ -27,6 +27,7 @@ export interface ClassModalProps {
   modalButtonLabel?: string;
   mode?: 'create' | 'select';
   handleFollowUp: (value?: InternalClass) => void;
+  applicationProfile?: boolean;
 }
 
 export default function ClassModal({
@@ -34,6 +35,7 @@ export default function ClassModal({
   modalButtonLabel,
   mode = 'create',
   handleFollowUp,
+  applicationProfile,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -154,6 +156,7 @@ export default function ClassModal({
             searchParams={searchParams}
             setSearchParams={handleSearch}
             modelId={modelId}
+            applicationProfile={applicationProfile}
           />
         </ModalContent>
         <ModalFooter>
@@ -163,7 +166,9 @@ export default function ClassModal({
                 disabled={selectedId === ''}
                 onClick={() => handleSubmit()}
               >
-                {t('create-subclass-for-selected')}
+                {applicationProfile
+                  ? t('select-class')
+                  : t('create-subclass-for-selected')}
               </Button>
               <Button
                 icon="plus"

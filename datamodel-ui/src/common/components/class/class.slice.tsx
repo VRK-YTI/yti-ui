@@ -19,6 +19,7 @@ function convertToPUT(data: ClassFormType): object {
     equivalentClass: data.equivalentClass.map((eq) => eq.identifier),
     subClassOf: data.subClassOf.map((sco) => sco.identifier),
     subject: conceptURI,
+    targetClass: data.targetClass?.id,
   };
 }
 
