@@ -315,7 +315,7 @@ export default function ClassForm({
               />
             }
             items={data.targetClass ? [data.targetClass] : []}
-            label={t('target-class')}
+            label={t('target-class-profile')}
             handleRemoval={() =>
               handleUpdate({ ...data, targetClass: undefined })
             }
