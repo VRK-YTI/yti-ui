@@ -8,12 +8,10 @@ import { useTranslation } from 'next-i18next';
 import { useGetResourceMutation } from '@app/common/components/resource/resource.slice';
 import { useEffect, useState } from 'react';
 import CommonViewContent from '../common-view/common-view-content';
-import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 export default function ResourceInfo({
   data,
   modelId,
-  type,
 }: {
   data: {
     identifier: string;
@@ -24,7 +22,6 @@ export default function ResourceInfo({
     uri: string;
   };
   modelId: string;
-  type: ResourceType;
 }) {
   const { i18n } = useTranslation('common');
   const [open, setOpen] = useState(false);
@@ -54,7 +51,6 @@ export default function ResourceInfo({
             data={result.data}
             modelId={modelId}
             displayLabel
-            type={type}
           />
         )}
       </ExpanderContent>

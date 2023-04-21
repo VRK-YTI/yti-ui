@@ -12,12 +12,10 @@ import ConceptView from '../concept-view';
 export default function CommonViewContent({
   modelId,
   data,
-  type,
   displayLabel,
 }: {
   modelId: string;
   data: Resource;
-  type?: ResourceType;
   displayLabel?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
@@ -25,7 +23,7 @@ export default function CommonViewContent({
   return (
     <>
       {displayLabel && (
-        <BasicBlock title={`${type} nimi`}>
+        <BasicBlock title={`${data.type} nimi`}>
           {getLanguageVersion({
             data: data.label,
             lang: i18n.language,
@@ -49,6 +47,36 @@ export default function CommonViewContent({
           {t('copy-to-clipboard')}
         </Button>
       </BasicBlock>
+
+      {data.type === ResourceType.ATTRIBUTE && (
+        <>
+          <BasicBlock title={t('range', { ns: 'admin' })}>
+            {t('literal', { ns: 'admin' })} (rdfs:Literal)
+          </BasicBlock>
+
+          <BasicBlock title={`${t('class', { ns: 'admin' })} (rdfs:domain)`}>
+            {data.domain
+              ? (data.domain as string).split('/').pop()?.replace('#', ':')
+              : t('no-upper-attributes')}
+          </BasicBlock>
+        </>
+      )}
+
+      {data.type === ResourceType.ASSOCIATION && (
+        <>
+          <BasicBlock title={t('source-class', { ns: 'admin' })}>
+            {data.range
+              ? data.range.split('/').pop()?.replace('#', ':')
+              : t('no-source-class')}
+          </BasicBlock>
+
+          <BasicBlock title={t('target-class', { ns: 'admin' })}>
+            {data.domain
+              ? (data.domain as string).split('/').pop()?.replace('#', ':')
+              : t('no-target-class')}
+          </BasicBlock>
+        </>
+      )}
 
       <BasicBlock title={translateCommonForm('upper', data.type, t)}>
         {!data.subResourceOf || data.subResourceOf.length === 0 ? (

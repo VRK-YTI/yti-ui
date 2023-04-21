@@ -382,7 +382,6 @@ export default function ClassView({
                       key={`${data.identifier}-attr-${attr.identifier}`}
                       data={attr}
                       modelId={modelId}
-                      type={ResourceType.ATTRIBUTE}
                     />
                   ))}
                 </ExpanderGroup>
@@ -407,7 +406,6 @@ export default function ClassView({
                       key={`${data.identifier}-attr-${assoc.identifier}`}
                       data={assoc}
                       modelId={modelId}
-                      type={ResourceType.ASSOCIATION}
                     />
                   ))}
                 </ExpanderGroup>
