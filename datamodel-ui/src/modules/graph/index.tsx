@@ -49,28 +49,21 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   const [startNodeId, setStartNodeId] = useState<string | undefined>();
   const [cleanUnused, setCleanUnused] = useState(false);
 
-  const cleanCorners = () => {
-    const corners = nodes.filter((node) => node.id.includes('corner'));
-    const delIds: string[] = [];
-
-    corners.forEach((corner) => {
-      if (
-        edges.filter(
-          (edge) => edge.source === corner.id || edge.target === corner.id
-        ).length < 1
-      ) {
-        delIds.push(corner.id);
-      }
-    });
-
-    if (delIds.length > 0) {
-      setNodes(nodes.filter((node) => !delIds.includes(node.id)));
-    }
-  };
-
   const deleteEdgeById = useCallback(
-    (id: string) => {
-      setEdges((edges) => edges.filter((edge) => edge.id !== id));
+    (id: string, source: string, target: string) => {
+      setEdges((edges) =>
+        edges
+          .filter((edge) => edge.id !== id)
+          .map((edge) => {
+            if (edge.source === target) {
+              return {
+                ...edge,
+                source: source,
+              };
+            }
+            return edge;
+          })
+      );
       setCleanUnused(true);
     },
     [setEdges]
@@ -82,9 +75,9 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
         ? reactFlowWrapper.current.getBoundingClientRect()
         : { top: 0, left: 0 };
       const randromId = v4().split('-')[0];
-      const newCorderId = `corner-${randromId}`;
+      const newCornerId = `corner-${randromId}`;
       const newCornerEdge = {
-        id: newCorderId,
+        id: newCornerId,
         data: {},
         position: project({ x: x - left - 26, y: y - top }),
         type: 'cornerEdge',
@@ -94,19 +87,9 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
 
       const newEdges = [
         {
-          id: `react-flow__edge-path-${source}-.corner-${newCorderId}`,
+          id: `react-flow__edge-path-${source}-.corner-${newCornerId}`,
           source: source,
-          target: newCorderId,
-          type: 'defaultEdge',
-          data: {
-            handleDelete: deleteEdgeById,
-            splitEdge: splitEdge,
-          },
-        },
-        {
-          id: `react-flow__edge-path-${newCorderId}-.corner-${target}`,
-          source: newCorderId,
-          target: target,
+          target: newCornerId,
           type: 'defaultEdge',
           data: {
             handleDelete: deleteEdgeById,
@@ -115,10 +98,35 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
         },
       ];
 
+      if (target.includes('corner')) {
+        newEdges.push({
+          id: `react-flow__edge-path-${newCornerId}-.corner-${target}`,
+          source: newCornerId,
+          target: target,
+          type: 'defaultEdge',
+          data: {
+            handleDelete: deleteEdgeById,
+            splitEdge: splitEdge,
+          },
+        });
+      }
+
       setEdges((edges) => [
-        ...edges.filter(
-          (edge) => !(edge.source === source && edge.target === target)
-        ),
+        ...edges
+          .map((edge) => {
+            if (!target.includes('corner') && !edge.target.includes('corner')) {
+              return {
+                ...edge,
+                id: `reactflow__edge-${newCornerId}-${edge.target}`,
+                source: newCornerId,
+              };
+            }
+
+            return edge;
+          })
+          .filter(
+            (edge) => !(edge.source === source && edge.target === target)
+          ),
         ...newEdges,
       ]);
     },
@@ -223,11 +231,30 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   }, [data, isSuccess, setNodes]);
 
   useEffect(() => {
+    const cleanCorners = () => {
+      const corners = nodes.filter((node) => node.id.includes('corner'));
+      const delIds: string[] = [];
+
+      corners.forEach((corner) => {
+        if (
+          edges.filter(
+            (edge) => edge.source === corner.id || edge.target === corner.id
+          ).length < 1
+        ) {
+          delIds.push(corner.id);
+        }
+      });
+
+      if (delIds.length > 0) {
+        setNodes(nodes.filter((node) => !delIds.includes(node.id)));
+      }
+    };
+
     if (cleanUnused) {
       cleanCorners();
       setCleanUnused(false);
     }
-  }, [cleanUnused, cleanCorners]);
+  }, [cleanUnused, edges, nodes, setNodes]);
 
   return (
     <div ref={reactFlowWrapper} style={{ height: '100%', width: '100%' }}>

@@ -33,7 +33,7 @@ export default function LabeledEdge({
     targetY,
   });
 
-  const onDeleteClick = (e: MouseEvent<HTMLButtonElement>, id: string) => {
+  const onDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     data.handleDelete(id);
     if (globalSelected.id === id) {
@@ -65,7 +65,7 @@ export default function LabeledEdge({
         >
           <div>{label}</div>
           {selected && (
-            <DeleteEdgeButton onClick={(e) => onDeleteClick(e, id)}>
+            <DeleteEdgeButton onClick={(e) => onDeleteClick(e)}>
               ×
             </DeleteEdgeButton>
           )}

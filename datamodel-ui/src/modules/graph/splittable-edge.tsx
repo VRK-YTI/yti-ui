@@ -49,7 +49,7 @@ export default function SplittableEdge({
 
   const onDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    data.handleDelete(id);
+    data.handleDelete(id, source, target);
   };
 
   const onSplitClick = (e: MouseEvent<HTMLButtonElement>) => {
