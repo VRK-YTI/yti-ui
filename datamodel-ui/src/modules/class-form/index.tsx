@@ -42,6 +42,8 @@ import {
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '@app/store';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
+import ClassModal from '../class-modal';
+import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -49,6 +51,7 @@ export interface ClassFormProps {
   languages: string[];
   modelId: string;
   terminologies: string[];
+  applicationProfile?: boolean;
 }
 
 export default function ClassForm({
@@ -57,6 +60,7 @@ export default function ClassForm({
   languages,
   modelId,
   terminologies,
+  applicationProfile,
 }: ClassFormProps) {
   const { t } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -117,6 +121,21 @@ export default function ClassForm({
       concept: value ? value : undefined,
       label: label ? { ...data.label, ...label } : data.label,
     });
+  };
+
+  const handleTargetClassUpdate = (value?: InternalClass | undefined) => {
+    if (!value) {
+      return;
+    }
+
+    const classInfo = {
+      id: value.id,
+      label:
+        value.id.split('/').pop()?.replace('#', ':') ??
+        `${value.isDefinedBy.split('/').pop()}:${value.identifier}`,
+    };
+
+    handleUpdate({ ...data, targetClass: classInfo });
   };
 
   const handleSubClassOfRemoval = (id: string) => {
@@ -284,14 +303,35 @@ export default function ClassForm({
           handleRemoval={() => null}
         />
 
-        <InlineListBlock
-          addNewComponent={
-            <Button variant="secondary">{t('add-corresponding-class')}</Button>
-          }
-          items={[]}
-          label={t('corresponding-classes')}
-          handleRemoval={() => null}
-        />
+        {applicationProfile ? (
+          <InlineListBlock
+            addNewComponent={
+              <ClassModal
+                modelId={modelId}
+                mode={'select'}
+                modalButtonLabel={t('select-class')}
+                handleFollowUp={handleTargetClassUpdate}
+                applicationProfile
+              />
+            }
+            items={data.targetClass ? [data.targetClass] : []}
+            label={t('target-class')}
+            handleRemoval={() =>
+              handleUpdate({ ...data, targetClass: undefined })
+            }
+          />
+        ) : (
+          <InlineListBlock
+            addNewComponent={
+              <Button variant="secondary">
+                {t('add-corresponding-class')}
+              </Button>
+            }
+            items={[]}
+            label={t('corresponding-classes')}
+            handleRemoval={() => null}
+          />
+        )}
 
         <div>
           <Dropdown

@@ -70,6 +70,7 @@ export default function Model({ modelId }: ModelProps) {
                   <ClassView
                     modelId={modelId}
                     languages={languages}
+                    applicationProfile={modelInfo?.type === 'PROFILE'}
                     terminologies={
                       modelInfo?.terminologies.map((t) => t.uri) ?? []
                     }

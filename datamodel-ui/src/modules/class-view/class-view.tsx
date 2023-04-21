@@ -52,12 +52,14 @@ interface ClassViewProps {
   modelId: string;
   languages: string[];
   terminologies: string[];
+  applicationProfile?: boolean;
 }
 
 export default function ClassView({
   modelId,
   languages,
   terminologies,
+  applicationProfile,
 }: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
@@ -92,7 +94,9 @@ export default function ClassView({
       return;
     }
 
-    dispatch(setClass(internalClassToClassForm(value, languages)));
+    dispatch(
+      setClass(internalClassToClassForm(value, languages, applicationProfile))
+    );
     dispatch(setView('classes', 'edit'));
   };
 
@@ -159,6 +163,7 @@ export default function ClassView({
               <ClassModal
                 modelId={modelId}
                 handleFollowUp={handleFollowUpAction}
+                applicationProfile={applicationProfile}
               />
             )}
           </div>
@@ -220,6 +225,7 @@ export default function ClassView({
         languages={languages}
         modelId={modelId}
         terminologies={terminologies}
+        applicationProfile={applicationProfile}
       />
     );
   }
