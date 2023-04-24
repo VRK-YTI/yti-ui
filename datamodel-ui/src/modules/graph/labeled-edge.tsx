@@ -35,7 +35,7 @@ export default function LabeledEdge({
 
   const onDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    data.handleDelete(id);
+    data.handleDelete(id, source, target);
     if (globalSelected.id === id) {
       dispatch(setSelected('', 'associations'));
     }

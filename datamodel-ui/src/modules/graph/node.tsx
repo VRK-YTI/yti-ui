@@ -1,12 +1,14 @@
 import {
   selectHovered,
   selectSelected,
+  setSelected,
 } from '@app/common/components/model/model.slice';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Handle, Position } from 'reactflow';
 import { Icon } from 'suomifi-ui-components';
 import { Attribute, ClassNodeDiv } from './node.styles';
+import { useStoreDispatch } from '@app/store';
 
 interface ClassNodeProps {
   id: string;
@@ -21,6 +23,7 @@ interface ClassNodeProps {
 }
 
 export default function ClassNode({ id, data }: ClassNodeProps) {
+  const dispatch = useStoreDispatch();
   const globalSelected = useSelector(selectSelected());
   const globalHover = useSelector(selectHovered());
   const [showAtttributes, setShowAttributes] = useState(true);
@@ -69,6 +72,7 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
           <Attribute
             key={`${id}-child-${child.identifier}`}
             className="node-resource"
+            onClick={() => dispatch(setSelected('', 'attributes'))}
           >
             {child.label}
           </Attribute>

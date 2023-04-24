@@ -12,7 +12,7 @@ import {
   ReactFlowProvider,
   useReactFlow,
 } from 'reactflow';
-import { convertToNodes } from './utils';
+import { convertToNodes, getConnectedCornerIds } from './utils';
 import LabeledEdge from './labeled-edge';
 import { useGetVisualizationQuery } from '@app/common/components/visualization/visualization.slice';
 import { useStoreDispatch } from '@app/store';
@@ -48,25 +48,31 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [startNodeId, setStartNodeId] = useState<string | undefined>();
   const [cleanUnused, setCleanUnused] = useState(false);
+  const [cleanFullEdge, setCleanFullEdge] = useState<{
+    source?: string;
+    target?: string;
+    check: boolean;
+  }>({ check: false });
 
   const deleteEdgeById = useCallback(
     (id: string, source: string, target: string) => {
-      setEdges((edges) =>
-        edges
-          .filter((edge) => edge.id !== id)
-          .map((edge) => {
-            if (edge.source === target) {
-              return {
-                ...edge,
-                source: source,
-              };
-            }
-            return edge;
-          })
-      );
-      setCleanUnused(true);
+      // setEdges((edges) =>
+      //   edges
+      //     .filter((edge) => edge.id !== id)
+      //     .map((edge) => {
+      //       if (edge.source === target) {
+      //         return {
+      //           ...edge,
+      //           source: source,
+      //         };
+      //       }
+      //       return edge;
+      //     })
+      // );
+      // setCleanUnused(true);
+      setCleanFullEdge({ source: source, target: target, check: true });
     },
-    [setEdges]
+    [setEdges, setCleanFullEdge]
   );
 
   const splitEdge = useCallback(
@@ -87,7 +93,7 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
 
       const newEdges = [
         {
-          id: `react-flow__edge-path-${source}-.corner-${newCornerId}`,
+          id: `react-flow__edge-path-${source}-#corner-${newCornerId}`,
           source: source,
           target: newCornerId,
           type: 'defaultEdge',
@@ -100,7 +106,7 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
 
       if (target.includes('corner')) {
         newEdges.push({
-          id: `react-flow__edge-path-${newCornerId}-.corner-${target}`,
+          id: `react-flow__edge-path-${newCornerId}-#corner-${target}`,
           source: newCornerId,
           target: target,
           type: 'defaultEdge',
@@ -114,11 +120,17 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
       setEdges((edges) => [
         ...edges
           .map((edge) => {
-            if (!target.includes('corner') && !edge.target.includes('corner')) {
+            if (
+              edge.target === target &&
+              edge.source === source &&
+              !target.includes('corner') &&
+              !edge.target.includes('corner')
+            ) {
               return {
                 ...edge,
                 id: `reactflow__edge-${newCornerId}-${edge.target}`,
                 source: newCornerId,
+                sourceHandle: newCornerId,
               };
             }
 
@@ -255,6 +267,22 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
       setCleanUnused(false);
     }
   }, [cleanUnused, edges, nodes, setNodes]);
+
+  useEffect(() => {
+    if (cleanFullEdge.check) {
+      const delIds = getConnectedCornerIds(
+        edges,
+        cleanFullEdge.source,
+        cleanFullEdge.target
+      );
+
+      if (delIds.length > 0) {
+        setEdges(edges.filter((edge) => !delIds.includes(edge.id)));
+      }
+
+      setCleanFullEdge({ check: false });
+    }
+  }, [cleanFullEdge, edges, setEdges]);
 
   return (
     <div ref={reactFlowWrapper} style={{ height: '100%', width: '100%' }}>
