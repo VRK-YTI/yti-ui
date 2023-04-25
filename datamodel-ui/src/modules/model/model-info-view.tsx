@@ -46,14 +46,13 @@ import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import HasPermission from '@app/common/utils/has-permission';
 import DeleteModal from '../delete-modal';
 import { useStoreDispatch } from '@app/store';
+import { getModelId } from '@app/common/utils/parse-slug';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const { query } = useRouter();
-  const [modelId] = useState(
-    Array.isArray(query.modelId) ? query.modelId[0] : query.modelId ?? ''
-  );
+  const [modelId] = useState(getModelId(query.slug) ?? '');
   const [showTooltip, setShowTooltip] = useState(false);
   const [showEditView, setShowEditView] = useState(false);
   const [formData, setFormData] = useState<ModelFormType | undefined>();

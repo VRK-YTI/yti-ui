@@ -11,6 +11,7 @@ import {
 import { useStoreDispatch } from '@app/store';
 import { selectCurrentViewName, setView } from '../model/model.slice';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 type ViewType = {
   id:
@@ -28,20 +29,30 @@ type ViewType = {
 };
 
 interface SideNavigationProps {
+  modelId: string;
   views: ViewType[];
 }
 
-export default function Drawer({ views }: SideNavigationProps) {
+export default function Drawer({ modelId, views }: SideNavigationProps) {
   const { breakpoint, isSmall, isLarge } = useBreakpoints();
   const dispatch = useStoreDispatch();
+  const router = useRouter();
   const currentView = useSelector(selectCurrentViewName());
   const [activeView, setActiveView] = useState<ViewType | undefined>(
     isSmall
       ? views.find((v) => v.id === 'graph')
-      : views.find((v) => v.id === 'search')
+      : views.find((v) => v.id === 'info')
   );
 
+  // const [activeView, setActiveView] = useState<ViewType | undefined>(
+  //   isSmall
+  //     ? views.find((v) => v.id === 'graph')
+  //     : views.find((v) => v.id === 'info')
+  // );
+
   const handleSetActiveView = (viewId: ViewType['id']) => {
+    // router.replace(modelId);
+
     if (['search', 'links', 'graph'].includes(viewId)) {
       dispatch(setView(viewId));
       return;
@@ -87,19 +98,11 @@ export default function Drawer({ views }: SideNavigationProps) {
             typeof activeView.component !== 'undefined'
           }
           active={currentView}
+          initialOpen
         >
-          {/* {typeof activeView !== 'undefined' &&
-            typeof activeView.component !== 'undefined' && ( */}
           <DrawerViewContainer>
-            {activeView ? (
-              activeView.component
-            ) : (
-              <div style={{ height: '100%', minHeight: '100%' }}>
-                testi123123123
-              </div>
-            )}
+            {activeView && activeView.component}
           </DrawerViewContainer>
-          {/* )} */}
         </CommonDrawer>
       </ModelDrawerContainer>
     </ModelPanel>

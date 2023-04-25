@@ -15,9 +15,13 @@ import CommonView from '../common-view';
 import {
   initializeResource,
   resetResource,
-  useGetResourceMutation,
+  useGetResourceQuery,
 } from '@app/common/components/resource/resource.slice';
 import { useStoreDispatch } from '@app/store';
+import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+import { selectViews } from '@app/common/components/model/model.slice';
+import { getResourceInfo } from '@app/common/utils/parse-slug';
 
 export default function AttributeView({
   modelId,
@@ -29,14 +33,22 @@ export default function AttributeView({
   terminologies: string[];
 }) {
   const { t, i18n } = useTranslation('common');
-  const [view, setView] = useState('listing');
+  const views = useSelector(selectViews());
+  const [view, setView] = useState(
+    Object.keys(views.attributes).filter((k) => k).length > 0
+      ? Object.keys(views.attributes).find(
+          (k) =>
+            views.attributes[k as keyof typeof views['attributes']] === true
+        )
+      : 'list'
+  );
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
   const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
   const [currentPage, setCurrentPage] = useState(1);
-  const [getResource, getResourceResult] = useGetResourceMutation();
   const [query, setQuery] = useState('');
+  const router = useRouter();
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
@@ -44,6 +56,22 @@ export default function AttributeView({
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [ResourceType.ATTRIBUTE],
   });
+  const [currentAttributeId, setCurrentAttributeId] = useState<
+    string | undefined
+  >(
+    getResourceInfo(router.query.slug)?.type === 'attribute'
+      ? getResourceInfo(router.query.slug)?.id
+      : undefined
+  );
+  const { data: attributeData, isSuccess } = useGetResourceQuery(
+    {
+      modelId: modelId,
+      resourceIdentifier: currentAttributeId ?? '',
+    },
+    {
+      skip: typeof currentAttributeId === 'undefined',
+    }
+  );
 
   useEffect(() => {
     if (ref.current) {
@@ -64,14 +92,15 @@ export default function AttributeView({
   };
 
   const handleFormReturn = () => {
-    setView('listing');
+    setView('list');
     dispatch(resetResource());
     refetch();
   };
 
   const handleShowAttribute = (id: string) => {
-    getResource({ modelId: modelId, resourceIdentifier: id });
-    setView('attribute');
+    setView('info');
+    setCurrentAttributeId(id);
+    router.replace(`${modelId}/attribute/${id}`);
   };
 
   const handleFormFollowUp = (id: string) => {
@@ -88,7 +117,7 @@ export default function AttributeView({
   );
 
   function renderListing() {
-    if (view !== 'listing') {
+    if (view !== 'list') {
       return <></>;
     }
 
@@ -171,18 +200,13 @@ export default function AttributeView({
   }
 
   function renderAttribute() {
-    if (view !== 'attribute' || !getResourceResult.isSuccess) {
-      return <></>;
-    }
-
-    const assoc = getResourceResult.data;
-    if (!assoc) {
+    if (view !== 'info') {
       return <></>;
     }
 
     return (
       <CommonView
-        data={assoc}
+        data={attributeData}
         modelId={modelId}
         type={ResourceType.ATTRIBUTE}
         handleReturn={handleFormReturn}

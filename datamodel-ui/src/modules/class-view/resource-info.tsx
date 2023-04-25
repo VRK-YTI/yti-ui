@@ -5,8 +5,8 @@ import {
   ExpanderTitleButton,
 } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
-import { useGetResourceMutation } from '@app/common/components/resource/resource.slice';
-import { useEffect, useState } from 'react';
+import { useGetResourceQuery } from '@app/common/components/resource/resource.slice';
+import { useState } from 'react';
 import CommonViewContent from '../common-view/common-view-content';
 
 export default function ResourceInfo({
@@ -25,16 +25,13 @@ export default function ResourceInfo({
 }) {
   const { i18n } = useTranslation('common');
   const [open, setOpen] = useState(false);
-  const [getResource, result] = useGetResourceMutation();
-
-  useEffect(() => {
-    if (open) {
-      getResource({
-        modelId: modelId,
-        resourceIdentifier: data.identifier,
-      });
-    }
-  }, [open, data.identifier, getResource, modelId]);
+  const { data: resourceData, isSuccess } = useGetResourceQuery(
+    {
+      modelId: modelId,
+      resourceIdentifier: data.identifier,
+    },
+    { skip: !open }
+  );
 
   return (
     <Expander open={open} onOpenChange={() => setOpen(!open)}>
@@ -46,9 +43,9 @@ export default function ResourceInfo({
         })}
       </ExpanderTitleButton>
       <ExpanderContent>
-        {result.data && (
+        {isSuccess && (
           <CommonViewContent
-            data={result.data}
+            data={resourceData}
             modelId={modelId}
             displayLabel
           />

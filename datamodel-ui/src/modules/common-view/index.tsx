@@ -18,7 +18,7 @@ import CommonViewContent from './common-view-content';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 interface CommonViewProps {
-  data: Resource;
+  data?: Resource;
   modelId: string;
   type: ResourceType;
   handleReturn: () => void;
@@ -54,9 +54,9 @@ export default function CommonView({
             style={{ textTransform: 'uppercase' }}
             onClick={handleReturn}
           >
-            {translateCommonForm('return', data.type, t)}
+            {data ? translateCommonForm('return', data.type, t) : t('back')}
           </Button>
-          {hasPermission && (
+          {hasPermission && data && (
             <div>
               <Button
                 variant="secondary"
@@ -97,20 +97,21 @@ export default function CommonView({
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Text variant="bold">
-              {getLanguageVersion({
-                data: data.label,
-                lang: i18n.language,
-              })}
+              {data &&
+                getLanguageVersion({
+                  data: data.label,
+                  lang: i18n.language,
+                })}
             </Text>
-            <StatusChip $isValid={data.status === 'VALID'}>
-              {translateStatus(data.status, t)}
+            <StatusChip $isValid={data && data.status === 'VALID'}>
+              {data && translateStatus(data.status, t)}
             </StatusChip>
           </div>
         </div>
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
-        <CommonViewContent modelId={modelId} data={data} />
+        {data && <CommonViewContent modelId={modelId} data={data} />}
       </DrawerContent>
     </>
   );

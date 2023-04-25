@@ -15,9 +15,13 @@ import CommonView from '../common-view';
 import {
   initializeResource,
   resetResource,
-  useGetResourceMutation,
+  useGetResourceQuery,
 } from '@app/common/components/resource/resource.slice';
 import { useStoreDispatch } from '@app/store';
+import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+import { selectViews } from '@app/common/components/model/model.slice';
+import { getResourceInfo } from '@app/common/utils/parse-slug';
 
 export default function AssociationView({
   modelId,
@@ -29,14 +33,22 @@ export default function AssociationView({
   terminologies: string[];
 }) {
   const { t, i18n } = useTranslation('common');
-  const [view, setView] = useState('listing');
+  const views = useSelector(selectViews());
+  const [view, setView] = useState(
+    Object.keys(views.associations).filter((k) => k).length > 0
+      ? Object.keys(views.associations).find(
+          (k) =>
+            views.associations[k as keyof typeof views['associations']] === true
+        )
+      : 'list'
+  );
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
   const hasPermission = HasPermission({ actions: ['CREATE_ASSOCIATION'] });
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
-  const [getResource, getResourceResult] = useGetResourceMutation();
+  const router = useRouter();
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
@@ -44,6 +56,22 @@ export default function AssociationView({
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [ResourceType.ASSOCIATION],
   });
+  const [currentAssociationId, setCurrentAssociationId] = useState<
+    string | undefined
+  >(
+    getResourceInfo(router.query.slug)?.type === 'association'
+      ? getResourceInfo(router.query.slug)?.id
+      : undefined
+  );
+  const { data: associationData, isSuccess } = useGetResourceQuery(
+    {
+      modelId: modelId,
+      resourceIdentifier: currentAssociationId ?? '',
+    },
+    {
+      skip: typeof currentAssociationId === 'undefined',
+    }
+  );
 
   useEffect(() => {
     if (ref.current) {
@@ -59,9 +87,10 @@ export default function AssociationView({
   };
 
   const handleFormReturn = () => {
-    setView('listing');
+    setView('list');
     dispatch(resetResource());
     refetch();
+    // router.replace(modelId);
   };
 
   const handleQueryChange = (value: string) => {
@@ -70,20 +99,15 @@ export default function AssociationView({
   };
 
   const handleShowAssociation = (id: string) => {
-    getResource({ modelId: modelId, resourceIdentifier: id });
-    setView('association');
+    setCurrentAssociationId(id);
+    setView('info');
+    // router.replace(`${modelId}/association/${id}`);
   };
 
   const handleFormFollowUp = (id: string) => {
     handleShowAssociation(id);
     refetch();
   };
-
-  useEffect(() => {
-    if (getResourceResult.isSuccess) {
-      setView('association');
-    }
-  }, [getResourceResult]);
 
   return (
     <>
@@ -94,7 +118,7 @@ export default function AssociationView({
   );
 
   function renderListing() {
-    if (view !== 'listing') {
+    if (view !== 'list') {
       return <></>;
     }
 
@@ -176,18 +200,13 @@ export default function AssociationView({
   }
 
   function renderAssociation() {
-    if (view !== 'association' || !getResourceResult.isSuccess) {
-      return <></>;
-    }
-
-    const assoc = getResourceResult.data;
-    if (!assoc) {
+    if (view !== 'info') {
       return <></>;
     }
 
     return (
       <CommonView
-        data={assoc}
+        data={associationData}
         modelId={modelId}
         type={ResourceType.ASSOCIATION}
         handleReturn={handleFormReturn}
