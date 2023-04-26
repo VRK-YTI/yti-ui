@@ -63,7 +63,7 @@ export default function AssociationView({
       ? getResourceInfo(router.query.slug)?.id
       : undefined
   );
-  const { data: associationData, isSuccess } = useGetResourceQuery(
+  const { data: associationData } = useGetResourceQuery(
     {
       modelId: modelId,
       resourceIdentifier: currentAssociationId ?? '',
@@ -90,7 +90,6 @@ export default function AssociationView({
     setView('list');
     dispatch(resetResource());
     refetch();
-    // router.replace(modelId);
   };
 
   const handleQueryChange = (value: string) => {
@@ -101,7 +100,7 @@ export default function AssociationView({
   const handleShowAssociation = (id: string) => {
     setCurrentAssociationId(id);
     setView('info');
-    // router.replace(`${modelId}/association/${id}`);
+    router.replace(`${modelId}/association/${id}`);
   };
 
   const handleFormFollowUp = (id: string) => {

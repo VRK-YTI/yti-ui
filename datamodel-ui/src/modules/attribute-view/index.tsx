@@ -63,7 +63,7 @@ export default function AttributeView({
       ? getResourceInfo(router.query.slug)?.id
       : undefined
   );
-  const { data: attributeData, isSuccess } = useGetResourceQuery(
+  const { data: attributeData } = useGetResourceQuery(
     {
       modelId: modelId,
       resourceIdentifier: currentAttributeId ?? '',

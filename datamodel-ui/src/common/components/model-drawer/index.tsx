@@ -29,11 +29,10 @@ type ViewType = {
 };
 
 interface SideNavigationProps {
-  modelId: string;
   views: ViewType[];
 }
 
-export default function Drawer({ modelId, views }: SideNavigationProps) {
+export default function Drawer({ views }: SideNavigationProps) {
   const { breakpoint, isSmall, isLarge } = useBreakpoints();
   const dispatch = useStoreDispatch();
   const router = useRouter();
@@ -44,15 +43,7 @@ export default function Drawer({ modelId, views }: SideNavigationProps) {
       : views.find((v) => v.id === 'info')
   );
 
-  // const [activeView, setActiveView] = useState<ViewType | undefined>(
-  //   isSmall
-  //     ? views.find((v) => v.id === 'graph')
-  //     : views.find((v) => v.id === 'info')
-  // );
-
   const handleSetActiveView = (viewId: ViewType['id']) => {
-    // router.replace(modelId);
-
     if (['search', 'links', 'graph'].includes(viewId)) {
       dispatch(setView(viewId));
       return;
@@ -65,7 +56,15 @@ export default function Drawer({ modelId, views }: SideNavigationProps) {
     if (currentView !== activeView?.id) {
       setActiveView(views.find((v) => v.id === currentView));
     }
-  }, [activeView, currentView, views]);
+
+    if (
+      currentView === 'info' &&
+      router.query.slug &&
+      router.query.slug.length > 1
+    ) {
+      router.replace(router.query.slug[0]);
+    }
+  }, [activeView, currentView, views, router]);
 
   return (
     <ModelPanel position="bottom-left" $isSmall={isSmall}>

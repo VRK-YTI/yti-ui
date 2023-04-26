@@ -38,7 +38,6 @@ export default function Model({ modelId }: ModelProps) {
       <ContentWrapper>
         <Graph modelId={modelId}>
           <Drawer
-            modelId={modelId}
             views={[
               {
                 id: 'search',
