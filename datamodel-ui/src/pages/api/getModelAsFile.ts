@@ -39,7 +39,7 @@ export default withIronSessionApiRoute(
     }
 
     const { status, data: response } = await axios.get(
-      `${process.env.DATAMODEL_API_URL}/v2/model/${target}/file`,
+      `${process.env.DATAMODEL_API_URL}/v2/export/${target}`,
       {
         headers: headers,
         responseType: 'stream',
