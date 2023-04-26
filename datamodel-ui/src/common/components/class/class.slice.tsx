@@ -112,7 +112,7 @@ export const {
   useGetClassQuery,
   useGetClassMutMutation,
   useDeleteClassMutation,
-  util: { getRunningQueriesThunk, getRunningMutationsThunk },
+  util: { getRunningQueriesThunk },
 } = classApi;
 
 export const { putClass, getClass, getClassMut } = classApi.endpoints;
