@@ -66,7 +66,7 @@ export const resourceApi = createApi({
               },
       }),
     }),
-    getResource: builder.mutation<
+    getResource: builder.query<
       Resource,
       { modelId: string; resourceIdentifier: string }
     >({
@@ -161,7 +161,7 @@ export const { putResource, getResource } = resourceApi.endpoints;
 
 export const {
   usePutResourceMutation,
-  useGetResourceMutation,
+  useGetResourceQuery,
   useDeleteResourceMutation,
-  util: { getRunningQueriesThunk },
+  util: { getRunningQueriesThunk, getRunningMutationsThunk },
 } = resourceApi;

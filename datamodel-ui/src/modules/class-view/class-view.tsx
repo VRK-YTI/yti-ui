@@ -1,7 +1,7 @@
 import {
   resetClass,
   setClass,
-  useGetClassMutMutation,
+  useGetClassQuery,
 } from '@app/common/components/class/class.slice';
 import { initialClassForm } from '@app/common/interfaces/class-form.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
@@ -47,6 +47,8 @@ import {
 import { useSelector } from 'react-redux';
 import ResourceInfo from './resource-info';
 import ConceptView from '../concept-view';
+import { useRouter } from 'next/router';
+import { getResourceInfo } from '@app/common/utils/parse-slug';
 
 interface ClassViewProps {
   modelId: string;
@@ -63,8 +65,8 @@ export default function ClassView({
 }: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
+  const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false);
-  const [getClass, getClassResult] = useGetClassMutMutation();
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -79,6 +81,16 @@ export default function ClassView({
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [ResourceType.CLASS],
   });
+
+  const [currentClassId, setCurrentClassId] = useState<string | undefined>(
+    getResourceInfo(router.query.slug)?.type === 'class'
+      ? getResourceInfo(router.query.slug)?.id
+      : undefined
+  );
+  const { data: classData, isSuccess } = useGetClassQuery(
+    { modelId: modelId, classId: currentClassId ?? '' },
+    { skip: typeof currentClassId === 'undefined' }
+  );
 
   const handleQueryChange = (value: string) => {
     setQuery(value);
@@ -108,20 +120,15 @@ export default function ClassView({
   };
 
   const handleFollowUp = (classId: string) => {
-    getClass({ modelId: modelId, classId: classId });
     dispatch(setView('classes', 'info'));
+    router.replace(`${modelId}/class/${classId}`);
   };
 
   const handleActive = (classId: string) => {
     dispatch(setSelected(classId, 'classes'));
     dispatch(resetHovered());
+    router.replace(`${modelId}/class/${classId}`);
   };
-
-  useEffect(() => {
-    if (getClassResult.isSuccess) {
-      dispatch(setView('classes', 'info'));
-    }
-  }, [getClassResult, dispatch]);
 
   useEffect(() => {
     if (ref.current) {
@@ -134,10 +141,13 @@ export default function ClassView({
   }, [ref, view]);
 
   useEffect(() => {
-    if (globalSelected.type === 'classes') {
-      getClass({ modelId: modelId, classId: globalSelected.id });
+    if (
+      globalSelected.type === 'classes' &&
+      currentClassId !== globalSelected.id
+    ) {
+      setCurrentClassId(globalSelected.id);
     }
-  }, [globalSelected, getClass, modelId]);
+  }, [globalSelected, currentClassId]);
 
   return (
     <>
@@ -190,7 +200,8 @@ export default function ClassView({
                 }),
                 subtitle: `${modelId}:${item.identifier}`,
                 onClick: () => {
-                  getClass({ modelId: modelId, classId: item.identifier });
+                  // getClass({ modelId: modelId, classId: item.identifier });
+                  setCurrentClassId(item.identifier);
                   handleActive(item.identifier);
                 },
                 onMouseEnter: () => {
@@ -235,7 +246,9 @@ export default function ClassView({
       return <></>;
     }
 
-    const data = getClassResult.data;
+    // const data = getClassResult.data;
+
+    const data = classData;
 
     return (
       <>
@@ -299,7 +312,7 @@ export default function ClassView({
           </div>
         </StaticHeader>
 
-        {getClassResult.isSuccess && data && (
+        {isSuccess && data && (
           <DrawerContent height={headerHeight}>
             <div
               style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}

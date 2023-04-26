@@ -11,6 +11,7 @@ import {
 import { useStoreDispatch } from '@app/store';
 import { selectCurrentViewName, setView } from '../model/model.slice';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 type ViewType = {
   id:
@@ -34,11 +35,12 @@ interface SideNavigationProps {
 export default function Drawer({ views }: SideNavigationProps) {
   const { breakpoint, isSmall, isLarge } = useBreakpoints();
   const dispatch = useStoreDispatch();
+  const router = useRouter();
   const currentView = useSelector(selectCurrentViewName());
   const [activeView, setActiveView] = useState<ViewType | undefined>(
     isSmall
       ? views.find((v) => v.id === 'graph')
-      : views.find((v) => v.id === 'search')
+      : views.find((v) => v.id === 'info')
   );
 
   const handleSetActiveView = (viewId: ViewType['id']) => {
@@ -54,7 +56,15 @@ export default function Drawer({ views }: SideNavigationProps) {
     if (currentView !== activeView?.id) {
       setActiveView(views.find((v) => v.id === currentView));
     }
-  }, [activeView, currentView, views]);
+
+    if (
+      currentView === 'info' &&
+      router.query.slug &&
+      router.query.slug.length > 1
+    ) {
+      router.replace(router.query.slug[0]);
+    }
+  }, [activeView, currentView, views, router]);
 
   return (
     <ModelPanel position="bottom-left" $isSmall={isSmall}>
@@ -87,19 +97,11 @@ export default function Drawer({ views }: SideNavigationProps) {
             typeof activeView.component !== 'undefined'
           }
           active={currentView}
+          initialOpen
         >
-          {/* {typeof activeView !== 'undefined' &&
-            typeof activeView.component !== 'undefined' && ( */}
           <DrawerViewContainer>
-            {activeView ? (
-              activeView.component
-            ) : (
-              <div style={{ height: '100%', minHeight: '100%' }}>
-                testi123123123
-              </div>
-            )}
+            {activeView && activeView.component}
           </DrawerViewContainer>
-          {/* )} */}
         </CommonDrawer>
       </ModelDrawerContainer>
     </ModelPanel>

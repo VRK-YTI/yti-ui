@@ -8,6 +8,7 @@ import {
 } from '@app/common/interfaces/model.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
+import isHydrate from '@app/store/isHydrate';
 
 export const modelApi = createApi({
   reducerPath: 'modelApi',
@@ -130,8 +131,19 @@ export const modelSlice = createSlice({
     ...initialState,
     view: {
       ...initialView,
-      search: true,
+      info: {
+        info: true,
+        edit: false,
+      },
     },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(isHydrate, (state, action) => {
+      return {
+        ...state,
+        ...action.payload.model,
+      };
+    });
   },
   reducers: {
     setSelected(state, action) {

@@ -20,6 +20,7 @@ interface SideNavigationProps {
   }[];
   viewOpen?: boolean;
   active?: string;
+  initialOpen?: boolean;
   children: React.ReactFragment;
 }
 
@@ -28,10 +29,11 @@ export default function Drawer({
   smallButtons,
   viewOpen,
   active,
+  initialOpen,
   children,
 }: SideNavigationProps) {
   const { isSmall } = useBreakpoints();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(initialOpen ?? false);
   const [width, setWidth] = useState(390);
 
   const handleResize = (e: ReactMouseEvent<HTMLDivElement>) => {

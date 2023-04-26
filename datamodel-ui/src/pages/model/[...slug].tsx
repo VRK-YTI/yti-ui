@@ -11,6 +11,7 @@ import ModelHeader from '@app/modules/model/model-header';
 import {
   getModel,
   getRunningQueriesThunk,
+  setView,
   useGetModelQuery,
 } from '@app/common/components/model/model.slice';
 import {
@@ -30,6 +31,15 @@ import {
   getVisualization,
   getRunningQueriesThunk as getVisualizationRunningQueriesThunk,
 } from '@app/common/components/visualization/visualization.slice';
+import { getModelId } from '@app/common/utils/parse-slug';
+import {
+  getClass,
+  getRunningQueriesThunk as getClassRunningQueriesThunk,
+} from '@app/common/components/class/class.slice';
+import {
+  getResource,
+  getRunningQueriesThunk as getResourceRunningQueriesThunk,
+} from '@app/common/components/resource/resource.slice';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -56,13 +66,11 @@ export default function ModelPage(props: IndexPageProps) {
 
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, query, locale }) => {
-    if (!query) {
+    if (!query.slug) {
       throw new Error('Missing query for page');
     }
 
-    const modelId = Array.isArray(query.modelId)
-      ? query.modelId[0]
-      : query.modelId;
+    const modelId = getModelId(query.slug);
 
     if (!modelId) {
       throw new Error('Missing id for page');
@@ -107,6 +115,37 @@ export const getServerSideProps = createCommonGetServerSideProps(
       store.dispatch(getInternalResourcesRunningQueriesThunk())
     );
     await Promise.all(store.dispatch(getVisualizationRunningQueriesThunk()));
+
+    if (query.slug.length >= 3) {
+      const resourceType = query.slug[1];
+      const resourceId = query.slug[2];
+
+      if (resourceType === 'class') {
+        store.dispatch(setView('classes', 'info'));
+        store.dispatch(
+          getClass.initiate({ modelId: modelId, classId: resourceId })
+        );
+
+        await Promise.all(store.dispatch(getClassRunningQueriesThunk()));
+      }
+
+      if (['association', 'attribute'].includes(resourceType)) {
+        store.dispatch(
+          setView(
+            resourceType === 'association' ? 'associations' : 'attributes',
+            'info'
+          )
+        );
+        store.dispatch(
+          getResource.initiate({
+            modelId: modelId,
+            resourceIdentifier: resourceId,
+          })
+        );
+
+        await Promise.all(store.dispatch(getResourceRunningQueriesThunk()));
+      }
+    }
 
     return {
       props: {
