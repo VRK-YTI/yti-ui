@@ -24,7 +24,7 @@ export const ModelFlow = styled(ReactFlow)`
     z-index: 4;
   }
 
-  [data-id^="corner-"] {
+  [data-id^="#corner-"] {
     padding: 0;
     margin: 0;
     width: 20px;
