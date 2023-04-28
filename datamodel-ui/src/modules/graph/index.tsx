@@ -55,7 +55,6 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   const { data, isSuccess } = useGetVisualizationQuery(modelId);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [startNodeId, setStartNodeId] = useState<string | undefined>();
   const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
 
   const deleteEdgeById = useCallback(
@@ -145,53 +144,6 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
     [dispatch, globalSelected.id]
   );
 
-  // const onConnectEnd = useCallback(
-  //   (e) => {
-  //     if (!startNodeId) {
-  //       return;
-  //     }
-
-  //     if (e.target.className === 'react-flow__pane') {
-  //       if (!reactFlowWrapper.current) {
-  //         return;
-  //       }
-
-  //       const { top, left } = reactFlowWrapper.current.getBoundingClientRect();
-
-  //       // We need to subtract 26 from x position to get correct location
-  //       // 26 is calculated by so:
-  //       // ( Drawer width + half of the cornerEdge width ) / 2
-  //       // = (42 + 5) / 2
-
-  //       setNodes((nodes) => [
-  //         ...nodes,
-  //         {
-  //           id: `corner-${edgePart}`,
-  //           position: project({ x: e.clientX - left - 26, y: e.clientY - top }),
-  //           data: {},
-  //           type: 'cornerEdge',
-  //         }
-  //       ]);
-
-  //       setEdges((edges) => [
-  //         ...edges,
-  //         { id: `${startNodeId}-corner-${edgePart}`, source: startNodeId, target: `corner-${edgePart}`, type: 'straight' }
-  //       ]);
-
-  //       setEdgePart((part) => part + 1);
-  //     } else {
-  //       setEdgePart(0);
-  //     }
-
-  //     setStartNodeId(undefined);
-  //   },
-  //   [startNodeId, edgePart, setEdges, setNodes, project]
-  // );
-
-  const onConnectStart = useCallback((e, params) => {
-    setStartNodeId(params.nodeId);
-  }, []);
-
   const onConnect = useCallback(
     (params) => {
       setEdges((edges) =>
@@ -253,8 +205,6 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
         edgeTypes={edgeTypes}
         onNodeClick={onNodeClick}
         onEdgeClick={onEdgeClick}
-        // onConnectEnd={onConnectEnd}
-        // onConnectStart={onConnectStart}
         fitView
       >
         {children}
