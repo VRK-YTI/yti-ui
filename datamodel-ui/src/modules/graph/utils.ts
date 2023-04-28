@@ -13,8 +13,6 @@ export function convertToNodes(
   const size = data.length;
   const spread = Math.floor(Math.sqrt(size));
 
-  console.log('data', data);
-
   return data.map((obj, idx) => ({
     id: obj.identifier,
     position: { x: 400 * (idx % spread), y: 200 * Math.floor(idx / spread) },
@@ -40,10 +38,50 @@ export function convertToNodes(
   }));
 }
 
+export function generateInitialEdges(
+  data: VisualizationType[],
+  handleDelete: (id: string, source: string, target: string) => void,
+  splitEdge: (source: string, target: string, x: number, y: number) => void,
+  lang?: string
+): Edge[] {
+  if (
+    data.length < 1 ||
+    data.filter((obj) => obj.associations.length > 0).length < 1
+  ) {
+    return [];
+  }
+
+  // TODO: Support for path generation
+  return data
+    .filter((obj) => obj.associations.length > 0)
+    .flatMap((obj) =>
+      obj.associations.flatMap((assoc) =>
+        createNewAssociationEdge(
+          getLanguageVersion({
+            data: assoc.label,
+            lang: lang ?? 'fi',
+            appendLocale: true,
+          }),
+          handleDelete,
+          splitEdge,
+          {
+            source: obj.identifier,
+            sourceHandle: obj.identifier,
+            target: assoc.path[0],
+            targetHandle: assoc.path[0],
+            id: `reactflow__edge-${obj.identifier}-${assoc.path[0]}`,
+          }
+        )
+      )
+    );
+}
+
 export function createNewAssociationEdge(
   label: string,
   handleDelete: (id: string, source: string, target: string) => void,
   splitEdge: (source: string, target: string, x: number, y: number) => void,
+  // This needs to be typed as "any" to correlate with specs of React Flow edge parameters
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params: any
 ) {
   return {
@@ -176,6 +214,9 @@ export function handleEdgeDelete(edgeId: string, edges: Edge[]) {
             ...e,
             source: delEdge.source,
             sourceHandle: delEdge.source,
+            id: `reactflow__edge-${delEdge.source}-${
+              e.target.includes('#corner') ? `#corner-${e.target}` : e.target
+            }`,
           };
         }
 

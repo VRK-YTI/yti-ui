@@ -10,5 +10,9 @@ export interface VisualizationType {
     identifier: string;
     label: { [key: string]: string };
   }[];
-  associations: [];
+  associations: {
+    identifier: string;
+    label: { [key: string]: string };
+    path: string[];
+  }[];
 }

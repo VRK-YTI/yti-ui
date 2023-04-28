@@ -16,6 +16,7 @@ import {
   createNewAssociationEdge,
   createNewCornerEdge,
   createNewCornerNode,
+  generateInitialEdges,
   getUnusedCornerIds,
   handleEdgeDelete,
 } from './utils';
@@ -211,8 +212,19 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   useEffect(() => {
     if (isSuccess) {
       setNodes(convertToNodes(data, i18n.language));
+      setEdges(
+        generateInitialEdges(data, deleteEdgeById, splitEdge, i18n.language)
+      );
     }
-  }, [data, isSuccess, setNodes, i18n.language]);
+  }, [
+    data,
+    isSuccess,
+    setNodes,
+    setEdges,
+    deleteEdgeById,
+    splitEdge,
+    i18n.language,
+  ]);
 
   useEffect(() => {
     const cleanCorners = () => {
@@ -228,9 +240,6 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
       setCleanUnusedCorners(false);
     }
   }, [cleanUnusedCorners, edges, nodes, setNodes]);
-
-  console.log('nodes', nodes);
-  console.log('edges', edges);
 
   return (
     <div ref={reactFlowWrapper} style={{ height: '100%', width: '100%' }}>

@@ -2,6 +2,7 @@ import {
   convertToNodes,
   createNewAssociationEdge,
   createNewCornerEdge,
+  generateInitialEdges,
   getConnectedCornerIds,
   handleEdgeDelete,
 } from './utils';
@@ -10,6 +11,7 @@ import {
   connectedEdgesRemovedMultiple,
   convertedExpected,
   convertedLangVersionedExpected,
+  initialEdges,
   threeEdgesOneMultipleSplit,
   twoEdgesOneSplit,
   visualizationTypeArray,
@@ -147,7 +149,7 @@ describe('graph-util', () => {
     expect(input).toStrictEqual(expected);
   });
 
-  it('should an edge between two class nodes', () => {
+  it('should remove an edge between two class nodes', () => {
     const input = handleEdgeDelete('reactflow__edge-class-1-class-2', [
       {
         source: 'class-1',
@@ -167,5 +169,68 @@ describe('graph-util', () => {
     ]);
 
     expect(input).toStrictEqual([]);
+  });
+
+  it('should remove a corner', () => {
+    const input = handleEdgeDelete('reactflow__edge-class-1-#corner-#corner', [
+      {
+        source: 'class-1',
+        sourceHandle: 'class-1',
+        target: '#corner',
+        targetHandle: '#corner',
+        type: 'defaultEdge',
+        data: {},
+        id: 'reactflow__edge-class-1-#corner-#corner',
+      },
+      {
+        source: '#corner',
+        sourceHandle: '#corner',
+        target: 'class-2',
+        targetHandle: 'class-2',
+        type: 'associationEdge',
+        markerEnd: {
+          type: 'arrowclosed' as MarkerType,
+          height: 30,
+          width: 30,
+        },
+        label: 'Association',
+        data: {},
+        id: 'reactflow__edge-#corner-#corner-class-2',
+      },
+    ]);
+
+    expect(input).toStrictEqual([
+      {
+        source: 'class-1',
+        sourceHandle: 'class-1',
+        target: 'class-2',
+        targetHandle: 'class-2',
+        type: 'associationEdge',
+        markerEnd: {
+          type: 'arrowclosed' as MarkerType,
+          height: 30,
+          width: 30,
+        },
+        label: 'Association',
+        data: {},
+        id: 'reactflow__edge-class-1-class-2',
+      },
+    ]);
+  });
+
+  it('should generate association edges', () => {
+    const mockDelete = jest.fn();
+    const mockSplit = jest.fn();
+
+    const input = generateInitialEdges(
+      visualizationTypeArray,
+      mockDelete,
+      mockSplit,
+      'fi'
+    );
+
+    const expected = initialEdges(mockDelete, mockSplit);
+
+    expect(input).toStrictEqual(expected);
   });
 });

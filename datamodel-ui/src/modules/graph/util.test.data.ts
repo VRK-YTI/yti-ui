@@ -14,7 +14,16 @@ export const visualizationTypeArray: VisualizationType[] = [
       y: 0,
     },
     attributes: [],
-    associations: [],
+    associations: [
+      {
+        identifier: 'association-1',
+        label: {
+          fi: 'assoc-1-fi',
+          en: 'assoc-1-en',
+        },
+        path: ['2'],
+      },
+    ],
   },
   {
     identifier: '2',
@@ -27,7 +36,15 @@ export const visualizationTypeArray: VisualizationType[] = [
       y: 0,
     },
     attributes: [],
-    associations: [],
+    associations: [
+      {
+        identifier: 'association-2',
+        label: {
+          en: 'assoc-2-en',
+        },
+        path: ['3'],
+      },
+    ],
   },
   {
     identifier: '3',
@@ -41,7 +58,16 @@ export const visualizationTypeArray: VisualizationType[] = [
       x: 0,
       y: 0,
     },
-    attributes: [],
+    attributes: [
+      {
+        identifier: '3-1',
+        label: {
+          fi: 'attr-1-fi',
+          en: 'attr-1-en',
+          sv: 'attr-1-sv',
+        },
+      },
+    ],
     associations: [],
   },
 ];
@@ -209,7 +235,12 @@ export const convertedExpected = [
     data: {
       identifier: '3',
       label: 'label-3-fi',
-      resources: [],
+      resources: [
+        {
+          identifier: '3-1',
+          label: 'attr-1-fi',
+        },
+      ],
     },
     type: 'classNode',
   },
@@ -251,7 +282,12 @@ export const convertedLangVersionedExpected = [
     data: {
       identifier: '3',
       label: 'label-3-en',
-      resources: [],
+      resources: [
+        {
+          identifier: '3-1',
+          label: 'attr-1-en',
+        },
+      ],
     },
     type: 'classNode',
   },
@@ -270,3 +306,45 @@ export const connectedEdgesRemovedMultiple: string[] = [
   'reactflow__edge-corner-1-#corner-corner-2',
   'reactflow__edge-class-3-#corner-corner-1',
 ];
+
+// Initial edges results
+export function initialEdges(handleDelete: jest.Mock, splitEdge: jest.Mock) {
+  return [
+    {
+      source: '1',
+      sourceHandle: '1',
+      target: '2',
+      targetHandle: '2',
+      type: 'associationEdge',
+      markerEnd: {
+        type: 'arrowclosed' as MarkerType,
+        height: 30,
+        width: 30,
+      },
+      label: 'assoc-1-fi',
+      data: {
+        handleDelete: handleDelete,
+        splitEdge: splitEdge,
+      },
+      id: 'reactflow__edge-1-2',
+    },
+    {
+      source: '2',
+      sourceHandle: '2',
+      target: '3',
+      targetHandle: '3',
+      type: 'associationEdge',
+      markerEnd: {
+        type: 'arrowclosed' as MarkerType,
+        height: 30,
+        width: 30,
+      },
+      label: 'assoc-2-en (en)',
+      data: {
+        handleDelete: handleDelete,
+        splitEdge: splitEdge,
+      },
+      id: 'reactflow__edge-2-3',
+    },
+  ];
+}
