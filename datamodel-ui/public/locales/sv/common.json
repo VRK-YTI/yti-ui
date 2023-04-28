@@ -1,7 +1,6 @@
 {
   "actions": "",
   "add-email-subscription": "",
-  "additional-information": "",
   "association-count-title_one": "",
   "association-count-title_other": "",
   "associations": "",
@@ -179,6 +178,7 @@
     "superseded": "",
     "valid": ""
   },
+  "technical-description": "",
   "terminologies-used": "",
   "terminology": "",
   "terminology-footer-accessibility": "",

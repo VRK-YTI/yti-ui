@@ -23,7 +23,7 @@ import Separator from 'yti-common-ui/separator';
 import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
 import { TooltipWrapper } from '../model/model.styles';
-import { internalClassToClassForm } from './utils';
+import { classTypeToClassForm, internalClassToClassForm } from './utils';
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
@@ -64,14 +64,15 @@ export default function ClassView({
   applicationProfile,
 }: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
+  const ref = useRef<HTMLDivElement>(null);
+  const dispatch = useStoreDispatch();
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
   const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const dispatch = useStoreDispatch();
+  const [isEdit, setIsEdit] = useState(false);
   const globalSelected = useSelector(selectSelected());
   const view = useSelector(selectClassView());
   const { data, refetch } = useQueryInternalResourcesQuery({
@@ -98,6 +99,10 @@ export default function ClassView({
   };
 
   const handleFollowUpAction = (value?: InternalClass) => {
+    if (isEdit) {
+      setIsEdit(false);
+    }
+
     if (!value) {
       const initialData = initialClassForm;
       const label = Object.fromEntries(languages.map((lang) => [lang, '']));
@@ -109,6 +114,7 @@ export default function ClassView({
     dispatch(
       setClass(internalClassToClassForm(value, languages, applicationProfile))
     );
+
     dispatch(setView('classes', 'edit'));
   };
 
@@ -117,6 +123,10 @@ export default function ClassView({
     dispatch(resetClass());
     dispatch(setView('classes', 'list'));
     refetch();
+
+    if (isEdit) {
+      setIsEdit(false);
+    }
   };
 
   const handleFollowUp = (classId: string) => {
@@ -128,6 +138,14 @@ export default function ClassView({
     dispatch(setSelected(classId, 'classes'));
     dispatch(resetHovered());
     router.replace(`${modelId}/class/${classId}`);
+  };
+
+  const handleEdit = () => {
+    if (isSuccess) {
+      dispatch(setView('classes', 'edit'));
+      dispatch(setClass(classTypeToClassForm(classData)));
+      setIsEdit(true);
+    }
   };
 
   useEffect(() => {
@@ -237,6 +255,7 @@ export default function ClassView({
         modelId={modelId}
         terminologies={terminologies}
         applicationProfile={applicationProfile}
+        isEdit={isEdit}
       />
     );
   }
@@ -245,8 +264,6 @@ export default function ClassView({
     if (!view.info) {
       return <></>;
     }
-
-    // const data = getClassResult.data;
 
     const data = classData;
 
@@ -277,22 +294,14 @@ export default function ClassView({
                   open={showTooltip}
                   onCloseButtonClick={() => setShowTooltip(false)}
                 >
-                  {hasPermission && (
-                    <>
-                      <Button variant="secondaryNoBorder">
-                        {t('edit', { ns: 'admin' })}
-                      </Button>
-                      <Separator />
-                    </>
-                  )}
-                  <Button variant="secondaryNoBorder">
-                    {t('show-as-file')}
-                  </Button>
-                  <Button variant="secondaryNoBorder">
-                    {t('download-as-file')}
-                  </Button>
                   {hasPermission && data && (
                     <>
+                      <Button
+                        variant="secondaryNoBorder"
+                        onClick={() => handleEdit()}
+                      >
+                        {t('edit', { ns: 'admin' })}
+                      </Button>
                       <Separator />
                       <DeleteModal
                         modelId={modelId}
@@ -373,7 +382,7 @@ export default function ClassView({
               )}
             </BasicBlock>
 
-            <BasicBlock title={t('additional-information')}>
+            <BasicBlock title={t('technical-description')}>
               {getLanguageVersion({
                 data: data.note,
                 lang: i18n.language,

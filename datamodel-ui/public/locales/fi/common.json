@@ -1,7 +1,6 @@
 {
   "actions": "Toiminnot",
   "add-email-subscription": "Tilaa sähköposti-ilmoitukset",
-  "additional-information": "Lisätiedot",
   "association-count-title_one": "{{count}} Assosiaatio",
   "association-count-title_other": "{{count}} Assosiaatiota",
   "associations": "Assosiaatiot",
@@ -179,6 +178,7 @@
     "superseded": "Korvattu",
     "valid": "Voimassa oleva"
   },
+  "technical-description": "Tekninen kuvaus",
   "terminologies-used": "Käytetyt sanastot",
   "terminology": "Sanasto",
   "terminology-footer-accessibility": "Saavutettavuus",

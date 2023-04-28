@@ -1,7 +1,6 @@
 {
   "actions": "Actions",
   "add-email-subscription": "Add email subscription",
-  "additional-information": "Additional information",
   "association-count-title_one": "{{count}} Association",
   "association-count-title_other": "{{count}} Associations",
   "associations": "Associations",
@@ -179,6 +178,7 @@
     "superseded": "Superseded",
     "valid": "Valid"
   },
+  "technical-description": "Technical description",
   "terminologies-used": "Terminologies used",
   "terminology": "Terminology",
   "terminology-footer-accessibility": "Accessibility",

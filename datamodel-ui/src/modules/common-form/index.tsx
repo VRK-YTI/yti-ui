@@ -381,7 +381,7 @@ export default function CommonForm({
             label={translateCommonForm('equivalent', type, t)}
             items={[]}
             addNewComponent={
-              <Button variant="secondary">
+              <Button variant="secondary" icon="plus">
                 {translateCommonForm('add-equivalent', type, t)}
               </Button>
             }
@@ -421,7 +421,7 @@ export default function CommonForm({
           </LanguageVersionedWrapper>
 
           <Textarea
-            labelText={translateCommonForm('editorial-note', type, t)}
+            labelText={translateCommonForm('work-group-comment', type, t)}
             optionalText={t('optional')}
             defaultValue={data.editorialNote}
             onChange={(e) =>

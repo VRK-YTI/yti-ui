@@ -19,7 +19,7 @@ import { useTranslation } from 'next-i18next';
 import { Status } from '@app/common/interfaces/status.interface';
 import ConceptBlock from '../concept-block';
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
-import { ClassFormErrors, classFormToClass, validateClassForm } from './utils';
+import { ClassFormErrors, validateClassForm } from './utils';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import {
@@ -44,6 +44,7 @@ import { useStoreDispatch } from '@app/store';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
 import ClassModal from '../class-modal';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -51,6 +52,7 @@ export interface ClassFormProps {
   languages: string[];
   modelId: string;
   terminologies: string[];
+  isEdit: boolean;
   applicationProfile?: boolean;
 }
 
@@ -60,9 +62,10 @@ export default function ClassForm({
   languages,
   modelId,
   terminologies,
+  isEdit,
   applicationProfile,
 }: ClassFormProps) {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
@@ -95,7 +98,11 @@ export default function ClassForm({
       return;
     }
 
-    putClass({ modelId: modelId, data: data });
+    putClass({
+      modelId: modelId,
+      data: data,
+      classId: isEdit ? data.identifier : undefined,
+    });
   };
 
   const handleSetConcept = (value?: ConceptType) => {
@@ -210,8 +217,19 @@ export default function ClassForm({
 
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Text variant="bold">
-            {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
-              t('class-name')}
+            {Object.values(data.label).filter(
+              (l) => l !== '' && typeof l !== 'undefined'
+            ).length > 0
+              ? getLanguageVersion({
+                  data: Object.fromEntries(
+                    Object.entries(data.label).filter(
+                      (l) => l[1] !== '' && typeof l[1] !== 'undefined'
+                    )
+                  ),
+                  lang: i18n.language,
+                  appendLocale: true,
+                })
+              : t('class-name')}
           </Text>
 
           <div style={{ display: 'flex', gap: '10px' }}>
@@ -289,7 +307,9 @@ export default function ClassForm({
 
         <InlineListBlock
           addNewComponent={
-            <Button variant="secondary">{t('add-upper-class')}</Button>
+            <Button variant="secondary" icon="plus">
+              {t('add-upper-class')}
+            </Button>
           }
           items={
             data.subClassOf.length > 0
@@ -323,7 +343,7 @@ export default function ClassForm({
         ) : (
           <InlineListBlock
             addNewComponent={
-              <Button variant="secondary">
+              <Button variant="secondary" icon="plus">
                 {t('add-corresponding-class')}
               </Button>
             }
@@ -351,7 +371,7 @@ export default function ClassForm({
           {languages.map((lang) => (
             <Textarea
               key={`comment-${lang}`}
-              labelText={`${t('additional-information')}, ${lang}`}
+              labelText={`${t('technical-description')}, ${lang}`}
               optionalText={t('optional')}
               defaultValue={data.note[lang as keyof typeof data.note]}
               onChange={(e) =>
@@ -381,6 +401,7 @@ export default function ClassForm({
               }}
               handleFollowUp={() => null}
               modelId={modelId}
+              buttonIcon
             />
           }
           handleRemoval={() => null}
@@ -425,7 +446,9 @@ export default function ClassForm({
           items={[]}
           label={t('associations-added-to-class', { count: 0 })}
           addNewComponent={
-            <Button variant="secondary">{t('add-association')}</Button>
+            <Button variant="secondary" icon="plus">
+              {t('add-association')}
+            </Button>
           }
           handleRemoval={() => null}
         />
@@ -445,7 +468,7 @@ export default function ClassForm({
         <Separator />
 
         <Textarea
-          labelText={t('editor-comment')}
+          labelText={t('work-group-comment')}
           optionalText={t('optional')}
           hintText={t('editor-comment-hint')}
           defaultValue={data.editorialNote}

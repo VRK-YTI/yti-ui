@@ -15,7 +15,6 @@
   "add-selected": "Lisää valitut",
   "add-terminology": "Lisää sanasto",
   "add-upper-class": "Lisää yläluokka",
-  "additional-information": "Lisätiedot",
   "allowed-file-formats": "",
   "association-missing-general": "Assosisaation kaikkia tietoja ei ole määritelty",
   "association-missing-identifier": "Assosisaation yksilöivää tunnusta ei ole määritelty",
@@ -53,15 +52,15 @@
     "add-upper-attribute": "Lisää yläattribuutti",
     "associations-identifier": "Assosiaation yksilöivä tunnus",
     "associations-name": "$t(association-name)",
-    "associations-note": "Assosiaation lisätiedot",
+    "associations-note": "Assosiaation tekninen kuvaus",
     "attributes-identifier": "Attribuutin yksilöivä tunnus",
     "attributes-name": "$t(attribute-name)",
-    "attributes-note": "Attribuutin lisätiedot",
-    "editorial-note": "$t(editor-comment)",
+    "attributes-note": "Attribuutin tekninen kuvaus",
     "equivalent-associations": "Vastaavat assosiaatiot",
     "equivalent-attributes": "Vastaavat attribuutit",
     "upper-associations": "Yläassosiaatiot",
-    "upper-attributes": "Yläattribuutit"
+    "upper-attributes": "Yläattribuutit",
+    "work-group-comment": "$t(work-group-comment)"
   },
   "concept": "Käsite",
   "concept-counts_one": "{{count}} käsite",
@@ -110,7 +109,6 @@
   },
   "description": "Kuvaus",
   "edit": "Muokkaa",
-  "editor-comment": "Muokkaajan kommentti",
   "editor-comment-hint": "Kommentti näkyy vain tietomallin muokkaajille.",
   "email": "Sähköposti",
   "error-prefix-invalid": "Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva",
@@ -174,6 +172,7 @@
   "still-unknown": "Ei vielä tiedossa",
   "target-class": "Kohdeluokka",
   "target-class-profile": "Kohdistuu luokkaan",
+  "technical-description": "Tekninen kuvaus",
   "terminologies-available": "Saatavilla olevat sanastot",
   "terminologies-in-use": "Käytetyt sanastot",
   "terminologies-linked-to-data-model": "Tietomalliin linkitetyt sanastot",
@@ -185,5 +184,6 @@
   "update-models-resources-statuses": "Muuta tietomallin resurssin tiloja",
   "upper-classes": "Yläluokat",
   "uri-preview": "URI:n esikatselu",
-  "use-as-is": "Ote käyttöön sellaisenaan"
+  "use-as-is": "Ote käyttöön sellaisenaan",
+  "work-group-comment": "Työryhmän sisäinen kommentti"
 }

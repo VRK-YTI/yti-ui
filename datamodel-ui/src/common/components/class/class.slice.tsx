@@ -9,18 +9,24 @@ import {
   initialClassForm,
 } from '@app/common/interfaces/class-form.interface';
 
-function convertToPUT(data: ClassFormType): object {
+function convertToPUT(data: ClassFormType, isEdit: boolean): object {
   // Dropping inheritedAttributes and ownAttributes for the time being
   const { inheritedAttributes, ownAttributes, concept, ...retVal } = data;
   const conceptURI = concept?.conceptURI;
 
-  return {
+  const ret = {
     ...retVal,
     equivalentClass: data.equivalentClass.map((eq) => eq.identifier),
     subClassOf: data.subClassOf.map((sco) => sco.identifier),
     subject: conceptURI,
     targetClass: data.targetClass?.id,
   };
+
+  return isEdit
+    ? Object.fromEntries(
+        Object.entries(ret).filter((e) => e[0] !== 'identifier')
+      )
+    : ret;
 }
 
 export const classApi = createApi({
@@ -35,12 +41,14 @@ export const classApi = createApi({
   endpoints: (builder) => ({
     putClass: builder.mutation<
       string,
-      { modelId: string; data: ClassFormType }
+      { modelId: string; data: ClassFormType; classId?: string }
     >({
       query: (value) => ({
-        url: `/class/${value.modelId}`,
+        url: !value.classId
+          ? `/class/${value.modelId}`
+          : `/class/${value.modelId}/${value.classId}`,
         method: 'PUT',
-        data: convertToPUT(value.data),
+        data: convertToPUT(value.data, value.classId ? true : false),
       }),
     }),
     getClass: builder.query<ClassType, { modelId: string; classId: string }>({

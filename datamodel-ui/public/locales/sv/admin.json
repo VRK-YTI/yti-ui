@@ -15,7 +15,6 @@
   "add-selected": "",
   "add-terminology": "",
   "add-upper-class": "",
-  "additional-information": "",
   "allowed-file-formats": "",
   "association-missing-general": "",
   "association-missing-identifier": "",
@@ -57,11 +56,11 @@
     "attributes-identifier": "",
     "attributes-name": "",
     "attributes-note": "",
-    "editorial-note": "",
     "equivalent-associations": "",
     "equivalent-attributes": "",
     "upper-associations": "",
-    "upper-attributes": ""
+    "upper-attributes": "",
+    "work-group-comment": ""
   },
   "concept": "",
   "concept-counts_one": "",
@@ -110,7 +109,6 @@
   },
   "description": "",
   "edit": "",
-  "editor-comment": "",
   "editor-comment-hint": "",
   "email": "",
   "error-prefix-invalid": "",
@@ -174,6 +172,7 @@
   "still-unknown": "",
   "target-class": "",
   "target-class-profile": "",
+  "technical-description": "",
   "terminologies-available": "",
   "terminologies-in-use": "",
   "terminologies-linked-to-data-model": "",
@@ -185,5 +184,6 @@
   "update-models-resources-statuses": "",
   "upper-classes": "",
   "uri-preview": "",
-  "use-as-is": ""
+  "use-as-is": "",
+  "work-group-comment": ""
 }
