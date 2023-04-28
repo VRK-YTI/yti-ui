@@ -48,6 +48,7 @@ interface CommonFormProps {
   modelId: string;
   languages: string[];
   terminologies: string[];
+  isEdit: boolean;
 }
 
 export default function CommonForm({
@@ -57,6 +58,7 @@ export default function CommonForm({
   modelId,
   languages,
   terminologies,
+  isEdit,
 }: CommonFormProps) {
   const { t, i18n } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -85,6 +87,7 @@ export default function CommonForm({
     putResource({
       modelId: modelId,
       data: { ...data, type: type, subResourceOf: [] },
+      resourceId: isEdit ? data.identifier : undefined,
     });
   };
 

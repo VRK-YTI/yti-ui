@@ -1,7 +1,4 @@
-import {
-  ClassFormType,
-  initialClassForm,
-} from '@app/common/interfaces/class-form.interface';
+import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { ClassType } from '@app/common/interfaces/class.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 

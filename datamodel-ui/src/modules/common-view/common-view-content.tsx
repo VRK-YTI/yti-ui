@@ -127,10 +127,12 @@ export default function CommonViewContent({
 
       <BasicBlock title={t('created')}>
         <FormattedDate date={data.created} />
+        {data.creator ? `, ${data.creator.name}` : ''}
       </BasicBlock>
 
       <BasicBlock title={t('modified-at')}>
-        <FormattedDate date={data.created} />
+        <FormattedDate date={data.modified} />
+        {data.creator ? `, ${data.modifier.name}` : ''}
       </BasicBlock>
 
       <BasicBlock title={t('editorial-note')}>
