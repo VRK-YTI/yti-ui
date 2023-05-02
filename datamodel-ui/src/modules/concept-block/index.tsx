@@ -8,7 +8,6 @@ import {
   Expander,
   ExpanderTitleButton,
   ExternalLink,
-  HintText,
   InlineAlert,
   Modal,
   ModalContent,

@@ -10,8 +10,7 @@ import {
 } from '@app/common/interfaces/class-form.interface';
 
 function convertToPUT(data: ClassFormType, isEdit: boolean): object {
-  // Dropping inheritedAttributes and ownAttributes for the time being
-  const { inheritedAttributes, ownAttributes, concept, ...retVal } = data;
+  const { concept, ...retVal } = data;
   const conceptURI = concept?.conceptURI;
 
   const ret = {
