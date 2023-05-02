@@ -2,11 +2,7 @@ import {
   Button,
   Dropdown,
   DropdownItem,
-  Expander,
   ExpanderGroup,
-  ExpanderTitleButton,
-  Heading,
-  Label,
   Text,
   Textarea,
   TextInput,
@@ -14,7 +10,6 @@ import {
 } from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
 import { LanguageVersionedWrapper } from './class-form.styles';
-import AttributeModal from '../attribute-modal';
 import { useTranslation } from 'next-i18next';
 import { Status } from '@app/common/interfaces/status.interface';
 import ConceptBlock from '../concept-block';
@@ -45,6 +40,8 @@ import { ConceptType } from '@app/common/interfaces/concept-interface';
 import ClassModal from '../class-modal';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { BasicBlock } from 'yti-common-ui/block';
+import ResourceInfo from '../class-view/resource-info';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -292,6 +289,7 @@ export default function ClassForm({
           visualPlaceholder={t('input-class-identifier')}
           defaultValue={data.identifier}
           status={userPosted && errors.identifier ? 'error' : 'default'}
+          disabled={isEdit}
           onChange={(e) =>
             handleUpdate({ ...data, identifier: e?.toString() ?? '' })
           }
@@ -321,6 +319,7 @@ export default function ClassForm({
           }
           label={t('upper-classes')}
           handleRemoval={() => null}
+          deleteDisabled={['owl:Thing']}
         />
 
         {applicationProfile ? (
@@ -352,6 +351,17 @@ export default function ClassForm({
             handleRemoval={() => null}
           />
         )}
+
+        <InlineListBlock
+          label={t('separate-classes', { ns: 'common' })}
+          addNewComponent={
+            <Button variant="secondary" icon="plus">
+              {t('add-separate-class')}
+            </Button>
+          }
+          items={[]}
+          handleRemoval={() => null}
+        />
 
         <div>
           <Dropdown
@@ -387,83 +397,45 @@ export default function ClassForm({
 
         <Separator />
 
-        <div>
-          <Heading variant="h3">{t('attributes')}</Heading>
-        </div>
+        <BasicBlock title={t('attributes')}>
+          {!isEdit || !data.attribute || data.attribute.length < 1 ? (
+            t('no-attributes', { ns: 'common' })
+          ) : (
+            <ExpanderGroup
+              closeAllText=""
+              openAllText=""
+              showToggleAllButton={false}
+            >
+              {data.attribute.map((attr) => (
+                <ResourceInfo
+                  key={`${data.identifier}-attr-${attr.identifier}`}
+                  data={attr}
+                  modelId={modelId}
+                />
+              ))}
+            </ExpanderGroup>
+          )}
+        </BasicBlock>
 
-        <InlineListBlock
-          items={[]}
-          label={t('attributes-added-to-class', { count: 0 })}
-          addNewComponent={
-            <AttributeModal
-              buttonTranslations={{
-                useSelected: t('use-as-is'),
-              }}
-              handleFollowUp={() => null}
-              modelId={modelId}
-              buttonIcon
-            />
-          }
-          handleRemoval={() => null}
-        />
-
-        {/* TODO:
-         * Change this use InlineListBlock possibly
-         * after it's been decided whether all attributes are
-         * listed together
-         */}
-        <div className="spread-content">
-          <Label>
-            {t('attributes-inherited-from-upper-classes', {
-              count:
-                data.subClassOf.length > 0
-                  ? data.subClassOf[0].attributes.length
-                  : 0,
-            })}
-          </Label>
-          <ExpanderGroup
-            closeAllText=""
-            openAllText=""
-            showToggleAllButton={false}
-          >
-            {data.subClassOf.length > 0 ? (
-              data.subClassOf[0].attributes.map((attr) => (
-                <Expander key={attr}>
-                  <ExpanderTitleButton>{attr}</ExpanderTitleButton>
-                </Expander>
-              ))
-            ) : (
-              <Text smallScreen>{t('no-inherited-attributes')}</Text>
-            )}
-          </ExpanderGroup>
-        </div>
-
-        <div>
-          <Heading variant="h3">{t('associations')}</Heading>
-        </div>
-
-        <InlineListBlock
-          items={[]}
-          label={t('associations-added-to-class', { count: 0 })}
-          addNewComponent={
-            <Button variant="secondary" icon="plus">
-              {t('add-association')}
-            </Button>
-          }
-          handleRemoval={() => null}
-        />
-
-        {/* TODO:
-         * Change this use InlineListBlock possibly
-         * after it's been decided whether all assocations are
-         * listed together
-         */}
-        <div className="spread-content">
-          <Label>
-            {t('associations-inherited-from-upper-classes', { count: 0 })}
-          </Label>
-          <Text smallScreen>{t('no-inherited-associations')}</Text>
-        </div>
+        <BasicBlock title={t('associations')}>
+          {!isEdit || !data.association || data.association.length < 1 ? (
+            t('no-assocations', { ns: 'common' })
+          ) : (
+            <ExpanderGroup
+              closeAllText=""
+              openAllText=""
+              showToggleAllButton={false}
+            >
+              {data.association.map((assoc) => (
+                <ResourceInfo
+                  key={`${data.identifier}-attr-${assoc.identifier}`}
+                  data={assoc}
+                  modelId={modelId}
+                />
+              ))}
+            </ExpanderGroup>
+          )}
+        </BasicBlock>
 
         <Separator />
 

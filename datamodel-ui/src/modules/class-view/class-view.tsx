@@ -106,7 +106,19 @@ export default function ClassView({
     if (!value) {
       const initialData = initialClassForm;
       const label = Object.fromEntries(languages.map((lang) => [lang, '']));
-      dispatch(setClass({ ...initialData, label: label }));
+      dispatch(
+        setClass({
+          ...initialData,
+          label: label,
+          subClassOf: [
+            {
+              attributes: [],
+              identifier: 'owl:Thing',
+              label: 'owl:Thing',
+            },
+          ],
+        })
+      );
       dispatch(setView('classes', 'edit'));
       return;
     }
@@ -382,12 +394,16 @@ export default function ClassView({
               )}
             </BasicBlock>
 
+            <BasicBlock title={t('separate-classes')}>
+              {t('no-separate-classes')}
+            </BasicBlock>
+
             <BasicBlock title={t('technical-description')}>
               {getLanguageVersion({
                 data: data.note,
                 lang: i18n.language,
                 appendLocale: true,
-              })}
+              }) || t('no-note')}
             </BasicBlock>
 
             <BasicBlock

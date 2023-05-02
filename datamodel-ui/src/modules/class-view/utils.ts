@@ -50,11 +50,11 @@ export function classTypeToClassForm(data: ClassType): ClassFormType {
     editorialNote: data.editorialNote ?? '',
     equivalentClass: [],
     identifier: data.identifier,
-    inheritedAttributes: [],
     label: data.label,
     note: data.note,
-    ownAttributes: [],
     status: data.status,
     subClassOf: [],
+    association: data.association,
+    attribute: data.attribute,
   };
 }

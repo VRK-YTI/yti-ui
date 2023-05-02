@@ -70,6 +70,8 @@ export default function CommonForm({
   const [putResource, result] = usePutResourceMutation();
   const statuses = statusList;
 
+  console.log('data', data);
+
   const handleSubmit = () => {
     if (!userPosted) {
       setUserPosted(true);
@@ -303,6 +305,7 @@ export default function CommonForm({
               })
             }
             status={userPosted && errors.identifier ? 'error' : 'default'}
+            disabled={isEdit}
           />
 
           {type === ResourceType.ATTRIBUTE && (
@@ -377,6 +380,11 @@ export default function CommonForm({
                 {translateCommonForm('add-upper', type, t)}
               </Button>
             }
+            deleteDisabled={[
+              'owl:topDataProperty',
+              'owl:TopObjectProperty',
+              'owl:topObjectProperty',
+            ]}
             handleRemoval={() => null}
           />
 
@@ -388,6 +396,7 @@ export default function CommonForm({
                 {translateCommonForm('add-equivalent', type, t)}
               </Button>
             }
+            optionalText={t('optional')}
             handleRemoval={() => null}
           />
 
