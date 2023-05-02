@@ -143,10 +143,27 @@ export default function ClassForm({
   };
 
   const handleSubClassOfRemoval = (id: string) => {
-    handleUpdate({
-      ...data,
-      subClassOf: data.subClassOf.filter((s) => s.identifier !== id),
-    });
+    const newSubClasses = data.subClassOf.filter(
+      (subclass) => subclass.identifier !== id
+    );
+
+    if (newSubClasses.length < 1) {
+      handleUpdate({
+        ...data,
+        subClassOf: [
+          {
+            attributes: [],
+            identifier: 'owl:Thing',
+            label: 'owl:Thing',
+          },
+        ],
+      });
+    } else {
+      handleUpdate({
+        ...data,
+        subClassOf: newSubClasses,
+      });
+    }
   };
 
   useEffect(() => {
@@ -197,6 +214,8 @@ export default function ClassForm({
       }
     }
   }, [putClassResult, data, handleFollowUp]);
+
+  console.log('data', data);
 
   return (
     <>
@@ -318,7 +337,7 @@ export default function ClassForm({
               : []
           }
           label={t('upper-classes')}
-          handleRemoval={() => null}
+          handleRemoval={(id: string) => handleSubClassOfRemoval(id)}
           deleteDisabled={['owl:Thing']}
         />
 

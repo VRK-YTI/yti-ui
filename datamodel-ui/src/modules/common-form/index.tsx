@@ -70,8 +70,6 @@ export default function CommonForm({
   const [putResource, result] = usePutResourceMutation();
   const statuses = statusList;
 
-  console.log('data', data);
-
   const handleSubmit = () => {
     if (!userPosted) {
       setUserPosted(true);
@@ -165,6 +163,13 @@ export default function CommonForm({
           appendLocale: true,
         }),
       },
+    });
+  };
+
+  const handleDomainOrRangeRemoval = (id: string, type: 'domain' | 'range') => {
+    handleUpdate({
+      ...data,
+      [type]: undefined,
     });
   };
 
@@ -323,7 +328,9 @@ export default function CommonForm({
                     mode="select"
                   />
                 }
-                handleRemoval={() => console.log('TODO removal')}
+                handleRemoval={(id: string) =>
+                  handleDomainOrRangeRemoval(id, 'domain')
+                }
                 items={data.domain ? [data.domain] : []}
                 label={`${t('class')} (rdfs:domain)`}
                 optionalText={t('optional')}
@@ -342,7 +349,9 @@ export default function CommonForm({
                     mode="select"
                   />
                 }
-                handleRemoval={() => console.log('TODO removal')}
+                handleRemoval={(id: string) =>
+                  handleDomainOrRangeRemoval(id, 'domain')
+                }
                 items={data.domain ? [data.domain] : []}
                 label={t('source-class')}
                 optionalText={t('optional')}
@@ -357,7 +366,9 @@ export default function CommonForm({
                     mode="select"
                   />
                 }
-                handleRemoval={() => console.log('TODO removal')}
+                handleRemoval={(id: string) =>
+                  handleDomainOrRangeRemoval(id, 'range')
+                }
                 items={
                   data.range && typeof data.range !== 'string'
                     ? [data.range]
