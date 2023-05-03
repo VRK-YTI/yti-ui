@@ -1,4 +1,5 @@
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
+import { ClassType } from '@app/common/interfaces/class.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 
 export function internalClassToClassForm(
@@ -41,4 +42,19 @@ export function internalClassToClassForm(
     ];
   }
   return obj;
+}
+
+export function classTypeToClassForm(data: ClassType): ClassFormType {
+  return {
+    concept: data.subject,
+    editorialNote: data.editorialNote ?? '',
+    equivalentClass: [],
+    identifier: data.identifier,
+    label: data.label,
+    note: data.note,
+    status: data.status,
+    subClassOf: [],
+    association: data.association,
+    attribute: data.attribute,
+  };
 }

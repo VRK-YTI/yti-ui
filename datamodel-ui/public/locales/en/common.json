@@ -1,7 +1,6 @@
 {
   "actions": "Actions",
   "add-email-subscription": "Add email subscription",
-  "additional-information": "Additional information",
   "association-count-title_one": "{{count}} Association",
   "association-count-title_other": "{{count}} Associations",
   "associations": "Associations",
@@ -58,6 +57,7 @@
   "datamodels-unused": "Data Vocabularies not in use",
   "description": "Description",
   "details": "Details",
+  "disjoint-classes": "Disjoint classes",
   "download": "Download",
   "download-as-file": "Download as file",
   "download-as-file-description": "Choose the file format to download the data model in.",
@@ -118,6 +118,7 @@
   "no-attributes": "No attributes",
   "no-contributors": "No contributors",
   "no-description": "No description",
+  "no-disjoint-classes": "No disjoint classes",
   "no-editorial-note": "No editorial note",
   "no-equivalent-classes": "No equivalent classes",
   "no-filters": "No filters",
@@ -179,6 +180,7 @@
     "superseded": "Superseded",
     "valid": "Valid"
   },
+  "technical-description": "Technical description",
   "terminologies-used": "Terminologies used",
   "terminology": "Terminology",
   "terminology-footer-accessibility": "Accessibility",

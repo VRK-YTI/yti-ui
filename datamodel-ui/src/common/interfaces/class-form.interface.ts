@@ -10,9 +10,7 @@ export interface ClassFormType {
   }[];
   identifier: string;
   label: { [key: string]: string };
-  inheritedAttributes: string[];
   note: { [key: string]: string };
-  ownAttributes: string[];
   subClassOf: {
     label: string;
     identifier: string;
@@ -20,6 +18,18 @@ export interface ClassFormType {
   }[];
   status: Status;
   targetClass?: { label: string; id: string };
+  attribute?: {
+    identifier: string;
+    label: { [key: string]: string };
+    modelId: string;
+    uri: string;
+  }[];
+  association?: {
+    identifier: string;
+    label: { [key: string]: string };
+    modelId: string;
+    uri: string;
+  }[];
 }
 
 export const initialClassForm: ClassFormType = {
@@ -28,9 +38,7 @@ export const initialClassForm: ClassFormType = {
   equivalentClass: [],
   identifier: '',
   label: {},
-  inheritedAttributes: [],
   note: {},
-  ownAttributes: [],
   subClassOf: [],
   status: 'DRAFT',
 };

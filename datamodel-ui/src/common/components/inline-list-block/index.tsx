@@ -19,6 +19,7 @@ interface InlineListBlockProps {
   }[];
   addNewComponent: React.ReactElement;
   labelRow?: boolean;
+  deleteDisabled?: string[] | boolean;
   handleRemoval: (id: string) => void;
 }
 
@@ -27,8 +28,9 @@ export default function InlineListBlock({
   optionalText,
   items,
   addNewComponent,
-  handleRemoval,
   labelRow,
+  deleteDisabled = false,
+  handleRemoval,
 }: InlineListBlockProps) {
   return (
     <InlineListBlockWrapper>
@@ -37,6 +39,7 @@ export default function InlineListBlock({
         labelRow={labelRow}
         handleRemoval={handleRemoval}
         items={items}
+        deleteDisabled={deleteDisabled}
       />
       {addNewComponent}
     </InlineListBlockWrapper>

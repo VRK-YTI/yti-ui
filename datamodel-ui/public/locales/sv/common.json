@@ -1,7 +1,6 @@
 {
   "actions": "",
   "add-email-subscription": "",
-  "additional-information": "",
   "association-count-title_one": "",
   "association-count-title_other": "",
   "associations": "",
@@ -58,6 +57,7 @@
   "datamodels-unused": "",
   "description": "",
   "details": "",
+  "disjoint-classes": "",
   "download": "",
   "download-as-file": "",
   "download-as-file-description": "",
@@ -118,6 +118,7 @@
   "no-attributes": "",
   "no-contributors": "",
   "no-description": "",
+  "no-disjoint-classes": "",
   "no-editorial-note": "",
   "no-equivalent-classes": "",
   "no-filters": "",
@@ -179,6 +180,7 @@
     "superseded": "",
     "valid": ""
   },
+  "technical-description": "",
   "terminologies-used": "",
   "terminology": "",
   "terminology-footer-accessibility": "",

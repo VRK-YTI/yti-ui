@@ -1,7 +1,6 @@
 {
   "actions": "Toiminnot",
   "add-email-subscription": "Tilaa sähköposti-ilmoitukset",
-  "additional-information": "Lisätiedot",
   "association-count-title_one": "{{count}} Assosiaatio",
   "association-count-title_other": "{{count}} Assosiaatiota",
   "associations": "Assosiaatiot",
@@ -58,6 +57,7 @@
   "datamodels-unused": "Ei käytössä olevat tietomallit",
   "description": "Kuvaus",
   "details": "Tiedot",
+  "disjoint-classes": "Erilliset luokat",
   "download": "Lataa",
   "download-as-file": "Lataa tiedostona",
   "download-as-file-description": "Valitse tiedostoformaatti, jossa haluat ladata tietomallin.",
@@ -118,6 +118,7 @@
   "no-attributes": "Ei attribuutteja",
   "no-contributors": "Ei sisällöntuottajia",
   "no-description": "Ei annettu kuvausta",
+  "no-disjoint-classes": "Ei erillisiä luokkia",
   "no-editorial-note": "Ei muokkajaan kommenttia",
   "no-equivalent-classes": "Ei vastaavia luokkia",
   "no-filters": "Ei rajauksia",
@@ -179,6 +180,7 @@
     "superseded": "Korvattu",
     "valid": "Voimassa oleva"
   },
+  "technical-description": "Tekninen kuvaus",
   "terminologies-used": "Käytetyt sanastot",
   "terminology": "Sanasto",
   "terminology-footer-accessibility": "Saavutettavuus",
