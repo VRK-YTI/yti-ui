@@ -394,8 +394,8 @@ export default function ClassView({
               )}
             </BasicBlock>
 
-            <BasicBlock title={t('separate-classes')}>
-              {t('no-separate-classes')}
+            <BasicBlock title={t('disjoint-classes')}>
+              {t('no-disjoint-classes')}
             </BasicBlock>
 
             <BasicBlock title={t('technical-description')}>

@@ -372,10 +372,10 @@ export default function ClassForm({
         )}
 
         <InlineListBlock
-          label={t('separate-classes', { ns: 'common' })}
+          label={t('disjoint-classes', { ns: 'common' })}
           addNewComponent={
             <Button variant="secondary" icon="plus">
-              {t('add-separate-class')}
+              {t('add-disjoint-class')}
             </Button>
           }
           items={[]}
