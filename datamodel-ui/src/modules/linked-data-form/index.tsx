@@ -71,21 +71,46 @@ export default function LinkedDataForm({
             </div>
           }
         >
-          {[
-            {
-              label: 'Sanaston nimi',
-              uri: 'http://uri.suomi.fi/datamodel/ns/df-lanu',
-            },
-          ].map((item) => (
-            <LinkedItem
-              key={`terminology-item-${item.uri}`}
-              data={item}
-              type="terminology"
-            />
-          ))}
+          <div>
+            {[
+              {
+                label: 'Sanaston nimi',
+                uri: 'http://uri.suomi.fi/datamodel/ns/df-lanu',
+              },
+            ].map((item) => (
+              <LinkedItem
+                key={`terminology-item-${item.uri}`}
+                data={item}
+                type="terminology"
+              />
+            ))}
+          </div>
         </BasicBlock>
 
-        {hasCodelist ? <>On koodistot</> : <></>}
+        {hasCodelist ? (
+          <BasicBlock
+            title={
+              <>
+                Linkitetyt koodistot
+                <Text smallScreen style={{ color: '#5F686D' }}>
+                  {' '}
+                  ({t('optional')})
+                </Text>
+              </>
+            }
+            extra={
+              <div>
+                <Button variant="secondary" icon="plus">
+                  Lisää koodisto
+                </Button>
+              </div>
+            }
+          >
+            <div></div>
+          </BasicBlock>
+        ) : (
+          <></>
+        )}
 
         <BasicBlock
           title={
@@ -105,24 +130,26 @@ export default function LinkedDataForm({
             </div>
           }
         >
-          {[
-            {
-              label: 'Inspire',
-              identifier: 'inspire',
-              uri: 'http://inspire.ec.eropa.eu/featureconcept#',
-            },
-            {
-              label: 'Henkilötietojen tietokomponentit',
-              identifier: 'vrkhlo',
-              uri: 'http://uri.suomi.fi/datamodel/ns/vrkhlo#',
-            },
-          ].map((item) => (
-            <LinkedItem
-              key={`terminology-item-${item.uri}`}
-              data={item}
-              type="datamodel"
-            />
-          ))}
+          <div>
+            {[
+              {
+                label: 'Inspire',
+                identifier: 'inspire',
+                uri: 'http://inspire.ec.eropa.eu/featureconcept#',
+              },
+              {
+                label: 'Henkilötietojen tietokomponentit',
+                identifier: 'vrkhlo',
+                uri: 'http://uri.suomi.fi/datamodel/ns/vrkhlo#',
+              },
+            ].map((item) => (
+              <LinkedItem
+                key={`terminology-item-${item.uri}`}
+                data={item}
+                type="datamodel"
+              />
+            ))}
+          </div>
         </BasicBlock>
       </DrawerContent>
     </>

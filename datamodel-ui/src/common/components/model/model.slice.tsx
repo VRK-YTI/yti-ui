@@ -74,7 +74,7 @@ export type ViewListItem = {
   list: boolean;
 };
 
-interface ViewList {
+export interface ViewList {
   search: boolean;
   links: boolean;
   graph: boolean;

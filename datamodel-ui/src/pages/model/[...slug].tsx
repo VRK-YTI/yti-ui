@@ -106,6 +106,15 @@ export const getServerSideProps = createCommonGetServerSideProps(
         resourceTypes: [ResourceType.ATTRIBUTE],
       })
     );
+    store.dispatch(
+      queryInternalResources.initiate({
+        query: '',
+        limitToDataModel: modelId,
+        pageSize: 20,
+        pageFrom: 0,
+        resourceTypes: [],
+      })
+    );
     store.dispatch(getVisualization.initiate(modelId));
 
     await Promise.all(store.dispatch(getRunningQueriesThunk()));

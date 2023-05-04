@@ -44,7 +44,7 @@ export default function Model({ modelId }: ModelProps) {
                 id: 'search',
                 icon: 'search',
                 buttonLabel: t('search-variant'),
-                component: <SearchView />,
+                component: <SearchView modelId={modelId} />,
               },
               {
                 id: 'graph',
@@ -61,7 +61,11 @@ export default function Model({ modelId }: ModelProps) {
                 id: 'links',
                 icon: 'attachment',
                 buttonLabel: 'Linkitykset',
-                component: <LinkedDataView />,
+                component: (
+                  <LinkedDataView
+                    isApplicationProfile={modelInfo?.type === 'PROFILE'}
+                  />
+                ),
               },
               {
                 id: 'classes',

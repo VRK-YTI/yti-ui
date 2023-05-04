@@ -13,6 +13,17 @@ export function translateModelType(type: Type, t: TFunction) {
   }
 }
 
+export function translateResourceType(type: ResourceType, t: TFunction) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('association');
+    case ResourceType.ATTRIBUTE:
+      return t('attribute');
+    default:
+      return t('class');
+  }
+}
+
 export function translateModelFormErrors(error: string, t: TFunction) {
   switch (error) {
     case 'languageAmount':

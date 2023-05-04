@@ -13,8 +13,12 @@ import { TooltipWrapper } from '../model/model.styles';
 import LinkedDataForm from '../linked-data-form';
 import HasPermission from '@app/common/utils/has-permission';
 
-export default function LinkedDataView() {
-  const { t, i18n } = useTranslation('common');
+export default function LinkedDataView({
+  isApplicationProfile,
+}: {
+  isApplicationProfile: boolean;
+}) {
+  const { t } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
   const hasPermission = HasPermission({
     actions: ['ADMIN_DATA_MODEL'],
@@ -62,7 +66,10 @@ export default function LinkedDataView() {
 
   if (renderForm) {
     return (
-      <LinkedDataForm hasCodelist={false} handleReturn={handleFormReturn} />
+      <LinkedDataForm
+        hasCodelist={isApplicationProfile}
+        handleReturn={handleFormReturn}
+      />
     );
   }
 
@@ -123,13 +130,17 @@ export default function LinkedDataView() {
           )}
         </BasicBlock>
 
-        <BasicBlock title="Koodistot">
-          {data.codelists && data.codelists.length > 0 ? (
-            <LinkedWrapper></LinkedWrapper>
-          ) : (
-            <>Ei linkitettyjä koodistoja.</>
-          )}
-        </BasicBlock>
+        {isApplicationProfile ? (
+          <BasicBlock title="Koodistot">
+            {data.codelists && data.codelists.length > 0 ? (
+              <LinkedWrapper></LinkedWrapper>
+            ) : (
+              <>Ei linkitettyjä koodistoja.</>
+            )}
+          </BasicBlock>
+        ) : (
+          <></>
+        )}
 
         <BasicBlock title="Linkitetyt tietomallit">
           {data.datamodels && data.datamodels.length > 0 ? (

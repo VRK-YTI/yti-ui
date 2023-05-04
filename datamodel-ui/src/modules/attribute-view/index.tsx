@@ -20,7 +20,10 @@ import {
 import { useStoreDispatch } from '@app/store';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { selectViews } from '@app/common/components/model/model.slice';
+import {
+  selectSelected,
+  selectViews,
+} from '@app/common/components/model/model.slice';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
 
 export default function AttributeView({
@@ -46,6 +49,7 @@ export default function AttributeView({
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
   const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
+  const globalSelected = useSelector(selectSelected());
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const router = useRouter();
@@ -78,6 +82,15 @@ export default function AttributeView({
       setHeaderHeight(ref.current.clientHeight);
     }
   }, [ref]);
+
+  useEffect(() => {
+    if (
+      globalSelected.type === 'attributes' &&
+      currentAttributeId !== globalSelected.id
+    ) {
+      setCurrentAttributeId(globalSelected.id);
+    }
+  }, [globalSelected, currentAttributeId]);
 
   const handleFollowUp = (value?: { label: string; uri: string }) => {
     dispatch(
