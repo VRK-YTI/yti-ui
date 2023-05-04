@@ -55,7 +55,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
     id: terminologyId,
   });
   const user = useSelector(selectLogin());
-  const [data, setData] = useState(generateInitialData(i18n.language, info));
+  const [data, setData] = useState(generateInitialData(i18n.language, t, info));
   const [isValid, setIsValid] = useState(true);
   const [userPosted, setUserPosted] = useState(false);
   const [isCreating, setIsCreating] = useState(false);

@@ -145,9 +145,14 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           title={t('vocabulary-info-languages')}
           property={data.properties.language}
           delimiter=", "
-          valueAccessor={({ value }) =>
-            `${translateLanguage(value, t)} ${value.toUpperCase()}`
-          }
+          valueAccessor={({ value }) => {
+            // if no translation found for language, return only language code
+            const tr = translateLanguage(value, t);
+            if (tr === value) {
+              return value;
+            }
+            return `${tr} ${value.toUpperCase()}`;
+          }}
           id="languages"
         />
         <BasicBlock title={t('vocabulary-info-vocabulary-type')} id="type">

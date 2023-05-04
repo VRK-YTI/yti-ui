@@ -24,6 +24,7 @@ import { removeApi } from '@app/common/components/remove/remove.slice';
 import { NextApiRequest } from 'next';
 import { modifyStatusesApi } from '@app/common/components/modify-statuses/modify-statuses.slice';
 import { fakeableUsersApi } from '@app/common/components/fakeable-user/fakeable-user.slice';
+import { codeListApi } from '@app/common/components/codelist/codelist.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -50,6 +51,7 @@ export function makeStore(ctx: NextIronContext) {
       [removeApi.reducerPath]: removeApi.reducer,
       [modifyStatusesApi.reducerPath]: modifyStatusesApi.reducer,
       [fakeableUsersApi.reducerPath]: fakeableUsersApi.reducer,
+      [codeListApi.reducerPath]: codeListApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -66,7 +68,8 @@ export function makeStore(ctx: NextIronContext) {
         removeApi.middleware,
         loginApi.middleware,
         modifyStatusesApi.middleware,
-        fakeableUsersApi.middleware
+        fakeableUsersApi.middleware,
+        codeListApi.middleware
       ),
 
     // Development tools should be available only in development environments

@@ -21,7 +21,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
       <FormFooterAlert
         labelText={t('missing-information')}
         alerts={[
-          ...renderDescriptionAlerts(),
+          ...renderLanguageAlerts(),
           renderOrganizationAlerts(),
           renderInformationDomainAlerts(),
           renderPrefixAlerts(),
@@ -36,8 +36,8 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
 
   function renderAlert() {
     if (
-      data.description[0].length === 0 ||
-      data.description[0].some((d) => !d.name) ||
+      data.languages.length === 0 ||
+      data.languages.some((l) => !l.title) ||
       data.contributors.length === 0 ||
       data.infoDomains.length === 0 ||
       !data.prefix[0] ||
@@ -49,19 +49,19 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
     }
   }
 
-  function renderDescriptionAlerts(): string[] {
+  function renderLanguageAlerts(): string[] {
     const returnList = [];
 
-    if (data.description[0].length === 0) {
+    if (data.languages.length === 0) {
       returnList.push(t('alert-description-languages-undefined'));
     }
 
-    data.description[0]
-      .filter((desc) => !desc.name)
-      .forEach((desc) =>
+    data.languages
+      .filter((lang) => !lang.title)
+      .forEach((lang) =>
         returnList.push(
           `${t('alert-description-name-undefined')} ${translateLanguage(
-            desc.lang,
+            lang.uniqueItemId,
             t
           )}`
         )

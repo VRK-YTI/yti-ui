@@ -1,25 +1,37 @@
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
+import { TFunction } from 'next-i18next';
+import { LanguageBlockType } from 'yti-common-ui/form/language-selector';
 
 export default function generateInitialData(
   lang: string,
+  t: TFunction,
   data?: VocabularyInfoDTO
 ): NewTerminologyInfo | undefined {
   if (!data) {
     return undefined;
   }
 
-  const description =
-    data.properties.prefLabel?.map((label) => {
-      const desc = data.properties.description?.find(
-        (d) => d.lang === label.lang
-      );
+  const languages =
+    data.properties.language?.map((l) => {
+      const description =
+        data.properties.description?.find((d) => d.lang === l.value)?.value ??
+        '';
+      const title =
+        data.properties.prefLabel?.find((p) => p.lang === l.value)?.value ?? '';
+
+      const labelText = ['fi', 'sv', 'en'].includes(l.value)
+        ? `${t(`language-label-text-${l.value}`)}`
+        : l.value;
+
       return {
-        lang: label.lang,
-        name: label.value,
-        description: desc ? desc.value : '',
-      };
+        title,
+        description,
+        uniqueItemId: l.value,
+        selected: true,
+        labelText,
+      } as LanguageBlockType;
     }) ?? [];
 
   const infoDomains =
@@ -64,7 +76,7 @@ export default function generateInitialData(
 
   const obj: NewTerminologyInfo = {
     contact: data.properties.contact?.[0].value ?? '',
-    description: [description, true],
+    languages: languages,
     infoDomains: infoDomains,
     prefix: [prefix ?? '', true],
     status: data.properties.status?.[0].value ?? 'DRAFT',
