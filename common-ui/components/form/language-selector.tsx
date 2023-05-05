@@ -22,7 +22,6 @@ export interface LanguageBlockType {
 
 export default function LanguageSelector(
   props: MultiSelectProps<LanguageBlockType> & {
-    languages: LanguageBlockType[];
     setLanguages: (value: LanguageBlockType[]) => void;
     userPosted: boolean;
     translations: {
@@ -132,7 +131,7 @@ export default function LanguageSelector(
             onBlur={(e) => handleTitleChange(e.target.value, item.uniqueItemId)}
             status={
               props.userPosted &&
-              props.languages.find((l) => l.uniqueItemId === item.uniqueItemId)
+              props.items.find((l) => l.uniqueItemId === item.uniqueItemId)
                 ?.title === ''
                 ? 'error'
                 : 'default'

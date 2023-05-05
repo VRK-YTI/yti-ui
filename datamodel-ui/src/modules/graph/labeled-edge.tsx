@@ -11,7 +11,7 @@ import { DeleteEdgeButton, EdgeContent } from './edge.styles';
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '@app/store';
 
-export default function Edge({
+export default function LabeledEdge({
   id,
   data,
   source,
@@ -33,12 +33,17 @@ export default function Edge({
     targetY,
   });
 
-  const onDeleteClick = (e: MouseEvent<HTMLButtonElement>, id: string) => {
+  const onDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     data.handleDelete(id);
     if (globalSelected.id === id) {
       dispatch(setSelected('', 'associations'));
     }
+  };
+
+  const onSplitClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    data.splitEdge(source, target, e.clientX, e.clientY);
   };
 
   return (
@@ -60,10 +65,13 @@ export default function Edge({
         >
           <div>{label}</div>
           {selected && (
-            <DeleteEdgeButton onClick={(e) => onDeleteClick(e, id)}>
+            <DeleteEdgeButton onClick={(e) => onDeleteClick(e)}>
               ×
             </DeleteEdgeButton>
           )}
+          <div>
+            <button onClick={(e) => onSplitClick(e)}>split</button>
+          </div>
         </EdgeContent>
       </EdgeLabelRenderer>
     </>

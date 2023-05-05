@@ -15,20 +15,19 @@ import { StatusChip } from '@app/common/components/multi-column-search/multi-col
 import { TooltipWrapper } from '../model/model.styles';
 import DeleteModal from '../delete-modal';
 import CommonViewContent from './common-view-content';
-import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 interface CommonViewProps {
   data?: Resource;
   modelId: string;
-  type: ResourceType;
   handleReturn: () => void;
+  handleEdit: () => void;
 }
 
 export default function CommonView({
   data,
   modelId,
-  type,
   handleReturn,
+  handleEdit,
 }: CommonViewProps) {
   const { t, i18n } = useTranslation('common');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -73,7 +72,10 @@ export default function CommonView({
                   open={showTooltip}
                   onCloseButtonClick={() => setShowTooltip(false)}
                 >
-                  <Button variant="secondaryNoBorder">
+                  <Button
+                    variant="secondaryNoBorder"
+                    onClick={() => handleEdit()}
+                  >
                     {t('edit', { ns: 'admin' })}
                   </Button>
                   <Separator />

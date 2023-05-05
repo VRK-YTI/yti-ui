@@ -48,6 +48,7 @@ interface CommonFormProps {
   modelId: string;
   languages: string[];
   terminologies: string[];
+  isEdit: boolean;
 }
 
 export default function CommonForm({
@@ -57,6 +58,7 @@ export default function CommonForm({
   modelId,
   languages,
   terminologies,
+  isEdit,
 }: CommonFormProps) {
   const { t, i18n } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -85,6 +87,7 @@ export default function CommonForm({
     putResource({
       modelId: modelId,
       data: { ...data, type: type, subResourceOf: [] },
+      resourceId: isEdit ? data.identifier : undefined,
     });
   };
 
@@ -160,6 +163,13 @@ export default function CommonForm({
           appendLocale: true,
         }),
       },
+    });
+  };
+
+  const handleDomainOrRangeRemoval = (id: string, type: 'domain' | 'range') => {
+    handleUpdate({
+      ...data,
+      [type]: undefined,
     });
   };
 
@@ -300,6 +310,7 @@ export default function CommonForm({
               })
             }
             status={userPosted && errors.identifier ? 'error' : 'default'}
+            disabled={isEdit}
           />
 
           {type === ResourceType.ATTRIBUTE && (
@@ -317,7 +328,9 @@ export default function CommonForm({
                     mode="select"
                   />
                 }
-                handleRemoval={() => console.log('TODO removal')}
+                handleRemoval={(id: string) =>
+                  handleDomainOrRangeRemoval(id, 'domain')
+                }
                 items={data.domain ? [data.domain] : []}
                 label={`${t('class')} (rdfs:domain)`}
                 optionalText={t('optional')}
@@ -336,7 +349,9 @@ export default function CommonForm({
                     mode="select"
                   />
                 }
-                handleRemoval={() => console.log('TODO removal')}
+                handleRemoval={(id: string) =>
+                  handleDomainOrRangeRemoval(id, 'domain')
+                }
                 items={data.domain ? [data.domain] : []}
                 label={t('source-class')}
                 optionalText={t('optional')}
@@ -351,7 +366,9 @@ export default function CommonForm({
                     mode="select"
                   />
                 }
-                handleRemoval={() => console.log('TODO removal')}
+                handleRemoval={(id: string) =>
+                  handleDomainOrRangeRemoval(id, 'range')
+                }
                 items={
                   data.range && typeof data.range !== 'string'
                     ? [data.range]
@@ -374,6 +391,11 @@ export default function CommonForm({
                 {translateCommonForm('add-upper', type, t)}
               </Button>
             }
+            deleteDisabled={[
+              'owl:topDataProperty',
+              'owl:TopObjectProperty',
+              'owl:topObjectProperty',
+            ]}
             handleRemoval={() => null}
           />
 
@@ -381,10 +403,11 @@ export default function CommonForm({
             label={translateCommonForm('equivalent', type, t)}
             items={[]}
             addNewComponent={
-              <Button variant="secondary">
+              <Button variant="secondary" icon="plus">
                 {translateCommonForm('add-equivalent', type, t)}
               </Button>
             }
+            optionalText={t('optional')}
             handleRemoval={() => null}
           />
 
@@ -421,7 +444,7 @@ export default function CommonForm({
           </LanguageVersionedWrapper>
 
           <Textarea
-            labelText={translateCommonForm('editorial-note', type, t)}
+            labelText={translateCommonForm('work-group-comment', type, t)}
             optionalText={t('optional')}
             defaultValue={data.editorialNote}
             onChange={(e) =>

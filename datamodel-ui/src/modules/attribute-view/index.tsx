@@ -15,6 +15,7 @@ import CommonView from '../common-view';
 import {
   initializeResource,
   resetResource,
+  setResource,
   useGetResourceQuery,
 } from '@app/common/components/resource/resource.slice';
 import { useStoreDispatch } from '@app/store';
@@ -25,6 +26,7 @@ import {
   selectViews,
 } from '@app/common/components/model/model.slice';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
+import { resourceToResourceFormType } from '../common-form/utils';
 
 export default function AttributeView({
   modelId,
@@ -36,7 +38,12 @@ export default function AttributeView({
   terminologies: string[];
 }) {
   const { t, i18n } = useTranslation('common');
+  const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
+  const ref = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const dispatch = useStoreDispatch();
   const views = useSelector(selectViews());
+  const globalSelected = useSelector(selectSelected());
   const [view, setView] = useState(
     Object.keys(views.attributes).filter((k) => k).length > 0
       ? Object.keys(views.attributes).find(
@@ -46,20 +53,9 @@ export default function AttributeView({
       : 'list'
   );
   const [headerHeight, setHeaderHeight] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const dispatch = useStoreDispatch();
-  const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
-  const globalSelected = useSelector(selectSelected());
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
-  const router = useRouter();
-  const { data, refetch } = useQueryInternalResourcesQuery({
-    query: query ?? '',
-    limitToDataModel: modelId,
-    pageSize: 20,
-    pageFrom: (currentPage - 1) * 20,
-    resourceTypes: [ResourceType.ATTRIBUTE],
-  });
+  const [isEdit, setIsEdit] = useState(false);
   const [currentAttributeId, setCurrentAttributeId] = useState<
     string | undefined
   >(
@@ -67,6 +63,14 @@ export default function AttributeView({
       ? getResourceInfo(router.query.slug)?.id
       : undefined
   );
+
+  const { data, refetch } = useQueryInternalResourcesQuery({
+    query: query ?? '',
+    limitToDataModel: modelId,
+    pageSize: 20,
+    pageFrom: (currentPage - 1) * 20,
+    resourceTypes: [ResourceType.ATTRIBUTE],
+  });
   const { data: attributeData } = useGetResourceQuery(
     {
       modelId: modelId,
@@ -97,6 +101,10 @@ export default function AttributeView({
       initializeResource(ResourceType.ATTRIBUTE, languages, value?.label)
     );
     setView('form');
+
+    if (isEdit) {
+      setIsEdit(false);
+    }
   };
 
   const handleQueryChange = (value: string) => {
@@ -108,6 +116,10 @@ export default function AttributeView({
     setView('list');
     dispatch(resetResource());
     refetch();
+
+    if (isEdit) {
+      setIsEdit(false);
+    }
   };
 
   const handleShowAttribute = (id: string) => {
@@ -119,6 +131,14 @@ export default function AttributeView({
   const handleFormFollowUp = (id: string) => {
     handleShowAttribute(id);
     refetch();
+  };
+
+  const handleEdit = () => {
+    if (attributeData) {
+      setView('form');
+      dispatch(setResource(resourceToResourceFormType(attributeData)));
+      setIsEdit(true);
+    }
   };
 
   return (
@@ -208,6 +228,7 @@ export default function AttributeView({
         modelId={modelId}
         languages={languages}
         terminologies={terminologies}
+        isEdit={isEdit}
       />
     );
   }
@@ -221,8 +242,8 @@ export default function AttributeView({
       <CommonView
         data={attributeData}
         modelId={modelId}
-        type={ResourceType.ATTRIBUTE}
         handleReturn={handleFormReturn}
+        handleEdit={handleEdit}
       />
     );
   }

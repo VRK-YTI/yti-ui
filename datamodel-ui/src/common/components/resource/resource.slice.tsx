@@ -14,19 +14,26 @@ import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
-function convertToPUT(data: AssociationFormType | AttributeFormType): object {
+function convertToPUT(
+  data: AssociationFormType | AttributeFormType,
+  isEdit: boolean
+): object {
+  const removeKeys: string[] = isEdit
+    ? ['identifier', 'type', 'concept']
+    : ['concept'];
+
+  const ret = Object.fromEntries(
+    Object.entries(data).filter((e) => !removeKeys.includes(e[0]))
+  );
+
   if (!data.concept) {
-    return data;
+    return ret;
   }
 
-  const retVal = {
-    ...data,
+  return {
+    ...ret,
     subject: data.concept.conceptURI,
   };
-
-  delete retVal['concept'];
-
-  return retVal;
 }
 
 export const resourceApi = createApi({
@@ -47,20 +54,23 @@ export const resourceApi = createApi({
       {
         modelId: string;
         data: AssociationFormType | AttributeFormType;
+        resourceId?: string;
       }
     >({
       query: (value) => ({
-        url: `/resource/${value.modelId}`,
+        url: !value.resourceId
+          ? `/resource/${value.modelId}`
+          : `/resource/${value.modelId}/${value.resourceId}`,
         method: 'PUT',
         data:
           value.data.type === ResourceType.ATTRIBUTE
             ? {
-                ...convertToPUT(value.data),
+                ...convertToPUT(value.data, value.resourceId ? true : false),
                 domain: value.data.domain ? value.data.domain.id : '',
                 range: '',
               }
             : {
-                ...convertToPUT(value.data),
+                ...convertToPUT(value.data, value.resourceId ? true : false),
                 domain: value.data.domain ? value.data.domain.id : '',
                 range: value.data.range ? value.data.range.id : '',
               },

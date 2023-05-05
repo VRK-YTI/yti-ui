@@ -6,6 +6,13 @@ export interface VisualizationType {
     x: number;
     y: number;
   };
-  attributes: [];
-  associations: [];
+  attributes: {
+    identifier: string;
+    label: { [key: string]: string };
+  }[];
+  associations: {
+    identifier: string;
+    label: { [key: string]: string };
+    path: string[];
+  }[];
 }

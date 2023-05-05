@@ -134,8 +134,8 @@ export function translateCommonForm(
       return type === ResourceType.ASSOCIATION
         ? t('common-form.associations-note', { ns: 'admin' })
         : t('common-form.attributes-note', { ns: 'admin' });
-    case 'editorial-note':
-      return t('common-form.editorial-note', { ns: 'admin' });
+    case 'work-group-comment':
+      return t('common-form.work-group-comment', { ns: 'admin' });
     case 'contact':
       return type === ResourceType.ASSOCIATION
         ? t('common-view.associations-contact', { ns: 'common' })

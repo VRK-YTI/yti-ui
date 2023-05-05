@@ -10,6 +10,7 @@ import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { useMemo } from 'react';
 import Graph from '../graph';
 import LinkedDataView from '../linked-data-view';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 interface ModelProps {
   modelId: string;
@@ -24,7 +25,7 @@ export default function Model({ modelId }: ModelProps) {
       return [];
     }
 
-    return modelInfo.languages;
+    return [...modelInfo.languages].sort((a, b) => compareLocales(a, b));
   }, [modelInfo]);
 
   return (
