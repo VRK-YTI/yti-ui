@@ -12,13 +12,17 @@ import {
 import { TooltipWrapper } from '../model/model.styles';
 import LinkedDataForm from '../linked-data-form';
 import HasPermission from '@app/common/utils/has-permission';
+import { useGetModelQuery } from '@app/common/components/model/model.slice';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
 export default function LinkedDataView({
+  modelId,
   isApplicationProfile,
 }: {
+  modelId: string;
   isApplicationProfile: boolean;
 }) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
   const hasPermission = HasPermission({
     actions: ['ADMIN_DATA_MODEL'],
@@ -26,28 +30,9 @@ export default function LinkedDataView({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
   const [renderForm, setRenderForm] = useState(false);
+  const { data } = useGetModelQuery(modelId);
 
-  const data = {
-    terminologies: [
-      {
-        label: 'Sanaston nimi',
-        uri: 'uri.suomi.fi/label-1',
-      },
-    ],
-    datamodels: [
-      {
-        label: 'Inspire',
-        identifier: 'inspire',
-        uri: 'http://inspire.ec.eropa.eu/featureconcept#',
-      },
-      {
-        label: 'Henkilötietojen tietokomponentit',
-        identifier: 'vrkhlo',
-        uri: 'http://uri.suomi.fi/datamodel/ns/vrkhlo#',
-      },
-    ],
-    codelists: [],
-  };
+  console.log('data', data);
 
   const handleShowForm = () => {
     setRenderForm(true);
@@ -68,6 +53,11 @@ export default function LinkedDataView({
     return (
       <LinkedDataForm
         hasCodelist={isApplicationProfile}
+        initialData={
+          data && {
+            terminologies: data.terminologies,
+          }
+        }
         handleReturn={handleFormReturn}
       />
     );
@@ -115,15 +105,23 @@ export default function LinkedDataView({
 
       <DrawerContent height={headerHeight}>
         <BasicBlock title="Linkitetyt sanastot">
-          {data.terminologies && data.terminologies.length > 0 ? (
+          {data && data.terminologies.length > 0 ? (
             <LinkedWrapper>
-              {data.terminologies.map((t, idx) => (
-                <LinkedItem key={`linked-terminology-${idx}`}>
-                  <ExternalLink labelNewWindow={'avaa uuteen'} href={t.uri}>
-                    {t.label}
-                  </ExternalLink>
-                </LinkedItem>
-              ))}
+              {data.terminologies.map((t, idx) => {
+                const label = getLanguageVersion({
+                  data: t.label,
+                  lang: i18n.language,
+                  appendLocale: true,
+                });
+
+                return (
+                  <LinkedItem key={`linked-terminology-${idx}`}>
+                    <ExternalLink labelNewWindow={'avaa uuteen'} href={t.uri}>
+                      {label !== '' ? label : t.uri}
+                    </ExternalLink>
+                  </LinkedItem>
+                );
+              })}
             </LinkedWrapper>
           ) : (
             <>Ei linkitettyjä sanastoja.</>
@@ -131,19 +129,15 @@ export default function LinkedDataView({
         </BasicBlock>
 
         {isApplicationProfile ? (
-          <BasicBlock title="Koodistot">
-            {data.codelists && data.codelists.length > 0 ? (
-              <LinkedWrapper></LinkedWrapper>
-            ) : (
-              <>Ei linkitettyjä koodistoja.</>
-            )}
-          </BasicBlock>
+          // TODO: Add codelist visualization
+          <BasicBlock title="Koodistot">Ei linkitettyjä koodistoja.</BasicBlock>
         ) : (
           <></>
         )}
 
         <BasicBlock title="Linkitetyt tietomallit">
-          {data.datamodels && data.datamodels.length > 0 ? (
+          {/* TODO: Add datamodel visualization */}
+          {/* {data && data.datamodels?.length > 0 ? (
             <LinkedWrapper>
               {data.datamodels.map((d, idx) => (
                 <LinkedItem key={`linked-datamodel-${idx}`}>
@@ -159,7 +153,8 @@ export default function LinkedDataView({
             </LinkedWrapper>
           ) : (
             <>Ei linkitettyjä tietomalleja.</>
-          )}
+          )} */}
+          <>Ei linkitettyjä tietomalleja.</>
         </BasicBlock>
       </DrawerContent>
     </>

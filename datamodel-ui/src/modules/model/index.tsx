@@ -63,6 +63,7 @@ export default function Model({ modelId }: ModelProps) {
                 buttonLabel: 'Linkitykset',
                 component: (
                   <LinkedDataView
+                    modelId={modelId}
                     isApplicationProfile={modelInfo?.type === 'PROFILE'}
                   />
                 ),

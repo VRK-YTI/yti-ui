@@ -6,6 +6,12 @@ import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { LinkedItemWrapper } from './linked-data-form.styles';
 import TerminologyModal from '../terminology-modal';
+import { ModelTerminology } from '@app/common/interfaces/model.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+
+interface LinkedDataFormData {
+  terminologies: ModelTerminology[];
+}
 
 export default function LinkedDataForm({
   hasCodelist,
@@ -13,12 +19,17 @@ export default function LinkedDataForm({
   handleReturn,
 }: {
   hasCodelist: boolean;
-  initialData?: object;
+  initialData?: LinkedDataFormData;
   handleReturn: () => void;
 }) {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
   const ref = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [data, setData] = useState(
+    initialData ?? {
+      terminologies: [],
+    }
+  );
 
   useEffect(() => {
     if (ref.current) {
@@ -66,21 +77,16 @@ export default function LinkedDataForm({
             <div>
               <TerminologyModal
                 setFormData={() => null}
-                addedTerminologies={[]}
+                addedTerminologies={data.terminologies}
               />
             </div>
           }
         >
           <div>
-            {[
-              {
-                label: 'Sanaston nimi',
-                uri: 'http://uri.suomi.fi/datamodel/ns/df-lanu',
-              },
-            ].map((item) => (
+            {data.terminologies.map((t) => (
               <LinkedItem
-                key={`terminology-item-${item.uri}`}
-                data={item}
+                key={`terminology-item-${t.uri}`}
+                data={t}
                 type="terminology"
               />
             ))}
@@ -112,7 +118,7 @@ export default function LinkedDataForm({
           <></>
         )}
 
-        <BasicBlock
+        {/* <BasicBlock
           title={
             <>
               Linkitetyt tietomallit
@@ -125,7 +131,7 @@ export default function LinkedDataForm({
           extra={
             <div>
               <Button variant="secondary" icon="plus">
-                Lisää tietomalli
+                {t('add-data-model')}
               </Button>
             </div>
           }
@@ -150,7 +156,7 @@ export default function LinkedDataForm({
               />
             ))}
           </div>
-        </BasicBlock>
+        </BasicBlock> */}
       </DrawerContent>
     </>
   );
@@ -160,7 +166,7 @@ export default function LinkedDataForm({
     type,
   }: {
     data: {
-      label: string;
+      label: { [key: string]: string };
       identifier?: string;
       uri: string;
     };
@@ -186,10 +192,16 @@ export default function LinkedDataForm({
         return <></>;
       }
 
+      const label = getLanguageVersion({
+        data: data.label,
+        lang: i18n.language,
+        appendLocale: true,
+      });
+
       return (
         <>
           <ExternalLink labelNewWindow="Avaa uuteen ikkunaan" href={data.uri}>
-            {data.label}
+            {label !== '' ? label : data.uri}
           </ExternalLink>
           <Text smallScreen>{data.uri}</Text>
         </>
@@ -211,7 +223,11 @@ export default function LinkedDataForm({
               <TextInput
                 labelText=""
                 labelMode="hidden"
-                defaultValue={data.label}
+                defaultValue={getLanguageVersion({
+                  data: data.label,
+                  lang: i18n.language,
+                  appendLocale: true,
+                })}
               />
             )}
           </BasicBlock>
