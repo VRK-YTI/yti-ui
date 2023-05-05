@@ -300,7 +300,7 @@
   "search": "Hae",
   "search-term": "Hakusana",
   "search-term-description": "Termi, jolla käsitteen voi löytää palvelusta",
-  "select-information-description-languages": "Valitse sanston kielet",
+  "select-information-description-languages": "Valitse sanaston kielet",
   "select-targets-to-be-changed": "Valitse muutettavat kohteet",
   "show-chosen_one": "Näytä {{count}} valinta",
   "show-chosen_other": "Näytä {{count}} valintaa",
