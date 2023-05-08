@@ -30,9 +30,7 @@ export default function LinkedDataView({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
   const [renderForm, setRenderForm] = useState(false);
-  const { data } = useGetModelQuery(modelId);
-
-  console.log('data', data);
+  const { data, refetch } = useGetModelQuery(modelId);
 
   const handleShowForm = () => {
     setRenderForm(true);
@@ -41,6 +39,7 @@ export default function LinkedDataView({
 
   const handleFormReturn = () => {
     setRenderForm(false);
+    refetch();
   };
 
   useEffect(() => {
@@ -49,15 +48,18 @@ export default function LinkedDataView({
     }
   }, [ref]);
 
-  if (renderForm) {
+  if (renderForm && data) {
     return (
       <LinkedDataForm
         hasCodelist={isApplicationProfile}
         initialData={
           data && {
             terminologies: data.terminologies,
+            datamodels: [],
+            codelists: [],
           }
         }
+        model={data}
         handleReturn={handleFormReturn}
       />
     );
@@ -137,23 +139,6 @@ export default function LinkedDataView({
 
         <BasicBlock title="Linkitetyt tietomallit">
           {/* TODO: Add datamodel visualization */}
-          {/* {data && data.datamodels?.length > 0 ? (
-            <LinkedWrapper>
-              {data.datamodels.map((d, idx) => (
-                <LinkedItem key={`linked-datamodel-${idx}`}>
-                  <ExternalLink labelNewWindow={'avaa uuteen'} href={d.uri}>
-                    {d.label}
-                  </ExternalLink>
-                  <LinkExtraInfo>
-                    <div>Tunnus: {d.identifier}</div>
-                    <div>{d.uri.split('#')[0] + '#'}</div>
-                  </LinkExtraInfo>
-                </LinkedItem>
-              ))}
-            </LinkedWrapper>
-          ) : (
-            <>Ei linkitettyjä tietomalleja.</>
-          )} */}
           <>Ei linkitettyjä tietomalleja.</>
         </BasicBlock>
       </DrawerContent>

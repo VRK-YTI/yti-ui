@@ -6,36 +6,79 @@ import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { LinkedItemWrapper } from './linked-data-form.styles';
 import TerminologyModal from '../terminology-modal';
-import { ModelTerminology } from '@app/common/interfaces/model.interface';
+import {
+  ModelTerminology,
+  ModelType,
+} from '@app/common/interfaces/model.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { usePostModelMutation } from '@app/common/components/model/model.slice';
+import { ModelFormType } from '@app/common/interfaces/model-form.interface';
+import { translateLanguage } from '@app/common/utils/translation-helpers';
+import {
+  getIsPartOfWithId,
+  getOrganizationsWithId,
+} from '@app/common/utils/get-value';
+import generatePayload from '../model/generate-payload';
 
-interface LinkedDataFormData {
+export interface LinkedDataFormData {
   terminologies: ModelTerminology[];
+  datamodels: [];
+  codelists: [];
 }
 
 export default function LinkedDataForm({
   hasCodelist,
   initialData,
+  model,
   handleReturn,
 }: {
   hasCodelist: boolean;
   initialData?: LinkedDataFormData;
-  handleReturn: () => void;
+  model: ModelType;
+  handleReturn: (data?: LinkedDataFormData) => void;
 }) {
   const { t, i18n } = useTranslation('admin');
   const ref = useRef<HTMLDivElement>(null);
+  const [postModel, result] = usePostModelMutation();
   const [headerHeight, setHeaderHeight] = useState(0);
-  const [data, setData] = useState(
-    initialData ?? {
-      terminologies: [],
-    }
-  );
+  const [data, setData] = useState<ModelFormType>({
+    contact: '',
+    languages:
+      ['fi', 'sv', 'en'].map((lang) => ({
+        labelText: translateLanguage(lang, t),
+        uniqueItemId: lang,
+        title:
+          Object.entries(model.label).find((t) => t[0] === lang)?.[1] ?? '',
+        description:
+          Object.entries(model.description).find((d) => d[0] === lang)?.[1] ??
+          '',
+        selected: model.languages.includes(lang),
+      })) ?? [],
+    organizations: getOrganizationsWithId(model, i18n.language) ?? [],
+    prefix: model.prefix ?? '',
+    serviceCategories: getIsPartOfWithId(model, i18n.language) ?? [],
+    status: model.status ?? 'DRAFT',
+    type: model.type ?? 'PROFILE',
+    terminologies: model.terminologies ?? [],
+  });
+
+  const handleSubmit = () => {
+    const payload = generatePayload(data);
+
+    postModel({ payload: payload, prefix: data.prefix });
+  };
 
   useEffect(() => {
     if (ref.current) {
       setHeaderHeight(ref.current.clientHeight);
     }
   }, [ref]);
+
+  useEffect(() => {
+    if (result.isSuccess) {
+      handleReturn();
+    }
+  }, [result, handleReturn]);
 
   return (
     <>
@@ -54,7 +97,7 @@ export default function LinkedDataForm({
               gap: '15px',
             }}
           >
-            <Button>{t('save')}</Button>
+            <Button onClick={() => handleSubmit()}>{t('save')}</Button>
             <Button variant="secondary" onClick={() => handleReturn()}>
               {t('cancel-variant')}
             </Button>
@@ -76,7 +119,12 @@ export default function LinkedDataForm({
           extra={
             <div>
               <TerminologyModal
-                setFormData={() => null}
+                setFormData={(terminologies) =>
+                  setData({
+                    ...data,
+                    terminologies: terminologies,
+                  })
+                }
                 addedTerminologies={data.terminologies}
               />
             </div>
@@ -86,7 +134,7 @@ export default function LinkedDataForm({
             {data.terminologies.map((t) => (
               <LinkedItem
                 key={`terminology-item-${t.uri}`}
-                data={t}
+                itemData={t}
                 type="terminology"
               />
             ))}
@@ -118,7 +166,7 @@ export default function LinkedDataForm({
           <></>
         )}
 
-        {/* <BasicBlock
+        <BasicBlock
           title={
             <>
               Linkitetyt tietomallit
@@ -131,47 +179,39 @@ export default function LinkedDataForm({
           extra={
             <div>
               <Button variant="secondary" icon="plus">
-                {t('add-data-model')}
+                Lisää tietomalli
               </Button>
             </div>
           }
         >
-          <div>
-            {[
-              {
-                label: 'Inspire',
-                identifier: 'inspire',
-                uri: 'http://inspire.ec.eropa.eu/featureconcept#',
-              },
-              {
-                label: 'Henkilötietojen tietokomponentit',
-                identifier: 'vrkhlo',
-                uri: 'http://uri.suomi.fi/datamodel/ns/vrkhlo#',
-              },
-            ].map((item) => (
-              <LinkedItem
-                key={`terminology-item-${item.uri}`}
-                data={item}
-                type="datamodel"
-              />
-            ))}
-          </div>
-        </BasicBlock> */}
+          <div></div>
+        </BasicBlock>
       </DrawerContent>
     </>
   );
 
   function LinkedItem({
-    data,
+    itemData,
     type,
   }: {
-    data: {
+    itemData: {
       label: { [key: string]: string };
       identifier?: string;
       uri: string;
     };
     type: 'terminology' | 'datamodel';
   }) {
+    const handleItemRemove = () => {
+      if (type === 'terminology') {
+        setData((data) => ({
+          ...data,
+          terminologies: data.terminologies.filter(
+            (t) => t.uri !== itemData.uri
+          ),
+        }));
+      }
+    };
+
     return (
       <LinkedItemWrapper>
         <div className="item-content">
@@ -180,7 +220,11 @@ export default function LinkedDataForm({
         </div>
 
         <div>
-          <Button variant="secondaryNoBorder" icon="remove">
+          <Button
+            variant="secondaryNoBorder"
+            icon="remove"
+            onClick={() => handleItemRemove()}
+          >
             {t('remove')}
           </Button>
         </div>
@@ -193,17 +237,20 @@ export default function LinkedDataForm({
       }
 
       const label = getLanguageVersion({
-        data: data.label,
+        data: itemData.label,
         lang: i18n.language,
         appendLocale: true,
       });
 
       return (
         <>
-          <ExternalLink labelNewWindow="Avaa uuteen ikkunaan" href={data.uri}>
-            {label !== '' ? label : data.uri}
+          <ExternalLink
+            labelNewWindow="Avaa uuteen ikkunaan"
+            href={itemData.uri}
+          >
+            {label !== '' ? label : itemData.uri}
           </ExternalLink>
-          <Text smallScreen>{data.uri}</Text>
+          <Text smallScreen>{itemData.uri}</Text>
         </>
       );
     }
@@ -216,15 +263,15 @@ export default function LinkedDataForm({
       return (
         <>
           <BasicBlock title="Tietomallin nimi">
-            {data.uri.startsWith('http://uri.suomi.fi') ||
-            data.uri.includes('http://uri.suomi.fi') ? (
-              data.label
+            {itemData.uri.startsWith('http://uri.suomi.fi') ||
+            itemData.uri.includes('http://uri.suomi.fi') ? (
+              itemData.label
             ) : (
               <TextInput
                 labelText=""
                 labelMode="hidden"
                 defaultValue={getLanguageVersion({
-                  data: data.label,
+                  data: itemData.label,
                   lang: i18n.language,
                   appendLocale: true,
                 })}
@@ -233,14 +280,17 @@ export default function LinkedDataForm({
           </BasicBlock>
 
           <BasicBlock title="Etuliite (tunnus tässä palvelussa)">
-            {data.identifier ??
-              data.uri.split('/').pop()?.replace('#', '') ??
-              data.uri}
+            {itemData.identifier ??
+              itemData.uri.split('/').pop()?.replace('#', '') ??
+              itemData.uri}
           </BasicBlock>
 
           <div className="datamodel-link">
-            <ExternalLink labelNewWindow="Avaa uuteen ikkunaan" href={data.uri}>
-              {data.uri}
+            <ExternalLink
+              labelNewWindow="Avaa uuteen ikkunaan"
+              href={itemData.uri}
+            >
+              {itemData.uri}
             </ExternalLink>
           </div>
         </>
