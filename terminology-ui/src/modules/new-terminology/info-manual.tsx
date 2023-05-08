@@ -114,7 +114,21 @@ export default function InfoManual({
     });
 
     if (langResult) {
-      setLanguageList(langResult);
+      const promotedOrder = ['fi', 'sv', 'en'];
+      const promoted: LanguageBlockType[] = [];
+      const otherLanguages = langResult.reduce((langList, lang) => {
+        promotedOrder.includes(lang.uniqueItemId)
+          ? promoted.push(lang)
+          : langList.push(lang);
+        return langList;
+      }, [] as LanguageBlockType[]);
+
+      promoted.sort(
+        (a, b) =>
+          promotedOrder.indexOf(a.uniqueItemId) -
+          promotedOrder.indexOf(b.uniqueItemId)
+      );
+      setLanguageList([...promoted, ...otherLanguages]);
     }
   }, [languages, i18n, initialData]);
 
