@@ -28,12 +28,10 @@ export interface LinkedDataFormData {
 
 export default function LinkedDataForm({
   hasCodelist,
-  initialData,
   model,
   handleReturn,
 }: {
   hasCodelist: boolean;
-  initialData?: LinkedDataFormData;
   model: ModelType;
   handleReturn: (data?: LinkedDataFormData) => void;
 }) {
@@ -89,7 +87,7 @@ export default function LinkedDataForm({
             alignItems: 'space-between',
           }}
         >
-          <Text variant="bold">Linkitykset</Text>
+          <Text variant="bold">{t('links', { ns: 'common' })}</Text>
 
           <div
             style={{
@@ -109,7 +107,7 @@ export default function LinkedDataForm({
         <BasicBlock
           title={
             <>
-              Linkitetyt sanastot
+              {t('linked-terminologies', { ns: 'common' })}
               <Text smallScreen style={{ color: '#5F686D' }}>
                 {' '}
                 ({t('optional')})
@@ -145,7 +143,7 @@ export default function LinkedDataForm({
           <BasicBlock
             title={
               <>
-                Linkitetyt koodistot
+                {t('linked-codelists')}
                 <Text smallScreen style={{ color: '#5F686D' }}>
                   {' '}
                   ({t('optional')})
@@ -155,6 +153,7 @@ export default function LinkedDataForm({
             extra={
               <div>
                 <Button variant="secondary" icon="plus">
+                  {/* No need for translation. Just a placeholder */}
                   Lisää koodisto
                 </Button>
               </div>
@@ -169,7 +168,7 @@ export default function LinkedDataForm({
         <BasicBlock
           title={
             <>
-              Linkitetyt tietomallit
+              {t('linked-terminologies', { ns: 'common' })}
               <Text smallScreen style={{ color: '#5F686D' }}>
                 {' '}
                 ({t('optional')})
@@ -179,6 +178,7 @@ export default function LinkedDataForm({
           extra={
             <div>
               <Button variant="secondary" icon="plus">
+                {/* No need for translation. Just a placeholder */}
                 Lisää tietomalli
               </Button>
             </div>

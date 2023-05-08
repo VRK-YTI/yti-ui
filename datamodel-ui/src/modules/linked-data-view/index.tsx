@@ -52,13 +52,6 @@ export default function LinkedDataView({
     return (
       <LinkedDataForm
         hasCodelist={isApplicationProfile}
-        initialData={
-          data && {
-            terminologies: data.terminologies,
-            datamodels: [],
-            codelists: [],
-          }
-        }
         model={data}
         handleReturn={handleFormReturn}
       />
@@ -74,7 +67,7 @@ export default function LinkedDataView({
             alignItems: 'space-between',
           }}
         >
-          <Text variant="bold">Linkitykset</Text>
+          <Text variant="bold">{t('links')}</Text>
 
           {hasPermission && (
             <div>
@@ -106,40 +99,50 @@ export default function LinkedDataView({
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
-        <BasicBlock title="Linkitetyt sanastot">
+        <BasicBlock title={t('linked-terminologies')}>
+          {/* <BasicBlock title="Linkitetyt sanastot"> */}
           {data && data.terminologies.length > 0 ? (
             <LinkedWrapper>
-              {data.terminologies.map((t, idx) => {
+              {data.terminologies.map((terminology, idx) => {
                 const label = getLanguageVersion({
-                  data: t.label,
+                  data: terminology.label,
                   lang: i18n.language,
                   appendLocale: true,
                 });
 
                 return (
                   <LinkedItem key={`linked-terminology-${idx}`}>
-                    <ExternalLink labelNewWindow={'avaa uuteen'} href={t.uri}>
-                      {label !== '' ? label : t.uri}
+                    <ExternalLink
+                      labelNewWindow={t('link-opens-new-window-external')}
+                      href={terminology.uri}
+                    >
+                      {label !== '' ? label : terminology.uri}
                     </ExternalLink>
                   </LinkedItem>
                 );
               })}
             </LinkedWrapper>
           ) : (
-            <>Ei linkitettyjä sanastoja.</>
+            <>{t('no-linked-terminologies')}</>
+            // <>Ei linkitettyjä sanastoja.</>
           )}
         </BasicBlock>
 
         {isApplicationProfile ? (
           // TODO: Add codelist visualization
-          <BasicBlock title="Koodistot">Ei linkitettyjä koodistoja.</BasicBlock>
+          <BasicBlock title={t('linked-codelists')}>
+            {t('no-linked-codelists')}
+          </BasicBlock>
         ) : (
+          // <BasicBlock title="Koodistot">Ei linkitettyjä koodistoja.</BasicBlock>
           <></>
         )}
 
-        <BasicBlock title="Linkitetyt tietomallit">
+        {/* <BasicBlock title="Linkitetyt tietomallit"> */}
+        <BasicBlock title={t('linked-datamodels')}>
           {/* TODO: Add datamodel visualization */}
-          <>Ei linkitettyjä tietomalleja.</>
+          <>{t('no-linked-datamodels')}</>
+          {/* <>Ei linkitettyjä tietomalleja.</> */}
         </BasicBlock>
       </DrawerContent>
     </>
