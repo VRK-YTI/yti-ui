@@ -10,6 +10,7 @@ import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { useMemo } from 'react';
 import Graph from '../graph';
 import { compareLocales } from '@app/common/utils/compare-locals';
+import LinkedModel from '../linked-model';
 
 interface ModelProps {
   modelId: string;
@@ -61,7 +62,7 @@ export default function Model({ modelId }: ModelProps) {
                 id: 'links',
                 icon: 'attachment',
                 buttonLabel: 'Linkitykset',
-                component: <></>,
+                component: <LinkedModel />,
               },
               {
                 id: 'classes',
