@@ -26,7 +26,7 @@ const ListItem = styled.div`
 `;
 
 interface DrawerItem {
-  label: string;
+  label: string | React.ReactElement;
   subtitle: string;
   onClick: () => void;
   onMouseEnter?: () => void;

@@ -230,7 +230,6 @@ export default function ClassView({
                 }),
                 subtitle: `${modelId}:${item.identifier}`,
                 onClick: () => {
-                  // getClass({ modelId: modelId, classId: item.identifier });
                   setCurrentClassId(item.identifier);
                   handleActive(item.identifier);
                 },
