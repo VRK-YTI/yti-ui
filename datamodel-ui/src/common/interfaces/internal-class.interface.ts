@@ -1,3 +1,4 @@
+import { ResourceType } from './resource-type.interface';
 import { Status } from './status.interface';
 
 export interface InternalClass {
@@ -14,5 +15,6 @@ export interface InternalClass {
   note: {
     [key: string]: string;
   };
+  resourceType: ResourceType;
   status: Status;
 }

@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { useMemo } from 'react';
 import Graph from '../graph';
+import LinkedDataView from '../linked-data-view';
 import { compareLocales } from '@app/common/utils/compare-locals';
 
 interface ModelProps {
@@ -44,7 +45,7 @@ export default function Model({ modelId }: ModelProps) {
                 id: 'search',
                 icon: 'search',
                 buttonLabel: t('search-variant'),
-                component: <SearchView />,
+                component: <SearchView modelId={modelId} />,
               },
               {
                 id: 'graph',
@@ -60,8 +61,14 @@ export default function Model({ modelId }: ModelProps) {
               {
                 id: 'links',
                 icon: 'attachment',
-                buttonLabel: 'Linkitykset',
-                component: <></>,
+                // buttonLabel: 'Linkitykset',
+                buttonLabel: t('links'),
+                component: (
+                  <LinkedDataView
+                    modelId={modelId}
+                    isApplicationProfile={modelInfo?.type === 'PROFILE'}
+                  />
+                ),
               },
               {
                 id: 'classes',
