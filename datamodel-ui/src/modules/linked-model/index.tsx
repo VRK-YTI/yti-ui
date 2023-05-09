@@ -47,6 +47,11 @@ export default function LinkedModel() {
     setKeyword('');
     setShowExternalForm(false);
     setSelected([]);
+    setFormData({
+      label: '',
+      uri: '',
+      prefix: '',
+    });
     setVisible(false);
   };
 
@@ -61,7 +66,7 @@ export default function LinkedModel() {
   return (
     <>
       <Button variant="secondary" icon="plus" onClick={() => setVisible(true)}>
-        Lisää tietomallit
+        {t('add-data-model')}
       </Button>
       <Modal
         appElementId="__next"
@@ -79,10 +84,10 @@ export default function LinkedModel() {
                 : selected.length < 1
             }
           >
-            Lisää valitut
+            {showExternalForm ? <>{t('add')}</> : <>{t('add-selected')}</>}
           </Button>
           <Button variant="secondary" onClick={() => handleClose()}>
-            Peruuta
+            {t('cancel-variant')}
           </Button>
         </ModalFooter>
       </Modal>
@@ -96,12 +101,12 @@ export default function LinkedModel() {
 
     return (
       <ModalContent>
-        <ModalTitle>Lisää viittaus tietomalliin</ModalTitle>
+        <ModalTitle>{t('add-reference-to-data-model')}</ModalTitle>
 
         <ContentWrapper>
           <div>
             <TextInput
-              labelText="Hae tietomallia"
+              labelText={t('search-data-model')}
               onChange={(e) => setKeyword(e?.toString() ?? '')}
               debounce={300}
             />
@@ -110,7 +115,7 @@ export default function LinkedModel() {
               variant="secondary"
               onClick={() => setShowExternalForm(true)}
             >
-              Lisää viittaus ulkoiseen tietomalliin
+              {t('add-reference-to-external-data-model')}
             </Button>
           </div>
 
@@ -126,16 +131,19 @@ export default function LinkedModel() {
                         appendLocale: true,
                       })}
                     </Checkbox>
-                    <ExternalLink href={obj.id} labelNewWindow="">
+                    <ExternalLink
+                      href={obj.id}
+                      labelNewWindow={t('link-opens-new-window-external', {
+                        ns: 'common',
+                      })}
+                    >
                       {obj.id}
                     </ExternalLink>
                   </SearchResult>
                 ))}
               </>
             ) : (
-              <Text smallScreen>
-                Etsi tietomalleja syöttämällä hakukenttään hakusana.
-              </Text>
+              <Text smallScreen>{t('search-data-model-by-keyword')}</Text>
             )}
           </div>
         </ContentWrapper>
@@ -150,14 +158,12 @@ export default function LinkedModel() {
 
     return (
       <ModalContent>
-        <ModalTitle>
-          Lisää viittaus tämän palvelun ulkopuoliseen tietomalliin
-        </ModalTitle>
+        <ModalTitle>{t('add-reference-to-data-model-outside')}</ModalTitle>
 
         <ContentWrapper>
           <TextInput
-            labelText="Tietomallin nimi"
-            visualPlaceholder="Kirjoita tietomallin nimi"
+            labelText={t('data-model-name')}
+            visualPlaceholder={t('input-data-model-name')}
             fullWidth
             onChange={(e) =>
               setFormData((f) => ({ ...f, label: e?.toString() ?? '' }))
@@ -165,8 +171,8 @@ export default function LinkedModel() {
           />
 
           <TextInput
-            labelText="Nimiavaruus (URI, URN tms.)"
-            visualPlaceholder="Kirjoita tietomallin URI / nimiavaruus"
+            labelText={t('namespace-with-examples')}
+            visualPlaceholder={t('input-uri-namespace')}
             fullWidth
             onChange={(e) =>
               setFormData((f) => ({ ...f, uri: e?.toString() ?? '' }))
@@ -174,8 +180,8 @@ export default function LinkedModel() {
           />
 
           <TextInput
-            labelText="Etuliite (tunnus tässä palvelussa)"
-            visualPlaceholder="Kirjoita tietomallin etuliite"
+            labelText={t('prefix-in-this-service')}
+            visualPlaceholder={t('input-data-model-prefix')}
             fullWidth
             onChange={(e) =>
               setFormData((f) => ({ ...f, prefix: e?.toString() ?? '' }))
