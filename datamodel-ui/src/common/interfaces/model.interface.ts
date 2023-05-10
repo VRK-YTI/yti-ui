@@ -10,7 +10,7 @@ export interface ModelType {
   organizations: Organization[];
   groups: Group[];
   contact: string;
-  internalNamespaces: [];
+  internalNamespaces: string[];
   externalNamespaces: [];
   terminologies: ModelTerminology[];
   created: string;
@@ -73,8 +73,11 @@ export interface ModelUpdatePayload {
   languages: string[];
   organizations: string[];
   groups: string[];
-  // Namespaces need better typing
   internalNamespaces: string[];
-  externalNamespaces: string[];
+  externalNamespaces: {
+    name: string;
+    namespace: string;
+    prefix: string;
+  }[];
   terminologies: string[];
 }

@@ -85,6 +85,8 @@
   "data-model": "Data model",
   "data-model-name": "Data model name",
   "data-models-added-to-this-model": "Data models added to this model",
+  "data-models-count_one": "{{count}} data model",
+  "data-models-count_other": "{{count}} data models",
   "data-models-in-use": "Data models in use",
   "datamodel-type": "Data Model type",
   "delete-modal": {
@@ -133,6 +135,7 @@
   "language-input-text": "Data Model name",
   "language-swedish-with-suffix": "Swedish SV",
   "library-hint-text": "Common and reusable description of content and structure",
+  "linked-codelists": "Linked code lists",
   "links": "Links",
   "literal": "Literal",
   "missing-general": "Model is missing information",

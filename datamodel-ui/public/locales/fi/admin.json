@@ -85,6 +85,8 @@
   "data-model": "Tietomalli",
   "data-model-name": "Tietomallin nimi",
   "data-models-added-to-this-model": "Tähän tietomalliin lisätyt tietomallit",
+  "data-models-count_one": "{{count}} tietomalli",
+  "data-models-count_other": "{{count}} tietomallia",
   "data-models-in-use": "Käytetyt tietomallit",
   "datamodel-type": "Tietomallin tyyppi",
   "delete-modal": {
@@ -133,6 +135,7 @@
   "language-input-text": "Tietomallin nimi",
   "language-swedish-with-suffix": "ruotsi SV",
   "library-hint-text": "Yleinen ja uudelleenkäytettävä tietojen sisällön ja rakenteen kuvaus",
+  "linked-codelists": "Linkitetyt koodistot",
   "links": "Linkit",
   "literal": "Literaali",
   "missing-general": "Tietomallin kaikkia tietoja ei ole määritelty",

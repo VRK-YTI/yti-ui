@@ -11,7 +11,6 @@ import { useMemo } from 'react';
 import Graph from '../graph';
 import LinkedDataView from '../linked-data-view';
 import { compareLocales } from '@app/common/utils/compare-locals';
-import LinkedModel from '../linked-model';
 
 interface ModelProps {
   modelId: string;

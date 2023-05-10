@@ -1,16 +1,14 @@
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
-import { Button, ExternalLink, Text, TextInput } from 'suomifi-ui-components';
+import { Button, Text } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
-import { LinkedItemWrapper } from './linked-data-form.styles';
 import TerminologyModal from '../terminology-modal';
 import {
   ModelTerminology,
   ModelType,
 } from '@app/common/interfaces/model.interface';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { usePostModelMutation } from '@app/common/components/model/model.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
@@ -19,6 +17,8 @@ import {
   getOrganizationsWithId,
 } from '@app/common/utils/get-value';
 import generatePayload from '../model/generate-payload';
+import LinkedModel from '../linked-model';
+import LinkedItem from './linked-item';
 
 export interface LinkedDataFormData {
   terminologies: ModelTerminology[];
@@ -41,6 +41,8 @@ export default function LinkedDataForm({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [data, setData] = useState<ModelFormType>({
     contact: '',
+    externalNamespaces: model.externalNamespaces ?? [],
+    internalNamespaces: model.internalNamespaces ?? [],
     languages:
       ['fi', 'sv', 'en'].map((lang) => ({
         labelText: translateLanguage(lang, t),
@@ -62,7 +64,6 @@ export default function LinkedDataForm({
 
   const handleSubmit = () => {
     const payload = generatePayload(data);
-
     postModel({ payload: payload, prefix: data.prefix });
   };
 
@@ -132,8 +133,18 @@ export default function LinkedDataForm({
             {data.terminologies.map((t) => (
               <LinkedItem
                 key={`terminology-item-${t.uri}`}
-                itemData={t}
-                type="terminology"
+                itemData={{
+                  ...t,
+                  type: 'terminology',
+                }}
+                handleRemove={(id) =>
+                  setData((data) => ({
+                    ...data,
+                    terminologies: data.terminologies.filter(
+                      (t) => t.uri !== id
+                    ),
+                  }))
+                }
               />
             ))}
           </div>
@@ -177,124 +188,241 @@ export default function LinkedDataForm({
           }
           extra={
             <div>
-              <Button variant="secondary" icon="plus">
-                {/* No need for translation. Just a placeholder */}
-                Lisää tietomalli
-              </Button>
+              <LinkedModel
+                initialData={{
+                  internalNamespaces: data.internalNamespaces,
+                }}
+                setInternalData={(internal) =>
+                  setData({
+                    ...data,
+                    internalNamespaces: internal,
+                  })
+                }
+                setExternalData={(external: {
+                  name: string;
+                  namespace: string;
+                  prefix: string;
+                }) =>
+                  setData({
+                    ...data,
+                    externalNamespaces: [...data.externalNamespaces, external],
+                  })
+                }
+              />
             </div>
           }
         >
-          <div></div>
+          <div>
+            {data.internalNamespaces.map((n) => (
+              <LinkedItem
+                key={`internal-namespace-item-${n}`}
+                itemData={{
+                  uri: n,
+                  type: 'datamodel-internal',
+                }}
+                handleRemove={(id) =>
+                  setData((data) => ({
+                    ...data,
+                    internalNamespaces: data.internalNamespaces.filter(
+                      (n) => n !== id
+                    ),
+                  }))
+                }
+              />
+            ))}
+            {data.externalNamespaces.map((n) => (
+              <LinkedItem
+                key={`external-namespace-item-${n.prefix}`}
+                itemData={{
+                  ...n,
+                  type: 'datamodel-external',
+                  setData: (name) =>
+                    setData((data) => {
+                      const updated = data.externalNamespaces.map((ext) => {
+                        if (ext.prefix === n.prefix) {
+                          return {
+                            ...ext,
+                            name: name,
+                          };
+                        }
+                        return ext;
+                      });
+
+                      return {
+                        ...data,
+                        externalNamespaces: updated,
+                      };
+                    }),
+                }}
+                handleRemove={(id) =>
+                  setData((data) => ({
+                    ...data,
+                    externalNamespaces: data.externalNamespaces.filter(
+                      (n) => n.namespace !== id
+                    ),
+                  }))
+                }
+              />
+            ))}
+          </div>
         </BasicBlock>
       </DrawerContent>
     </>
   );
 
-  function LinkedItem({
-    itemData,
-    type,
-  }: {
-    itemData: {
-      label: { [key: string]: string };
-      identifier?: string;
-      uri: string;
-    };
-    type: 'terminology' | 'datamodel';
-  }) {
-    const handleItemRemove = () => {
-      if (type === 'terminology') {
-        setData((data) => ({
-          ...data,
-          terminologies: data.terminologies.filter(
-            (t) => t.uri !== itemData.uri
-          ),
-        }));
-      }
-    };
+  // function LinkedItem({
+  //   itemData,
+  // }: {
+  //   itemData:
+  //   | {
+  //     label: { [key: string]: string };
+  //     identifier?: string;
+  //     uri: string;
+  //     type: 'terminology';
+  //   }
+  //   | {
+  //     uri: string;
+  //     type: 'datamodel-internal';
+  //   }
+  //   | {
+  //     name: string;
+  //     namespace: string;
+  //     prefix: string;
+  //     type: 'datamodel-external';
+  //   };
+  // }) {
+  //   const handleItemRemove = () => {
+  //     if (itemData.type === 'terminology') {
+  //       setData((data) => ({
+  //         ...data,
+  //         terminologies: data.terminologies.filter(
+  //           (t) => t.uri !== itemData.uri
+  //         ),
+  //       }));
+  //       return;
+  //     } else if (itemData.type === 'datamodel-internal') {
+  //       setData((data) => ({
+  //         ...data,
+  //         internalNamespaces: data.internalNamespaces.filter(
+  //           (n) => n !== itemData.uri
+  //         ),
+  //       }));
+  //     } else {
+  //       setData((data) => ({
+  //         ...data,
+  //         externalNamespaces: data.externalNamespaces.filter(
+  //           (n) => n.namespace !== itemData.namespace
+  //         ),
+  //       }));
+  //     }
+  //   };
 
-    return (
-      <LinkedItemWrapper>
-        <div className="item-content">
-          {renderTerminologyContent()}
-          {renderDatamodelContent()}
-        </div>
+  //   return (
+  //     <LinkedItemWrapper>
+  //       <div className="item-content">
+  //         {renderTerminologyContent()}
+  //         {renderDatamodelContent()}
+  //       </div>
 
-        <div>
-          <Button
-            variant="secondaryNoBorder"
-            icon="remove"
-            onClick={() => handleItemRemove()}
-          >
-            {t('remove')}
-          </Button>
-        </div>
-      </LinkedItemWrapper>
-    );
+  //       <div>
+  //         <Button
+  //           variant="secondaryNoBorder"
+  //           icon="remove"
+  //           onClick={() => handleItemRemove()}
+  //         >
+  //           {t('remove')}
+  //         </Button>
+  //       </div>
+  //     </LinkedItemWrapper>
+  //   );
 
-    function renderTerminologyContent() {
-      if (type !== 'terminology') {
-        return <></>;
-      }
+  //   function renderTerminologyContent() {
+  //     if (itemData.type !== 'terminology') {
+  //       return <></>;
+  //     }
 
-      const label = getLanguageVersion({
-        data: itemData.label,
-        lang: i18n.language,
-        appendLocale: true,
-      });
+  //     const label = getLanguageVersion({
+  //       data: itemData.label,
+  //       lang: i18n.language,
+  //       appendLocale: true,
+  //     });
 
-      return (
-        <>
-          <ExternalLink
-            labelNewWindow="Avaa uuteen ikkunaan"
-            href={itemData.uri}
-          >
-            {label !== '' ? label : itemData.uri}
-          </ExternalLink>
-          <Text smallScreen>{itemData.uri}</Text>
-        </>
-      );
-    }
+  //     return (
+  //       <>
+  //         <ExternalLink
+  //           labelNewWindow="Avaa uuteen ikkunaan"
+  //           href={itemData.uri}
+  //         >
+  //           {label !== '' ? label : itemData.uri}
+  //         </ExternalLink>
+  //         <Text smallScreen>{itemData.uri}</Text>
+  //       </>
+  //     );
+  //   }
 
-    function renderDatamodelContent() {
-      if (type !== 'datamodel') {
-        return <></>;
-      }
+  //   function renderDatamodelContent() {
+  //     if (itemData.type === 'datamodel-internal') {
+  //       return (
+  //         <>
+  //           <BasicBlock title="Tietomallin nimi">Tietomallin nimi</BasicBlock>
 
-      return (
-        <>
-          <BasicBlock title="Tietomallin nimi">
-            {itemData.uri.startsWith('http://uri.suomi.fi') ||
-            itemData.uri.includes('http://uri.suomi.fi') ? (
-              itemData.label
-            ) : (
-              <TextInput
-                labelText=""
-                labelMode="hidden"
-                defaultValue={getLanguageVersion({
-                  data: itemData.label,
-                  lang: i18n.language,
-                  appendLocale: true,
-                })}
-              />
-            )}
-          </BasicBlock>
+  //           <BasicBlock title="Etuliite (tunnus tässä palvelussa)">
+  //             {itemData.uri.split('/').pop()?.replace('#', '') ?? itemData.uri}
+  //           </BasicBlock>
 
-          <BasicBlock title="Etuliite (tunnus tässä palvelussa)">
-            {itemData.identifier ??
-              itemData.uri.split('/').pop()?.replace('#', '') ??
-              itemData.uri}
-          </BasicBlock>
+  //           <div className="datamodel-link">
+  //             <ExternalLink
+  //               labelNewWindow="Avaa uuteen ikkunaan"
+  //               href={itemData.uri}
+  //             >
+  //               {itemData.uri}
+  //             </ExternalLink>
+  //           </div>
+  //         </>
+  //       );
+  //     }
 
-          <div className="datamodel-link">
-            <ExternalLink
-              labelNewWindow="Avaa uuteen ikkunaan"
-              href={itemData.uri}
-            >
-              {itemData.uri}
-            </ExternalLink>
-          </div>
-        </>
-      );
-    }
-  }
+  //     if (itemData.type === 'datamodel-external') {
+  //       return (
+  //         <>
+  //           <TextInput
+  //             labelText="Tietomallin nimi"
+  //             defaultValue={itemData.name}
+  //             onChange={(e) => {
+  //               const updated = data.externalNamespaces.map((n) => {
+  //                 if (n.namespace === itemData.namespace) {
+  //                   return {
+  //                     ...n,
+  //                     name: e?.toString() ?? '',
+  //                   };
+  //                 }
+  //                 return n;
+  //               });
+
+  //               setData({
+  //                 ...data,
+  //                 externalNamespaces: updated,
+  //               });
+  //             }}
+  //           />
+
+  //           <BasicBlock title="Etuliite (tunnus tässä palvelussa)">
+  //             {itemData.prefix}
+  //           </BasicBlock>
+
+  //           <div className="datamodel-link">
+  //             <ExternalLink
+  //               labelNewWindow="Avaa uuteen ikkunaan"
+  //               href={itemData.namespace}
+  //             >
+  //               {itemData.namespace}
+  //             </ExternalLink>
+  //           </div>
+  //         </>
+  //       );
+  //     }
+
+  //     return <></>;
+  //   }
+  // }
 }

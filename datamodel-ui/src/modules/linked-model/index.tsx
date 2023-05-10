@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Button,
   Checkbox,
+  Chip,
   ExternalLink,
   Modal,
   ModalContent,
@@ -15,18 +16,34 @@ import { useGetSearchModelsQuery } from '@app/common/components/search-models/se
 import { useTranslation } from 'next-i18next';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
-export default function LinkedModel() {
+export default function LinkedModel({
+  initialData,
+  setInternalData,
+  setExternalData,
+}: {
+  initialData: {
+    internalNamespaces: string[];
+  };
+  setInternalData: (value: string[]) => void;
+  setExternalData: (value: {
+    name: string;
+    namespace: string;
+    prefix: string;
+  }) => void;
+}) {
   const { t, i18n } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
   const [keyword, setKeyword] = useState('');
   const [showExternalForm, setShowExternalForm] = useState(false);
-  const [formData, setFormData] = useState({
-    label: '',
-    uri: '',
+  const [data, setData] = useState({
+    name: '',
+    namespace: '',
     prefix: '',
   });
-  const [selected, setSelected] = useState<string[]>([]);
-  const { data } = useGetSearchModelsQuery(
+  const [selected, setSelected] = useState<string[]>(
+    initialData.internalNamespaces
+  );
+  const { data: models, isUninitialized } = useGetSearchModelsQuery(
     {
       lang: i18n.language,
       urlState: {
@@ -46,13 +63,23 @@ export default function LinkedModel() {
   const handleClose = () => {
     setKeyword('');
     setShowExternalForm(false);
-    setSelected([]);
-    setFormData({
-      label: '',
-      uri: '',
+    setSelected(initialData.internalNamespaces);
+    setData({
+      name: '',
+      namespace: '',
       prefix: '',
     });
     setVisible(false);
+  };
+
+  const handleSubmit = () => {
+    if (showExternalForm) {
+      setExternalData(data);
+    } else {
+      setInternalData(selected);
+    }
+
+    handleClose();
   };
 
   const handleCheckboxClick = (id: string) => {
@@ -62,6 +89,10 @@ export default function LinkedModel() {
         : [...selected, id]
     );
   };
+
+  useEffect(() => {
+    setSelected(initialData.internalNamespaces);
+  }, [initialData]);
 
   return (
     <>
@@ -78,9 +109,10 @@ export default function LinkedModel() {
 
         <ModalFooter>
           <Button
+            onClick={() => handleSubmit()}
             disabled={
               showExternalForm
-                ? Object.values(formData).filter((val) => val !== '').length < 3
+                ? Object.values(data).filter((val) => val !== '').length < 3
                 : selected.length < 1
             }
           >
@@ -119,12 +151,37 @@ export default function LinkedModel() {
             </Button>
           </div>
 
+          <div style={{ display: 'flex', gap: '5px' }}>
+            {selected.map((select) => (
+              <Chip
+                key={`selected-result-${select}`}
+                onClick={() =>
+                  setSelected(selected.filter((s) => s !== select))
+                }
+                removable
+              >
+                {select}
+              </Chip>
+            ))}
+          </div>
+
+          {!isUninitialized && (
+            <div>
+              <Text variant="bold">
+                {t('data-models-count', { count: models?.totalHitCount ?? 0 })}
+              </Text>
+            </div>
+          )}
+
           <div>
-            {keyword !== '' && data ? (
+            {keyword !== '' && models ? (
               <>
-                {data.responseObjects.map((obj) => (
+                {models.responseObjects.map((obj) => (
                   <SearchResult key={`data-model-result-${obj.id}`}>
-                    <Checkbox onClick={() => handleCheckboxClick(obj.id)}>
+                    <Checkbox
+                      checked={selected.includes(obj.id)}
+                      onClick={() => handleCheckboxClick(obj.id)}
+                    >
                       {getLanguageVersion({
                         data: obj.label,
                         lang: i18n.language,
@@ -166,7 +223,7 @@ export default function LinkedModel() {
             visualPlaceholder={t('input-data-model-name')}
             fullWidth
             onChange={(e) =>
-              setFormData((f) => ({ ...f, label: e?.toString() ?? '' }))
+              setData((f) => ({ ...f, name: e?.toString() ?? '' }))
             }
           />
 
@@ -175,7 +232,7 @@ export default function LinkedModel() {
             visualPlaceholder={t('input-uri-namespace')}
             fullWidth
             onChange={(e) =>
-              setFormData((f) => ({ ...f, uri: e?.toString() ?? '' }))
+              setData((f) => ({ ...f, namespace: e?.toString() ?? '' }))
             }
           />
 
@@ -184,7 +241,7 @@ export default function LinkedModel() {
             visualPlaceholder={t('input-data-model-prefix')}
             fullWidth
             onChange={(e) =>
-              setFormData((f) => ({ ...f, prefix: e?.toString() ?? '' }))
+              setData((f) => ({ ...f, prefix: e?.toString() ?? '' }))
             }
           />
         </ContentWrapper>

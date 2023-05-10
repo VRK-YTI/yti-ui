@@ -85,6 +85,8 @@
   "data-model": "",
   "data-model-name": "",
   "data-models-added-to-this-model": "",
+  "data-models-count_one": "",
+  "data-models-count_other": "",
   "data-models-in-use": "",
   "datamodel-type": "",
   "delete-modal": {
@@ -133,6 +135,7 @@
   "language-input-text": "",
   "language-swedish-with-suffix": "",
   "library-hint-text": "",
+  "linked-codelists": "",
   "links": "",
   "literal": "",
   "missing-general": "",
