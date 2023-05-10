@@ -147,6 +147,7 @@
   "missing-prefix": "Tietomallin tunnusta ei ole määritelty",
   "modified": "Muokattu",
   "namespace": "Nimiavaruus",
+  "namespace-is-not-valid": "Nimiavaruus ei ole laillisessa muodossa",
   "namespace-with-examples": "Nimiavaruus (URI, URN tms.)",
   "no-terminologies-available": "Sanastoja ei saatavilla",
   "optional": "valinnainen",

@@ -4,35 +4,15 @@ import {
 } from '@app/common/components/model/model.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Button,
-  Expander,
-  ExpanderGroup,
-  ExpanderTitleButton,
-  ExternalLink,
-  Text,
-  Tooltip,
-} from 'suomifi-ui-components';
+import { useEffect, useRef, useState } from 'react';
+import { Button, ExternalLink, Text, Tooltip } from 'suomifi-ui-components';
 import { BasicBlock, MultilingualBlock } from 'yti-common-ui/block';
 import {
-  getBaseModelPrefix,
-  getComments,
-  getContact,
-  getCreated,
-  getDataVocabularies,
-  getIsPartOf,
   getIsPartOfWithId,
-  getLanguages,
-  getLink,
-  getOrganizations,
   getOrganizationsWithId,
-  getReferenceData,
-  getTerminology,
-  getTitles,
   getUri,
 } from '@app/common/utils/get-value';
-import { ModelInfoListWrapper, TooltipWrapper } from './model.styles';
+import { TooltipWrapper } from './model.styles';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import Separator from 'yti-common-ui/separator';
@@ -61,28 +41,6 @@ export default function ModelInfoView() {
   const hasPermission = HasPermission({ actions: ['ADMIN_DATA_MODEL'] });
   const { data: modelInfo, refetch } = useGetModelQuery(modelId);
 
-  const data = useMemo(() => {
-    if (!modelInfo) {
-      return undefined;
-    }
-
-    return {
-      title: getTitles(modelInfo),
-      description: getComments(modelInfo),
-      prefix: getBaseModelPrefix(modelInfo),
-      uri: getUri(modelInfo),
-      isPartOf: getIsPartOf(modelInfo, i18n.language),
-      languages: getLanguages(modelInfo),
-      terminologies: getTerminology(modelInfo, i18n.language),
-      referenceData: getReferenceData(modelInfo, i18n.language),
-      dataVocabularies: getDataVocabularies(modelInfo, i18n.language),
-      links: getLink(modelInfo),
-      organizations: getOrganizations(modelInfo, i18n.language),
-      contact: getContact(modelInfo),
-      created: getCreated(modelInfo),
-    };
-  }, [modelInfo, i18n.language]);
-
   useEffect(() => {
     if (modelInfo) {
       setFormData({
@@ -106,6 +64,8 @@ export default function ModelInfoView() {
         status: modelInfo?.status ?? 'DRAFT',
         type: modelInfo?.type ?? 'PROFILE',
         terminologies: modelInfo.terminologies ?? [],
+        externalNamespaces: modelInfo.externalNamespaces ?? [],
+        internalNamespaces: modelInfo.internalNamespaces ?? [],
       });
     }
   }, [modelInfo, t, i18n.language]);
@@ -127,7 +87,7 @@ export default function ModelInfoView() {
     }
   }, [ref]);
 
-  if (!modelInfo || !data) {
+  if (!modelInfo) {
     return <DrawerContent />;
   }
 
@@ -210,142 +170,79 @@ export default function ModelInfoView() {
       <DrawerContent height={headerHeight}>
         <BasicBlock title={t('name')}>
           <MultilingualBlock
-            data={data.title.sort((a, b) => compareLocales(a.lang, b.lang))}
+            data={Object.entries(modelInfo.label)
+              .sort((a, b) => compareLocales(a[0], b[0]))
+              .map((l) => ({ lang: l[0], value: l[1] }))}
           />
         </BasicBlock>
         <BasicBlock title={t('description')}>
-          {data.description.length > 0 ? (
+          {Object.keys(modelInfo.description).length > 0 ? (
             <MultilingualBlock
-              data={data.description.sort((a, b) =>
-                compareLocales(a.lang, b.lang)
-              )}
+              data={Object.entries(modelInfo.description)
+                .sort((a, b) => compareLocales(a[0], b[0]))
+                .map((d) => ({ lang: d[0], value: d[1] }))}
             />
           ) : (
             t('not-added')
           )}
         </BasicBlock>
-        <BasicBlock title={t('prefix')}>{data.prefix}</BasicBlock>
-        <BasicBlock title={t('model-uri')}>{data.uri}</BasicBlock>
+        <BasicBlock title={t('prefix')}>{modelInfo.prefix}</BasicBlock>
+        <BasicBlock title={t('model-uri')}>{getUri(modelInfo)}</BasicBlock>
         <BasicBlock title={t('information-domains')}>
-          {data.isPartOf.join(', ')}
+          {modelInfo.groups
+            .map((group) =>
+              getLanguageVersion({ data: group.label, lang: i18n.language })
+            )
+            .sort()
+            .join(', ')}
         </BasicBlock>
         <BasicBlock title={t('model-languages')}>
-          {data.languages
+          {modelInfo.languages
             .map(
               (lang) => `${translateLanguage(lang, t)} ${lang.toUpperCase()}`
             )
             .join(', ')}
         </BasicBlock>
 
-        <BasicBlock title={t('terminologies-used')}>
-          {data.terminologies.length > 0 ? (
-            <ModelInfoListWrapper>
-              {data.terminologies.map((terminology, idx) => (
-                <li key={`model-terminologies-${idx}`}>
-                  <ExternalLink
-                    href={terminology.url}
-                    labelNewWindow={`${t('link-opens-new-window-external')} ${
-                      terminology.url
-                    }`}
-                  >
-                    {terminology.label}
-                  </ExternalLink>
-                </li>
-              ))}
-            </ModelInfoListWrapper>
-          ) : (
-            t('not-added')
-          )}
-        </BasicBlock>
-        <BasicBlock title={t('reference-data-used')}>
-          {data.referenceData.length > 0
-            ? data.referenceData.map((reference, idx) => (
-                <div key={`model-data-references-${idx}`}>
-                  <ExternalLink
-                    href={reference.url}
-                    labelNewWindow={`${t('link-opens-new-window-external')} ${
-                      reference.url
-                    }`}
-                  >
-                    {reference.title}
-                  </ExternalLink>
-                  <br />
-                  {reference.description}
-                </div>
-              ))
-            : t('not-added')}
-        </BasicBlock>
-        <BasicBlock title={t('data-vocabularies-used')}>
-          {data.dataVocabularies.length > 0
-            ? data.dataVocabularies.map((vocab, idx) => (
-                <div key={`model-data-references-${idx}`}>
-                  <ExternalLink
-                    href={vocab.url}
-                    labelNewWindow={`${t('link-opens-new-window-external')} ${
-                      vocab.url
-                    }`}
-                  >
-                    {vocab.title}
-                  </ExternalLink>
-                </div>
-              ))
-            : t('not-added')}
-        </BasicBlock>
-        <BasicBlock title={t('links')}>
-          {data.links.length > 0 ? (
-            <ModelInfoListWrapper>
-              {data.links.map((link, idx) => (
-                <li key={`model-link-${idx}`}>
-                  <ExternalLink
-                    href={link.url}
-                    labelNewWindow={`${t('link-opens-new-window-external')} ${
-                      link.url
-                    }`}
-                  >
-                    {link.title}
-                  </ExternalLink>
-                  <br />
-                  {link.description}
-                </li>
-              ))}{' '}
-            </ModelInfoListWrapper>
-          ) : (
-            <div>{t('not-added')}</div>
-          )}
+        <BasicBlock title={t('links-to-additional-information')}>
+          {t('not-added')}
         </BasicBlock>
 
-        <ExpanderGroup
-          closeAllText=""
-          openAllText=""
-          showToggleAllButton={false}
-        >
-          <Expander>
-            <ExpanderTitleButton>{t('usage-from-other')}</ExpanderTitleButton>
-          </Expander>
-        </ExpanderGroup>
+        <BasicBlock title={t('references-from-other-components')}>
+          {t('no-references')}
+        </BasicBlock>
+
+        <Separator isLarge />
+
+        <BasicBlock title={t('created')}>
+          <FormattedDate date={modelInfo.created} />
+          {modelInfo.creator && `, ${modelInfo.creator.name}`}
+        </BasicBlock>
 
         <Separator isLarge />
 
         <BasicBlock title={t('contributors')}>
-          {data.organizations.join(', ')}
+          {modelInfo.organizations
+            .map((org) =>
+              getLanguageVersion({ data: org.label, lang: i18n.language })
+            )
+            .sort()
+            .join(', ')}
         </BasicBlock>
         <BasicBlock title={t('feedback')}>
           <ExternalLink
-            href={`mailto:${data.contact}?subject=${getLanguageVersion({
-              data: data.title.reduce(
-                (acc, curr) => ({ ...acc, [curr.lang]: curr.value }),
-                {}
-              ),
+            href={`mailto:${
+              modelInfo.contact && modelInfo.contact !== ''
+                ? modelInfo.contact
+                : 'yhteentoimivuus@dvv.fi'
+            }?subject=${getLanguageVersion({
+              data: modelInfo.label,
               lang: i18n.language,
             })}`}
             labelNewWindow=""
           >
-            {data.contact}
+            {modelInfo.contact ?? 'yhteentoimivuus@dvv.fi'}
           </ExternalLink>
-        </BasicBlock>
-
-        <BasicBlock title={t('created')}>
-          <FormattedDate date={data.created} />
         </BasicBlock>
       </DrawerContent>
     </>

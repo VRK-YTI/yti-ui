@@ -147,6 +147,7 @@
   "missing-prefix": "Prefix hasn't been set",
   "modified": "Modified",
   "namespace": "Namespace",
+  "namespace-is-not-valid": "Namespace isn't valid",
   "namespace-with-examples": "Namespace (URI, URN etc.)",
   "no-terminologies-available": "No terminologies available",
   "optional": "optional",

@@ -15,6 +15,7 @@ import { ContentWrapper, SearchResult } from './linked-model.styles';
 import { useGetSearchModelsQuery } from '@app/common/components/search-models/search-models.slice';
 import { useTranslation } from 'next-i18next';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import isURL from 'validator/lib/isURL';
 
 export default function LinkedModel({
   initialData,
@@ -22,9 +23,17 @@ export default function LinkedModel({
   setExternalData,
 }: {
   initialData: {
-    internalNamespaces: string[];
+    internalNamespaces: {
+      name: string;
+      uri: string;
+    }[];
   };
-  setInternalData: (value: string[]) => void;
+  setInternalData: (
+    value: {
+      name: string;
+      uri: string;
+    }[]
+  ) => void;
   setExternalData: (value: {
     name: string;
     namespace: string;
@@ -35,14 +44,23 @@ export default function LinkedModel({
   const [visible, setVisible] = useState(false);
   const [keyword, setKeyword] = useState('');
   const [showExternalForm, setShowExternalForm] = useState(false);
+  const [userPosted, setUserPosted] = useState(false);
+  const [errors, setErrors] = useState({
+    name: true,
+    namespace: true,
+    prefix: true,
+  });
   const [data, setData] = useState({
     name: '',
     namespace: '',
     prefix: '',
   });
-  const [selected, setSelected] = useState<string[]>(
-    initialData.internalNamespaces
-  );
+  const [selected, setSelected] = useState<
+    {
+      name: string;
+      uri: string;
+    }[]
+  >(initialData.internalNamespaces);
   const { data: models, isUninitialized } = useGetSearchModelsQuery(
     {
       lang: i18n.language,
@@ -60,6 +78,24 @@ export default function LinkedModel({
     { skip: keyword === '' }
   );
 
+  const setDataValue = (key: keyof typeof data, value: string) => {
+    if (userPosted && Object.values(errors).some((val) => val === true)) {
+      const newErrors = {
+        name: !data.name || data.name === '',
+        namespace:
+          !data.namespace || data.namespace === '' || !isURL(data.namespace),
+        prefix: !data.prefix || data.namespace === '',
+      };
+
+      setErrors(newErrors);
+    }
+
+    setData({
+      ...data,
+      [key]: value,
+    });
+  };
+
   const handleClose = () => {
     setKeyword('');
     setShowExternalForm(false);
@@ -69,12 +105,37 @@ export default function LinkedModel({
       namespace: '',
       prefix: '',
     });
+    setUserPosted(false);
     setVisible(false);
   };
 
   const handleSubmit = () => {
+    if (!userPosted) {
+      setUserPosted(true);
+    }
+
     if (showExternalForm) {
-      setExternalData(data);
+      const newErrors = {
+        name: !data.name || data.name === '',
+        namespace:
+          !data.namespace || data.namespace === '' || !isURL(data.namespace),
+        prefix: !data.prefix || data.namespace === '',
+      };
+
+      setErrors(newErrors);
+
+      if (Object.values(newErrors).some((val) => val === true)) {
+        return;
+      }
+
+      setExternalData({
+        ...data,
+        namespace:
+          !data.namespace.startsWith('http://') ||
+          !data.namespace.startsWith('https://')
+            ? `http://${data.namespace}`
+            : data.namespace,
+      });
     } else {
       setInternalData(selected);
     }
@@ -82,11 +143,17 @@ export default function LinkedModel({
     handleClose();
   };
 
-  const handleCheckboxClick = (id: string) => {
+  const handleCheckboxClick = ({
+    name,
+    uri,
+  }: {
+    name: string;
+    uri: string;
+  }) => {
     setSelected((selected) =>
-      selected.includes(id)
-        ? selected.filter((s) => s !== id)
-        : [...selected, id]
+      selected.map((s) => s.uri).includes(uri)
+        ? selected.filter((s) => s.uri !== uri)
+        : [...selected, { name: name, uri: uri }]
     );
   };
 
@@ -154,13 +221,21 @@ export default function LinkedModel({
           <div style={{ display: 'flex', gap: '5px' }}>
             {selected.map((select) => (
               <Chip
-                key={`selected-result-${select}`}
+                key={`selected-result-${select.uri}`}
                 onClick={() =>
                   setSelected(selected.filter((s) => s !== select))
                 }
                 removable
               >
-                {select}
+                {data
+                  ? getLanguageVersion({
+                      data: models?.responseObjects.find(
+                        (obj) => obj.id === select.uri
+                      )?.label,
+                      lang: i18n.language,
+                      appendLocale: true,
+                    })
+                  : select}
               </Chip>
             ))}
           </div>
@@ -179,8 +254,17 @@ export default function LinkedModel({
                 {models.responseObjects.map((obj) => (
                   <SearchResult key={`data-model-result-${obj.id}`}>
                     <Checkbox
-                      checked={selected.includes(obj.id)}
-                      onClick={() => handleCheckboxClick(obj.id)}
+                      checked={selected.map((s) => s.uri).includes(obj.id)}
+                      onClick={() =>
+                        handleCheckboxClick({
+                          name: getLanguageVersion({
+                            data: obj.label,
+                            lang: i18n.language,
+                            appendLocale: true,
+                          }),
+                          uri: obj.id,
+                        })
+                      }
                     >
                       {getLanguageVersion({
                         data: obj.label,
@@ -222,17 +306,18 @@ export default function LinkedModel({
             labelText={t('data-model-name')}
             visualPlaceholder={t('input-data-model-name')}
             fullWidth
-            onChange={(e) =>
-              setData((f) => ({ ...f, name: e?.toString() ?? '' }))
-            }
+            onChange={(e) => setDataValue('name', e?.toString() ?? '')}
+            status={userPosted && errors.name ? 'error' : 'default'}
           />
 
           <TextInput
             labelText={t('namespace-with-examples')}
             visualPlaceholder={t('input-uri-namespace')}
             fullWidth
-            onChange={(e) =>
-              setData((f) => ({ ...f, namespace: e?.toString() ?? '' }))
+            onChange={(e) => setDataValue('namespace', e?.toString() ?? '')}
+            status={userPosted && errors.namespace ? 'error' : 'default'}
+            statusText={
+              userPosted && errors.namespace ? t('namespace-is-not-valid') : ''
             }
           />
 
@@ -240,9 +325,8 @@ export default function LinkedModel({
             labelText={t('prefix-in-this-service')}
             visualPlaceholder={t('input-data-model-prefix')}
             fullWidth
-            onChange={(e) =>
-              setData((f) => ({ ...f, prefix: e?.toString() ?? '' }))
-            }
+            onChange={(e) => setDataValue('prefix', e?.toString() ?? '')}
+            status={userPosted && errors.prefix ? 'error' : 'default'}
           />
         </ContentWrapper>
       </ModalContent>

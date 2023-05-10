@@ -14,7 +14,15 @@ export interface ModelType {
   externalNamespaces: [];
   terminologies: ModelTerminology[];
   created: string;
+  creator: {
+    id: string;
+    name: string;
+  };
   modified: string;
+  modifier: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface Group {

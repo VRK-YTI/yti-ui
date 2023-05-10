@@ -13,6 +13,7 @@ interface LinkedItemProps {
         type: 'terminology';
       }
     | {
+        name: string;
         uri: string;
         type: 'datamodel-internal';
       }
@@ -81,7 +82,9 @@ export default function LinkedItem({
     if (itemData.type === 'datamodel-internal') {
       return (
         <>
-          <BasicBlock title={t('data-model-name')}>Tietomallin nimi</BasicBlock>
+          <BasicBlock title={t('data-model-name')}>
+            {itemData.name !== '' ? itemData.name : itemData.uri}
+          </BasicBlock>
 
           <BasicBlock title={t('prefix-in-this-service')}>
             {itemData.uri.split('/').pop()?.replace('#', '') ?? itemData.uri}

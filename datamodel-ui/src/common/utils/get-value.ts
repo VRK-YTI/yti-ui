@@ -1,6 +1,5 @@
 import { MultiSelectData } from 'suomifi-ui-components';
 import {
-  DataVocabulary,
   Group,
   LangObject,
   ModelType,
@@ -9,16 +8,6 @@ import {
 import { Status } from '../interfaces/status.interface';
 import { Type } from '../interfaces/type.interface';
 import { getLanguageVersion } from './get-language-version';
-
-export function getDataVocabulariesInfo(
-  data?: ModelType
-): DataVocabulary[] | undefined {
-  if (!data) {
-    return;
-  }
-
-  return [...data.externalNamespaces, ...data.internalNamespaces];
-}
 
 function getReferenceDataInfo(data?: ModelType): ReferenceData[] {
   if (!data) {
@@ -229,23 +218,4 @@ export function getReferenceData(
       url: '',
     };
   });
-}
-
-export function getDataVocabularies(
-  data?: ModelType,
-  lang?: string
-): {
-  title: string;
-  url: string;
-}[] {
-  const dataVocabularies = getDataVocabulariesInfo(data);
-
-  if (!dataVocabularies) {
-    return [];
-  }
-
-  return dataVocabularies.map((t) => ({
-    title: '',
-    url: t.id,
-  }));
 }
