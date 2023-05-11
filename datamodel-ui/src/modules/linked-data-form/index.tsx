@@ -19,6 +19,7 @@ import {
   getOrganizationsWithId,
 } from '@app/common/utils/get-value';
 import generatePayload from '../model/generate-payload';
+import CodeListModal from '../code-list-modal';
 
 export interface LinkedDataFormData {
   terminologies: ModelTerminology[];
@@ -143,7 +144,7 @@ export default function LinkedDataForm({
           <BasicBlock
             title={
               <>
-                {t('linked-codelists')}
+                {t('linked-codelists', { ns: 'common' })}
                 <Text smallScreen style={{ color: '#5F686D' }}>
                   {' '}
                   ({t('optional')})
@@ -152,10 +153,7 @@ export default function LinkedDataForm({
             }
             extra={
               <div>
-                <Button variant="secondary" icon="plus">
-                  {/* No need for translation. Just a placeholder */}
-                  Lisää koodisto
-                </Button>
+                <CodeListModal />
               </div>
             }
           >

@@ -134,7 +134,6 @@ export default function LinkedDataView({
             {t('no-linked-codelists')}
           </BasicBlock>
         ) : (
-          // <BasicBlock title="Koodistot">Ei linkitettyjä koodistoja.</BasicBlock>
           <></>
         )}
 
