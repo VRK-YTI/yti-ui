@@ -21,7 +21,10 @@ import {
 import { useStoreDispatch } from '@app/store';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { selectViews } from '@app/common/components/model/model.slice';
+import {
+  selectSelected,
+  selectViews,
+} from '@app/common/components/model/model.slice';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
 import { resourceToResourceFormType } from '../common-form/utils';
 
@@ -40,6 +43,7 @@ export default function AssociationView({
   const router = useRouter();
   const dispatch = useStoreDispatch();
   const views = useSelector(selectViews());
+  const globalSelected = useSelector(selectSelected());
   const [view, setView] = useState(
     Object.keys(views.associations).filter((k) => k).length > 0
       ? Object.keys(views.associations).find(
@@ -82,6 +86,15 @@ export default function AssociationView({
       setHeaderHeight(ref.current.clientHeight);
     }
   }, [ref]);
+
+  useEffect(() => {
+    if (
+      globalSelected.type === 'associations' &&
+      currentAssociationId !== globalSelected.id
+    ) {
+      setCurrentAssociationId(globalSelected.id);
+    }
+  }, [globalSelected, currentAssociationId]);
 
   const handleFollowUp = (value?: { label: string; uri: string }) => {
     dispatch(
