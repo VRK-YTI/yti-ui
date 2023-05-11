@@ -215,8 +215,6 @@ export default function ClassForm({
     }
   }, [putClassResult, data, handleFollowUp]);
 
-  console.log('data', data);
-
   return (
     <>
       <StaticHeader ref={ref}>

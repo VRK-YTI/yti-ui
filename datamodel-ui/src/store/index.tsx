@@ -21,6 +21,7 @@ import { conceptSearchApi } from '@app/common/components/concept-search/concept-
 import { graphSlice } from '@app/common/components/graph/graph.slice';
 import { visualizationApi } from '@app/common/components/visualization/visualization.slice';
 import { activeSlice } from '@app/common/components/active/active.slice';
+import { codeApi, codeIntake } from '@app/common/components/code';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -49,6 +50,8 @@ export function makeStore(ctx: NextIronContext) {
       [graphSlice.name]: graphSlice.reducer,
       [visualizationApi.reducerPath]: visualizationApi.reducer,
       [activeSlice.name]: activeSlice.reducer,
+      [codeIntake.reducerPath]: codeIntake.reducer,
+      [codeApi.reducerPath]: codeApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -66,7 +69,9 @@ export function makeStore(ctx: NextIronContext) {
         searchTerminologyApi.middleware,
         countApi.middleware,
         conceptSearchApi.middleware,
-        visualizationApi.middleware
+        visualizationApi.middleware,
+        codeIntake.middleware,
+        codeApi.middleware
       ),
 
     // Development tools should be available only in development environments

@@ -14,17 +14,15 @@ export const FilterBlock = styled.div`
       flex-grow: 4;
     }
 
-    .fi-dropdown:first-child {
+    .fi-single-select {
       flex-grow: 4;
-
-      span {
-        width: calc(100% - 47px);
-      }
+      min-height: min-content;
+      height: min-content;
     }
   }
 
-  div:first-child {
-    margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
+  > div:first-child {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
   }
 `;
 
