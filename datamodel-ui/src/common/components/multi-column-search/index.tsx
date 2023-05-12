@@ -178,17 +178,35 @@ export default function MultiColumnSearch({
 
   return (
     <div>
+      {applicationProfile && (
+        <div style={{ marginBottom: '20px' }}>
+          <SearchInput
+            className="wider"
+            clearButtonLabel={t('clear-keyword-filter')}
+            labelText={t('search', { ns: 'common' })}
+            labelMode="hidden"
+            searchButtonLabel={t('search-by-keyword', { ns: 'common' })}
+            visualPlaceholder={t('search-by-keyword', { ns: 'common' })}
+            defaultValue={searchParams.query}
+            onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
+            debounce={300}
+          />
+        </div>
+      )}
       <SearchToolsBlock>
-        <SearchInput
-          className="wider"
-          clearButtonLabel={t('clear-keyword-filter')}
-          labelText={t('search', { ns: 'common' })}
-          searchButtonLabel={t('search-by-keyword', { ns: 'common' })}
-          visualPlaceholder={t('search-by-keyword', { ns: 'common' })}
-          defaultValue={searchParams.query}
-          onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
-          debounce={300}
-        />
+        {!applicationProfile && (
+          <SearchInput
+            className="wider"
+            clearButtonLabel={t('clear-keyword-filter')}
+            labelText={t('search', { ns: 'common' })}
+            searchButtonLabel={t('search-by-keyword', { ns: 'common' })}
+            visualPlaceholder={t('search-by-keyword', { ns: 'common' })}
+            defaultValue={searchParams.query}
+            onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
+            debounce={300}
+          />
+        )}
+
         {applicationProfile && (
           <Dropdown
             className="data-model-type-picker"

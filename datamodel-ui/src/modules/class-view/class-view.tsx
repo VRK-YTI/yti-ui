@@ -49,6 +49,7 @@ import ResourceInfo from './resource-info';
 import ConceptView from '../concept-view';
 import { useRouter } from 'next/router';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
+import ResourcePicker from '../resource-picker-modal';
 
 interface ClassViewProps {
   modelId: string;
@@ -179,6 +180,8 @@ export default function ClassView({
     }
   }, [globalSelected, currentClassId]);
 
+  const [test, setTest] = useState(false);
+
   return (
     <>
       {renderListing()}
@@ -216,6 +219,9 @@ export default function ClassView({
             onChange={(e) => handleQueryChange(e?.toString() ?? '')}
             debounce={500}
           />
+
+          <Button onClick={() => setTest(true)}>Test</Button>
+          <ResourcePicker visible={test} hide={() => setTest(false)} />
         </StaticHeader>
 
         <DrawerContent height={headerHeight} spaced>

@@ -157,6 +157,7 @@ export default function ClassModal({
             setSearchParams={handleSearch}
             modelId={modelId}
             applicationProfile={applicationProfile}
+            languageVersioned={applicationProfile}
           />
         </ModalContent>
         <ModalFooter>
