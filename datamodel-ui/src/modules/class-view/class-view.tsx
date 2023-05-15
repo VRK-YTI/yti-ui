@@ -50,6 +50,7 @@ import ConceptView from '../concept-view';
 import { useRouter } from 'next/router';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
 import ResourcePicker from '../resource-picker-modal';
+import ClassRestrictionModal from '../class-restriction-modal';
 
 interface ClassViewProps {
   modelId: string;
@@ -181,6 +182,7 @@ export default function ClassView({
   }, [globalSelected, currentClassId]);
 
   const [test, setTest] = useState(false);
+  const [test2, setTest2] = useState(false);
 
   return (
     <>
@@ -220,8 +222,10 @@ export default function ClassView({
             debounce={500}
           />
 
-          <Button onClick={() => setTest(true)}>Test</Button>
+          <Button onClick={() => setTest(true)}>Resource picker</Button>
+          <Button onClick={() => setTest2(true)}>Class restriction</Button>
           <ResourcePicker visible={test} hide={() => setTest(false)} />
+          <ClassRestrictionModal visible={test2} hide={() => setTest2(false)} />
         </StaticHeader>
 
         <DrawerContent height={headerHeight} spaced>

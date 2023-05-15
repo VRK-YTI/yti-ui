@@ -1,19 +1,14 @@
 import { useTranslation } from 'next-i18next';
 import {
   Button,
-  Checkbox,
-  ExternalLink,
   ModalContent,
   ModalFooter,
   ModalTitle,
 } from 'suomifi-ui-components';
-import {
-  ListWrapper,
-  StyledTable,
-  WideModal,
-} from './resource-picker-modal.styles';
+import { WideModal } from './resource-picker-modal.styles';
 import { useState } from 'react';
 import { useBreakpoints } from 'yti-common-ui/media-query';
+import ResourceList from '@app/common/components/resource-list';
 
 interface ResourcePickerProps {
   visible: boolean;
@@ -66,41 +61,22 @@ export default function ResourcePicker({ visible, hide }: ResourcePickerProps) {
   ]);
 
   const handleCheckboxClick = (
-    id: string,
+    id: string | string[],
     type: 'associations' | 'attributes'
   ) => {
-    setSelected({
-      ...selected,
-      [type]: selected[type].includes(id)
-        ? selected[type].filter((s) => s !== id)
-        : [...selected[type], id],
-    });
-  };
-
-  const handleGroupClick = (type: 'associations' | 'attributes') => {
-    if (
-      type === 'associations' &&
-      selected[type].length < associations.length
-    ) {
+    if (Array.isArray(id)) {
       setSelected({
         ...selected,
-        [type]: associations.map((a) => a.uri),
+        [type]: id,
       });
-      return;
-    }
-
-    if (type === 'attributes' && selected[type].length < attributes.length) {
+    } else {
       setSelected({
         ...selected,
-        [type]: attributes.map((a) => a.uri),
+        [type]: selected[type].includes(id)
+          ? selected[type].filter((s) => s !== id)
+          : [...selected[type], id],
       });
-      return;
     }
-
-    setSelected({
-      ...selected,
-      [type]: [],
-    });
   };
 
   return (
@@ -113,117 +89,123 @@ export default function ResourcePicker({ visible, hide }: ResourcePickerProps) {
       <ModalContent>
         <ModalTitle>Lisää ominaisuudet valitusta luokasta</ModalTitle>
 
-        <ListWrapper $spaceBottom={true}>
-          <div className="title-row">3 Attribuuttia</div>
+        <ResourceList
+          primaryColumnName="Attribuutin nimi"
+          handleClick={(id: string | string[]) =>
+            handleCheckboxClick(id, 'attributes')
+          }
+          items={[
+            {
+              partOf: {
+                label: 'partOfLabel',
+                domains: ['domain1', 'domain2'],
+                type: 'type',
+              },
+              subClass: {
+                label: 'subClassLabel',
+                link: 'link',
+                partOf: 'subClassPartOf',
+              },
+              target: {
+                identifier: 'targetIdentifier',
+                label: 'targetLabel',
+                link: 'targetLink',
+                linkLabel: 'targetLinkLabel',
+                note: 'targetNote',
+                status: 'targetStatus',
+                isValid: false,
+              },
+            },
+            {
+              partOf: {
+                label: 'partOfLabel2',
+                domains: ['domain1'],
+                type: 'type',
+              },
+              subClass: {
+                label: 'subClassLabel2',
+                link: 'link',
+                partOf: 'subClassPartOf',
+              },
+              target: {
+                identifier: 'targetIdentifier2',
+                label: 'targetLabel2',
+                link: 'targetLink',
+                linkLabel: 'targetLinkLabel',
+                note: 'targetNote',
+                status: 'targetStatus',
+                isValid: true,
+              },
+            },
+          ]}
+          type="multiple"
+          selected={selected.attributes}
+          extraHeader={
+            <tr>
+              <td colSpan={4}>2 Attribuuttia</td>
+            </tr>
+          }
+        />
 
-          <StyledTable>
-            <thead>
-              <tr>
-                <td>
-                  <Checkbox
-                    onClick={() => handleGroupClick('attributes')}
-                    checked={selected.attributes.length === attributes.length}
-                  />
-                </td>
-                <td>Attribuutin nimi</td>
-                <td>Käsite</td>
-                <td>Tekninen kuvaus</td>
-              </tr>
-            </thead>
-            <tbody>
-              {attributes.map((attr) => (
-                <tr key={`attribute-${attr.uri}`}>
-                  <td>
-                    <div>
-                      <Checkbox
-                        onClick={() =>
-                          handleCheckboxClick(attr.uri, 'attributes')
-                        }
-                        checked={selected.attributes.includes(attr.uri)}
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <div>
-                      {attr.label}
-                      <ExternalLink labelNewWindow="" href={attr.url}>
-                        {attr.uri}
-                      </ExternalLink>
-                    </div>
-                  </td>
-                  <td>
-                    <div>
-                      <ExternalLink labelNewWindow="" href="#">
-                        {attr.label}
-                      </ExternalLink>
-                      {attr.terminologyName}
-                    </div>
-                  </td>
-                  <td>
-                    <div>{attr.description}</div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </StyledTable>
-        </ListWrapper>
+        <div style={{ height: '50px' }} />
 
-        <ListWrapper>
-          <div className="title-row">1 Assosaatio</div>
-
-          <StyledTable>
-            <thead>
-              <tr>
-                <td>
-                  <Checkbox
-                    onClick={() => handleGroupClick('associations')}
-                    checked={
-                      selected.associations.length === associations.length
-                    }
-                  />
-                </td>
-                <td>Assosiaation nimi</td>
-                <td>Käsite</td>
-                <td>Tekninen kuvaus</td>
-              </tr>
-            </thead>
-            <tbody>
-              {associations.map((assoc) => (
-                <tr key={`association-${assoc.uri}`}>
-                  <td>
-                    <div>
-                      <Checkbox
-                        onClick={() =>
-                          handleCheckboxClick(assoc.uri, 'associations')
-                        }
-                        checked={selected.associations.includes(assoc.uri)}
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <div>
-                      {assoc.label}
-                      <ExternalLink labelNewWindow="" href={assoc.url}>
-                        {assoc.uri}
-                      </ExternalLink>
-                    </div>
-                  </td>
-                  <td>
-                    <div>
-                      <ExternalLink labelNewWindow="" href="#">
-                        {assoc.label}
-                      </ExternalLink>
-                      {assoc.terminologyName}
-                    </div>
-                  </td>
-                  <td>
-                    <div>{assoc.description}</div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </StyledTable>
-        </ListWrapper>
+        <ResourceList
+          primaryColumnName="Assosiaation nimi"
+          handleClick={(id: string | string[]) =>
+            handleCheckboxClick(id, 'associations')
+          }
+          items={[
+            {
+              partOf: {
+                label: 'partOfLabel',
+                domains: ['domain1', 'domain2'],
+                type: 'type',
+              },
+              subClass: {
+                label: 'subClassLabel',
+                link: 'link',
+                partOf: 'subClassPartOf',
+              },
+              target: {
+                identifier: 'targetIdentifier',
+                label: 'targetLabel',
+                link: 'targetLink',
+                linkLabel: 'targetLinkLabel',
+                note: 'targetNote',
+                status: 'targetStatus',
+                isValid: false,
+              },
+            },
+            {
+              partOf: {
+                label: 'partOfLabel2',
+                domains: ['domain1'],
+                type: 'type',
+              },
+              subClass: {
+                label: 'subClassLabel2',
+                link: 'link',
+                partOf: 'subClassPartOf',
+              },
+              target: {
+                identifier: 'targetIdentifier2',
+                label: 'targetLabel2',
+                link: 'targetLink',
+                linkLabel: 'targetLinkLabel',
+                note: 'targetNote',
+                status: 'targetStatus',
+                isValid: true,
+              },
+            },
+          ]}
+          type="multiple"
+          selected={selected.associations}
+          extraHeader={
+            <tr>
+              <td colSpan={4}>2 Assosiaatiota</td>
+            </tr>
+          }
+        />
       </ModalContent>
 
       <ModalFooter>

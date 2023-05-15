@@ -9,18 +9,15 @@ import {
   ModalTitle,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import MultiColumnSearch, {
-  ResultType,
-} from '@app/common/components/multi-column-search';
+import MultiColumnSearch from '@app/common/components/multi-column-search';
 import { LargeModal, OpenModalButton } from './class-modal.styles';
-import format from 'yti-common-ui/formatted-date/format';
-import { Locale } from 'yti-common-ui/locale-chooser/use-locales';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import {
   InternalResourcesSearchParams,
   useGetInternalResourcesMutation,
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { ResultType } from '@app/common/components/resource-list';
 
 export interface ClassModalProps {
   modelId: string;
@@ -70,6 +67,7 @@ export default function ClassModal({
       sortLang: i18n.language,
       pageSize: 50,
       pageFrom: 0,
+      limitToDataModel: modelId,
       resourceTypes: [ResourceType.CLASS],
     });
     setVisible(false);
@@ -113,7 +111,11 @@ export default function ClassModal({
             link: r.id,
             status: translateStatus(r.status, t),
             isValid: r.status === 'VALID',
-            modified: format(r.modified, (i18n.language as Locale) ?? 'fi'),
+            note: getLanguageVersion({
+              data: r.note,
+              lang: i18n.language,
+              appendLocale: true,
+            }),
           },
           partOf: {
             label: 'Tietomallin nimi',

@@ -6,9 +6,7 @@ import {
   ModalTitle,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import MultiColumnSearch, {
-  ResultType,
-} from '@app/common/components/multi-column-search';
+import MultiColumnSearch from '@app/common/components/multi-column-search';
 import { LargeModal } from './association-modal.styles';
 import { useTranslation } from 'next-i18next';
 import {
@@ -20,6 +18,7 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import format from 'yti-common-ui/formatted-date/format';
 import { Locale } from 'yti-common-ui/locale-chooser/use-locales';
+import { ResultType } from '@app/common/components/resource-list';
 
 interface AssociationModalProps {
   buttonTranslations: {
@@ -117,6 +116,11 @@ export default function AssociationModal({
             status: translateStatus(r.status, t),
             isValid: r.status === 'VALID',
             modified: format(r.modified, (i18n.language as Locale) ?? 'fi'),
+            note: getLanguageVersion({
+              data: r.note,
+              lang: i18n.language,
+              appendLocale: true,
+            }),
           },
           partOf: {
             label: 'Tietomallin nimi',

@@ -1,50 +1,20 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import {
   Dropdown,
   DropdownItem,
-  ExternalLink,
-  Icon,
-  RadioButton,
   SearchInput,
   SingleSelect,
   SingleSelectData,
-  Text,
 } from 'suomifi-ui-components';
-import {
-  ResultsTable,
-  SearchToolsBlock,
-  StatusChip,
-} from './multi-column-search.styles';
+import { SearchToolsBlock } from './multi-column-search.styles';
 import { useGetServiceCategoriesQuery } from '../service-categories/service-categories.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { isEqual } from 'lodash';
 import { InternalResourcesSearchParams } from '../search-internal-resources/search-internal-resources.slice';
 import { Status } from 'yti-common-ui/interfaces/status.interface';
-
-export interface ResultType {
-  target: {
-    identifier: string;
-    label: string;
-    linkLabel: string;
-    link: string;
-    modified: string;
-    status: string;
-    isValid?: boolean;
-  };
-  partOf: {
-    label: string;
-    type: string;
-    domains: string[];
-  };
-  subClass: {
-    label: string;
-    link: string;
-    partOf: string;
-  };
-}
+import ResourceList, { ResultType } from '../resource-list';
 
 interface MultiColumnSearchProps {
   primaryColumnName: string;
@@ -293,86 +263,12 @@ export default function MultiColumnSearch({
         )}
       </SearchToolsBlock>
 
-      <ResultsTable cellSpacing={0}>
-        <tbody>
-          <tr>
-            <td>
-              <Text variant="bold">{primaryColumnName}</Text>
-            </td>
-            <td>
-              <Text variant="bold">{t('data-model')}</Text>
-            </td>
-            <td>
-              <Text variant="bold">{t('concept')}</Text>
-            </td>
-            <td>
-              <Text variant="bold">{t('modified')}</Text>
-            </td>
-          </tr>
-
-          {results.map((result) => (
-            <tr key={`result-${result.target.identifier}`}>
-              <td className="td-with-radio-button">
-                <div
-                  onMouseDown={() =>
-                    handleRadioButtonClick(result.target.identifier)
-                  }
-                  onKeyDown={(e) =>
-                    e.key === 'Enter' &&
-                    handleRadioButtonClick(result.target.identifier)
-                  }
-                >
-                  <RadioButton
-                    value={result.target.identifier}
-                    checked={result.target.identifier === selectedId}
-                  />
-                </div>
-                <div>
-                  {result.target.label}
-                  <ExternalLink
-                    href={result.target.link}
-                    labelNewWindow={t('link-opens-new-window-external', {
-                      ns: 'common',
-                    })}
-                  >
-                    {result.target.linkLabel}
-                  </ExternalLink>
-                </div>
-              </td>
-              <td style={{ width: '40%' }}>
-                <div>
-                  <Text>{result.partOf.label}</Text>
-                  <Text>
-                    <Icon icon="calendar" /> {result.partOf.type}
-                  </Text>
-                  <Text>{result.partOf.domains.join(', ')}</Text>
-                </div>
-              </td>
-              <td style={{ width: '20%' }}>
-                <div>
-                  <ExternalLink
-                    href={result.subClass.link}
-                    labelNewWindow={t('link-opens-new-window-external', {
-                      ns: 'common',
-                    })}
-                  >
-                    {result.subClass.label}
-                  </ExternalLink>
-                  <Text>{result.subClass.partOf}</Text>
-                </div>
-              </td>
-              <td style={{ width: '15%' }}>
-                <div>
-                  <Text>{result.target.modified}</Text>
-                  <StatusChip $isValid={result.target.isValid}>
-                    {result.target.status}
-                  </StatusChip>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </ResultsTable>
+      <ResourceList
+        primaryColumnName={primaryColumnName}
+        items={results}
+        selected={selectedId}
+        handleClick={handleRadioButtonClick}
+      />
     </div>
   );
 }

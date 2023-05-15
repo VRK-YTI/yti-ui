@@ -11,10 +11,10 @@ import { Button, Text, Tooltip } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import Separator from 'yti-common-ui/separator';
-import { StatusChip } from '@app/common/components/multi-column-search/multi-column-search.styles';
 import { TooltipWrapper } from '../model/model.styles';
 import DeleteModal from '../delete-modal';
 import CommonViewContent from './common-view-content';
+import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
 
 interface CommonViewProps {
   data?: Resource;
