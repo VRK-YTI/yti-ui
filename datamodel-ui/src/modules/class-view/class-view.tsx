@@ -18,7 +18,6 @@ import {
   Tooltip,
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
-import { StatusChip } from '@app/common/components/multi-column-search/multi-column-search.styles';
 import Separator from 'yti-common-ui/separator';
 import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
@@ -51,6 +50,7 @@ import { useRouter } from 'next/router';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
 import ResourcePicker from '../resource-picker-modal';
 import ClassRestrictionModal from '../class-restriction-modal';
+import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
 
 interface ClassViewProps {
   modelId: string;
@@ -224,7 +224,11 @@ export default function ClassView({
 
           <Button onClick={() => setTest(true)}>Resource picker</Button>
           <Button onClick={() => setTest2(true)}>Class restriction</Button>
-          <ResourcePicker visible={test} hide={() => setTest(false)} />
+          <ResourcePicker
+            modelId={modelId}
+            visible={test}
+            hide={() => setTest(false)}
+          />
           <ClassRestrictionModal visible={test2} hide={() => setTest2(false)} />
         </StaticHeader>
 

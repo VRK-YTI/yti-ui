@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { StaticChip } from 'suomifi-ui-components';
 
-export const ResultsTable = styled.table`
+export const ResultsTable = styled.table<{ $expandedLastCell?: boolean }>`
   width: 100%;
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   border-collapse: collapse;
@@ -25,6 +25,18 @@ export const ResultsTable = styled.table`
   td {
     padding: 10px 15px;
   }
+
+  td:not(:first-child) {
+    width: 25%;
+  }
+
+  ${(props) =>
+    props.$expandedLastCell &&
+    `
+    td:last-child {
+      width: 50%;
+    }
+  `}
 
   tbody {
     tr {

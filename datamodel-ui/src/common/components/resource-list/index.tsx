@@ -19,7 +19,7 @@ export interface ResultType {
     status: string;
     isValid?: boolean;
   };
-  partOf: {
+  partOf?: {
     label: string;
     type: string;
     domains: string[];
@@ -34,7 +34,7 @@ export interface ResultType {
 interface ResourceListProps {
   primaryColumnName: string;
   items: ResultType[];
-  type?: 'single' | 'multiple';
+  type?: 'single' | 'multiple' | 'display';
   selected?: string | string[];
   extraHeader?: React.ReactFragment;
   handleClick: (value: string | string[]) => void;
@@ -70,30 +70,62 @@ export default function ResourceList({
     }
   };
 
+  const renderHeaderButton = () => {
+    if (type === 'multiple') {
+      return (
+        <td className="td-with-button">
+          <div>
+            <Checkbox
+              onClick={() => handleMultipleCheck()}
+              checked={selected ? selected.length === items.length : false}
+            />
+          </div>
+          <Text variant="bold">{primaryColumnName}</Text>
+        </td>
+      );
+    }
+
+    return (
+      <td>
+        <Text variant="bold">{primaryColumnName}</Text>
+      </td>
+    );
+  };
+
+  const renderTrButton = (id: string) => {
+    switch (type) {
+      case 'single':
+        return (
+          <div
+            onMouseDown={() => handleClick(id)}
+            onKeyDown={(e) => e.key === 'Enter' && handleClick(id)}
+          >
+            <RadioButton value={id} checked={checkChecked(id)} />
+          </div>
+        );
+      case 'multiple':
+        return (
+          <Checkbox
+            onClick={() => handleClick(id)}
+            checked={checkChecked(id)}
+          />
+        );
+      default:
+        return <></>;
+    }
+  };
+
   return (
-    <ResultsTable cellSpacing={0}>
+    <ResultsTable cellSpacing={0} $expandedLastCell={type === 'multiple'}>
       <thead>
         {extraHeader && extraHeader}
         <tr>
-          {type === 'single' ? (
+          {renderHeaderButton()}
+          {(!extraHeader || items.filter((item) => item.partOf).length > 0) && (
             <td>
-              <Text variant="bold">{primaryColumnName}</Text>
-            </td>
-          ) : (
-            <td className="td-with-button">
-              <div>
-                <Checkbox
-                  onClick={() => handleMultipleCheck()}
-                  checked={selected ? selected.length === items.length : false}
-                />
-              </div>
-              <Text variant="bold">{primaryColumnName}</Text>
+              <Text variant="bold">{t('data-model')}</Text>
             </td>
           )}
-
-          <td>
-            <Text variant="bold">{t('data-model')}</Text>
-          </td>
           <td>
             <Text variant="bold">{t('concept')}</Text>
           </td>
@@ -107,24 +139,7 @@ export default function ResourceList({
         {items.map((item) => (
           <tr key={`item-${item.target.identifier}`}>
             <td className="td-with-button">
-              {type === 'single' ? (
-                <div
-                  onMouseDown={() => handleClick(item.target.identifier)}
-                  onKeyDown={(e) =>
-                    e.key === 'Enter' && handleClick(item.target.identifier)
-                  }
-                >
-                  <RadioButton
-                    value={item.target.identifier}
-                    checked={checkChecked(item.target.identifier)}
-                  />
-                </div>
-              ) : (
-                <Checkbox
-                  onClick={() => handleClick(item.target.identifier)}
-                  checked={checkChecked(item.target.identifier)}
-                />
-              )}
+              {renderTrButton(item.target.identifier)}
               <div>
                 {item.target.label}
                 <ExternalLink
@@ -137,21 +152,23 @@ export default function ResourceList({
                 </ExternalLink>
               </div>
             </td>
-            <td style={{ width: '30%' }}>
-              <div>
-                <Text>{item.partOf.label}</Text>
+            {item.partOf && (
+              <td>
                 <div>
-                  <Text>
-                    <Icon icon="calendar" /> {item.partOf.type}
-                  </Text>{' '}
-                  <StatusChip $isValid={item.target.isValid}>
-                    {item.target.status}
-                  </StatusChip>
+                  <Text>{item.partOf.label}</Text>
+                  <div>
+                    <Text>
+                      <Icon icon="calendar" /> {item.partOf.type}
+                    </Text>{' '}
+                    <StatusChip $isValid={item.target.isValid}>
+                      {item.target.status}
+                    </StatusChip>
+                  </div>
+                  <Text>{item.partOf.domains.join(', ')}</Text>
                 </div>
-                <Text>{item.partOf.domains.join(', ')}</Text>
-              </div>
-            </td>
-            <td style={{ width: '20%' }}>
+              </td>
+            )}
+            <td>
               <div>
                 <ExternalLink
                   href={item.subClass.link}
@@ -164,7 +181,7 @@ export default function ResourceList({
                 <Text>{item.subClass.partOf}</Text>
               </div>
             </td>
-            <td style={{ minWidth: '25%' }}>
+            <td>
               <div>
                 <Text>{item.target.note}</Text>
               </div>

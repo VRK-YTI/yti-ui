@@ -6,17 +6,24 @@ import {
   ModalTitle,
 } from 'suomifi-ui-components';
 import { WideModal } from './resource-picker-modal.styles';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import ResourceList from '@app/common/components/resource-list';
+import ResourceList, { ResultType } from '@app/common/components/resource-list';
+import { useGetClassQuery } from '@app/common/components/class/class.slice';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
 interface ResourcePickerProps {
   visible: boolean;
+  modelId: string;
   hide: () => void;
 }
 
-export default function ResourcePicker({ visible, hide }: ResourcePickerProps) {
-  const { t } = useTranslation('admin');
+export default function ResourcePicker({
+  visible,
+  modelId,
+  hide,
+}: ResourcePickerProps) {
+  const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [selected, setSelected] = useState<{
     attributes: string[];
@@ -26,39 +33,65 @@ export default function ResourcePicker({ visible, hide }: ResourcePickerProps) {
     associations: [],
   });
 
-  const [attributes] = useState([
-    {
-      label: 'Sisäänkäynti',
-      uri: 'jhs:sisaankaynti1',
-      url: '#',
-      terminologyName: 'Sanaston nimi',
-      description: 'Tekninen kuvaus',
-    },
-    {
-      label: 'Sisäänkäynti',
-      uri: 'jhs:sisaankaynti2',
-      url: '#',
-      terminologyName: 'Sanaston nimi',
-      description: 'Tekninen kuvaus',
-    },
-    {
-      label: 'Sisäänkäynti',
-      uri: 'jhs:sisaankaynti3',
-      url: '#',
-      terminologyName: 'Sanaston nimi',
-      description: 'Tekninen kuvaus',
-    },
-  ]);
+  const { data: classData, isSuccess } = useGetClassQuery(
+    { modelId: 'tietomalli', classId: 'luokka2' ?? '' }
+    // { skip: typeof currentClassId === 'undefined' }
+  );
 
-  const [associations] = useState([
-    {
-      label: 'Rakennuksen osa',
-      uri: 'jhs:rakennuksenOsa',
-      url: '#',
-      terminologyName: 'Sanaston nimi',
-      description: 'Tekninen kuvaus',
-    },
-  ]);
+  const formattedData = useMemo<{
+    associations: ResultType[];
+    attributes: ResultType[];
+  }>(() => {
+    if (isSuccess) {
+      return {
+        associations:
+          classData.association?.map((assoc) => ({
+            target: {
+              identifier: assoc.identifier,
+              label: getLanguageVersion({
+                data: assoc.label,
+                lang: i18n.language,
+              }),
+              linkLabel: 'linkLabel',
+              link: 'link',
+              note: 'note',
+              status: 'VALID',
+              isValid: true,
+            },
+            subClass: {
+              label: 'subClass',
+              link: 'link',
+              partOf: 'partOf',
+            },
+          })) ?? [],
+        attributes:
+          classData.attribute?.map((attr) => ({
+            target: {
+              identifier: attr.identifier,
+              label: getLanguageVersion({
+                data: attr.label,
+                lang: i18n.language,
+              }),
+              linkLabel: 'linkLabel',
+              link: 'link',
+              note: 'note',
+              status: 'VALID',
+              isValid: true,
+            },
+            subClass: {
+              label: 'subClass',
+              link: 'link',
+              partOf: 'partOf',
+            },
+          })) ?? [],
+      };
+    }
+
+    return {
+      associations: [],
+      attributes: [],
+    };
+  }, [isSuccess, classData, i18n.language]);
 
   const handleCheckboxClick = (
     id: string | string[],
@@ -79,11 +112,19 @@ export default function ResourcePicker({ visible, hide }: ResourcePickerProps) {
     }
   };
 
+  const handleClose = () => {
+    hide();
+    setSelected({
+      associations: [],
+      attributes: [],
+    });
+  };
+
   return (
     <WideModal
       appElementId="__next"
       visible={visible}
-      onEscKeyDown={() => hide()}
+      onEscKeyDown={() => handleClose()}
       variant={isSmall ? 'smallScreen' : 'default'}
     >
       <ModalContent>
@@ -94,55 +135,14 @@ export default function ResourcePicker({ visible, hide }: ResourcePickerProps) {
           handleClick={(id: string | string[]) =>
             handleCheckboxClick(id, 'attributes')
           }
-          items={[
-            {
-              partOf: {
-                label: 'partOfLabel',
-                domains: ['domain1', 'domain2'],
-                type: 'type',
-              },
-              subClass: {
-                label: 'subClassLabel',
-                link: 'link',
-                partOf: 'subClassPartOf',
-              },
-              target: {
-                identifier: 'targetIdentifier',
-                label: 'targetLabel',
-                link: 'targetLink',
-                linkLabel: 'targetLinkLabel',
-                note: 'targetNote',
-                status: 'targetStatus',
-                isValid: false,
-              },
-            },
-            {
-              partOf: {
-                label: 'partOfLabel2',
-                domains: ['domain1'],
-                type: 'type',
-              },
-              subClass: {
-                label: 'subClassLabel2',
-                link: 'link',
-                partOf: 'subClassPartOf',
-              },
-              target: {
-                identifier: 'targetIdentifier2',
-                label: 'targetLabel2',
-                link: 'targetLink',
-                linkLabel: 'targetLinkLabel',
-                note: 'targetNote',
-                status: 'targetStatus',
-                isValid: true,
-              },
-            },
-          ]}
+          items={formattedData.attributes}
           type="multiple"
           selected={selected.attributes}
           extraHeader={
             <tr>
-              <td colSpan={4}>2 Attribuuttia</td>
+              <td colSpan={4}>
+                {classData?.attribute?.length ?? 0} Attribuuttia
+              </td>
             </tr>
           }
         />
@@ -154,55 +154,14 @@ export default function ResourcePicker({ visible, hide }: ResourcePickerProps) {
           handleClick={(id: string | string[]) =>
             handleCheckboxClick(id, 'associations')
           }
-          items={[
-            {
-              partOf: {
-                label: 'partOfLabel',
-                domains: ['domain1', 'domain2'],
-                type: 'type',
-              },
-              subClass: {
-                label: 'subClassLabel',
-                link: 'link',
-                partOf: 'subClassPartOf',
-              },
-              target: {
-                identifier: 'targetIdentifier',
-                label: 'targetLabel',
-                link: 'targetLink',
-                linkLabel: 'targetLinkLabel',
-                note: 'targetNote',
-                status: 'targetStatus',
-                isValid: false,
-              },
-            },
-            {
-              partOf: {
-                label: 'partOfLabel2',
-                domains: ['domain1'],
-                type: 'type',
-              },
-              subClass: {
-                label: 'subClassLabel2',
-                link: 'link',
-                partOf: 'subClassPartOf',
-              },
-              target: {
-                identifier: 'targetIdentifier2',
-                label: 'targetLabel2',
-                link: 'targetLink',
-                linkLabel: 'targetLinkLabel',
-                note: 'targetNote',
-                status: 'targetStatus',
-                isValid: true,
-              },
-            },
-          ]}
+          items={formattedData.associations}
           type="multiple"
           selected={selected.associations}
           extraHeader={
             <tr>
-              <td colSpan={4}>2 Assosiaatiota</td>
+              <td colSpan={4}>
+                {classData?.association?.length ?? 0} Assosiaatiota
+              </td>
             </tr>
           }
         />
@@ -212,7 +171,7 @@ export default function ResourcePicker({ visible, hide }: ResourcePickerProps) {
         <Button disabled={Object.values(selected).flatMap((s) => s).length < 1}>
           {t('add-selected')}
         </Button>
-        <Button variant="secondary" onClick={() => hide()}>
+        <Button variant="secondary" onClick={() => handleClose()}>
           {t('cancel-variant')}
         </Button>
       </ModalFooter>
