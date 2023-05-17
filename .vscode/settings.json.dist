@@ -10,6 +10,11 @@
   "eslint.workingDirectories": [
     { "directory": "./terminology-ui", "changeProcessCWD": true },
     { "directory": "./datamodel-ui", "changeProcessCWD": true },
-    { "directory": "./common-ui", "changeProcessCWD": true}
+    { "directory": "./common-ui", "changeProcessCWD": true},
+    { "directory": "./mscr-playground-app", "changeProcessCWD": true},
+    
+  
+  
+
   ]
 }

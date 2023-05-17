@@ -70,6 +70,11 @@ export default function DesktopNavigation({
                     {t('datamodel-title')}
                   </SuomiFiLink>
                 </NavigationDropdownItem>
+                <NavigationDropdownItem className="top-navigation-dropdown-li">
+                  <SuomiFiLink href="/crosswalk">
+                    Metadata Schema Crosswalk Registration
+                  </SuomiFiLink>
+                </NavigationDropdownItem>
               </NavigationDropdownList>
             </NavigationDropdownWrapper>
           </ClickOutsideListener>

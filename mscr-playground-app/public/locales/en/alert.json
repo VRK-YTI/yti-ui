@@ -1,0 +1,18 @@
+{
+  "error-alert": "ERROR {{id}}: {{displayText}}",
+  "error-occured": "An error occurred",
+  "error-occured_access-request": "An error occurred with access request service",
+  "error-occured_counts": "An error occurred while getting counts for statuses and information domains",
+  "error-occured_download-excel": "An error occured with downloading terminology",
+  "error-occured_groups": "An error occurred while getting information domains",
+  "error-occured_organization": "An error occurred while getting organizations",
+  "error-occured_subscription": "An error occurred with subscription service",
+  "error-occured_terminology-search": "An error occurred while searching for terminologies",
+  "error-occured_unhandled-error": "An unknown error occurred",
+  "error-occurred_internal-server": "An error occurred, please try again later",
+  "error-occurred_remove-collection": "An error occured while removing collection",
+  "error-occurred_remove-concept": "An error occured while removing concept",
+  "error-occurred_remove-terminology": "An error occured while removing terminology",
+  "error-occurred_session": "An error occured with the session, try logging in again",
+  "error-occurred_unauthenticated": "An error occured with login information verification. Please login to the service again."
+}
