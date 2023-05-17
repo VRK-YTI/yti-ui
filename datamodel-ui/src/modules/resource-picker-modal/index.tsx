@@ -14,14 +14,32 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
 interface ResourcePickerProps {
   visible: boolean;
-  modelId: string;
+  selectedNodeShape: {
+    modelId: string;
+    classId: string;
+  };
   hide: () => void;
+  handleFollowUp: (value: {
+    associations: {
+      identifier: string;
+      label: { [key: string]: string };
+      modelId: string;
+      uri: string;
+    }[];
+    attributes: {
+      identifier: string;
+      label: { [key: string]: string };
+      modelId: string;
+      uri: string;
+    }[];
+  }) => void;
 }
 
 export default function ResourcePicker({
   visible,
-  modelId,
+  selectedNodeShape,
   hide,
+  handleFollowUp,
 }: ResourcePickerProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -34,8 +52,10 @@ export default function ResourcePicker({
   });
 
   const { data: classData, isSuccess } = useGetClassQuery(
-    { modelId: 'tietomalli', classId: 'luokka2' ?? '' }
-    // { skip: typeof currentClassId === 'undefined' }
+    { modelId: selectedNodeShape.modelId, classId: selectedNodeShape.classId },
+    {
+      skip: selectedNodeShape.modelId == '' || selectedNodeShape.classId === '',
+    }
   );
 
   const formattedData = useMemo<{
@@ -120,6 +140,23 @@ export default function ResourcePicker({
     });
   };
 
+  const handleSubmit = () => {
+    if (!classData) {
+      return;
+    }
+
+    handleFollowUp({
+      associations:
+        classData.association?.filter((a) =>
+          selected.associations.includes(a.identifier)
+        ) ?? [],
+      attributes:
+        classData.attribute?.filter((a) =>
+          selected.attributes.includes(a.identifier)
+        ) ?? [],
+    });
+  };
+
   return (
     <WideModal
       appElementId="__next"
@@ -168,7 +205,10 @@ export default function ResourcePicker({
       </ModalContent>
 
       <ModalFooter>
-        <Button disabled={Object.values(selected).flatMap((s) => s).length < 1}>
+        <Button
+          disabled={Object.values(selected).flatMap((s) => s).length < 1}
+          onClick={() => handleSubmit()}
+        >
           {t('add-selected')}
         </Button>
         <Button variant="secondary" onClick={() => handleClose()}>

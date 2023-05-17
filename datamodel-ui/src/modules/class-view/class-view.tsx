@@ -48,9 +48,8 @@ import ResourceInfo from './resource-info';
 import ConceptView from '../concept-view';
 import { useRouter } from 'next/router';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
-import ResourcePicker from '../resource-picker-modal';
-import ClassRestrictionModal from '../class-restriction-modal';
 import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
+import ApplicationProfileFlow from './application-profile-flow';
 
 interface ClassViewProps {
   modelId: string;
@@ -75,6 +74,10 @@ export default function ClassView({
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
+  const [showAppProfileModal, setShowAppProfileModal] = useState(false);
+  const [selectedNodeShape, setSelectedNodeShape] = useState<
+    InternalClass | undefined
+  >();
   const globalSelected = useSelector(selectSelected());
   const view = useSelector(selectClassView());
   const { data, refetch } = useQueryInternalResourcesQuery({
@@ -105,6 +108,12 @@ export default function ClassView({
       setIsEdit(false);
     }
 
+    if (applicationProfile && value) {
+      setShowAppProfileModal(true);
+      setSelectedNodeShape(value);
+      return;
+    }
+
     if (!value) {
       const initialData = initialClassForm;
       const label = Object.fromEntries(languages.map((lang) => [lang, '']));
@@ -129,6 +138,37 @@ export default function ClassView({
       setClass(internalClassToClassForm(value, languages, applicationProfile))
     );
 
+    dispatch(setView('classes', 'edit'));
+  };
+
+  const handleAppProfileFollowUpAction = (
+    value: InternalClass,
+    associations?: {
+      identifier: string;
+      label: { [key: string]: string };
+      modelId: string;
+      uri: string;
+    }[],
+    attributes?: {
+      identifier: string;
+      label: { [key: string]: string };
+      modelId: string;
+      uri: string;
+    }[]
+  ) => {
+    setShowAppProfileModal(false);
+
+    dispatch(
+      setClass(
+        internalClassToClassForm(
+          value,
+          languages,
+          applicationProfile,
+          associations,
+          attributes
+        )
+      )
+    );
     dispatch(setView('classes', 'edit'));
   };
 
@@ -181,9 +221,6 @@ export default function ClassView({
     }
   }, [globalSelected, currentClassId]);
 
-  const [test, setTest] = useState(false);
-  const [test2, setTest2] = useState(false);
-
   return (
     <>
       {renderListing()}
@@ -205,11 +242,40 @@ export default function ClassView({
               {t('classes', { count: data?.totalHitCount ?? 0 })}
             </Text>
             {hasPermission && (
-              <ClassModal
-                modelId={modelId}
-                handleFollowUp={handleFollowUpAction}
-                applicationProfile={applicationProfile}
-              />
+              <>
+                <ClassModal
+                  modelId={modelId}
+                  handleFollowUp={handleFollowUpAction}
+                  applicationProfile={applicationProfile}
+                />
+                {selectedNodeShape && (
+                  <ApplicationProfileFlow
+                    visible={showAppProfileModal}
+                    selectedNodeShape={selectedNodeShape}
+                    handleFollowUp={(
+                      value: InternalClass,
+                      associations?: {
+                        identifier: string;
+                        label: { [key: string]: string };
+                        modelId: string;
+                        uri: string;
+                      }[],
+                      attributes?: {
+                        identifier: string;
+                        label: { [key: string]: string };
+                        modelId: string;
+                        uri: string;
+                      }[]
+                    ) =>
+                      handleAppProfileFollowUpAction(
+                        value,
+                        associations,
+                        attributes
+                      )
+                    }
+                  />
+                )}
+              </>
             )}
           </div>
           <SearchInput
@@ -221,15 +287,6 @@ export default function ClassView({
             onChange={(e) => handleQueryChange(e?.toString() ?? '')}
             debounce={500}
           />
-
-          <Button onClick={() => setTest(true)}>Resource picker</Button>
-          <Button onClick={() => setTest2(true)}>Class restriction</Button>
-          <ResourcePicker
-            modelId={modelId}
-            visible={test}
-            hide={() => setTest(false)}
-          />
-          <ClassRestrictionModal visible={test2} hide={() => setTest2(false)} />
         </StaticHeader>
 
         <DrawerContent height={headerHeight} spaced>

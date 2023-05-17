@@ -16,18 +16,29 @@ import { useState } from 'react';
 interface ClassRestrictionModalProps {
   visible: boolean;
   hide: () => void;
+  handleFollowUp: (createNew?: boolean) => void;
 }
 
 export default function ClassRestrictionModal({
   visible,
   hide,
+  handleFollowUp,
 }: ClassRestrictionModalProps) {
   const { t } = useTranslation('admin');
   const [keyword, setKeyword] = useState('');
+  const [selected, setSelected] = useState('');
 
   const handleClose = () => {
     setKeyword('');
     hide();
+  };
+
+  const handleClick = (id: string | string[]) => {
+    if (selected !== id) {
+      setSelected(Array.isArray(id) ? id[0] : id);
+      return;
+    }
+    setSelected('');
   };
 
   return (
@@ -102,7 +113,7 @@ export default function ClassRestrictionModal({
 
           <div>
             <ResourceList
-              handleClick={() => null}
+              handleClick={(value: string | string[]) => handleClick(value)}
               items={[
                 {
                   subClass: {
@@ -169,14 +180,22 @@ export default function ClassRestrictionModal({
                 },
               ]}
               primaryColumnName="Luokan nimi"
+              selected={selected}
             />
           </div>
         </ModalContentWrapper>
       </ModalContent>
 
       <ModalFooter>
-        <Button>Valitse luokkarajoite</Button>
-        <Button variant="secondary">Luo uusi luokkarajoite</Button>
+        <Button
+          disabled={!selected || selected === ''}
+          onClick={() => handleFollowUp()}
+        >
+          Valitse luokkarajoite
+        </Button>
+        <Button variant="secondary" onClick={() => handleFollowUp(true)}>
+          Luo uusi luokkarajoite
+        </Button>
         <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
           {t('cancel-variant')}
         </Button>

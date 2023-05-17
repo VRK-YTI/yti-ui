@@ -77,7 +77,12 @@ export default function ResourceList({
           <div>
             <Checkbox
               onClick={() => handleMultipleCheck()}
-              checked={selected ? selected.length === items.length : false}
+              checked={
+                items.length > 0 && selected
+                  ? selected.length === items.length
+                  : false
+              }
+              disabled={items.length < 1}
             />
           </div>
           <Text variant="bold">{primaryColumnName}</Text>

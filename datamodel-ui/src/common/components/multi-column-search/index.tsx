@@ -98,8 +98,9 @@ export default function MultiColumnSearch({
     );
   }, [serviceCategoriesResult, serviceCategoriesIsSuccess, t, i18n.language]);
 
-  const handleRadioButtonClick = (id: string) => {
-    setSelectedId(selectedId === id ? '' : id);
+  const handleRadioButtonClick = (id: string | string[]) => {
+    const targetId = Array.isArray(id) ? id[0] : id;
+    setSelectedId(selectedId === targetId ? '' : targetId);
   };
 
   const handleAvailableDataModelsChange = (value: string | null) => {

@@ -5,7 +5,19 @@ import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 export function internalClassToClassForm(
   data: InternalClass,
   languages: string[],
-  applicationProfile?: boolean
+  applicationProfile?: boolean,
+  associations?: {
+    identifier: string;
+    label: { [key: string]: string };
+    modelId: string;
+    uri: string;
+  }[],
+  attributes?: {
+    identifier: string;
+    label: { [key: string]: string };
+    modelId: string;
+    uri: string;
+  }[]
 ): ClassFormType {
   const label = languages.reduce(
     (acc, lang) => ({ ...acc, [lang]: data.label[lang] }),
@@ -30,6 +42,8 @@ export function internalClassToClassForm(
         `${data.isDefinedBy.split('/').pop()}:${data.identifier}`,
       id: data.id,
     };
+    obj['association'] = associations ?? [];
+    obj['attribute'] = attributes ?? [];
   } else {
     obj['subClassOf'] = [
       {

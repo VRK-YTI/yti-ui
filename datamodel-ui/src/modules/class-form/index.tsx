@@ -369,16 +369,29 @@ export default function ClassForm({
           />
         )}
 
-        <InlineListBlock
-          label={t('disjoint-classes', { ns: 'common' })}
-          addNewComponent={
-            <Button variant="secondary" icon="plus">
-              {t('add-disjoint-class')}
-            </Button>
-          }
-          items={[]}
-          handleRemoval={() => null}
-        />
+        {applicationProfile ? (
+          <InlineListBlock
+            label="Hyödyntää luokkarajoitetta"
+            addNewComponent={
+              <Button variant="secondary" icon="plus">
+                Valitse luokkarajoite
+              </Button>
+            }
+            items={[]}
+            handleRemoval={() => null}
+          />
+        ) : (
+          <InlineListBlock
+            label={t('disjoint-classes', { ns: 'common' })}
+            addNewComponent={
+              <Button variant="secondary" icon="plus">
+                {t('add-disjoint-class')}
+              </Button>
+            }
+            items={[]}
+            handleRemoval={() => null}
+          />
+        )}
 
         <div>
           <Dropdown
@@ -415,7 +428,9 @@ export default function ClassForm({
         <Separator />
 
         <BasicBlock title={t('attributes')}>
-          {!isEdit || !data.attribute || data.attribute.length < 1 ? (
+          {(!applicationProfile && !isEdit) ||
+          !data.attribute ||
+          data.attribute.length < 1 ? (
             t('no-attributes', { ns: 'common' })
           ) : (
             <ExpanderGroup
@@ -427,7 +442,7 @@ export default function ClassForm({
                 <ResourceInfo
                   key={`${data.identifier}-attr-${attr.identifier}`}
                   data={attr}
-                  modelId={modelId}
+                  modelId={applicationProfile ? attr.modelId : modelId}
                 />
               ))}
             </ExpanderGroup>
@@ -435,7 +450,9 @@ export default function ClassForm({
         </BasicBlock>
 
         <BasicBlock title={t('associations')}>
-          {!isEdit || !data.association || data.association.length < 1 ? (
+          {(!applicationProfile && !isEdit) ||
+          !data.association ||
+          data.association.length < 1 ? (
             t('no-assocations', { ns: 'common' })
           ) : (
             <ExpanderGroup
@@ -447,7 +464,7 @@ export default function ClassForm({
                 <ResourceInfo
                   key={`${data.identifier}-attr-${assoc.identifier}`}
                   data={assoc}
-                  modelId={modelId}
+                  modelId={applicationProfile ? assoc.modelId : modelId}
                 />
               ))}
             </ExpanderGroup>
