@@ -3,7 +3,7 @@ import { Collection } from '@app/common/interfaces/collection.interface';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
 
-//Making the HTTP requests, may be can used to get the regustered schemas and crosswalks
+//Making the HTTP requests, may be can used to get the regsstered schemas and crosswalks
 export const collectionApi = createApi({
   reducerPath: 'collectionAPI',
   baseQuery: getTerminologyApiBaseQuery(),

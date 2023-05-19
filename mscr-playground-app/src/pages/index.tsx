@@ -20,18 +20,16 @@ import {
 import PageHead from 'yti-common-ui/page-head';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
 import { Button, SideNavigationItem } from 'suomifi-ui-components';
-import { Sidebar, SidebarHeader, SidebarSection } from 'yti-common-ui/sidebar';
 
-import Separator from 'yti-common-ui/separator';
 import EditCollection from '@app/modules/edit-collection';
-import Collection from '@app/modules/collection';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
-const handleClick = () => {
+const registerSchema = () => {
   // register a new schema
+  console.log('go to register schema page');
 };
 export default function IndexPage(props: IndexPageProps) {
   const { t } = useTranslation('common');
@@ -47,7 +45,7 @@ export default function IndexPage(props: IndexPageProps) {
         />
 
         <h2>Create a Crosswalk</h2>
-        <Button onClick={() => handleClick()} id="submit-button">
+        <Button onClick={() => registerSchema()} id="submit-button">
           {t('Register schema', { ns: 'admin' })}
         </Button>
         <EditCollection terminologyId={'1'} collectionName={'Crosswalks'} />
