@@ -42,6 +42,7 @@ import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { BasicBlock } from 'yti-common-ui/block';
 import ResourceInfo from '../class-view/resource-info';
+import ResourceForm from '../resource-form';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -438,13 +439,27 @@ export default function ClassForm({
               openAllText=""
               showToggleAllButton={false}
             >
-              {data.attribute.map((attr) => (
-                <ResourceInfo
-                  key={`${data.identifier}-attr-${attr.identifier}`}
-                  data={attr}
-                  modelId={applicationProfile ? attr.modelId : modelId}
-                />
-              ))}
+              {data.attribute.map((attr) =>
+                applicationProfile ? (
+                  <>
+                    <ResourceForm
+                      key={`${data.identifier}-attr-${attr.identifier}`}
+                      data={attr}
+                      langs={languages}
+                      type="attribute"
+                    />
+                    <Button variant="secondary" style={{ marginTop: '10px' }}>
+                      Lisää attribuutti
+                    </Button>
+                  </>
+                ) : (
+                  <ResourceInfo
+                    key={`${data.identifier}-attr-${attr.identifier}`}
+                    data={attr}
+                    modelId={applicationProfile ? attr.modelId : modelId}
+                  />
+                )
+              )}
             </ExpanderGroup>
           )}
         </BasicBlock>
@@ -460,13 +475,26 @@ export default function ClassForm({
               openAllText=""
               showToggleAllButton={false}
             >
-              {data.association.map((assoc) => (
-                <ResourceInfo
-                  key={`${data.identifier}-attr-${assoc.identifier}`}
-                  data={assoc}
-                  modelId={applicationProfile ? assoc.modelId : modelId}
-                />
-              ))}
+              {data.association.map((assoc) =>
+                applicationProfile ? (
+                  <>
+                    <ResourceInfo
+                      key={`${data.identifier}-attr-${assoc.identifier}`}
+                      data={assoc}
+                      modelId={applicationProfile ? assoc.modelId : modelId}
+                    />
+                    <Button variant="secondary" style={{ marginTop: '10px' }}>
+                      Lisää assosiaatio
+                    </Button>
+                  </>
+                ) : (
+                  <ResourceInfo
+                    key={`${data.identifier}-attr-${assoc.identifier}`}
+                    data={assoc}
+                    modelId={applicationProfile ? assoc.modelId : modelId}
+                  />
+                )
+              )}
             </ExpanderGroup>
           )}
         </BasicBlock>
