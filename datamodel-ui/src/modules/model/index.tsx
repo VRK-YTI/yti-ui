@@ -61,7 +61,6 @@ export default function Model({ modelId }: ModelProps) {
               {
                 id: 'links',
                 icon: 'attachment',
-                // buttonLabel: 'Linkitykset',
                 buttonLabel: t('links'),
                 component: (
                   <LinkedDataView
