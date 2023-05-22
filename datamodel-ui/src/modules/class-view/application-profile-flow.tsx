@@ -11,7 +11,7 @@ export default function ApplicationProfileFlow({
   visible: boolean;
   selectedNodeShape: InternalClass;
   handleFollowUp: (
-    value: InternalClass,
+    value?: InternalClass,
     associations?: {
       identifier: string;
       label: { [key: string]: string };
@@ -48,7 +48,7 @@ export default function ApplicationProfileFlow({
     handleFollowUp(selectedNodeShape);
   };
 
-  const handleResourcePickerFollowUp = (value: {
+  const handleResourcePickerFollowUp = (value?: {
     associations: {
       identifier: string;
       label: { [key: string]: string };
@@ -64,6 +64,12 @@ export default function ApplicationProfileFlow({
   }) => {
     setResourcePickerVisible(false);
     setRestrictionVisible(false);
+
+    if (!value) {
+      handleFollowUp();
+      return;
+    }
+
     handleFollowUp(selectedNodeShape, value.associations, value.attributes);
   };
 
@@ -76,13 +82,12 @@ export default function ApplicationProfileFlow({
       />
 
       <ResourcePicker
-        hide={() => setResourcePickerVisible(false)}
         visible={resourcePickerVisible}
         selectedNodeShape={{
           modelId: selectedNodeShape?.isDefinedBy.split('/').pop() ?? '',
           classId: selectedNodeShape?.identifier ?? '',
         }}
-        handleFollowUp={(value: {
+        handleFollowUp={(value?: {
           associations: {
             identifier: string;
             label: { [key: string]: string };

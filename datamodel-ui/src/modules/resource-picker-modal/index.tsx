@@ -18,8 +18,7 @@ interface ResourcePickerProps {
     modelId: string;
     classId: string;
   };
-  hide: () => void;
-  handleFollowUp: (value: {
+  handleFollowUp: (value?: {
     associations: {
       identifier: string;
       label: { [key: string]: string };
@@ -38,7 +37,6 @@ interface ResourcePickerProps {
 export default function ResourcePicker({
   visible,
   selectedNodeShape,
-  hide,
   handleFollowUp,
 }: ResourcePickerProps) {
   const { t, i18n } = useTranslation('admin');
@@ -133,7 +131,7 @@ export default function ResourcePicker({
   };
 
   const handleClose = () => {
-    hide();
+    handleFollowUp();
     setSelected({
       associations: [],
       attributes: [],

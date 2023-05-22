@@ -9,7 +9,11 @@ import {
   initialClassForm,
 } from '@app/common/interfaces/class-form.interface';
 
-function convertToPUT(data: ClassFormType, isEdit: boolean): object {
+function convertToPUT(
+  data: ClassFormType,
+  isEdit: boolean,
+  applicationProfile?: boolean
+): object {
   const { concept, ...retVal } = data;
   const conceptURI = concept?.conceptURI;
 
@@ -19,7 +23,18 @@ function convertToPUT(data: ClassFormType, isEdit: boolean): object {
     subClassOf: data.subClassOf.map((sco) => sco.identifier),
     subject: conceptURI,
     targetClass: data.targetClass?.id,
+    ...(applicationProfile && {
+      properties: [
+        ...(data.association?.map((a) => a.identifier) ?? []),
+        ...(data.attribute?.map((a) => a.identifier) ?? []),
+      ],
+    }),
   };
+
+  if (applicationProfile) {
+    delete ret.association;
+    delete ret.attribute;
+  }
 
   return isEdit
     ? Object.fromEntries(
@@ -40,14 +55,23 @@ export const classApi = createApi({
   endpoints: (builder) => ({
     putClass: builder.mutation<
       string,
-      { modelId: string; data: ClassFormType; classId?: string }
+      {
+        modelId: string;
+        data: ClassFormType;
+        classId?: string;
+        applicationProfile?: boolean;
+      }
     >({
       query: (value) => ({
         url: !value.classId
           ? `/class/${value.modelId}`
           : `/class/${value.modelId}/${value.classId}`,
         method: 'PUT',
-        data: convertToPUT(value.data, value.classId ? true : false),
+        data: convertToPUT(
+          value.data,
+          value.classId ? true : false,
+          value.applicationProfile
+        ),
       }),
     }),
     getClass: builder.query<ClassType, { modelId: string; classId: string }>({

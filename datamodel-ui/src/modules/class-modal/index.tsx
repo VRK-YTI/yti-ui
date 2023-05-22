@@ -49,6 +49,7 @@ export default function ClassModal({
       pageSize: 50,
       pageFrom: 0,
       limitToDataModel: modelId,
+      limitToModelType: 'LIBRARY',
       fromAddedNamespaces: true,
       resourceTypes: [ResourceType.CLASS],
     });
@@ -68,6 +69,7 @@ export default function ClassModal({
       pageSize: 50,
       pageFrom: 0,
       limitToDataModel: modelId,
+      limitToModelType: 'LIBRARY',
       resourceTypes: [ResourceType.CLASS],
     });
     setVisible(false);

@@ -142,7 +142,7 @@ export default function ClassView({
   };
 
   const handleAppProfileFollowUpAction = (
-    value: InternalClass,
+    value?: InternalClass,
     associations?: {
       identifier: string;
       label: { [key: string]: string };
@@ -157,6 +157,10 @@ export default function ClassView({
     }[]
   ) => {
     setShowAppProfileModal(false);
+
+    if (!value) {
+      return;
+    }
 
     dispatch(
       setClass(
@@ -253,7 +257,7 @@ export default function ClassView({
                     visible={showAppProfileModal}
                     selectedNodeShape={selectedNodeShape}
                     handleFollowUp={(
-                      value: InternalClass,
+                      value?: InternalClass,
                       associations?: {
                         identifier: string;
                         label: { [key: string]: string };

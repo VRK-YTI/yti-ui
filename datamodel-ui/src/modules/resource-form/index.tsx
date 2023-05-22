@@ -72,11 +72,15 @@ export default function ResourceForm({
                     ? t('association-name')
                     : t('attribute-name')
                 }, ${translateLanguage(l, t)} (${l.toUpperCase()})`}
+                defaultValue={data.label[l] ?? ''}
               />
             ))}
           </LanguageVersionedWrapper>
 
-          <TextInput labelText="Attribuutin yksilöivä tunnus" />
+          <TextInput
+            labelText="Attribuutin yksilöivä tunnus"
+            defaultValue={data.identifier}
+          />
 
           <div>
             <InlineListBlock

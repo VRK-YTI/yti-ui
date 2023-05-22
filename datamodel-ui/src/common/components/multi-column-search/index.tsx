@@ -104,7 +104,7 @@ export default function MultiColumnSearch({
   };
 
   const handleAvailableDataModelsChange = (value: string | null) => {
-    if (value === 'this') {
+    if (value === 'self') {
       setSearchParams({
         ...searchParams,
         ['limitToDataModel']: modelId,
