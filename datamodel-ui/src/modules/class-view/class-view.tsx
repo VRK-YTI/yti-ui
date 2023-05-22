@@ -419,7 +419,7 @@ export default function ClassView({
                     <ResourceInfo
                       key={`${data.identifier}-attr-${attr.identifier}`}
                       data={attr}
-                      modelId={modelId}
+                      modelId={attr.modelId}
                     />
                   ))}
                 </ExpanderGroup>
