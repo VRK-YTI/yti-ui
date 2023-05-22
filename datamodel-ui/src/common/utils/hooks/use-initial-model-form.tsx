@@ -34,5 +34,7 @@ export function useInitialModelForm(): ModelFormType {
     serviceCategories: [],
     type: 'profile' as ModelFormType['type'],
     terminologies: [],
+    externalNamespaces: [],
+    internalNamespaces: [],
   };
 }

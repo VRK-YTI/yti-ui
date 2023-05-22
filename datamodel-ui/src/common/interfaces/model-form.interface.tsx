@@ -5,6 +5,12 @@ import { Status } from './status.interface';
 
 export interface ModelFormType {
   contact: string;
+  externalNamespaces: {
+    name: string;
+    namespace: string;
+    prefix: string;
+  }[];
+  internalNamespaces: string[];
   languages: (LanguageBlockType & { selected: boolean })[];
   organizations: MultiSelectData[];
   prefix: string;

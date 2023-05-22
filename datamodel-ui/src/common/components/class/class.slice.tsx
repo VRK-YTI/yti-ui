@@ -43,6 +43,10 @@ function convertToPUT(
     : ret;
 }
 
+function pathForModelType(isApplicationProfile?: boolean) {
+  return isApplicationProfile ? 'profile/' : 'ontology/';
+}
+
 export const classApi = createApi({
   reducerPath: 'classApi',
   baseQuery: getDatamodelApiBaseQuery(),
@@ -64,8 +68,12 @@ export const classApi = createApi({
     >({
       query: (value) => ({
         url: !value.classId
-          ? `/class/${value.modelId}`
-          : `/class/${value.modelId}/${value.classId}`,
+          ? `/class/${pathForModelType(value.applicationProfile)}${
+              value.modelId
+            }`
+          : `/class/${pathForModelType(value.applicationProfile)}${
+              value.modelId
+            }/${value.classId}`,
         method: 'PUT',
         data: convertToPUT(
           value.data,
@@ -74,29 +82,39 @@ export const classApi = createApi({
         ),
       }),
     }),
-    getClass: builder.query<ClassType, { modelId: string; classId: string }>({
+    getClass: builder.query<
+      ClassType,
+      { modelId: string; classId: string; applicationProfile?: boolean }
+    >({
       query: (value) => ({
-        url: `/class/${value.modelId}/${value.classId}`,
+        url: `/class/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }/${value.classId}`,
         method: 'GET',
       }),
     }),
     getClassMut: builder.mutation<
       ClassType,
-      { modelId: string; classId: string }
+      { modelId: string; classId: string; applicationProfile?: boolean }
     >({
       query: (value) => ({
-        url: `/class/${value.modelId}/${value.classId}`,
+        url: `/class/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }/${value.classId}`,
         method: 'GET',
       }),
     }),
-    deleteClass: builder.mutation<string, { modelId: string; classId: string }>(
-      {
-        query: (value) => ({
-          url: `/class/${value.modelId}/${value.classId}`,
-          method: 'DELETE',
-        }),
-      }
-    ),
+    deleteClass: builder.mutation<
+      string,
+      { modelId: string; classId: string; applicationProfile?: boolean }
+    >({
+      query: (value) => ({
+        url: `/class/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }/${value.classId}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 

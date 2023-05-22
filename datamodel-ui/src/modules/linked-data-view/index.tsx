@@ -100,7 +100,6 @@ export default function LinkedDataView({
 
       <DrawerContent height={headerHeight}>
         <BasicBlock title={t('linked-terminologies')}>
-          {/* <BasicBlock title="Linkitetyt sanastot"> */}
           {data && data.terminologies.length > 0 ? (
             <LinkedWrapper>
               {data.terminologies.map((terminology, idx) => {
@@ -124,7 +123,6 @@ export default function LinkedDataView({
             </LinkedWrapper>
           ) : (
             <>{t('no-linked-terminologies')}</>
-            // <>Ei linkitettyjä sanastoja.</>
           )}
         </BasicBlock>
 
@@ -138,11 +136,29 @@ export default function LinkedDataView({
           <></>
         )}
 
-        {/* <BasicBlock title="Linkitetyt tietomallit"> */}
         <BasicBlock title={t('linked-datamodels')}>
-          {/* TODO: Add datamodel visualization */}
-          <>{t('no-linked-datamodels')}</>
-          {/* <>Ei linkitettyjä tietomalleja.</> */}
+          {data && data.internalNamespaces ? (
+            <LinkedWrapper>
+              {data.internalNamespaces.map((namespace, idx) => {
+                return (
+                  <LinkedItem key={`linked-terminology-${idx}`}>
+                    <LinkExtraInfo>
+                      <ExternalLink
+                        labelNewWindow={t('link-opens-new-window-external')}
+                        href={namespace}
+                      >
+                        {namespace}
+                      </ExternalLink>
+                      <div>Tunnus: {namespace.split('/').pop()}</div>
+                      <div>{namespace}</div>
+                    </LinkExtraInfo>
+                  </LinkedItem>
+                );
+              })}
+            </LinkedWrapper>
+          ) : (
+            <>{t('no-linked-datamodels')}</>
+          )}
         </BasicBlock>
       </DrawerContent>
     </>

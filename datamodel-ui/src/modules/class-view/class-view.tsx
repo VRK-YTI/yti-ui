@@ -94,7 +94,7 @@ export default function ClassView({
       : undefined
   );
   const { data: classData, isSuccess } = useGetClassQuery(
-    { modelId: modelId, classId: currentClassId ?? '' },
+    { modelId: modelId, classId: currentClassId ?? '', applicationProfile },
     { skip: typeof currentClassId === 'undefined' }
   );
 
@@ -398,6 +398,7 @@ export default function ClassView({
                           lang: i18n.language,
                         })}
                         onClose={handleReturn}
+                        applicationProfile={applicationProfile}
                       />
                     </>
                   )}
