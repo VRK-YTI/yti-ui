@@ -24,6 +24,7 @@ interface DeleteModalProps {
   label: string;
   type: 'model' | 'class' | 'attribute' | 'association';
   onClose?: () => void;
+  applicationProfile?: boolean;
 }
 
 export default function DeleteModal({
@@ -32,6 +33,7 @@ export default function DeleteModal({
   type,
   resourceId,
   onClose,
+  applicationProfile,
 }: DeleteModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -62,7 +64,11 @@ export default function DeleteModal({
     if (type === 'model') {
       deleteModel(modelId);
     } else if (type === 'class') {
-      deleteClass({ modelId: modelId, classId: resourceId ?? '' });
+      deleteClass({
+        modelId: modelId,
+        classId: resourceId ?? '',
+        applicationProfile,
+      });
     } else {
       deleteResource({ modelId: modelId, resourceId: resourceId ?? '' });
     }

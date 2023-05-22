@@ -29,8 +29,8 @@ export default function generatePayload(
       .map((l) => l.uniqueItemId),
     organizations: data.organizations.map((o) => o.uniqueItemId),
     groups: data.serviceCategories.map((s) => s.uniqueItemId),
-    internalNamespaces: [],
-    externalNamespaces: [],
+    internalNamespaces: data.internalNamespaces,
+    externalNamespaces: data.externalNamespaces,
     terminologies: data.terminologies.map((t) => t.uri),
     codeLists: data.codeLists.map((c) => c.id),
   };

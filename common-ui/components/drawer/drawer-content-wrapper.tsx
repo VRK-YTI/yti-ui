@@ -14,6 +14,10 @@ const DrawerContentWrapper = styled.div<{ $height?: number }>`
     width: 100%;
   }
 
+  a {
+    font-size: 16px;
+  }
+
   overflow-y: scroll;
   overflow-x: hidden;
 

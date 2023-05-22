@@ -10,12 +10,20 @@ export interface ModelType {
   organizations: Organization[];
   groups: Group[];
   contact: string;
-  internalNamespaces: [];
+  internalNamespaces: string[];
   externalNamespaces: [];
   terminologies: ModelTerminology[];
   codeLists: ModelCodeList[];
   created: string;
+  creator: {
+    id: string;
+    name: string;
+  };
   modified: string;
+  modifier: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface Group {
@@ -80,9 +88,12 @@ export interface ModelUpdatePayload {
   languages: string[];
   organizations: string[];
   groups: string[];
-  // Namespaces need better typing
   internalNamespaces: string[];
-  externalNamespaces: string[];
+  externalNamespaces: {
+    name: string;
+    namespace: string;
+    prefix: string;
+  }[];
   terminologies: string[];
   codeLists: string[];
 }

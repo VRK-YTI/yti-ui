@@ -39,6 +39,8 @@ export default function ModelEditView({
   const [postModel, result] = usePostModelMutation();
   const [formData, setFormData] = useState<ModelFormType>({
     contact: '',
+    externalNamespaces: model.externalNamespaces ?? [],
+    internalNamespaces: model.internalNamespaces ?? [],
     languages:
       ['fi', 'sv', 'en'].map((lang) => ({
         labelText: translateLanguage(lang, t),

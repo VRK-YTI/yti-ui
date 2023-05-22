@@ -128,7 +128,7 @@ export default function LinkedDataView({
 
         {isApplicationProfile ? (
           <BasicBlock title={t('linked-codelists')}>
-            {data && data.codeLists ? (
+            {data && data.codeLists.length > 0 ? (
               <LinkedWrapper>
                 {data.codeLists.map((codeList, idx) => {
                   const label = getLanguageVersion({
@@ -157,11 +157,29 @@ export default function LinkedDataView({
           <></>
         )}
 
-        {/* <BasicBlock title="Linkitetyt tietomallit"> */}
         <BasicBlock title={t('linked-datamodels')}>
-          {/* TODO: Add datamodel visualization */}
-          <>{t('no-linked-datamodels')}</>
-          {/* <>Ei linkitettyjä tietomalleja.</> */}
+          {data && data.internalNamespaces.length > 0 ? (
+            <LinkedWrapper>
+              {data.internalNamespaces.map((namespace, idx) => {
+                return (
+                  <LinkedItem key={`linked-terminology-${idx}`}>
+                    <LinkExtraInfo>
+                      <ExternalLink
+                        labelNewWindow={t('link-opens-new-window-external')}
+                        href={namespace}
+                      >
+                        {namespace}
+                      </ExternalLink>
+                      <div>Tunnus: {namespace.split('/').pop()}</div>
+                      <div>{namespace}</div>
+                    </LinkExtraInfo>
+                  </LinkedItem>
+                );
+              })}
+            </LinkedWrapper>
+          ) : (
+            <>{t('no-linked-datamodels')}</>
+          )}
         </BasicBlock>
       </DrawerContent>
     </>
