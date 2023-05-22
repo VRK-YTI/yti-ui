@@ -13,6 +13,7 @@ export interface ModelType {
   internalNamespaces: [];
   externalNamespaces: [];
   terminologies: ModelTerminology[];
+  codeLists: ModelCodeList[];
   created: string;
   modified: string;
 }
@@ -40,6 +41,12 @@ export interface Link {
 export interface ModelTerminology {
   uri: string;
   label: { [key: string]: string };
+}
+
+export interface ModelCodeList {
+  id: string;
+  prefLabel: { [key: string]: string };
+  status: Status;
 }
 
 export interface ReferenceData {
@@ -77,4 +84,5 @@ export interface ModelUpdatePayload {
   internalNamespaces: string[];
   externalNamespaces: string[];
   terminologies: string[];
+  codeLists: string[];
 }

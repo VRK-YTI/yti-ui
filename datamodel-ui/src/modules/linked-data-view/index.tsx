@@ -100,7 +100,6 @@ export default function LinkedDataView({
 
       <DrawerContent height={headerHeight}>
         <BasicBlock title={t('linked-terminologies')}>
-          {/* <BasicBlock title="Linkitetyt sanastot"> */}
           {data && data.terminologies.length > 0 ? (
             <LinkedWrapper>
               {data.terminologies.map((terminology, idx) => {
@@ -124,14 +123,35 @@ export default function LinkedDataView({
             </LinkedWrapper>
           ) : (
             <>{t('no-linked-terminologies')}</>
-            // <>Ei linkitettyjä sanastoja.</>
           )}
         </BasicBlock>
 
         {isApplicationProfile ? (
-          // TODO: Add codelist visualization
           <BasicBlock title={t('linked-codelists')}>
-            {t('no-linked-codelists')}
+            {data && data.codeLists ? (
+              <LinkedWrapper>
+                {data.codeLists.map((codeList, idx) => {
+                  const label = getLanguageVersion({
+                    data: codeList.prefLabel,
+                    lang: i18n.language,
+                    appendLocale: true,
+                  });
+
+                  return (
+                    <LinkedItem key={`linked-codeList-${idx}`}>
+                      <ExternalLink
+                        labelNewWindow={t('link-opens-new-window-external')}
+                        href={codeList.id}
+                      >
+                        {label !== '' ? label : codeList.id}
+                      </ExternalLink>
+                    </LinkedItem>
+                  );
+                })}
+              </LinkedWrapper>
+            ) : (
+              <>{t('no-linked-codelists')}</>
+            )}
           </BasicBlock>
         ) : (
           <></>

@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -24,8 +24,15 @@ import {
 } from '@app/common/components/code';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import { useBreakpoints } from 'yti-common-ui/media-query';
+import { ModelCodeList } from '@app/common/interfaces/model.interface';
 
-export default function CodeListModal() {
+export default function CodeListModal({
+  initialData,
+  setData,
+}: {
+  initialData: ModelCodeList[];
+  setData: (value: ModelCodeList[]) => void;
+}) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [defaultGroup] = useState({
@@ -41,7 +48,9 @@ export default function CodeListModal() {
     status: '',
   });
   const statuses = ['all-statuses', ...statusList];
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string[]>(
+    initialData.map((d) => d.id) ?? []
+  );
   const [selectedGroup, setSelectedGroup] = useState(defaultGroup);
   const { data: codeListInfoDomains } = useGetInfoDomainsQuery({
     lang: i18n.language,
@@ -77,7 +86,25 @@ export default function CodeListModal() {
       status: '',
     });
     setSelectedGroup(defaultGroup);
+    setSelected(initialData.map((d) => d.id));
     setVisible(false);
+  };
+
+  const handleSubmit = () => {
+    if (!codes) {
+      return;
+    }
+
+    setData(
+      codes.results
+        .filter((code) => selected.includes(code.uri))
+        .map((code) => ({
+          prefLabel: code.prefLabel,
+          status: code.status,
+          id: code.uri,
+        }))
+    );
+    handleClose();
   };
 
   const handleGroupChange = (id: string | null) => {
@@ -98,6 +125,10 @@ export default function CodeListModal() {
     setSelectedGroup(newGroup);
     setFilter({ ...filter, group: id });
   };
+
+  useEffect(() => {
+    setSelected(initialData.map((d) => d.id));
+  }, [initialData]);
 
   return (
     <>
@@ -175,10 +206,9 @@ export default function CodeListModal() {
                 })}
               </Text>
             </Paragraph>
-
-            <div className="results">
-              {isSuccess &&
-                codes.results
+            {isSuccess && codes.meta.totalResults > 0 && (
+              <div className="results">
+                {codes.results
                   .filter((code) => {
                     if (
                       filter.status === 'all-statuses' ||
@@ -193,11 +223,12 @@ export default function CodeListModal() {
                       <Checkbox
                         onClick={() =>
                           setSelected((selected) =>
-                            selected.includes(code.id)
-                              ? selected.filter((s) => s !== code.id)
-                              : [...selected, code.id]
+                            selected.includes(code.uri)
+                              ? selected.filter((s) => s !== code.uri)
+                              : [...selected, code.uri]
                           )
                         }
+                        checked={selected.includes(code.uri)}
                       >
                         {getLanguageVersion({
                           data: code.prefLabel,
@@ -249,12 +280,15 @@ export default function CodeListModal() {
                       </div>
                     </div>
                   ))}
-            </div>
+              </div>
+            )}
           </ResultBlock>
         </ModalContent>
 
         <ModalFooter>
-          <Button disabled={selected.length < 1}>{t('add-selected')}</Button>
+          <Button disabled={selected.length < 1} onClick={() => handleSubmit()}>
+            {t('add-selected')}
+          </Button>
           <Button variant="secondary" onClick={() => handleClose()}>
             {t('cancel-variant')}
           </Button>

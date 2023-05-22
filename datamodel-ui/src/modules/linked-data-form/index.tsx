@@ -59,6 +59,7 @@ export default function LinkedDataForm({
     status: model.status ?? 'DRAFT',
     type: model.type ?? 'PROFILE',
     terminologies: model.terminologies ?? [],
+    codeLists: model.codeLists ?? [],
   });
 
   const handleSubmit = () => {
@@ -153,11 +154,27 @@ export default function LinkedDataForm({
             }
             extra={
               <div>
-                <CodeListModal />
+                <CodeListModal
+                  initialData={data.codeLists}
+                  setData={(codeLists) =>
+                    setData({
+                      ...data,
+                      codeLists: codeLists,
+                    })
+                  }
+                />
               </div>
             }
           >
-            <div></div>
+            <div>
+              {data.codeLists.map((c) => (
+                <LinkedItem
+                  key={`terminology-item-${c.id}`}
+                  itemData={c}
+                  type="codelist"
+                />
+              ))}
+            </div>
           </BasicBlock>
         ) : (
           <></>
@@ -166,7 +183,7 @@ export default function LinkedDataForm({
         <BasicBlock
           title={
             <>
-              {t('linked-terminologies', { ns: 'common' })}
+              {t('linked-datamodels', { ns: 'common' })}
               <Text smallScreen style={{ color: '#5F686D' }}>
                 {' '}
                 ({t('optional')})
@@ -193,11 +210,13 @@ export default function LinkedDataForm({
     type,
   }: {
     itemData: {
-      label: { [key: string]: string };
+      label?: { [key: string]: string };
+      prefLabel?: { [key: string]: string };
       identifier?: string;
-      uri: string;
+      uri?: string;
+      id?: string;
     };
-    type: 'terminology' | 'datamodel';
+    type: 'terminology' | 'datamodel' | 'codelist';
   }) {
     const handleItemRemove = () => {
       if (type === 'terminology') {
@@ -208,6 +227,13 @@ export default function LinkedDataForm({
           ),
         }));
       }
+
+      if (type === 'codelist') {
+        setData((data) => ({
+          ...data,
+          codeLists: data.codeLists.filter((c) => c.id !== itemData.id),
+        }));
+      }
     };
 
     return (
@@ -215,6 +241,7 @@ export default function LinkedDataForm({
         <div className="item-content">
           {renderTerminologyContent()}
           {renderDatamodelContent()}
+          {renderCodeListContent()}
         </div>
 
         <div>
@@ -244,7 +271,7 @@ export default function LinkedDataForm({
         <>
           <ExternalLink
             labelNewWindow="Avaa uuteen ikkunaan"
-            href={itemData.uri}
+            href={itemData.uri ?? ''}
           >
             {label !== '' ? label : itemData.uri}
           </ExternalLink>
@@ -261,8 +288,8 @@ export default function LinkedDataForm({
       return (
         <>
           <BasicBlock title="Tietomallin nimi">
-            {itemData.uri.startsWith('http://uri.suomi.fi') ||
-            itemData.uri.includes('http://uri.suomi.fi') ? (
+            {itemData.uri?.startsWith('http://uri.suomi.fi') ||
+            itemData.uri?.includes('http://uri.suomi.fi') ? (
               itemData.label
             ) : (
               <TextInput
@@ -279,18 +306,42 @@ export default function LinkedDataForm({
 
           <BasicBlock title="Etuliite (tunnus tässä palvelussa)">
             {itemData.identifier ??
-              itemData.uri.split('/').pop()?.replace('#', '') ??
+              itemData.uri?.split('/').pop()?.replace('#', '') ??
               itemData.uri}
           </BasicBlock>
 
           <div className="datamodel-link">
             <ExternalLink
               labelNewWindow="Avaa uuteen ikkunaan"
-              href={itemData.uri}
+              href={itemData.uri ?? ''}
             >
               {itemData.uri}
             </ExternalLink>
           </div>
+        </>
+      );
+    }
+
+    function renderCodeListContent() {
+      if (type !== 'codelist') {
+        return <></>;
+      }
+
+      const label = getLanguageVersion({
+        data: itemData.prefLabel,
+        lang: i18n.language,
+        appendLocale: true,
+      });
+
+      return (
+        <>
+          <ExternalLink
+            labelNewWindow="Avaa uuteen ikkunaan"
+            href={itemData.id ?? ''}
+          >
+            {label !== '' ? label : itemData.id}
+          </ExternalLink>
+          <Text smallScreen>{itemData.id}</Text>
         </>
       );
     }

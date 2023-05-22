@@ -32,5 +32,6 @@ export default function generatePayload(
     internalNamespaces: [],
     externalNamespaces: [],
     terminologies: data.terminologies.map((t) => t.uri),
+    codeLists: data.codeLists.map((c) => c.id),
   };
 }
