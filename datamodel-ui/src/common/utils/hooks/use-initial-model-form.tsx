@@ -36,5 +36,6 @@ export function useInitialModelForm(): ModelFormType {
     terminologies: [],
     externalNamespaces: [],
     internalNamespaces: [],
+    codeLists: [],
   };
 }
