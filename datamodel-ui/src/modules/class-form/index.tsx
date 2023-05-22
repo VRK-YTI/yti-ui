@@ -99,6 +99,7 @@ export default function ClassForm({
       modelId: modelId,
       data: data,
       classId: isEdit ? data.identifier : undefined,
+      applicationProfile,
     });
   };
 
