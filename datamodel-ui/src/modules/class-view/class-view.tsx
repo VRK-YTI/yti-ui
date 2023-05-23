@@ -566,7 +566,7 @@ export default function ClassView({
                   data: data.label,
                   lang: i18n.language,
                 })}`}
-                labelNewWindow=""
+                labelNewWindow={t('link-opens-new-window-external')}
               >
                 {t('class-contact')}
               </ExternalLink>

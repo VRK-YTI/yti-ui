@@ -5,12 +5,12 @@ import {
   ModalFooter,
   ModalTitle,
 } from 'suomifi-ui-components';
-import { WideModal } from './resource-picker-modal.styles';
 import { useMemo, useState } from 'react';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import ResourceList, { ResultType } from '@app/common/components/resource-list';
 import { useGetClassQuery } from '@app/common/components/class/class.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import WideModal from '@app/common/components/wide-modal';
 
 interface ResourcePickerProps {
   visible: boolean;
@@ -163,10 +163,10 @@ export default function ResourcePicker({
       variant={isSmall ? 'smallScreen' : 'default'}
     >
       <ModalContent>
-        <ModalTitle>Lisää ominaisuudet valitusta luokasta</ModalTitle>
+        <ModalTitle>{t('resource-picker-title')}</ModalTitle>
 
         <ResourceList
-          primaryColumnName="Attribuutin nimi"
+          primaryColumnName={t('attribute-name')}
           handleClick={(id: string | string[]) =>
             handleCheckboxClick(id, 'attributes')
           }
@@ -176,7 +176,10 @@ export default function ResourcePicker({
           extraHeader={
             <tr>
               <td colSpan={4}>
-                {classData?.attribute?.length ?? 0} Attribuuttia
+                {t('attribute-count-title', {
+                  ns: 'common',
+                  count: classData?.attribute?.length ?? 0,
+                })}
               </td>
             </tr>
           }
@@ -185,7 +188,7 @@ export default function ResourcePicker({
         <div style={{ height: '50px' }} />
 
         <ResourceList
-          primaryColumnName="Assosiaation nimi"
+          primaryColumnName={t('association-name')}
           handleClick={(id: string | string[]) =>
             handleCheckboxClick(id, 'associations')
           }
@@ -195,7 +198,10 @@ export default function ResourcePicker({
           extraHeader={
             <tr>
               <td colSpan={4}>
-                {classData?.association?.length ?? 0} Assosiaatiota
+                {t('association-count-title', {
+                  ns: 'common',
+                  count: classData?.association?.length ?? 0,
+                })}
               </td>
             </tr>
           }

@@ -70,5 +70,11 @@ export function classTypeToClassForm(data: ClassType): ClassFormType {
     subClassOf: [],
     association: data.association,
     attribute: data.attribute,
+    targetClass: data.targetClass
+      ? {
+          id: data.targetClass,
+          label: data.targetClass,
+        }
+      : undefined,
   };
 }

@@ -25,6 +25,7 @@ export interface ClassModalProps {
   mode?: 'create' | 'select';
   handleFollowUp: (value?: InternalClass) => void;
   applicationProfile?: boolean;
+  initialSelected?: string;
 }
 
 export default function ClassModal({
@@ -33,11 +34,12 @@ export default function ClassModal({
   mode = 'create',
   handleFollowUp,
   applicationProfile,
+  initialSelected,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
-  const [selectedId, setSelectedId] = useState('');
+  const [selectedId, setSelectedId] = useState(initialSelected ?? '');
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [searchInternalResources, result] = useGetInternalResourcesMutation();
   const [searchParams, setSearchParams] =
@@ -91,7 +93,7 @@ export default function ClassModal({
     }
 
     const target = result.data?.responseObjects.find(
-      (r) => r.identifier === selectedId
+      (r) => r.id === selectedId
     );
     setVisible(false);
     handleFollowUp(target);
@@ -107,7 +109,7 @@ export default function ClassModal({
       setResultsFormatted(
         result.data.responseObjects.map((r) => ({
           target: {
-            identifier: r.identifier,
+            identifier: r.id,
             label: getLanguageVersion({ data: r.label, lang: i18n.language }),
             linkLabel: getLinkLabel(r.namespace, r.identifier),
             link: r.id,

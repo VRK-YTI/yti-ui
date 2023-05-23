@@ -78,14 +78,14 @@ export default function ResourceForm({
           </LanguageVersionedWrapper>
 
           <TextInput
-            labelText="Attribuutin yksilöivä tunnus"
+            labelText={t('attributes-identifier')}
             defaultValue={data.identifier}
           />
 
           <div>
             <InlineListBlock
               addNewComponent={
-                <Button variant="secondary">Valitse attribuutti</Button>
+                <Button variant="secondary">{t('select-attribute')}</Button>
               }
               handleRemoval={() => null}
               items={[
@@ -94,18 +94,18 @@ export default function ResourceForm({
                   label: 'Testi',
                 },
               ]}
-              label="Kohdistuu attribuuttiin (?)"
+              label={`${t('target-attribute')} (?)`}
             />
           </div>
 
           <div>
-            <Dropdown labelText="Tietotyyppi" defaultValue="literal">
-              <DropdownItem value="literal">Literaali</DropdownItem>
+            <Dropdown labelText={t('range')} defaultValue="literal">
+              <DropdownItem value="literal">{t('literal')}</DropdownItem>
             </Dropdown>
           </div>
 
           <div>
-            <Dropdown labelText="Tila" defaultValue="DRAFT">
+            <Dropdown labelText={t('status')} defaultValue="DRAFT">
               {statuses.map((status) => (
                 <DropdownItem key={`status-${status}`} value={status}>
                   {translateStatus(status, t)}
@@ -117,14 +117,14 @@ export default function ResourceForm({
           <Separator />
 
           <div>
-            <Text className="form-label">Rajoitteet</Text>
+            <Text className="form-label">{t('restrictions')}</Text>
           </div>
 
           <div>
             <InlineListBlock
               addNewComponent={
                 <Button variant="secondary" icon="plus">
-                  Lisää koodisto
+                  {t('add-reference-data')}
                 </Button>
               }
               handleRemoval={() => null}
@@ -134,75 +134,76 @@ export default function ResourceForm({
                   label: 'Testi',
                 },
               ]}
-              label="Koodisto (?)"
+              label={`${t('codelist')} (?)`}
             />
           </div>
 
           <div>
             <StyledDropdown
-              labelText="Sallitut arvot"
-              visualPlaceholder="Valitse arvot"
+              labelText={t('allowed-values')}
+              visualPlaceholder={t('select-values')}
               $noValue={true}
             >
-              <DropdownItem value="test">Test</DropdownItem>
+              <DropdownItem value="test">Placeholder</DropdownItem>
             </StyledDropdown>
           </div>
           <div>
             <StyledDropdown
-              labelText="Oletusarvo"
-              visualPlaceholder="Valitse arvo"
+              labelText={t('default-value')}
+              visualPlaceholder={t('select-value')}
               $noValue={true}
             >
-              <DropdownItem value="test">Test</DropdownItem>
+              <DropdownItem value="test">Placeholder</DropdownItem>
             </StyledDropdown>
           </div>
           <div>
             <StyledDropdown
-              labelText="Pakollinen arvo"
-              visualPlaceholder="Valitse arvo"
+              labelText={t('required-value')}
+              visualPlaceholder={t('select-value')}
               $noValue={true}
             >
-              <DropdownItem value="test">Test</DropdownItem>
+              <DropdownItem value="test">Placeholder</DropdownItem>
             </StyledDropdown>
           </div>
           <div>
             <TextInput
-              labelText="Vähimmäispituus"
-              visualPlaceholder="Kirjoita arvo"
+              labelText={t('minimum-length')}
+              visualPlaceholder={t('input-value')}
             />
           </div>
           <div>
             <TextInput
-              labelText="Enimmäispituus"
-              visualPlaceholder="Kirjoita arvo"
+              labelText={t('maximum-length')}
+              visualPlaceholder={t('input-value')}
             />
           </div>
           <div>
             <TextInput
-              labelText="Vähimmäismäärä"
-              visualPlaceholder="Kirjoita arvo"
+              labelText={t('minimum-amount')}
+              visualPlaceholder={t('input-value')}
             />
           </div>
           <div>
             <TextInput
-              labelText="Enimmäismäärä"
-              visualPlaceholder="Kirjoita arvo"
+              labelText={t('maximum-amount')}
+              visualPlaceholder={t('input-value')}
             />
           </div>
+
           <Separator />
 
           <LanguageVersionedWrapper>
             {langs.map((l) => (
               <Textarea
                 key={`${data.identifier}-description-${l}`}
-                labelText={`Tekninen kuvaus, ${l}`}
+                labelText={`${t('technical-description')}, ${l}`}
                 optionalText={t('optional')}
               />
             ))}
           </LanguageVersionedWrapper>
 
           <Textarea
-            labelText="Työryhmän sisäiset kommenttit"
+            labelText={t('work-group-comment')}
             optionalText={t('optional')}
           />
         </FormWrapper>

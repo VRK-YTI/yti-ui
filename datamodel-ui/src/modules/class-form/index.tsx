@@ -104,8 +104,6 @@ export default function ClassForm({
     });
   };
 
-  console.log('data', data);
-
   const handleSetConcept = (value?: ConceptType) => {
     const label =
       value && 'label' in value
@@ -324,24 +322,28 @@ export default function ClassForm({
           }
         />
 
-        <InlineListBlock
-          addNewComponent={
-            <Button variant="secondary" icon="plus">
-              {t('add-upper-class')}
-            </Button>
-          }
-          items={
-            data.subClassOf.length > 0
-              ? data.subClassOf.map((s) => ({
-                  label: s.label,
-                  id: s.identifier,
-                }))
-              : []
-          }
-          label={t('upper-classes')}
-          handleRemoval={(id: string) => handleSubClassOfRemoval(id)}
-          deleteDisabled={['owl:Thing']}
-        />
+        {!applicationProfile ? (
+          <InlineListBlock
+            addNewComponent={
+              <Button variant="secondary" icon="plus">
+                {t('add-upper-class')}
+              </Button>
+            }
+            items={
+              data.subClassOf.length > 0
+                ? data.subClassOf.map((s) => ({
+                    label: s.label,
+                    id: s.identifier,
+                  }))
+                : []
+            }
+            label={t('upper-classes')}
+            handleRemoval={(id: string) => handleSubClassOfRemoval(id)}
+            deleteDisabled={['owl:Thing']}
+          />
+        ) : (
+          <></>
+        )}
 
         {applicationProfile ? (
           <InlineListBlock
@@ -352,6 +354,7 @@ export default function ClassForm({
                 modalButtonLabel={t('select-class')}
                 handleFollowUp={handleTargetClassUpdate}
                 applicationProfile
+                initialSelected={data.targetClass?.id}
               />
             }
             items={data.targetClass ? [data.targetClass] : []}
@@ -375,10 +378,10 @@ export default function ClassForm({
 
         {applicationProfile ? (
           <InlineListBlock
-            label="Hyödyntää luokkarajoitetta"
+            label={t('utilizes-class-restriction')}
             addNewComponent={
               <Button variant="secondary" icon="plus">
-                Valitse luokkarajoite
+                {t('select-class-restriction')}
               </Button>
             }
             items={[]}
@@ -444,17 +447,16 @@ export default function ClassForm({
             >
               {data.attribute.map((attr) =>
                 applicationProfile ? (
-                  <>
+                  <div key={`${data.identifier}-attr-${attr.identifier}`}>
                     <ResourceForm
-                      key={`${data.identifier}-attr-${attr.identifier}`}
                       data={attr}
                       langs={languages}
                       type="attribute"
                     />
                     <Button variant="secondary" style={{ marginTop: '10px' }}>
-                      Lisää attribuutti
+                      {t('add-attribute')}
                     </Button>
-                  </>
+                  </div>
                 ) : (
                   <ResourceInfo
                     key={`${data.identifier}-attr-${attr.identifier}`}
@@ -480,19 +482,18 @@ export default function ClassForm({
             >
               {data.association.map((assoc) =>
                 applicationProfile ? (
-                  <>
+                  <div key={`${data.identifier}-assoc-${assoc.identifier}`}>
                     <ResourceInfo
-                      key={`${data.identifier}-attr-${assoc.identifier}`}
                       data={assoc}
                       modelId={applicationProfile ? assoc.modelId : modelId}
                     />
                     <Button variant="secondary" style={{ marginTop: '10px' }}>
-                      Lisää assosiaatio
+                      {t('add-association')}
                     </Button>
-                  </>
+                  </div>
                 ) : (
                   <ResourceInfo
-                    key={`${data.identifier}-attr-${assoc.identifier}`}
+                    key={`${data.identifier}-assoc-${assoc.identifier}`}
                     data={assoc}
                     modelId={applicationProfile ? assoc.modelId : modelId}
                   />

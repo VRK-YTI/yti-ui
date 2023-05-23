@@ -48,19 +48,17 @@ export default function ClassRestrictionModal({
       onEscKeyDown={() => handleClose()}
     >
       <ModalContent>
-        <ModalTitle>Lisää luokka</ModalTitle>
+        <ModalTitle>{t('add-class')}</ModalTitle>
 
         <Paragraph>
-          <Text>
-            Valitulle ydintietomallin luokalle on tehty jo X rajoiteluokkaa.
-            Haluatko ottaa niistä jonkun pohjaksi vai haluatko tehdä uuden
-            rajoiteluokan?
-          </Text>
+          <Text>{t('class-restriction-description', { count: 0 })}</Text>
         </Paragraph>
 
         <ModalContentWrapper>
           <div>
-            <Text className="block-label">Valittu ydintietomallin luokka</Text>
+            <Text className="block-label">
+              {t('selected-data-model-class')}
+            </Text>
           </div>
 
           <div>
@@ -90,13 +88,13 @@ export default function ClassRestrictionModal({
                   },
                 },
               ]}
-              primaryColumnName="Luokan nimi"
+              primaryColumnName={t('class-name')}
             />
           </div>
 
           <div>
             <Text className="block-label">
-              Ydintietomallin luokkaan kohdistuvat luokkarajoitteet
+              {t('class-restrictions-targeted-at-data-model-class')}
             </Text>
           </div>
 
@@ -104,7 +102,7 @@ export default function ClassRestrictionModal({
             <TextInput
               labelMode="hidden"
               labelText=""
-              visualPlaceholder="Hae luokan nimellä"
+              visualPlaceholder={t('search-by-class-name')}
               onChange={(e) => setKeyword(e?.toString() ?? '')}
               defaultValue={keyword}
               debounce={300}
@@ -179,7 +177,7 @@ export default function ClassRestrictionModal({
                   },
                 },
               ]}
-              primaryColumnName="Luokan nimi"
+              primaryColumnName={t('class-name')}
               selected={selected}
             />
           </div>
@@ -191,10 +189,10 @@ export default function ClassRestrictionModal({
           disabled={!selected || selected === ''}
           onClick={() => handleFollowUp()}
         >
-          Valitse luokkarajoite
+          {t('select-class-restriction')}
         </Button>
         <Button variant="secondary" onClick={() => handleFollowUp(true)}>
-          Luo uusi luokkarajoite
+          {t('create-new-class-restriction')}
         </Button>
         <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
           {t('cancel-variant')}

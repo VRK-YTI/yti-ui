@@ -239,7 +239,7 @@ export default function ModelInfoView() {
               data: modelInfo.label,
               lang: i18n.language,
             })}`}
-            labelNewWindow=""
+            labelNewWindow={t('link-opens-new-window-external')}
           >
             {modelInfo.contact ?? 'yhteentoimivuus@dvv.fi'}
           </ExternalLink>

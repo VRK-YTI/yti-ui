@@ -326,6 +326,7 @@ export default function CommonForm({
                     modelId={modelId}
                     modalButtonLabel={t('select-class')}
                     mode="select"
+                    initialSelected={data.domain?.id}
                   />
                 }
                 handleRemoval={(id: string) =>
@@ -347,6 +348,7 @@ export default function CommonForm({
                     modelId={modelId}
                     modalButtonLabel={t('select-class')}
                     mode="select"
+                    initialSelected={data.domain?.id}
                   />
                 }
                 handleRemoval={(id: string) =>
@@ -364,6 +366,7 @@ export default function CommonForm({
                     modelId={modelId}
                     modalButtonLabel={t('select-class')}
                     mode="select"
+                    initialSelected={data.range?.id}
                   />
                 }
                 handleRemoval={(id: string) =>
