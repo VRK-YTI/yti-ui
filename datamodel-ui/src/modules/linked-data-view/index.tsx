@@ -127,17 +127,38 @@ export default function LinkedDataView({
         </BasicBlock>
 
         {isApplicationProfile ? (
-          // TODO: Add codelist visualization
           <BasicBlock title={t('linked-codelists')}>
-            {t('no-linked-codelists')}
+            {data && data.codeLists.length > 0 ? (
+              <LinkedWrapper>
+                {data.codeLists.map((codeList, idx) => {
+                  const label = getLanguageVersion({
+                    data: codeList.prefLabel,
+                    lang: i18n.language,
+                    appendLocale: true,
+                  });
+
+                  return (
+                    <LinkedItem key={`linked-codeList-${idx}`}>
+                      <ExternalLink
+                        labelNewWindow={t('link-opens-new-window-external')}
+                        href={codeList.id}
+                      >
+                        {label !== '' ? label : codeList.id}
+                      </ExternalLink>
+                    </LinkedItem>
+                  );
+                })}
+              </LinkedWrapper>
+            ) : (
+              <>{t('no-linked-codelists')}</>
+            )}
           </BasicBlock>
         ) : (
-          // <BasicBlock title="Koodistot">Ei linkitettyjä koodistoja.</BasicBlock>
           <></>
         )}
 
         <BasicBlock title={t('linked-datamodels')}>
-          {data && data.internalNamespaces ? (
+          {data && data.internalNamespaces.length > 0 ? (
             <LinkedWrapper>
               {data.internalNamespaces.map((namespace, idx) => {
                 return (

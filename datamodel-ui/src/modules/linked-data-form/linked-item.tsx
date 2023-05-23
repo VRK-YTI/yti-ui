@@ -23,6 +23,11 @@ interface LinkedItemProps {
         prefix: string;
         type: 'datamodel-external';
         setData: (value: string) => void;
+      }
+    | {
+        prefLabel: { [key: string]: string };
+        type: 'codelist';
+        id: string;
       };
   handleRemove: (id: string) => void;
 }
@@ -33,20 +38,27 @@ export default function LinkedItem({
 }: LinkedItemProps) {
   const { t, i18n } = useTranslation('admin');
 
+  const getId = () => {
+    return 'uri' in itemData
+      ? itemData.uri
+      : 'id' in itemData
+      ? itemData.id
+      : itemData.namespace;
+  };
+
   return (
     <LinkedItemWrapper>
       <div className="item-content">
         {renderTerminologyContent()}
         {renderDatamodelContent()}
+        {renderCodeListContent()}
       </div>
 
       <div>
         <Button
           variant="secondaryNoBorder"
           icon="remove"
-          onClick={() =>
-            handleRemove('uri' in itemData ? itemData.uri : itemData.namespace)
-          }
+          onClick={() => handleRemove(getId())}
         >
           {t('remove')}
         </Button>
@@ -128,5 +140,29 @@ export default function LinkedItem({
     }
 
     return <></>;
+  }
+
+  function renderCodeListContent() {
+    if (itemData.type !== 'codelist') {
+      return <></>;
+    }
+
+    const label = getLanguageVersion({
+      data: itemData.prefLabel,
+      lang: i18n.language,
+      appendLocale: true,
+    });
+
+    return (
+      <>
+        <ExternalLink
+          labelNewWindow={t('site-open-link-new-window', { ns: 'common' })}
+          href={itemData.id ?? ''}
+        >
+          {label !== '' ? label : itemData.id}
+        </ExternalLink>
+        <Text smallScreen>{itemData.id}</Text>
+      </>
+    );
   }
 }

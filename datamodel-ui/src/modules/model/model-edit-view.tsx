@@ -58,6 +58,7 @@ export default function ModelEditView({
     status: model.status ?? 'DRAFT',
     type: model.type ?? 'PROFILE',
     terminologies: model.terminologies ?? [],
+    codeLists: model.codeLists ?? [],
   });
 
   useEffect(() => {
