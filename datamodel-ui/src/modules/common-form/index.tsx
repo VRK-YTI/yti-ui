@@ -8,7 +8,7 @@ import {
   Textarea,
   TextInput,
 } from 'suomifi-ui-components';
-import ConceptBlock from '../class-form/concept-block';
+import ConceptBlock from '../concept-block';
 import { LanguageVersionedWrapper } from '../class-form/class-form.styles';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
@@ -20,39 +20,51 @@ import {
   translateCommonForm,
   translateCommonFormErrors,
 } from '@app/common/utils/translation-helpers';
-import {
-  AssociationFormType,
-  initialAssociation,
-} from '@app/common/interfaces/association-form.interface';
-import {
-  AttributeFormType,
-  initialAttribute,
-} from '@app/common/interfaces/attribute-form.interface';
 import { Status } from '@app/common/interfaces/status.interface';
 import validateForm from './validate-form';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
-import { usePutResourceMutation } from '@app/common/components/resource/resource.slice';
+import {
+  selectResource,
+  setResource,
+  usePutResourceMutation,
+} from '@app/common/components/resource/resource.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import {
+  AxiosBaseQueryError,
+  AxiosQueryErrorFields,
+} from 'yti-common-ui/interfaces/axios-base-query.interface';
+import ClassModal from '../class-modal';
+import { BasicBlock } from 'yti-common-ui/block';
+import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { useStoreDispatch } from '@app/store';
+import { useSelector } from 'react-redux';
+import { ConceptType } from '@app/common/interfaces/concept-interface';
 
-interface AttributeFormProps {
+interface CommonFormProps {
   handleReturn: () => void;
+  handleFollowUp: (id: string) => void;
   type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
   modelId: string;
-  initialSubResourceOf?: { label: string; uri: string };
   languages: string[];
+  terminologies: string[];
+  isEdit: boolean;
 }
 
 export default function CommonForm({
   handleReturn,
+  handleFollowUp,
   type,
   modelId,
-  initialSubResourceOf,
   languages,
-}: AttributeFormProps) {
-  const { t } = useTranslation('admin');
+  terminologies,
+  isEdit,
+}: CommonFormProps) {
+  const { t, i18n } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-  const [data, setData] = useState(getInitialData());
+  const dispatch = useStoreDispatch();
+  const data = useSelector(selectResource());
   const [userPosted, setUserPosted] = useState(false);
   const [errors, setErrors] = useState(validateForm(data));
   const [putResource, result] = usePutResourceMutation();
@@ -75,6 +87,7 @@ export default function CommonForm({
     putResource({
       modelId: modelId,
       data: { ...data, type: type, subResourceOf: [] },
+      resourceId: isEdit ? data.identifier : undefined,
     });
   };
 
@@ -83,7 +96,81 @@ export default function CommonForm({
       setErrors(validateForm(value));
     }
 
-    setData(value);
+    dispatch(setResource(value));
+  };
+
+  const handleSetConcept = (value?: ConceptType) => {
+    const label =
+      value && 'label' in value
+        ? Object.fromEntries(
+            Object.entries(data.label)
+              .map((obj) => {
+                if (value.label[obj[0]] != null) {
+                  return [[obj[0]], value.label[obj[0]]];
+                }
+                return [[obj[0]], data.label[obj[0]]];
+              })
+              .filter(
+                (obj) =>
+                  data.label[Array.isArray(obj[0]) ? obj[0][0] : obj[0]] === ''
+              )
+          )
+        : undefined;
+
+    handleUpdate({
+      ...data,
+      concept: value ? value : undefined,
+      label: label ? { ...data.label, ...label } : data.label,
+    });
+  };
+
+  const handleDomainFollowUp = (value?: InternalClass) => {
+    if (!value) {
+      handleUpdate({ ...data, domain: value });
+      return;
+    }
+
+    handleUpdate({
+      ...data,
+      domain: {
+        id: value.id,
+        label: getLanguageVersion({
+          data: value.label,
+          lang: i18n.language,
+          appendLocale: true,
+        }),
+      },
+    });
+  };
+
+  const handleRangeFollowUp = (value?: InternalClass) => {
+    if (type === ResourceType.ATTRIBUTE) {
+      return;
+    }
+
+    if (!value) {
+      handleUpdate({ ...data, range: value });
+      return;
+    }
+
+    handleUpdate({
+      ...data,
+      range: {
+        id: value.id,
+        label: getLanguageVersion({
+          data: value.label,
+          lang: i18n.language,
+          appendLocale: true,
+        }),
+      },
+    });
+  };
+
+  const handleDomainOrRangeRemoval = (id: string, type: 'domain' | 'range') => {
+    handleUpdate({
+      ...data,
+      [type]: undefined,
+    });
   };
 
   useEffect(() => {
@@ -94,11 +181,44 @@ export default function CommonForm({
     if (
       ref.current &&
       userPosted &&
-      Object.values(errors).filter((val) => val).length > 0
+      (Object.values(errors).filter((val) => val).length > 0 || result.error)
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors, userPosted]);
+  }, [ref, errors, userPosted, result.error]);
+
+  useEffect(() => {
+    if (result.isError && result.error && 'data' in result.error) {
+      const backendErrorFields = Array.isArray(
+        (result.error as AxiosQueryErrorFields).data?.details
+      )
+        ? (result.error as AxiosQueryErrorFields).data?.details?.map(
+            (d) => d.field
+          )
+        : [];
+
+      if (backendErrorFields.length > 0) {
+        setErrors({
+          identifier: backendErrorFields.includes('identifier'),
+          label: backendErrorFields.includes('label'),
+        });
+        return;
+      }
+
+      if (result.error?.status === 401) {
+        setErrors({
+          ...validateForm(data),
+          unauthorized: true,
+        });
+      }
+    }
+  }, [result.isError, result.error, data]);
+
+  useEffect(() => {
+    if (result.isSuccess) {
+      handleFollowUp(data.identifier);
+    }
+  }, [result.isSuccess, handleFollowUp, data.identifier]);
 
   return (
     <>
@@ -114,7 +234,10 @@ export default function CommonForm({
           </Button>
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Text variant="bold">{translateCommonForm('name', type, t)}</Text>
+          <Text variant="bold">
+            {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
+              translateCommonForm('name', type, t)}
+          </Text>
 
           <div>
             <Button
@@ -128,13 +251,22 @@ export default function CommonForm({
             </Button>
           </div>
         </div>
-        {userPosted ? (
+
+        {userPosted &&
+        (Object.values(errors).filter((val) => val).length > 0 ||
+          result.isError) ? (
           <div>
             <FormFooterAlert
-              labelText={t('missing-information-title')}
-              alerts={Object.entries(errors)
-                .filter((e) => e[1])
-                .map((e) => translateCommonFormErrors(e[0], type, t))}
+              labelText={
+                Object.keys(errors).filter(
+                  (key) =>
+                    ['label', 'identifier'].includes(key) &&
+                    errors[key as keyof typeof errors] === true
+                ).length > 0
+                  ? t('missing-information-title')
+                  : t('unexpected-error-title')
+              }
+              alerts={getErrors()}
             />
           </div>
         ) : (
@@ -144,7 +276,11 @@ export default function CommonForm({
 
       <DrawerContent height={headerHeight}>
         <FormWrapper>
-          <ConceptBlock setConcept={() => null} />
+          <ConceptBlock
+            concept={data.concept}
+            setConcept={handleSetConcept}
+            terminologies={terminologies}
+          />
 
           <LanguageVersionedWrapper>
             {languages.map((lang) => (
@@ -152,7 +288,7 @@ export default function CommonForm({
                 key={`label-${lang}`}
                 className="wide-text"
                 labelText={`${translateCommonForm('name', type, t)}, ${lang}`}
-                defaultValue={data.label[lang] ?? ''}
+                value={data.label[lang] ?? ''}
                 onChange={(e) =>
                   handleUpdate({
                     ...data,
@@ -174,7 +310,75 @@ export default function CommonForm({
               })
             }
             status={userPosted && errors.identifier ? 'error' : 'default'}
+            disabled={isEdit}
           />
+
+          {type === ResourceType.ATTRIBUTE && (
+            <>
+              <BasicBlock title={t('range')}>
+                {t('literal')} (rdfs:Literal)
+              </BasicBlock>
+
+              <InlineListBlock
+                addNewComponent={
+                  <ClassModal
+                    handleFollowUp={handleDomainFollowUp}
+                    modelId={modelId}
+                    modalButtonLabel={t('select-class')}
+                    mode="select"
+                  />
+                }
+                handleRemoval={(id: string) =>
+                  handleDomainOrRangeRemoval(id, 'domain')
+                }
+                items={data.domain ? [data.domain] : []}
+                label={`${t('class')} (rdfs:domain)`}
+                optionalText={t('optional')}
+              />
+            </>
+          )}
+
+          {type === ResourceType.ASSOCIATION && (
+            <>
+              <InlineListBlock
+                addNewComponent={
+                  <ClassModal
+                    handleFollowUp={handleDomainFollowUp}
+                    modelId={modelId}
+                    modalButtonLabel={t('select-class')}
+                    mode="select"
+                  />
+                }
+                handleRemoval={(id: string) =>
+                  handleDomainOrRangeRemoval(id, 'domain')
+                }
+                items={data.domain ? [data.domain] : []}
+                label={t('source-class')}
+                optionalText={t('optional')}
+              />
+
+              <InlineListBlock
+                addNewComponent={
+                  <ClassModal
+                    handleFollowUp={handleRangeFollowUp}
+                    modelId={modelId}
+                    modalButtonLabel={t('select-class')}
+                    mode="select"
+                  />
+                }
+                handleRemoval={(id: string) =>
+                  handleDomainOrRangeRemoval(id, 'range')
+                }
+                items={
+                  data.range && typeof data.range !== 'string'
+                    ? [data.range]
+                    : []
+                }
+                label={t('target-class')}
+                optionalText={t('optional')}
+              />
+            </>
+          )}
 
           <InlineListBlock
             label={translateCommonForm('upper', type, t)}
@@ -187,6 +391,11 @@ export default function CommonForm({
                 {translateCommonForm('add-upper', type, t)}
               </Button>
             }
+            deleteDisabled={[
+              'owl:topDataProperty',
+              'owl:TopObjectProperty',
+              'owl:topObjectProperty',
+            ]}
             handleRemoval={() => null}
           />
 
@@ -194,10 +403,11 @@ export default function CommonForm({
             label={translateCommonForm('equivalent', type, t)}
             items={[]}
             addNewComponent={
-              <Button variant="secondary">
+              <Button variant="secondary" icon="plus">
                 {translateCommonForm('add-equivalent', type, t)}
               </Button>
             }
+            optionalText={t('optional')}
             handleRemoval={() => null}
           />
 
@@ -234,7 +444,7 @@ export default function CommonForm({
           </LanguageVersionedWrapper>
 
           <Textarea
-            labelText={translateCommonForm('editorial-note', type, t)}
+            labelText={translateCommonForm('work-group-comment', type, t)}
             optionalText={t('optional')}
             defaultValue={data.editorialNote}
             onChange={(e) =>
@@ -248,15 +458,31 @@ export default function CommonForm({
     </>
   );
 
-  function getInitialData(): AssociationFormType | AttributeFormType {
-    if (!initialSubResourceOf) {
-      return type === ResourceType.ASSOCIATION
-        ? { ...initialAssociation, subResourceOf: ['owl:TopObjectProperty'] }
-        : { ...initialAttribute, subResourceOf: ['owl:topDataProperty'] };
+  function getErrors(): string[] {
+    const translatedErrors = Object.entries(errors)
+      .filter((e) => e[1])
+      .map((e) => translateCommonFormErrors(e[0], type, t));
+
+    if (result.error) {
+      const error = result.error as AxiosBaseQueryError;
+      const errorStatus = error.status ?? '';
+      const errorTitle =
+        error.data &&
+        Object.entries(error.data).filter(
+          (entry) => entry[0] === 'title'
+        )?.[0]?.[1];
+      const errorDetail =
+        error.data &&
+        Object.entries(error.data).filter(
+          (entry) => entry[0] === 'detail'
+        )?.[0]?.[1];
+      const catchedError = `Error ${errorStatus}: ${
+        errorTitle ?? t('unexpected-error-title')
+      } ${errorDetail}`;
+
+      return [...translatedErrors, catchedError];
     }
 
-    return type === ResourceType.ASSOCIATION
-      ? { ...initialAssociation, subResourceOf: [initialSubResourceOf.label] }
-      : { ...initialAttribute, subResourceOf: [initialSubResourceOf.label] };
+    return translatedErrors;
   }
 }

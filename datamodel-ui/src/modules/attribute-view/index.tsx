@@ -12,32 +12,74 @@ import { DetachedPagination } from 'yti-common-ui/pagination';
 import AttributeModal from '../attribute-modal';
 import CommonForm from '../common-form';
 import CommonView from '../common-view';
+import {
+  initializeResource,
+  resetResource,
+  setResource,
+  useGetResourceQuery,
+} from '@app/common/components/resource/resource.slice';
+import { useStoreDispatch } from '@app/store';
+import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+import {
+  selectSelected,
+  selectViews,
+} from '@app/common/components/model/model.slice';
+import { getResourceInfo } from '@app/common/utils/parse-slug';
+import { resourceToResourceFormType } from '../common-form/utils';
 
 export default function AttributeView({
   modelId,
   languages,
+  terminologies,
 }: {
   modelId: string;
   languages: string[];
+  terminologies: string[];
 }) {
   const { t, i18n } = useTranslation('common');
-  const [view, setView] = useState('listing');
-  const [headerHeight, setHeaderHeight] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
   const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
+  const ref = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const dispatch = useStoreDispatch();
+  const views = useSelector(selectViews());
+  const globalSelected = useSelector(selectSelected());
+  const [view, setView] = useState(
+    Object.keys(views.attributes).filter((k) => k).length > 0
+      ? Object.keys(views.attributes).find(
+          (k) =>
+            views.attributes[k as keyof typeof views['attributes']] === true
+        )
+      : 'list'
+  );
+  const [headerHeight, setHeaderHeight] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
-  const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
-    label: string;
-    uri: string;
-  }>();
-  const { data } = useQueryInternalResourcesQuery({
+  const [isEdit, setIsEdit] = useState(false);
+  const [currentAttributeId, setCurrentAttributeId] = useState<
+    string | undefined
+  >(
+    getResourceInfo(router.query.slug)?.type === 'attribute'
+      ? getResourceInfo(router.query.slug)?.id
+      : undefined
+  );
+
+  const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
     pageSize: 20,
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [ResourceType.ATTRIBUTE],
   });
+  const { data: attributeData } = useGetResourceQuery(
+    {
+      modelId: modelId,
+      resourceIdentifier: currentAttributeId ?? '',
+    },
+    {
+      skip: typeof currentAttributeId === 'undefined',
+    }
+  );
 
   useEffect(() => {
     if (ref.current) {
@@ -45,25 +87,58 @@ export default function AttributeView({
     }
   }, [ref]);
 
-  const handleFollowUp = (value?: { label: string; uri: string }) => {
-    if (value) {
-      setInitialSubResourceOf(value);
+  useEffect(() => {
+    if (
+      globalSelected.type === 'attributes' &&
+      currentAttributeId !== globalSelected.id
+    ) {
+      setCurrentAttributeId(globalSelected.id);
     }
+  }, [globalSelected, currentAttributeId]);
 
+  const handleFollowUp = (value?: { label: string; uri: string }) => {
+    dispatch(
+      initializeResource(ResourceType.ATTRIBUTE, languages, value?.label)
+    );
     setView('form');
+
+    if (isEdit) {
+      setIsEdit(false);
+    }
   };
 
-  const handleQueryChange = (query: string) => {
-    setQuery(query);
+  const handleQueryChange = (value: string) => {
+    setQuery(value);
     setCurrentPage(1);
   };
 
   const handleFormReturn = () => {
-    setView('listing');
+    setView('list');
+    dispatch(resetResource());
+    refetch();
+
+    if (isEdit) {
+      setIsEdit(false);
+    }
   };
 
-  const handleShowAttribute = () => {
-    setView('attribute');
+  const handleShowAttribute = (id: string) => {
+    setView('info');
+    setCurrentAttributeId(id);
+    router.replace(`${modelId}/attribute/${id}`);
+  };
+
+  const handleFormFollowUp = (id: string) => {
+    handleShowAttribute(id);
+    refetch();
+  };
+
+  const handleEdit = () => {
+    if (attributeData) {
+      setView('form');
+      dispatch(setResource(resourceToResourceFormType(attributeData)));
+      setIsEdit(true);
+    }
   };
 
   return (
@@ -75,7 +150,7 @@ export default function AttributeView({
   );
 
   function renderListing() {
-    if (view !== 'listing') {
+    if (view !== 'list') {
       return <></>;
     }
 
@@ -102,9 +177,7 @@ export default function AttributeView({
               />
             )}
           </div>
-        </StaticHeader>
 
-        <DrawerContent height={headerHeight} spaced>
           <SearchInput
             labelText=""
             clearButtonLabel={t('clear-all-selections', { ns: 'admin' })}
@@ -114,7 +187,9 @@ export default function AttributeView({
             onChange={(e) => handleQueryChange(e?.toString() ?? '')}
             debounce={500}
           />
+        </StaticHeader>
 
+        <DrawerContent height={headerHeight} spaced>
           {!data || data?.totalHitCount < 1 ? (
             <Text>{t('datamodel-no-attributes')}</Text>
           ) : (
@@ -125,7 +200,7 @@ export default function AttributeView({
                   lang: i18n.language,
                 }),
                 subtitle: `${modelId}:${item.identifier}`,
-                onClick: handleShowAttribute,
+                onClick: () => handleShowAttribute(item.identifier),
               }))}
             />
           )}
@@ -148,23 +223,27 @@ export default function AttributeView({
     return (
       <CommonForm
         handleReturn={handleFormReturn}
+        handleFollowUp={handleFormFollowUp}
         type={ResourceType.ATTRIBUTE}
         modelId={modelId}
-        initialSubResourceOf={initialSubResourceOf}
         languages={languages}
+        terminologies={terminologies}
+        isEdit={isEdit}
       />
     );
   }
 
   function renderAttribute() {
-    if (view !== 'attribute') {
+    if (view !== 'info') {
       return <></>;
     }
 
     return (
       <CommonView
-        type={ResourceType.ATTRIBUTE}
+        data={attributeData}
+        modelId={modelId}
         handleReturn={handleFormReturn}
+        handleEdit={handleEdit}
       />
     );
   }

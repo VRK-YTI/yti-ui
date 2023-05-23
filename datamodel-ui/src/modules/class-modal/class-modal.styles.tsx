@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Modal } from 'suomifi-ui-components';
+import { Button, Modal } from 'suomifi-ui-components';
 
 export const LargeModal = styled(Modal)`
   ${(props) =>
@@ -7,4 +7,9 @@ export const LargeModal = styled(Modal)`
     `
     width: 95vw !important;
   `}
+`;
+
+export const OpenModalButton = styled(Button)`
+  width: min-content;
+  white-space: nowrap;
 `;

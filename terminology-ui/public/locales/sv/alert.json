@@ -14,5 +14,5 @@
   "error-occurred_remove-concept": "Ett problem uppstod med radering av begreppet",
   "error-occurred_remove-terminology": "Ett problem uppstod med radering av ordlistan",
   "error-occurred_session": "Ett problem uppstod med sessionen, försök att logga in igen",
-  "error-occurred_unauthenticated": ""
+  "error-occurred_unauthenticated": "Ett problem uppstod med verifiering av inloggningsinformation. Var god och logga in igen till tjänsten. "
 }

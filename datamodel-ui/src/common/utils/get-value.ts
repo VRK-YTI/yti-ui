@@ -5,7 +5,6 @@ import {
   LangObject,
   ModelType,
   ReferenceData,
-  ModelTerminology,
 } from '../interfaces/model.interface';
 import { Status } from '../interfaces/status.interface';
 import { Type } from '../interfaces/type.interface';
@@ -135,7 +134,6 @@ export function getOrganizationsWithId(
   data?: ModelType,
   lang?: string
 ): MultiSelectData[] {
-  console.log(data);
   if (!data || !data.organizations) {
     return [];
   }

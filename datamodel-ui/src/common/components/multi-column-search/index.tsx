@@ -54,6 +54,7 @@ interface MultiColumnSearchProps {
   searchParams: InternalResourcesSearchParams;
   setSearchParams: (value: InternalResourcesSearchParams) => void;
   languageVersioned?: boolean;
+  applicationProfile?: boolean;
   modelId: string;
 }
 
@@ -66,6 +67,7 @@ export default function MultiColumnSearch({
   setSearchParams,
   languageVersioned,
   modelId,
+  applicationProfile,
 }: MultiColumnSearchProps) {
   const { t, i18n } = useTranslation('admin');
   const {
@@ -187,6 +189,23 @@ export default function MultiColumnSearch({
           onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
           debounce={300}
         />
+        {applicationProfile && (
+          <Dropdown
+            className="data-model-type-picker"
+            labelText={'Tietomallin tyyppi'}
+            defaultValue={'LIBRARY'}
+            onChange={(e) => {
+              handleSearchChange('limitToModelType', e);
+            }}
+          >
+            <DropdownItem value={'LIBRARY'}>
+              {t('library-variant', { ns: 'common' })}
+            </DropdownItem>
+            <DropdownItem value={'PROFILE'}>
+              {t('profile', { ns: 'common' })}
+            </DropdownItem>
+          </Dropdown>
+        )}
 
         <Dropdown
           className="data-model-picker"

@@ -115,6 +115,10 @@ module.exports = (phase, { defaultConfig }) => {
             source: '/messaging-api/:path*',
             destination: 'http://localhost:9801/messaging-api/:path*',
           },
+          {
+            source: '/codelist-api/:path*',
+            destination: 'http://localhost:9601/codelist-api/:path*',
+          },
         ];
       },
     };
@@ -135,6 +139,11 @@ module.exports = (phase, { defaultConfig }) => {
           {
             source: '/messaging-api/:path*',
             destination: 'http://yti-messaging-api:9801/messaging-api/:path*',
+          },
+          {
+            source: '/codelist-api/:path*',
+            destination:
+              'http://yti-codelist-public-api-service:9601/codelist-api/:path*',
           },
         ];
       },

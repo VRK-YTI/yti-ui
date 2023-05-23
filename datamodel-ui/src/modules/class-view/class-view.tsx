@@ -1,22 +1,17 @@
 import {
-  useGetClassMutMutation,
-  usePutClassMutation,
+  resetClass,
+  setClass,
+  useGetClassQuery,
 } from '@app/common/components/class/class.slice';
-import {
-  ClassFormType,
-  initialClassForm,
-} from '@app/common/interfaces/class-form.interface';
+import { initialClassForm } from '@app/common/interfaces/class-form.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import {
   Button,
-  Expander,
   ExpanderGroup,
-  ExpanderTitleButton,
-  HintText,
-  Label,
+  ExternalLink,
   Link,
   SearchInput,
   Text,
@@ -28,12 +23,7 @@ import Separator from 'yti-common-ui/separator';
 import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
 import { TooltipWrapper } from '../model/model.styles';
-import {
-  ClassFormErrors,
-  classFormToClass,
-  internalClassToClassForm,
-  validateClassForm,
-} from './utils';
+import { classTypeToClassForm, internalClassToClassForm } from './utils';
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
@@ -41,29 +31,51 @@ import HasPermission from '@app/common/utils/has-permission';
 import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { DetachedPagination } from 'yti-common-ui/pagination';
+import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
+import { useStoreDispatch } from '@app/store';
+import FormattedDate from 'yti-common-ui/components/formatted-date';
+import DeleteModal from '../delete-modal';
+import {
+  resetHovered,
+  resetSelected,
+  selectClassView,
+  selectSelected,
+  setHovered,
+  setSelected,
+  setView,
+} from '@app/common/components/model/model.slice';
+import { useSelector } from 'react-redux';
+import ResourceInfo from './resource-info';
+import ConceptView from '../concept-view';
+import { useRouter } from 'next/router';
+import { getResourceInfo } from '@app/common/utils/parse-slug';
 
-interface ClassView {
+interface ClassViewProps {
   modelId: string;
   languages: string[];
+  terminologies: string[];
+  applicationProfile?: boolean;
 }
 
-export default function ClassView({ modelId, languages }: ClassView) {
+export default function ClassView({
+  modelId,
+  languages,
+  terminologies,
+  applicationProfile,
+}: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
+  const ref = useRef<HTMLDivElement>(null);
+  const dispatch = useStoreDispatch();
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
-  const [formData, setFormData] = useState<ClassFormType>(initialClassForm);
-  const [formErrors, setFormErrors] = useState<ClassFormErrors>(
-    validateClassForm(formData)
-  );
-  const [userPosted, setUserPosted] = useState(false);
+  const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false);
-  const [view, setView] = useState<'listing' | 'class' | 'form'>('listing');
-  const [putClass, putClassResult] = usePutClassMutation();
-  const [getClass, getClassResult] = useGetClassMutMutation();
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const { data } = useQueryInternalResourcesQuery({
+  const [isEdit, setIsEdit] = useState(false);
+  const globalSelected = useSelector(selectSelected());
+  const view = useSelector(selectClassView());
+  const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
     pageSize: 20,
@@ -71,79 +83,101 @@ export default function ClassView({ modelId, languages }: ClassView) {
     resourceTypes: [ResourceType.CLASS],
   });
 
-  const handleQueryChange = (query: string) => {
-    setQuery(query);
+  const [currentClassId, setCurrentClassId] = useState<string | undefined>(
+    getResourceInfo(router.query.slug)?.type === 'class'
+      ? getResourceInfo(router.query.slug)?.id
+      : undefined
+  );
+  const { data: classData, isSuccess } = useGetClassQuery(
+    { modelId: modelId, classId: currentClassId ?? '' },
+    { skip: typeof currentClassId === 'undefined' }
+  );
+
+  const handleQueryChange = (value: string) => {
+    setQuery(value);
     setCurrentPage(1);
   };
 
   const handleFollowUpAction = (value?: InternalClass) => {
-    setView('form');
+    if (isEdit) {
+      setIsEdit(false);
+    }
 
     if (!value) {
       const initialData = initialClassForm;
       const label = Object.fromEntries(languages.map((lang) => [lang, '']));
-      setFormData({ ...initialData, label: label });
+      dispatch(
+        setClass({
+          ...initialData,
+          label: label,
+          subClassOf: [
+            {
+              attributes: [],
+              identifier: 'owl:Thing',
+              label: 'owl:Thing',
+            },
+          ],
+        })
+      );
+      dispatch(setView('classes', 'edit'));
       return;
     }
 
-    setFormData(internalClassToClassForm(value, languages));
+    dispatch(
+      setClass(internalClassToClassForm(value, languages, applicationProfile))
+    );
+
+    dispatch(setView('classes', 'edit'));
   };
 
-  const handleFormReturn = () => {
-    setView('listing');
-    setUserPosted(false);
-    setFormData(initialClassForm);
-    setFormErrors(validateClassForm(initialClassForm));
+  const handleReturn = () => {
+    dispatch(resetSelected());
+    dispatch(resetClass());
+    dispatch(setView('classes', 'list'));
+    refetch();
+
+    if (isEdit) {
+      setIsEdit(false);
+    }
   };
 
-  const setFormDataHandler = (value: ClassFormType) => {
-    if (
-      userPosted &&
-      Object.values(formErrors).filter((val) => val === true).length > 0
-    ) {
-      setFormErrors(validateClassForm(value));
-    }
-
-    setFormData(value);
+  const handleFollowUp = (classId: string) => {
+    dispatch(setView('classes', 'info'));
+    router.replace(`${modelId}/class/${classId}`);
   };
 
-  const handleFormSubmit = () => {
-    if (!userPosted) {
-      setUserPosted(true);
-    }
-
-    const errors = validateClassForm(formData);
-    setFormErrors(errors);
-
-    if (Object.values(errors).filter((val) => val === true).length > 0) {
-      return;
-    }
-
-    const data = classFormToClass(formData);
-    putClass({ modelId: modelId, data: data });
+  const handleActive = (classId: string) => {
+    dispatch(setSelected(classId, 'classes'));
+    dispatch(resetHovered());
+    router.replace(`${modelId}/class/${classId}`);
   };
 
-  useEffect(() => {
-    if (putClassResult.isSuccess) {
-      getClass({ modelId: modelId, classId: formData.identifier });
+  const handleEdit = () => {
+    if (isSuccess) {
+      dispatch(setView('classes', 'edit'));
+      dispatch(setClass(classTypeToClassForm(classData)));
+      setIsEdit(true);
     }
-  }, [putClassResult, modelId, formData.identifier, getClass]);
-
-  useEffect(() => {
-    if (getClassResult.isSuccess) {
-      setView('class');
-    }
-  }, [getClassResult]);
+  };
 
   useEffect(() => {
     if (ref.current) {
       setHeaderHeight(ref.current.clientHeight);
     }
 
-    if (ref.current && ['listing', 'class'].includes(view)) {
+    if (ref.current && Object.values(view).filter((val) => val).length > 0) {
       setHeaderHeight(ref.current.clientHeight);
     }
   }, [ref, view]);
+
+  useEffect(() => {
+    if (
+      globalSelected.type === 'classes' &&
+      currentClassId !== globalSelected.id
+    ) {
+      setCurrentClassId(globalSelected.id);
+    }
+  }, [globalSelected, currentClassId]);
 
   return (
     <>
@@ -154,7 +188,7 @@ export default function ClassView({ modelId, languages }: ClassView) {
   );
 
   function renderListing() {
-    if (view !== 'listing') {
+    if (!view.list) {
       return <></>;
     }
 
@@ -169,12 +203,10 @@ export default function ClassView({ modelId, languages }: ClassView) {
               <ClassModal
                 modelId={modelId}
                 handleFollowUp={handleFollowUpAction}
+                applicationProfile={applicationProfile}
               />
             )}
           </div>
-        </StaticHeader>
-
-        <DrawerContent height={headerHeight} spaced>
           <SearchInput
             labelText=""
             clearButtonLabel={t('clear-all-selections', { ns: 'admin' })}
@@ -184,6 +216,9 @@ export default function ClassView({ modelId, languages }: ClassView) {
             onChange={(e) => handleQueryChange(e?.toString() ?? '')}
             debounce={500}
           />
+        </StaticHeader>
+
+        <DrawerContent height={headerHeight} spaced>
           {!data || data?.totalHitCount < 1 ? (
             <Text>{t('datamodel-no-classes')}</Text>
           ) : (
@@ -194,8 +229,16 @@ export default function ClassView({ modelId, languages }: ClassView) {
                   lang: i18n.language,
                 }),
                 subtitle: `${modelId}:${item.identifier}`,
-                onClick: () =>
-                  getClass({ modelId: modelId, classId: item.identifier }),
+                onClick: () => {
+                  setCurrentClassId(item.identifier);
+                  handleActive(item.identifier);
+                },
+                onMouseEnter: () => {
+                  dispatch(setHovered(item.identifier, 'classes'));
+                },
+                onMouseLeave: () => {
+                  dispatch(resetHovered());
+                },
               }))}
             />
           )}
@@ -211,29 +254,29 @@ export default function ClassView({ modelId, languages }: ClassView) {
   }
 
   function renderForm() {
-    if (view !== 'form') {
+    if (!view.edit) {
       return <></>;
     }
 
     return (
       <ClassForm
-        handleReturn={handleFormReturn}
-        handleSubmit={handleFormSubmit}
-        data={formData}
-        setData={setFormDataHandler}
+        handleReturn={handleReturn}
+        handleFollowUp={handleFollowUp}
         languages={languages}
-        errors={formErrors}
-        userPosted={userPosted}
         modelId={modelId}
+        terminologies={terminologies}
+        applicationProfile={applicationProfile}
+        isEdit={isEdit}
       />
     );
   }
 
   function renderClass() {
-    if (view !== 'class' || !getClassResult.isSuccess) {
+    if (!view.info) {
       return <></>;
     }
-    const data = getClassResult.data;
+
+    const data = classData;
 
     return (
       <>
@@ -242,7 +285,7 @@ export default function ClassView({ modelId, languages }: ClassView) {
             <Button
               variant="secondaryNoBorder"
               icon="arrowLeft"
-              onClick={() => setView('listing')}
+              onClick={() => handleReturn()}
               style={{ textTransform: 'uppercase' }}
             >
               {t('back')}
@@ -262,26 +305,25 @@ export default function ClassView({ modelId, languages }: ClassView) {
                   open={showTooltip}
                   onCloseButtonClick={() => setShowTooltip(false)}
                 >
-                  {hasPermission && (
+                  {hasPermission && data && (
                     <>
-                      <Button variant="secondaryNoBorder">
+                      <Button
+                        variant="secondaryNoBorder"
+                        onClick={() => handleEdit()}
+                      >
                         {t('edit', { ns: 'admin' })}
                       </Button>
                       <Separator />
-                    </>
-                  )}
-                  <Button variant="secondaryNoBorder">
-                    {t('show-as-file')}
-                  </Button>
-                  <Button variant="secondaryNoBorder">
-                    {t('download-as-file')}
-                  </Button>
-                  {hasPermission && (
-                    <>
-                      <Separator />
-                      <Button variant="secondaryNoBorder">
-                        {t('remove', { ns: 'admin' })}
-                      </Button>
+                      <DeleteModal
+                        modelId={modelId}
+                        resourceId={data.identifier}
+                        type="class"
+                        label={getLanguageVersion({
+                          data: data.label,
+                          lang: i18n.language,
+                        })}
+                        onClose={handleReturn}
+                      />
                     </>
                   )}
                 </Tooltip>
@@ -290,93 +332,171 @@ export default function ClassView({ modelId, languages }: ClassView) {
           </div>
         </StaticHeader>
 
-        <DrawerContent height={headerHeight}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <Text variant="bold">
-              {getLanguageVersion({ data: data.label, lang: i18n.language })}
-            </Text>
-            <StatusChip $isValid={formData.status === 'VALID'}>
-              {data.status}
-            </StatusChip>
-          </div>
-
-          <BasicBlock title={t('class-identifier')}>
-            {data.identifier}
-            <Button
-              icon="copy"
-              variant="secondary"
-              style={{ width: 'min-content', whiteSpace: 'nowrap' }}
-              onClick={() => navigator.clipboard.writeText(data.identifier)}
+        {isSuccess && data && (
+          <DrawerContent height={headerHeight}>
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}
             >
-              {t('copy-to-clipboard')}
-            </Button>
-          </BasicBlock>
+              <Text variant="bold">
+                {getLanguageVersion({ data: data.label, lang: i18n.language })}
+              </Text>
+              <StatusChip $isValid={data.status === 'VALID'}>
+                {translateStatus(data.status, t)}
+              </StatusChip>
+            </div>
 
-          <div style={{ marginTop: '20px' }}>
-            <Expander>
-              <ExpanderTitleButton>
-                {t('concept-definition')}
-                <HintText>{t('interval')}</HintText>
-              </ExpanderTitleButton>
-            </Expander>
-          </div>
+            <BasicBlock title={t('concept')}>
+              <ConceptView data={data.subject} />
+            </BasicBlock>
 
-          <BasicBlock title={t('upper-class')}>
-            {data.subClassOf.map((c) => (
-              <Link key={c} href="" style={{ fontSize: '16px' }}>
-                {c.split('/').pop()?.replace('#', ':')}
-              </Link>
-            ))}
-          </BasicBlock>
+            <BasicBlock title={t('class-identifier')}>
+              {`${modelId}:${data.identifier}`}
+              <Button
+                icon="copy"
+                variant="secondary"
+                style={{ width: 'min-content', whiteSpace: 'nowrap' }}
+                onClick={() => navigator.clipboard.writeText(data.identifier)}
+              >
+                {t('copy-to-clipboard')}
+              </Button>
+            </BasicBlock>
 
-          <BasicBlock title={t('equivalent-classes')}>
-            {t('no-equivalent-classes')}
-          </BasicBlock>
+            <BasicBlock title={t('upper-class')}>
+              {!data.subClassOf || data.subClassOf.length === 0 ? (
+                <> {t('no-upper-classes')}</>
+              ) : (
+                <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
+                  {data.subClassOf.map((c) => (
+                    <li key={c}>
+                      <Link key={c} href={c} style={{ fontSize: '16px' }}>
+                        {c.split('/').pop()?.replace('#', ':')}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </BasicBlock>
 
-          <BasicBlock title={t('additional-information')}>
-            {getLanguageVersion({
-              data: data.note,
-              lang: i18n.language,
-              appendLocale: true,
-            })}
-          </BasicBlock>
+            <BasicBlock title={t('equivalent-classes')}>
+              {!data.equivalentClass || data.equivalentClass.length === 0 ? (
+                <> {t('no-equivalent-classes')}</>
+              ) : (
+                <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
+                  {data.equivalentClass.map((c) => (
+                    <li key={c}>
+                      <Link key={c} href={c} style={{ fontSize: '16px' }}>
+                        {c.split('/').pop()?.replace('#', ':')}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </BasicBlock>
 
-          <div style={{ marginTop: '20px' }}>
-            <Label style={{ marginBottom: '10px' }}>
-              {t('attributes', { count: 2 })}
-            </Label>
-            <ExpanderGroup
-              closeAllText=""
-              openAllText=""
-              showToggleAllButton={false}
+            <BasicBlock title={t('disjoint-classes')}>
+              {t('no-disjoint-classes')}
+            </BasicBlock>
+
+            <BasicBlock title={t('technical-description')}>
+              {getLanguageVersion({
+                data: data.note,
+                lang: i18n.language,
+                appendLocale: true,
+              }) || t('no-note')}
+            </BasicBlock>
+
+            <BasicBlock
+              title={t('attributes', { count: data.attribute?.length ?? 0 })}
             >
-              <Expander>
-                <ExpanderTitleButton>Attribuutti #1</ExpanderTitleButton>
-              </Expander>
-              <Expander>
-                <ExpanderTitleButton>Attribuutti #2</ExpanderTitleButton>
-              </Expander>
-            </ExpanderGroup>
-          </div>
+              {data.attribute && data.attribute.length > 0 ? (
+                <ExpanderGroup
+                  closeAllText=""
+                  openAllText=""
+                  showToggleAllButton={false}
+                >
+                  {data.attribute.map((attr) => (
+                    <ResourceInfo
+                      key={`${data.identifier}-attr-${attr.identifier}`}
+                      data={attr}
+                      modelId={modelId}
+                    />
+                  ))}
+                </ExpanderGroup>
+              ) : (
+                t('no-attributes')
+              )}
+            </BasicBlock>
 
-          <BasicBlock title={t('associations', { count: 0 })}>
-            {t('no-assocations')}
-          </BasicBlock>
+            <BasicBlock
+              title={t('associations', {
+                count: data.association?.length ?? 0,
+              })}
+            >
+              {data.association && data.association.length > 0 ? (
+                <ExpanderGroup
+                  closeAllText=""
+                  openAllText=""
+                  showToggleAllButton={false}
+                >
+                  {data.association.map((assoc) => (
+                    <ResourceInfo
+                      key={`${data.identifier}-attr-${assoc.identifier}`}
+                      data={assoc}
+                      modelId={modelId}
+                    />
+                  ))}
+                </ExpanderGroup>
+              ) : (
+                t('no-assocations')
+              )}
+            </BasicBlock>
 
-          <BasicBlock title={t('references-from-other-components')}>
-            {t('no-references')}
-          </BasicBlock>
+            <BasicBlock title={t('references-from-other-components')}>
+              {t('no-references')}
+            </BasicBlock>
 
-          <Separator />
+            <Separator />
 
-          <div>
-            <BasicBlock title={t('created')}>Päiväys</BasicBlock>
+            <BasicBlock title={t('created')}>
+              <FormattedDate date={data.created} />
+            </BasicBlock>
+
+            <BasicBlock title={t('modified-at')}>
+              <FormattedDate date={data.created} />
+            </BasicBlock>
 
             <BasicBlock title={t('editorial-note')}>
               {data.editorialNote ?? t('no-editorial-note')}
             </BasicBlock>
-          </div>
-        </DrawerContent>
+
+            <BasicBlock title={t('uri')}>{data.uri}</BasicBlock>
+
+            <Separator />
+
+            <BasicBlock title={t('contributors')}>
+              {data.contributor?.map((contributor) =>
+                getLanguageVersion({
+                  data: contributor.label,
+                  lang: i18n.language,
+                })
+              )}
+            </BasicBlock>
+            <BasicBlock>
+              {t('class-contact-description')}
+              <ExternalLink
+                href={`mailto:${
+                  data.contact ?? 'yhteentoimivuus@dvv.fi'
+                }?subject=${getLanguageVersion({
+                  data: data.label,
+                  lang: i18n.language,
+                })}`}
+                labelNewWindow=""
+              >
+                {t('class-contact')}
+              </ExternalLink>
+            </BasicBlock>
+          </DrawerContent>
+        )}
       </>
     );
   }

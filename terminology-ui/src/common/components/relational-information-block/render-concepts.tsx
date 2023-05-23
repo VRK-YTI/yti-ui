@@ -52,8 +52,10 @@ export default function RenderConcepts({
       setChosen(
         'terminology' in chosen
           ? (chosen as Concepts[]).filter((chose) => chose.id !== concept.id)
-          : (chosen as RelationInfoType[]).filter(
-              (chose) => chose.id !== concept.id
+          : (chosen as RelationInfoType[]).filter((chose) =>
+              chose.targetId
+                ? chose.targetId !== concept.id
+                : chose.id !== concept.id
             )
       );
     }
@@ -95,7 +97,11 @@ export default function RenderConcepts({
                       lang: i18n.language,
                     })} - ${translateStatus(concept.status ?? 'DRAFT', t)}`}
                     onClick={(e) => handleCheckbox(e, concept)}
-                    checked={chosen.some((chose) => chose.id === concept.id)}
+                    checked={chosen.some((chose) =>
+                      'targetId' in chose
+                        ? (chose as RelationInfoType).targetId === concept.id
+                        : chose.id === concept.id
+                    )}
                     className="concept-checkbox"
                     variant={isSmall ? 'large' : 'small'}
                   >

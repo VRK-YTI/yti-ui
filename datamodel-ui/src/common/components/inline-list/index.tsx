@@ -9,12 +9,14 @@ export interface InlineListProps {
   }[];
   handleRemoval: (value: string) => void;
   labelRow?: boolean;
+  deleteDisabled: string[] | boolean;
 }
 
 export default function InlineList({
   items,
   handleRemoval,
   labelRow,
+  deleteDisabled,
 }: InlineListProps) {
   const { t } = useTranslation('admin');
 
@@ -48,13 +50,18 @@ export default function InlineList({
               {item.label}
             </ExternalLink>
           )}
-          <Button
-            variant="secondaryNoBorder"
-            icon="remove"
-            onClick={() => handleRemoval(item.id)}
-          >
-            {t('remove')}
-          </Button>
+
+          {Array.isArray(deleteDisabled) && deleteDisabled.includes(item.id) ? (
+            <></>
+          ) : (
+            <Button
+              variant="secondaryNoBorder"
+              icon="remove"
+              onClick={() => handleRemoval(item.id)}
+            >
+              {t('remove')}
+            </Button>
+          )}
         </ListItem>
       ))}
     </List>

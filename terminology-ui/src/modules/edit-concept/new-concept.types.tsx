@@ -50,6 +50,8 @@ export interface BasicInfo {
     relatedConceptInOther: RelationInfoType[];
     matchInOther: RelationInfoType[];
     closeMatch: RelationInfoType[];
+    broadInOther: RelationInfoType[];
+    narrowInOther: RelationInfoType[];
   };
 }
 
@@ -58,6 +60,7 @@ export interface RelationInfoType {
   label: { [key: string]: string };
   terminologyId: string;
   terminologyLabel: { [key: string]: string };
+  targetId?: string;
 }
 
 export interface ListType {

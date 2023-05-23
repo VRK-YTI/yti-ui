@@ -12,7 +12,7 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 import MultiColumnSearch, {
   ResultType,
 } from '@app/common/components/multi-column-search';
-import { LargeModal } from './class-modal.styles';
+import { LargeModal, OpenModalButton } from './class-modal.styles';
 import format from 'yti-common-ui/formatted-date/format';
 import { Locale } from 'yti-common-ui/locale-chooser/use-locales';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
@@ -24,12 +24,18 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 export interface ClassModalProps {
   modelId: string;
+  modalButtonLabel?: string;
+  mode?: 'create' | 'select';
   handleFollowUp: (value?: InternalClass) => void;
+  applicationProfile?: boolean;
 }
 
 export default function ClassModal({
   modelId,
+  modalButtonLabel,
+  mode = 'create',
   handleFollowUp,
+  applicationProfile,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -78,9 +84,16 @@ export default function ClassModal({
   };
 
   const handleSubmit = () => {
+    if (selectedId === '') {
+      setVisible(false);
+      handleFollowUp();
+      return;
+    }
+
     const target = result.data?.responseObjects.find(
       (r) => r.identifier === selectedId
     );
+    setVisible(false);
     handleFollowUp(target);
   };
 
@@ -119,9 +132,13 @@ export default function ClassModal({
 
   return (
     <>
-      <Button variant="secondary" icon="plus" onClick={() => handleOpen()}>
-        {t('add-class')}
-      </Button>
+      <OpenModalButton
+        variant="secondary"
+        icon={modalButtonLabel ? undefined : 'plus'}
+        onClick={() => handleOpen()}
+      >
+        {modalButtonLabel ? modalButtonLabel : t('add-class')}
+      </OpenModalButton>
 
       <LargeModal
         appElementId="__next"
@@ -139,22 +156,44 @@ export default function ClassModal({
             searchParams={searchParams}
             setSearchParams={handleSearch}
             modelId={modelId}
+            applicationProfile={applicationProfile}
           />
         </ModalContent>
         <ModalFooter>
-          <Button disabled={selectedId === ''} onClick={() => handleSubmit()}>
-            {t('create-subclass-for-selected')}
-          </Button>
-          <Button
-            icon="plus"
-            disabled={selectedId !== ''}
-            onClick={() => handleFollowUp()}
-          >
-            {t('create-new-class')}
-          </Button>
-          <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
-            {t('cancel-variant')}
-          </Button>
+          {mode === 'create' ? (
+            <>
+              <Button
+                disabled={selectedId === ''}
+                onClick={() => handleSubmit()}
+              >
+                {applicationProfile
+                  ? t('select-class')
+                  : t('create-subclass-for-selected')}
+              </Button>
+              <Button
+                icon="plus"
+                disabled={selectedId !== ''}
+                onClick={() => handleSubmit()}
+              >
+                {t('create-new-class')}
+              </Button>
+              <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
+                {t('cancel-variant')}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                disabled={selectedId === ''}
+                onClick={() => handleSubmit()}
+              >
+                {modalButtonLabel}
+              </Button>
+              <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
+                {t('cancel-variant')}
+              </Button>
+            </>
+          )}
         </ModalFooter>
       </LargeModal>
     </>

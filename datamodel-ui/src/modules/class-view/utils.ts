@@ -1,23 +1,37 @@
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { ClassType } from '@app/common/interfaces/class.interface';
+import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 
 export function internalClassToClassForm(
   data: InternalClass,
-  languages: string[]
+  languages: string[],
+  applicationProfile?: boolean
 ): ClassFormType {
-  const label = languages.reduce((acc, lang) => ({ ...acc, [lang]: '' }), {});
-
-  return {
+  const label = languages.reduce(
+    (acc, lang) => ({ ...acc, [lang]: data.label[lang] }),
+    {}
+  );
+  const obj = {
     editorialNote: '',
-    concept: {},
     equivalentClass: [],
-    identifier: '',
+    identifier: applicationProfile ? data.identifier : '',
     label: label,
     inheritedAttributes: [],
     note: {},
+    subClassOf: [],
     ownAttributes: [],
-    subClassOf: [
+    status: 'DRAFT',
+  } as ClassFormType;
+
+  if (applicationProfile) {
+    obj['targetClass'] = {
+      label:
+        data.id.split('/').pop()?.replace('#', ':') ??
+        `${data.isDefinedBy.split('/').pop()}:${data.identifier}`,
+      id: data.id,
+    };
+  } else {
+    obj['subClassOf'] = [
       {
         label:
           data.id.split('/').pop()?.replace('#', ':') ??
@@ -25,46 +39,22 @@ export function internalClassToClassForm(
         identifier: `${data.isDefinedBy}/${data.identifier}`,
         attributes: ['Attribuutti #1', 'Attribuutti #2'],
       },
-    ],
-    status: 'DRAFT',
-  };
+    ];
+  }
+  return obj;
 }
 
-// TODO: Need to add equivalentClass, subClassOf and subject after backend is ready
-export function classFormToClass(data: ClassFormType): ClassType {
+export function classTypeToClassForm(data: ClassType): ClassFormType {
   return {
-    editorialNote: data.editorialNote,
+    concept: data.subject,
+    editorialNote: data.editorialNote ?? '',
     equivalentClass: [],
     identifier: data.identifier,
     label: data.label,
     note: data.note,
     status: data.status,
     subClassOf: [],
-    subject: 'http://uri.suomi.fi/terminology/demo',
+    association: data.association,
+    attribute: data.attribute,
   };
-}
-
-export interface ClassFormErrors {
-  identifier: boolean;
-  label: boolean;
-}
-
-export function validateClassForm(data: ClassFormType): ClassFormErrors {
-  const returnErrors: ClassFormErrors = {
-    identifier: true,
-    label: true,
-  };
-
-  if (
-    Object.values(data.label).filter((value) => value || value !== '').length >
-    0
-  ) {
-    returnErrors.label = false;
-  }
-
-  if (data.identifier && data.identifier !== '') {
-    returnErrors.identifier = false;
-  }
-
-  return returnErrors;
 }

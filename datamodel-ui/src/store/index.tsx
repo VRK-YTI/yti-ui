@@ -8,12 +8,19 @@ import { organizationsApi } from '@app/common/components/organizations/organizat
 import { searchModelsApi } from '@app/common/components/search-models/search-models.slice';
 import { fakeableUsersApi } from '@app/common/components/fakeable-users/fakeable-users.slice';
 import { prefixApi } from '@app/common/components/prefix';
-import { modelApi } from '@app/common/components/model/model.slice';
-import { classApi } from '@app/common/components/class/class.slice';
+import { modelApi, modelSlice } from '@app/common/components/model/model.slice';
+import { classApi, classSlice } from '@app/common/components/class/class.slice';
 import { searchInternalResourcesApi } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
-import { resourceApi } from '@app/common/components/resource/resource.slice';
+import {
+  resourceApi,
+  resourceSlice,
+} from '@app/common/components/resource/resource.slice';
 import { searchTerminologyApi } from '@app/common/components/terminology-search/search-terminology.slice';
 import { countApi } from '@app/common/components/counts/counts.slice';
+import { conceptSearchApi } from '@app/common/components/concept-search/concept-search.slice';
+import { graphSlice } from '@app/common/components/graph/graph.slice';
+import { visualizationApi } from '@app/common/components/visualization/visualization.slice';
+import { activeSlice } from '@app/common/components/active/active.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -29,12 +36,19 @@ export function makeStore(ctx: NextIronContext) {
       [fakeableUsersApi.reducerPath]: fakeableUsersApi.reducer,
       [prefixApi.reducerPath]: prefixApi.reducer,
       [modelApi.reducerPath]: modelApi.reducer,
+      [modelSlice.name]: modelSlice.reducer,
       [classApi.reducerPath]: classApi.reducer,
+      [classSlice.name]: classSlice.reducer,
       [searchInternalResourcesApi.reducerPath]:
         searchInternalResourcesApi.reducer,
       [resourceApi.reducerPath]: resourceApi.reducer,
+      [resourceSlice.name]: resourceSlice.reducer,
       [searchTerminologyApi.reducerPath]: searchTerminologyApi.reducer,
       [countApi.reducerPath]: countApi.reducer,
+      [conceptSearchApi.reducerPath]: conceptSearchApi.reducer,
+      [graphSlice.name]: graphSlice.reducer,
+      [visualizationApi.reducerPath]: visualizationApi.reducer,
+      [activeSlice.name]: activeSlice.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -50,7 +64,9 @@ export function makeStore(ctx: NextIronContext) {
         searchInternalResourcesApi.middleware,
         resourceApi.middleware,
         searchTerminologyApi.middleware,
-        countApi.middleware
+        countApi.middleware,
+        conceptSearchApi.middleware,
+        visualizationApi.middleware
       ),
 
     // Development tools should be available only in development environments

@@ -1,5 +1,5 @@
 import Drawer from '@app/common/components/model-drawer';
-import { ContentWrapper, ModelFlow } from './model.styles';
+import { ContentWrapper } from './model.styles';
 import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
 import ClassView from '../class-view/class-view';
@@ -8,6 +8,9 @@ import AssociationView from '../association-view';
 import { useTranslation } from 'next-i18next';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { useMemo } from 'react';
+import Graph from '../graph';
+import LinkedDataView from '../linked-data-view';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 interface ModelProps {
   modelId: string;
@@ -22,7 +25,7 @@ export default function Model({ modelId }: ModelProps) {
       return [];
     }
 
-    return modelInfo.languages;
+    return [...modelInfo.languages].sort((a, b) => compareLocales(a, b));
   }, [modelInfo]);
 
   return (
@@ -35,60 +38,17 @@ export default function Model({ modelId }: ModelProps) {
       }}
     >
       <ContentWrapper>
-        <ModelFlow
-          nodes={[
-            {
-              id: '1',
-              position: { x: 300, y: 300 },
-              data: { label: '1' },
-              style: {
-                border: '1px solid black',
-                width: 'min-content',
-                padding: '5px',
-              },
-            },
-            {
-              id: '2',
-              position: { x: 400, y: 300 },
-              data: { label: '2' },
-              style: {
-                border: '1px solid black',
-                width: 'min-content',
-                padding: '5px',
-              },
-            },
-            {
-              id: '3',
-              position: { x: 500, y: 300 },
-              data: { label: '3' },
-              style: {
-                border: '1px solid black',
-                width: 'min-content',
-                padding: '5px',
-              },
-            },
-            {
-              id: '4',
-              position: { x: 600, y: 300 },
-              data: { label: '4' },
-              style: {
-                border: '1px solid black',
-                width: 'min-content',
-                padding: '5px',
-              },
-            },
-          ]}
-        >
+        <Graph modelId={modelId}>
           <Drawer
             views={[
               {
                 id: 'search',
                 icon: 'search',
                 buttonLabel: t('search-variant'),
-                component: <SearchView />,
+                component: <SearchView modelId={modelId} />,
               },
               {
-                id: 'graph-small',
+                id: 'graph',
                 icon: 'applicationProfile',
                 buttonLabel: t('graph'),
               },
@@ -99,11 +59,30 @@ export default function Model({ modelId }: ModelProps) {
                 component: <ModelInfoView />,
               },
               {
+                id: 'links',
+                icon: 'attachment',
+                // buttonLabel: 'Linkitykset',
+                buttonLabel: t('links'),
+                component: (
+                  <LinkedDataView
+                    modelId={modelId}
+                    isApplicationProfile={modelInfo?.type === 'PROFILE'}
+                  />
+                ),
+              },
+              {
                 id: 'classes',
                 icon: 'chatHeart',
                 buttonLabel: t('classes'),
                 component: (
-                  <ClassView modelId={modelId} languages={languages} />
+                  <ClassView
+                    modelId={modelId}
+                    languages={languages}
+                    applicationProfile={modelInfo?.type === 'PROFILE'}
+                    terminologies={
+                      modelInfo?.terminologies.map((t) => t.uri) ?? []
+                    }
+                  />
                 ),
               },
               {
@@ -112,7 +91,13 @@ export default function Model({ modelId }: ModelProps) {
                 buttonLabel: t('attributes'),
                 buttonLabelSm: t('attributes-abbreviation'),
                 component: (
-                  <AttributeView modelId={modelId} languages={languages} />
+                  <AttributeView
+                    modelId={modelId}
+                    languages={languages}
+                    terminologies={
+                      modelInfo?.terminologies.map((t) => t.uri) ?? []
+                    }
+                  />
                 ),
               },
               {
@@ -121,12 +106,18 @@ export default function Model({ modelId }: ModelProps) {
                 buttonLabel: t('associations'),
                 buttonLabelSm: t('associations-abbreviation'),
                 component: (
-                  <AssociationView modelId={modelId} languages={languages} />
+                  <AssociationView
+                    modelId={modelId}
+                    languages={languages}
+                    terminologies={
+                      modelInfo?.terminologies.map((t) => t.uri) ?? []
+                    }
+                  />
                 ),
               },
             ]}
           />
-        </ModelFlow>
+        </Graph>
       </ContentWrapper>
     </div>
   );

@@ -1,6 +1,6 @@
 import { useBreakpoints } from '../media-query';
 import { useEffect, useState, MouseEvent as ReactMouseEvent } from 'react';
-import { Icon } from 'suomifi-ui-components';
+import { Icon, BaseIconKeys } from 'suomifi-ui-components';
 import {
   DrawerButtonGroup,
   DrawerContainer,
@@ -8,20 +8,32 @@ import {
   DrawerWrapper,
   ToggleButton,
 } from './drawer.styles';
+import ScrollableButtonMenu from './scrollable-button-menu';
 
 interface SideNavigationProps {
   buttons: React.ReactFragment;
+  smallButtons: {
+    id: string;
+    icon: BaseIconKeys;
+    label: string;
+    onClick: () => void;
+  }[];
   viewOpen?: boolean;
+  active?: string;
+  initialOpen?: boolean;
   children: React.ReactFragment;
 }
 
 export default function Drawer({
   buttons,
+  smallButtons,
   viewOpen,
+  active,
+  initialOpen,
   children,
 }: SideNavigationProps) {
   const { isSmall } = useBreakpoints();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(initialOpen ?? false);
   const [width, setWidth] = useState(390);
 
   const handleResize = (e: ReactMouseEvent<HTMLDivElement>) => {
@@ -73,26 +85,30 @@ export default function Drawer({
         </div>
       )}
 
-      {isSmall && (
+      {isSmall ? (
         <div className="small-screen-wrapper">
-          <DrawerContent $isSmall={isSmall} $viewOpen={viewOpen}>
-            {children}
-          </DrawerContent>
-          <DrawerButtonGroup $isSmall={isSmall}>{buttons}</DrawerButtonGroup>
-        </div>
-      )}
-
-      <DrawerWrapper $open={open}>
-        {open && (
-          <>
-            <DrawerContent $isSmall={isSmall} $width={width}>
+          {children && (
+            <DrawerContent $isSmall={isSmall} $viewOpen={viewOpen}>
               {children}
             </DrawerContent>
+          )}
+          <ScrollableButtonMenu buttons={smallButtons} active={active} />
+        </div>
+      ) : (
+        <DrawerWrapper $open={open}>
+          {open && (
+            <>
+              <DrawerContent $isSmall={isSmall} $width={width}>
+                {children}
+              </DrawerContent>
 
-            <DrawerButtonGroup $isSmall={isSmall}>{buttons}</DrawerButtonGroup>
-          </>
-        )}
-      </DrawerWrapper>
+              <DrawerButtonGroup $isSmall={isSmall}>
+                {buttons}
+              </DrawerButtonGroup>
+            </>
+          )}
+        </DrawerWrapper>
+      )}
     </DrawerContainer>
   );
 }

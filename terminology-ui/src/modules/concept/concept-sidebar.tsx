@@ -111,6 +111,21 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         )}
       />
 
+      <SidebarSection
+        heading={t('sidebar-section-heading-broad-match')}
+        items={getReferenceValues(
+          concept?.references.broadMatch,
+          i18n.language
+        )}
+      />
+
+      <SidebarSection
+        heading={t('sidebar-section-heading-narrow-match')}
+        items={getReferenceValues(
+          concept?.references.narrowMatch,
+          i18n.language
+        )}
+      />
       {shouldRenderDivider2 && <Separator />}
 
       {/* <SidebarSection<ConceptLink>

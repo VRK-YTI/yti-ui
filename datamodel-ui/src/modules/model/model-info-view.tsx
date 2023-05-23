@@ -1,4 +1,7 @@
-import { useGetModelQuery } from '@app/common/components/model/model.slice';
+import {
+  setView,
+  useGetModelQuery,
+} from '@app/common/components/model/model.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -41,13 +44,15 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import HasPermission from '@app/common/utils/has-permission';
+import DeleteModal from '../delete-modal';
+import { useStoreDispatch } from '@app/store';
+import { getModelId } from '@app/common/utils/parse-slug';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
+  const dispatch = useStoreDispatch();
   const { query } = useRouter();
-  const [modelId] = useState(
-    Array.isArray(query.modelId) ? query.modelId[0] : query.modelId ?? ''
-  );
+  const [modelId] = useState(getModelId(query.slug) ?? '');
   const [showTooltip, setShowTooltip] = useState(false);
   const [showEditView, setShowEditView] = useState(false);
   const [formData, setFormData] = useState<ModelFormType | undefined>();
@@ -112,6 +117,7 @@ export default function ModelInfoView() {
 
   const handleEditViewItemClick = (setItem: (value: boolean) => void) => {
     setItem(true);
+    dispatch(setView('info', 'edit'));
     setShowTooltip(false);
   };
 
@@ -164,8 +170,15 @@ export default function ModelInfoView() {
                     {t('edit', { ns: 'admin' })}
                   </Button>
                 )}
-                <AsFileModal type="show" />
-                <AsFileModal type="download" />
+                <AsFileModal type="show" modelId={modelId} />
+                <AsFileModal
+                  type="download"
+                  modelId={modelId}
+                  filename={getLanguageVersion({
+                    data: modelInfo.label,
+                    lang: i18n.language,
+                  })}
+                />
                 {hasPermission && (
                   <>
                     <Button variant="secondaryNoBorder">
@@ -177,10 +190,15 @@ export default function ModelInfoView() {
                     <Button variant="secondaryNoBorder">
                       {t('add-email-subscription')}
                     </Button>
-                    <hr />
-                    <Button variant="secondaryNoBorder">
-                      {t('remove', { ns: 'admin' })}
-                    </Button>
+                    <Separator />
+                    <DeleteModal
+                      modelId={modelId}
+                      label={getLanguageVersion({
+                        data: modelInfo.label,
+                        lang: i18n.language,
+                      })}
+                      type="model"
+                    />
                   </>
                 )}
               </Tooltip>

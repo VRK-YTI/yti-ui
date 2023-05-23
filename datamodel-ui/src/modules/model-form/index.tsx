@@ -139,7 +139,6 @@ export default function ModelForm({
       <div>
         <LanguageSelector
           items={formData.languages}
-          languages={formData.languages}
           labelText={t('information-description-languages')}
           hintText={t('information-description-languages-hint-text')}
           visualPlaceholder={t('select-information-description-languages')}

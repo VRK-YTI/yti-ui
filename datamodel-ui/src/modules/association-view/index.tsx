@@ -12,32 +12,74 @@ import { DetachedPagination } from 'yti-common-ui/pagination';
 import AssociationModal from '../association-modal';
 import CommonForm from '../common-form';
 import CommonView from '../common-view';
+import {
+  initializeResource,
+  resetResource,
+  setResource,
+  useGetResourceQuery,
+} from '@app/common/components/resource/resource.slice';
+import { useStoreDispatch } from '@app/store';
+import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+import {
+  selectSelected,
+  selectViews,
+} from '@app/common/components/model/model.slice';
+import { getResourceInfo } from '@app/common/utils/parse-slug';
+import { resourceToResourceFormType } from '../common-form/utils';
 
 export default function AssociationView({
   modelId,
   languages,
+  terminologies,
 }: {
   modelId: string;
   languages: string[];
+  terminologies: string[];
 }) {
   const { t, i18n } = useTranslation('common');
-  const [view, setView] = useState('listing');
-  const [headerHeight, setHeaderHeight] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
   const hasPermission = HasPermission({ actions: ['CREATE_ASSOCIATION'] });
+  const ref = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const dispatch = useStoreDispatch();
+  const views = useSelector(selectViews());
+  const globalSelected = useSelector(selectSelected());
+  const [view, setView] = useState(
+    Object.keys(views.associations).filter((k) => k).length > 0
+      ? Object.keys(views.associations).find(
+          (k) =>
+            views.associations[k as keyof typeof views['associations']] === true
+        )
+      : 'list'
+  );
+  const [headerHeight, setHeaderHeight] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
-  const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
-    label: string;
-    uri: string;
-  }>();
-  const { data } = useQueryInternalResourcesQuery({
+  const [isEdit, setIsEdit] = useState(false);
+  const [currentAssociationId, setCurrentAssociationId] = useState<
+    string | undefined
+  >(
+    getResourceInfo(router.query.slug)?.type === 'association'
+      ? getResourceInfo(router.query.slug)?.id
+      : undefined
+  );
+
+  const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
     pageSize: 20,
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [ResourceType.ASSOCIATION],
   });
+  const { data: associationData } = useGetResourceQuery(
+    {
+      modelId: modelId,
+      resourceIdentifier: currentAssociationId ?? '',
+    },
+    {
+      skip: typeof currentAssociationId === 'undefined',
+    }
+  );
 
   useEffect(() => {
     if (ref.current) {
@@ -45,25 +87,58 @@ export default function AssociationView({
     }
   }, [ref]);
 
-  const handleFollowUp = (value?: { label: string; uri: string }) => {
-    if (value) {
-      setInitialSubResourceOf(value);
+  useEffect(() => {
+    if (
+      globalSelected.type === 'associations' &&
+      currentAssociationId !== globalSelected.id
+    ) {
+      setCurrentAssociationId(globalSelected.id);
     }
+  }, [globalSelected, currentAssociationId]);
 
+  const handleFollowUp = (value?: { label: string; uri: string }) => {
+    dispatch(
+      initializeResource(ResourceType.ASSOCIATION, languages, value?.label)
+    );
     setView('form');
+
+    if (isEdit) {
+      setIsEdit(false);
+    }
   };
 
   const handleFormReturn = () => {
-    setView('listing');
+    setView('list');
+    dispatch(resetResource());
+    refetch();
+
+    if (isEdit) {
+      setIsEdit(false);
+    }
   };
 
-  const handleQueryChange = (query: string) => {
-    setQuery(query);
+  const handleQueryChange = (value: string) => {
+    setQuery(value);
     setCurrentPage(1);
   };
 
-  const handleShowAssociation = () => {
-    setView('association');
+  const handleShowAssociation = (id: string) => {
+    setCurrentAssociationId(id);
+    setView('info');
+    router.replace(`${modelId}/association/${id}`);
+  };
+
+  const handleFormFollowUp = (id: string) => {
+    handleShowAssociation(id);
+    refetch();
+  };
+
+  const handleEdit = () => {
+    if (associationData) {
+      setView('form');
+      dispatch(setResource(resourceToResourceFormType(associationData)));
+      setIsEdit(true);
+    }
   };
 
   return (
@@ -75,7 +150,7 @@ export default function AssociationView({
   );
 
   function renderListing() {
-    if (view !== 'listing') {
+    if (view !== 'list') {
       return <></>;
     }
 
@@ -102,9 +177,6 @@ export default function AssociationView({
               />
             )}
           </div>
-        </StaticHeader>
-
-        <DrawerContent height={headerHeight} spaced>
           <SearchInput
             labelText=""
             clearButtonLabel={t('clear-all-selections', { ns: 'admin' })}
@@ -114,7 +186,9 @@ export default function AssociationView({
             onChange={(e) => handleQueryChange(e?.toString() ?? '')}
             debounce={500}
           />
+        </StaticHeader>
 
+        <DrawerContent height={headerHeight} spaced>
           {!data || data?.totalHitCount < 1 ? (
             <Text>{t('datamodel-no-association')}</Text>
           ) : (
@@ -125,7 +199,7 @@ export default function AssociationView({
                   lang: i18n.language,
                 }),
                 subtitle: `${modelId}:${item.identifier}`,
-                onClick: handleShowAssociation,
+                onClick: () => handleShowAssociation(item.identifier),
               }))}
             />
           )}
@@ -148,23 +222,27 @@ export default function AssociationView({
     return (
       <CommonForm
         handleReturn={handleFormReturn}
+        handleFollowUp={handleFormFollowUp}
         type={ResourceType.ASSOCIATION}
         modelId={modelId}
-        initialSubResourceOf={initialSubResourceOf}
         languages={languages}
+        terminologies={terminologies}
+        isEdit={isEdit}
       />
     );
   }
 
   function renderAssociation() {
-    if (view !== 'association') {
+    if (view !== 'info') {
       return <></>;
     }
 
     return (
       <CommonView
-        type={ResourceType.ASSOCIATION}
+        data={associationData}
+        modelId={modelId}
         handleReturn={handleFormReturn}
+        handleEdit={handleEdit}
       />
     );
   }
