@@ -13,6 +13,7 @@ import {
   ModalTitleH1,
 } from './login-modal.styles';
 import { KeyboardEvent, MouseEvent } from 'react';
+import { useRouter } from 'next/router';
 
 export default function LoginModalView({
   setVisible,
@@ -21,6 +22,7 @@ export default function LoginModalView({
 }) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
+  const { asPath } = useRouter();
 
   return (
     <>
@@ -68,6 +70,8 @@ export default function LoginModalView({
 
   function login(e: MouseEvent | KeyboardEvent) {
     e.preventDefault();
-    window.location.href = `/api/auth/login?target=/${i18n.language}`;
+    window.location.href = `/api/auth/login?target=/${
+      i18n.language ?? 'fi'
+    }${asPath}`;
   }
 }
