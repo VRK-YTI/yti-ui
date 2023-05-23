@@ -1,6 +1,6 @@
 import { MultiSelectData } from 'suomifi-ui-components';
 import { LanguageBlockType } from 'yti-common-ui/form/language-selector';
-import { ModelType, ModelTerminology } from './model.interface';
+import { ModelType, ModelTerminology, ModelCodeList } from './model.interface';
 import { Status } from './status.interface';
 
 export interface ModelFormType {
@@ -18,4 +18,5 @@ export interface ModelFormType {
   status?: Status;
   type: ModelType['type'];
   terminologies: ModelTerminology[];
+  codeLists: ModelCodeList[];
 }

@@ -66,6 +66,7 @@ export default function ModelInfoView() {
         terminologies: modelInfo.terminologies ?? [],
         externalNamespaces: modelInfo.externalNamespaces ?? [],
         internalNamespaces: modelInfo.internalNamespaces ?? [],
+        codeLists: modelInfo.codeLists ?? [],
       });
     }
   }, [modelInfo, t, i18n.language]);

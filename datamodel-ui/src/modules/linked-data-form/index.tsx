@@ -17,6 +17,7 @@ import {
   getOrganizationsWithId,
 } from '@app/common/utils/get-value';
 import generatePayload from '../model/generate-payload';
+import CodeListModal from '../code-list-modal';
 import LinkedModel from '../linked-model';
 import LinkedItem from './linked-item';
 
@@ -71,6 +72,7 @@ export default function LinkedDataForm({
     status: model.status ?? 'DRAFT',
     type: model.type ?? 'PROFILE',
     terminologies: model.terminologies ?? [],
+    codeLists: model.codeLists ?? [],
   });
 
   const handleSubmit = () => {
@@ -166,7 +168,7 @@ export default function LinkedDataForm({
           <BasicBlock
             title={
               <>
-                {t('linked-codelists')}
+                {t('linked-codelists', { ns: 'common' })}
                 <Text smallScreen style={{ color: '#5F686D' }}>
                   {' '}
                   ({t('optional')})
@@ -175,14 +177,35 @@ export default function LinkedDataForm({
             }
             extra={
               <div>
-                <Button variant="secondary" icon="plus">
-                  {/* No need for translation. Just a placeholder */}
-                  Lisää koodisto
-                </Button>
+                <CodeListModal
+                  initialData={data.codeLists}
+                  setData={(codeLists) =>
+                    setData({
+                      ...data,
+                      codeLists: codeLists,
+                    })
+                  }
+                />
               </div>
             }
           >
-            <div></div>
+            <div>
+              {data.codeLists.map((c) => (
+                <LinkedItem
+                  key={`terminology-item-${c.id}`}
+                  itemData={{
+                    ...c,
+                    type: 'codelist',
+                  }}
+                  handleRemove={(id) =>
+                    setData((data) => ({
+                      ...data,
+                      codeLists: data.codeLists.filter((t) => t.id !== id),
+                    }))
+                  }
+                />
+              ))}
+            </div>
           </BasicBlock>
         ) : (
           <></>
