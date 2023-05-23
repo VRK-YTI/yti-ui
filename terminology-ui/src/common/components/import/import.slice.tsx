@@ -46,6 +46,13 @@ export const importApi = createApi({
         data: props.file,
       }),
     }),
+    postImportJson: builder.mutation<ImportResponse, FormData>({
+      query: (file) => ({
+        url: '/import/json',
+        method: 'POST',
+        data: file,
+      }),
+    }),
   }),
 });
 
@@ -54,4 +61,5 @@ export const {
   useGetImportStatusMutation,
   usePostSimpleImportExcelMutation,
   usePostImportNTRFMutation,
+  usePostImportJsonMutation,
 } = importApi;

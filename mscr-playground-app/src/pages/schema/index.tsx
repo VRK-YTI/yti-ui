@@ -1,5 +1,7 @@
+import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 import EditCollection from '@app/modules/edit-collection';
 import { SSRConfig } from 'next-i18next';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { Button, Paragraph, TextInput } from 'suomifi-ui-components';
 import {
@@ -7,17 +9,20 @@ import {
   CommonContextState,
 } from 'yti-common-ui/common-context-provider';
 import Layout from 'yti-common-ui/layout/layout';
+import Separator from 'yti-common-ui/separator';
 
 interface SchemaIndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
-const schemaFileUplaod = () => {
-  // Open the modal for file chooser, may be concept import modal can be used
-  console.log('Upload the schema file');
-};
-
 export default function Schemas(props: SchemaIndexPageProps) {
+  const router = useRouter();
+
+  const schemaFileUplaod = () => {
+    // Open the modal for file chooser, may be new terminology modal can be used
+    console.log('Upload the schema file');
+  };
+
   return (
     <CommonContextProvider value={props}>
       <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
@@ -37,12 +42,12 @@ export default function Schemas(props: SchemaIndexPageProps) {
           labelText="Filename"
           visualPlaceholder="filename for the schema"
         />
-        <Paragraph>
-          <Button onClick={() => schemaFileUplaod()} id="submit-button">
-            {'Register schema'}
-          </Button>
-        </Paragraph>
-
+        <Separator isLarge />
+        <Button onClick={() => schemaFileUplaod()} id="submit-button">
+          {'Register schema'}
+        </Button>
+        <Separator isLarge />
+        <UpdateWithFileModal />
         <h2> List of Schemas</h2>
         <EditCollection
           terminologyId={'1'}

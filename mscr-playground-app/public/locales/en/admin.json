@@ -362,7 +362,7 @@
   "update-terminology": "Update terminology",
   "update-terminology-description-1": "Terminology can be updated by first exporting the terminology as a file. After that you can make changes to the file and finally import the file with made changes. Requirements for the contents of the file can be read from",
   "update-terminology-description-2": "If you want to add concepts to the terminology with a file, select 'Import concepts' in the terminology information card.",
-  "update-terminology-with-file": "Update terminology with a file",
+  "update-terminology-with-file": "Update Schema File",
   "updating-terminology": "Updating terminology",
   "url-preview": "URL preview",
   "valid_one": "Valid ({{count}} item)",

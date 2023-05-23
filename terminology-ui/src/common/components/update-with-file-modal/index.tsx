@@ -22,6 +22,7 @@ import {
 import {
   useGetImportStatusMutation,
   usePostImportExcelMutation,
+  usePostImportJsonMutation,
 } from '../import/import.slice';
 import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
 import {
@@ -40,6 +41,7 @@ export default function UpdateWithFileModal() {
   const [error, setError] = useState<ExcelError | undefined>(undefined);
   const [postImportExcel, importExcel] = usePostImportExcelMutation();
   const [fetchImportStatus, importStatus] = useGetImportStatusMutation();
+  const [postImportJson, importJson] = usePostImportJsonMutation();
   const [getAuthenticatedUser, authenticatedUser] =
     useGetAuthenticatedUserMutMutation();
 
@@ -59,11 +61,15 @@ export default function UpdateWithFileModal() {
     setUserPosted(true);
 
     if (fileData) {
+      console.log(fileData);
       const formData = new FormData();
       formData.append('file', fileData);
       setUserPosted(true);
       if (fileData.name.includes('.xlsx')) {
         postImportExcel(formData);
+      }
+      if (fileData.name.includes('.json')) {
+        postImportJson(formData);
       }
     }
   };
@@ -94,7 +100,7 @@ export default function UpdateWithFileModal() {
   return (
     <>
       <Button variant="secondary" icon="upload" onClick={() => handleVisible()}>
-        {t('update-terminology-with-file')}
+        {t('schema-file-upload-title')}
       </Button>
 
       <Modal
@@ -111,7 +117,7 @@ export default function UpdateWithFileModal() {
     return (
       <>
         <ModalContent>
-          <ModalTitle>{t('update-terminology-with-file')}</ModalTitle>
+          <ModalTitle>{t('schema-file-upload-title')}</ModalTitle>
           <UpdateDescriptionBlock>
             <Paragraph>
               {t('update-terminology-description-1')}{' '}

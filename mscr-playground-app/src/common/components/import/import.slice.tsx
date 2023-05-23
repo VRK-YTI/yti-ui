@@ -5,6 +5,8 @@ import {
   ImportStatus,
 } from '@app/common/interfaces/import.interface';
 
+// Here we list the json file upload API
+
 export const importApi = createApi({
   reducerPath: 'excelApi',
   baseQuery: getTerminologyApiBaseQuery((headers) => ({
@@ -46,6 +48,13 @@ export const importApi = createApi({
         data: props.file,
       }),
     }),
+    postImportJson: builder.mutation<ImportResponse, FormData>({
+      query: (file) => ({
+        url: '/import/json',
+        method: 'POST',
+        data: file,
+      }),
+    }),
   }),
 });
 
@@ -54,4 +63,5 @@ export const {
   useGetImportStatusMutation,
   usePostSimpleImportExcelMutation,
   usePostImportNTRFMutation,
+  usePostImportJsonMutation,
 } = importApi;

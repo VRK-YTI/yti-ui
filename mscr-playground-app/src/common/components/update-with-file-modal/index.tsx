@@ -22,6 +22,7 @@ import {
 import {
   useGetImportStatusMutation,
   usePostImportExcelMutation,
+  usePostImportJsonMutation,
 } from '../import/import.slice';
 import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
 import {
@@ -31,7 +32,7 @@ import {
 } from './update-with-file-modal.styles';
 
 export default function UpdateWithFileModal() {
-  const { t } = useTranslation('admin');
+  const { t } = useTranslation('schema');
   const [visible, setVisible] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const [userPosted, setUserPosted] = useState(false);
@@ -40,6 +41,7 @@ export default function UpdateWithFileModal() {
   const [error, setError] = useState<ExcelError | undefined>(undefined);
   const [postImportExcel, importExcel] = usePostImportExcelMutation();
   const [fetchImportStatus, importStatus] = useGetImportStatusMutation();
+  const [postImportJson, importJson] = usePostImportJsonMutation();
   const [getAuthenticatedUser, authenticatedUser] =
     useGetAuthenticatedUserMutMutation();
 
@@ -64,6 +66,9 @@ export default function UpdateWithFileModal() {
       setUserPosted(true);
       if (fileData.name.includes('.xlsx')) {
         postImportExcel(formData);
+      }
+      if (fileData.name.includes('.json')) {
+        postImportJson(formData);
       }
     }
   };
@@ -94,7 +99,7 @@ export default function UpdateWithFileModal() {
   return (
     <>
       <Button variant="secondary" icon="upload" onClick={() => handleVisible()}>
-        {t('update-terminology-with-file')}
+        {t('schema-file-upload-title')}
       </Button>
 
       <Modal
@@ -111,25 +116,14 @@ export default function UpdateWithFileModal() {
     return (
       <>
         <ModalContent>
-          <ModalTitle>{t('update-terminology-with-file')}</ModalTitle>
+          <ModalTitle>{t('schema-file-upload-title')}</ModalTitle>
           <UpdateDescriptionBlock>
-            <Paragraph>
-              {t('update-terminology-description-1')}{' '}
-              <ExternalLink
-                href="https://wiki.dvv.fi/pages/viewpage.action?pageId=21783347"
-                labelNewWindow={t('link-opens-new-window-external', {
-                  ns: 'common',
-                })}
-              >
-                {t('from-terminology-manual')}
-              </ExternalLink>
-            </Paragraph>
-            <Paragraph>{t('update-terminology-description-2')}</Paragraph>
+            <Paragraph>{t('schema-file-upload-description')} </Paragraph>
           </UpdateDescriptionBlock>
           <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}
-            validFileTypes={['xlsx']}
+            validFileTypes={['xlsx', 'json']}
             translateFileUploadError={translateFileUploadError}
           />
         </ModalContent>
@@ -140,7 +134,7 @@ export default function UpdateWithFileModal() {
             </InlineAlert>
           )}
           <Button disabled={!isValid} onClick={() => handlePost()}>
-            {t('update-terminology')}
+            {t('upload-file')}
           </Button>
           <Button variant="secondary" onClick={() => handleClose()}>
             {t('cancel')}

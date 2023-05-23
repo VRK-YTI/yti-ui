@@ -19,20 +19,31 @@ import {
 } from '@app/common/components/counts/counts.slice';
 import PageHead from 'yti-common-ui/page-head';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
-import { Button, SideNavigationItem } from 'suomifi-ui-components';
+import { Button } from 'suomifi-ui-components';
 
 import EditCollection from '@app/modules/edit-collection';
+import { ButtonBlock } from '@app/modules/new-terminology/new-terminology.styles';
+import Separator from 'yti-common-ui/separator';
+import { useRouter } from 'next/router';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
-const registerSchema = () => {
-  // register a new schema
-  console.log('go to register schema page');
-};
 export default function IndexPage(props: IndexPageProps) {
   const { t } = useTranslation('common');
+
+  const router = useRouter();
+
+  const registerSchema = () => {
+    // register a new schema
+    router.push('/schema');
+  };
+
+  const registerCrossWalk = () => {
+    //Register a new crosswalk
+    router.push('/crosswalk');
+  };
 
   // May edit collection can be used to have the crosswalk list?
   return (
@@ -43,12 +54,17 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('terminology-site-title')}
           description={t('terminology-search-info')}
         />
+        <Separator isLarge />
+        <ButtonBlock>
+          <Button onClick={() => registerSchema()} id="submit-button">
+            {t('Register schema', { ns: 'admin' })}
+          </Button>
+          <Button onClick={() => registerCrossWalk()} id="submit-button">
+            {t('Register crosswalks', { ns: 'admin' })}
+          </Button>
+        </ButtonBlock>
 
-        <h2>Create a Crosswalk</h2>
-        <Button onClick={() => registerSchema()} id="submit-button">
-          {t('Register schema', { ns: 'admin' })}
-        </Button>
-        <EditCollection terminologyId={'1'} collectionName={'Crosswalks'} />
+        <EditCollection terminologyId={'1'} collectionName={'Crosswalk 1'} />
       </Layout>
     </CommonContextProvider>
   );

@@ -181,17 +181,6 @@ export default function EditCollection({
 
   return (
     <>
-      <Breadcrumb>
-        {router.query.terminologyId && (
-          <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
-            <PropertyValue property={terminology?.properties.prefLabel} />
-          </BreadcrumbLink>
-        )}
-        <BreadcrumbLink url="" current>
-          {collectionName}
-        </BreadcrumbLink>
-      </Breadcrumb>
-
       <NewCollectionBlock $isSmall={isSmall}>
         <SubTitle>
           <PropertyValue
@@ -202,10 +191,6 @@ export default function EditCollection({
           />
         </SubTitle>
         <MainTitle>{collectionName}</MainTitle>
-        <BadgeBar>
-          {t('heading')}
-          <PropertyValue property={terminology?.properties.prefLabel} />
-        </BadgeBar>
         <PageHelpText>{t('new-collection-page-help')}</PageHelpText>
 
         <Separator isLarge />
