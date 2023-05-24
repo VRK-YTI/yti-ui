@@ -100,7 +100,12 @@ export default function AttributeModal({
   };
 
   const getLinkLabel = (ns: string, id: string) => {
-    const namespace = ns.split('#').at(0)?.split('/').pop();
+    const namespace =
+      ns
+        .split('/')
+        .filter((val) => val !== '')
+        .pop()
+        ?.replace('#', '') ?? ns;
     return `${namespace}:${id}`;
   };
 

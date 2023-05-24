@@ -17,6 +17,7 @@ interface ResourcePickerProps {
   selectedNodeShape: {
     modelId: string;
     classId: string;
+    isAppProfile: boolean;
   };
   handleFollowUp: (value?: {
     associations: {
@@ -50,7 +51,11 @@ export default function ResourcePicker({
   });
 
   const { data: classData, isSuccess } = useGetClassQuery(
-    { modelId: selectedNodeShape.modelId, classId: selectedNodeShape.classId },
+    {
+      modelId: selectedNodeShape.modelId,
+      classId: selectedNodeShape.classId,
+      applicationProfile: selectedNodeShape.isAppProfile,
+    },
     {
       skip: selectedNodeShape.modelId == '' || selectedNodeShape.classId === '',
     }
@@ -210,10 +215,17 @@ export default function ResourcePicker({
 
       <ModalFooter>
         <Button
-          disabled={Object.values(selected).flatMap((s) => s).length < 1}
+          disabled={
+            formattedData.attributes.length > 0 &&
+            formattedData.associations.length > 0 &&
+            Object.values(selected).flatMap((s) => s).length < 1
+          }
           onClick={() => handleSubmit()}
         >
-          {t('add-selected')}
+          {formattedData.attributes.length > 0 &&
+          formattedData.associations.length > 0
+            ? t('add-selected')
+            : t('continue')}
         </Button>
         <Button variant="secondary" onClick={() => handleClose()}>
           {t('cancel-variant')}

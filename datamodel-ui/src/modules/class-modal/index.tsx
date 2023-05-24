@@ -23,7 +23,7 @@ export interface ClassModalProps {
   modelId: string;
   modalButtonLabel?: string;
   mode?: 'create' | 'select';
-  handleFollowUp: (value?: InternalClass) => void;
+  handleFollowUp: (value?: InternalClass, targetIsAppProfile?: boolean) => void;
   applicationProfile?: boolean;
   initialSelected?: string;
 }
@@ -96,11 +96,19 @@ export default function ClassModal({
       (r) => r.id === selectedId
     );
     setVisible(false);
-    handleFollowUp(target);
+    handleFollowUp(
+      target,
+      searchParams.limitToModelType === 'PROFILE' ?? undefined
+    );
   };
 
   const getLinkLabel = (ns: string, id: string) => {
-    const namespace = ns.split('#').at(0)?.split('/').pop();
+    const namespace =
+      ns
+        .split('/')
+        .filter((val) => val !== '')
+        .pop()
+        ?.replace('#', '') ?? ns;
     return `${namespace}:${id}`;
   };
 

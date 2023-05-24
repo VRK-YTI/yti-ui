@@ -12,7 +12,8 @@ import {
 function convertToPUT(
   data: ClassFormType,
   isEdit: boolean,
-  applicationProfile?: boolean
+  applicationProfile?: boolean,
+  basedOnNodeShape?: boolean
 ): object {
   const { concept, ...retVal } = data;
   const conceptURI = concept?.conceptURI;
@@ -20,20 +21,33 @@ function convertToPUT(
   const ret = {
     ...retVal,
     equivalentClass: data.equivalentClass.map((eq) => eq.identifier),
-    subClassOf: data.subClassOf.map((sco) => sco.identifier),
+    subClassOf: data.subClassOf
+      .filter((soc) => soc.identifier !== 'owl:Thing')
+      .map((sco) => sco.identifier),
     subject: conceptURI,
-    targetClass: data.targetClass?.id,
-    ...(applicationProfile && {
-      properties: [
-        ...(data.association?.map((a) => a.identifier) ?? []),
-        ...(data.attribute?.map((a) => a.identifier) ?? []),
-      ],
-    }),
+    ...(basedOnNodeShape
+      ? {
+          targetNode: data.targetClass?.id,
+        }
+      : {
+          targetClass: data.targetClass?.id,
+        }),
+    ...(applicationProfile &&
+      !basedOnNodeShape && {
+        properties: [
+          ...(data.association?.map((a) => a.uri) ?? []),
+          ...(data.attribute?.map((a) => a.uri) ?? []),
+        ],
+      }),
   };
 
   if (applicationProfile) {
     delete ret.association;
     delete ret.attribute;
+  }
+
+  if (basedOnNodeShape) {
+    delete ret.targetClass;
   }
 
   return isEdit
@@ -64,6 +78,7 @@ export const classApi = createApi({
         data: ClassFormType;
         classId?: string;
         applicationProfile?: boolean;
+        basedOnNodeShape?: boolean;
       }
     >({
       query: (value) => ({
@@ -78,7 +93,8 @@ export const classApi = createApi({
         data: convertToPUT(
           value.data,
           value.classId ? true : false,
-          value.applicationProfile
+          value.applicationProfile,
+          value.basedOnNodeShape
         ),
       }),
     }),

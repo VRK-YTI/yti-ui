@@ -52,6 +52,7 @@ export interface ClassFormProps {
   terminologies: string[];
   isEdit: boolean;
   applicationProfile?: boolean;
+  basedOnNodeShape?: boolean;
 }
 
 export default function ClassForm({
@@ -62,6 +63,7 @@ export default function ClassForm({
   terminologies,
   isEdit,
   applicationProfile,
+  basedOnNodeShape,
 }: ClassFormProps) {
   const { t, i18n } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -101,6 +103,7 @@ export default function ClassForm({
       data: data,
       classId: isEdit ? data.identifier : undefined,
       applicationProfile,
+      basedOnNodeShape: basedOnNodeShape,
     });
   };
 

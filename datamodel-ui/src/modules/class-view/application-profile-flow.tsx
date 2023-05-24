@@ -9,7 +9,10 @@ export default function ApplicationProfileFlow({
   handleFollowUp,
 }: {
   visible: boolean;
-  selectedNodeShape: InternalClass;
+  selectedNodeShape: {
+    nodeShape: InternalClass;
+    isAppProfile?: boolean;
+  };
   handleFollowUp: (
     value?: InternalClass,
     associations?: {
@@ -30,10 +33,18 @@ export default function ApplicationProfileFlow({
   const [resourcePickerVisible, setResourcePickerVisible] = useState(false);
 
   useEffect(() => {
-    if (!resourcePickerVisible) {
+    if (!selectedNodeShape.isAppProfile) {
       setRestrictionVisible(visible);
     }
-  }, [visible, resourcePickerVisible]);
+
+    if (selectedNodeShape.isAppProfile) {
+      setResourcePickerVisible(visible);
+    }
+  }, [visible, selectedNodeShape]);
+
+  const handleClassRestrictionClose = () => {
+    setRestrictionVisible(false);
+  };
 
   const handleClassRestrictionFollowUp = (createNew?: boolean) => {
     setRestrictionVisible(false);
@@ -45,7 +56,7 @@ export default function ApplicationProfileFlow({
 
     setRestrictionVisible(false);
     setResourcePickerVisible(false);
-    handleFollowUp(selectedNodeShape);
+    handleFollowUp(selectedNodeShape.nodeShape);
   };
 
   const handleResourcePickerFollowUp = (value?: {
@@ -70,13 +81,17 @@ export default function ApplicationProfileFlow({
       return;
     }
 
-    handleFollowUp(selectedNodeShape, value.associations, value.attributes);
+    handleFollowUp(
+      selectedNodeShape.nodeShape,
+      value.associations,
+      value.attributes
+    );
   };
 
   return (
     <>
       <ClassRestrictionModal
-        hide={() => handleClassRestrictionFollowUp()}
+        hide={() => handleClassRestrictionClose()}
         visible={restrictionVisible}
         handleFollowUp={(value) => handleClassRestrictionFollowUp(value)}
       />
@@ -84,8 +99,10 @@ export default function ApplicationProfileFlow({
       <ResourcePicker
         visible={resourcePickerVisible}
         selectedNodeShape={{
-          modelId: selectedNodeShape?.isDefinedBy.split('/').pop() ?? '',
-          classId: selectedNodeShape?.identifier ?? '',
+          modelId:
+            selectedNodeShape.nodeShape.isDefinedBy.split('/').pop() ?? '',
+          classId: selectedNodeShape.nodeShape.identifier ?? '',
+          isAppProfile: selectedNodeShape.isAppProfile ?? false,
         }}
         handleFollowUp={(value?: {
           associations: {

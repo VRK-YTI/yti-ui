@@ -75,8 +75,13 @@ export default function ClassView({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
   const [showAppProfileModal, setShowAppProfileModal] = useState(false);
+  const [basedOnNodeShape, setBasedOnNodeShape] = useState(false);
   const [selectedNodeShape, setSelectedNodeShape] = useState<
-    InternalClass | undefined
+    | {
+        nodeShape: InternalClass;
+        isAppProfile?: boolean;
+      }
+    | undefined
   >();
   const globalSelected = useSelector(selectSelected());
   const view = useSelector(selectClassView());
@@ -103,14 +108,21 @@ export default function ClassView({
     setCurrentPage(1);
   };
 
-  const handleFollowUpAction = (value?: InternalClass) => {
+  const handleFollowUpAction = (
+    value?: InternalClass,
+    targetIsAppProfile?: boolean
+  ) => {
     if (isEdit) {
       setIsEdit(false);
     }
 
     if (applicationProfile && value) {
       setShowAppProfileModal(true);
-      setSelectedNodeShape(value);
+      setSelectedNodeShape({
+        nodeShape: value,
+        isAppProfile: targetIsAppProfile ?? false,
+      });
+      setBasedOnNodeShape(targetIsAppProfile ?? false);
       return;
     }
 
@@ -341,6 +353,7 @@ export default function ClassView({
         modelId={modelId}
         terminologies={terminologies}
         applicationProfile={applicationProfile}
+        basedOnNodeShape={basedOnNodeShape}
         isEdit={isEdit}
       />
     );

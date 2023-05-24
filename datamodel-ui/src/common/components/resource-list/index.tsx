@@ -141,8 +141,8 @@ export default function ResourceList({
       </thead>
 
       <tbody>
-        {items.map((item) => (
-          <tr key={`item-${item.target.identifier}`}>
+        {items.map((item, idx) => (
+          <tr key={`item-${item.target.identifier}-${idx}`}>
             <td className="td-with-button">
               {renderTrButton(item.target.identifier)}
               <div>
