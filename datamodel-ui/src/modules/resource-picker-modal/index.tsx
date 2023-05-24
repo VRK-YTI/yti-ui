@@ -216,13 +216,13 @@ export default function ResourcePicker({
       <ModalFooter>
         <Button
           disabled={
-            formattedData.attributes.length > 0 &&
-            formattedData.associations.length > 0 &&
+            (formattedData.attributes.length > 0 ||
+              formattedData.associations.length > 0) &&
             Object.values(selected).flatMap((s) => s).length < 1
           }
           onClick={() => handleSubmit()}
         >
-          {formattedData.attributes.length > 0 &&
+          {formattedData.attributes.length > 0 ||
           formattedData.associations.length > 0
             ? t('add-selected')
             : t('continue')}

@@ -115,6 +115,7 @@ export default function ClassView({
     if (isEdit) {
       setIsEdit(false);
     }
+    setBasedOnNodeShape(targetIsAppProfile ?? false);
 
     if (applicationProfile && value) {
       setShowAppProfileModal(true);
@@ -122,7 +123,6 @@ export default function ClassView({
         nodeShape: value,
         isAppProfile: targetIsAppProfile ?? false,
       });
-      setBasedOnNodeShape(targetIsAppProfile ?? false);
       return;
     }
 
@@ -201,6 +201,7 @@ export default function ClassView({
 
   const handleFollowUp = (classId: string) => {
     dispatch(setView('classes', 'info'));
+    dispatch(setSelected(classId, 'classes'));
     router.replace(`${modelId}/class/${classId}`);
   };
 
