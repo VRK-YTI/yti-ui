@@ -19,8 +19,8 @@
   "dependencies": {
     "@fontsource/source-sans-pro": "^4.5.9",
     "@reduxjs/toolkit": "^1.9.5",
-    "axios": "^0.27.2",
-    "iron-session": "^6.2.1",
+    "axios": "^1.4.0",
+    "iron-session": "^6.3.1",
     "next": "^12.1.6",
     "next-i18next": "^12.0.1",
     "next-redux-wrapper": "^7.0.5",
@@ -31,9 +31,9 @@
     "reactflow": "^11.4.2",
     "redux-devtools-extension": "^2.13.9",
     "suomifi-ui-components": "^10.0.2",
-    "swr": "^1.3.0",
+    "swr": "^2.1.5",
     "uuid": "^9.0.0",
-    "validator": "^13.7.0",
+    "validator": "^13.9.0",
     "yti-common-ui": "file:../common-ui/components"
   },
   "devDependencies": {

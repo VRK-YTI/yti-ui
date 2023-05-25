@@ -22,8 +22,7 @@ call the returned `enableConfirmation` and `disableConfirmation` functions when
 you want to enable or disable the behavior.
 
 ```tsx
-const { enableConfirmation, disableConfirmation } =
-  useConfirmBeforeLeavingPage('enabled');
+const { enableConfirmation, disableConfirmation } = useConfirmBeforeLeavingPage('enabled');
 ```
 
 Both of these callback functions are idempotent so just call them as many times
