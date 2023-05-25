@@ -34,7 +34,7 @@
   "attribute-missing-label": "Attribuutin nimeä ei ole määritelty",
   "attribute-name": "Attribuutin nimi",
   "attributes": "Attribuutit",
-  "attributes-identifier": "",
+  "attributes-identifier": "Attribuutin yksilöivä tunnus",
   "cancel": "Keskeytä",
   "cancel-variant": "Peruuta",
   "class": "Luokka",

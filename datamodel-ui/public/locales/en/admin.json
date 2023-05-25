@@ -34,7 +34,7 @@
   "attribute-missing-label": "Attribute name is missing",
   "attribute-name": "Attribute's name",
   "attributes": "Attributes",
-  "attributes-identifier": "",
+  "attributes-identifier": "Attribute identifier",
   "cancel": "Cancel",
   "cancel-variant": "Cancel",
   "class": "Class",
