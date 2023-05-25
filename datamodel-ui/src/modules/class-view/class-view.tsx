@@ -18,7 +18,6 @@ import {
   Tooltip,
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
-import { StatusChip } from '@app/common/components/multi-column-search/multi-column-search.styles';
 import Separator from 'yti-common-ui/separator';
 import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
@@ -49,6 +48,8 @@ import ResourceInfo from './resource-info';
 import ConceptView from '../concept-view';
 import { useRouter } from 'next/router';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
+import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
+import ApplicationProfileFlow from './application-profile-flow';
 
 interface ClassViewProps {
   modelId: string;
@@ -73,6 +74,15 @@ export default function ClassView({
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
+  const [showAppProfileModal, setShowAppProfileModal] = useState(false);
+  const [basedOnNodeShape, setBasedOnNodeShape] = useState(false);
+  const [selectedNodeShape, setSelectedNodeShape] = useState<
+    | {
+        nodeShape: InternalClass;
+        isAppProfile?: boolean;
+      }
+    | undefined
+  >();
   const globalSelected = useSelector(selectSelected());
   const view = useSelector(selectClassView());
   const { data, refetch } = useQueryInternalResourcesQuery({
@@ -98,9 +108,22 @@ export default function ClassView({
     setCurrentPage(1);
   };
 
-  const handleFollowUpAction = (value?: InternalClass) => {
+  const handleFollowUpAction = (
+    value?: InternalClass,
+    targetIsAppProfile?: boolean
+  ) => {
     if (isEdit) {
       setIsEdit(false);
+    }
+    setBasedOnNodeShape(targetIsAppProfile ?? false);
+
+    if (applicationProfile && value) {
+      setShowAppProfileModal(true);
+      setSelectedNodeShape({
+        nodeShape: value,
+        isAppProfile: targetIsAppProfile ?? false,
+      });
+      return;
     }
 
     if (!value) {
@@ -130,6 +153,41 @@ export default function ClassView({
     dispatch(setView('classes', 'edit'));
   };
 
+  const handleAppProfileFollowUpAction = (
+    value?: InternalClass,
+    associations?: {
+      identifier: string;
+      label: { [key: string]: string };
+      modelId: string;
+      uri: string;
+    }[],
+    attributes?: {
+      identifier: string;
+      label: { [key: string]: string };
+      modelId: string;
+      uri: string;
+    }[]
+  ) => {
+    setShowAppProfileModal(false);
+
+    if (!value) {
+      return;
+    }
+
+    dispatch(
+      setClass(
+        internalClassToClassForm(
+          value,
+          languages,
+          applicationProfile,
+          associations,
+          attributes
+        )
+      )
+    );
+    dispatch(setView('classes', 'edit'));
+  };
+
   const handleReturn = () => {
     dispatch(resetSelected());
     dispatch(resetClass());
@@ -143,6 +201,7 @@ export default function ClassView({
 
   const handleFollowUp = (classId: string) => {
     dispatch(setView('classes', 'info'));
+    dispatch(setSelected(classId, 'classes'));
     router.replace(`${modelId}/class/${classId}`);
   };
 
@@ -200,11 +259,40 @@ export default function ClassView({
               {t('classes', { count: data?.totalHitCount ?? 0 })}
             </Text>
             {hasPermission && (
-              <ClassModal
-                modelId={modelId}
-                handleFollowUp={handleFollowUpAction}
-                applicationProfile={applicationProfile}
-              />
+              <>
+                <ClassModal
+                  modelId={modelId}
+                  handleFollowUp={handleFollowUpAction}
+                  applicationProfile={applicationProfile}
+                />
+                {selectedNodeShape && (
+                  <ApplicationProfileFlow
+                    visible={showAppProfileModal}
+                    selectedNodeShape={selectedNodeShape}
+                    handleFollowUp={(
+                      value?: InternalClass,
+                      associations?: {
+                        identifier: string;
+                        label: { [key: string]: string };
+                        modelId: string;
+                        uri: string;
+                      }[],
+                      attributes?: {
+                        identifier: string;
+                        label: { [key: string]: string };
+                        modelId: string;
+                        uri: string;
+                      }[]
+                    ) =>
+                      handleAppProfileFollowUpAction(
+                        value,
+                        associations,
+                        attributes
+                      )
+                    }
+                  />
+                )}
+              </>
             )}
           </div>
           <SearchInput
@@ -266,6 +354,7 @@ export default function ClassView({
         modelId={modelId}
         terminologies={terminologies}
         applicationProfile={applicationProfile}
+        basedOnNodeShape={basedOnNodeShape}
         isEdit={isEdit}
       />
     );
@@ -491,7 +580,7 @@ export default function ClassView({
                   data: data.label,
                   lang: i18n.language,
                 })}`}
-                labelNewWindow=""
+                labelNewWindow={t('link-opens-new-window-external')}
               >
                 {t('class-contact')}
               </ExternalLink>

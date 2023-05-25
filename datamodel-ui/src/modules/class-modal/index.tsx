@@ -9,25 +9,23 @@ import {
   ModalTitle,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import MultiColumnSearch, {
-  ResultType,
-} from '@app/common/components/multi-column-search';
+import MultiColumnSearch from '@app/common/components/multi-column-search';
 import { LargeModal, OpenModalButton } from './class-modal.styles';
-import format from 'yti-common-ui/formatted-date/format';
-import { Locale } from 'yti-common-ui/locale-chooser/use-locales';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import {
   InternalResourcesSearchParams,
   useGetInternalResourcesMutation,
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { ResultType } from '@app/common/components/resource-list';
 
 export interface ClassModalProps {
   modelId: string;
   modalButtonLabel?: string;
   mode?: 'create' | 'select';
-  handleFollowUp: (value?: InternalClass) => void;
+  handleFollowUp: (value?: InternalClass, targetIsAppProfile?: boolean) => void;
   applicationProfile?: boolean;
+  initialSelected?: string;
 }
 
 export default function ClassModal({
@@ -36,11 +34,12 @@ export default function ClassModal({
   mode = 'create',
   handleFollowUp,
   applicationProfile,
+  initialSelected,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
-  const [selectedId, setSelectedId] = useState('');
+  const [selectedId, setSelectedId] = useState(initialSelected ?? '');
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [searchInternalResources, result] = useGetInternalResourcesMutation();
   const [searchParams, setSearchParams] =
@@ -52,6 +51,7 @@ export default function ClassModal({
       pageSize: 50,
       pageFrom: 0,
       limitToDataModel: modelId,
+      limitToModelType: 'LIBRARY',
       fromAddedNamespaces: true,
       resourceTypes: [ResourceType.CLASS],
     });
@@ -70,6 +70,8 @@ export default function ClassModal({
       sortLang: i18n.language,
       pageSize: 50,
       pageFrom: 0,
+      limitToDataModel: modelId,
+      limitToModelType: 'LIBRARY',
       resourceTypes: [ResourceType.CLASS],
     });
     setVisible(false);
@@ -91,14 +93,22 @@ export default function ClassModal({
     }
 
     const target = result.data?.responseObjects.find(
-      (r) => r.identifier === selectedId
+      (r) => r.id === selectedId
     );
     setVisible(false);
-    handleFollowUp(target);
+    handleFollowUp(
+      target,
+      searchParams.limitToModelType === 'PROFILE' ?? undefined
+    );
   };
 
   const getLinkLabel = (ns: string, id: string) => {
-    const namespace = ns.split('#').at(0)?.split('/').pop();
+    const namespace =
+      ns
+        .split('/')
+        .filter((val) => val !== '')
+        .pop()
+        ?.replace('#', '') ?? ns;
     return `${namespace}:${id}`;
   };
 
@@ -107,13 +117,17 @@ export default function ClassModal({
       setResultsFormatted(
         result.data.responseObjects.map((r) => ({
           target: {
-            identifier: r.identifier,
+            identifier: r.id,
             label: getLanguageVersion({ data: r.label, lang: i18n.language }),
             linkLabel: getLinkLabel(r.namespace, r.identifier),
             link: r.id,
             status: translateStatus(r.status, t),
             isValid: r.status === 'VALID',
-            modified: format(r.modified, (i18n.language as Locale) ?? 'fi'),
+            note: getLanguageVersion({
+              data: r.note,
+              lang: i18n.language,
+              appendLocale: true,
+            }),
           },
           partOf: {
             label: 'Tietomallin nimi',
@@ -157,6 +171,7 @@ export default function ClassModal({
             setSearchParams={handleSearch}
             modelId={modelId}
             applicationProfile={applicationProfile}
+            languageVersioned={applicationProfile}
           />
         </ModalContent>
         <ModalFooter>
@@ -170,13 +185,15 @@ export default function ClassModal({
                   ? t('select-class')
                   : t('create-subclass-for-selected')}
               </Button>
-              <Button
-                icon="plus"
-                disabled={selectedId !== ''}
-                onClick={() => handleSubmit()}
-              >
-                {t('create-new-class')}
-              </Button>
+              {!applicationProfile && (
+                <Button
+                  icon="plus"
+                  disabled={selectedId !== ''}
+                  onClick={() => handleSubmit()}
+                >
+                  {t('create-new-class')}
+                </Button>
+              )}
               <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
                 {t('cancel-variant')}
               </Button>

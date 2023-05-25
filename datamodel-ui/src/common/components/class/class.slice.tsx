@@ -9,17 +9,46 @@ import {
   initialClassForm,
 } from '@app/common/interfaces/class-form.interface';
 
-function convertToPUT(data: ClassFormType, isEdit: boolean): object {
+function convertToPUT(
+  data: ClassFormType,
+  isEdit: boolean,
+  applicationProfile?: boolean,
+  basedOnNodeShape?: boolean
+): object {
   const { concept, ...retVal } = data;
   const conceptURI = concept?.conceptURI;
 
   const ret = {
     ...retVal,
     equivalentClass: data.equivalentClass.map((eq) => eq.identifier),
-    subClassOf: data.subClassOf.map((sco) => sco.identifier),
+    subClassOf: data.subClassOf
+      .filter((soc) => soc.identifier !== 'owl:Thing')
+      .map((sco) => sco.identifier),
     subject: conceptURI,
-    targetClass: data.targetClass?.id,
+    ...(basedOnNodeShape
+      ? {
+          targetNode: data.targetClass?.id,
+        }
+      : {
+          targetClass: data.targetClass?.id,
+        }),
+    ...(applicationProfile &&
+      !basedOnNodeShape && {
+        properties: [
+          ...(data.association?.map((a) => a.uri) ?? []),
+          ...(data.attribute?.map((a) => a.uri) ?? []),
+        ],
+      }),
   };
+
+  if (applicationProfile) {
+    delete ret.association;
+    delete ret.attribute;
+  }
+
+  if (basedOnNodeShape) {
+    delete ret.targetClass;
+  }
 
   return isEdit
     ? Object.fromEntries(
@@ -49,6 +78,7 @@ export const classApi = createApi({
         data: ClassFormType;
         classId?: string;
         applicationProfile?: boolean;
+        basedOnNodeShape?: boolean;
       }
     >({
       query: (value) => ({
@@ -60,7 +90,12 @@ export const classApi = createApi({
               value.modelId
             }/${value.classId}`,
         method: 'PUT',
-        data: convertToPUT(value.data, value.classId ? true : false),
+        data: convertToPUT(
+          value.data,
+          value.classId ? true : false,
+          value.applicationProfile,
+          value.basedOnNodeShape
+        ),
       }),
     }),
     getClass: builder.query<

@@ -40,6 +40,7 @@ import {
   getResource,
   getRunningQueriesThunk as getResourceRunningQueriesThunk,
 } from '@app/common/components/resource/resource.slice';
+import { ModelType } from '@app/common/interfaces/model.interface';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -130,9 +131,20 @@ export const getServerSideProps = createCommonGetServerSideProps(
       const resourceId = query.slug[2];
 
       if (resourceType === 'class') {
+        const modelType = (
+          store.getState().modelApi.queries[`getModel("${modelId}")`]?.data as
+            | ModelType
+            | undefined
+            | null
+        )?.type;
+
         store.dispatch(setView('classes', 'info'));
         store.dispatch(
-          getClass.initiate({ modelId: modelId, classId: resourceId })
+          getClass.initiate({
+            modelId: modelId,
+            classId: resourceId,
+            applicationProfile: modelType === 'PROFILE' ?? false,
+          })
         );
 
         await Promise.all(store.dispatch(getClassRunningQueriesThunk()));
