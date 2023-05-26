@@ -158,7 +158,9 @@ export default function LinkedDataView({
         )}
 
         <BasicBlock title={t('linked-datamodels')}>
-          {data && data.internalNamespaces.length > 0 ? (
+          {data &&
+          (data.internalNamespaces.length > 0 ||
+            data.externalNamespaces.length > 0) ? (
             <LinkedWrapper>
               {data.internalNamespaces.map((namespace, idx) => {
                 return (
@@ -172,6 +174,22 @@ export default function LinkedDataView({
                       </ExternalLink>
                       <div>Tunnus: {namespace.split('/').pop()}</div>
                       <div>{namespace}</div>
+                    </LinkExtraInfo>
+                  </LinkedItem>
+                );
+              })}
+              {data.externalNamespaces.map((namespace, idx) => {
+                return (
+                  <LinkedItem key={`linked-ext-terminology-${idx}`}>
+                    <LinkExtraInfo>
+                      <ExternalLink
+                        labelNewWindow={t('link-opens-new-window-external')}
+                        href={namespace.namespace}
+                      >
+                        {namespace.name}
+                      </ExternalLink>
+                      <div>Tunnus: {namespace.prefix}</div>
+                      <div>{namespace.namespace}</div>
                     </LinkExtraInfo>
                   </LinkedItem>
                 );
