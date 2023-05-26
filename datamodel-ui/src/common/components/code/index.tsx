@@ -1,17 +1,21 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { CodeInformationDomainType } from '@app/common/interfaces/code-information-domain';
 import { CodeType } from '@app/common/interfaces/code';
 
 function generateUrl({
   searchTerm,
   infoDomain,
+  pageFrom,
 }: {
   searchTerm?: string;
   infoDomain?: string;
+  pageFrom?: number;
 }): string {
+  const pageSize = '&pageSize=20';
+  const pageStart = `&from=${pageFrom ? (pageFrom - 1) * 20 : 0}`;
+
   if (!searchTerm && !infoDomain) {
-    return '/codeschemes?expand=codeRegistry,externalReference,propertyType,code,organization,extension,valueType,searchHit&searchCodes=false&searchExtensions=false&language=fi';
+    return `/codeschemes?expand=codeRegistry,externalReference,propertyType,code,organization,extension,valueType,searchHit&searchCodes=false&searchExtensions=false&language=fi${pageSize}${pageStart}`;
   }
 
   const base =
@@ -19,48 +23,8 @@ function generateUrl({
   const term = searchTerm ? `&searchTerm=${searchTerm}` : '';
   const domain = infoDomain ? `&infoDomain=${infoDomain}` : '';
 
-  return `${base}${term}${domain}`;
+  return `${base}${term}${domain}${pageSize}${pageStart}`;
 }
-
-export const codeIntake = createApi({
-  reducerPath: 'codeIntakeApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/codelist-intake' }),
-  tagTypes: ['codeIntakeApi'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
-  endpoints: (builder) => ({
-    getInfoDomains: builder.query<
-      {
-        meta: {
-          code: number;
-          resultCouts: number;
-        };
-        results: CodeInformationDomainType[];
-      },
-      { lang: string }
-    >({
-      query: (props) => ({
-        url: `/infodomains/?language=${props.lang}`,
-        method: 'GET',
-      }),
-      transformResponse: (response: {
-        meta: {
-          code: number;
-          resultCouts: number;
-        };
-        results: CodeInformationDomainType[];
-      }) => {
-        return {
-          ...response,
-          results: response.results.reverse(),
-        };
-      },
-    }),
-  }),
-});
 
 export const codeApi = createApi({
   reducerPath: 'codeApi',
@@ -84,6 +48,7 @@ export const codeApi = createApi({
       {
         searchTerm?: string;
         infoDomain?: string;
+        pageFrom?: number;
       }
     >({
       query: (props) => ({
@@ -94,8 +59,6 @@ export const codeApi = createApi({
   }),
 });
 
-export const { useGetInfoDomainsQuery } = codeIntake;
 export const { useGetCodesQuery } = codeApi;
 
-export const { getInfoDomains } = codeIntake.endpoints;
 export const { getCodes } = codeApi.endpoints;

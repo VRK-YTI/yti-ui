@@ -18,13 +18,12 @@ import {
 import { FilterBlock, ResultBlock, StatusChip } from './code-list-modal.styles';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
-import {
-  useGetCodesQuery,
-  useGetInfoDomainsQuery,
-} from '@app/common/components/code';
+import { useGetCodesQuery } from '@app/common/components/code';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { ModelCodeList } from '@app/common/interfaces/model.interface';
+import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
+import { DetachedPagination } from 'yti-common-ui/pagination';
 
 export default function CodeListModal({
   initialData,
@@ -52,30 +51,32 @@ export default function CodeListModal({
     initialData.map((d) => d.id) ?? []
   );
   const [selectedGroup, setSelectedGroup] = useState(defaultGroup);
-  const { data: codeListInfoDomains } = useGetInfoDomainsQuery({
-    lang: i18n.language,
-  });
+  const [currPage, setCurrPage] = useState(1);
+  const { data: serviceCategories } = useGetServiceCategoriesQuery(
+    i18n.language
+  );
   const { data: codes, isSuccess } = useGetCodesQuery({
     searchTerm: filter.keyword !== '' ? filter.keyword : undefined,
     infoDomain: filter.group !== '' ? filter.group : undefined,
+    pageFrom: currPage,
   });
 
   const groups = useMemo(
     () => [
       defaultGroup,
-      ...(codeListInfoDomains?.results.map((infoDomain) => ({
+      ...(serviceCategories?.map((category) => ({
         name: getLanguageVersion({
-          data: infoDomain.prefLabel,
+          data: category.label,
           lang: i18n.language,
         }),
         labelText: getLanguageVersion({
-          data: infoDomain.prefLabel,
+          data: category.label,
           lang: i18n.language,
         }),
-        uniqueItemId: infoDomain.codeValue,
+        uniqueItemId: category.identifier,
       })) ?? []),
     ],
-    [codeListInfoDomains, i18n.language, defaultGroup]
+    [serviceCategories, i18n.language, defaultGroup]
   );
 
   const handleClose = () => {
@@ -88,6 +89,7 @@ export default function CodeListModal({
     setSelectedGroup(defaultGroup);
     setSelected(initialData.map((d) => d.id));
     setVisible(false);
+    setCurrPage(1);
   };
 
   const handleSubmit = () => {
@@ -283,6 +285,14 @@ export default function CodeListModal({
               </div>
             )}
           </ResultBlock>
+          {codes && codes.meta.totalResults > 20 && (
+            <DetachedPagination
+              currentPage={currPage}
+              maxPages={Math.ceil(codes.meta.totalResults / 20)}
+              maxTotal={20}
+              setCurrentPage={(e) => setCurrPage(e)}
+            />
+          )}
         </ModalContent>
 
         <ModalFooter>
