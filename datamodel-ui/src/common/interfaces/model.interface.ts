@@ -11,7 +11,11 @@ export interface ModelType {
   groups: Group[];
   contact: string;
   internalNamespaces: string[];
-  externalNamespaces: [];
+  externalNamespaces: {
+    name: string;
+    namespace: string;
+    prefix: string;
+  }[];
   terminologies: ModelTerminology[];
   codeLists: ModelCodeList[];
   created: string;
