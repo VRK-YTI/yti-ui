@@ -6,7 +6,6 @@ import {
   CommonContextProvider,
   CommonContextState,
 } from 'yti-common-ui/common-context-provider';
-import TerminologySearch from '@app/modules/terminology-search';
 import {
   getGroups,
   getOrganizations,
@@ -22,7 +21,7 @@ import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
 import { Button } from 'suomifi-ui-components';
 
 import EditCollection from '@app/modules/edit-collection';
-import { ButtonBlock } from '@app/modules/new-terminology/new-terminology.styles';
+import { ButtonBlock } from '@app/pages/schema/schema.styles';
 import Separator from 'yti-common-ui/separator';
 import { useRouter } from 'next/router';
 

@@ -1,4 +1,4 @@
-# mscr-playground-app
+# MSCR-Playground-App
 
 A user interface for MSCR component
 
@@ -21,7 +21,7 @@ manually.
 
 Install dependencies
 
-Run in yti-terminology-ui root folder:
+Run in mscr-ui-monorepo root folder:
 
 ```bash
 npm install
@@ -41,14 +41,13 @@ This is necessary for VSCodes eslint to work correctly.
 ```
 {
   "eslint.workingDirectories": [
-    { "directory": "./terminology-ui", "changeProcessCWD": true }
+    { "directory": "./mscr-playground-app", "changeProcessCWD": true }
   ]
 }
 ```
 
 Run terminology-api backend application (and all its dependencies) for example
-by using [yti-compose](https://github.com/VRK-YTI/yti-compose)
-
+by using [mscr-compose]
 Run the development server:
 
 ```bash
@@ -64,3 +63,18 @@ auto-updates as you edit the file.
 ## Troubleshooting and more documentation
 
 You can find more documentation in [docs](../docs).
+
+## Possible Codebase Architecure
+
+#### Components
+
+#### Interfaces
+
+Contains the data models for MSCR
+
+#### Modules
+
+Schema-collection
+Crosswalk-collection
+
+#### Pages

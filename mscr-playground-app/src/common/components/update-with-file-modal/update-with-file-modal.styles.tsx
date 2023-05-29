@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Block, Icon } from 'suomifi-ui-components';
 
 export const ModalContentWrapper = styled.div`
@@ -37,4 +37,29 @@ export const UpdateDescriptionBlock = styled(Block)`
   display: flex;
   flex-direction: column;
   gap: 12px;
+`;
+
+const rotate = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+export const DownloadIndicator = styled.div`
+  ::after {
+    content: ' ';
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid black;
+    border-color: ${(props) => props.theme.suomifi.colors.brandBase}
+      ${(props) => props.theme.suomifi.colors.brandBase}
+      ${(props) => props.theme.suomifi.colors.brandBase} transparent;
+    animation: ${rotate} 1.2s linear infinite;
+  }
 `;

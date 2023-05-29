@@ -3,7 +3,7 @@ import { Collection } from '@app/common/interfaces/collection.interface';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
 
-//Making the HTTP requests, may be can used to get the regsstered schemas and crosswalks
+//Making the HTTP requests, may be can used to get the registered schemas and crosswalks
 export const collectionApi = createApi({
   reducerPath: 'collectionAPI',
   baseQuery: getTerminologyApiBaseQuery(),
@@ -16,16 +16,16 @@ export const collectionApi = createApi({
   endpoints: (builder) => ({
     getCollection: builder.query<
       Collection,
-      { terminologyId: string; collectionId: string }
+      { schemaId: string; collectionId: string }
     >({
-      query: ({ terminologyId, collectionId }) => ({
-        url: `/collection?graphId=${terminologyId}&collectionId=${collectionId}`,
+      query: ({ schemaId, collectionId }) => ({
+        url: `/collection?graphId=${schemaId}&collectionId=${collectionId}`,
         method: 'GET',
       }),
     }),
     getCollections: builder.query<Collection[], string>({
-      query: (terminologyId) => ({
-        url: `/collections?graphId=${terminologyId}`,
+      query: (schemaId) => ({
+        url: `/collections?graphId=${schemaId}`,
         method: 'GET',
       }),
     }),

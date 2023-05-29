@@ -1,5 +1,4 @@
 import { translateFileUploadError } from '@app/common/utils/translation-helpers';
-import { DownloadIndicator } from '@app/modules/new-terminology/new-terminology.styles';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
@@ -123,7 +122,7 @@ export default function UpdateWithFileModal() {
           <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}
-            validFileTypes={['xlsx', 'json']}
+            validFileTypes={['json', 'xslt']}
             translateFileUploadError={translateFileUploadError}
           />
         </ModalContent>

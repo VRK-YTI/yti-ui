@@ -1,6 +1,8 @@
 import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
+import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import EditCollection from '@app/modules/edit-collection';
-import { SSRConfig } from 'next-i18next';
+import SchemaCollection from '@app/modules/schema-collection';
+import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { Button, Paragraph, TextInput } from 'suomifi-ui-components';
@@ -17,6 +19,7 @@ interface SchemaIndexPageProps extends CommonContextState {
 
 export default function Schemas(props: SchemaIndexPageProps) {
   const router = useRouter();
+  const { t } = useTranslation('schema');
 
   const schemaFileUplaod = () => {
     // Open the modal for file chooser, may be new terminology modal can be used
@@ -39,6 +42,11 @@ export default function Schemas(props: SchemaIndexPageProps) {
         />
         <TextInput
           onBlur={(event) => console.log(event.target.value)}
+          labelText="Language Version"
+          visualPlaceholder="Enter the language version"
+        />
+        <TextInput
+          onBlur={(event) => console.log(event.target.value)}
           labelText="Filename"
           visualPlaceholder="filename for the schema"
         />
@@ -51,9 +59,11 @@ export default function Schemas(props: SchemaIndexPageProps) {
         <h2> List of Schemas</h2>
         <EditCollection
           terminologyId={'1'}
-          collectionName={'First Schema'}
+          collectionName={'Schema Collection'}
         ></EditCollection>
       </Layout>
     </CommonContextProvider>
   );
 }
+
+export const getServerSideProps = createCommonGetServerSideProps();
