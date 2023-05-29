@@ -1,4 +1,4 @@
-import ResourceList from '@app/common/components/resource-list';
+import ResourceList, { ResultType } from '@app/common/components/resource-list';
 import WideModal from '@app/common/components/wide-modal';
 import { useTranslation } from 'next-i18next';
 import {
@@ -11,22 +11,62 @@ import {
   TextInput,
 } from 'suomifi-ui-components';
 import { ModalContentWrapper } from './class-restriction-modal.styles';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useGetNodeShapesQuery } from '@app/common/components/class/class.slice';
+import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { translateResourceType } from '@app/common/utils/translation-helpers';
 
 interface ClassRestrictionModalProps {
   visible: boolean;
+  selectedNodeShape: InternalClass;
   hide: () => void;
   handleFollowUp: (createNew?: boolean) => void;
 }
 
 export default function ClassRestrictionModal({
   visible,
+  selectedNodeShape,
   hide,
   handleFollowUp,
 }: ClassRestrictionModalProps) {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
   const [keyword, setKeyword] = useState('');
   const [selected, setSelected] = useState('');
+  const { data, isSuccess } = useGetNodeShapesQuery(selectedNodeShape.id);
+  const nodeShapes: ResultType[] = useMemo(() => {
+    if (!data) {
+      return [];
+    }
+
+    return data.map((d) => ({
+      subClass: {
+        label: 'subClassLabel',
+        link: 'link',
+        partOf: 'partOf',
+      },
+      partOf: {
+        domains: ['domain-1'],
+        label: 'partOfLabel',
+        type: translateResourceType(d.resourceType, t),
+      },
+      target: {
+        identifier: d.id,
+        label: getLanguageVersion({
+          data: d.label,
+          lang: i18n.language,
+        }),
+        link: d.id,
+        linkLabel: 'linkLabel',
+        note: getLanguageVersion({
+          data: d.note,
+          lang: i18n.language,
+        }),
+        status: d.status,
+        isValid: d.status === 'VALID',
+      },
+    }));
+  }, [data, t, i18n.language]);
 
   const handleClose = () => {
     setKeyword('');
@@ -40,6 +80,12 @@ export default function ClassRestrictionModal({
     }
     setSelected('');
   };
+
+  useEffect(() => {
+    if (isSuccess && data.length < 1) {
+      handleFollowUp(true);
+    }
+  }, [isSuccess, handleFollowUp, data]);
 
   return (
     <WideModal
@@ -112,71 +158,7 @@ export default function ClassRestrictionModal({
           <div>
             <ResourceList
               handleClick={(value: string | string[]) => handleClick(value)}
-              items={[
-                {
-                  subClass: {
-                    label: 'subClassLabel',
-                    link: 'link',
-                    partOf: 'partOf',
-                  },
-                  partOf: {
-                    domains: ['domain-1'],
-                    label: 'partOfLabel',
-                    type: 'tyyppi',
-                  },
-                  target: {
-                    identifier: 'id-1',
-                    label: 'targetLabel',
-                    link: 'link',
-                    linkLabel: 'linkLabel',
-                    note: 'tekninen kuvaus',
-                    status: 'VALID',
-                    isValid: true,
-                  },
-                },
-                {
-                  subClass: {
-                    label: 'subClassLabel',
-                    link: 'link',
-                    partOf: 'partOf',
-                  },
-                  partOf: {
-                    domains: ['domain-1'],
-                    label: 'partOfLabel',
-                    type: 'tyyppi',
-                  },
-                  target: {
-                    identifier: 'id-2',
-                    label: 'targetLabel',
-                    link: 'link',
-                    linkLabel: 'linkLabel',
-                    note: 'tekninen kuvaus',
-                    status: 'VALID',
-                    isValid: true,
-                  },
-                },
-                {
-                  subClass: {
-                    label: 'subClassLabel',
-                    link: 'link',
-                    partOf: 'partOf',
-                  },
-                  partOf: {
-                    domains: ['domain-2'],
-                    label: 'partOfLabel',
-                    type: 'tyyppi',
-                  },
-                  target: {
-                    identifier: 'id-3',
-                    label: 'targetLabel',
-                    link: 'link',
-                    linkLabel: 'linkLabel',
-                    note: 'tekninen kuvaus',
-                    status: 'VALID',
-                    isValid: true,
-                  },
-                },
-              ]}
+              items={nodeShapes}
               primaryColumnName={t('class-name')}
               selected={selected}
             />

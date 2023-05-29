@@ -8,6 +8,7 @@ import {
 } from 'suomifi-ui-components';
 import { StatusChip, ResultsTable } from './resource-list.styles';
 import { useTranslation } from 'next-i18next';
+import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 
 export interface ResultType {
   target: {
@@ -166,7 +167,7 @@ export default function ResourceList({
                       <Icon icon="calendar" /> {item.partOf.type}
                     </Text>{' '}
                     <StatusChip $isValid={item.target.isValid}>
-                      {item.target.status}
+                      {translateStatus(item.target.status, t)}
                     </StatusChip>
                   </div>
                   <Text>{item.partOf.domains.join(', ')}</Text>

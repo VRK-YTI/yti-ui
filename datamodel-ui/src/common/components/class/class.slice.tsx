@@ -8,6 +8,7 @@ import {
   ClassFormType,
   initialClassForm,
 } from '@app/common/interfaces/class-form.interface';
+import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 
 function convertToPUT(
   data: ClassFormType,
@@ -120,6 +121,12 @@ export const classApi = createApi({
         method: 'GET',
       }),
     }),
+    getNodeShapes: builder.query<InternalClass[], string>({
+      query: (targetClass) => ({
+        url: `/class/nodeshapes?targetClass=${targetClass}`,
+        method: 'GET',
+      }),
+    }),
     deleteClass: builder.mutation<
       string,
       { modelId: string; classId: string; applicationProfile?: boolean }
@@ -176,6 +183,7 @@ export const {
   usePutClassMutation,
   useGetClassQuery,
   useGetClassMutMutation,
+  useGetNodeShapesQuery,
   useDeleteClassMutation,
   util: { getRunningQueriesThunk },
 } = classApi;
