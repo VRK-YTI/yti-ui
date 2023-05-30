@@ -32,5 +32,6 @@ export default function generatePayload(data: ModelFormType): NewModel {
     prefix: data.prefix,
     status: 'DRAFT',
     type: data.type.toUpperCase(),
+    contact: data.contact !== '' ? data.contact : 'yhteentoimivuus@dvv.fi',
   };
 }

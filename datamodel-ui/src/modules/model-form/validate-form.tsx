@@ -1,4 +1,5 @@
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
+import isEmail from 'validator/lib/isEmail';
 
 export interface FormErrors {
   languageAmount: boolean;
@@ -6,6 +7,7 @@ export interface FormErrors {
   prefix: boolean;
   serviceCategories: boolean;
   organizations: boolean;
+  contact: boolean;
 }
 
 export function validateForm(data: ModelFormType) {
@@ -15,6 +17,7 @@ export function validateForm(data: ModelFormType) {
     prefix: false,
     serviceCategories: false,
     organizations: false,
+    contact: false,
   };
 
   const selectedLanguages = data.languages.filter((lang) => lang.selected);
@@ -52,6 +55,10 @@ export function validateForm(data: ModelFormType) {
   // Should have at least one organization set
   if (data.organizations.length < 1) {
     errors.organizations = true;
+  }
+
+  if (data.contact && !isEmail(data.contact)) {
+    errors.contact = true;
   }
 
   return errors;

@@ -100,4 +100,5 @@ export interface ModelUpdatePayload {
   }[];
   terminologies: string[];
   codeLists: string[];
+  contact: string;
 }

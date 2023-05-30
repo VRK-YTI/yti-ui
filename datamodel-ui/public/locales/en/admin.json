@@ -153,6 +153,7 @@
   "maximum-length": "Maximum length",
   "minimum-amount": "Minimum amount",
   "minimum-length": "Minimum length",
+  "missing-contact": "Contact email is invalid",
   "missing-general": "Model is missing information",
   "missing-information-domain": "Information domain hasn't been set",
   "missing-information-title": "Missing information",

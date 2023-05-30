@@ -153,6 +153,7 @@
   "maximum-length": "Enimmäispituus",
   "minimum-amount": "Vähimmäismäärä",
   "minimum-length": "Vähimmäispituus",
+  "missing-contact": "Palautteen sähköposti ei ole oikeassa muodossa",
   "missing-general": "Tietomallin kaikkia tietoja ei ole määritelty",
   "missing-information-domain": "Tietomallin tietoaluetta ei ole määritelty",
   "missing-information-title": "Puuttuvia tietoja",
