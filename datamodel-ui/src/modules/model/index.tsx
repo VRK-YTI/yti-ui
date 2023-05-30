@@ -11,6 +11,7 @@ import { useMemo } from 'react';
 import Graph from '../graph';
 import LinkedDataView from '../linked-data-view';
 import { compareLocales } from '@app/common/utils/compare-locals';
+import Documentation from '../documentation';
 
 interface ModelProps {
   modelId: string;
@@ -115,6 +116,13 @@ export default function Model({ modelId }: ModelProps) {
                     }
                   />
                 ),
+              },
+              {
+                id: 'documentation',
+                icon: 'alert',
+                buttonLabel: 'Demo',
+                buttonLabelSm: 'Demo',
+                component: <Documentation />,
               },
             ]}
           />
