@@ -57,7 +57,9 @@ export default function ClassRestrictionModal({
           lang: i18n.language,
         }),
         link: d.id,
-        linkLabel: 'linkLabel',
+        linkLabel: `${d.namespace.slice(0, -1).split('/').pop()}:${
+          d.identifier
+        }`,
         note: getLanguageVersion({
           data: d.note,
           lang: i18n.language,
@@ -97,7 +99,9 @@ export default function ClassRestrictionModal({
         <ModalTitle>{t('add-class')}</ModalTitle>
 
         <Paragraph>
-          <Text>{t('class-restriction-description', { count: 0 })}</Text>
+          <Text>
+            {t('class-restriction-description', { count: data?.length ?? 0 })}
+          </Text>
         </Paragraph>
 
         <ModalContentWrapper>
@@ -124,13 +128,22 @@ export default function ClassRestrictionModal({
                     type: 'tyyppi',
                   },
                   target: {
-                    identifier: 'id-11',
-                    label: 'targetLabel',
-                    link: 'link',
-                    linkLabel: 'linkLabel',
-                    note: 'tekninen kuvaus',
-                    status: 'VALID',
-                    isValid: true,
+                    identifier: selectedNodeShape.identifier,
+                    label: getLanguageVersion({
+                      data: selectedNodeShape.label,
+                      lang: i18n.language,
+                    }),
+                    link: selectedNodeShape.id,
+                    linkLabel: `${selectedNodeShape.namespace
+                      .slice(0, -1)
+                      .split('/')
+                      .pop()}:${selectedNodeShape.identifier}`,
+                    note: getLanguageVersion({
+                      data: selectedNodeShape.note,
+                      lang: i18n.language,
+                    }),
+                    status: selectedNodeShape.status,
+                    isValid: selectedNodeShape.status === 'VALID',
                   },
                 },
               ]}
@@ -158,7 +171,11 @@ export default function ClassRestrictionModal({
           <div>
             <ResourceList
               handleClick={(value: string | string[]) => handleClick(value)}
-              items={nodeShapes}
+              items={
+                keyword === ''
+                  ? nodeShapes
+                  : nodeShapes.filter((n) => n.target.label.includes(keyword))
+              }
               primaryColumnName={t('class-name')}
               selected={selected}
             />
