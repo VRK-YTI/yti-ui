@@ -110,6 +110,8 @@ export default function CodeListModal({
   };
 
   const handleGroupChange = (id: string | null) => {
+    setCurrPage(1);
+
     if (!id) {
       setSelectedGroup(defaultGroup);
       setFilter({ ...filter, group: '' });
@@ -151,12 +153,13 @@ export default function CodeListModal({
             <div>
               <TextInput
                 labelText={t('search-for-reference-data')}
-                onChange={(e) =>
+                onChange={(e) => {
                   setFilter({
                     ...filter,
                     keyword: e?.toString() ?? '',
-                  })
-                }
+                  });
+                  setCurrPage(1);
+                }}
                 debounce={300}
               />
 
@@ -187,7 +190,10 @@ export default function CodeListModal({
               <Dropdown
                 labelText={t('show-statuses')}
                 defaultValue="all-statuses"
-                onChange={(e) => setFilter({ ...filter, status: e })}
+                onChange={(e) => {
+                  setFilter({ ...filter, status: e });
+                  setCurrPage(1);
+                }}
               >
                 {statuses.map((status) => (
                   <DropdownItem key={`status-${status}`} value={status}>
