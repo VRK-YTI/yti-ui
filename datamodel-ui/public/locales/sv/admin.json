@@ -168,6 +168,8 @@
   "prefix": "",
   "prefix-in-this-service": "",
   "prefix-input-hint-text": "",
+  "prefix-invalid-initial-character": "",
+  "prefix-invalid-length": "",
   "profile-hint-text": "",
   "range": "",
   "reference-data-counts_one": "",

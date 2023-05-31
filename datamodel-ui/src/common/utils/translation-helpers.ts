@@ -32,6 +32,10 @@ export function translateModelFormErrors(error: string, t: TFunction) {
       return t('missing-language-title', { ns: 'admin' });
     case 'prefix':
       return t('missing-prefix', { ns: 'admin' });
+    case 'prefixInitChar':
+      return t('prefix-invalid-initial-character', { ns: 'admin' });
+    case 'prefixLength':
+      return t('prefix-invalid-length', { ns: 'admin' });
     case 'serviceCategories':
       return t('missing-information-domain', { ns: 'admin' });
     case 'organizations':
