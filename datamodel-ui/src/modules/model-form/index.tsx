@@ -344,6 +344,7 @@ export default function ModelForm({
           optional: t('optional'),
           undefined: t('still-unknown'),
         }}
+        error={errors?.contact}
         disabled={disabled}
       />
     );

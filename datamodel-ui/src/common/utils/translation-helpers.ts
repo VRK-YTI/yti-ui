@@ -36,6 +36,8 @@ export function translateModelFormErrors(error: string, t: TFunction) {
       return t('missing-information-domain', { ns: 'admin' });
     case 'organizations':
       return t('missing-organizations', { ns: 'admin' });
+    case 'contact':
+      return t('missing-contact', { ns: 'admin' });
     default:
       return t('missing-general', { ns: 'admin' });
   }
