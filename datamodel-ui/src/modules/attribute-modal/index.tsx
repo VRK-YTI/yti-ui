@@ -42,6 +42,7 @@ export default function AttributeModal({
   const [selectedId, setSelectedId] = useState('');
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [searchInternalResources, result] = useGetInternalResourcesMutation();
+  const [contentLanguage, setContentLanguage] = useState<string>();
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>({
       query: '',
@@ -68,6 +69,7 @@ export default function AttributeModal({
       pageFrom: 0,
       resourceTypes: [ResourceType.ATTRIBUTE],
     });
+    setContentLanguage(undefined);
     setVisible(false);
   };
 
@@ -115,7 +117,7 @@ export default function AttributeModal({
         result.data.responseObjects.map((r) => ({
           target: {
             identifier: r.identifier,
-            label: getLanguageVersion({ data: r.label, lang: i18n.language }),
+            label: getLanguageVersion({ data: r.label, lang: contentLanguage ?? i18n.language, appendLocale: true }),
             linkLabel: getLinkLabel(r.namespace, r.identifier),
             link: r.id,
             status: translateStatus(r.status, t),
@@ -123,7 +125,7 @@ export default function AttributeModal({
             modified: format(r.modified, (i18n.language as Locale) ?? 'fi'),
             note: getLanguageVersion({
               data: r.note,
-              lang: i18n.language,
+              lang: contentLanguage ?? i18n.language,
               appendLocale: true,
             }),
           },
@@ -140,7 +142,7 @@ export default function AttributeModal({
         }))
       );
     }
-  }, [result, i18n.language, t]);
+  }, [result, i18n.language, t, contentLanguage]);
 
   return (
     <div>
@@ -165,6 +167,7 @@ export default function AttributeModal({
             setSelectedId={setSelectedId}
             searchParams={searchParams}
             setSearchParams={handleSearch}
+            setContentLanguage={setContentLanguage}
             languageVersioned
             modelId={modelId}
           />

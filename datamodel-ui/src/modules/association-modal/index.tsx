@@ -42,6 +42,7 @@ export default function AssociationModal({
   const [selectedId, setSelectedId] = useState('');
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [searchInternalResources, result] = useGetInternalResourcesMutation();
+  const [contentLanguage, setContentLanguage] = useState<string>();
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>({
       query: '',
@@ -68,6 +69,7 @@ export default function AssociationModal({
       pageFrom: 0,
       resourceTypes: [ResourceType.ASSOCIATION],
     });
+    setContentLanguage(undefined);
     setVisible(false);
   };
 
@@ -115,7 +117,7 @@ export default function AssociationModal({
         result.data.responseObjects.map((r) => ({
           target: {
             identifier: r.identifier,
-            label: getLanguageVersion({ data: r.label, lang: i18n.language }),
+            label: getLanguageVersion({ data: r.label, lang: contentLanguage ?? i18n.language, appendLocale: true }),
             linkLabel: getLinkLabel(r.namespace, r.identifier),
             link: r.id,
             status: translateStatus(r.status, t),
@@ -165,6 +167,7 @@ export default function AssociationModal({
             setSelectedId={setSelectedId}
             searchParams={searchParams}
             setSearchParams={handleSearch}
+            setContentLanguage={setContentLanguage}
             languageVersioned
             modelId={modelId}
           />

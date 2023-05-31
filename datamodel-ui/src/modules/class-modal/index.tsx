@@ -41,6 +41,7 @@ export default function ClassModal({
   const [visible, setVisible] = useState(false);
   const [selectedId, setSelectedId] = useState(initialSelected ?? '');
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
+  const [contentLanguage, setContentLanguage] = useState<string>();
   const [searchInternalResources, result] = useGetInternalResourcesMutation();
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>({
@@ -74,6 +75,7 @@ export default function ClassModal({
       limitToModelType: 'LIBRARY',
       resourceTypes: [ResourceType.CLASS],
     });
+    setContentLanguage(undefined);
     setVisible(false);
   };
 
@@ -118,7 +120,7 @@ export default function ClassModal({
         result.data.responseObjects.map((r) => ({
           target: {
             identifier: r.id,
-            label: getLanguageVersion({ data: r.label, lang: i18n.language }),
+            label: getLanguageVersion({ data: r.label, lang: contentLanguage ?? i18n.language, appendLocale: true}),
             linkLabel: getLinkLabel(r.namespace, r.identifier),
             link: r.id,
             status: translateStatus(r.status, t),
@@ -169,9 +171,10 @@ export default function ClassModal({
             setSelectedId={setSelectedId}
             searchParams={searchParams}
             setSearchParams={handleSearch}
+            setContentLanguage={setContentLanguage}
             modelId={modelId}
             applicationProfile={applicationProfile}
-            languageVersioned={applicationProfile}
+            languageVersioned
           />
         </ModalContent>
         <ModalFooter>
