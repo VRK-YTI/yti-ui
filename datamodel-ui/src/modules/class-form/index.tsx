@@ -206,6 +206,8 @@ export default function ClassForm({
       if (backendErrorFields.length > 0) {
         setErrors({
           identifier: backendErrorFields.includes('identifier'),
+          identifierInitChar: false,
+          identifierLength: false,
           label: backendErrorFields.includes('label'),
         });
         return;
@@ -310,7 +312,14 @@ export default function ClassForm({
           labelText={t('class-identifier')}
           visualPlaceholder={t('input-class-identifier')}
           defaultValue={data.identifier}
-          status={userPosted && errors.identifier ? 'error' : 'default'}
+          status={
+            userPosted &&
+            (errors.identifier ||
+              errors.identifierInitChar ||
+              errors.identifierLength)
+              ? 'error'
+              : 'default'
+          }
           disabled={isEdit}
           onChange={(e) =>
             handleUpdate({ ...data, identifier: e?.toString() ?? '' })
