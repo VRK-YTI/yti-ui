@@ -144,7 +144,7 @@ export default function ClassModal({
         }))
       );
     }
-  }, [result, i18n.language, t]);
+  }, [result, i18n.language, t, contentLanguage]);
 
   return (
     <>

@@ -142,7 +142,7 @@ export default function AssociationModal({
         }))
       );
     }
-  }, [result, i18n.language, t]);
+  }, [result, i18n.language, contentLanguage, t]);
 
   return (
     <div>
