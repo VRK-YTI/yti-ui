@@ -30,6 +30,7 @@
     "react-redux": "^8.0.2",
     "reactflow": "^11.4.2",
     "redux-devtools-extension": "^2.13.9",
+    "suomifi-icons": "^7.0.0",
     "suomifi-ui-components": "^10.0.2",
     "swr": "^2.1.5",
     "uuid": "^9.0.0",
