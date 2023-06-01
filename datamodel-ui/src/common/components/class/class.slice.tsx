@@ -131,6 +131,18 @@ export const classApi = createApi({
         method: 'DELETE',
       }),
     }),
+    getClassIdentifierFree: builder.query<
+      boolean,
+      {
+        prefix: string;
+        identifier: string;
+      }
+    >({
+      query: (props) => ({
+        url: `/class/${props.prefix}/free-identifier/${props.identifier}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -177,6 +189,7 @@ export const {
   useGetClassQuery,
   useGetClassMutMutation,
   useDeleteClassMutation,
+  useGetClassIdentifierFreeQuery,
   util: { getRunningQueriesThunk },
 } = classApi;
 
