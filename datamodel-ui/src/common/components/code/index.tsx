@@ -15,11 +15,11 @@ function generateUrl({
   const pageStart = `&from=${pageFrom ? (pageFrom - 1) * 20 : 0}`;
 
   if (!searchTerm && !infoDomain) {
-    return `/codeschemes?expand=codeRegistry,externalReference,propertyType,code,organization,extension,valueType,searchHit&searchCodes=false&searchExtensions=false&language=fi${pageSize}${pageStart}`;
+    return `/v1/codeschemes?expand=codeRegistry,externalReference,propertyType,code,organization,extension,valueType,searchHit&searchCodes=false&searchExtensions=false&language=fi${pageSize}${pageStart}`;
   }
 
   const base =
-    '/codeschemes?expand=codeRegistry,externalReference,propertyType,code,organization,extension,valueType,searchHit&searchCodes=false&searchExtensions=false&language=fi';
+    '/v1/codeschemes?expand=codeRegistry,externalReference,propertyType,code,organization,extension,valueType,searchHit&searchCodes=false&searchExtensions=false&language=fi';
   const term = searchTerm ? `&searchTerm=${searchTerm}` : '';
   const domain = infoDomain ? `&infoDomain=${infoDomain}` : '';
 
