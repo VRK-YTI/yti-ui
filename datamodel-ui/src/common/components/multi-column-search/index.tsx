@@ -23,6 +23,7 @@ interface MultiColumnSearchProps {
   setSelectedId: (value: string) => void;
   searchParams: InternalResourcesSearchParams;
   setSearchParams: (value: InternalResourcesSearchParams) => void;
+  setContentLanguage: (value: string) => void;
   languageVersioned?: boolean;
   applicationProfile?: boolean;
   modelId: string;
@@ -35,6 +36,7 @@ export default function MultiColumnSearch({
   setSelectedId,
   searchParams,
   setSearchParams,
+  setContentLanguage,
   languageVersioned,
   modelId,
   applicationProfile,
@@ -254,6 +256,7 @@ export default function MultiColumnSearch({
                 (lang) => lang.uniqueItemId === i18n.language ?? 'fi'
               )?.uniqueItemId ?? 'fi'
             }
+            onChange={setContentLanguage}
           >
             {languages.map((lang) => (
               <DropdownItem key={lang.uniqueItemId} value={lang.uniqueItemId}>
