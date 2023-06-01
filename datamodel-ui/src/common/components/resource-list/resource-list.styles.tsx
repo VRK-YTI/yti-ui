@@ -53,6 +53,15 @@ export const ResultsTable = styled.table<{ $expandedLastCell?: boolean }>`
         display: flex;
         flex-direction: column;
       }
+
+      td:last-child > div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-height: 80px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
     }
   }
 

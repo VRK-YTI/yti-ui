@@ -5,11 +5,11 @@ import { Type } from '../interfaces/type.interface';
 export function translateModelType(type: Type, t: TFunction) {
   switch (type) {
     case 'LIBRARY':
-      return t('library');
+      return t('library', { ns: 'common' });
     case 'PROFILE':
-      return t('profile');
+      return t('profile', { ns: 'common' });
     default:
-      return t('profile');
+      return t('profile', { ns: 'common' });
   }
 }
 

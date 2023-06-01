@@ -2,7 +2,10 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { Status } from '@app/common/interfaces/status.interface';
-import { SearchInternalClasses } from '@app/common/interfaces/search-internal-classes.interface';
+import {
+  SearchInternalClasses,
+  SearchInternalClassesInfo,
+} from '@app/common/interfaces/search-internal-classes.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Type } from '@app/common/interfaces/type.interface';
 
@@ -17,12 +20,17 @@ export interface InternalResourcesSearchParams {
   pageSize?: number;
   pageFrom?: number;
   limitToModelType?: Type;
+  extend?: boolean;
 }
 
 function createUrl(obj: InternalResourcesSearchParams): string {
-  let baseQuery = `/frontend/searchInternalResources?query=${
-    obj.query
-  }&pageSize=${obj.pageSize ?? 50}&pageFrom=${obj.pageFrom ?? 0}`;
+  const basePath = obj.extend
+    ? '/frontend/searchInternalResourcesInfo'
+    : '/frontend/searchInternalResources';
+
+  let baseQuery = `${basePath}?query=${obj.query}&pageSize=${
+    obj.pageSize ?? 50
+  }&pageFrom=${obj.pageFrom ?? 0}`;
 
   if (obj.sortLang) {
     baseQuery = baseQuery.concat(`&sortLang=${obj.sortLang}`);
@@ -89,6 +97,15 @@ export const searchInternalResourcesApi = createApi({
         method: 'GET',
       }),
     }),
+    getInternalResourcesInfo: builder.mutation<
+      SearchInternalClassesInfo,
+      InternalResourcesSearchParams
+    >({
+      query: (object) => ({
+        url: createUrl(Object.assign(object, { extend: true })),
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -98,5 +115,6 @@ export const { getInternalResources, queryInternalResources } =
 export const {
   useGetInternalResourcesMutation,
   useQueryInternalResourcesQuery,
+  useGetInternalResourcesInfoMutation,
   util: { getRunningQueriesThunk },
 } = searchInternalResourcesApi;
