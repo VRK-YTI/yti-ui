@@ -120,7 +120,11 @@ export default function ClassModal({
         result.data.responseObjects.map((r) => ({
           target: {
             identifier: r.id,
-            label: getLanguageVersion({ data: r.label, lang: contentLanguage ?? i18n.language, appendLocale: true}),
+            label: getLanguageVersion({
+              data: r.label,
+              lang: contentLanguage ?? i18n.language,
+              appendLocale: true,
+            }),
             linkLabel: getLinkLabel(r.namespace, r.identifier),
             link: r.id,
             status: translateStatus(r.status, t),
