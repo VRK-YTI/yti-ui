@@ -1,28 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import remarkGfm from 'remark-gfm';
-import styled from 'styled-components';
-import { Button, Text, Textarea } from 'suomifi-ui-components';
+import { Icon, Text } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
-import Separator from 'yti-common-ui/separator';
-
-const FullWidthTextarea = styled(Textarea)`
-  width: 100%;
-`;
-
-const ContentWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-  flex-wrap: wrap;
-
-  > div {
-    min-width: 300px;
-    flex-grow: 4;
-  }
-`;
+import {
+  ContentWrapper,
+  ControlButton,
+  ControlsRow,
+  FullWidthTextarea,
+} from './documentation.styles';
 
 export default function Documentation() {
   const ref = useRef<HTMLDivElement>(null);
@@ -42,9 +29,22 @@ export default function Documentation() {
       case 'italic':
         elem = '*';
         break;
-      case 'strike':
-        elem = '~~';
-        break;
+      case 'quote':
+        elem = '>';
+        setValue(
+          `${value.slice(0, selection.start)}${elem}${value.slice(
+            selection.end
+          )}`
+        );
+        return;
+      case 'link':
+        elem = '[](http://)';
+        setValue(
+          `${value.slice(0, selection.start)}${elem}${value.slice(
+            selection.end
+          )}`
+        );
+        return;
       default:
         return;
     }
@@ -72,19 +72,32 @@ export default function Documentation() {
       </StaticHeader>
 
       <DrawerContent height={headerHeight} spaced>
-        <Button onClick={() => handleButtonClick('bold')} variant="secondary">
-          B
-        </Button>
-        <Button onClick={() => handleButtonClick('italic')} variant="secondary">
-          I
-        </Button>
-        <Button onClick={() => handleButtonClick('strike')} variant="secondary">
-          <del>I</del>
-        </Button>
         <ContentWrapper>
           <div>
+            <ControlsRow>
+              <ControlButton onClick={() => handleButtonClick('bold')}>
+                B
+              </ControlButton>
+              <ControlButton onClick={() => handleButtonClick('italic')}>
+                I
+              </ControlButton>
+              <ControlButton onClick={() => handleButtonClick('quote')}>
+                ``
+              </ControlButton>
+              <ControlButton onClick={() => handleButtonClick('listBulleted')}>
+                <Icon icon="listBulleted" />
+              </ControlButton>
+              <ControlButton onClick={() => handleButtonClick('listNumbered')}>
+                <Icon icon="listNumbered" />
+              </ControlButton>
+              <ControlButton onClick={() => handleButtonClick('link')}>
+                <Icon icon="attachment" />
+              </ControlButton>
+            </ControlsRow>
+
             <FullWidthTextarea
-              labelText="Input"
+              labelText=""
+              labelMode="hidden"
               value={value}
               onChange={(e) => setValue(e.target.value ?? '')}
               onKeyUp={(e) =>
@@ -99,16 +112,19 @@ export default function Documentation() {
                   end: e.target.selectionEnd,
                 })
               }
+              onKeyDown={(e) => e.key === 'Enter' && console.log(e.target)}
             />
           </div>
 
-          <Separator />
-
           <div>
-            <Text variant="bold" smallScreen>
-              Output
-            </Text>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{value}</ReactMarkdown>
+            <div>
+              <Text variant="bold" smallScreen>
+                Esikatselu
+              </Text>
+            </div>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} unwrapDisallowed={false}>
+              {value}
+            </ReactMarkdown>
           </div>
         </ContentWrapper>
       </DrawerContent>
