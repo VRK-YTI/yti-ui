@@ -102,8 +102,7 @@
     "sv": "ruotsi"
   },
   "languages-available": "Kieliä saatavilla",
-  "library": "Tietokomponenttikirjasto",
-  "library-variant": "Ydintietomalli",
+  "library": "Ydintietomalli",
   "library-with-count_one": "Ydintietomalli ({{count}}) kpl",
   "library-with-count_other": "Ydintietomalli ({{count}}) kpl",
   "link-opens-new-window-external": "Avaa uuden ikkunan sivulle",

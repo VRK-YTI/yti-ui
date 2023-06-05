@@ -125,7 +125,7 @@ export default function ModelForm({
             id="library-radio-button"
             disabled={disabled}
           >
-            {t('library-variant', { ns: 'common' })}
+            {t('library', { ns: 'common' })}
           </RadioButton>
         </RadioButtonGroup>
 

@@ -11,7 +11,7 @@ import { LargeModal } from './attribute-modal.styles';
 import { useTranslation } from 'next-i18next';
 import {
   InternalResourcesSearchParams,
-  useGetInternalResourcesMutation,
+  useGetInternalResourcesInfoMutation,
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
@@ -41,7 +41,8 @@ export default function AttributeModal({
   const [visible, setVisible] = useState(false);
   const [selectedId, setSelectedId] = useState('');
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
-  const [searchInternalResources, result] = useGetInternalResourcesMutation();
+  const [searchInternalResources, result] =
+    useGetInternalResourcesInfoMutation();
   const [contentLanguage, setContentLanguage] = useState<string>();
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>({
@@ -134,14 +135,26 @@ export default function AttributeModal({
             }),
           },
           partOf: {
-            label: 'Tietomallin nimi',
-            type: 'Tietomallin tyyppi',
-            domains: ['Asuminen', 'Elinkeinot'],
+            label: getLanguageVersion({
+              data: r.dataModelInfo.label,
+              lang: contentLanguage ?? i18n.language,
+              appendLocale: true,
+            }),
+            type: r.dataModelInfo.modelType,
+            domains: r.dataModelInfo.groups,
           },
           subClass: {
-            label: 'Linkki käsitteeseen',
-            link: '#',
-            partOf: 'Sanaston nimi',
+            label: getLanguageVersion({
+              data: r.conceptInfo?.conceptLabel,
+              lang: contentLanguage ?? i18n.language,
+              appendLocale: true,
+            }),
+            link: r.conceptInfo?.conceptURI,
+            partOf: getLanguageVersion({
+              data: r.conceptInfo?.terminologyLabel,
+              lang: contentLanguage ?? i18n.language,
+              appendLocale: true,
+            }),
           },
         }))
       );

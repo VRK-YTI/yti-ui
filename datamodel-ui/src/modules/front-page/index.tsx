@@ -214,7 +214,7 @@ export default function FrontPage() {
               },
               {
                 id: 'library',
-                label: t('library-variant'),
+                label: t('library'),
               },
             ]}
             partOfText={t('card-information-domains')}

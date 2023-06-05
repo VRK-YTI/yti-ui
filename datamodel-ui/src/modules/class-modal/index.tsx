@@ -11,10 +11,10 @@ import {
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import MultiColumnSearch from '@app/common/components/multi-column-search';
 import { LargeModal, OpenModalButton } from './class-modal.styles';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import {
   InternalResourcesSearchParams,
-  useGetInternalResourcesMutation,
+  useGetInternalResourcesInfoMutation,
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { ResultType } from '@app/common/components/resource-list';
@@ -23,7 +23,10 @@ export interface ClassModalProps {
   modelId: string;
   modalButtonLabel?: string;
   mode?: 'create' | 'select';
-  handleFollowUp: (value?: InternalClass, targetIsAppProfile?: boolean) => void;
+  handleFollowUp: (
+    value?: InternalClassInfo,
+    targetIsAppProfile?: boolean
+  ) => void;
   applicationProfile?: boolean;
   initialSelected?: string;
 }
@@ -42,7 +45,8 @@ export default function ClassModal({
   const [selectedId, setSelectedId] = useState(initialSelected ?? '');
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [contentLanguage, setContentLanguage] = useState<string>();
-  const [searchInternalResources, result] = useGetInternalResourcesMutation();
+  const [searchInternalResources, result] =
+    useGetInternalResourcesInfoMutation();
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>({
       query: '',
@@ -131,19 +135,31 @@ export default function ClassModal({
             isValid: r.status === 'VALID',
             note: getLanguageVersion({
               data: r.note,
-              lang: i18n.language,
+              lang: contentLanguage ?? i18n.language,
               appendLocale: true,
             }),
           },
           partOf: {
-            label: 'Tietomallin nimi',
-            type: 'Tietomallin tyyppi',
-            domains: ['Asuminen', 'Elinkeinot'],
+            label: getLanguageVersion({
+              data: r.dataModelInfo.label,
+              lang: contentLanguage ?? i18n.language,
+              appendLocale: true,
+            }),
+            type: r.dataModelInfo.modelType,
+            domains: r.dataModelInfo.groups,
           },
           subClass: {
-            label: 'Linkki käsitteeseen',
-            link: '#',
-            partOf: 'Sanaston nimi',
+            label: getLanguageVersion({
+              data: r.conceptInfo?.conceptLabel,
+              lang: contentLanguage ?? i18n.language,
+              appendLocale: true,
+            }),
+            link: r.conceptInfo?.conceptURI,
+            partOf: getLanguageVersion({
+              data: r.conceptInfo?.terminologyLabel,
+              lang: contentLanguage ?? i18n.language,
+              appendLocale: true,
+            }),
           },
         }))
       );

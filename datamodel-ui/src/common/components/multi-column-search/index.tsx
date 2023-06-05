@@ -190,7 +190,7 @@ export default function MultiColumnSearch({
             }}
           >
             <DropdownItem value={'LIBRARY'}>
-              {t('library-variant', { ns: 'common' })}
+              {t('library', { ns: 'common' })}
             </DropdownItem>
             <DropdownItem value={'PROFILE'}>
               {t('profile', { ns: 'common' })}
@@ -272,6 +272,7 @@ export default function MultiColumnSearch({
         items={results}
         selected={selectedId}
         handleClick={handleRadioButtonClick}
+        serviceCategories={serviceCategoriesResult}
       />
     </div>
   );
