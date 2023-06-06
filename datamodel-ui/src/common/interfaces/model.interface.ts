@@ -6,6 +6,7 @@ export interface ModelType {
   status: Status;
   label: { [key: string]: string };
   description: { [key: string]: string };
+  documentation: { [key: string]: string };
   languages: string[];
   organizations: Organization[];
   groups: Group[];
@@ -100,4 +101,5 @@ export interface ModelUpdatePayload {
   }[];
   terminologies: string[];
   codeLists: string[];
+  documentation: { [key: string]: string };
 }

@@ -119,6 +119,8 @@
     "model-title": ""
   },
   "description": "",
+  "documentation": "",
+  "documentation-fitted": "",
   "edit": "",
   "editor-comment-hint": "",
   "email": "",
@@ -168,6 +170,7 @@
   "prefix": "",
   "prefix-in-this-service": "",
   "prefix-input-hint-text": "",
+  "preview": "",
   "profile-hint-text": "",
   "range": "",
   "reference-data-counts_one": "",

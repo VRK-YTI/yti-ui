@@ -119,6 +119,8 @@
     "model-title": "Remove model"
   },
   "description": "Description",
+  "documentation": "Documentation",
+  "documentation-fitted": "Documenta-\ntion",
   "edit": "Edit",
   "editor-comment-hint": "Comment is only visible to editors of this data model.",
   "email": "Email",
@@ -168,6 +170,7 @@
   "prefix": "Prefix",
   "prefix-in-this-service": "Prefix (identifier in this service)",
   "prefix-input-hint-text": "Unique prefix for Data Model that can not be changed afterwards. Prefix must start with a lowercase letter and be 2-10 characters long. Valid characters are a-z, 0-9, \"_\" and \"-\".",
+  "preview": "Preview",
   "profile-hint-text": "Data Model related to a context that utilizes Core Models",
   "range": "Range",
   "reference-data-counts_one": "{{count}} reference data",

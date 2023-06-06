@@ -78,6 +78,7 @@ export interface ViewList {
   search: boolean;
   links: boolean;
   graph: boolean;
+  documentation: boolean;
   info: {
     edit: boolean;
     info: boolean;
@@ -91,6 +92,7 @@ const initialView: ViewList = {
   search: false,
   graph: false,
   links: false,
+  documentation: false,
   info: {
     info: false,
     edit: false,

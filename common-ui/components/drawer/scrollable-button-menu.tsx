@@ -17,7 +17,7 @@ const ButtonContainer = styled.div`
 
 const ScrollableButtons = styled.div`
   display: flex;
-  white-space: nowrap;
+  white-space: pre;
   overflow: hidden;
 
   > button {

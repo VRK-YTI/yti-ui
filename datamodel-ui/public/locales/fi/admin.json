@@ -119,6 +119,8 @@
     "model-title": "Poista tietomalli"
   },
   "description": "Kuvaus",
+  "documentation": "Dokumentaatio",
+  "documentation-fitted": "Dokumentaa-\ntio",
   "edit": "Muokkaa",
   "editor-comment-hint": "Kommentti näkyy vain tietomallin muokkaajille.",
   "email": "Sähköposti",
@@ -168,6 +170,7 @@
   "prefix": "Tunnus",
   "prefix-in-this-service": "Etuliite (tunnus tässä palvelussa)",
   "prefix-input-hint-text": "Tietomallin yksilöivä tunnus, jota ei voi muuttaa sanaston luonnin jälkeen. Tunnuksen tulee alkaa pienellä kirjaimella ja sen pitää olla 2-10 merkkiä pitkä. Sallitut merkit ovat a-z, 0-9, \"_\" ja \"-\".",
+  "preview": "Esikatselu",
   "profile-hint-text": "Tiettyyn asiayhteyteen liittyvä tietomalli, joka hyödyntää ydintietomalleja",
   "range": "Tietotyyppi",
   "reference-data-counts_one": "{{count}} koodisto",
