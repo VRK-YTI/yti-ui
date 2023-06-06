@@ -217,7 +217,9 @@ export default function ModelInfoView() {
 
         <BasicBlock title={t('created')}>
           <FormattedDate date={modelInfo.created} />
-          {modelInfo.creator && `, ${modelInfo.creator.name}`}
+          {modelInfo.creator &&
+            modelInfo.creator.name &&
+            `, ${modelInfo.creator.name}`}
         </BasicBlock>
 
         <Separator isLarge />

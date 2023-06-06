@@ -5,6 +5,8 @@ export interface FormErrors {
   languageAmount: boolean;
   titleAmount: string[];
   prefix: boolean;
+  prefixInitChar: boolean;
+  prefixLength: boolean;
   serviceCategories: boolean;
   organizations: boolean;
   contact: boolean;
@@ -15,6 +17,8 @@ export function validateForm(data: ModelFormType) {
     languageAmount: false,
     titleAmount: [],
     prefix: false,
+    prefixInitChar: false,
+    prefixLength: false,
     serviceCategories: false,
     organizations: false,
     contact: false,
@@ -45,6 +49,20 @@ export function validateForm(data: ModelFormType) {
   // Prefix should be defined
   if (!data.prefix || data.prefix.length < 1 || data.prefix === '') {
     errors.prefix = true;
+  }
+
+  // Prefix should not start with a digit
+  if (data.prefix && data.prefix !== '' && /^[0-9]/.test(data.prefix)) {
+    errors.prefixInitChar = true;
+  }
+
+  // Prefix length should be between 2-32 characters
+  if (
+    data.prefix &&
+    data.prefix !== '' &&
+    (data.prefix.length < 2 || data.prefix.length > 32)
+  ) {
+    errors.prefixLength = true;
   }
 
   // Should have at least one service category set
