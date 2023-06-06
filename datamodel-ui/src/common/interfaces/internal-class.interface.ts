@@ -28,6 +28,7 @@ export interface InternalClassInfo extends InternalClass {
     groups: string[];
     status: Status;
     modelType: Type;
+    uri: string;
   };
   conceptInfo: {
     conceptURI: string;
