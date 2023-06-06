@@ -29,6 +29,8 @@ export function classFormToClass(data: ClassFormType): ClassType {
 
 export interface ClassFormErrors {
   identifier: boolean;
+  identifierInitChar: boolean;
+  identifierLength: boolean;
   label: boolean;
   unauthorized?: boolean;
 }
@@ -36,6 +38,8 @@ export interface ClassFormErrors {
 export function validateClassForm(data: ClassFormType): ClassFormErrors {
   const returnErrors: ClassFormErrors = {
     identifier: true,
+    identifierInitChar: true,
+    identifierLength: true,
     label: true,
   };
 
@@ -48,6 +52,18 @@ export function validateClassForm(data: ClassFormType): ClassFormErrors {
 
   if (data.identifier && data.identifier !== '') {
     returnErrors.identifier = false;
+  }
+
+  if (
+    data.identifier &&
+    data.identifier.length > 1 &&
+    data.identifier.length < 33
+  ) {
+    returnErrors.identifierLength = false;
+  }
+
+  if (data.identifier && /^[^0-9]/.test(data.identifier)) {
+    returnErrors.identifierInitChar = false;
   }
 
   return returnErrors;

@@ -28,6 +28,7 @@ import InlineListBlock from '@app/common/components/inline-list-block';
 import {
   selectClass,
   setClass,
+  useGetClassIdentifierFreeQuery,
   usePutClassMutation,
 } from '@app/common/components/class/class.slice';
 import {
@@ -76,6 +77,11 @@ export default function ClassForm({
   );
   const [putClass, putClassResult] = usePutClassMutation();
 
+  const { data: identifierFree, isSuccess } = useGetClassIdentifierFreeQuery(
+    { prefix: modelId, identifier: data.identifier },
+    { skip: isEdit || data.identifier === '' }
+  );
+
   const handleUpdate = (value: ClassFormType) => {
     if (
       userPosted &&
@@ -94,7 +100,10 @@ export default function ClassForm({
     const errors = validateClassForm(data);
     setErrors(errors);
 
-    if (Object.values(errors).filter((val) => val === true).length > 0) {
+    if (
+      Object.values(errors).filter((val) => val === true).length > 0 ||
+      (isSuccess && !identifierFree)
+    ) {
       return;
     }
 
@@ -206,6 +215,8 @@ export default function ClassForm({
       if (backendErrorFields.length > 0) {
         setErrors({
           identifier: backendErrorFields.includes('identifier'),
+          identifierInitChar: false,
+          identifierLength: false,
           label: backendErrorFields.includes('label'),
         });
         return;
@@ -261,7 +272,8 @@ export default function ClassForm({
 
         {userPosted &&
         (Object.values(errors).filter((e) => e).length > 0 ||
-          putClassResult.isError) ? (
+          putClassResult.isError ||
+          (isSuccess && !identifierFree)) ? (
           <div>
             <FormFooterAlert
               labelText={
@@ -310,10 +322,22 @@ export default function ClassForm({
           labelText={t('class-identifier')}
           visualPlaceholder={t('input-class-identifier')}
           defaultValue={data.identifier}
-          status={userPosted && errors.identifier ? 'error' : 'default'}
+          status={
+            (userPosted &&
+              (errors.identifier ||
+                errors.identifierInitChar ||
+                errors.identifierLength)) ||
+            (isSuccess && !identifierFree)
+              ? 'error'
+              : 'default'
+          }
           disabled={isEdit}
           onChange={(e) =>
             handleUpdate({ ...data, identifier: e?.toString() ?? '' })
+          }
+          debounce={300}
+          statusText={
+            isSuccess && !identifierFree ? t('error-prefix-taken') : ''
           }
           tooltipComponent={
             <Tooltip
@@ -526,6 +550,10 @@ export default function ClassForm({
     const translatedErrors = Object.entries(errors)
       .filter((e) => e[1])
       .map((e) => translateClassFormErrors(e[0], t));
+
+    if (isSuccess && !identifierFree) {
+      return [...translatedErrors, t('error-prefix-taken')];
+    }
 
     if (putClassResult.error) {
       const error = putClassResult.error as AxiosBaseQueryError;

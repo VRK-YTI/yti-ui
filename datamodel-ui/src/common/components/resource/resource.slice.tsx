@@ -111,6 +111,18 @@ export const resourceApi = createApi({
         method: 'DELETE',
       }),
     }),
+    getResourceIdentifierFree: builder.query<
+      boolean,
+      {
+        prefix: string;
+        identifier: string;
+      }
+    >({
+      query: (props) => ({
+        url: `/resource/${props.prefix}/free-identifier/${props.identifier}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -190,5 +202,6 @@ export const {
   usePutResourceMutation,
   useGetResourceQuery,
   useDeleteResourceMutation,
+  useGetResourceIdentifierFreeQuery,
   util: { getRunningQueriesThunk, getRunningMutationsThunk },
 } = resourceApi;

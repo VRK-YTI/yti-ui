@@ -15,7 +15,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useGetNodeShapesQuery } from '@app/common/components/class/class.slice';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { translateResourceType } from '@app/common/utils/translation-helpers';
 
 interface ClassRestrictionModalProps {
   visible: boolean;
@@ -48,7 +47,7 @@ export default function ClassRestrictionModal({
       partOf: {
         domains: ['domain-1'],
         label: 'partOfLabel',
-        type: translateResourceType(d.resourceType, t),
+        type: d.resourceType,
       },
       target: {
         identifier: d.id,
@@ -68,7 +67,7 @@ export default function ClassRestrictionModal({
         isValid: d.status === 'VALID',
       },
     }));
-  }, [data, t, i18n.language]);
+  }, [data, i18n.language]);
 
   const handleClose = () => {
     setKeyword('');
@@ -125,7 +124,7 @@ export default function ClassRestrictionModal({
                   partOf: {
                     domains: ['domain-1'],
                     label: 'partOfLabel',
-                    type: 'tyyppi',
+                    type: selectedNodeShape.resourceType,
                   },
                   target: {
                     identifier: selectedNodeShape.identifier,
@@ -176,6 +175,71 @@ export default function ClassRestrictionModal({
                   ? nodeShapes
                   : nodeShapes.filter((n) => n.target.label.includes(keyword))
               }
+              // items={[
+              //   {
+              //     subClass: {
+              //       label: 'subClassLabel',
+              //       link: 'link',
+              //       partOf: 'partOf',
+              //     },
+              //     partOf: {
+              //       domains: ['domain-1'],
+              //       label: 'partOfLabel',
+              //       type: 'LIBRARY',
+              //     },
+              //     target: {
+              //       identifier: 'id-1',
+              //       label: 'targetLabel',
+              //       link: 'link',
+              //       linkLabel: 'linkLabel',
+              //       note: 'tekninen kuvaus',
+              //       status: 'VALID',
+              //       isValid: true,
+              //     },
+              //   },
+              //   {
+              //     subClass: {
+              //       label: 'subClassLabel',
+              //       link: 'link',
+              //       partOf: 'partOf',
+              //     },
+              //     partOf: {
+              //       domains: ['domain-1'],
+              //       label: 'partOfLabel',
+              //       type: 'LIBRARY',
+              //     },
+              //     target: {
+              //       identifier: 'id-2',
+              //       label: 'targetLabel',
+              //       link: 'link',
+              //       linkLabel: 'linkLabel',
+              //       note: 'tekninen kuvaus',
+              //       status: 'VALID',
+              //       isValid: true,
+              //     },
+              //   },
+              //   {
+              //     subClass: {
+              //       label: 'subClassLabel',
+              //       link: 'link',
+              //       partOf: 'partOf',
+              //     },
+              //     partOf: {
+              //       domains: ['domain-2'],
+              //       label: 'partOfLabel',
+              //       type: 'LIBRARY',
+              //     },
+              //     target: {
+              //       identifier: 'id-3',
+              //       label: 'targetLabel',
+              //       link: 'link',
+              //       linkLabel: 'linkLabel',
+              //       note: 'tekninen kuvaus',
+              //       status: 'VALID',
+              //       isValid: true,
+              //     },
+              //   },
+              // ]}
               primaryColumnName={t('class-name')}
               selected={selected}
             />
