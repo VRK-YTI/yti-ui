@@ -28,6 +28,7 @@ export interface ResultType {
     label: string;
     type: Type;
     domains: string[];
+    uri: string;
   };
   subClass: {
     label: string;
@@ -164,8 +165,8 @@ export default function ResourceList({
                 </ExternalLink>
               </div>
             </td>
-            {item.partOf && (
-              <td>
+            <td>
+              {item.partOf?.type ? (
                 <div>
                   <Text>{item.partOf.label}</Text>
                   <div>
@@ -179,7 +180,7 @@ export default function ResourceList({
                   </div>
                   <Text>
                     {item.partOf.domains
-                      .map((domain) =>
+                      ?.map((domain) =>
                         getLanguageVersion({
                           data: serviceCategories?.find(
                             (cat) => cat.identifier === domain
@@ -190,8 +191,12 @@ export default function ResourceList({
                       .join(', ')}
                   </Text>
                 </div>
-              </td>
-            )}
+              ) : (
+                <div>
+                  <Text>{item.partOf?.uri}</Text>
+                </div>
+              )}
+            </td>
             <td>
               <div>
                 {item.subClass.link && (

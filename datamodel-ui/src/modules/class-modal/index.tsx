@@ -147,6 +147,7 @@ export default function ClassModal({
             }),
             type: r.dataModelInfo.modelType,
             domains: r.dataModelInfo.groups,
+            uri: r.dataModelInfo.uri,
           },
           subClass: {
             label: getLanguageVersion({
