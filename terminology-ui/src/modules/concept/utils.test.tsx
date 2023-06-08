@@ -15,7 +15,8 @@ describe('order concept data', () => {
 
     const expectedTermOrder = [
       'finnish pref term',
-      'finnish synonym',
+      'aaa finnish synonym',
+      'zzz finnish synonym',
       'finnish not recommended',
       'swedish pref term',
       'swedish synonym',
@@ -56,7 +57,18 @@ const concept = {
           prefLabel: [
             {
               lang: 'fi',
-              value: 'finnish synonym',
+              value: 'zzz finnish synonym',
+              regex: '(?s)^.*$',
+            },
+          ],
+        },
+      },
+      {
+        properties: {
+          prefLabel: [
+            {
+              lang: 'fi',
+              value: 'aaa finnish synonym',
               regex: '(?s)^.*$',
             },
           ],

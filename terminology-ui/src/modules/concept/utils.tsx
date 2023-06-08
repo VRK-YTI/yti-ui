@@ -28,10 +28,11 @@ const termTypeOrder: { [key: string]: string } = {
  * @returns
  */
 function getCompareKey(term: Term, type: string) {
-  const lang = term.properties.prefLabel?.[0].lang;
-  return `${langOrder[lang ?? ''] ?? `x_${lang}`}_${
-    termTypeOrder[type] ?? 'x'
+  const prefLabel = term.properties.prefLabel?.[0];
+  const langKey = `${
+    langOrder[prefLabel?.lang ?? ''] ?? `x_${prefLabel?.lang}`
   }`;
+  return `${langKey}_${termTypeOrder[type] ?? 'x'}_${prefLabel?.value}`;
 }
 
 export function getBlockData(t: TFunction, concept?: Concept) {
