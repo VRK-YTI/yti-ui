@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Icon } from 'suomifi-ui-components';
+import { IconCheckCircleFilled } from 'suomifi-ui-components';
 
 export const ModalContentWrapper = styled.div`
   > * {
@@ -31,7 +31,7 @@ export const ModalContentProcessing = styled.div`
   }
 `;
 
-export const SuccessIcon = styled(Icon)`
+export const SuccessIcon = styled(IconCheckCircleFilled)`
   color: ${(props) => props.theme.suomifi.colors.successBase};
   width: 46px;
   height: 46px;

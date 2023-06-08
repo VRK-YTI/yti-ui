@@ -62,11 +62,11 @@ export default function Search({
           id="keyword-input"
         />
         <SingleSelect
-          ariaOptionsAvailableText={t('statuses-available')}
+          ariaOptionsAvailableText={t('statuses-available') as string}
           labelText={t('concept-status')}
           clearButtonLabel={t('clear-button-label')}
           items={statuses}
-          noItemsText={t('no-statuses-available')}
+          itemAdditionHelpText={''}
           onItemSelectionChange={(e) => setStatus(e)}
           selectedItem={status ? status : undefined}
           id="status-picker"

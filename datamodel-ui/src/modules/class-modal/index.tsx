@@ -13,7 +13,7 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 import MultiColumnSearch, {
   ResultType,
 } from '@app/common/components/multi-column-search';
-import { LargeModal, OpenModalButton } from './class-modal.styles';
+import { LargeModal } from './class-modal.styles';
 import format from 'yti-common-ui/formatted-date/format';
 import { Locale } from 'yti-common-ui/locale-chooser/use-locales';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
@@ -133,13 +133,13 @@ export default function ClassModal({
 
   return (
     <>
-      <OpenModalButton
+      <Button
         variant="secondary"
         icon={modalButtonLabel ? undefined : <IconPlus />}
         onClick={() => handleOpen()}
       >
         {modalButtonLabel ? modalButtonLabel : t('add-class')}
-      </OpenModalButton>
+      </Button>
 
       <LargeModal
         appElementId="__next"

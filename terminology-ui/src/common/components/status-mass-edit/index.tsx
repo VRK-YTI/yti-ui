@@ -8,7 +8,6 @@ import {
   Button,
   Checkbox,
   CheckboxGroup,
-  IconCheckCircleFilled,
   IconEdit,
   InlineAlert,
   Modal,
@@ -149,9 +148,9 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
 
             <SingleSelect
               labelText={t('start-state-targets')}
-              ariaOptionsAvailableText={t('start-states')}
+              ariaOptionsAvailableText={t('start-states') as string}
               clearButtonLabel={t('clear-selected-start-states')}
-              noItemsText={t('start-states-not-available')}
+              itemAdditionHelpText={''}
               items={[
                 {
                   labelText: t('draft', {
@@ -228,9 +227,9 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
               (chosenTargetType.concept || chosenTargetType.term) && (
                 <SingleSelect
                   labelText={t('targets-end-state')}
-                  ariaOptionsAvailableText={t('end-states')}
+                  ariaOptionsAvailableText={t('end-states') as string}
                   clearButtonLabel={t('clear-selected-end-state')}
-                  noItemsText={t('end-states-not-unavailable')}
+                  itemAdditionHelpText={''}
                   items={[
                     {
                       labelText: translateStatus('DRAFT', t),
@@ -293,7 +292,7 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
             )}
             {result.isSuccess && (
               <>
-                <SuccessIcon icon={<IconCheckCircleFilled />} />
+                <SuccessIcon />
                 <Text variant="bold">{t('done')}</Text>
               </>
             )}

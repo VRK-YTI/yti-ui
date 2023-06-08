@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import {
   Button,
   ExternalLink,
-  IconCheckCircleFilled,
   IconUpload,
   InlineAlert,
   Modal,
@@ -184,7 +183,7 @@ export default function UpdateWithFileModal() {
               </>
             ) : (
               <>
-                <SuccessIcon icon={<IconCheckCircleFilled />} />
+                <SuccessIcon />
                 <Text variant="bold">{t('percent-done', { count: 100 })}</Text>
               </>
             )}

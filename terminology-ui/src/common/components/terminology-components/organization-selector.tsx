@@ -96,6 +96,7 @@ export default function OrganizationSelector({
           ariaSelectedAmountText={t('chosen-organizations')}
           ariaOptionChipRemovedText={t('organization-removed')}
           disabled={disabled}
+          loading={false}
         />
       ) : (
         <>

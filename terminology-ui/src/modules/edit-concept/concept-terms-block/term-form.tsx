@@ -343,12 +343,12 @@ export default function TermForm({
         />
 
         <SingleSelect
-          ariaOptionsAvailableText={t('available-term-families')}
+          ariaOptionsAvailableText={t('available-term-families') as string}
           clearButtonLabel={t('clear-button-label')}
           labelText={t('term-family')}
           optionalText={t('optional')}
-          noItemsText={t('no-term-families-available')}
           visualPlaceholder={t('choose-term-family')}
+          itemAdditionHelpText={''}
           items={termFamily}
           defaultSelectedItem={
             term.termFamily
@@ -364,12 +364,12 @@ export default function TermForm({
         />
 
         <SingleSelect
-          ariaOptionsAvailableText={t('available-term-conjugations')}
+          ariaOptionsAvailableText={t('available-term-conjugations') as string}
           clearButtonLabel={t('clear-button-label')}
           labelText={t('term-conjugation')}
           optionalText={t('optional')}
-          noItemsText={t('no-term-conjugations-available')}
           visualPlaceholder={t('choose-term-conjugation')}
+          itemAdditionHelpText=""
           items={termConjugation}
           defaultSelectedItem={
             term.termConjugation
@@ -399,13 +399,13 @@ export default function TermForm({
         />
 
         <SingleSelect
-          ariaOptionsAvailableText={t('available-term-word-classes')}
+          ariaOptionsAvailableText={t('available-term-word-classes') as string}
           clearButtonLabel={t('clear-button-label')}
           labelText={t('term-word-class')}
           optionalText={t('optional')}
-          noItemsText={t('no-term-word-classes-available')}
           hintText={t('term-word-class-hint-text')}
           visualPlaceholder={t('choose-term-word-class')}
+          itemAdditionHelpText={''}
           items={wordClasses}
           defaultSelectedItem={
             term.wordClass

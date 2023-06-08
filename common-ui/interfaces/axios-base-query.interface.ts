@@ -1,6 +1,6 @@
 import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import { MaybePromise } from '@reduxjs/toolkit/dist/query/tsHelpers';
-import { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import { AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
 import { Context } from 'next-redux-wrapper';
 import { NextApiRequest } from 'next';
 
@@ -12,7 +12,7 @@ export type AxiosBaseQuery = {
     api: Pick<BaseQueryApi, 'getState' | 'endpoint' | 'type' | 'forced'> & {
       extra: NextIronContext;
     }
-  ) => MaybePromise<AxiosRequestHeaders>;
+  ) => MaybePromise<RawAxiosRequestHeaders>;
 };
 
 export type AxiosBaseQueryArgs = {
