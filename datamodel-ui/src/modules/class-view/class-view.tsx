@@ -12,6 +12,9 @@ import {
   Button,
   ExpanderGroup,
   ExternalLink,
+  IconArrowLeft,
+  IconCopy,
+  IconMenu,
   Link,
   SearchInput,
   Text,
@@ -284,7 +287,7 @@ export default function ClassView({
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button
               variant="secondaryNoBorder"
-              icon="arrowLeft"
+              icon={<IconArrowLeft />}
               onClick={() => handleReturn()}
               style={{ textTransform: 'uppercase' }}
             >
@@ -293,7 +296,7 @@ export default function ClassView({
             <div>
               <Button
                 variant="secondary"
-                iconRight="menu"
+                iconRight={<IconMenu />}
                 onClick={() => setShowTooltip(!showTooltip)}
               >
                 {t('actions')}
@@ -353,7 +356,7 @@ export default function ClassView({
             <BasicBlock title={t('class-identifier')}>
               {`${modelId}:${data.identifier}`}
               <Button
-                icon="copy"
+                icon={<IconCopy />}
                 variant="secondary"
                 style={{ width: 'min-content', whiteSpace: 'nowrap' }}
                 onClick={() => navigator.clipboard.writeText(data.identifier)}

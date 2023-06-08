@@ -3,6 +3,8 @@ import {
   Dropdown,
   DropdownItem,
   ExpanderGroup,
+  IconArrowLeft,
+  IconPlus,
   Text,
   Textarea,
   TextInput,
@@ -221,7 +223,7 @@ export default function ClassForm({
       <StaticHeader ref={ref}>
         <div>
           <Button
-            icon="arrowLeft"
+            icon={<IconArrowLeft />}
             variant="secondaryNoBorder"
             onClick={() => handleReturn()}
             style={{ textTransform: 'uppercase' }}
@@ -323,7 +325,7 @@ export default function ClassForm({
 
         <InlineListBlock
           addNewComponent={
-            <Button variant="secondary" icon="plus">
+            <Button variant="secondary" icon={<IconPlus />}>
               {t('add-upper-class')}
             </Button>
           }
@@ -360,7 +362,7 @@ export default function ClassForm({
         ) : (
           <InlineListBlock
             addNewComponent={
-              <Button variant="secondary" icon="plus">
+              <Button variant="secondary" icon={<IconPlus />}>
                 {t('add-corresponding-class')}
               </Button>
             }
@@ -373,7 +375,7 @@ export default function ClassForm({
         <InlineListBlock
           label={t('disjoint-classes', { ns: 'common' })}
           addNewComponent={
-            <Button variant="secondary" icon="plus">
+            <Button variant="secondary" icon={<IconPlus />}>
               {t('add-disjoint-class')}
             </Button>
           }

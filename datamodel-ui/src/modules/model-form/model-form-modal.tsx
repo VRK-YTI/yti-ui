@@ -2,6 +2,7 @@ import { useGetAuthenticatedUserMutMutation } from '@app/common/components/login
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
+  IconPlus,
   InlineAlert,
   Modal,
   ModalContent,
@@ -95,7 +96,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
   return (
     <>
       <Button
-        icon="plus"
+        icon={<IconPlus />}
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}
       >

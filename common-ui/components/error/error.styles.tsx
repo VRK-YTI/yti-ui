@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Block, Heading, Link, StaticIcon } from 'suomifi-ui-components';
+import { Block, Heading, IconFailure, Link } from 'suomifi-ui-components';
 
 export const ErrorCard = styled(Block)<{ $isSmall: boolean }>`
   align-items: ${(props) =>
@@ -16,7 +16,7 @@ export const ErrorCard = styled(Block)<{ $isSmall: boolean }>`
   width: 1110px;
 `;
 
-export const ErrorIcon = styled(StaticIcon)`
+export const ErrorIcon = styled(IconFailure)`
   min-height: 80px;
   min-width: 80px;
 `;

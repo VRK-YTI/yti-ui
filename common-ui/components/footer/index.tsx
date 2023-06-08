@@ -6,6 +6,7 @@ import {
 } from './footer.styles';
 import { useBreakpoints } from '../media-query';
 import { TFunction } from 'next-i18next';
+import Image from 'next/image';
 
 export interface FooterProps {
   t: TFunction;
@@ -26,7 +27,7 @@ export default function Footer({
   return (
     <>
       <FooterContentWrapper id="footer">
-        <img
+        <Image
           src="/logo-suomi.fi.png"
           width="138"
           height="38"

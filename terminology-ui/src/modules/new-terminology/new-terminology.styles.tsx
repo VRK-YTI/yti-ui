@@ -1,16 +1,15 @@
 import styled, { keyframes } from 'styled-components';
-import { Block, Icon, ModalTitle, SingleSelect } from 'suomifi-ui-components';
+import {
+  Block,
+  IconCheck,
+  ModalTitle,
+  SingleSelect,
+} from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
 
 export const ButtonBlock = styled(Block)`
   display: flex;
   gap: 20px;
-`;
-
-export const ErrorIndicator = styled(Icon)`
-  height: 24px;
-  width: 24px;
-  color: ${(props) => props.theme.suomifi.colors.alertBase};
 `;
 
 export const FileBlock = styled(Block)`
@@ -66,7 +65,7 @@ export const ModalTitleAsH1 = styled(ModalTitle)`
   margin-bottom: 28px;
 `;
 
-export const SuccessIndicator = styled(Icon)`
+export const SuccessIndicator = styled(IconCheck)`
   height: 20px;
   width: 20px;
   padding: 10px;

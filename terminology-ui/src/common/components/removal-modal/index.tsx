@@ -16,6 +16,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import {
   Button,
+  IconRemove,
   InlineAlert,
   ModalTitle,
   Notification,
@@ -152,7 +153,7 @@ export default function RemovalModal({
             <BasicBlockExtraWrapper>
               <Button
                 variant="secondary"
-                icon="remove"
+                icon={<IconRemove />}
                 id={`open-remove-${removalData.type}-modal`}
                 onClick={() => handleVisibility()}
               >
@@ -167,7 +168,7 @@ export default function RemovalModal({
         <>
           <Button
             variant="secondary"
-            icon="remove"
+            icon={<IconRemove />}
             id={`open-remove-${removalData.type}-modal`}
             onClick={() => handleVisibility()}
           >

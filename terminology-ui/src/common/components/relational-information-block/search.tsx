@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import {
   Button,
+  IconRemove,
   SearchInput,
   SingleSelect,
   SingleSelectData,
@@ -77,7 +78,7 @@ export default function Search({
         </Button>
         <Button
           variant="secondaryNoBorder"
-          icon="remove"
+          icon={<IconRemove />}
           onClick={() => handleClearValues()}
           id="clear-search-button"
         >

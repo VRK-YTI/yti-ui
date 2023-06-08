@@ -4,6 +4,7 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
   Button,
+  IconPlus,
   ModalContent,
   ModalFooter,
   ModalTitle,
@@ -134,7 +135,7 @@ export default function ClassModal({
     <>
       <OpenModalButton
         variant="secondary"
-        icon={modalButtonLabel ? undefined : 'plus'}
+        icon={modalButtonLabel ? undefined : <IconPlus />}
         onClick={() => handleOpen()}
       >
         {modalButtonLabel ? modalButtonLabel : t('add-class')}
@@ -171,7 +172,7 @@ export default function ClassModal({
                   : t('create-subclass-for-selected')}
               </Button>
               <Button
-                icon="plus"
+                icon={<IconPlus />}
                 disabled={selectedId !== ''}
                 onClick={() => handleSubmit()}
               >

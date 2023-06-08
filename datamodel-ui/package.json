@@ -31,7 +31,7 @@
     "reactflow": "^11.4.2",
     "redux-devtools-extension": "^2.13.9",
     "suomifi-icons": "^7.0.0",
-    "suomifi-ui-components": "^10.0.2",
+    "suomifi-ui-components": "^11.0.0-beta.0",
     "swr": "^2.1.5",
     "uuid": "^9.0.0",
     "validator": "^13.9.0",

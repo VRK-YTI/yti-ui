@@ -4,6 +4,8 @@ import {
   Button,
   Dropdown,
   DropdownItem,
+  IconArrowLeft,
+  IconPlus,
   Text,
   Textarea,
   TextInput,
@@ -226,7 +228,7 @@ export default function CommonForm({
         <div>
           <Button
             variant="secondaryNoBorder"
-            icon="arrowLeft"
+            icon={<IconArrowLeft />}
             style={{ textTransform: 'uppercase' }}
             onClick={() => handleReturn()}
           >
@@ -387,7 +389,7 @@ export default function CommonForm({
               label: resource,
             }))}
             addNewComponent={
-              <Button variant="secondary" icon="plus">
+              <Button variant="secondary" icon={<IconPlus />}>
                 {translateCommonForm('add-upper', type, t)}
               </Button>
             }
@@ -403,7 +405,7 @@ export default function CommonForm({
             label={translateCommonForm('equivalent', type, t)}
             items={[]}
             addNewComponent={
-              <Button variant="secondary" icon="plus">
+              <Button variant="secondary" icon={<IconPlus />}>
                 {translateCommonForm('add-equivalent', type, t)}
               </Button>
             }

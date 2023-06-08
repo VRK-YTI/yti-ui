@@ -142,8 +142,10 @@ export default function ConceptBlock({
               <SingleSelect
                 clearButtonLabel={t('clear-selection')}
                 labelText={t('terminology')}
-                noItemsText={t('no-terminologies-available')}
-                ariaOptionsAvailableText={t('terminologies-available')}
+                noItemsText={t('no-terminologies-available') as string}
+                ariaOptionsAvailableText={
+                  t('terminologies-available') as string
+                }
                 allowItemAddition={false}
                 selectedItem={selectedOption}
                 items={terminologyOptions}

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Block, Button, StaticIcon } from 'suomifi-ui-components';
+import { Block, Button, IconFileGeneric } from 'suomifi-ui-components';
 
 export const FileBlock = styled(Block)`
   background-color: ${(props) => props.theme.suomifi.colors.highlightLight4};
@@ -29,7 +29,7 @@ export const FileInfoBlock = styled(Block)`
   justify-content: space-between;
 `;
 
-export const FileInfoStaticIcon = styled(StaticIcon)`
+export const FileInfoStaticIcon = styled(IconFileGeneric)`
   height: 24px;
   width: 20px;
 `;

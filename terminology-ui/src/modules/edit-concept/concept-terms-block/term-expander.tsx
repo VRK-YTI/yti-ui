@@ -50,13 +50,13 @@ export default function TermExpander({
         title={
           <>
             {primaryText}
-            {displayIcon && <ExpanderIcon icon="error" />}
+            {displayIcon && <ExpanderIcon />}
           </>
         }
         extra={
           <>
             {secondaryText}
-            {completed && <SuccessIcon icon="checkCircleFilled" />}
+            {completed && <SuccessIcon />}
           </>
         }
       />

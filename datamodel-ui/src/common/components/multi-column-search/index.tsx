@@ -6,7 +6,7 @@ import {
   Dropdown,
   DropdownItem,
   ExternalLink,
-  Icon,
+  IconCalendar,
   RadioButton,
   SearchInput,
   SingleSelect,
@@ -150,7 +150,7 @@ export default function MultiColumnSearch({
 
   const handleSearchChange = (
     key: keyof InternalResourcesSearchParams,
-    value: typeof searchParams[keyof InternalResourcesSearchParams]
+    value: (typeof searchParams)[keyof InternalResourcesSearchParams]
   ) => {
     if (key === 'groups' && isEqual(value, ['-1'])) {
       setSearchParams({ ...searchParams, [key]: [] });
@@ -225,7 +225,9 @@ export default function MultiColumnSearch({
         <SingleSelect
           labelText={t('information-domain')}
           itemAdditionHelpText=""
-          ariaOptionsAvailableText={t('information-domains-available')}
+          ariaOptionsAvailableText={
+            t('information-domains-available') as string
+          }
           clearButtonLabel={t('clear-selection')}
           defaultSelectedItem={serviceCategories.find(
             (category) => category.uniqueItemId === '-1'
@@ -325,7 +327,8 @@ export default function MultiColumnSearch({
                 <div>
                   <Text>{result.partOf.label}</Text>
                   <Text>
-                    <Icon icon="calendar" /> {result.partOf.type}
+                    <IconCalendar />
+                    {result.partOf.type}
                   </Text>
                   <Text>{result.partOf.domains.join(', ')}</Text>
                 </div>

@@ -13,6 +13,7 @@ import {
   Button,
   Dropdown,
   DropdownItem,
+  IconRemove,
   SingleSelect,
   TextInput,
 } from 'suomifi-ui-components';
@@ -143,7 +144,7 @@ export default function TermForm({
         {handleRemoveTerm && !isSmall && (
           <TermFormRemoveButton
             variant="secondaryNoBorder"
-            icon="remove"
+            icon={<IconRemove />}
             onClick={() => handleRemoveTerm(term.id)}
           >
             {t('remove-term', { count: 1 })}
@@ -422,7 +423,7 @@ export default function TermForm({
           <TermFormBottomBlock>
             <TermFormRemoveButton
               variant="secondaryNoBorder"
-              icon="remove"
+              icon={<IconRemove />}
               onClick={() => handleRemoveTerm(term.id)}
             >
               {t('remove-term', { count: 1 })}

@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
   Button,
+  IconAlertOff,
   ModalFooter,
   ModalTitle,
   Paragraph,
@@ -77,7 +78,7 @@ export default function RemoveSubscription({
       {resources && (
         <Button
           variant="secondary"
-          icon="alertOff"
+          icon={<IconAlertOff />}
           onClick={() => setVisible(true)}
           id="remove-all-notifications-button"
         >
@@ -88,7 +89,7 @@ export default function RemoveSubscription({
       {resource && (
         <IconButton
           variant="secondary"
-          icon="alertOff"
+          icon={<IconAlertOff />}
           color="currentColor"
           onClick={() => setVisible(true)}
         />

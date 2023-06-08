@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SearchInput } from 'suomifi-ui-components';
+import { IconSearch, SearchInput } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import IconButton from '../icon-button';
 import { useBreakpoints } from '../media-query';
@@ -44,7 +44,7 @@ export default function HeaderSearch({
   if (isSmall && !isSearchOpen) {
     return (
       <IconButton
-        icon="search"
+        icon={<IconSearch />}
         aria-label={t('terminology-search-open')}
         onClick={() => setIsSearchOpen(true)}
       />

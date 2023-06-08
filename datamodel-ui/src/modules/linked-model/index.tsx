@@ -4,6 +4,7 @@ import {
   Checkbox,
   Chip,
   ExternalLink,
+  IconPlus,
   Modal,
   ModalContent,
   ModalFooter,
@@ -163,7 +164,11 @@ export default function LinkedModel({
 
   return (
     <>
-      <Button variant="secondary" icon="plus" onClick={() => setVisible(true)}>
+      <Button
+        variant="secondary"
+        icon={<IconPlus />}
+        onClick={() => setVisible(true)}
+      >
         {t('add-data-model')}
       </Button>
       <Modal

@@ -11,7 +11,15 @@ import { useMemo } from 'react';
 import Graph from '../graph';
 import LinkedDataView from '../linked-data-view';
 import { compareLocales } from '@app/common/utils/compare-locals';
-import CodeListModal from '../code-list-modal';
+import {
+  IconApplicationProfile,
+  IconInfo,
+  IconLink,
+  IconRows,
+  IconSearch,
+  IconSwapVertical,
+  IconWindow,
+} from 'suomifi-ui-components';
 
 interface ModelProps {
   modelId: string;
@@ -44,24 +52,24 @@ export default function Model({ modelId }: ModelProps) {
             views={[
               {
                 id: 'search',
-                icon: 'search',
+                icon: <IconSearch />,
                 buttonLabel: t('search-variant'),
                 component: <SearchView modelId={modelId} />,
               },
               {
                 id: 'graph',
-                icon: 'applicationProfile',
+                icon: <IconApplicationProfile />,
                 buttonLabel: t('graph'),
               },
               {
                 id: 'info',
-                icon: 'info',
+                icon: <IconInfo />,
                 buttonLabel: t('details'),
                 component: <ModelInfoView />,
               },
               {
                 id: 'links',
-                icon: 'attachment',
+                icon: <IconLink />,
                 buttonLabel: t('links'),
                 component: (
                   <LinkedDataView
@@ -72,7 +80,7 @@ export default function Model({ modelId }: ModelProps) {
               },
               {
                 id: 'classes',
-                icon: 'chatHeart',
+                icon: <IconWindow />,
                 buttonLabel: t('classes'),
                 component: (
                   <ClassView
@@ -87,7 +95,7 @@ export default function Model({ modelId }: ModelProps) {
               },
               {
                 id: 'attributes',
-                icon: 'history',
+                icon: <IconRows />,
                 buttonLabel: t('attributes'),
                 buttonLabelSm: t('attributes-abbreviation'),
                 component: (
@@ -102,7 +110,7 @@ export default function Model({ modelId }: ModelProps) {
               },
               {
                 id: 'associations',
-                icon: 'swapVertical',
+                icon: <IconSwapVertical />,
                 buttonLabel: t('associations'),
                 buttonLabelSm: t('associations-abbreviation'),
                 component: (

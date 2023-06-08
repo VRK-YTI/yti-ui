@@ -1,4 +1,10 @@
-import { Button, ExternalLink, Text, TextInput } from 'suomifi-ui-components';
+import {
+  Button,
+  ExternalLink,
+  IconRemove,
+  Text,
+  TextInput,
+} from 'suomifi-ui-components';
 import { LinkedItemWrapper } from './linked-data-form.styles';
 import { useTranslation } from 'next-i18next';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
@@ -57,7 +63,7 @@ export default function LinkedItem({
       <div>
         <Button
           variant="secondaryNoBorder"
-          icon="remove"
+          icon={<IconRemove />}
           onClick={() => handleRemove(getId())}
         >
           {t('remove')}

@@ -14,6 +14,7 @@ import {
   Title,
 } from './access-request.styles';
 import { AccessRequestModalProps } from './access-request-modal';
+import { IconMessage } from 'suomifi-ui-components';
 
 const AccessRequestModal = dynamic<AccessRequestModalProps>(() =>
   import('./access-request-modal').then((module) => module.default)
@@ -81,7 +82,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
 
       <ModalButton
         variant="secondary"
-        icon="message"
+        icon={<IconMessage />}
         onClick={() => setVisible(true)}
         disabled={requestsError ? true : false}
         id="access-request-button"

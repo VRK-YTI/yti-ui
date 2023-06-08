@@ -4,7 +4,6 @@ import ContactInfo from '@app/common/components/terminology-components/contact-i
 import InformationDomainsSelector from '@app/common/components/terminology-components/information-domains-selector';
 import { TallerSeparator } from './new-terminology.styles';
 import OrganizationSelector from '@app/common/components/terminology-components/organization-selector';
-// import Prefix from '@app/common/components/terminology-components/prefix';
 import Prefix from 'yti-common-ui/form/prefix';
 import TypeSelector from '@app/common/components/terminology-components/type-selector';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';

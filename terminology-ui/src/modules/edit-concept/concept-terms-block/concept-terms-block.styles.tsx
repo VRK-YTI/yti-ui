@@ -6,7 +6,8 @@ import {
   Dropdown,
   ExpanderGroup,
   Heading,
-  Icon,
+  IconCheckCircleFilled,
+  IconError,
   RadioButtonGroup,
   SingleSelect,
   Text,
@@ -23,8 +24,7 @@ export const MediumHeading = styled(Heading)`
   line-height: 24px !important;
 `;
 
-export const SuccessIcon = styled(Icon)`
-  // expander group has icon color with higher precedence
+export const SuccessIcon = styled(IconCheckCircleFilled)`
   color: ${(props) => props.theme.suomifi.colors.successBase} !important;
   margin-left: ${(props) => props.theme.suomifi.spacing.insetXs};
 `;
@@ -132,7 +132,7 @@ export const ModalTermTypeBlock = styled(Block)`
   }
 `;
 
-export const ExpanderIcon = styled(Icon)`
+export const ExpanderIcon = styled(IconError)`
   color: ${(props) => props.theme.suomifi.colors.alertBase} !important;
   margin-left: ${(props) => props.theme.suomifi.spacing.xs};
   position: relative;

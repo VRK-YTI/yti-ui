@@ -1,7 +1,8 @@
+import { ReactNode } from 'react';
 import { translateStatus } from '../../utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
-import { BaseIconKeys, Icon, VisuallyHidden } from 'suomifi-ui-components';
+import { VisuallyHidden } from 'suomifi-ui-components';
 import {
   OrganizationParagraph,
   CardBlock,
@@ -19,7 +20,7 @@ interface ResultCardProps {
   contributors?: string[];
   description?: string;
   extra?: JSX.Element | string;
-  icon?: BaseIconKeys;
+  icon?: ReactNode;
   noChip?: boolean;
   noDescriptionText: string;
   partOfText?: string;
@@ -57,7 +58,7 @@ export default function ResultCard({
       )}
       <Link passHref href={titleLink}>
         <TitleLink href="">
-          {icon && <Icon icon={icon} style={{ minWidth: 'max-content' }} />}
+          {icon && icon}
           <Title variant="h2" id="card-title-link">
             <SanitizedTextContent text={title} />
             <VisuallyHidden>

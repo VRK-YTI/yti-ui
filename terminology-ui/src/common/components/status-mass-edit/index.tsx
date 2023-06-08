@@ -8,6 +8,8 @@ import {
   Button,
   Checkbox,
   CheckboxGroup,
+  IconCheckCircleFilled,
+  IconEdit,
   InlineAlert,
   Modal,
   ModalContent,
@@ -116,7 +118,11 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
 
   return (
     <>
-      <Button variant="secondary" icon="edit" onClick={() => handleOpen()}>
+      <Button
+        variant="secondary"
+        icon={<IconEdit />}
+        onClick={() => handleOpen()}
+      >
         {t('change-concepts-status')}
       </Button>
 
@@ -287,7 +293,7 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
             )}
             {result.isSuccess && (
               <>
-                <SuccessIcon icon="checkCircleFilled" />
+                <SuccessIcon icon={<IconCheckCircleFilled />} />
                 <Text variant="bold">{t('done')}</Text>
               </>
             )}

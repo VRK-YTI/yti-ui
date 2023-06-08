@@ -6,6 +6,7 @@ import {
   Dropdown,
   DropdownItem,
   ExternalLink,
+  IconPlus,
   Modal,
   ModalContent,
   ModalFooter,
@@ -21,7 +22,7 @@ import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import {
   useGetCodesQuery,
   useGetInfoDomainsQuery,
-} from '@app/common/components/code';
+} from '@app/common/components/code/code.slice';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { ModelCodeList } from '@app/common/interfaces/model.interface';
@@ -132,7 +133,11 @@ export default function CodeListModal({
 
   return (
     <>
-      <Button variant="secondary" icon="plus" onClick={() => setVisible(true)}>
+      <Button
+        variant="secondary"
+        icon={<IconPlus />}
+        onClick={() => setVisible(true)}
+      >
         {t('add-reference-data')}
       </Button>
 

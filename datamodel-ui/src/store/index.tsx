@@ -7,7 +7,7 @@ import { serviceCategoriesApi } from '@app/common/components/service-categories/
 import { organizationsApi } from '@app/common/components/organizations/organizations.slice';
 import { searchModelsApi } from '@app/common/components/search-models/search-models.slice';
 import { fakeableUsersApi } from '@app/common/components/fakeable-users/fakeable-users.slice';
-import { prefixApi } from '@app/common/components/prefix';
+import { prefixApi } from '@app/common/components/prefix/prefix.slice';
 import { modelApi, modelSlice } from '@app/common/components/model/model.slice';
 import { classApi, classSlice } from '@app/common/components/class/class.slice';
 import { searchInternalResourcesApi } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
@@ -21,7 +21,7 @@ import { conceptSearchApi } from '@app/common/components/concept-search/concept-
 import { graphSlice } from '@app/common/components/graph/graph.slice';
 import { visualizationApi } from '@app/common/components/visualization/visualization.slice';
 import { activeSlice } from '@app/common/components/active/active.slice';
-import { codeApi, codeIntake } from '@app/common/components/code';
+import { codeApi, codeIntake } from '@app/common/components/code/code.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
