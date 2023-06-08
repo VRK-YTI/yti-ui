@@ -77,8 +77,7 @@ describe('term-form', () => {
       { wrapper: themeProvider }
     );
 
-    // Expect two tr-statuses.draft because the default value in dropdown is draft.
-    expect(screen.getAllByText(/tr-statuses\.draft/)).toHaveLength(2);
+    expect(screen.getByText(/tr-statuses\.draft/)).toBeInTheDocument();
 
     userEvent.click(screen.getAllByText(/tr-statuses\.draft/)[0]);
 

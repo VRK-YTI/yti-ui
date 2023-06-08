@@ -47,8 +47,8 @@ describe('access-request', () => {
     );
 
     userEvent.click(screen.getByText('tr-access-request-access'));
-    const el = await screen.findAllByText('tr-access-pick-org');
-    expect(el).toHaveLength(2);
+    const el = await screen.findByText('tr-access-pick-org');
+    expect(el).toBeInTheDocument();
     expect(screen.getByText(/tr-access-terminology/)).toBeInTheDocument();
     expect(screen.getByText(/tr-access-reference-data/)).toBeInTheDocument();
     expect(screen.getByText(/tr-access-data-vocabularies/)).toBeInTheDocument();

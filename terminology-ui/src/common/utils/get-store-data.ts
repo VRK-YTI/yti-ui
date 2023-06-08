@@ -12,12 +12,14 @@ interface FuncProps {
 // This causes a problem where we could have empty objects ({})
 // that cannot be filtered in a way that TS understands.
 export function getStoreData({ state, reduxKey, functionKey }: FuncProps) {
-  if (Object.keys(state[reduxKey]).includes('queries')) {
-    const key = Object.keys((state[reduxKey] as any).queries).filter((k) =>
+  const data = state[reduxKey] as any;
+
+  if (typeof data !== 'undefined' && Object.keys(data).includes('queries')) {
+    const key = Object.keys(data.queries).filter((k) =>
       k.includes(functionKey)
     )?.[0];
 
-    return key ? (state[reduxKey] as any).queries[key].data : {};
+    return key ? data.queries[key].data : {};
   }
 
   return {};
