@@ -1,70 +1,39 @@
 import { HYDRATE } from 'next-redux-wrapper';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { CodeInformationDomainType } from '@app/common/interfaces/code-information-domain';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { CodeType } from '@app/common/interfaces/code';
+import { getCodeListApiBaseQuery } from '@app/store/api-base-query';
+import { CodeRegistry } from '@app/common/interfaces/code-registry';
 
 function generateUrl({
+  lang,
   searchTerm,
-  infoDomain,
+  codeRegistryCodeValue,
+  pageFrom,
 }: {
+  lang: string;
   searchTerm?: string;
-  infoDomain?: string;
+  codeRegistryCodeValue?: string;
+  pageFrom?: number;
 }): string {
-  if (!searchTerm && !infoDomain) {
-    return '/codeschemes?expand=codeRegistry,externalReference,propertyType,code,organization,extension,valueType,searchHit&searchCodes=false&searchExtensions=false&language=fi';
+  const pageSize = '&pageSize=20';
+  const pageStart = `&from=${pageFrom ? (pageFrom - 1) * 20 : 0}`;
+
+  if (!searchTerm && !codeRegistryCodeValue) {
+    return `/codeschemes?expand=codeRegistry,externalReference,propertyType,code,organization,extension,valueType,searchHit&searchCodes=false&searchExtensions=false&language=${lang}${pageSize}${pageStart}`;
   }
 
-  const base =
-    '/codeschemes?expand=codeRegistry,externalReference,propertyType,code,organization,extension,valueType,searchHit&searchCodes=false&searchExtensions=false&language=fi';
+  const base = `/codeschemes?expand=codeRegistry,externalReference,propertyType,code,organization,extension,valueType,searchHit&searchCodes=false&searchExtensions=false&language=${lang}`;
   const term = searchTerm ? `&searchTerm=${searchTerm}` : '';
-  const domain = infoDomain ? `&infoDomain=${infoDomain}` : '';
+  const codeRegistry = codeRegistryCodeValue
+    ? `&codeRegistryCodeValue=${codeRegistryCodeValue}`
+    : '';
 
-  return `${base}${term}${domain}`;
+  return `${base}${term}${codeRegistry}${pageSize}${pageStart}`;
 }
-
-export const codeIntake = createApi({
-  reducerPath: 'codeIntakeApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/codelist-intake' }),
-  tagTypes: ['codeIntakeApi'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
-  endpoints: (builder) => ({
-    getInfoDomains: builder.query<
-      {
-        meta: {
-          code: number;
-          resultCouts: number;
-        };
-        results: CodeInformationDomainType[];
-      },
-      { lang: string }
-    >({
-      query: (props) => ({
-        url: `/infodomains/?language=${props.lang}`,
-        method: 'GET',
-      }),
-      transformResponse: (response: {
-        meta: {
-          code: number;
-          resultCouts: number;
-        };
-        results: CodeInformationDomainType[];
-      }) => {
-        return {
-          ...response,
-          results: response.results.reverse(),
-        };
-      },
-    }),
-  }),
-});
 
 export const codeApi = createApi({
   reducerPath: 'codeApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/codelist-api' }),
+  baseQuery: getCodeListApiBaseQuery(),
   tagTypes: ['codeApi'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
@@ -82,8 +51,10 @@ export const codeApi = createApi({
         results: CodeType[];
       },
       {
+        lang: string;
         searchTerm?: string;
-        infoDomain?: string;
+        codeRegistryCodeValue?: string;
+        pageFrom?: number;
       }
     >({
       query: (props) => ({
@@ -91,11 +62,26 @@ export const codeApi = createApi({
         method: 'GET',
       }),
     }),
+    getCodeRegistries: builder.query<
+      {
+        meta: {
+          code: number;
+          from: number;
+          resultCount: number;
+          totalResults: number;
+        };
+        results: CodeRegistry[];
+      },
+      void
+    >({
+      query: () => ({
+        url: '/coderegistries',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { useGetInfoDomainsQuery } = codeIntake;
-export const { useGetCodesQuery } = codeApi;
+export const { useGetCodesQuery, useGetCodeRegistriesQuery } = codeApi;
 
-export const { getInfoDomains } = codeIntake.endpoints;
 export const { getCodes } = codeApi.endpoints;

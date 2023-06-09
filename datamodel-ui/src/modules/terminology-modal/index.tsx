@@ -291,7 +291,12 @@ export default function TerminologyModal({
                 </div>
 
                 <div>
-                  <ExternalLink href={result.uri} labelNewWindow="">
+                  <ExternalLink
+                    href={result.uri}
+                    labelNewWindow={t('link-opens-new-window-external', {
+                      ns: 'common',
+                    })}
+                  >
                     <SanitizedTextContent text={result.uri} />
                   </ExternalLink>
                 </div>

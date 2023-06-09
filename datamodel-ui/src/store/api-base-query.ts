@@ -188,3 +188,10 @@ export const getTerminologyBaseQuery = (
       return headers;
     },
   });
+
+export const getCodeListApiBaseQuery = () =>
+  axiosBaseQuery({
+    baseUrl: process.env.CODELIST_API_URL
+      ? `${process.env.CODELIST_API_URL}/api/v1`
+      : '/codelist-api/api/v1',
+  });

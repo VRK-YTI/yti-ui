@@ -8,4 +8,5 @@ export interface NewModel {
   prefix: string;
   status: string;
   type: string;
+  contact: string;
 }

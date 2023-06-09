@@ -32,10 +32,12 @@ export default function AttributeView({
   modelId,
   languages,
   terminologies,
+  applicationProfile,
 }: {
   modelId: string;
   languages: string[];
   terminologies: string[];
+  applicationProfile?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
@@ -75,6 +77,7 @@ export default function AttributeView({
     {
       modelId: modelId,
       resourceIdentifier: currentAttributeId ?? '',
+      applicationProfile,
     },
     {
       skip: typeof currentAttributeId === 'undefined',
@@ -229,6 +232,7 @@ export default function AttributeView({
         languages={languages}
         terminologies={terminologies}
         isEdit={isEdit}
+        applicationProfile={applicationProfile}
       />
     );
   }

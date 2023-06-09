@@ -159,7 +159,7 @@ export default function CommonViewContent({
             data: data.label,
             lang: i18n.language,
           })}`}
-          labelNewWindow=""
+          labelNewWindow={t('link-opens-new-window-external')}
         >
           {translateCommonForm('contact', data.type, t)}
         </ExternalLink>

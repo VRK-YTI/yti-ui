@@ -20,12 +20,13 @@ import { FilterBlock, ResultBlock, StatusChip } from './code-list-modal.styles';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import {
+  useGetCodeRegistriesQuery,
   useGetCodesQuery,
-  useGetInfoDomainsQuery,
 } from '@app/common/components/code/code.slice';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { ModelCodeList } from '@app/common/interfaces/model.interface';
+import { DetachedPagination } from 'yti-common-ui/pagination';
 
 export default function CodeListModal({
   initialData,
@@ -53,30 +54,37 @@ export default function CodeListModal({
     initialData.map((d) => d.id) ?? []
   );
   const [selectedGroup, setSelectedGroup] = useState(defaultGroup);
-  const { data: codeListInfoDomains } = useGetInfoDomainsQuery({
-    lang: i18n.language,
-  });
+  const [currPage, setCurrPage] = useState(1);
   const { data: codes, isSuccess } = useGetCodesQuery({
+    lang: i18n.language ?? 'fi',
     searchTerm: filter.keyword !== '' ? filter.keyword : undefined,
-    infoDomain: filter.group !== '' ? filter.group : undefined,
+    codeRegistryCodeValue: !['', 'all-groups'].includes(filter.group)
+      ? filter.group
+      : undefined,
+    pageFrom: currPage,
   });
+  const { data: codeRegistries } = useGetCodeRegistriesQuery();
 
   const groups = useMemo(
     () => [
       defaultGroup,
-      ...(codeListInfoDomains?.results.map((infoDomain) => ({
-        name: getLanguageVersion({
-          data: infoDomain.prefLabel,
-          lang: i18n.language,
-        }),
-        labelText: getLanguageVersion({
-          data: infoDomain.prefLabel,
-          lang: i18n.language,
-        }),
-        uniqueItemId: infoDomain.codeValue,
-      })) ?? []),
+      ...(codeRegistries?.results
+        .map((registry) => ({
+          name: getLanguageVersion({
+            data: registry.prefLabel,
+            lang: i18n.language,
+            appendLocale: true,
+          }),
+          labelText: getLanguageVersion({
+            data: registry.prefLabel,
+            lang: i18n.language,
+            appendLocale: true,
+          }),
+          uniqueItemId: registry.codeValue,
+        }))
+        .sort((a, b) => (a.labelText > b.labelText ? 1 : -1)) ?? []),
     ],
-    [codeListInfoDomains, i18n.language, defaultGroup]
+    [codeRegistries, i18n.language, defaultGroup]
   );
 
   const handleClose = () => {
@@ -89,6 +97,7 @@ export default function CodeListModal({
     setSelectedGroup(defaultGroup);
     setSelected(initialData.map((d) => d.id));
     setVisible(false);
+    setCurrPage(1);
   };
 
   const handleSubmit = () => {
@@ -109,6 +118,8 @@ export default function CodeListModal({
   };
 
   const handleGroupChange = (id: string | null) => {
+    setCurrPage(1);
+
     if (!id) {
       setSelectedGroup(defaultGroup);
       setFilter({ ...filter, group: '' });
@@ -154,12 +165,13 @@ export default function CodeListModal({
             <div>
               <TextInput
                 labelText={t('search-for-reference-data')}
-                onChange={(e) =>
+                onChange={(e) => {
                   setFilter({
                     ...filter,
                     keyword: e?.toString() ?? '',
-                  })
-                }
+                  });
+                  setCurrPage(1);
+                }}
                 debounce={300}
               />
 
@@ -190,7 +202,10 @@ export default function CodeListModal({
               <Dropdown
                 labelText={t('show-statuses')}
                 defaultValue="all-statuses"
-                onChange={(e) => setFilter({ ...filter, status: e })}
+                onChange={(e) => {
+                  setFilter({ ...filter, status: e });
+                  setCurrPage(1);
+                }}
               >
                 {statuses.map((status) => (
                   <DropdownItem key={`status-${status}`} value={status}>
@@ -288,6 +303,14 @@ export default function CodeListModal({
               </div>
             )}
           </ResultBlock>
+          {codes && codes.meta.totalResults > 20 && (
+            <DetachedPagination
+              currentPage={currPage}
+              maxPages={Math.ceil(codes.meta.totalResults / 20)}
+              maxTotal={20}
+              setCurrentPage={(e) => setCurrPage(e)}
+            />
+          )}
         </ModalContent>
 
         <ModalFooter>

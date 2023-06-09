@@ -5,11 +5,11 @@ import { Type } from '../interfaces/type.interface';
 export function translateModelType(type: Type, t: TFunction) {
   switch (type) {
     case 'LIBRARY':
-      return t('library');
+      return t('library', { ns: 'common' });
     case 'PROFILE':
-      return t('profile');
+      return t('profile', { ns: 'common' });
     default:
-      return t('profile');
+      return t('profile', { ns: 'common' });
   }
 }
 
@@ -32,10 +32,16 @@ export function translateModelFormErrors(error: string, t: TFunction) {
       return t('missing-language-title', { ns: 'admin' });
     case 'prefix':
       return t('missing-prefix', { ns: 'admin' });
+    case 'prefixInitChar':
+      return t('prefix-invalid-initial-character', { ns: 'admin' });
+    case 'prefixLength':
+      return t('prefix-invalid-length', { ns: 'admin' });
     case 'serviceCategories':
       return t('missing-information-domain', { ns: 'admin' });
     case 'organizations':
       return t('missing-organizations', { ns: 'admin' });
+    case 'contact':
+      return t('missing-contact', { ns: 'admin' });
     default:
       return t('missing-general', { ns: 'admin' });
   }
@@ -45,6 +51,10 @@ export function translateClassFormErrors(error: string, t: TFunction) {
   switch (error) {
     case 'identifier':
       return t('class-missing-identifier', { ns: 'admin' });
+    case 'identifierInitChar':
+      return t('class-invalid-identifier-first-character', { ns: 'admin' });
+    case 'identifierLength':
+      return t('class-invalid-identifier-length', { ns: 'admin' });
     case 'label':
       return t('class-missing-language-title', { ns: 'admin' });
     case 'unauthorized':
@@ -163,6 +173,14 @@ export function translateCommonFormErrors(
       return type === ResourceType.ASSOCIATION
         ? t('association-missing-identifier', { ns: 'admin' })
         : t('attribute-missing-identifier', { ns: 'admin' });
+    case 'identifierInitChar':
+      return type === ResourceType.ASSOCIATION
+        ? t('association-invalid-identifier-first-character', { ns: 'admin' })
+        : t('attribute-invalid-identifier-first-character', { ns: 'admin' });
+    case 'identifierLength':
+      return type === ResourceType.ASSOCIATION
+        ? t('association-invalid-identifier-length', { ns: 'admin' })
+        : t('attribute-invalid-identifier-length', { ns: 'admin' });
     case 'unauthorized':
       return t('error-unauthenticated', { ns: 'admin' });
     default:

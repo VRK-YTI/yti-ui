@@ -102,6 +102,7 @@ export default function Model({ modelId }: ModelProps) {
                   <AttributeView
                     modelId={modelId}
                     languages={languages}
+                    applicationProfile={modelInfo?.type === 'PROFILE'}
                     terminologies={
                       modelInfo?.terminologies.map((t) => t.uri) ?? []
                     }
@@ -117,6 +118,7 @@ export default function Model({ modelId }: ModelProps) {
                   <AssociationView
                     modelId={modelId}
                     languages={languages}
+                    applicationProfile={modelInfo?.type === 'PROFILE'}
                     terminologies={
                       modelInfo?.terminologies.map((t) => t.uri) ?? []
                     }

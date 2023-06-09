@@ -235,7 +235,12 @@ export default function ConceptBlock({
                           )}
                         </Text>
 
-                        <ExternalLink href={c.uri} labelNewWindow="">
+                        <ExternalLink
+                          href={c.uri}
+                          labelNewWindow={t('link-opens-new-window-external', {
+                            ns: 'common',
+                          })}
+                        >
                           {c.uri}
                         </ExternalLink>
                       </div>

@@ -125,7 +125,7 @@ export default function ModelForm({
             id="library-radio-button"
             disabled={disabled}
           >
-            {t('library-variant', { ns: 'common' })}
+            {t('library', { ns: 'common' })}
           </RadioButton>
         </RadioButtonGroup>
 
@@ -187,7 +187,7 @@ export default function ModelForm({
           </div>
 
           <Dropdown
-            labelText={'Tila'}
+            labelText={t('status')}
             defaultValue={formData.status ?? ''}
             onChange={(e) =>
               setFormData({
@@ -216,6 +216,14 @@ export default function ModelForm({
       );
     }
 
+    const errorInPrefix = () => {
+      if (!errors || !('prefix' in errors)) {
+        return false;
+      }
+
+      return errors.prefix || errors.prefixInitChar || errors.prefixLength;
+    };
+
     return (
       <>
         <Prefix
@@ -228,7 +236,7 @@ export default function ModelForm({
           }
           validatePrefixMutation={useGetFreePrefixMutation}
           typeInUri={'datamodel/ns'}
-          error={errors && 'prefix' in errors ? errors?.prefix : false}
+          error={errorInPrefix()}
           translations={{
             automatic: t('create-prefix-automatically'),
             errorInvalid: t('error-prefix-invalid'),
@@ -344,6 +352,7 @@ export default function ModelForm({
           optional: t('optional'),
           undefined: t('still-unknown'),
         }}
+        error={errors?.contact}
         disabled={disabled}
       />
     );

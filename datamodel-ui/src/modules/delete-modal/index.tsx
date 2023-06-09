@@ -70,7 +70,11 @@ export default function DeleteModal({
         applicationProfile,
       });
     } else {
-      deleteResource({ modelId: modelId, resourceId: resourceId ?? '' });
+      deleteResource({
+        modelId: modelId,
+        resourceId: resourceId ?? '',
+        applicationProfile,
+      });
     }
   };
 

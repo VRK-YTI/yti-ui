@@ -223,7 +223,9 @@ export default function ModelInfoView() {
 
         <BasicBlock title={t('created')}>
           <FormattedDate date={modelInfo.created} />
-          {modelInfo.creator && `, ${modelInfo.creator.name}`}
+          {modelInfo.creator &&
+            modelInfo.creator.name &&
+            `, ${modelInfo.creator.name}`}
         </BasicBlock>
 
         <Separator isLarge />
@@ -246,7 +248,7 @@ export default function ModelInfoView() {
               data: modelInfo.label,
               lang: i18n.language,
             })}`}
-            labelNewWindow=""
+            labelNewWindow={t('link-opens-new-window-external')}
           >
             {modelInfo.contact ?? 'yhteentoimivuus@dvv.fi'}
           </ExternalLink>

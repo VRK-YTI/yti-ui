@@ -32,10 +32,12 @@ export default function AssociationView({
   modelId,
   languages,
   terminologies,
+  applicationProfile,
 }: {
   modelId: string;
   languages: string[];
   terminologies: string[];
+  applicationProfile: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: ['CREATE_ASSOCIATION'] });
@@ -76,6 +78,7 @@ export default function AssociationView({
     {
       modelId: modelId,
       resourceIdentifier: currentAssociationId ?? '',
+      applicationProfile,
     },
     {
       skip: typeof currentAssociationId === 'undefined',
@@ -229,6 +232,7 @@ export default function AssociationView({
         languages={languages}
         terminologies={terminologies}
         isEdit={isEdit}
+        applicationProfile={applicationProfile}
       />
     );
   }

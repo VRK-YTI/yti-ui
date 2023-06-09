@@ -28,6 +28,7 @@ import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
   selectResource,
   setResource,
+  useGetResourceIdentifierFreeQuery,
   usePutResourceMutation,
 } from '@app/common/components/resource/resource.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
@@ -51,6 +52,7 @@ interface CommonFormProps {
   languages: string[];
   terminologies: string[];
   isEdit: boolean;
+  applicationProfile?: boolean;
 }
 
 export default function CommonForm({
@@ -61,16 +63,26 @@ export default function CommonForm({
   languages,
   terminologies,
   isEdit,
+  applicationProfile,
 }: CommonFormProps) {
   const { t, i18n } = useTranslation('admin');
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const statuses = statusList;
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
   const data = useSelector(selectResource());
+  const [headerHeight, setHeaderHeight] = useState(0);
   const [userPosted, setUserPosted] = useState(false);
   const [errors, setErrors] = useState(validateForm(data));
   const [putResource, result] = usePutResourceMutation();
-  const statuses = statusList;
+  const { data: identifierFree, isSuccess } = useGetResourceIdentifierFreeQuery(
+    {
+      prefix: modelId,
+      identifier: data.identifier,
+    },
+    {
+      skip: isEdit || data.identifier === '',
+    }
+  );
 
   const handleSubmit = () => {
     if (!userPosted) {
@@ -80,7 +92,10 @@ export default function CommonForm({
     const errors = validateForm(data);
     setErrors(errors);
 
-    if (Object.values(errors).filter((val) => val).length > 0) {
+    if (
+      Object.values(errors).filter((val) => val).length > 0 ||
+      (isSuccess && !identifierFree)
+    ) {
       return;
     }
 
@@ -90,6 +105,7 @@ export default function CommonForm({
       modelId: modelId,
       data: { ...data, type: type, subResourceOf: [] },
       resourceId: isEdit ? data.identifier : undefined,
+      applicationProfile,
     });
   };
 
@@ -202,6 +218,8 @@ export default function CommonForm({
       if (backendErrorFields.length > 0) {
         setErrors({
           identifier: backendErrorFields.includes('identifier'),
+          identifierInitChar: false,
+          identifierLength: false,
           label: backendErrorFields.includes('label'),
         });
         return;
@@ -256,7 +274,8 @@ export default function CommonForm({
 
         {userPosted &&
         (Object.values(errors).filter((val) => val).length > 0 ||
-          result.isError) ? (
+          result.isError ||
+          (isSuccess && !identifierFree)) ? (
           <div>
             <FormFooterAlert
               labelText={
@@ -311,8 +330,20 @@ export default function CommonForm({
                 identifier: e?.toString() ?? '',
               })
             }
-            status={userPosted && errors.identifier ? 'error' : 'default'}
+            status={
+              (userPosted &&
+                (errors.identifier ||
+                  errors.identifierInitChar ||
+                  errors.identifierLength)) ||
+              (isSuccess && !identifierFree)
+                ? 'error'
+                : 'default'
+            }
             disabled={isEdit}
+            debounce={300}
+            statusText={
+              isSuccess && !identifierFree ? t('error-prefix-taken') : ''
+            }
           />
 
           {type === ResourceType.ATTRIBUTE && (
@@ -328,6 +359,7 @@ export default function CommonForm({
                     modelId={modelId}
                     modalButtonLabel={t('select-class')}
                     mode="select"
+                    initialSelected={data.domain?.id}
                   />
                 }
                 handleRemoval={(id: string) =>
@@ -349,6 +381,7 @@ export default function CommonForm({
                     modelId={modelId}
                     modalButtonLabel={t('select-class')}
                     mode="select"
+                    initialSelected={data.domain?.id}
                   />
                 }
                 handleRemoval={(id: string) =>
@@ -366,6 +399,7 @@ export default function CommonForm({
                     modelId={modelId}
                     modalButtonLabel={t('select-class')}
                     mode="select"
+                    initialSelected={data.range?.id}
                   />
                 }
                 handleRemoval={(id: string) =>
@@ -464,6 +498,10 @@ export default function CommonForm({
     const translatedErrors = Object.entries(errors)
       .filter((e) => e[1])
       .map((e) => translateCommonFormErrors(e[0], type, t));
+
+    if (isSuccess && !identifierFree) {
+      return [...translatedErrors, t('error-prefix-taken')];
+    }
 
     if (result.error) {
       const error = result.error as AxiosBaseQueryError;
