@@ -52,6 +52,9 @@ export default function AssociationModal({
       sortLang: i18n.language,
       pageSize: 50,
       pageFrom: 0,
+      limitToDataModel: modelId,
+      limitToModelType: 'LIBRARY',
+      fromAddedNamespaces: true,
       resourceTypes: [ResourceType.ASSOCIATION],
     });
 
@@ -68,6 +71,8 @@ export default function AssociationModal({
       sortLang: i18n.language,
       pageSize: 50,
       pageFrom: 0,
+      limitToDataModel: modelId,
+      limitToModelType: 'LIBRARY',
       resourceTypes: [ResourceType.ASSOCIATION],
     });
     setContentLanguage(undefined);
@@ -142,6 +147,7 @@ export default function AssociationModal({
             }),
             type: r.dataModelInfo.modelType,
             domains: r.dataModelInfo.groups,
+            uri: r.dataModelInfo.uri,
           },
           subClass: {
             label: getLanguageVersion({

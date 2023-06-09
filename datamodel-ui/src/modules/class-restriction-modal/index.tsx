@@ -48,6 +48,7 @@ export default function ClassRestrictionModal({
         domains: ['domain-1'],
         label: 'partOfLabel',
         type: d.resourceType,
+        uri: '',
       },
       target: {
         identifier: d.id,
@@ -125,6 +126,7 @@ export default function ClassRestrictionModal({
                     domains: ['domain-1'],
                     label: 'partOfLabel',
                     type: selectedNodeShape.resourceType,
+                    uri: '',
                   },
                   target: {
                     identifier: selectedNodeShape.identifier,

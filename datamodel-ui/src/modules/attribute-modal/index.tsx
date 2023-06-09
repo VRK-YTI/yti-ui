@@ -52,6 +52,9 @@ export default function AttributeModal({
       sortLang: i18n.language,
       pageSize: 50,
       pageFrom: 0,
+      limitToDataModel: modelId,
+      limitToModelType: 'LIBRARY',
+      fromAddedNamespaces: true,
       resourceTypes: [ResourceType.ATTRIBUTE],
     });
 
@@ -68,6 +71,8 @@ export default function AttributeModal({
       sortLang: i18n.language,
       pageSize: 50,
       pageFrom: 0,
+      limitToDataModel: modelId,
+      limitToModelType: 'LIBRARY',
       resourceTypes: [ResourceType.ATTRIBUTE],
     });
     setContentLanguage(undefined);
@@ -142,6 +147,7 @@ export default function AttributeModal({
             }),
             type: r.dataModelInfo.modelType,
             domains: r.dataModelInfo.groups,
+            uri: r.dataModelInfo.uri,
           },
           subClass: {
             label: getLanguageVersion({
