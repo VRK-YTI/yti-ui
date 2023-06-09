@@ -7,12 +7,17 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { StatusChip, ResultsTable } from './resource-list.styles';
+import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { i18n, useTranslation } from 'next-i18next';
-import { translateModelType } from '@app/common/utils/translation-helpers';
-import { Type } from '@app/common/interfaces/type.interface';
+import {
+  translateModelType,
+  translateResourceType,
+} from '@app/common/utils/translation-helpers';
 import { ServiceCategory } from '@app/common/interfaces/service-categories.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { Type } from '@app/common/interfaces/type.interface';
 
 export interface ResultType {
   target: {
@@ -26,7 +31,7 @@ export interface ResultType {
   };
   partOf?: {
     label: string;
-    type: Type;
+    type: ResourceType | Type;
     domains: string[];
     uri: string;
   };
@@ -172,10 +177,15 @@ export default function ResourceList({
                   <div>
                     <Text>
                       <Icon icon="calendar" />{' '}
-                      {translateModelType(item.partOf.type, t)}
+                      {['LIBRARY', 'PROFILE'].includes(item.partOf.type)
+                        ? translateModelType(item.partOf.type as Type, t)
+                        : translateResourceType(
+                            item.partOf.type as ResourceType,
+                            t
+                          )}
                     </Text>{' '}
                     <StatusChip $isValid={item.target.isValid}>
-                      {item.target.status}
+                      {translateStatus(item.target.status, t)}
                     </StatusChip>
                   </div>
                   <Text>

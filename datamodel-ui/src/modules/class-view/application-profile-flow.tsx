@@ -36,10 +36,6 @@ export default function ApplicationProfileFlow({
     if (!selectedNodeShape.isAppProfile) {
       setRestrictionVisible(visible);
     }
-
-    if (selectedNodeShape.isAppProfile) {
-      setResourcePickerVisible(visible);
-    }
   }, [visible, selectedNodeShape]);
 
   const handleClassRestrictionClose = () => {
@@ -90,35 +86,40 @@ export default function ApplicationProfileFlow({
 
   return (
     <>
-      <ClassRestrictionModal
-        hide={() => handleClassRestrictionClose()}
-        visible={restrictionVisible}
-        handleFollowUp={(value) => handleClassRestrictionFollowUp(value)}
-      />
+      {restrictionVisible && (
+        <ClassRestrictionModal
+          hide={() => handleClassRestrictionClose()}
+          visible={restrictionVisible}
+          selectedNodeShape={selectedNodeShape.nodeShape}
+          handleFollowUp={(value) => handleClassRestrictionFollowUp(value)}
+        />
+      )}
 
-      <ResourcePicker
-        visible={resourcePickerVisible}
-        selectedNodeShape={{
-          modelId:
-            selectedNodeShape.nodeShape.isDefinedBy.split('/').pop() ?? '',
-          classId: selectedNodeShape.nodeShape.identifier ?? '',
-          isAppProfile: selectedNodeShape.isAppProfile ?? false,
-        }}
-        handleFollowUp={(value?: {
-          associations: {
-            identifier: string;
-            label: { [key: string]: string };
-            modelId: string;
-            uri: string;
-          }[];
-          attributes: {
-            identifier: string;
-            label: { [key: string]: string };
-            modelId: string;
-            uri: string;
-          }[];
-        }) => handleResourcePickerFollowUp(value)}
-      />
+      {resourcePickerVisible && (
+        <ResourcePicker
+          visible={resourcePickerVisible}
+          selectedNodeShape={{
+            modelId:
+              selectedNodeShape.nodeShape.isDefinedBy.split('/').pop() ?? '',
+            classId: selectedNodeShape.nodeShape.identifier ?? '',
+            isAppProfile: selectedNodeShape.isAppProfile ?? false,
+          }}
+          handleFollowUp={(value?: {
+            associations: {
+              identifier: string;
+              label: { [key: string]: string };
+              modelId: string;
+              uri: string;
+            }[];
+            attributes: {
+              identifier: string;
+              label: { [key: string]: string };
+              modelId: string;
+              uri: string;
+            }[];
+          }) => handleResourcePickerFollowUp(value)}
+        />
+      )}
     </>
   );
 }
