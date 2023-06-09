@@ -1,7 +1,7 @@
 import { KeyboardEvent, createRef, useEffect, useRef, useState } from 'react';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Button, Icon, Text } from 'suomifi-ui-components';
+import { Button, HintText, Icon, Text } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import {
@@ -9,6 +9,8 @@ import {
   ControlButton,
   ControlsRow,
   FullWidthTextarea,
+  LanguageSelectorBtn,
+  LanguageSelectorWrapper,
 } from './documentation.styles';
 import { useTranslation } from 'next-i18next';
 import {
@@ -23,14 +25,16 @@ import {
   getOrganizationsWithId,
 } from '@app/common/utils/get-value';
 import FormattedDate from 'yti-common-ui/formatted-date';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 export default function Documentation({ modelId }: { modelId: string }) {
   const { t, i18n } = useTranslation('admin');
   const ref = useRef<HTMLDivElement>(null);
   const textAreaRef = createRef<HTMLTextAreaElement>();
   const [headerHeight, setHeaderHeight] = useState(0);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<{ [key: string]: string }>({});
   const [isEdit, setIsEdit] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
   const [realignCursor, setRealignCursor] = useState({
     still: false,
     align: 0,
@@ -72,9 +76,7 @@ export default function Documentation({ modelId }: { modelId: string }) {
       externalNamespaces: modelData.externalNamespaces ?? [],
       internalNamespaces: modelData.internalNamespaces ?? [],
       codeLists: modelData.codeLists ?? [],
-      documentation: {
-        [i18n.language]: value,
-      },
+      documentation: value,
     });
 
     postModel({
@@ -85,8 +87,10 @@ export default function Documentation({ modelId }: { modelId: string }) {
 
   const handleButtonClick = (key: string) => {
     let elem = ['', ''];
-    const rows: string[] = value.split('\n');
-    const currRow = value.substring(0, selection.start).split('\n').length - 1;
+    const rows: string[] = value[currentLanguage].split('\n');
+    const currRow =
+      value[currentLanguage].substring(0, selection.start).split('\n').length -
+      1;
     const addNewLine = rows[currRow] && rows[currRow].length > 0;
 
     switch (key) {
@@ -115,12 +119,14 @@ export default function Documentation({ modelId }: { modelId: string }) {
         return;
     }
 
-    setValue(
-      `${value.slice(0, selection.start)}${elem[0]}${value.slice(
-        selection.start,
-        selection.end
-      )}${elem[1]}${value.slice(selection.end)}`
-    );
+    setValue({
+      ...value,
+      [currentLanguage]: `${value[currentLanguage].slice(0, selection.start)}${
+        elem[0]
+      }${value[currentLanguage].slice(selection.start, selection.end)}${
+        elem[1]
+      }${value[currentLanguage].slice(selection.end)}`,
+    });
   };
 
   const handleEnterClick = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -138,11 +144,12 @@ export default function Documentation({ modelId }: { modelId: string }) {
       e.preventDefault();
 
       if (target.value[target.selectionStart - 1].match(/\n/)) {
-        setValue(
-          `${rows.slice(0, currRow - 1).join('\n')}\n\n${rows
+        setValue({
+          ...value,
+          [currentLanguage]: `${rows.slice(0, currRow - 1).join('\n')}\n\n${rows
             .slice(currRow - 1)
-            .join('\n')}`
-        );
+            .join('\n')}`,
+        });
         setRealignCursor({
           ...realignCursor,
           still: true,
@@ -150,11 +157,12 @@ export default function Documentation({ modelId }: { modelId: string }) {
         return;
       }
 
-      setValue(
-        `${rows.slice(0, currRow).join('\n')}\n- ${
+      setValue({
+        ...value,
+        [currentLanguage]: `${rows.slice(0, currRow).join('\n')}\n- ${
           currRow !== rows.length ? '\n' : ''
-        }${rows.slice(currRow).join('\n')}`
-      );
+        }${rows.slice(currRow).join('\n')}`,
+      });
       setRealignCursor({
         ...realignCursor,
         align: 3,
@@ -166,11 +174,12 @@ export default function Documentation({ modelId }: { modelId: string }) {
       e.preventDefault();
 
       if (target.value[target.selectionStart - 1].match(/\n/)) {
-        setValue(
-          `${rows.slice(0, currRow - 1).join('\n')}\n\n${rows
+        setValue({
+          ...value,
+          [currentLanguage]: `${rows.slice(0, currRow - 1).join('\n')}\n\n${rows
             .slice(currRow - 1)
-            .join('\n')}`
-        );
+            .join('\n')}`,
+        });
         setRealignCursor({
           ...realignCursor,
           still: true,
@@ -180,11 +189,14 @@ export default function Documentation({ modelId }: { modelId: string }) {
 
       const lastValue =
         Math.max(parseInt(rows[currRow - 1].match(/\d/)?.[0] ?? '0')) + 1;
-      setValue(
-        `${rows.slice(0, currRow).join('\n')}\n${lastValue}. ${
+      setValue({
+        ...value,
+        [currentLanguage]: `${rows
+          .slice(0, currRow)
+          .join('\n')}\n${lastValue}. ${
           currRow !== rows.length ? '\n' : ''
-        }${rows.slice(currRow).join('\n')}`
-      );
+        }${rows.slice(currRow).join('\n')}`,
+      });
       setRealignCursor({
         ...realignCursor,
         align: 3 + lastValue.toString()?.length ?? 0,
@@ -201,9 +213,19 @@ export default function Documentation({ modelId }: { modelId: string }) {
 
   useEffect(() => {
     if (modelData && !isEdit) {
-      setValue(modelData.documentation[i18n.language] ?? '');
+      setValue(modelData.documentation ?? '');
     }
-  }, [modelData, isEdit, i18n.language]);
+
+    if (modelData && Object.keys(value).length === 0) {
+      setValue(modelData.documentation);
+      setCurrentLanguage(
+        modelData.languages.includes(i18n.language)
+          ? i18n.language
+          : [...modelData.languages].sort((a, b) => compareLocales(a, b))[0] ??
+              'fi'
+      );
+    }
+  }, [modelData, isEdit, i18n.language, value]);
 
   useEffect(() => {
     if (result.isSuccess) {
@@ -268,11 +290,8 @@ export default function Documentation({ modelId }: { modelId: string }) {
     return (
       <DrawerContent height={headerHeight} spaced>
         <div>
-          Päivitetty: <FormattedDate date={modelData?.modified} />
+          {t('updated')}: <FormattedDate date={modelData?.modified} />
           {modelData?.modifier.name ? `, ${modelData.modifier.name}` : ''}
-        </div>
-        <div>
-          <Text variant="bold">Otsikko</Text>
         </div>
         <div>
           <ReactMarkdown remarkPlugins={[remarkGfm]} unwrapDisallowed={false}>
@@ -293,38 +312,70 @@ export default function Documentation({ modelId }: { modelId: string }) {
 
     return (
       <DrawerContent height={headerHeight} spaced>
+        <LanguageSelectorWrapper>
+          {modelData &&
+            [...modelData.languages]
+              .sort((a, b) => compareLocales(a, b))
+              .map((lang) => (
+                <LanguageSelectorBtn
+                  key={lang}
+                  variant="secondaryNoBorder"
+                  $active={currentLanguage === lang}
+                  onClick={() => setCurrentLanguage(lang)}
+                >
+                  {translateLanguage(lang, t)}
+                </LanguageSelectorBtn>
+              ))}
+        </LanguageSelectorWrapper>
+
         <ContentWrapper>
           <div>
+            {/* First 3 buttons use chars instead of Icons because they aren't available yet */}
             <ControlsRow>
-              <ControlButton onClick={() => handleButtonClick('bold')}>
-                B
-              </ControlButton>
-              <ControlButton onClick={() => handleButtonClick('italic')}>
-                I
-              </ControlButton>
-              <ControlButton onClick={() => handleButtonClick('quote')}>
-                ``
-              </ControlButton>
-              <ControlButton onClick={() => handleButtonClick('listBulleted')}>
-                <Icon icon="listBulleted" />
-              </ControlButton>
-              <ControlButton onClick={() => handleButtonClick('listNumbered')}>
-                <Icon icon="listNumbered" />
-              </ControlButton>
-              <ControlButton onClick={() => handleButtonClick('link')}>
-                <Icon icon="attachment" />
-              </ControlButton>
-              <ControlButton onClick={() => handleButtonClick('image')}>
-                <Icon icon="image" />
-              </ControlButton>
+              <div>
+                <ControlButton onClick={() => handleButtonClick('bold')}>
+                  B
+                </ControlButton>
+                <ControlButton onClick={() => handleButtonClick('italic')}>
+                  I
+                </ControlButton>
+                <ControlButton onClick={() => handleButtonClick('quote')}>
+                  ``
+                </ControlButton>
+                <ControlButton
+                  onClick={() => handleButtonClick('listBulleted')}
+                >
+                  <Icon icon="listBulleted" />
+                </ControlButton>
+                <ControlButton
+                  onClick={() => handleButtonClick('listNumbered')}
+                >
+                  <Icon icon="listNumbered" />
+                </ControlButton>
+                <ControlButton onClick={() => handleButtonClick('link')}>
+                  <Icon icon="attachment" />
+                </ControlButton>
+                <ControlButton onClick={() => handleButtonClick('image')}>
+                  <Icon icon="image" />
+                </ControlButton>
+              </div>
+
+              <HintText>
+                {value[currentLanguage].length} / 5000 {t('characters')}
+              </HintText>
             </ControlsRow>
 
             <FullWidthTextarea
               ref={textAreaRef}
               labelText=""
               labelMode="hidden"
-              value={value}
-              onChange={(e) => setValue(e.target.value ?? '')}
+              value={value[currentLanguage] ?? ''}
+              onChange={(e) =>
+                setValue({
+                  ...value,
+                  [currentLanguage]: e.target.value ?? '',
+                })
+              }
               onKeyUp={(e) =>
                 setSelection({
                   start: (e.target as HTMLTextAreaElement).selectionStart ?? 0,
@@ -348,7 +399,7 @@ export default function Documentation({ modelId }: { modelId: string }) {
               </Text>
             </div>
             <ReactMarkdown remarkPlugins={[remarkGfm]} unwrapDisallowed={false}>
-              {value}
+              {value[currentLanguage]}
             </ReactMarkdown>
           </div>
         </ContentWrapper>
