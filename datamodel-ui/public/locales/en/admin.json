@@ -177,7 +177,7 @@
   "optional": "optional",
   "prefix": "Prefix",
   "prefix-in-this-service": "Prefix (identifier in this service)",
-  "prefix-input-hint-text": "Unique prefix for Data Model that can not be changed afterwards. Prefix must start with a lowercase letter and be 2-10 characters long. Valid characters are a-z, 0-9, \"_\" and \"-\".",
+  "prefix-input-hint-text": "Unique prefix for Data Model that can not be changed afterwards. Prefix must start with a lowercase letter and be 2-32 characters long. Valid characters are a-z, 0-9, \"_\" and \"-\".",
   "prefix-invalid-initial-character": "Unique prefix for Data Model can't start with a digit",
   "prefix-invalid-length": "Length of unique prefix for Data Model is invalid (2-32 characters)",
   "preview": "Preview",

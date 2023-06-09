@@ -26,6 +26,17 @@ import {
 } from '@app/common/utils/get-value';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import { compareLocales } from '@app/common/utils/compare-locals';
+import {
+  getAddNewLine,
+  getCurrentRowNumber,
+  getLastValue,
+  getRows,
+  getSpecialCharacters,
+  injectNewLine,
+  injectNewListRow,
+  injectSpecialCharacters,
+  previousCharIsNewLine,
+} from './utils';
 
 export default function Documentation({ modelId }: { modelId: string }) {
   const { t, i18n } = useTranslation('admin');
@@ -86,122 +97,64 @@ export default function Documentation({ modelId }: { modelId: string }) {
   };
 
   const handleButtonClick = (key: string) => {
-    let elem = ['', ''];
-    const rows: string[] = value[currentLanguage].split('\n');
-    const currRow =
-      value[currentLanguage].substring(0, selection.start).split('\n').length -
-      1;
-    const addNewLine = rows[currRow] && rows[currRow].length > 0;
-
-    switch (key) {
-      case 'bold':
-        elem = ['**', '**'];
-        break;
-      case 'italic':
-        elem = ['*', '*'];
-        break;
-      case 'quote':
-        elem = ['>', ''];
-        break;
-      case 'listBulleted':
-        elem = [addNewLine ? '\n- ' : '- ', ''];
-        break;
-      case 'listNumbered':
-        elem = [addNewLine ? '\n1. ' : '1. ', ''];
-        break;
-      case 'link':
-        elem = ['[](http://)', ''];
-        break;
-      case 'image':
-        elem = ['![]()', ''];
-        break;
-      default:
-        return;
-    }
+    const addNewLine = getAddNewLine(value[currentLanguage], selection.start);
+    const elem = getSpecialCharacters(key, addNewLine);
 
     setValue({
       ...value,
-      [currentLanguage]: `${value[currentLanguage].slice(0, selection.start)}${
-        elem[0]
-      }${value[currentLanguage].slice(selection.start, selection.end)}${
-        elem[1]
-      }${value[currentLanguage].slice(selection.end)}`,
+      [currentLanguage]: injectSpecialCharacters(
+        value[currentLanguage],
+        selection,
+        elem
+      ),
     });
   };
 
   const handleEnterClick = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     const target = e.target as HTMLTextAreaElement;
-    const rows: string[] = target.value.split('\n');
-    const currRow = target.value
-      .substring(0, target.selectionStart)
-      .split('\n').length;
+    const rows: string[] = getRows(target.value);
+    const currRowNmb = getCurrentRowNumber(target.value, target.selectionStart);
 
     if (target.selectionStart === 0) {
+      // If cursor is at the beginning of the text area allow normal enter key behaviour
       return;
     }
 
-    if (rows[currRow - 1].match(/\n?- /)) {
+    if (
+      rows[currRowNmb - 1].match(/\n?- /) ||
+      rows[currRowNmb - 1].match(/\n?[0-9]+\. /)
+    ) {
       e.preventDefault();
 
-      if (target.value[target.selectionStart - 1].match(/\n/)) {
+      if (previousCharIsNewLine(target.value, target.selectionStart)) {
         setValue({
           ...value,
-          [currentLanguage]: `${rows.slice(0, currRow - 1).join('\n')}\n\n${rows
-            .slice(currRow - 1)
-            .join('\n')}`,
+          [currentLanguage]: injectNewLine(rows, currRowNmb),
         });
+
         setRealignCursor({
           ...realignCursor,
           still: true,
         });
+
         return;
       }
 
+      const listStart = rows[currRowNmb - 1].match(/\n?- /)
+        ? '-'
+        : `${getLastValue(rows[currRowNmb - 1])}.`;
+
       setValue({
         ...value,
-        [currentLanguage]: `${rows.slice(0, currRow).join('\n')}\n- ${
-          currRow !== rows.length ? '\n' : ''
-        }${rows.slice(currRow).join('\n')}`,
+        [currentLanguage]: injectNewListRow(rows, currRowNmb, listStart),
       });
       setRealignCursor({
         ...realignCursor,
-        align: 3,
+        align:
+          listStart === '-'
+            ? 3
+            : 3 + getLastValue(rows[currRowNmb - 1]).toString()?.length ?? 0,
       });
-      return;
-    }
-
-    if (rows[currRow - 1].match(/\n?[0-9]+\. /)) {
-      e.preventDefault();
-
-      if (target.value[target.selectionStart - 1].match(/\n/)) {
-        setValue({
-          ...value,
-          [currentLanguage]: `${rows.slice(0, currRow - 1).join('\n')}\n\n${rows
-            .slice(currRow - 1)
-            .join('\n')}`,
-        });
-        setRealignCursor({
-          ...realignCursor,
-          still: true,
-        });
-        return;
-      }
-
-      const lastValue =
-        Math.max(parseInt(rows[currRow - 1].match(/\d/)?.[0] ?? '0')) + 1;
-      setValue({
-        ...value,
-        [currentLanguage]: `${rows
-          .slice(0, currRow)
-          .join('\n')}\n${lastValue}. ${
-          currRow !== rows.length ? '\n' : ''
-        }${rows.slice(currRow).join('\n')}`,
-      });
-      setRealignCursor({
-        ...realignCursor,
-        align: 3 + lastValue.toString()?.length ?? 0,
-      });
-      return;
     }
   };
 
