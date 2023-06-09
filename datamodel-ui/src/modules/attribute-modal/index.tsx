@@ -11,7 +11,7 @@ import { LargeModal } from './attribute-modal.styles';
 import { useTranslation } from 'next-i18next';
 import {
   InternalResourcesSearchParams,
-  useGetInternalResourcesMutation,
+  useGetInternalResourcesInfoMutation,
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
@@ -41,7 +41,9 @@ export default function AttributeModal({
   const [visible, setVisible] = useState(false);
   const [selectedId, setSelectedId] = useState('');
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
-  const [searchInternalResources, result] = useGetInternalResourcesMutation();
+  const [searchInternalResources, result] =
+    useGetInternalResourcesInfoMutation();
+  const [contentLanguage, setContentLanguage] = useState<string>();
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>({
       query: '',
@@ -50,6 +52,9 @@ export default function AttributeModal({
       sortLang: i18n.language,
       pageSize: 50,
       pageFrom: 0,
+      limitToDataModel: modelId,
+      limitToModelType: 'LIBRARY',
+      fromAddedNamespaces: true,
       resourceTypes: [ResourceType.ATTRIBUTE],
     });
 
@@ -66,8 +71,11 @@ export default function AttributeModal({
       sortLang: i18n.language,
       pageSize: 50,
       pageFrom: 0,
+      limitToDataModel: modelId,
+      limitToModelType: 'LIBRARY',
       resourceTypes: [ResourceType.ATTRIBUTE],
     });
+    setContentLanguage(undefined);
     setVisible(false);
   };
 
@@ -115,7 +123,11 @@ export default function AttributeModal({
         result.data.responseObjects.map((r) => ({
           target: {
             identifier: r.identifier,
-            label: getLanguageVersion({ data: r.label, lang: i18n.language }),
+            label: getLanguageVersion({
+              data: r.label,
+              lang: contentLanguage ?? i18n.language,
+              appendLocale: true,
+            }),
             linkLabel: getLinkLabel(r.namespace, r.identifier),
             link: r.id,
             status: translateStatus(r.status, t),
@@ -123,24 +135,37 @@ export default function AttributeModal({
             modified: format(r.modified, (i18n.language as Locale) ?? 'fi'),
             note: getLanguageVersion({
               data: r.note,
-              lang: i18n.language,
+              lang: contentLanguage ?? i18n.language,
               appendLocale: true,
             }),
           },
           partOf: {
-            label: 'Tietomallin nimi',
-            type: 'Tietomallin tyyppi',
-            domains: ['Asuminen', 'Elinkeinot'],
+            label: getLanguageVersion({
+              data: r.dataModelInfo.label,
+              lang: contentLanguage ?? i18n.language,
+              appendLocale: true,
+            }),
+            type: r.dataModelInfo.modelType,
+            domains: r.dataModelInfo.groups,
+            uri: r.dataModelInfo.uri,
           },
           subClass: {
-            label: 'Linkki käsitteeseen',
-            link: '#',
-            partOf: 'Sanaston nimi',
+            label: getLanguageVersion({
+              data: r.conceptInfo?.conceptLabel,
+              lang: contentLanguage ?? i18n.language,
+              appendLocale: true,
+            }),
+            link: r.conceptInfo?.conceptURI,
+            partOf: getLanguageVersion({
+              data: r.conceptInfo?.terminologyLabel,
+              lang: contentLanguage ?? i18n.language,
+              appendLocale: true,
+            }),
           },
         }))
       );
     }
-  }, [result, i18n.language, t]);
+  }, [result, i18n.language, t, contentLanguage]);
 
   return (
     <div>
@@ -165,6 +190,7 @@ export default function AttributeModal({
             setSelectedId={setSelectedId}
             searchParams={searchParams}
             setSearchParams={handleSearch}
+            setContentLanguage={setContentLanguage}
             languageVersioned
             modelId={modelId}
           />

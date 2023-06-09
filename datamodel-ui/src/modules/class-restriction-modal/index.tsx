@@ -75,7 +75,8 @@ export default function ClassRestrictionModal({
                   partOf: {
                     domains: ['domain-1'],
                     label: 'partOfLabel',
-                    type: 'tyyppi',
+                    type: 'LIBRARY',
+                    uri: '',
                   },
                   target: {
                     identifier: 'id-11',
@@ -122,7 +123,8 @@ export default function ClassRestrictionModal({
                   partOf: {
                     domains: ['domain-1'],
                     label: 'partOfLabel',
-                    type: 'tyyppi',
+                    type: 'LIBRARY',
+                    uri: '',
                   },
                   target: {
                     identifier: 'id-1',
@@ -143,7 +145,8 @@ export default function ClassRestrictionModal({
                   partOf: {
                     domains: ['domain-1'],
                     label: 'partOfLabel',
-                    type: 'tyyppi',
+                    type: 'LIBRARY',
+                    uri: '',
                   },
                   target: {
                     identifier: 'id-2',
@@ -164,7 +167,8 @@ export default function ClassRestrictionModal({
                   partOf: {
                     domains: ['domain-2'],
                     label: 'partOfLabel',
-                    type: 'tyyppi',
+                    type: 'LIBRARY',
+                    uri: '',
                   },
                   target: {
                     identifier: 'id-3',

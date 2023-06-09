@@ -18,11 +18,13 @@ import {
 import { FilterBlock, ResultBlock, StatusChip } from './code-list-modal.styles';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
-import { useGetCodesQuery } from '@app/common/components/code';
+import {
+  useGetCodeRegistriesQuery,
+  useGetCodesQuery,
+} from '@app/common/components/code';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { ModelCodeList } from '@app/common/interfaces/model.interface';
-import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 
 export default function CodeListModal({
@@ -52,31 +54,36 @@ export default function CodeListModal({
   );
   const [selectedGroup, setSelectedGroup] = useState(defaultGroup);
   const [currPage, setCurrPage] = useState(1);
-  const { data: serviceCategories } = useGetServiceCategoriesQuery(
-    i18n.language
-  );
   const { data: codes, isSuccess } = useGetCodesQuery({
+    lang: i18n.language ?? 'fi',
     searchTerm: filter.keyword !== '' ? filter.keyword : undefined,
-    infoDomain: filter.group !== '' ? filter.group : undefined,
+    codeRegistryCodeValue: !['', 'all-groups'].includes(filter.group)
+      ? filter.group
+      : undefined,
     pageFrom: currPage,
   });
+  const { data: codeRegistries } = useGetCodeRegistriesQuery();
 
   const groups = useMemo(
     () => [
       defaultGroup,
-      ...(serviceCategories?.map((category) => ({
-        name: getLanguageVersion({
-          data: category.label,
-          lang: i18n.language,
-        }),
-        labelText: getLanguageVersion({
-          data: category.label,
-          lang: i18n.language,
-        }),
-        uniqueItemId: category.identifier,
-      })) ?? []),
+      ...(codeRegistries?.results
+        .map((registry) => ({
+          name: getLanguageVersion({
+            data: registry.prefLabel,
+            lang: i18n.language,
+            appendLocale: true,
+          }),
+          labelText: getLanguageVersion({
+            data: registry.prefLabel,
+            lang: i18n.language,
+            appendLocale: true,
+          }),
+          uniqueItemId: registry.codeValue,
+        }))
+        .sort((a, b) => (a.labelText > b.labelText ? 1 : -1)) ?? []),
     ],
-    [serviceCategories, i18n.language, defaultGroup]
+    [codeRegistries, i18n.language, defaultGroup]
   );
 
   const handleClose = () => {
@@ -110,6 +117,8 @@ export default function CodeListModal({
   };
 
   const handleGroupChange = (id: string | null) => {
+    setCurrPage(1);
+
     if (!id) {
       setSelectedGroup(defaultGroup);
       setFilter({ ...filter, group: '' });
@@ -151,12 +160,13 @@ export default function CodeListModal({
             <div>
               <TextInput
                 labelText={t('search-for-reference-data')}
-                onChange={(e) =>
+                onChange={(e) => {
                   setFilter({
                     ...filter,
                     keyword: e?.toString() ?? '',
-                  })
-                }
+                  });
+                  setCurrPage(1);
+                }}
                 debounce={300}
               />
 
@@ -187,7 +197,10 @@ export default function CodeListModal({
               <Dropdown
                 labelText={t('show-statuses')}
                 defaultValue="all-statuses"
-                onChange={(e) => setFilter({ ...filter, status: e })}
+                onChange={(e) => {
+                  setFilter({ ...filter, status: e });
+                  setCurrPage(1);
+                }}
               >
                 {statuses.map((status) => (
                   <DropdownItem key={`status-${status}`} value={status}>

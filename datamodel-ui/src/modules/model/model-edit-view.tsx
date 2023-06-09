@@ -38,7 +38,7 @@ export default function ModelEditView({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [postModel, result] = usePostModelMutation();
   const [formData, setFormData] = useState<ModelFormType>({
-    contact: '',
+    contact: model.contact,
     externalNamespaces: model.externalNamespaces ?? [],
     internalNamespaces: model.internalNamespaces ?? [],
     languages:

@@ -7,18 +7,9 @@ export interface TermBlockType {
 }
 
 // Prioritizes Finnish and Swedish over other languages
-export function compareLocales(
-  t1: TermBlockType | Property,
-  t2: TermBlockType | Property
-): number {
-  const t1Lang =
-    'regex' in t1
-      ? t1.lang.toLowerCase()
-      : t1.term.properties.prefLabel?.[0].lang.toLowerCase() ?? '';
-  const t2Lang =
-    'regex' in t2
-      ? t2.lang.toLowerCase()
-      : t2.term.properties.prefLabel?.[0].lang.toLowerCase() ?? '';
+export function compareLocales(t1: Property, t2: Property): number {
+  const t1Lang = t1.lang.toLowerCase();
+  const t2Lang = t2.lang.toLowerCase();
 
   if (t1Lang === 'fi' || t2Lang === 'fi') {
     return t1Lang === 'fi' ? -1 : 1;

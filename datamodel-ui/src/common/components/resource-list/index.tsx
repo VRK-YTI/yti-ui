@@ -7,7 +7,12 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { StatusChip, ResultsTable } from './resource-list.styles';
-import { useTranslation } from 'next-i18next';
+import { i18n, useTranslation } from 'next-i18next';
+import { translateModelType } from '@app/common/utils/translation-helpers';
+import { Type } from '@app/common/interfaces/type.interface';
+import { ServiceCategory } from '@app/common/interfaces/service-categories.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 
 export interface ResultType {
   target: {
@@ -21,8 +26,9 @@ export interface ResultType {
   };
   partOf?: {
     label: string;
-    type: string;
+    type: Type;
     domains: string[];
+    uri: string;
   };
   subClass: {
     label: string;
@@ -38,6 +44,7 @@ interface ResourceListProps {
   selected?: string | string[];
   extraHeader?: React.ReactFragment;
   handleClick: (value: string | string[]) => void;
+  serviceCategories?: ServiceCategory[];
 }
 
 export default function ResourceList({
@@ -47,6 +54,7 @@ export default function ResourceList({
   selected,
   extraHeader,
   handleClick,
+  serviceCategories,
 }: ResourceListProps) {
   const { t } = useTranslation('admin');
 
@@ -157,38 +165,58 @@ export default function ResourceList({
                 </ExternalLink>
               </div>
             </td>
-            {item.partOf && (
-              <td>
+            <td>
+              {item.partOf?.type ? (
                 <div>
                   <Text>{item.partOf.label}</Text>
                   <div>
                     <Text>
-                      <Icon icon="calendar" /> {item.partOf.type}
+                      <Icon icon="calendar" />{' '}
+                      {translateModelType(item.partOf.type, t)}
                     </Text>{' '}
                     <StatusChip $isValid={item.target.isValid}>
                       {item.target.status}
                     </StatusChip>
                   </div>
-                  <Text>{item.partOf.domains.join(', ')}</Text>
+                  <Text>
+                    {item.partOf.domains
+                      ?.map((domain) =>
+                        getLanguageVersion({
+                          data: serviceCategories?.find(
+                            (cat) => cat.identifier === domain
+                          )?.label,
+                          lang: i18n?.language ?? 'fi',
+                        })
+                      )
+                      .join(', ')}
+                  </Text>
                 </div>
-              </td>
-            )}
+              ) : (
+                <div>
+                  <Text>{item.partOf?.uri}</Text>
+                </div>
+              )}
+            </td>
             <td>
               <div>
-                <ExternalLink
-                  href={item.subClass.link}
-                  labelNewWindow={t('link-opens-new-window-external', {
-                    ns: 'common',
-                  })}
-                >
-                  {item.subClass.label}
-                </ExternalLink>
-                <Text>{item.subClass.partOf}</Text>
+                {item.subClass.link && (
+                  <>
+                    <ExternalLink
+                      href={item.subClass.link}
+                      labelNewWindow={t('link-opens-new-window-external', {
+                        ns: 'common',
+                      })}
+                    >
+                      {item.subClass.label}
+                    </ExternalLink>
+                    <Text>{item.subClass.partOf}</Text>
+                  </>
+                )}
               </div>
             </td>
             <td>
               <div>
-                <Text>{item.target.note}</Text>
+                <SanitizedTextContent text={item.target.note} />
               </div>
             </td>
           </tr>
