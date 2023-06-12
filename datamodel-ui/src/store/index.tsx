@@ -21,7 +21,7 @@ import { conceptSearchApi } from '@app/common/components/concept-search/concept-
 import { graphSlice } from '@app/common/components/graph/graph.slice';
 import { visualizationApi } from '@app/common/components/visualization/visualization.slice';
 import { activeSlice } from '@app/common/components/active/active.slice';
-import { codeApi } from '@app/common/components/code';
+import { codeApi } from '@app/common/components/code/code.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });

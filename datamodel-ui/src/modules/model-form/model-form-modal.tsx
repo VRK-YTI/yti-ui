@@ -38,7 +38,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
   const [formData, setFormData] = useState(modelFormInitialData);
   const [errors, setErrors] = useState<FormErrors>();
   const [userPosted, setUserPosted] = useState(false);
-  const [getAuthenticatedUser, authenticateUser] =
+  const [getAuthenticatedUser, authenticatedUser] =
     useGetAuthenticatedUserMutMutation();
   const [putModel, result] = usePutModelMutation();
 
@@ -117,12 +117,14 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
             formData={formData}
             setFormData={setFormData}
             userPosted={userPosted}
-            disabled={authenticateUser.data && authenticateUser.data.anonymous}
+            disabled={
+              authenticatedUser.data && authenticatedUser.data.anonymous
+            }
             errors={userPosted ? errors : undefined}
           />
         </ModalContent>
         <ModalFooter>
-          {authenticateUser.data && authenticateUser.data.anonymous && (
+          {authenticatedUser.data && authenticatedUser.data.anonymous && (
             <InlineAlert status="error" role="alert" id="unauthenticated-alert">
               {t('error-unauthenticated')}
             </InlineAlert>

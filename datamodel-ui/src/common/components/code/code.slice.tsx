@@ -79,9 +79,36 @@ export const codeApi = createApi({
         method: 'GET',
       }),
     }),
+    getLanguages: builder.query<
+      {
+        meta: {
+          code: number;
+          from: number;
+          resultCount: number;
+          totalResults: number;
+        };
+        results: {
+          codeValue: string;
+          prefLabel: {
+            [key: string]: string;
+          };
+        }[];
+      },
+      void
+    >({
+      query: () => ({
+        url: '/coderegistries/interoperabilityplatform/codeschemes/languagecodes/codes',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { useGetCodesQuery, useGetCodeRegistriesQuery } = codeApi;
+export const {
+  useGetCodesQuery,
+  useGetCodeRegistriesQuery,
+  useGetLanguagesQuery,
+  util: { getRunningQueriesThunk },
+} = codeApi;
 
-export const { getCodes } = codeApi.endpoints;
+export const { getCodes, getLanguages } = codeApi.endpoints;

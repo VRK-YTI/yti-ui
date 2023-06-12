@@ -21,7 +21,7 @@ import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import {
   useGetCodeRegistriesQuery,
   useGetCodesQuery,
-} from '@app/common/components/code';
+} from '@app/common/components/code/code.slice';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { ModelCodeList } from '@app/common/interfaces/model.interface';

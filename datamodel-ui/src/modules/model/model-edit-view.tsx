@@ -41,17 +41,14 @@ export default function ModelEditView({
     contact: model.contact,
     externalNamespaces: model.externalNamespaces ?? [],
     internalNamespaces: model.internalNamespaces ?? [],
-    languages:
-      ['fi', 'sv', 'en'].map((lang) => ({
-        labelText: translateLanguage(lang, t),
-        uniqueItemId: lang,
-        title:
-          Object.entries(model.label).find((t) => t[0] === lang)?.[1] ?? '',
-        description:
-          Object.entries(model.description).find((d) => d[0] === lang)?.[1] ??
-          '',
-        selected: model.languages.includes(lang),
-      })) ?? [],
+    languages: model.languages.map((lang) => ({
+      labelText: lang.toUpperCase(),
+      uniqueItemId: lang,
+      title: Object.entries(model.label).find((t) => t[0] === lang)?.[1] ?? '',
+      description:
+        Object.entries(model.description).find((d) => d[0] === lang)?.[1] ?? '',
+      selected: model.languages.includes(lang),
+    })),
     organizations: getOrganizationsWithId(model, i18n.language) ?? [],
     prefix: model.prefix ?? '',
     serviceCategories: getIsPartOfWithId(model, i18n.language) ?? [],
