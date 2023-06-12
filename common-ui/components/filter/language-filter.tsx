@@ -22,12 +22,12 @@ export default function LanguageFilter({
   return (
     <DropdownWrapper>
       <SingleSelect
-        ariaOptionsAvailableText={t('languages-available')}
+        ariaOptionsAvailableText={t('languages-available') as string}
         clearButtonLabel={t('clear-language-filter')}
         items={languages}
         labelText={labelText}
-        noItemsText={t('no-languages-available')}
         visualPlaceholder={t('choose-language')}
+        itemAdditionHelpText={''}
         selectedItem={currLang}
         onItemSelect={(lang) =>
           patchUrlState({

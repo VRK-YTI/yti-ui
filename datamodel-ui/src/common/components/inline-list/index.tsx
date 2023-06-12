@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { ExternalLink, Button, Text } from 'suomifi-ui-components';
+import { ExternalLink, Button, Text, IconRemove } from 'suomifi-ui-components';
 import { List, ListItem } from './inline-list.styles';
 
 export interface InlineListProps {
@@ -56,7 +56,7 @@ export default function InlineList({
           ) : (
             <Button
               variant="secondaryNoBorder"
-              icon="remove"
+              icon={<IconRemove />}
               onClick={() => handleRemoval(item.id)}
             >
               {t('remove')}

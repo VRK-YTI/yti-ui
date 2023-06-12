@@ -2,7 +2,7 @@
 import {
   Checkbox,
   ExternalLink,
-  Icon,
+  IconCalendar,
   RadioButton,
   Text,
 } from 'suomifi-ui-components';
@@ -176,7 +176,7 @@ export default function ResourceList({
                   <Text>{item.partOf.label}</Text>
                   <div>
                     <Text>
-                      <Icon icon="calendar" />{' '}
+                      <IconCalendar />{' '}
                       {['LIBRARY', 'PROFILE'].includes(item.partOf.type)
                         ? translateModelType(item.partOf.type as Type, t)
                         : translateResourceType(

@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { Button } from 'suomifi-ui-components';
+import { Button, IconPlus } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import HasPermission from '@app/common/utils/has-permission';
 import { useGetAuthenticatedUserMutMutation } from '@app/common/components/login/login.slice';
@@ -27,7 +27,7 @@ export default function NewTerminology() {
   return (
     <>
       <Button
-        icon="plus"
+        icon={<IconPlus />}
         variant="secondary"
         fullWidth={isSmall}
         onClick={() => handleClick()}

@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { Button } from 'suomifi-ui-components';
+import { Button, IconClose } from 'suomifi-ui-components';
 import Separator from '../separator';
 import SkipLink from '../skip-link';
 import {
@@ -61,7 +61,7 @@ export default function Filter({
     return (
       <Header>
         <h2 id="filter-title">{t('filter-list')}</h2>
-        <HeaderButton iconRight="close" onClick={onModalClose}>
+        <HeaderButton iconRight={<IconClose />} onClick={onModalClose}>
           {t('close')}
         </HeaderButton>
       </Header>

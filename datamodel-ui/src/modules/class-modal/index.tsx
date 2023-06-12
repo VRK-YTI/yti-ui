@@ -4,13 +4,14 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
   Button,
+  IconPlus,
   ModalContent,
   ModalFooter,
   ModalTitle,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
+import { LargeModal } from './class-modal.styles';
 import MultiColumnSearch from '@app/common/components/multi-column-search';
-import { LargeModal, OpenModalButton } from './class-modal.styles';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import {
   InternalResourcesSearchParams,
@@ -169,13 +170,13 @@ export default function ClassModal({
 
   return (
     <>
-      <OpenModalButton
+      <Button
         variant="secondary"
-        icon={modalButtonLabel ? undefined : 'plus'}
+        icon={modalButtonLabel ? undefined : <IconPlus />}
         onClick={() => handleOpen()}
       >
         {modalButtonLabel ? modalButtonLabel : t('add-class')}
-      </OpenModalButton>
+      </Button>
 
       <LargeModal
         appElementId="__next"
@@ -211,7 +212,7 @@ export default function ClassModal({
               </Button>
               {!applicationProfile && (
                 <Button
-                  icon="plus"
+                  icon={<IconPlus />}
                   disabled={selectedId !== ''}
                   onClick={() => handleSubmit()}
                 >

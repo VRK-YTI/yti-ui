@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
-import { Button } from 'suomifi-ui-components';
+import { Button, IconCopy } from 'suomifi-ui-components';
 import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import Separator from 'yti-common-ui/separator';
 import { useGetAuthenticatedUserMutMutation } from '@app/common/components/login/login.slice';
@@ -32,7 +32,11 @@ export default function CopyTerminologyModal({
   if (noWrap) {
     return (
       <>
-        <Button icon="copy" variant="secondary" onClick={() => handleClick()}>
+        <Button
+          icon={<IconCopy />}
+          variant="secondary"
+          onClick={() => handleClick()}
+        >
           {t('copy-as-base')}
         </Button>
         {visible && (
@@ -56,7 +60,7 @@ export default function CopyTerminologyModal({
         extra={
           <BasicBlockExtraWrapper>
             <Button
-              icon="copy"
+              icon={<IconCopy />}
               variant="secondary"
               onClick={() => handleClick()}
             >

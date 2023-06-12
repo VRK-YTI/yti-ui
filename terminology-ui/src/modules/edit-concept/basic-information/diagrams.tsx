@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { Button, Text, TextInput } from 'suomifi-ui-components';
+import { Button, IconRemove, Text, TextInput } from 'suomifi-ui-components';
 import { v4 } from 'uuid';
 import { DiagramType, ListType } from '../new-concept.types';
 import {
@@ -64,7 +64,7 @@ export default function Diagrams({
                 <Text variant="bold">{t('concept-diagram-or-link')}</Text>
                 <Button
                   variant="secondaryNoBorder"
-                  icon="remove"
+                  icon={<IconRemove />}
                   onClick={() => handleRemoveDiagram(diagram.id)}
                 >
                   {t('remove')}

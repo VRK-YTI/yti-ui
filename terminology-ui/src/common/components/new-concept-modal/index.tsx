@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
-import { Button } from 'suomifi-ui-components';
+import { Button, IconPlus } from 'suomifi-ui-components';
 import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
 
 const NewConceptModalDynamic = dynamic(() => import('./new-concept-modal'));
@@ -29,7 +29,7 @@ export default function NewConceptModal({
   return (
     <>
       <Button
-        icon="plus"
+        icon={<IconPlus />}
         variant="secondary"
         onClick={() => handleClick()}
         id="new-concept-button"

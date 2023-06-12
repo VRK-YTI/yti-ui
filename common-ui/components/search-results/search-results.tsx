@@ -2,15 +2,15 @@ import { useBreakpoints } from '../media-query';
 import SearchCountTags from './search-count-tags';
 import { CardConcepts, ResultWrapper } from './search-results.styles';
 import ResultCard from './result-card';
-import { BaseIconKeys } from 'suomifi-ui-components';
 import ResultCardExpander from './result-card-expander';
 import SanitizedTextContent from '../sanitized-text-content';
+import { ReactNode } from 'react';
 
 export interface SearchResultData {
   id: string;
   contributors?: string[];
   description?: string;
-  icon?: BaseIconKeys;
+  icon?: ReactNode;
   status?: string;
   partOf?: string[];
   title: string;

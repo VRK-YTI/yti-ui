@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { userCookieOptions } from '@app/common/utils/user-cookie-options';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 import { withIronSessionApiRoute } from 'iron-session/next';
@@ -89,7 +89,7 @@ export default withIronSessionApiRoute(
           });
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         // handleAxiosError(error);
       } else {
         // handleUnexpectedError(error);

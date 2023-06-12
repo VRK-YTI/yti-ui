@@ -6,7 +6,7 @@ import {
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Handle, Position } from 'reactflow';
-import { Icon } from 'suomifi-ui-components';
+import { IconChevronDown, IconChevronUp } from 'suomifi-ui-components';
 import { Attribute, ClassNodeDiv } from './node.styles';
 import { useStoreDispatch } from '@app/store';
 
@@ -44,10 +44,7 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
       <div className="node-title">
         <div>{data.label}</div>
         <button onClick={() => setShowAttributes(!showAttributes)}>
-          <Icon
-            icon={showAttributes ? 'chevronUp' : 'chevronDown'}
-            variant="secondaryNoBorder"
-          />
+          {showAttributes ? <IconChevronUp /> : <IconChevronDown />}
         </button>
       </div>
       <Handle type="source" position={Position.Bottom} id={id} />

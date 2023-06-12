@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { BaseIconKeys } from 'suomifi-ui-components';
+import { ReactNode, useEffect, useState } from 'react';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { default as CommonDrawer } from 'yti-common-ui/drawer';
 import { DrawerButton } from 'yti-common-ui/drawer/drawer.styles';
@@ -22,7 +21,7 @@ type ViewType = {
     | 'classes'
     | 'attributes'
     | 'associations';
-  icon: BaseIconKeys;
+  icon: ReactNode;
   buttonLabel: string;
   buttonLabelSm?: string;
   component?: React.ReactFragment;

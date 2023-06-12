@@ -13,6 +13,9 @@ import {
   DropdownItem,
   Expander,
   ExpanderTitle,
+  IconArrowLeft,
+  IconArrowRight,
+  IconRemove,
   Modal,
   ModalContent,
   ModalFooter,
@@ -201,7 +204,7 @@ export default function PickerModal({
 
                 <Button
                   variant="secondaryNoBorder"
-                  iconRight="remove"
+                  iconRight={<IconRemove />}
                   onClick={() => handleClear()}
                   id="clear-button"
                 >
@@ -281,7 +284,7 @@ export default function PickerModal({
           <>
             <FooterButton
               variant="secondaryNoBorder"
-              iconRight={showSelected ? 'arrowLeft' : 'arrowRight'}
+              iconRight={showSelected ? <IconArrowLeft /> : <IconArrowRight />}
               onClick={() => setShowSelected(!showSelected)}
               id="switch-view-button"
             >

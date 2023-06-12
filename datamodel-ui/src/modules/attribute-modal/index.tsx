@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   Button,
+  IconPlus,
   ModalContent,
   ModalFooter,
   ModalTitle,
@@ -171,7 +172,7 @@ export default function AttributeModal({
     <div>
       <Button
         variant="secondary"
-        icon={buttonIcon ? 'plus' : undefined}
+        icon={buttonIcon ? <IconPlus /> : undefined}
         onClick={() => handleOpen()}
       >
         {t('add-attribute')}
@@ -203,7 +204,7 @@ export default function AttributeModal({
           {buttonTranslations.createNew && (
             <Button
               variant="secondary"
-              icon="plus"
+              icon={<IconPlus />}
               disabled={selectedId !== ''}
               onClick={() => handleSubmit()}
             >

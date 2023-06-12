@@ -50,7 +50,7 @@ export default function AttributeView({
     Object.keys(views.attributes).filter((k) => k).length > 0
       ? Object.keys(views.attributes).find(
           (k) =>
-            views.attributes[k as keyof typeof views['attributes']] === true
+            views.attributes[k as keyof (typeof views)['attributes']] === true
         )
       : 'list'
   );

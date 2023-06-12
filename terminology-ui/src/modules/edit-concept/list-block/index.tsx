@@ -1,7 +1,12 @@
 import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { Button, Dropdown, DropdownItem } from 'suomifi-ui-components';
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  IconRemove,
+} from 'suomifi-ui-components';
 import {
   ListBlockWrapper,
   ListItem as LI,
@@ -179,7 +184,7 @@ function ListItem({
         <div className="button-block">
           <Button
             variant="secondaryNoBorder"
-            icon="remove"
+            icon={<IconRemove />}
             onClick={() => handleRemove(item.id)}
           >
             {t('remove')}
@@ -204,7 +209,7 @@ function ListItem({
         <div className="button-block">
           <Button
             variant="secondaryNoBorder"
-            icon="remove"
+            icon={<IconRemove />}
             onClick={() => handleRemove(item.id)}
           >
             {t('remove')}

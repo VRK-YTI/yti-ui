@@ -59,7 +59,7 @@ export default function StatusPicker({
   return (
     <div style={{ marginTop: '20px', marginBottom: '5px' }}>
       <SingleSelect
-        ariaOptionsAvailableText={t('statuses-available')}
+        ariaOptionsAvailableText={t('statuses-available') as string}
         clearButtonLabel={t('clear-button-label')}
         items={statuses}
         labelText={t('concept-status')}

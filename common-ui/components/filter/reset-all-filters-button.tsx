@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { Button } from 'suomifi-ui-components';
+import { Button, IconRemove } from 'suomifi-ui-components';
 import useUrlState, { isInitial } from '../../utils/hooks/use-url-state';
 import Separator from '../separator';
 
@@ -15,7 +15,7 @@ export default function ResetAllFiltersButton() {
     <>
       <div>
         <Button
-          icon="remove"
+          icon={<IconRemove />}
           onClick={() => resetUrlState()}
           variant="secondaryNoBorder"
           id="filter-reset-button"

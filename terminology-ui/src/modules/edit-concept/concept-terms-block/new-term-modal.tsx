@@ -174,7 +174,7 @@ export default function NewTermModal({
         )}
 
         <LanguageSingleSelect
-          ariaOptionsAvailableText={t('available-languages')}
+          ariaOptionsAvailableText={t('available-languages') as string}
           clearButtonLabel=""
           items={languages.map((language) => ({
             labelText: `${translateLanguage(
@@ -184,7 +184,7 @@ export default function NewTermModal({
             uniqueItemId: language,
           }))}
           labelText={t('language')}
-          noItemsText={t('no-languages-available')}
+          itemAdditionHelpText=""
           onItemSelectionChange={(e) =>
             handleUpdate({ key: 'language', value: e?.uniqueItemId || '' })
           }
@@ -364,12 +364,12 @@ export default function NewTermModal({
           />
 
           <SingleSelect
-            ariaOptionsAvailableText={t('available-term-families')}
+            ariaOptionsAvailableText={t('available-term-families') as string}
             clearButtonLabel={t('clear-button-label')}
             labelText={t('term-family')}
             optionalText={t('optional')}
-            noItemsText={t('no-term-families-available')}
             visualPlaceholder={t('choose-term-family')}
+            itemAdditionHelpText={''}
             items={[
               {
                 labelText: t('term-family.masculine', { ns: 'common' }),
@@ -390,12 +390,14 @@ export default function NewTermModal({
           />
 
           <SingleSelect
-            ariaOptionsAvailableText={t('available-term-conjugations')}
+            ariaOptionsAvailableText={
+              t('available-term-conjugations') as string
+            }
             clearButtonLabel={t('clear-button-label')}
             labelText={t('choose-term-conjugation')}
             optionalText={t('optional')}
-            noItemsText={t('no-term-conjugations-available')}
             visualPlaceholder={t('choose-term-conjugation')}
+            itemAdditionHelpText={''}
             items={[
               {
                 labelText: t('term-conjugation.singular', { ns: 'common' }),
@@ -415,13 +417,15 @@ export default function NewTermModal({
           />
 
           <SingleSelect
-            ariaOptionsAvailableText={t('available-term-word-classes')}
+            ariaOptionsAvailableText={
+              t('available-term-word-classes') as string
+            }
             clearButtonLabel={t('clear-button-label')}
             labelText={t('term-word-class')}
             optionalText={t('optional')}
-            noItemsText={t('no-term-word-classes-available')}
             hintText={t('term-word-class-hint-text')}
             visualPlaceholder={t('choose-term-word-class')}
+            itemAdditionHelpText={''}
             items={wordClasses}
             onItemSelectionChange={(e) =>
               handleUpdate({ key: 'wordClass', value: e?.uniqueItemId || '' })

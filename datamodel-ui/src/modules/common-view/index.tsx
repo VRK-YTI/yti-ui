@@ -7,7 +7,13 @@ import {
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
-import { Button, Text, Tooltip } from 'suomifi-ui-components';
+import {
+  Button,
+  IconArrowLeft,
+  IconMenu,
+  Text,
+  Tooltip,
+} from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import Separator from 'yti-common-ui/separator';
@@ -49,7 +55,7 @@ export default function CommonView({
         <div>
           <Button
             variant="secondaryNoBorder"
-            icon="arrowLeft"
+            icon={<IconArrowLeft />}
             style={{ textTransform: 'uppercase' }}
             onClick={handleReturn}
           >
@@ -59,7 +65,7 @@ export default function CommonView({
             <div>
               <Button
                 variant="secondary"
-                iconRight="menu"
+                iconRight={<IconMenu />}
                 style={{ height: 'min-content' }}
                 onClick={() => setShowTooltip(!showTooltip)}
               >

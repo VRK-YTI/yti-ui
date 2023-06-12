@@ -5,7 +5,13 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { Button, ExternalLink, Text, Tooltip } from 'suomifi-ui-components';
+import {
+  Button,
+  ExternalLink,
+  IconMenu,
+  Text,
+  Tooltip,
+} from 'suomifi-ui-components';
 import { BasicBlock, MultilingualBlock } from 'yti-common-ui/block';
 import {
   getIsPartOfWithId,
@@ -111,7 +117,7 @@ export default function ModelInfoView() {
             <Button
               variant="secondary"
               onClick={() => setShowTooltip(!showTooltip)}
-              iconRight={'menu'}
+              iconRight={<IconMenu />}
             >
               {t('actions')}
             </Button>
