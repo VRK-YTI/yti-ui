@@ -6,6 +6,7 @@ import {
   Dropdown,
   DropdownItem,
   ExternalLink,
+  IconPlus,
   Modal,
   ModalContent,
   ModalFooter,
@@ -143,7 +144,11 @@ export default function CodeListModal({
 
   return (
     <>
-      <Button variant="secondary" icon="plus" onClick={() => setVisible(true)}>
+      <Button
+        variant="secondary"
+        icon={<IconPlus />}
+        onClick={() => setVisible(true)}
+      >
         {t('add-reference-data')}
       </Button>
 

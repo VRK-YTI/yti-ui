@@ -23,7 +23,7 @@ import LanguageSelector, {
 } from 'yti-common-ui/form/language-selector';
 import Prefix from 'yti-common-ui/form/prefix';
 import Contact from 'yti-common-ui/form/contact';
-import { useGetFreePrefixMutation } from '@app/common/components/prefix';
+import { useGetFreePrefixMutation } from '@app/common/components/prefix/prefix.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { FormErrors } from './validate-form';
 import AddBlock from './add-block';

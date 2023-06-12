@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from 'suomifi-ui-components';
+import { IconLinkList } from 'suomifi-ui-components';
 import { SidebarLinkListItemWrapper } from './sidebar.styles';
 
 export interface SidebarLinkListItemProps {
@@ -11,7 +11,7 @@ export default function SidebarLinkListItem({
 }: SidebarLinkListItemProps) {
   return (
     <SidebarLinkListItemWrapper>
-      <Icon icon="linkList" />
+      <IconLinkList />
       {children}
     </SidebarLinkListItemWrapper>
   );

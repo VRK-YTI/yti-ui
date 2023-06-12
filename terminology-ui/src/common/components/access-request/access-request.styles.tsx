@@ -19,8 +19,7 @@ export const Title = styled.h2`
 `;
 
 export const ModalButton = styled(Button)`
-  white-space: nowrap;
-  width: min-content;
+  width: max-content;
 `;
 
 export const ModalContentBlock = styled(Block)`

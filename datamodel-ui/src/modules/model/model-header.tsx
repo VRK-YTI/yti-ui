@@ -1,16 +1,25 @@
 import { MainTitle, BadgeBar, Badge } from 'yti-common-ui/title-block';
 import { TitleWrapper } from './model.styles';
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
-import { Button, Icon } from 'suomifi-ui-components';
+import {
+  Button,
+  IconApplicationProfile,
+  IconDownload,
+  IconFullscreen,
+  IconGrid,
+  IconMapMyLocation,
+  IconMenu,
+  IconMinus,
+  IconPlus,
+  IconSave,
+  IconSwapRounded,
+} from 'suomifi-ui-components';
 import { getStatus, getTitle, getType } from '@app/common/utils/get-value';
 import {
   translateModelType,
   translateStatus,
 } from '@app/common/utils/translation-helpers';
-import {
-  MoveButton,
-  ToolsButtonGroup,
-} from 'yti-common-ui/drawer/drawer.styles';
+import { ToolsButtonGroup } from 'yti-common-ui/drawer/drawer.styles';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 import { useBreakpoints } from 'yti-common-ui/media-query';
@@ -51,7 +60,11 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
         <MainTitle>{model.title}</MainTitle>
         <BadgeBar larger={true}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Icon icon="applicationProfile" color="hsl(212, 63%, 49%)" />{' '}
+            {modelInfo?.type === 'PROFILE' ? (
+              <IconApplicationProfile color="hsl(212, 63%, 49%)" />
+            ) : (
+              <IconGrid color="hsl(212, 63%, 49%)" />
+            )}{' '}
             {translateModelType(getType(modelInfo), t)}
           </div>
           <span>{modelInfo?.prefix}</span>
@@ -66,19 +79,14 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
           <>
             <ToolsButtonGroup $isSmall={isSmall}>
               <>
-                <Button icon="plus" />
-                <Button icon="minus" />
-                <MoveButton>
-                  <Icon icon="arrowUp" id="up" />
-                  <Icon icon="arrowRight" id="right" />
-                  <Icon icon="arrowDown" id="down" />
-                  <Icon icon="arrowLeft" id="left" />
-                </MoveButton>
-                <Button icon="swapRounded" />
-                <Button icon="mapMyLocation" />
-                <Button icon="download" />
-                <Button icon="save" />
-                <Button icon="menu" variant="secondary" />
+                <Button icon={<IconPlus />} />
+                <Button icon={<IconMinus />} />
+                <Button icon={<IconFullscreen />} />
+                <Button icon={<IconSwapRounded />} />
+                <Button icon={<IconMapMyLocation />} />
+                <Button icon={<IconDownload />} />
+                <Button icon={<IconSave />} />
+                <Button icon={<IconMenu />} variant="secondary" />
               </>
             </ToolsButtonGroup>
           </>

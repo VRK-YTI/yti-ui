@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
-import { Button } from 'suomifi-ui-components';
+import { Button, IconUpload } from 'suomifi-ui-components';
 import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
 
 const ConceptImportModalDynamic = dynamic(
@@ -30,7 +30,11 @@ export default function ConceptImportModal({
 
   return (
     <>
-      <Button icon="upload" variant="secondary" onClick={() => handleClick()}>
+      <Button
+        icon={<IconUpload />}
+        variant="secondary"
+        onClick={() => handleClick()}
+      >
         {t('import-concepts')}
       </Button>
 

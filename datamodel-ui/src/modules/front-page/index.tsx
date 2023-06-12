@@ -15,7 +15,13 @@ import { useTranslation } from 'next-i18next';
 import { useGetSearchModelsQuery } from '@app/common/components/search-models/search-models.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import { Modal, ModalContent, SingleSelectData } from 'suomifi-ui-components';
+import {
+  IconApplicationProfile,
+  IconGrid,
+  Modal,
+  ModalContent,
+  SingleSelectData,
+} from 'suomifi-ui-components';
 import useUrlState from 'yti-common-ui/utils/hooks/use-url-state';
 import {
   Description,
@@ -124,7 +130,8 @@ export default function FrontPage() {
           data: object.comment,
           lang: i18n.language,
         }),
-        icon: 'applicationProfile',
+        icon:
+          object.type === 'PROFILE' ? <IconApplicationProfile /> : <IconGrid />,
         status: object.status,
         partOf: partOf,
         title: getLanguageVersion({

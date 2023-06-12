@@ -27,7 +27,7 @@ const actions = [
   'DELETE_ATTRIBUTE',
 ] as const;
 
-export type Actions = typeof actions[number];
+export type Actions = (typeof actions)[number];
 
 export interface hasPermissionProps {
   actions: Actions | Actions[];

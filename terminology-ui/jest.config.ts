@@ -11,6 +11,7 @@ const config: Config.InitialOptions = {
   moduleNameMapper: {
     '^@app(.*)$': '<rootDir>/src$1',
     '^@common(.*)$': '<rootDir>/../common-ui$1',
+    '^axios$': 'axios/dist/axios.js',
   },
   moduleDirectories: [
     'node_modules',

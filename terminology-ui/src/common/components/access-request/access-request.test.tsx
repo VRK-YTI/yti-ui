@@ -47,18 +47,14 @@ describe('access-request', () => {
     );
 
     userEvent.click(screen.getByText('tr-access-request-access'));
-    /*
-      Note: Because AccessRequestModal is dynamically imported
-      we need to wait for the component to be rendered for the
-      first check.
-    */
-    await expect(screen.findByText(/Test-org/)).resolves.toBeInTheDocument();
+    const el = await screen.findByText('tr-access-pick-org');
+    expect(el).toBeInTheDocument();
     expect(screen.getByText(/tr-access-terminology/)).toBeInTheDocument();
     expect(screen.getByText(/tr-access-reference-data/)).toBeInTheDocument();
     expect(screen.getByText(/tr-access-data-vocabularies/)).toBeInTheDocument();
   });
 
-  it('should mark checkboxes if user already has role', () => {
+  it('should mark checkboxes if user already has role', async () => {
     const store = makeStore(getMockContext());
     const loginInitialState = Object.assign({}, initialState);
     loginInitialState['rolesInOrganizations'] = {
@@ -74,7 +70,8 @@ describe('access-request', () => {
     );
 
     userEvent.click(screen.getByText('tr-access-request-access'));
-    userEvent.click(screen.getByText('tr-access-pick-org'));
+    const el = await screen.findAllByText('tr-access-pick-org');
+    userEvent.click(el[0]);
     userEvent.click(screen.getByText('Test-org'));
     userEvent.click(screen.getByText('tr-access-terminology'));
     userEvent.click(screen.getByText('tr-access-send-request'));

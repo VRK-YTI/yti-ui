@@ -1,7 +1,7 @@
 #
 # PRE-BUILD STAGE
 #
-FROM node:16.13.1-alpine3.14@sha256:a9b9cb880fa429b0bea899cd3b1bc081ab7277cc97e6d2dcd84bd9753b2027e1 AS deps
+FROM node:18.16.0-alpine3.16@sha256:f47850733d8522489f57bfe86d790b1ee167a4b863d83d37572fb28cf10ec5e8 AS deps
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
@@ -17,7 +17,7 @@ RUN npm ci
 #
 
 # Rebuild the source code only when needed
-FROM node:16.13.1-alpine3.14@sha256:a9b9cb880fa429b0bea899cd3b1bc081ab7277cc97e6d2dcd84bd9753b2027e1 AS builder
+FROM node:18.16.0-alpine3.16@sha256:f47850733d8522489f57bfe86d790b1ee167a4b863d83d37572fb28cf10ec5e8 AS builder
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -54,7 +54,7 @@ RUN npm run build && npm install --production --ignore-scripts --prefer-offline
 # INSTALL STAGE
 #
 
-FROM node:16.13.1-alpine3.14@sha256:a9b9cb880fa429b0bea899cd3b1bc081ab7277cc97e6d2dcd84bd9753b2027e1 AS runner
+FROM node:18.16.0-alpine3.16@sha256:f47850733d8522489f57bfe86d790b1ee167a4b863d83d37572fb28cf10ec5e8 AS runner
 WORKDIR /app/datamodel-ui
 
 ENV NODE_ENV production

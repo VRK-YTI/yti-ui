@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useMemo } from 'react';
 import {
   Button,
+  IconEdit,
   Notification,
   Paragraph,
   Text,
@@ -183,7 +184,7 @@ export default function Collection({
                       <Link href={`${router.asPath}/edit`}>
                         <Button
                           variant="secondary"
-                          icon="edit"
+                          icon={<IconEdit />}
                           id="edit-collection-button"
                         >
                           {t('edit-collection')}

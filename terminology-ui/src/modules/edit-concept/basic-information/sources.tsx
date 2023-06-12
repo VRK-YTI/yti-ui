@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { Button, Text } from 'suomifi-ui-components';
+import { Button, IconRemove, Text } from 'suomifi-ui-components';
 import { v4 } from 'uuid';
 import { DiagramType, ListType } from '../new-concept.types';
 import {
@@ -59,7 +59,7 @@ export default function Sources({
                 <Text variant="bold">{t('source', { count: 1 })}</Text>
                 <Button
                   variant="secondaryNoBorder"
-                  icon="remove"
+                  icon={<IconRemove />}
                   onClick={() => handleRemoveSource(source.id)}
                 >
                   {t('remove')}

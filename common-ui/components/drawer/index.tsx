@@ -1,6 +1,11 @@
 import { useBreakpoints } from '../media-query';
-import { useEffect, useState, MouseEvent as ReactMouseEvent } from 'react';
-import { Icon, BaseIconKeys } from 'suomifi-ui-components';
+import {
+  useEffect,
+  useState,
+  MouseEvent as ReactMouseEvent,
+  ReactNode,
+} from 'react';
+import { IconChevronLeft, IconChevronRight } from 'suomifi-ui-components';
 import {
   DrawerButtonGroup,
   DrawerContainer,
@@ -14,7 +19,7 @@ interface SideNavigationProps {
   buttons: React.ReactFragment;
   smallButtons: {
     id: string;
-    icon: BaseIconKeys;
+    icon: ReactNode;
     label: string;
     onClick: () => void;
   }[];
@@ -70,7 +75,7 @@ export default function Drawer({
             variant="secondaryNoBorder"
             $open={open}
           >
-            <Icon icon={open ? 'chevronLeft' : 'chevronRight'} />
+            {open ? <IconChevronLeft /> : <IconChevronRight />}
           </ToggleButton>
 
           {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions*/}

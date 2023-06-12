@@ -1,6 +1,12 @@
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
-import { Button, Paragraph, Text } from 'suomifi-ui-components';
+import {
+  Button,
+  IconAlert,
+  IconAlertOff,
+  Paragraph,
+  Text,
+} from 'suomifi-ui-components';
 import { useStoreDispatch } from '@app/store';
 import { setAlert } from '../alert/alert.slice';
 import {
@@ -64,7 +70,7 @@ export default function Subscription({ uri }: SubscriptionProps) {
 
       <Button
         variant="secondary"
-        icon={subscribed ? 'alertOff' : 'alert'}
+        icon={subscribed ? <IconAlertOff /> : <IconAlert />}
         onClick={() => handleSubscription(subscribed)}
         id="toggle-subscription-button"
       >
