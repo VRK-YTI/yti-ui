@@ -8,44 +8,38 @@ import { BasicBlock } from 'yti-common-ui/block';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import Separator from 'yti-common-ui/separator';
 import ConceptView from '../concept-view';
+import HasPermission from '@app/common/utils/has-permission';
 
 export default function CommonViewContent({
   modelId,
   data,
-  displayLabel,
 }: {
   modelId: string;
   data: Resource;
-  displayLabel?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
+  const hasPermission = HasPermission({
+    actions: ['ADMIN_ASSOCIATION', 'ADMIN_ATTRIBUTE'],
+  });
 
   return (
     <>
-      {displayLabel && (
-        <BasicBlock title={`${data.type} nimi`}>
-          {getLanguageVersion({
-            data: data.label,
-            lang: i18n.language,
-            appendLocale: true,
-          })}
-        </BasicBlock>
-      )}
-
-      <BasicBlock title={t('concept')}>
-        <ConceptView data={data.subject} />
-      </BasicBlock>
-
       <BasicBlock title={translateCommonForm('identifier', data.type, t)}>
         {`${modelId}:${data.identifier}`}
         <Button
           icon={<IconCopy />}
           variant="secondary"
-          style={{ width: 'min-content', whiteSpace: 'nowrap' }}
-          onClick={() => navigator.clipboard.writeText(data.identifier)}
+          style={{ width: 'max-content' }}
+          onClick={() =>
+            navigator.clipboard.writeText(`${modelId}:${data.identifier}`)
+          }
         >
           {t('copy-to-clipboard')}
         </Button>
+      </BasicBlock>
+
+      <BasicBlock title={t('concept')}>
+        <ConceptView data={data.subject} />
       </BasicBlock>
 
       {data.type === ResourceType.ATTRIBUTE && (
@@ -127,19 +121,22 @@ export default function CommonViewContent({
 
       <BasicBlock title={t('created')}>
         <FormattedDate date={data.created} />
-        {data.creator ? `, ${data.creator.name}` : ''}
+        {data.creator.name ? `, ${data.creator.name}` : ''}
       </BasicBlock>
 
       <BasicBlock title={t('modified-at')}>
         <FormattedDate date={data.modified} />
-        {data.creator ? `, ${data.modifier.name}` : ''}
+        {data.modifier.name ? `, ${data.modifier.name}` : ''}
       </BasicBlock>
 
-      <BasicBlock title={t('editorial-note')}>
-        {data.editorialNote ?? t('no-editorial-note')}
-      </BasicBlock>
+      {hasPermission ? (
+        <BasicBlock title={t('work-group-comment', { ns: 'admin' })}>
+          {data.editorialNote ?? t('no-work-group-comment', { ns: 'admin' })}
+        </BasicBlock>
+      ) : (
+        <></>
+      )}
 
-      <BasicBlock title={t('uri')}>{data.uri}</BasicBlock>
       <Separator />
 
       <BasicBlock title={t('contributors')}>

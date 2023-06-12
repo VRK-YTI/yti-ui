@@ -186,7 +186,10 @@ export default function AttributeModal({
           <ModalTitle>{t('add-attribute')}</ModalTitle>
           <MultiColumnSearch
             primaryColumnName={t('attribute-name')}
-            results={resultsFormatted}
+            result={{
+              totalHitCount: result.data?.totalHitCount ?? 0,
+              items: resultsFormatted,
+            }}
             selectedId={selectedId}
             setSelectedId={setSelectedId}
             searchParams={searchParams}

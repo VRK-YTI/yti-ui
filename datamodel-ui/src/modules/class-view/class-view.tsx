@@ -438,20 +438,22 @@ export default function ClassView({
               </StatusChip>
             </div>
 
-            <BasicBlock title={t('concept')}>
-              <ConceptView data={data.subject} />
-            </BasicBlock>
-
             <BasicBlock title={t('class-identifier')}>
               {`${modelId}:${data.identifier}`}
               <Button
                 icon={<IconCopy />}
                 variant="secondary"
-                style={{ width: 'min-content', whiteSpace: 'nowrap' }}
-                onClick={() => navigator.clipboard.writeText(data.identifier)}
+                style={{ width: 'max-content' }}
+                onClick={() =>
+                  navigator.clipboard.writeText(`${modelId}:${data.identifier}`)
+                }
               >
                 {t('copy-to-clipboard')}
               </Button>
+            </BasicBlock>
+
+            <BasicBlock title={t('concept')}>
+              <ConceptView data={data.subject} />
             </BasicBlock>
 
             <BasicBlock title={t('upper-class')}>
@@ -497,6 +499,8 @@ export default function ClassView({
                 appendLocale: true,
               }) || t('no-note')}
             </BasicBlock>
+
+            <Separator />
 
             <BasicBlock
               title={t('attributes', { count: data.attribute?.length ?? 0 })}
@@ -544,6 +548,8 @@ export default function ClassView({
               )}
             </BasicBlock>
 
+            <Separator />
+
             <BasicBlock title={t('references-from-other-components')}>
               {t('no-references')}
             </BasicBlock>
@@ -552,17 +558,22 @@ export default function ClassView({
 
             <BasicBlock title={t('created')}>
               <FormattedDate date={data.created} />
+              {data.creator.name ? `, ${data.creator.name}` : ''}
             </BasicBlock>
 
             <BasicBlock title={t('modified-at')}>
-              <FormattedDate date={data.created} />
+              <FormattedDate date={data.modified} />
+              {data.modifier.name ? `, ${data.modifier.name}` : ''}
             </BasicBlock>
 
-            <BasicBlock title={t('editorial-note')}>
-              {data.editorialNote ?? t('no-editorial-note')}
-            </BasicBlock>
-
-            <BasicBlock title={t('uri')}>{data.uri}</BasicBlock>
+            {hasPermission ? (
+              <BasicBlock title={t('work-group-comment', { ns: 'admin' })}>
+                {data.editorialNote ??
+                  t('no-work-group-comment', { ns: 'admin' })}
+              </BasicBlock>
+            ) : (
+              <></>
+            )}
 
             <Separator />
 

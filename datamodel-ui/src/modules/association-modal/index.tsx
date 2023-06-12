@@ -186,7 +186,10 @@ export default function AssociationModal({
           <ModalTitle>{t('add-association')}</ModalTitle>
           <MultiColumnSearch
             primaryColumnName={t('association-name')}
-            results={resultsFormatted}
+            result={{
+              totalHitCount: result.data?.totalHitCount ?? 0,
+              items: resultsFormatted,
+            }}
             selectedId={selectedId}
             setSelectedId={setSelectedId}
             searchParams={searchParams}

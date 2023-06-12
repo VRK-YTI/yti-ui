@@ -22,7 +22,15 @@ export interface ClassType {
   subject?: ConceptType;
   identifier: string;
   created: string;
+  creator: {
+    id: string | null;
+    name: string | null;
+  };
   modified: string;
+  modifier: {
+    id: string | null;
+    name: string | null;
+  };
   contributor: [
     {
       id: string;
