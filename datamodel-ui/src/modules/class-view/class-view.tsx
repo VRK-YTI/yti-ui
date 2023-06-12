@@ -120,7 +120,7 @@ export default function ClassView({
     }
     setBasedOnNodeShape(targetIsAppProfile ?? false);
 
-    if (applicationProfile && value) {
+    if (applicationProfile && value && !targetIsAppProfile) {
       setShowAppProfileModal(true);
       setSelectedNodeShape({
         nodeShape: value,
