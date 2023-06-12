@@ -13,6 +13,16 @@ import LinkedDataView from '../linked-data-view';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import Documentation from '../documentation';
 import HasPermission from '@app/common/utils/has-permission';
+import {
+  IconApplicationProfile,
+  IconInfo,
+  IconLink,
+  IconRows,
+  IconSearch,
+  IconSwapVertical,
+  IconWindow,
+  IconRegisters,
+} from 'suomifi-ui-components';
 
 interface ModelProps {
   modelId: string;
@@ -37,24 +47,24 @@ export default function Model({ modelId }: ModelProps) {
     const v = [
       {
         id: 'search',
-        icon: 'search',
+        icon: <IconSearch />,
         buttonLabel: t('search-variant'),
         component: <SearchView modelId={modelId} />,
       },
       {
         id: 'graph',
-        icon: 'applicationProfile',
+        icon: <IconApplicationProfile />,
         buttonLabel: t('graph'),
       },
       {
         id: 'info',
-        icon: 'info',
+        icon: <IconInfo />,
         buttonLabel: t('details'),
         component: <ModelInfoView />,
       },
       {
         id: 'links',
-        icon: 'attachment',
+        icon: <IconLink />,
         buttonLabel: t('links'),
         component: (
           <LinkedDataView
@@ -65,7 +75,7 @@ export default function Model({ modelId }: ModelProps) {
       },
       {
         id: 'classes',
-        icon: 'chatHeart',
+        icon: <IconWindow />,
         buttonLabel: t('classes'),
         component: (
           <ClassView
@@ -78,7 +88,7 @@ export default function Model({ modelId }: ModelProps) {
       },
       {
         id: 'attributes',
-        icon: 'history',
+        icon: <IconRows />,
         buttonLabel: t('attributes'),
         buttonLabelSm: t('attributes-abbreviation'),
         component: (
@@ -92,7 +102,7 @@ export default function Model({ modelId }: ModelProps) {
       },
       {
         id: 'associations',
-        icon: 'swapVertical',
+        icon: <IconSwapVertical />,
         buttonLabel: t('associations'),
         buttonLabelSm: t('associations-abbreviation'),
         component: (
@@ -111,7 +121,7 @@ export default function Model({ modelId }: ModelProps) {
         ...v,
         {
           id: 'documentation',
-          icon: 'registers',
+          icon: <IconRegisters />,
           buttonLabel: t('documentation-fitted', { ns: 'admin' }),
           component: <Documentation modelId={modelId} />,
         },

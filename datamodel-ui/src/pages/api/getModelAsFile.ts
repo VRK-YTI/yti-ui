@@ -1,5 +1,5 @@
 import { userCookieOptions } from '@app/common/utils/user-cookie-options';
-import axios, { AxiosRequestHeaders } from 'axios';
+import axios, { RawAxiosRequestHeaders } from 'axios';
 import { withIronSessionApiRoute } from 'iron-session/next';
 
 export default withIronSessionApiRoute(
@@ -25,7 +25,7 @@ export default withIronSessionApiRoute(
         filename += '.jsonld';
     }
 
-    const headers: AxiosRequestHeaders = {
+    const headers: RawAxiosRequestHeaders = {
       Accept: mimeType,
     };
 

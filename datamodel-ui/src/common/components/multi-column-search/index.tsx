@@ -216,7 +216,9 @@ export default function MultiColumnSearch({
         <SingleSelect
           labelText={t('information-domain')}
           itemAdditionHelpText=""
-          ariaOptionsAvailableText={t('information-domains-available')}
+          ariaOptionsAvailableText={
+            t('information-domains-available') as string
+          }
           clearButtonLabel={t('clear-selection')}
           defaultSelectedItem={serviceCategories.find(
             (category) => category.uniqueItemId === '-1'

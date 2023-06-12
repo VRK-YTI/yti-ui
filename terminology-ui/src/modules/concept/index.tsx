@@ -3,6 +3,7 @@ import React, { useEffect, useMemo } from 'react';
 import {
   Button,
   ExternalLink,
+  IconEdit,
   Notification,
   Paragraph,
   Text,
@@ -193,7 +194,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                       >
                         <Button
                           variant="secondary"
-                          icon="edit"
+                          icon={<IconEdit />}
                           id="edit-concept-button"
                         >
                           {t('edit-concept')}

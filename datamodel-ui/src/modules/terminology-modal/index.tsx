@@ -15,6 +15,7 @@ import {
   Checkbox,
   Chip,
   ExternalLink,
+  IconPlus,
   Modal,
   ModalContent,
   ModalFooter,
@@ -154,7 +155,7 @@ export default function TerminologyModal({
     <>
       <Button
         variant="secondary"
-        icon="plus"
+        icon={<IconPlus />}
         id="terminologies"
         onClick={() => setVisible(true)}
       >
@@ -203,10 +204,11 @@ export default function TerminologyModal({
           <SingleSelect
             labelText={t('information-domain')}
             visualPlaceholder={t('input-or-select')}
-            // This text can be left empty because item addition isn't enabled
             itemAdditionHelpText=""
-            ariaOptionsAvailableText={t('information-domains-available')}
-            clearButtonLabel={t('clear-all-selections')}
+            ariaOptionsAvailableText={
+              t('information-domains-available') as string
+            }
+            clearButtonLabel={t('clear-all-selections') as string}
             items={serviceCategories}
             defaultSelectedItem={serviceCategories.find(
               (category) => category.uniqueItemId === '-1'

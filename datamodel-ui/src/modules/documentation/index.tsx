@@ -1,7 +1,15 @@
 import { KeyboardEvent, createRef, useEffect, useRef, useState } from 'react';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Button, HintText, Icon, Text } from 'suomifi-ui-components';
+import {
+  Button,
+  HintText,
+  IconListBulleted,
+  IconListNumbered,
+  IconAttachment,
+  IconImage,
+  Text,
+} from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import {
@@ -298,18 +306,18 @@ export default function Documentation({ modelId }: { modelId: string }) {
                 <ControlButton
                   onClick={() => handleButtonClick('listBulleted')}
                 >
-                  <Icon icon="listBulleted" />
+                  <IconListBulleted />
                 </ControlButton>
                 <ControlButton
                   onClick={() => handleButtonClick('listNumbered')}
                 >
-                  <Icon icon="listNumbered" />
+                  <IconListNumbered />
                 </ControlButton>
                 <ControlButton onClick={() => handleButtonClick('link')}>
-                  <Icon icon="attachment" />
+                  <IconAttachment />
                 </ControlButton>
                 <ControlButton onClick={() => handleButtonClick('image')}>
-                  <Icon icon="image" />
+                  <IconImage />
                 </ControlButton>
               </div>
 

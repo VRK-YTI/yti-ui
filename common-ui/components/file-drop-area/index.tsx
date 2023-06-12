@@ -1,6 +1,13 @@
 import { TFunction, useTranslation } from 'next-i18next';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { Button, InlineAlert, Paragraph, Text } from 'suomifi-ui-components';
+import {
+  Button,
+  IconPlus,
+  IconRemove,
+  InlineAlert,
+  Paragraph,
+  Text,
+} from 'suomifi-ui-components';
 import {
   FileBlock,
   FileInfo,
@@ -131,7 +138,7 @@ export default function FileDropArea({
               }}
             />
             <Button
-              icon="plus"
+              icon={<IconPlus />}
               variant="secondary"
               onClick={() => {
                 input.current && input.current.click();
@@ -144,7 +151,7 @@ export default function FileDropArea({
         ) : (
           <FileInfoBlock>
             <FileInfo>
-              <FileInfoStaticIcon icon="genericFile" />
+              <FileInfoStaticIcon />
               <div>
                 <Paragraph>
                   <Text color={'highlightBase'} variant={'bold'}>
@@ -163,7 +170,7 @@ export default function FileDropArea({
             </FileInfo>
             <FileRemoveButton
               variant="secondaryNoBorder"
-              icon="remove"
+              icon={<IconRemove />}
               onClick={() => setFile(null)}
               id="remove-file-button"
             >

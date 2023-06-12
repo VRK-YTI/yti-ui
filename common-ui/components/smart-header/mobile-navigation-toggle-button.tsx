@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'next-i18next';
 import IconButton from '../icon-button';
+import { IconClose, IconMenu } from 'suomifi-icons';
 
 export interface MobileNavigationToggleButtonProps {
   isOpen: boolean;
@@ -15,7 +16,7 @@ export default function MobileNavigationToggleButton({
 
   return (
     <IconButton
-      icon={isOpen ? 'close' : 'menu'}
+      icon={isOpen ? <IconClose /> : <IconMenu />}
       aria-label={isOpen ? t('navigation-close') : t('navigation-open')}
       onClick={() => setIsOpen((isOpen) => !isOpen)}
     />

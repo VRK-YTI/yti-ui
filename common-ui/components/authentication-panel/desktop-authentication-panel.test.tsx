@@ -4,6 +4,8 @@ import DesktopAuthenticationPanel from './desktop-authentication-panel';
 import { themeProvider } from '../../utils/test-utils';
 import { anonymousUser } from 'interfaces/user.interface';
 
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
+
 describe('authentication panel', () => {
   it('should render login button for unauthenticated user', () => {
     render(<DesktopAuthenticationPanel />, { wrapper: themeProvider });

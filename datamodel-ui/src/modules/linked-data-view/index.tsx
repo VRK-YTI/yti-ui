@@ -1,6 +1,12 @@
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
-import { Button, ExternalLink, Text, Tooltip } from 'suomifi-ui-components';
+import {
+  Button,
+  ExternalLink,
+  IconMenu,
+  Text,
+  Tooltip,
+} from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
@@ -73,7 +79,7 @@ export default function LinkedDataView({
             <div>
               <Button
                 variant="secondary"
-                iconRight="menu"
+                iconRight={<IconMenu />}
                 onClick={() => setShowTooltip(!showTooltip)}
               >
                 {t('actions')}
