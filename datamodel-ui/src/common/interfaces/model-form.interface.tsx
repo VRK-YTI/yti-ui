@@ -19,4 +19,5 @@ export interface ModelFormType {
   type: ModelType['type'];
   terminologies: ModelTerminology[];
   codeLists: ModelCodeList[];
+  documentation?: { [key: string]: string };
 }

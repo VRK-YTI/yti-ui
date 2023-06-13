@@ -50,8 +50,7 @@ export default function AssociationView({
     Object.keys(views.associations).filter((k) => k).length > 0
       ? Object.keys(views.associations).find(
           (k) =>
-            views.associations[k as keyof (typeof views)['associations']] ===
-            true
+            views.associations[k as keyof typeof views['associations']] === true
         )
       : 'list'
   );

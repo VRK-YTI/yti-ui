@@ -12,7 +12,7 @@ import { selectCurrentViewName, setView } from '../model/model.slice';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
-type ViewType = {
+export type ViewType = {
   id:
     | 'search'
     | 'graph'
@@ -20,7 +20,8 @@ type ViewType = {
     | 'links'
     | 'classes'
     | 'attributes'
-    | 'associations';
+    | 'associations'
+    | 'documentation';
   icon: ReactNode;
   buttonLabel: string;
   buttonLabelSm?: string;

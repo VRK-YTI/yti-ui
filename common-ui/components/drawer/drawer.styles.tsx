@@ -166,7 +166,7 @@ export const DrawerButton = styled(Button)<{
   gap: 5px;
   align-items: center;
   justify-content: center;
-  white-space: nowrap;
+  white-space: pre;
   border-radius: 0;
 
   ${(props) =>

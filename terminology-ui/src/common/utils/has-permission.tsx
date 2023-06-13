@@ -25,7 +25,7 @@ const actions = [
   'DELETE_COLLECTION',
 ] as const;
 
-export type Actions = (typeof actions)[number];
+export type Actions = typeof actions[number];
 
 export interface hasPermissionProps {
   actions: Actions | Actions[];

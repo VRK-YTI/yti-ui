@@ -33,6 +33,7 @@ export default function generatePayload(
     externalNamespaces: data.externalNamespaces,
     terminologies: data.terminologies.map((t) => t.uri),
     codeLists: data.codeLists.map((c) => c.id),
+    documentation: data.documentation ?? {},
     contact: data.contact !== '' ? data.contact : 'yhteentoimivuus@dvv.fi',
   };
 }

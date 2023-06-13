@@ -120,7 +120,7 @@ export default function TerminologyModal({
 
   const handleSearchChange = (
     key: keyof TerminologySearchParams,
-    value: (typeof searchParams)[keyof TerminologySearchParams]
+    value: typeof searchParams[keyof TerminologySearchParams]
   ) => {
     if (key === 'groups' && isEqual(value, ['-1'])) {
       setSearchParams({ ...searchParams, [key]: [], ['pageFrom']: 0 });
