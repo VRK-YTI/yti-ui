@@ -15,7 +15,15 @@ export function classFormToClass(data: ClassFormType): ClassType {
     subject: data.concept,
     contact: '',
     created: '',
+    creator: {
+      id: '',
+      name: '',
+    },
     modified: '',
+    modifier: {
+      id: '',
+      name: '',
+    },
     contributor: [
       {
         id: '',

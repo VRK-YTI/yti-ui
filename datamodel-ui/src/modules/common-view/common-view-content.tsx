@@ -13,17 +13,40 @@ import HasPermission from '@app/common/utils/has-permission';
 export default function CommonViewContent({
   modelId,
   data,
+  displayLabel,
 }: {
   modelId: string;
   data: Resource;
+  displayLabel?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
     actions: ['ADMIN_ASSOCIATION', 'ADMIN_ATTRIBUTE'],
   });
 
+  function getDisplayLabelTitle(type: ResourceType) {
+    switch (type) {
+      case ResourceType.ASSOCIATION:
+        return t('association-name', { ns: 'admin' });
+      case ResourceType.ATTRIBUTE:
+        return t('attribute-name', { ns: 'admin' });
+      default:
+        return t('name');
+    }
+  }
+
   return (
     <>
+      {displayLabel && (
+        <BasicBlock title={getDisplayLabelTitle(data.type)}>
+          {getLanguageVersion({
+            data: data.label,
+            lang: i18n.language,
+            appendLocale: true,
+          })}
+        </BasicBlock>
+      )}
+
       <BasicBlock title={translateCommonForm('identifier', data.type, t)}>
         {`${modelId}:${data.identifier}`}
         <Button
