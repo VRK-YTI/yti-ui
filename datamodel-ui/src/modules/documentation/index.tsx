@@ -101,6 +101,7 @@ export default function Documentation({ modelId }: { modelId: string }) {
     postModel({
       payload: payload,
       prefix: modelData.prefix,
+      isApplicationProfile: modelData.type === 'PROFILE',
     });
   };
 
