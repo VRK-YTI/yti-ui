@@ -3,7 +3,7 @@ import { useGetServiceCategoriesQuery } from '@app/common/components/service-cat
 import getOrganizations from '@app/common/utils/get-organizations';
 import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Dropdown,
   DropdownItem,
@@ -18,7 +18,9 @@ import {
   ModelFormContainer,
   WideMultiSelect,
 } from './model-form.styles';
-import LanguageSelector from 'yti-common-ui/form/language-selector';
+import LanguageSelector, {
+  LanguageBlockType,
+} from 'yti-common-ui/form/language-selector';
 import Prefix from 'yti-common-ui/form/prefix';
 import Contact from 'yti-common-ui/form/contact';
 import { useGetFreePrefixMutation } from '@app/common/components/prefix/prefix.slice';
@@ -27,6 +29,7 @@ import { FormErrors } from './validate-form';
 import AddBlock from './add-block';
 import { Status } from '@app/common/interfaces/status.interface';
 import { FormUpdateErrors } from '../model/validate-form-update';
+import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
 
 interface ModelFormProps {
   formData: ModelFormType;
@@ -50,6 +53,8 @@ export default function ModelForm({
     i18n.language
   );
   const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
+  const { data: languages, isSuccess } = useGetLanguagesQuery();
+  const [languageList, setLanguageList] = useState<LanguageBlockType[]>([]);
 
   const serviceCategories = useMemo(() => {
     if (!serviceCategoriesData) {
@@ -76,6 +81,64 @@ export default function ModelForm({
       }))
       .sort((o1, o2) => (o1.labelText > o2.labelText ? 1 : -1));
   }, [organizationsData, i18n.language]);
+
+  useEffect(() => {
+    if (isSuccess && languageList.length === 0) {
+      const selectedLangCodes =
+        formData.languages.map((d) => d.uniqueItemId) ?? [];
+
+      const langResult = languages?.results.map((r) => {
+        const labelText = `${
+          r.prefLabel[i18n.language]
+        } ${r.codeValue.toUpperCase()}`;
+
+        if (selectedLangCodes.includes(r.codeValue)) {
+          const selectedLang = formData.languages?.find(
+            (d) => d.uniqueItemId === r.codeValue
+          );
+          return {
+            labelText,
+            uniqueItemId: r.codeValue,
+            title: selectedLang?.title ?? '',
+            description: selectedLang?.description ?? '',
+            selected: true,
+          };
+        } else {
+          return {
+            labelText,
+            uniqueItemId: r.codeValue,
+            title: '',
+            description: '',
+            selected: false,
+          };
+        }
+      });
+
+      if (langResult) {
+        const promotedOrder = ['fi', 'sv', 'en'];
+        const promoted: LanguageBlockType[] = [];
+        const otherLanguages = langResult.reduce((langList, lang) => {
+          promotedOrder.includes(lang.uniqueItemId)
+            ? promoted.push(lang)
+            : langList.push(lang);
+          return langList;
+        }, [] as LanguageBlockType[]);
+
+        promoted.sort(
+          (a, b) =>
+            promotedOrder.indexOf(a.uniqueItemId) -
+            promotedOrder.indexOf(b.uniqueItemId)
+        );
+        setLanguageList([...promoted, ...otherLanguages]);
+      }
+    }
+  }, [
+    languages,
+    languageList.length,
+    isSuccess,
+    i18n.language,
+    formData.languages,
+  ]);
 
   return (
     <ModelFormContainer>
@@ -138,17 +201,38 @@ export default function ModelForm({
     return (
       <div>
         <LanguageSelector
-          items={formData.languages}
+          items={languageList}
           labelText={t('information-description-languages')}
           hintText={t('information-description-languages-hint-text')}
           visualPlaceholder={t('select-information-description-languages')}
           isWide={true}
-          setLanguages={(e) =>
+          setLanguages={(e) => {
+            const selectedItems = e.filter((v) => v.selected);
+            const selectedIds = selectedItems.map((i) => i.uniqueItemId);
+            const updatedList = languageList.map((item) => {
+              if (selectedIds.includes(item.uniqueItemId)) {
+                const selected = selectedItems.find(
+                  (v) => v.uniqueItemId === item.uniqueItemId
+                );
+                return {
+                  ...item,
+                  title: selected?.title ?? '',
+                  description: selected?.description ?? '',
+                  selected: true,
+                };
+              }
+              return {
+                ...item,
+                selected: false,
+              };
+            });
+
+            setLanguageList(updatedList);
             setFormData({
               ...formData,
-              languages: e,
-            })
-          }
+              languages: selectedItems,
+            });
+          }}
           userPosted={userPosted}
           translations={{
             textInput: t('language-input-text'),
