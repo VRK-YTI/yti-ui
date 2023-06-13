@@ -21,6 +21,7 @@ import { TooltipWrapper } from '../model/model.styles';
 import DeleteModal from '../delete-modal';
 import CommonViewContent from './common-view-content';
 import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
+import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 
 interface CommonViewProps {
   data?: Resource;
@@ -42,6 +43,7 @@ export default function CommonView({
     actions: ['ADMIN_ASSOCIATION', 'ADMIN_ATTRIBUTE'],
   });
   const [showTooltip, setShowTooltip] = useState(false);
+  const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
 
   useEffect(() => {
     if (ref.current) {
@@ -58,6 +60,7 @@ export default function CommonView({
             icon={<IconArrowLeft />}
             style={{ textTransform: 'uppercase' }}
             onClick={handleReturn}
+            ref={toolTipRef}
           >
             {data ? translateCommonForm('return', data.type, t) : t('back')}
           </Button>

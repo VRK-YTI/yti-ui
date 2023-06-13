@@ -53,6 +53,7 @@ import { useRouter } from 'next/router';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
 import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
 import ApplicationProfileFlow from './application-profile-flow';
+import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 
 interface ClassViewProps {
   modelId: string;
@@ -88,6 +89,7 @@ export default function ClassView({
   >();
   const globalSelected = useSelector(selectSelected());
   const view = useSelector(selectClassView());
+  const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
@@ -387,6 +389,7 @@ export default function ClassView({
                 variant="secondary"
                 iconRight={<IconMenu />}
                 onClick={() => setShowTooltip(!showTooltip)}
+                ref={toolTipRef}
               >
                 {t('actions')}
               </Button>
