@@ -109,9 +109,16 @@ export default function ClassForm({
       return;
     }
 
+    const usedLabels = Object.fromEntries(
+      Object.entries(data.label).filter((obj) => obj[1] !== '')
+    );
+
     putClass({
       modelId: modelId,
-      data: data,
+      data: {
+        ...data,
+        label: Object.keys(usedLabels).length > 0 ? usedLabels : {},
+      },
       classId: isEdit ? data.identifier : undefined,
       applicationProfile,
       basedOnNodeShape: basedOnNodeShape,

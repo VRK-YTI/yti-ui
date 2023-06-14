@@ -8,6 +8,7 @@ import { BasicBlock } from 'yti-common-ui/block';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import Separator from 'yti-common-ui/separator';
 import ConceptView from '../concept-view';
+import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 
 export default function CommonViewContent({
   modelId,
@@ -42,7 +43,7 @@ export default function CommonViewContent({
           icon={<IconCopy />}
           variant="secondary"
           style={{ width: 'min-content', whiteSpace: 'nowrap' }}
-          onClick={() => navigator.clipboard.writeText(data.identifier)}
+          onClick={() => navigator.clipboard.writeText(data.uri)}
         >
           {t('copy-to-clipboard')}
         </Button>
@@ -114,7 +115,16 @@ export default function CommonViewContent({
         {getLanguageVersion({
           data: data.note,
           lang: i18n.language,
-        }) || t('no-note')}
+        }) !== '' ? (
+          <SanitizedTextContent
+            text={getLanguageVersion({
+              data: data.note,
+              lang: i18n.language,
+            })}
+          />
+        ) : (
+          t('no-note')
+        )}
       </BasicBlock>
 
       <Separator />

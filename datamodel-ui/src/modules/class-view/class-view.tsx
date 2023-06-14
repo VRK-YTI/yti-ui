@@ -53,6 +53,7 @@ import { useRouter } from 'next/router';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
 import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
 import ApplicationProfileFlow from './application-profile-flow';
+import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 
 interface ClassViewProps {
   modelId: string;
@@ -448,7 +449,7 @@ export default function ClassView({
                 icon={<IconCopy />}
                 variant="secondary"
                 style={{ width: 'min-content', whiteSpace: 'nowrap' }}
-                onClick={() => navigator.clipboard.writeText(data.identifier)}
+                onClick={() => navigator.clipboard.writeText(data.uri)}
               >
                 {t('copy-to-clipboard')}
               </Button>
@@ -495,7 +496,17 @@ export default function ClassView({
                 data: data.note,
                 lang: i18n.language,
                 appendLocale: true,
-              }) || t('no-note')}
+              }) !== '' ? (
+                <SanitizedTextContent
+                  text={getLanguageVersion({
+                    data: data.note,
+                    lang: i18n.language,
+                    appendLocale: true,
+                  })}
+                />
+              ) : (
+                t('no-note')
+              )}
             </BasicBlock>
 
             <BasicBlock
