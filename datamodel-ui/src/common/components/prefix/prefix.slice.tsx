@@ -14,7 +14,7 @@ export const prefixApi = createApi({
   endpoints: (builder) => ({
     getFreePrefix: builder.mutation<boolean, string>({
       query: (prefix) => ({
-        url: `/model/freePrefix/${prefix}`,
+        url: `/model/free-prefix/${prefix}`,
         method: 'GET',
       }),
     }),

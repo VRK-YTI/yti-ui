@@ -9,6 +9,7 @@ import FormattedDate from 'yti-common-ui/formatted-date';
 import Separator from 'yti-common-ui/separator';
 import ConceptView from '../concept-view';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
+import HasPermission from '@app/common/utils/has-permission';
 
 export default function CommonViewContent({
   modelId,
@@ -20,11 +21,25 @@ export default function CommonViewContent({
   displayLabel?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
+  const hasPermission = HasPermission({
+    actions: ['ADMIN_ASSOCIATION', 'ADMIN_ATTRIBUTE'],
+  });
+
+  function getDisplayLabelTitle(type: ResourceType) {
+    switch (type) {
+      case ResourceType.ASSOCIATION:
+        return t('association-name', { ns: 'admin' });
+      case ResourceType.ATTRIBUTE:
+        return t('attribute-name', { ns: 'admin' });
+      default:
+        return t('name');
+    }
+  }
 
   return (
     <>
       {displayLabel && (
-        <BasicBlock title={`${data.type} nimi`}>
+        <BasicBlock title={getDisplayLabelTitle(data.type)}>
           {getLanguageVersion({
             data: data.label,
             lang: i18n.language,
@@ -33,20 +48,20 @@ export default function CommonViewContent({
         </BasicBlock>
       )}
 
-      <BasicBlock title={t('concept')}>
-        <ConceptView data={data.subject} />
-      </BasicBlock>
-
       <BasicBlock title={translateCommonForm('identifier', data.type, t)}>
         {`${modelId}:${data.identifier}`}
         <Button
           icon={<IconCopy />}
           variant="secondary"
-          style={{ width: 'min-content', whiteSpace: 'nowrap' }}
           onClick={() => navigator.clipboard.writeText(data.uri)}
+          style={{ width: 'max-content' }}
         >
           {t('copy-to-clipboard')}
         </Button>
+      </BasicBlock>
+
+      <BasicBlock title={t('concept')}>
+        <ConceptView data={data.subject} />
       </BasicBlock>
 
       {data.type === ResourceType.ATTRIBUTE && (
@@ -137,19 +152,22 @@ export default function CommonViewContent({
 
       <BasicBlock title={t('created')}>
         <FormattedDate date={data.created} />
-        {data.creator ? `, ${data.creator.name}` : ''}
+        {data.creator.name ? `, ${data.creator.name}` : ''}
       </BasicBlock>
 
       <BasicBlock title={t('modified-at')}>
         <FormattedDate date={data.modified} />
-        {data.creator ? `, ${data.modifier.name}` : ''}
+        {data.modifier.name ? `, ${data.modifier.name}` : ''}
       </BasicBlock>
 
-      <BasicBlock title={t('editorial-note')}>
-        {data.editorialNote ?? t('no-editorial-note')}
-      </BasicBlock>
+      {hasPermission ? (
+        <BasicBlock title={t('work-group-comment', { ns: 'admin' })}>
+          {data.editorialNote ?? t('no-work-group-comment', { ns: 'admin' })}
+        </BasicBlock>
+      ) : (
+        <></>
+      )}
 
-      <BasicBlock title={t('uri')}>{data.uri}</BasicBlock>
       <Separator />
 
       <BasicBlock title={t('contributors')}>

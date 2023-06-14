@@ -20,6 +20,7 @@ import LinkedDataForm from '../linked-data-form';
 import HasPermission from '@app/common/utils/has-permission';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 
 export default function LinkedDataView({
   modelId,
@@ -36,6 +37,7 @@ export default function LinkedDataView({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
   const [renderForm, setRenderForm] = useState(false);
+  const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
   const { data, refetch } = useGetModelQuery(modelId);
 
   const handleShowForm = () => {
@@ -81,6 +83,7 @@ export default function LinkedDataView({
                 variant="secondary"
                 iconRight={<IconMenu />}
                 onClick={() => setShowTooltip(!showTooltip)}
+                ref={toolTipRef}
               >
                 {t('actions')}
               </Button>
