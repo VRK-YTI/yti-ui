@@ -188,7 +188,10 @@ export default function ClassModal({
           <ModalTitle>{t('add-class')}</ModalTitle>
           <MultiColumnSearch
             primaryColumnName={t('class-name')}
-            results={resultsFormatted}
+            result={{
+              totalHitCount: result.data?.totalHitCount ?? 0,
+              items: resultsFormatted,
+            }}
             selectedId={selectedId}
             setSelectedId={setSelectedId}
             searchParams={searchParams}

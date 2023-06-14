@@ -33,6 +33,7 @@ import HasPermission from '@app/common/utils/has-permission';
 import DeleteModal from '../delete-modal';
 import { useStoreDispatch } from '@app/store';
 import { getModelId } from '@app/common/utils/parse-slug';
+import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -44,6 +45,7 @@ export default function ModelInfoView() {
   const [formData, setFormData] = useState<ModelFormType | undefined>();
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
   const hasPermission = HasPermission({ actions: ['ADMIN_DATA_MODEL'] });
   const { data: modelInfo, refetch } = useGetModelQuery(modelId);
 
@@ -118,6 +120,7 @@ export default function ModelInfoView() {
               variant="secondary"
               onClick={() => setShowTooltip(!showTooltip)}
               iconRight={<IconMenu />}
+              ref={toolTipRef}
             >
               {t('actions')}
             </Button>
