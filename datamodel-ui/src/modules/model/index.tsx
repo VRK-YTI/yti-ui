@@ -23,6 +23,8 @@ import {
   IconWindow,
   IconRegisters,
 } from 'suomifi-ui-components';
+import ResourceView from '../resource';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 interface ModelProps {
   modelId: string;
@@ -86,32 +88,50 @@ export default function Model({ modelId }: ModelProps) {
           />
         ),
       },
+      // {
+      //   id: 'attributes',
+      //   icon: <IconRows />,
+      //   buttonLabel: t('attributes'),
+      //   buttonLabelSm: t('attributes-abbreviation'),
+      //   component: (
+      //     <AttributeView
+      //       modelId={modelId}
+      //       languages={languages}
+      //       applicationProfile={modelInfo?.type === 'PROFILE'}
+      //       terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
+      //     />
+      //   ),
+      // },
+      // {
+      //   id: 'associations',
+      //   icon: <IconSwapVertical />,
+      //   buttonLabel: t('associations'),
+      //   buttonLabelSm: t('associations-abbreviation'),
+      //   component: (
+      //     <AssociationView
+      //       modelId={modelId}
+      //       languages={languages}
+      //       applicationProfile={modelInfo?.type === 'PROFILE'}
+      //       terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
+      //     />
+      //   ),
+      // },
       {
-        id: 'attributes',
+        id: 'associations',
         icon: <IconRows />,
-        buttonLabel: t('attributes'),
-        buttonLabelSm: t('attributes-abbreviation'),
+        buttonLabel: 'Test ASSOC',
+        buttonLabelSm: 'Test ASSOC',
         component: (
-          <AttributeView
-            modelId={modelId}
-            languages={languages}
-            applicationProfile={modelInfo?.type === 'PROFILE'}
-            terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
-          />
+          <ResourceView modelId={modelId} type={ResourceType.ASSOCIATION} />
         ),
       },
       {
-        id: 'associations',
-        icon: <IconSwapVertical />,
-        buttonLabel: t('associations'),
-        buttonLabelSm: t('associations-abbreviation'),
+        id: 'attributes',
+        icon: <IconRows />,
+        buttonLabel: 'Test ATTR',
+        buttonLabelSm: 'Test ATTR',
         component: (
-          <AssociationView
-            modelId={modelId}
-            languages={languages}
-            applicationProfile={modelInfo?.type === 'PROFILE'}
-            terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
-          />
+          <ResourceView modelId={modelId} type={ResourceType.ATTRIBUTE} />
         ),
       },
     ];
