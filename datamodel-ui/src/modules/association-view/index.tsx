@@ -73,16 +73,17 @@ export default function AssociationView({
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [ResourceType.ASSOCIATION],
   });
-  const { data: associationData } = useGetResourceQuery(
-    {
-      modelId: modelId,
-      resourceIdentifier: currentAssociationId ?? '',
-      applicationProfile,
-    },
-    {
-      skip: typeof currentAssociationId === 'undefined',
-    }
-  );
+  const { data: associationData, refetch: refetchAssociation } =
+    useGetResourceQuery(
+      {
+        modelId: modelId,
+        resourceIdentifier: currentAssociationId ?? '',
+        applicationProfile,
+      },
+      {
+        skip: typeof currentAssociationId === 'undefined',
+      }
+    );
 
   useEffect(() => {
     if (ref.current) {
@@ -133,7 +134,7 @@ export default function AssociationView({
 
   const handleFormFollowUp = (id: string) => {
     handleShowAssociation(id);
-    refetch();
+    refetchAssociation();
   };
 
   const handleEdit = () => {

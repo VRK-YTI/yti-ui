@@ -99,11 +99,15 @@ export default function CommonForm({
       return;
     }
 
+    const usedLabels = Object.fromEntries(
+      Object.entries(data.label).filter((obj) => obj[1] !== '')
+    );
+
     // TODO: Remove subResourceOf clearing when other supported
     // are implemented
     putResource({
       modelId: modelId,
-      data: { ...data, type: type, subResourceOf: [] },
+      data: { ...data, type: type, subResourceOf: [], label: usedLabels },
       resourceId: isEdit ? data.identifier : undefined,
       applicationProfile,
     });

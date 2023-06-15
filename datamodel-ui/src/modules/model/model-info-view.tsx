@@ -33,6 +33,7 @@ import HasPermission from '@app/common/utils/has-permission';
 import DeleteModal from '../delete-modal';
 import { useStoreDispatch } from '@app/store';
 import { getModelId } from '@app/common/utils/parse-slug';
+import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 
 export default function ModelInfoView() {
@@ -190,7 +191,10 @@ export default function ModelInfoView() {
             <MultilingualBlock
               data={Object.entries(modelInfo.description)
                 .sort((a, b) => compareLocales(a[0], b[0]))
-                .map((d) => ({ lang: d[0], value: d[1] }))}
+                .map((d) => ({
+                  lang: d[0],
+                  value: <SanitizedTextContent text={d[1]} />,
+                }))}
             />
           ) : (
             t('not-added')

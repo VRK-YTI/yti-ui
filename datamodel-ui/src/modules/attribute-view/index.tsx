@@ -73,16 +73,17 @@ export default function AttributeView({
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [ResourceType.ATTRIBUTE],
   });
-  const { data: attributeData } = useGetResourceQuery(
-    {
-      modelId: modelId,
-      resourceIdentifier: currentAttributeId ?? '',
-      applicationProfile,
-    },
-    {
-      skip: typeof currentAttributeId === 'undefined',
-    }
-  );
+  const { data: attributeData, refetch: refetchAttribute } =
+    useGetResourceQuery(
+      {
+        modelId: modelId,
+        resourceIdentifier: currentAttributeId ?? '',
+        applicationProfile,
+      },
+      {
+        skip: typeof currentAttributeId === 'undefined',
+      }
+    );
 
   useEffect(() => {
     if (ref.current) {
@@ -133,7 +134,7 @@ export default function AttributeView({
 
   const handleFormFollowUp = (id: string) => {
     handleShowAttribute(id);
-    refetch();
+    refetchAttribute();
   };
 
   const handleEdit = () => {
