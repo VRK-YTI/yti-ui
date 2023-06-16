@@ -11,7 +11,7 @@ export default withIronSessionApiRoute(
     }
 
     const withAuthProxy =
-      process.env.TERMINOLOGY_API_URL?.includes('yti-auth-proxy');
+      process.env.DATAMODEL_API_URL?.includes('yti-auth-proxy');
 
     let user: User | null = null;
     const cookies: { [key: string]: string } = {};
@@ -20,7 +20,7 @@ export default withIronSessionApiRoute(
 
     try {
       let fetchUrl: string =
-        process.env.TERMINOLOGY_API_URL + '/api/v1/frontend/authenticated-user';
+        process.env.DATAMODEL_API_URL + '/api/v1/frontend/authenticated-user';
       fetchUrl += '?fake.login.mail=' + encodeURIComponent(email);
 
       let authProxyHeaders = {};
@@ -44,7 +44,7 @@ export default withIronSessionApiRoute(
 
       // should receive a fake user on success
       user = response.data;
-
+      console.log(user);
       if (user && user.anonymous) {
         console.warn(
           'User from response appears to be anonymous, login may have failed'

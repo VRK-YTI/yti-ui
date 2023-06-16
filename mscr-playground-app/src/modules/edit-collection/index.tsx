@@ -3,13 +3,11 @@ import { useAddCollectionMutation } from '@app/common/components/modify/modify.s
 import PropertyValue from '@app/common/components/property-value';
 import Separator from 'yti-common-ui/separator';
 import { BadgeBar, MainTitle, SubTitle } from 'yti-common-ui/title-block';
-import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Button, Heading, InlineAlert } from 'suomifi-ui-components';
-import ConceptPicker from './concept-picker';
 import generateCollection from './generate-collection';
 import {
   ButtonBlock,
@@ -36,6 +34,9 @@ import {
   useGetAuthenticatedUserMutMutation,
   useGetAuthenticatedUserQuery,
 } from '@app/common/components/login/login.slice';
+import Collection from '../collection';
+import Collection from '../collection';
+import Collection from '../collection';
 
 export default function EditCollection({
   terminologyId,
@@ -45,24 +46,6 @@ export default function EditCollection({
   const { t } = useTranslation('collection');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
-  const { data: terminology } = useGetVocabularyQuery({
-    id: terminologyId,
-  });
-  const { data: collection } = useGetCollectionQuery(
-    /*
-      Setting collectionId as string manually because skip
-      flag isn't detected correctly by type checker.
-      It informs that collectionId might be undefined even
-      though call is skipped if collectionId isn't defined.
-    */
-    {
-      collectionId: collectionInfo?.collectionId as string,
-      terminologyId: terminologyId,
-    },
-    {
-      skip: !collectionInfo?.collectionId,
-    }
-  );
   const { data: authenticatedUser } = useGetAuthenticatedUserQuery();
   const [getAuthenticatedMutUser, authenticatedMutUser] =
     useGetAuthenticatedUserMutMutation();
@@ -71,12 +54,8 @@ export default function EditCollection({
   const [newCollectionId, setNewCollectionId] = useState('');
   const [emptyError, setEmptyError] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
-
-  const languages =
-    terminology?.properties.language?.map(({ value }) => value) ?? [];
-
   const [formData, setFormData] = useState<EditCollectionFormDataType>(
-    setInitialData(collection)
+    setInitialData()
   );
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
@@ -183,12 +162,7 @@ export default function EditCollection({
     <>
       <NewCollectionBlock $isSmall={isSmall}>
         <SubTitle>
-          <PropertyValue
-            property={getProperty(
-              'prefLabel',
-              terminology?.references.contributor
-            )}
-          />
+          <PropertyValue property={getProperty('prefLabel')} />
         </SubTitle>
         <MainTitle>{collectionName}</MainTitle>
         <PageHelpText>{t('new-collection-page-help')}</PageHelpText>
@@ -197,51 +171,7 @@ export default function EditCollection({
 
         <Heading variant="h3">{t('collection-basic-information')}</Heading>
 
-        <TextBlockWrapper id="collection-text-info-block">
-          {languages.map((language) => (
-            <NameTextInput
-              key={`name-input-${language}`}
-              labelText={`${t('field-name')}, ${translateLanguage(
-                language,
-                t
-              )} ${language.toUpperCase()}`}
-              visualPlaceholder={t('enter-collection-name')}
-              onBlur={(e) => setName(language, e.target.value.trim())}
-              status={emptyError ? 'error' : 'default'}
-              defaultValue={
-                formData.name.find((n) => n.lang === language)?.value
-              }
-              maxLength={TEXT_INPUT_MAX}
-              className="collection-name-input"
-            />
-          ))}
-
-          {languages.map((language) => (
-            <DescriptionTextarea
-              key={`description-textarea-${language}`}
-              labelText={`${t('field-definition')}, ${translateLanguage(
-                language,
-                t
-              )} ${language.toUpperCase()}`}
-              optionalText={t('optional', { ns: 'admin' })}
-              visualPlaceholder={t('enter-collection-description')}
-              onBlur={(e) => setDescription(language, e.target.value.trim())}
-              defaultValue={
-                formData.definition.find((n) => n.lang === language)?.value
-              }
-              maxLength={TEXT_AREA_MAX}
-              className="collection-description-input"
-            />
-          ))}
-        </TextBlockWrapper>
-
         <Separator isLarge />
-
-        <ConceptPicker
-          concepts={formData.concepts}
-          terminologyId={terminologyId}
-          onChange={setFormConcepts}
-        />
 
         <Separator isLarge />
 
@@ -318,17 +248,5 @@ export default function EditCollection({
           : [],
       };
     }
-
-    return {
-      name: languages.map((language) => ({
-        lang: language,
-        value: '',
-      })),
-      definition: languages.map((language) => ({
-        lang: language,
-        value: '',
-      })),
-      concepts: [],
-    };
   }
 }

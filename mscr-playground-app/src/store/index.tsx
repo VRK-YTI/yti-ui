@@ -1,13 +1,5 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { Context, createWrapper } from 'next-redux-wrapper';
-import {
-  terminologySearchSlice,
-  terminologySearchApi,
-} from '@app/common/components/terminology-search/terminology-search.slice';
-import {
-  vocabularyApi,
-  vocabularySlice,
-} from '@app/common/components/vocabulary/vocabulary.slice';
 import { conceptApi } from '@app/common/components/concept/concept.slice';
 import { useDispatch } from 'react-redux';
 import { collectionApi } from '@app/common/components/collection/collection.slice';
@@ -31,10 +23,6 @@ export type NextIronContext = Context | (Context & { req: NextApiRequest });
 export function makeStore(ctx: NextIronContext) {
   return configureStore({
     reducer: {
-      [terminologySearchSlice.name]: terminologySearchSlice.reducer,
-      [terminologySearchApi.reducerPath]: terminologySearchApi.reducer,
-      [vocabularySlice.name]: vocabularySlice.reducer,
-      [vocabularyApi.reducerPath]: vocabularyApi.reducer,
       [conceptApi.reducerPath]: conceptApi.reducer,
       [collectionApi.reducerPath]: collectionApi.reducer,
       [countsApi.reducerPath]: countsApi.reducer,
@@ -54,8 +42,6 @@ export function makeStore(ctx: NextIronContext) {
 
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({ thunk: { extraArgument: ctx } }).concat(
-        terminologySearchApi.middleware,
-        vocabularyApi.middleware,
         conceptApi.middleware,
         collectionApi.middleware,
         countsApi.middleware,

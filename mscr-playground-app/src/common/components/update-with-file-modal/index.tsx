@@ -1,4 +1,5 @@
 import { translateFileUploadError } from '@app/common/utils/translation-helpers';
+import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
@@ -19,12 +20,12 @@ import {
   ExcelErrorDetailBlock,
 } from '../import/excel.error';
 import {
-  useGetImportStatusMutation,
-  usePostImportExcelMutation,
   usePostImportJsonMutation,
+  usePostSchemaMutation,
 } from '../import/import.slice';
 import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
 import {
+  DownloadIndicator,
   ModalContentWrapper,
   SuccessIcon,
   UpdateDescriptionBlock,
@@ -38,8 +39,6 @@ export default function UpdateWithFileModal() {
   const [fileData, setFileData] = useState<File | null>();
   const [getStatusRetries, setGetStatusRetries] = useState(0);
   const [error, setError] = useState<ExcelError | undefined>(undefined);
-  const [postImportExcel, importExcel] = usePostImportExcelMutation();
-  const [fetchImportStatus, importStatus] = useGetImportStatusMutation();
   const [postImportJson, importJson] = usePostImportJsonMutation();
   const [getAuthenticatedUser, authenticatedUser] =
     useGetAuthenticatedUserMutMutation();
@@ -56,18 +55,38 @@ export default function UpdateWithFileModal() {
     setVisible(true);
   };
 
+  const sampleSchema = {
+    format: 'CSV',
+    aggregationKey: 'string',
+    status: 'INCOMPLETE',
+    label: {
+      additionalProp1: 'string',
+      additionalProp2: 'string',
+      additionalProp3: 'string',
+    },
+    description: {
+      additionalProp1: 'string',
+      additionalProp2: 'string',
+      additionalProp3: 'string',
+    },
+    languages: ['string'],
+    organization: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+  };
+
   const handlePost = () => {
     setUserPosted(true);
+    console.log();
 
     if (fileData) {
       const formData = new FormData();
+      formData.append('organization', '3fa85f64-5717-4562-b3fc-2c963f66afa6');
+      formData.append('format', 'csv');
       formData.append('file', fileData);
       setUserPosted(true);
-      if (fileData.name.includes('.xlsx')) {
-        postImportExcel(formData);
-      }
       if (fileData.name.includes('.json')) {
+        console.log('start posting');
         postImportJson(formData);
+        //postSchema(formData);
       }
     }
   };
@@ -76,24 +95,7 @@ export default function UpdateWithFileModal() {
     if (getStatusRetries > 9) {
       return;
     }
-
-    if (importExcel.isError) {
-      setError(createErrorMessage(importExcel.error));
-    }
-
-    if (importStatus.isError) {
-      setGetStatusRetries(getStatusRetries + 1);
-    }
-
-    if (!importStatus.isLoading && importStatus.data?.status !== 'SUCCESS') {
-      const timerId = setTimeout(() => {
-        if (importExcel.data?.jobToken) {
-          fetchImportStatus(importExcel.data.jobToken);
-        }
-      }, 1000);
-      return () => clearTimeout(timerId);
-    }
-  }, [importExcel, importStatus, fetchImportStatus, getStatusRetries]);
+  });
 
   return (
     <>
@@ -146,102 +148,19 @@ export default function UpdateWithFileModal() {
   function renderProcess() {
     return (
       <ModalContentWrapper>
-        <ModalTitle>{t('updating-terminology')}</ModalTitle>
+        <ModalTitle>{t('updating-schema')}</ModalTitle>
 
-        {(importExcel.isSuccess ||
-          (importStatus.isUninitialized && !importExcel.isError)) && (
-          <div id="loading-block">
-            {importStatus.data?.status !== 'SUCCESS' ? (
-              <>
-                <DownloadIndicator />
-                <Text variant="bold">
-                  {t('percent-done', {
-                    count:
-                      importStatus.data?.processingProgress !== undefined &&
-                      importStatus.data?.processingTotal !== undefined &&
-                      importStatus.data?.processingTotal !== 0
-                        ? Math.floor(
-                            (importStatus.data?.processingProgress /
-                              importStatus.data?.processingTotal) *
-                              100
-                          )
-                        : 0,
-                  })}
-                </Text>
-              </>
-            ) : (
-              <>
-                <SuccessIcon icon="checkCircleFilled" />
-                <Text variant="bold">{t('percent-done', { count: 100 })}</Text>
-              </>
-            )}
-          </div>
-        )}
-
-        {importExcel.isError && (
-          <div id="error-block">
-            <InlineAlert status="error">
-              {error ? (
-                <>
-                  {error.data.message === 'incorrect-sheet-count' ? (
-                    <>
-                      <Paragraph>
-                        {t('import-incorrect-excel-file-1.update-terminology')}{' '}
-                        <ExternalLink
-                          href="https://wiki.dvv.fi/pages/viewpage.action?pageId=21783347"
-                          labelNewWindow={t('site-open-link-new-window')}
-                        >
-                          {t('import-incorrect-excel-file-link')}
-                        </ExternalLink>
-                      </Paragraph>
-                      <br />
-                      <Paragraph>
-                        {t('import-incorrect-excel-file-2.update-terminology')}
-                      </Paragraph>
-                    </>
-                  ) : (
-                    <>
-                      <>{t('terminology-update-failed')}</>
-                      <ExcelErrorDetailBlock errorInfo={error} />
-                    </>
-                  )}
-                </>
-              ) : (
-                <>{t('terminology-update-failed')}</>
-              )}
-            </InlineAlert>
-          </div>
-        )}
-
-        {importStatus.isError && (
-          <div id="error-block">
-            <InlineAlert status="error">
-              {t('terminology-update-status-failed')}
-            </InlineAlert>
-          </div>
-        )}
-
-        <div>
-          {(importExcel.isError || importStatus.isError) && (
-            <Button onClick={() => handlePost()}>{t('try-again')}</Button>
-          )}
-
-          <Button
-            disabled={
-              authenticatedUser.data?.anonymous ||
-              importExcel.isLoading ||
-              (importExcel.data?.jobToken && importStatus.isUninitialized) ||
-              importStatus.isLoading ||
-              (importStatus.isSuccess &&
-                importStatus.data?.status !== 'SUCCESS')
-            }
-            variant="secondary"
-            onClick={() => handleClose()}
-          >
-            {t('close')}
-          </Button>
-        </div>
+        <Button
+          disabled={authenticatedUser.data?.anonymous}
+          variant="secondary"
+          onClick={() => handleClose()}
+        >
+          {t('close')}
+        </Button>
       </ModalContentWrapper>
     );
   }
+}
+function postSchema(formData: FormData) {
+  throw new Error('Function not implemented.');
 }

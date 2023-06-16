@@ -3,7 +3,10 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { AppState, AppThunk } from '@app/store';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
+import {
+  getDatamodelApiBaseQuery,
+  getTerminologyApiBaseQuery,
+} from '@app/store/api-base-query';
 import isHydrate from '@app/store/isHydrate';
 
 export const initialState: User = {
@@ -50,7 +53,7 @@ export const loginSlice = createSlice({
 
 export const loginApi = createApi({
   reducerPath: 'loginApi',
-  baseQuery: getTerminologyApiBaseQuery(),
+  baseQuery: getDatamodelApiBaseQuery(),
   tagTypes: ['login'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {

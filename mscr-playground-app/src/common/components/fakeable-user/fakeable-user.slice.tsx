@@ -1,11 +1,14 @@
 import { FakeableUser } from '@app/common/interfaces/fakeable-user.interface';
-import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
+import {
+  getDatamodelApiBaseQuery,
+  getTerminologyApiBaseQuery,
+} from '@app/store/api-base-query';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { HYDRATE } from 'next-redux-wrapper';
 
 export const fakeableUsersApi = createApi({
   reducerPath: 'fakeableUsers',
-  baseQuery: getTerminologyApiBaseQuery(),
+  baseQuery: getDatamodelApiBaseQuery(),
   tagTypes: ['fakeableUsers'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {

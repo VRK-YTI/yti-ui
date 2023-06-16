@@ -35,7 +35,7 @@ export default withIronSessionApiRoute(
       // After this, once we successfully get a JSESSIONID, we can bypass the proxy.
       const proxyUrl = process.env.AUTH_PROXY_URL ?? 'http://yti-auth-proxy';
       const apiBase =
-        process.env.TERMINOLOGY_API_URL ??
+        process.env.DATAMODEL_API_URL ??
         'http://yti-terminology-api:9103/terminology-api';
       const apiPath = new URL(apiBase).pathname;
       const fetchUrl =

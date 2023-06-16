@@ -7,12 +7,6 @@ import {
   CommonContextState,
 } from 'yti-common-ui/common-context-provider';
 import {
-  getGroups,
-  getOrganizations,
-  getRunningQueriesThunk as terminologyGetRunningQueriesThunk,
-  getSearchResult,
-} from '@app/common/components/terminology-search/terminology-search.slice';
-import {
   getCounts,
   getRunningQueriesThunk as countsGetRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
@@ -111,15 +105,6 @@ export const getServerSideProps = createCommonGetServerSideProps(
         urlState.lang = Array.isArray(query.lang) ? query.lang[0] : query.lang;
       }
     }
-
-    store.dispatch(
-      getSearchResult.initiate({ urlState: urlState, language: locale ?? 'fi' })
-    );
-    store.dispatch(getGroups.initiate(locale ?? 'fi'));
-    store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
-    store.dispatch(getCounts.initiate(null));
-
-    await Promise.all(store.dispatch(terminologyGetRunningQueriesThunk()));
     await Promise.all(store.dispatch(countsGetRunningQueriesThunk()));
 
     return {};
