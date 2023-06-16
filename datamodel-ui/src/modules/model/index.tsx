@@ -117,21 +117,29 @@ export default function Model({ modelId }: ModelProps) {
       //   ),
       // },
       {
-        id: 'associations',
-        icon: <IconRows />,
-        buttonLabel: 'Test ASSOC',
-        buttonLabelSm: 'Test ASSOC',
-        component: (
-          <ResourceView modelId={modelId} type={ResourceType.ASSOCIATION} />
-        ),
-      },
-      {
         id: 'attributes',
         icon: <IconRows />,
         buttonLabel: 'Test ATTR',
         buttonLabelSm: 'Test ATTR',
         component: (
-          <ResourceView modelId={modelId} type={ResourceType.ATTRIBUTE} />
+          <ResourceView
+            modelId={modelId}
+            type={ResourceType.ATTRIBUTE}
+            languages={languages}
+          />
+        ),
+      },
+      {
+        id: 'associations',
+        icon: <IconSwapVertical />,
+        buttonLabel: 'Test ASSOC',
+        buttonLabelSm: 'Test ASSOC',
+        component: (
+          <ResourceView
+            modelId={modelId}
+            type={ResourceType.ASSOCIATION}
+            languages={languages}
+          />
         ),
       },
     ];

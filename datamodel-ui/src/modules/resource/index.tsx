@@ -1,5 +1,6 @@
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import {
+  resetSelected,
   selectResourceView,
   selectSelected,
   setSelected,
@@ -14,20 +15,33 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, SearchInput, Text } from 'suomifi-ui-components';
+import { SearchInput, Text } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { DetachedPagination } from 'yti-common-ui/pagination';
-import { useGetResourceQuery } from '@app/common/components/resource/resource.slice';
+import {
+  initializeResource,
+  setResource,
+  useGetResourceQuery,
+} from '@app/common/components/resource/resource.slice';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
 import ResourceInfo from './resource-info/index';
+import { translateResourceCountTitle } from '@app/common/utils/translation-helpers';
+import ResourceModal from './resource-modal';
+import ResourceForm from './resource-form';
+import { resourceToResourceFormType } from './utils';
 
 interface ResourceViewProps {
   modelId: string;
   type: ResourceType;
+  languages: string[];
 }
 
-export default function ResourceView({ modelId, type }: ResourceViewProps) {
+export default function ResourceView({
+  modelId,
+  type,
+  languages,
+}: ResourceViewProps) {
   const { t, i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
@@ -42,6 +56,7 @@ export default function ResourceView({ modelId, type }: ResourceViewProps) {
   const [headerHeight, setHeaderHeight] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
+  const [isEdit, setIsEdit] = useState(false);
   const [currentResourceId, setCurrentResourceId] = useState<
     string | undefined
   >(
@@ -88,9 +103,51 @@ export default function ResourceView({ modelId, type }: ResourceViewProps) {
     );
     router.replace(
       `${modelId}/${
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
+        type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
       }/${id}`
     );
+  };
+
+  const handleReturn = () => {
+    dispatch(resetSelected());
+    dispatch(
+      setView(
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        'list'
+      )
+    );
+
+    refetch();
+    if (isEdit) {
+      setIsEdit(false);
+    }
+  };
+
+  const handleFollowUp = (value?: { label: string; uri: string }) => {
+    dispatch(initializeResource(type, languages, value?.label));
+    dispatch(
+      setView(
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        'edit'
+      )
+    );
+
+    if (isEdit) {
+      setIsEdit(false);
+    }
+  };
+
+  const handleEdit = () => {
+    if (resourceData) {
+      dispatch(
+        setView(
+          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+          'edit'
+        )
+      );
+      dispatch(setResource(resourceToResourceFormType(resourceData)));
+      setIsEdit(true);
+    }
   };
 
   useEffect(() => {
@@ -114,6 +171,7 @@ export default function ResourceView({ modelId, type }: ResourceViewProps) {
     <>
       {renderList()}
       {renderInfo()}
+      {renderEdit()}
     </>
   );
 
@@ -126,12 +184,22 @@ export default function ResourceView({ modelId, type }: ResourceViewProps) {
         <StaticHeader ref={ref}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Text variant="bold">
-              {/* {t('attribute-count-title', {
-                  count: data?.totalHitCount ?? 0,
-                })} */}
-              {type.toString() + ' ' + data?.totalHitCount ?? 0}
+              {translateResourceCountTitle(type, t, data?.totalHitCount)}
             </Text>
-            {hasPermission && <Button>Placeholder button</Button>}
+            {hasPermission && (
+              <ResourceModal
+                modelId={modelId}
+                type={type}
+                buttonTranslations={{
+                  useSelected: t('create-new-sub-association-for-selected', {
+                    ns: 'admin',
+                  }),
+                  createNew: t('create-new-association', { ns: 'admin' }),
+                }}
+                handleFollowUp={handleFollowUp}
+                buttonIcon={true}
+              />
+            )}
           </div>
 
           <SearchInput
@@ -181,8 +249,26 @@ export default function ResourceView({ modelId, type }: ResourceViewProps) {
       <ResourceInfo
         data={resourceData}
         modelId={modelId}
-        handleEdit={() => null}
-        handleReturn={() => null}
+        handleEdit={handleEdit}
+        handleReturn={handleReturn}
+      />
+    );
+  }
+
+  function renderEdit() {
+    if (!view.edit || !hasPermission) {
+      return <></>;
+    }
+
+    return (
+      <ResourceForm
+        type={type}
+        modelId={modelId}
+        languages={languages}
+        terminologies={[]}
+        applicationProfile={false}
+        isEdit={isEdit}
+        handleReturn={handleReturn}
       />
     );
   }
