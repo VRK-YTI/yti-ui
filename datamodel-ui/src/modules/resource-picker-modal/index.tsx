@@ -145,6 +145,10 @@ export default function ResourcePicker({
 
   const handleSubmit = () => {
     if (!classData) {
+      handleFollowUp({
+        associations: [],
+        attributes: [],
+      });
       return;
     }
 
