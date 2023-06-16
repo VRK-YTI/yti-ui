@@ -46,14 +46,22 @@ import {
   previousCharIsNewLine,
 } from './utils';
 
-export default function Documentation({ modelId }: { modelId: string }) {
+export default function Documentation({
+  modelId,
+  languages,
+}: {
+  modelId: string;
+  languages: string[];
+}) {
   const { t, i18n } = useTranslation('admin');
   const ref = useRef<HTMLDivElement>(null);
   const textAreaRef = createRef<HTMLTextAreaElement>();
   const [headerHeight, setHeaderHeight] = useState(0);
   const [value, setValue] = useState<{ [key: string]: string }>({});
   const [isEdit, setIsEdit] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
+  const [currentLanguage, setCurrentLanguage] = useState(
+    languages.sort((a, b) => compareLocales(a, b))[0]
+  );
   const [realignCursor, setRealignCursor] = useState({
     still: false,
     align: 0,
@@ -259,6 +267,7 @@ export default function Documentation({ modelId }: { modelId: string }) {
             {getLanguageVersion({
               data: modelData?.documentation,
               lang: i18n.language,
+              appendLocale: true,
             })}
           </ReactMarkdown>
         </div>
@@ -320,9 +329,8 @@ export default function Documentation({ modelId }: { modelId: string }) {
                   <IconImage />
                 </ControlButton>
               </div>
-
               <HintText>
-                {value[currentLanguage].length} / 5000 {t('characters')}
+                {value[currentLanguage]?.length ?? 0} / 5000 {t('characters')}
               </HintText>
             </ControlsRow>
 

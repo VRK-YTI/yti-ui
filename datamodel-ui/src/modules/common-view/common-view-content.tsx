@@ -50,6 +50,11 @@ export default function CommonViewContent({
 
       <BasicBlock title={translateCommonForm('identifier', data.type, t)}>
         {`${modelId}:${data.identifier}`}
+      </BasicBlock>
+
+      <BasicBlock title={t('uri')}>
+        {data.uri}
+
         <Button
           icon={<IconCopy />}
           variant="secondary"

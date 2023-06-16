@@ -24,6 +24,8 @@ interface DeleteModalProps {
   label: string;
   type: 'model' | 'class' | 'attribute' | 'association';
   onClose?: () => void;
+  visible: boolean;
+  hide: () => void;
   applicationProfile?: boolean;
 }
 
@@ -33,11 +35,12 @@ export default function DeleteModal({
   type,
   resourceId,
   onClose,
+  visible,
+  hide,
   applicationProfile,
 }: DeleteModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
-  const [visible, setVisible] = useState(false);
   const router = useRouter();
   const [deleteModel, deleteModelResult] = useDeleteModelMutation();
   const [deleteClass, deleteClassResult] = useDeleteClassMutation();
@@ -46,7 +49,7 @@ export default function DeleteModal({
   const [error, setError] = useState(false);
 
   const handleClose = () => {
-    setVisible(false);
+    hide();
   };
 
   const handleSuccessExit = () => {
@@ -149,15 +152,11 @@ export default function DeleteModal({
 
   return (
     <>
-      <Button onClick={() => setVisible(true)} variant="secondaryNoBorder">
-        {t('remove')}
-      </Button>
-
       <NarrowModal
         appElementId="__next"
         visible={visible}
         variant={isSmall ? 'smallScreen' : 'default'}
-        onEscKeyDown={() => setVisible(false)}
+        onEscKeyDown={() => hide()}
       >
         <SimpleModalContent>
           {success && renderSuccess()}

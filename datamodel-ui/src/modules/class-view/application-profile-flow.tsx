@@ -100,7 +100,7 @@ export default function ApplicationProfileFlow({
           visible={resourcePickerVisible}
           selectedNodeShape={{
             modelId:
-              selectedNodeShape.nodeShape.isDefinedBy.split('/').pop() ?? '',
+              selectedNodeShape.nodeShape.isDefinedBy?.split('/').pop() ?? '',
             classId: selectedNodeShape.nodeShape.identifier ?? '',
             isAppProfile: selectedNodeShape.isAppProfile ?? false,
           }}
