@@ -154,7 +154,7 @@ export default function ResourceView({
     if (ref.current) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref]);
+  }, [ref, view]);
 
   useEffect(() => {
     if (
@@ -179,6 +179,7 @@ export default function ResourceView({
     if (!view.list) {
       return <></>;
     }
+
     return (
       <>
         <StaticHeader ref={ref}>

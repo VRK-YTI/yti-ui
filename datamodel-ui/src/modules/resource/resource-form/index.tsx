@@ -38,6 +38,8 @@ import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import ClassModal from '@app/modules/class-modal';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
+import { setSelected, setView } from '@app/common/components/model/model.slice';
+import { useRouter } from 'next/router';
 
 interface ResourceFormProps {
   type: ResourceType;
@@ -61,6 +63,7 @@ export default function ResourceForm({
   const { t, i18n } = useTranslation('admin');
   const statuses = statusList;
   const ref = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const dispatch = useStoreDispatch();
   const data = useSelector(selectResource());
   const [userPosted, setUserPosted] = useState(false);
@@ -94,6 +97,7 @@ export default function ResourceForm({
 
     // TODO: Remove subResourceOf clearing when other supported
     // are implemented
+
     putResource({
       modelId: modelId,
       data: { ...data, type: type, subResourceOf: [] },
@@ -189,6 +193,26 @@ export default function ResourceForm({
       setHeaderHeight(ref.current.clientHeight);
     }
 
+    if (result.isSuccess) {
+      dispatch(
+        setSelected(
+          data.identifier,
+          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
+        )
+      );
+      dispatch(
+        setView(
+          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+          'info'
+        )
+      );
+      router.replace(
+        `${modelId}/${
+          type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
+        }/${data.identifier}`
+      );
+    }
+
     if (
       ref.current &&
       userPosted &&
@@ -196,7 +220,7 @@ export default function ResourceForm({
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors, userPosted, result.error]);
+  }, [ref, errors, userPosted, result, dispatch, type, router, modelId, data]);
 
   return (
     <>

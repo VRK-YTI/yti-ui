@@ -3,8 +3,6 @@ import { ContentWrapper } from './model.styles';
 import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
 import ClassView from '../class-view/class-view';
-import AttributeView from '../attribute-view';
-import AssociationView from '../association-view';
 import { useTranslation } from 'next-i18next';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { useMemo } from 'react';
@@ -88,34 +86,6 @@ export default function Model({ modelId }: ModelProps) {
           />
         ),
       },
-      // {
-      //   id: 'attributes',
-      //   icon: <IconRows />,
-      //   buttonLabel: t('attributes'),
-      //   buttonLabelSm: t('attributes-abbreviation'),
-      //   component: (
-      //     <AttributeView
-      //       modelId={modelId}
-      //       languages={languages}
-      //       applicationProfile={modelInfo?.type === 'PROFILE'}
-      //       terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
-      //     />
-      //   ),
-      // },
-      // {
-      //   id: 'associations',
-      //   icon: <IconSwapVertical />,
-      //   buttonLabel: t('associations'),
-      //   buttonLabelSm: t('associations-abbreviation'),
-      //   component: (
-      //     <AssociationView
-      //       modelId={modelId}
-      //       languages={languages}
-      //       applicationProfile={modelInfo?.type === 'PROFILE'}
-      //       terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
-      //     />
-      //   ),
-      // },
       {
         id: 'attributes',
         icon: <IconRows />,

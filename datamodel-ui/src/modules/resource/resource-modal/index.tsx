@@ -104,14 +104,18 @@ export default function ResourceModal({
       (obj) => obj.identifier === selectedId
     );
 
-    selectedObj
-      ? handleFollowUp({
-          label: `${selectedObj.namespace.split('/').pop()?.replace('#', '')}:${
-            selectedObj.identifier
-          }`,
-          uri: selectedObj.id,
-        })
-      : handleFollowUp();
+    if (selectedObj) {
+      const domain =
+        selectedObj.namespace[selectedObj.namespace.length - 1] === '/'
+          ? selectedObj.namespace.slice(0, -1)?.split('/').pop()
+          : selectedObj.namespace.split('/').pop();
+      handleFollowUp({
+        label: `${domain}:${selectedObj.identifier}`,
+        uri: selectedObj.id,
+      });
+    } else {
+      handleClose();
+    }
   };
 
   const getLinkLabel = (ns: string, id: string) => {

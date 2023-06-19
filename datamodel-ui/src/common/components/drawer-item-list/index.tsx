@@ -38,7 +38,7 @@ interface DrawerItemListProps {
 }
 
 export default function DrawerItemList({ items }: DrawerItemListProps) {
-  if (!items || items.length < 1) {
+  if (!items) {
     return <></>;
   }
 
