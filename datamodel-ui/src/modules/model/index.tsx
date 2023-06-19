@@ -121,7 +121,7 @@ export default function Model({ modelId }: ModelProps) {
           id: 'documentation',
           icon: <IconRegisters />,
           buttonLabel: t('documentation-fitted', { ns: 'admin' }),
-          component: <Documentation modelId={modelId} />,
+          component: <Documentation modelId={modelId} languages={languages} />,
         },
       ] as ViewType[];
     }

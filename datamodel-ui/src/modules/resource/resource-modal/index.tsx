@@ -133,7 +133,7 @@ export default function ResourceModal({
       setResultsFormatted(
         result.data.responseObjects.map((r) => ({
           target: {
-            identifier: r.identifier,
+            identifier: r.id,
             label: getLanguageVersion({
               data: r.label,
               lang: contentLanguage ?? i18n.language,

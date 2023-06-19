@@ -8,7 +8,7 @@ import { maxBy } from 'lodash';
 interface MultilingualBlockProps {
   data?: {
     lang: string;
-    value: string;
+    value: string | JSX.Element;
   }[];
 }
 

@@ -8,6 +8,7 @@ import { BasicBlock } from 'yti-common-ui/block';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import Separator from 'yti-common-ui/separator';
 import ConceptView from '../concept-view';
+import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import HasPermission from '@app/common/utils/has-permission';
 
 export default function CommonViewContent({
@@ -49,13 +50,16 @@ export default function CommonViewContent({
 
       <BasicBlock title={translateCommonForm('identifier', data.type, t)}>
         {`${modelId}:${data.identifier}`}
+      </BasicBlock>
+
+      <BasicBlock title={t('uri')}>
+        {data.uri}
+
         <Button
           icon={<IconCopy />}
           variant="secondary"
+          onClick={() => navigator.clipboard.writeText(data.uri)}
           style={{ width: 'max-content' }}
-          onClick={() =>
-            navigator.clipboard.writeText(`${modelId}:${data.identifier}`)
-          }
         >
           {t('copy-to-clipboard')}
         </Button>
@@ -131,7 +135,16 @@ export default function CommonViewContent({
         {getLanguageVersion({
           data: data.note,
           lang: i18n.language,
-        }) || t('no-note')}
+        }) !== '' ? (
+          <SanitizedTextContent
+            text={getLanguageVersion({
+              data: data.note,
+              lang: i18n.language,
+            })}
+          />
+        ) : (
+          t('no-note')
+        )}
       </BasicBlock>
 
       <Separator />

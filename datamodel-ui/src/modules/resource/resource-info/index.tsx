@@ -43,6 +43,7 @@ export default function ResourceInfo({
     actions: ['ADMIN_ASSOCIATION', 'ADMIN_ATTRIBUTE'],
   });
   const [showTooltip, setShowTooltip] = useState(false);
+  const [visible, setVisible] = useState(false);
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
 
   useEffect(() => {
@@ -88,20 +89,26 @@ export default function ResourceInfo({
                     {t('edit', { ns: 'admin' })}
                   </Button>
                   <Separator />
-                  <DeleteModal
-                    modelId={modelId}
-                    resourceId={data.identifier}
-                    type={
-                      data.type === 'ASSOCIATION' ? 'association' : 'attribute'
-                    }
-                    label={getLanguageVersion({
-                      data: data.label,
-                      lang: i18n.language,
-                    })}
-                    onClose={handleReturn}
-                  />
+                  <Button
+                    variant="secondaryNoBorder"
+                    onClick={() => setVisible(true)}
+                  >
+                    {t('remove', { ns: 'admin' })}
+                  </Button>
                 </Tooltip>
               </TooltipWrapper>
+              <DeleteModal
+                modelId={modelId}
+                resourceId={data.identifier}
+                type={data.type === 'ASSOCIATION' ? 'association' : 'attribute'}
+                label={getLanguageVersion({
+                  data: data.label,
+                  lang: i18n.language,
+                })}
+                onClose={handleReturn}
+                visible={visible}
+                hide={() => setVisible(false)}
+              />
             </div>
           )}
         </div>

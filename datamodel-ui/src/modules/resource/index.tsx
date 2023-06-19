@@ -35,12 +35,14 @@ interface ResourceViewProps {
   modelId: string;
   type: ResourceType;
   languages: string[];
+  applicationProfile?: boolean;
 }
 
 export default function ResourceView({
   modelId,
   type,
   languages,
+  applicationProfile,
 }: ResourceViewProps) {
   const { t, i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
@@ -77,6 +79,7 @@ export default function ResourceView({
     {
       modelId: modelId,
       resourceIdentifier: currentResourceId ?? '',
+      applicationProfile,
     },
     {
       skip: typeof currentResourceId === 'undefined',

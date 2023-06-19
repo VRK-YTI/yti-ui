@@ -53,6 +53,7 @@ import { useRouter } from 'next/router';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
 import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
 import ApplicationProfileFlow from './application-profile-flow';
+import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 
 interface ClassViewProps {
@@ -80,6 +81,7 @@ export default function ClassView({
   const [isEdit, setIsEdit] = useState(false);
   const [showAppProfileModal, setShowAppProfileModal] = useState(false);
   const [basedOnNodeShape, setBasedOnNodeShape] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedNodeShape, setSelectedNodeShape] = useState<
     | {
         nodeShape: InternalClass;
@@ -409,23 +411,35 @@ export default function ClassView({
                         {t('edit', { ns: 'admin' })}
                       </Button>
                       <Separator />
-                      <DeleteModal
-                        modelId={modelId}
-                        resourceId={data.identifier}
-                        type="class"
-                        label={getLanguageVersion({
-                          data: data.label,
-                          lang: i18n.language,
-                        })}
-                        onClose={handleReturn}
-                        applicationProfile={applicationProfile}
-                      />
+                      <Button
+                        variant="secondaryNoBorder"
+                        onClick={() => setShowDeleteModal(true)}
+                      >
+                        {t('remove', { ns: 'admin' })}
+                      </Button>
                     </>
                   )}
                 </Tooltip>
               </TooltipWrapper>
             </div>
           </div>
+          {data ? (
+            <DeleteModal
+              modelId={modelId}
+              resourceId={data.identifier}
+              type="class"
+              label={getLanguageVersion({
+                data: data.label,
+                lang: i18n.language,
+              })}
+              onClose={handleReturn}
+              applicationProfile={applicationProfile}
+              visible={showDeleteModal}
+              hide={() => setShowDeleteModal(false)}
+            />
+          ) : (
+            <></>
+          )}
         </StaticHeader>
 
         {isSuccess && data && (
@@ -443,13 +457,15 @@ export default function ClassView({
 
             <BasicBlock title={t('class-identifier')}>
               {`${modelId}:${data.identifier}`}
+            </BasicBlock>
+
+            <BasicBlock title={t('uri')}>
+              {data.uri}
               <Button
                 icon={<IconCopy />}
                 variant="secondary"
+                onClick={() => navigator.clipboard.writeText(data.uri)}
                 style={{ width: 'max-content' }}
-                onClick={() =>
-                  navigator.clipboard.writeText(`${modelId}:${data.identifier}`)
-                }
               >
                 {t('copy-to-clipboard')}
               </Button>
@@ -500,7 +516,17 @@ export default function ClassView({
                 data: data.note,
                 lang: i18n.language,
                 appendLocale: true,
-              }) || t('no-note')}
+              }) !== '' ? (
+                <SanitizedTextContent
+                  text={getLanguageVersion({
+                    data: data.note,
+                    lang: i18n.language,
+                    appendLocale: true,
+                  })}
+                />
+              ) : (
+                t('no-note')
+              )}
             </BasicBlock>
 
             <Separator />

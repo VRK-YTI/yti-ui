@@ -19,36 +19,35 @@ import {
 interface AsFileModalProps {
   type: 'show' | 'download';
   modelId: string;
+  visible: boolean;
+  onClose: () => void;
   filename?: string;
 }
 
 export default function AsFileModal({
   type,
   modelId,
+  visible,
+  onClose,
   filename,
 }: AsFileModalProps) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
-  const [visible, setVisible] = useState(false);
   const fileTypes = ['JSON-LD', 'RDF', 'Turtle' /*'XML', 'OpenAPI'*/];
   const [chosenFileType, setChosenFileType] = useState('JSON-LD');
 
   const handleClose = () => {
-    setVisible(false);
+    onClose();
     setChosenFileType('JSON-LD');
   };
 
   return (
     <>
-      <Button onClick={() => setVisible(true)} variant="secondaryNoBorder">
-        {type === 'show' ? t('show-as-file') : t('download-as-file')}
-      </Button>
-
       <NarrowModal
         appElementId="__next"
         visible={visible}
         variant={isSmall ? 'smallScreen' : 'default'}
-        onEscKeyDown={() => setVisible(false)}
+        onEscKeyDown={() => onClose()}
       >
         {type === 'show' ? renderShowView() : renderDownloadView()}
       </NarrowModal>

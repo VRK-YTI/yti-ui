@@ -22,7 +22,7 @@ export const modelApi = createApi({
   endpoints: (builder) => ({
     putModel: builder.mutation<string, NewModel>({
       query: (value) => ({
-        url: '/model',
+        url: `/model/${value.type === 'LIBRARY' ? 'library' : 'profile'}`,
         method: 'PUT',
         data: value,
       }),
@@ -38,10 +38,13 @@ export const modelApi = createApi({
       {
         payload: ModelUpdatePayload;
         prefix: string;
+        isApplicationProfile: boolean;
       }
     >({
       query: (value) => ({
-        url: `/model/${value.prefix}`,
+        url: `/model/${value.isApplicationProfile ? 'profile' : 'library'}/${
+          value.prefix
+        }`,
         method: 'POST',
         data: value.payload,
       }),
