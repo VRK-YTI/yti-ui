@@ -78,7 +78,11 @@ export default function LinkedDataForm({
   const handleSubmit = () => {
     const internalNamespaces = data.internalNamespaces.map((n) => n.uri);
     const payload = generatePayload({ ...data, internalNamespaces });
-    postModel({ payload: payload, prefix: data.prefix });
+    postModel({
+      payload: payload,
+      prefix: data.prefix,
+      isApplicationProfile: data.type === 'PROFILE',
+    });
   };
 
   useEffect(() => {

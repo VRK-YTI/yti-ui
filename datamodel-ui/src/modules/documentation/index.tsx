@@ -109,6 +109,7 @@ export default function Documentation({
     postModel({
       payload: payload,
       prefix: modelData.prefix,
+      isApplicationProfile: modelData.type === 'PROFILE',
     });
   };
 

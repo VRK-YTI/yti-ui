@@ -103,7 +103,11 @@ export default function ModelEditView({
 
     const payload = generatePayload(formData);
 
-    postModel({ payload: payload, prefix: formData.prefix });
+    postModel({
+      payload: payload,
+      prefix: formData.prefix,
+      isApplicationProfile: formData.type === 'PROFILE',
+    });
   };
 
   return (
