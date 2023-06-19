@@ -19,7 +19,7 @@ import StaticHeader from 'yti-common-ui/drawer/static-header';
 import Separator from 'yti-common-ui/separator';
 import { TooltipWrapper } from '@app/modules/model/model.styles';
 import DeleteModal from '@app/modules/delete-modal';
-import CommonViewContent from './resource-info-content';
+import CommonViewContent from '@app/modules/common-view-content';
 import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
 import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 

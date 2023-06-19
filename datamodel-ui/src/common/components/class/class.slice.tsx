@@ -59,7 +59,7 @@ function convertToPUT(
 }
 
 function pathForModelType(isApplicationProfile?: boolean) {
-  return isApplicationProfile ? 'profile/' : 'ontology/';
+  return isApplicationProfile ? 'profile/' : 'library/';
 }
 
 export const classApi = createApi({

@@ -7,7 +7,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useGetResourceQuery } from '@app/common/components/resource/resource.slice';
 import { useState } from 'react';
-import CommonViewContent from '../common-view/common-view-content';
+import CommonViewContent from '@app/modules/common-view-content';
 
 export default function ResourceInfo({
   data,

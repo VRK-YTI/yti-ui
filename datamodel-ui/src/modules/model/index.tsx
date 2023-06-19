@@ -89,8 +89,8 @@ export default function Model({ modelId }: ModelProps) {
       {
         id: 'attributes',
         icon: <IconRows />,
-        buttonLabel: 'Test ATTR',
-        buttonLabelSm: 'Test ATTR',
+        buttonLabel: t('attributes'),
+        buttonLabelSm: t('attributes-abbreviation'),
         component: (
           <ResourceView
             modelId={modelId}
@@ -102,8 +102,8 @@ export default function Model({ modelId }: ModelProps) {
       {
         id: 'associations',
         icon: <IconSwapVertical />,
-        buttonLabel: 'Test ASSOC',
-        buttonLabelSm: 'Test ASSOC',
+        buttonLabel: t('associations'),
+        buttonLabelSm: t('associations-abbreviation'),
         component: (
           <ResourceView
             modelId={modelId}
