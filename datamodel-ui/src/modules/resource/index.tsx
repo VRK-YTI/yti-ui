@@ -35,6 +35,7 @@ interface ResourceViewProps {
   modelId: string;
   type: ResourceType;
   languages: string[];
+  terminologies: string[];
   applicationProfile?: boolean;
 }
 
@@ -42,6 +43,7 @@ export default function ResourceView({
   modelId,
   type,
   languages,
+  terminologies,
   applicationProfile,
 }: ResourceViewProps) {
   const { t, i18n } = useTranslation('common');
@@ -119,8 +121,21 @@ export default function ResourceView({
         'list'
       )
     );
-
     refetch();
+
+    if (isEdit) {
+      setIsEdit(false);
+    }
+  };
+
+  const handleFormReturn = () => {
+    dispatch(
+      setView(
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        'info'
+      )
+    );
+
     if (isEdit) {
       setIsEdit(false);
     }
@@ -269,10 +284,10 @@ export default function ResourceView({
         type={type}
         modelId={modelId}
         languages={languages}
-        terminologies={[]}
+        terminologies={terminologies}
         applicationProfile={false}
         isEdit={isEdit}
-        handleReturn={handleReturn}
+        handleReturn={isEdit ? handleFormReturn : handleReturn}
       />
     );
   }

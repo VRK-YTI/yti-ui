@@ -96,6 +96,8 @@ export default function Model({ modelId }: ModelProps) {
             modelId={modelId}
             type={ResourceType.ATTRIBUTE}
             languages={languages}
+            applicationProfile={modelInfo?.type === 'PROFILE'}
+            terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
           />
         ),
       },
@@ -109,6 +111,8 @@ export default function Model({ modelId }: ModelProps) {
             modelId={modelId}
             type={ResourceType.ASSOCIATION}
             languages={languages}
+            applicationProfile={modelInfo?.type === 'PROFILE'}
+            terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
           />
         ),
       },
