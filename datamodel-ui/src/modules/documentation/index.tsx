@@ -1,4 +1,11 @@
-import { KeyboardEvent, createRef, useEffect, useRef, useState } from 'react';
+import {
+  KeyboardEvent,
+  createRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
@@ -45,6 +52,7 @@ import {
   injectSpecialCharacters,
   previousCharIsNewLine,
 } from './utils';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 
 export default function Documentation({
   modelId,
@@ -54,6 +62,8 @@ export default function Documentation({
   languages: string[];
 }) {
   const { t, i18n } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const ref = useRef<HTMLDivElement>(null);
   const textAreaRef = createRef<HTMLTextAreaElement>();
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -75,6 +85,8 @@ export default function Documentation({
   const [postModel, result] = usePostModelMutation();
 
   const handleSubmit = () => {
+    disableConfirmation();
+
     if (!modelData) {
       return;
     }
@@ -113,11 +125,19 @@ export default function Documentation({
     });
   };
 
+  const handleUpdate = useCallback(
+    (data: { [key: string]: string }) => {
+      enableConfirmation();
+      setValue(data);
+    },
+    [enableConfirmation]
+  );
+
   const handleButtonClick = (key: string) => {
     const addNewLine = getAddNewLine(value[currentLanguage], selection.start);
     const elem = getSpecialCharacters(key, addNewLine);
 
-    setValue({
+    handleUpdate({
       ...value,
       [currentLanguage]: injectSpecialCharacters(
         value[currentLanguage],
@@ -144,7 +164,7 @@ export default function Documentation({
       e.preventDefault();
 
       if (previousCharIsNewLine(target.value, target.selectionStart)) {
-        setValue({
+        handleUpdate({
           ...value,
           [currentLanguage]: injectNewLine(rows, currRowNmb),
         });
@@ -161,7 +181,7 @@ export default function Documentation({
         ? '-'
         : `${getLastValue(rows[currRowNmb - 1])}.`;
 
-      setValue({
+      handleUpdate({
         ...value,
         [currentLanguage]: injectNewListRow(rows, currRowNmb, listStart),
       });
@@ -183,11 +203,11 @@ export default function Documentation({
 
   useEffect(() => {
     if (modelData && !isEdit) {
-      setValue(modelData.documentation ?? '');
+      handleUpdate(modelData.documentation ?? '');
     }
 
     if (modelData && Object.keys(value).length === 0) {
-      setValue(modelData.documentation);
+      handleUpdate(modelData.documentation);
       setCurrentLanguage(
         modelData.languages.includes(i18n.language)
           ? i18n.language
@@ -195,7 +215,7 @@ export default function Documentation({
               'fi'
       );
     }
-  }, [modelData, isEdit, i18n.language, value]);
+  }, [modelData, isEdit, i18n.language, value, handleUpdate]);
 
   useEffect(() => {
     if (result.isSuccess) {
@@ -341,7 +361,7 @@ export default function Documentation({
               labelMode="hidden"
               value={value[currentLanguage] ?? ''}
               onChange={(e) =>
-                setValue({
+                handleUpdate({
                   ...value,
                   [currentLanguage]: e.target.value ?? '',
                 })

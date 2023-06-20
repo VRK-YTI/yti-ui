@@ -20,6 +20,7 @@ import generatePayload from '../model/generate-payload';
 import CodeListModal from '../code-list-modal';
 import LinkedModel from '../linked-model';
 import LinkedItem from './linked-item';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 
 export interface LinkedDataFormData {
   terminologies: ModelTerminology[];
@@ -44,6 +45,8 @@ export default function LinkedDataForm({
   handleReturn: (data?: LinkedDataFormData) => void;
 }) {
   const { t, i18n } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const ref = useRef<HTMLDivElement>(null);
   const [postModel, result] = usePostModelMutation();
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -75,7 +78,13 @@ export default function LinkedDataForm({
     codeLists: model.codeLists ?? [],
   });
 
+  const handleUpdate = (data: DataInterface) => {
+    enableConfirmation();
+    setData(data);
+  };
+
   const handleSubmit = () => {
+    disableConfirmation();
     const internalNamespaces = data.internalNamespaces.map((n) => n.uri);
     const payload = generatePayload({ ...data, internalNamespaces });
     postModel({
@@ -137,7 +146,7 @@ export default function LinkedDataForm({
             <div>
               <TerminologyModal
                 setFormData={(terminologies) =>
-                  setData({
+                  handleUpdate({
                     ...data,
                     terminologies: terminologies,
                   })
@@ -156,12 +165,12 @@ export default function LinkedDataForm({
                   type: 'terminology',
                 }}
                 handleRemove={(id) =>
-                  setData((data) => ({
+                  setData({
                     ...data,
                     terminologies: data.terminologies.filter(
                       (t) => t.uri !== id
                     ),
-                  }))
+                  })
                 }
               />
             ))}
@@ -184,7 +193,7 @@ export default function LinkedDataForm({
                 <CodeListModal
                   initialData={data.codeLists}
                   setData={(codeLists) =>
-                    setData({
+                    handleUpdate({
                       ...data,
                       codeLists: codeLists,
                     })
@@ -202,10 +211,10 @@ export default function LinkedDataForm({
                     type: 'codelist',
                   }}
                   handleRemove={(id) =>
-                    setData((data) => ({
+                    handleUpdate({
                       ...data,
                       codeLists: data.codeLists.filter((t) => t.id !== id),
-                    }))
+                    })
                   }
                 />
               ))}
@@ -232,7 +241,7 @@ export default function LinkedDataForm({
                   internalNamespaces: data.internalNamespaces,
                 }}
                 setInternalData={(internal) =>
-                  setData({
+                  handleUpdate({
                     ...data,
                     internalNamespaces: internal,
                   })
@@ -242,7 +251,7 @@ export default function LinkedDataForm({
                   namespace: string;
                   prefix: string;
                 }) =>
-                  setData({
+                  handleUpdate({
                     ...data,
                     externalNamespaces: [...data.externalNamespaces, external],
                   })
@@ -261,12 +270,12 @@ export default function LinkedDataForm({
                   type: 'datamodel-internal',
                 }}
                 handleRemove={(id) =>
-                  setData((data) => ({
+                  handleUpdate({
                     ...data,
                     internalNamespaces: data.internalNamespaces.filter(
                       (n) => n.uri !== id
                     ),
-                  }))
+                  })
                 }
               />
             ))}
@@ -277,31 +286,30 @@ export default function LinkedDataForm({
                 itemData={{
                   ...n,
                   type: 'datamodel-external',
-                  setData: (name) =>
-                    setData((data) => {
-                      const updated = data.externalNamespaces.map((ext) => {
-                        if (ext.prefix === n.prefix) {
-                          return {
-                            ...ext,
-                            name: name,
-                          };
-                        }
-                        return ext;
-                      });
+                  setData: (name) => {
+                    const updated = data.externalNamespaces.map((ext) => {
+                      if (ext.prefix === n.prefix) {
+                        return {
+                          ...ext,
+                          name: name,
+                        };
+                      }
+                      return ext;
+                    });
 
-                      return {
-                        ...data,
-                        externalNamespaces: updated,
-                      };
-                    }),
+                    handleUpdate({
+                      ...data,
+                      externalNamespaces: updated,
+                    });
+                  },
                 }}
                 handleRemove={(id) =>
-                  setData((data) => ({
+                  handleUpdate({
                     ...data,
                     externalNamespaces: data.externalNamespaces.filter(
                       (n) => n.namespace !== id
                     ),
-                  }))
+                  })
                 }
               />
             ))}

@@ -46,6 +46,7 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { BasicBlock } from 'yti-common-ui/block';
 import ResourceInfo from '../class-view/resource-info';
 import ResourceForm from '../resource-form';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -69,6 +70,8 @@ export default function ClassForm({
   basedOnNodeShape,
 }: ClassFormProps) {
   const { t, i18n } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
@@ -91,10 +94,13 @@ export default function ClassForm({
     ) {
       setErrors(validateClassForm(value));
     }
+    enableConfirmation();
     dispatch(setClass(value));
   };
 
   const handleSubmit = () => {
+    disableConfirmation();
+
     if (!userPosted) {
       setUserPosted(true);
     }

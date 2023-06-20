@@ -19,6 +19,7 @@ import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import ModelForm from '../model-form';
 import generatePayload from './generate-payload';
 import { FormUpdateErrors, validateFormUpdate } from './validate-form-update';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 
 interface ModelEditViewProps {
   model: ModelType;
@@ -32,6 +33,8 @@ export default function ModelEditView({
   handleSuccess,
 }: ModelEditViewProps) {
   const { t, i18n } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const [errors, setErrors] = useState<FormUpdateErrors>();
   const [userPosted, setUserPosted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -89,6 +92,7 @@ export default function ModelEditView({
 
   const handleSubmit = () => {
     setUserPosted(true);
+    disableConfirmation();
 
     if (!formData) {
       return;
@@ -108,6 +112,11 @@ export default function ModelEditView({
       prefix: formData.prefix,
       isApplicationProfile: formData.type === 'PROFILE',
     });
+  };
+
+  const handleUpdate = (data: ModelFormType) => {
+    enableConfirmation();
+    setFormData(data);
   };
 
   return (
@@ -138,7 +147,7 @@ export default function ModelEditView({
       <DrawerContent height={headerHeight}>
         <ModelForm
           formData={formData}
-          setFormData={setFormData}
+          setFormData={handleUpdate}
           userPosted={userPosted}
           editMode={true}
           errors={userPosted ? errors : undefined}
