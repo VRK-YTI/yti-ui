@@ -6,33 +6,15 @@ import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import TerminologyModal from '../terminology-modal';
 import {
+  ModelCodeList,
   ModelTerminology,
   ModelType,
 } from '@app/common/interfaces/model.interface';
 import { usePostModelMutation } from '@app/common/components/model/model.slice';
-import { ModelFormType } from '@app/common/interfaces/model-form.interface';
-import { translateLanguage } from '@app/common/utils/translation-helpers';
-import {
-  getIsPartOfWithId,
-  getOrganizationsWithId,
-} from '@app/common/utils/get-value';
 import generatePayload from '../model/generate-payload';
 import CodeListModal from '../code-list-modal';
 import LinkedModel from '../linked-model';
 import LinkedItem from './linked-item';
-
-export interface LinkedDataFormData {
-  terminologies: ModelTerminology[];
-  datamodels: [];
-  codelists: [];
-}
-
-interface DataInterface extends Omit<ModelFormType, 'internalNamespaces'> {
-  internalNamespaces: {
-    name: string;
-    uri: string;
-  }[];
-}
 
 export default function LinkedDataForm({
   hasCodelist,
@@ -41,47 +23,48 @@ export default function LinkedDataForm({
 }: {
   hasCodelist: boolean;
   model: ModelType;
-  handleReturn: (data?: LinkedDataFormData) => void;
+  handleReturn: () => void;
 }) {
-  const { t, i18n } = useTranslation('admin');
+  const { t } = useTranslation('admin');
   const ref = useRef<HTMLDivElement>(null);
   const [postModel, result] = usePostModelMutation();
   const [headerHeight, setHeaderHeight] = useState(0);
-  const [data, setData] = useState<DataInterface>({
-    contact: '',
+  const [data, setData] = useState<{
+    codeLists: ModelCodeList[];
+    externalNamespaces: {
+      name: string;
+      namespace: string;
+      prefix: string;
+    }[];
+    internalNamespaces: {
+      name: string;
+      uri: string;
+    }[];
+    terminologies: ModelTerminology[];
+  }>({
+    codeLists: model.codeLists ?? [],
     externalNamespaces: model.externalNamespaces ?? [],
     internalNamespaces:
       model.internalNamespaces.map((n) => ({
         name: '',
         uri: n,
       })) ?? [],
-    languages:
-      ['fi', 'sv', 'en'].map((lang) => ({
-        labelText: translateLanguage(lang, t),
-        uniqueItemId: lang,
-        title:
-          Object.entries(model.label).find((t) => t[0] === lang)?.[1] ?? '',
-        description:
-          Object.entries(model.description).find((d) => d[0] === lang)?.[1] ??
-          '',
-        selected: model.languages.includes(lang),
-      })) ?? [],
-    organizations: getOrganizationsWithId(model, i18n.language) ?? [],
-    prefix: model.prefix ?? '',
-    serviceCategories: getIsPartOfWithId(model, i18n.language) ?? [],
-    status: model.status ?? 'DRAFT',
-    type: model.type ?? 'PROFILE',
     terminologies: model.terminologies ?? [],
-    codeLists: model.codeLists ?? [],
   });
 
   const handleSubmit = () => {
-    const internalNamespaces = data.internalNamespaces.map((n) => n.uri);
-    const payload = generatePayload({ ...data, internalNamespaces });
+    const payload = generatePayload({
+      ...model,
+      codeLists: data.codeLists,
+      externalNamespaces: data.externalNamespaces,
+      internalNamespaces: data.internalNamespaces.map((n) => n.uri),
+      terminologies: data.terminologies,
+    });
+
     postModel({
       payload: payload,
-      prefix: data.prefix,
-      isApplicationProfile: data.type === 'PROFILE',
+      prefix: model.prefix,
+      isApplicationProfile: model.type === 'PROFILE',
     });
   };
 
