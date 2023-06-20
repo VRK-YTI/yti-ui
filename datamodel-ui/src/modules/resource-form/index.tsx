@@ -80,12 +80,15 @@ export default function ResourceForm({
           <TextInput
             labelText={t('attributes-identifier')}
             defaultValue={data.identifier}
+            id="resource-identifier-input"
           />
 
           <div>
             <InlineListBlock
               addNewComponent={
-                <Button variant="secondary">{t('select-attribute')}</Button>
+                <Button variant="secondary" id="select-resource-button">
+                  {t('select-attribute')}
+                </Button>
               }
               handleRemoval={() => null}
               items={[
@@ -99,13 +102,21 @@ export default function ResourceForm({
           </div>
 
           <div>
-            <Dropdown labelText={t('range')} defaultValue="literal">
+            <Dropdown
+              labelText={t('range')}
+              defaultValue="literal"
+              id="resource-range-dropdown"
+            >
               <DropdownItem value="literal">{t('literal')}</DropdownItem>
             </Dropdown>
           </div>
 
           <div>
-            <Dropdown labelText={t('status')} defaultValue="DRAFT">
+            <Dropdown
+              labelText={t('status')}
+              defaultValue="DRAFT"
+              id="resource-status-dropdown"
+            >
               {statuses.map((status) => (
                 <DropdownItem key={`status-${status}`} value={status}>
                   {translateStatus(status, t)}
@@ -123,7 +134,11 @@ export default function ResourceForm({
           <div>
             <InlineListBlock
               addNewComponent={
-                <Button variant="secondary" icon="plus">
+                <Button
+                  variant="secondary"
+                  icon="plus"
+                  id="add-reference-data-button"
+                >
                   {t('add-reference-data')}
                 </Button>
               }
@@ -143,6 +158,7 @@ export default function ResourceForm({
               labelText={t('allowed-values')}
               visualPlaceholder={t('select-values')}
               $noValue={true}
+              id="resource-allowed-values-dropdown"
             >
               <DropdownItem value="test">Placeholder</DropdownItem>
             </StyledDropdown>
@@ -152,6 +168,7 @@ export default function ResourceForm({
               labelText={t('default-value')}
               visualPlaceholder={t('select-value')}
               $noValue={true}
+              id="resource-default-value-dropdown"
             >
               <DropdownItem value="test">Placeholder</DropdownItem>
             </StyledDropdown>
@@ -161,6 +178,7 @@ export default function ResourceForm({
               labelText={t('required-value')}
               visualPlaceholder={t('select-value')}
               $noValue={true}
+              id="resource-required-value-dropdown"
             >
               <DropdownItem value="test">Placeholder</DropdownItem>
             </StyledDropdown>
@@ -169,24 +187,28 @@ export default function ResourceForm({
             <TextInput
               labelText={t('minimum-length')}
               visualPlaceholder={t('input-value')}
+              id="minimum-length-input"
             />
           </div>
           <div>
             <TextInput
               labelText={t('maximum-length')}
               visualPlaceholder={t('input-value')}
+              id="maximum-length-input"
             />
           </div>
           <div>
             <TextInput
               labelText={t('minimum-amount')}
               visualPlaceholder={t('input-value')}
+              id="minimum-amount-input"
             />
           </div>
           <div>
             <TextInput
               labelText={t('maximum-amount')}
               visualPlaceholder={t('input-value')}
+              id="maximum-amount-input"
             />
           </div>
 
@@ -198,6 +220,7 @@ export default function ResourceForm({
                 key={`${data.identifier}-description-${l}`}
                 labelText={`${t('technical-description')}, ${l}`}
                 optionalText={t('optional')}
+                id="resource-description-input"
               />
             ))}
           </LanguageVersionedWrapper>
@@ -205,6 +228,7 @@ export default function ResourceForm({
           <Textarea
             labelText={t('work-group-comment')}
             optionalText={t('optional')}
+            id="resource-work-group-comment-input"
           />
         </FormWrapper>
       </ExpanderContent>

@@ -60,6 +60,7 @@ export default function CommonViewContent({
           variant="secondary"
           onClick={() => navigator.clipboard.writeText(data.uri)}
           style={{ width: 'max-content' }}
+          id="copy-to-clipboard-button"
         >
           {t('copy-to-clipboard')}
         </Button>

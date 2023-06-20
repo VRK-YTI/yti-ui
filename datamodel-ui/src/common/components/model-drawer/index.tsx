@@ -80,6 +80,7 @@ export default function Drawer({ views }: SideNavigationProps) {
                 $active={activeView?.id === view.id}
                 $breakpoint={breakpoint}
                 onClick={() => handleSetActiveView(view.id)}
+                id={`drawer-button-${view.id}`}
               >
                 {isLarge && view.buttonLabel}
               </DrawerButton>

@@ -81,10 +81,14 @@ export default function AsFileModal({
             download
           >
             <SuomiLink target="_blank" href="">
-              <Button>{t('show')}</Button>
+              <Button id="show-button">{t('show')}</Button>
             </SuomiLink>
           </Link>
-          <Button variant="secondary" onClick={() => handleClose()}>
+          <Button
+            variant="secondary"
+            onClick={() => handleClose()}
+            id="cancel-button"
+          >
             {t('site-cancel')}
           </Button>
         </ButtonFooter>
@@ -118,10 +122,14 @@ export default function AsFileModal({
             passHref
           >
             <SuomiLink href="">
-              <Button>{t('download')}</Button>
+              <Button id="download-button">{t('download')}</Button>
             </SuomiLink>
           </Link>
-          <Button variant="secondary" onClick={() => handleClose()}>
+          <Button
+            variant="secondary"
+            onClick={() => handleClose()}
+            id="cancel-button"
+          >
             {t('site-cancel')}
           </Button>
         </ButtonFooter>
