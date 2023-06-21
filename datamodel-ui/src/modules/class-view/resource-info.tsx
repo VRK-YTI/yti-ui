@@ -12,6 +12,7 @@ import CommonViewContent from '../common-view/common-view-content';
 export default function ResourceInfo({
   data,
   modelId,
+  applicationProfile,
 }: {
   data: {
     identifier: string;
@@ -22,6 +23,7 @@ export default function ResourceInfo({
     uri: string;
   };
   modelId: string;
+  applicationProfile?: boolean;
 }) {
   const { i18n } = useTranslation('common');
   const [open, setOpen] = useState(false);
@@ -29,6 +31,7 @@ export default function ResourceInfo({
     {
       modelId: modelId,
       resourceIdentifier: data.identifier,
+      applicationProfile,
     },
     { skip: !open }
   );
