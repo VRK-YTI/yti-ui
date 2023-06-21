@@ -28,7 +28,7 @@ import { useGetCollectionQuery } from '@app/common/components/collection/collect
 import { Collection } from '@app/common/interfaces/collection.interface';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_INPUT_MAX, TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
-import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import SaveSpinner from 'yti-common-ui/save-spinner';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
