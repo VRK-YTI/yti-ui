@@ -28,10 +28,6 @@ import {
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import generatePayload from '../model/generate-payload';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
-import {
-  getIsPartOfWithId,
-  getOrganizationsWithId,
-} from '@app/common/utils/get-value';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import {
@@ -79,32 +75,7 @@ export default function Documentation({
       return;
     }
 
-    const payload = generatePayload({
-      contact: '',
-      languages:
-        modelData.languages.map((lang) => ({
-          labelText: translateLanguage(lang, t),
-          uniqueItemId: lang,
-          title:
-            Object.entries(modelData.label).find((t) => t[0] === lang)?.[1] ??
-            '',
-          description:
-            Object.entries(modelData.description).find(
-              (d) => d[0] === lang
-            )?.[1] ?? '',
-          selected: true,
-        })) ?? [],
-      organizations: getOrganizationsWithId(modelData, i18n.language) ?? [],
-      prefix: modelData?.prefix ?? '',
-      serviceCategories: getIsPartOfWithId(modelData, i18n.language) ?? [],
-      status: modelData?.status ?? 'DRAFT',
-      type: modelData?.type ?? 'PROFILE',
-      terminologies: modelData.terminologies ?? [],
-      externalNamespaces: modelData.externalNamespaces ?? [],
-      internalNamespaces: modelData.internalNamespaces ?? [],
-      codeLists: modelData.codeLists ?? [],
-      documentation: value,
-    });
+    const payload = generatePayload({ ...modelData, documentation: value });
 
     postModel({
       payload: payload,
