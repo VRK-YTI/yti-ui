@@ -7,11 +7,12 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useGetResourceQuery } from '@app/common/components/resource/resource.slice';
 import { useState } from 'react';
-import CommonViewContent from '../common-view/common-view-content';
+import CommonViewContent from '@app/modules/common-view-content';
 
 export default function ResourceInfo({
   data,
   modelId,
+  applicationProfile,
 }: {
   data: {
     identifier: string;
@@ -22,6 +23,7 @@ export default function ResourceInfo({
     uri: string;
   };
   modelId: string;
+  applicationProfile?: boolean;
 }) {
   const { i18n } = useTranslation('common');
   const [open, setOpen] = useState(false);
@@ -29,6 +31,7 @@ export default function ResourceInfo({
     {
       modelId: modelId,
       resourceIdentifier: data.identifier,
+      applicationProfile,
     },
     { skip: !open }
   );

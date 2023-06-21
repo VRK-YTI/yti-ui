@@ -17,9 +17,9 @@ import {
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import Separator from 'yti-common-ui/separator';
-import { TooltipWrapper } from '../model/model.styles';
-import DeleteModal from '../delete-modal';
-import CommonViewContent from './common-view-content';
+import { TooltipWrapper } from '@app/modules/model/model.styles';
+import DeleteModal from '@app/modules/delete-modal';
+import CommonViewContent from '@app/modules/common-view-content';
 import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
 import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 
@@ -30,7 +30,7 @@ interface CommonViewProps {
   handleEdit: () => void;
 }
 
-export default function CommonView({
+export default function ResourceInfo({
   data,
   modelId,
   handleReturn,

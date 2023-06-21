@@ -3,8 +3,6 @@ import { ContentWrapper } from './model.styles';
 import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
 import ClassView from '../class-view/class-view';
-import AttributeView from '../attribute-view';
-import AssociationView from '../association-view';
 import { useTranslation } from 'next-i18next';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { useMemo } from 'react';
@@ -23,6 +21,8 @@ import {
   IconWindow,
   IconRegisters,
 } from 'suomifi-ui-components';
+import ResourceView from '../resource';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 interface ModelProps {
   modelId: string;
@@ -92,8 +92,9 @@ export default function Model({ modelId }: ModelProps) {
         buttonLabel: t('attributes'),
         buttonLabelSm: t('attributes-abbreviation'),
         component: (
-          <AttributeView
+          <ResourceView
             modelId={modelId}
+            type={ResourceType.ATTRIBUTE}
             languages={languages}
             applicationProfile={modelInfo?.type === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
@@ -106,8 +107,9 @@ export default function Model({ modelId }: ModelProps) {
         buttonLabel: t('associations'),
         buttonLabelSm: t('associations-abbreviation'),
         component: (
-          <AssociationView
+          <ResourceView
             modelId={modelId}
+            type={ResourceType.ASSOCIATION}
             languages={languages}
             applicationProfile={modelInfo?.type === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
