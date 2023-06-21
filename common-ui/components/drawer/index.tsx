@@ -26,6 +26,7 @@ interface SideNavigationProps {
   viewOpen?: boolean;
   active?: string;
   initialOpen?: boolean;
+  navDisabled?: boolean;
   children: React.ReactFragment;
 }
 
@@ -35,6 +36,7 @@ export default function Drawer({
   viewOpen,
   active,
   initialOpen,
+  navDisabled,
   children,
 }: SideNavigationProps) {
   const { isSmall } = useBreakpoints();
@@ -60,6 +62,12 @@ export default function Drawer({
     window.addEventListener('mouseup', onMouseUp, { once: true });
   };
 
+  const handleSetOpen = (value: boolean) => {
+    if (!navDisabled) {
+      setOpen(value);
+    }
+  };
+
   useEffect(() => {
     if (isSmall) {
       setWidth(390);
@@ -71,7 +79,7 @@ export default function Drawer({
       {!isSmall && (
         <div>
           <ToggleButton
-            onClick={() => setOpen(!open)}
+            onClick={() => handleSetOpen(!open)}
             variant="secondaryNoBorder"
             $open={open}
           >

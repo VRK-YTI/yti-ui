@@ -1,4 +1,5 @@
 import {
+  setHasChanges,
   setView,
   useGetModelQuery,
 } from '@app/common/components/model/model.slice';
@@ -124,7 +125,10 @@ export default function ModelInfoView() {
     return (
       <ModelEditView
         model={modelInfo}
-        setShow={setShowEditView}
+        hide={() => {
+          setShowEditView(false);
+          dispatch(setHasChanges(false));
+        }}
         handleSuccess={handleSuccess}
       />
     );

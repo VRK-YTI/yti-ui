@@ -47,6 +47,7 @@ import { BasicBlock } from 'yti-common-ui/block';
 import ResourceInfo from '../class-view/resource-info';
 import ResourceForm from '../resource-form';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
+import { setHasChanges } from '@app/common/components/model/model.slice';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -95,11 +96,13 @@ export default function ClassForm({
       setErrors(validateClassForm(value));
     }
     enableConfirmation();
+    dispatch(setHasChanges(true));
     dispatch(setClass(value));
   };
 
   const handleSubmit = () => {
     disableConfirmation();
+    dispatch(setHasChanges(false));
 
     if (!userPosted) {
       setUserPosted(true);
@@ -253,7 +256,10 @@ export default function ClassForm({
           <Button
             icon={<IconArrowLeft />}
             variant="secondaryNoBorder"
-            onClick={() => handleReturn()}
+            onClick={() => {
+              handleReturn();
+              dispatch(setHasChanges(false));
+            }}
             style={{ textTransform: 'uppercase' }}
           >
             {t('back', { ns: 'common' })}
@@ -279,7 +285,13 @@ export default function ClassForm({
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <Button onClick={() => handleSubmit()}>{t('save')}</Button>
-            <Button variant="secondary" onClick={() => handleReturn()}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                handleReturn();
+                dispatch(setHasChanges(false));
+              }}
+            >
               {t('cancel-variant')}
             </Button>
           </div>

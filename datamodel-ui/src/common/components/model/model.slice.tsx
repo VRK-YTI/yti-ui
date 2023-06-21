@@ -128,6 +128,7 @@ const initialState = {
   },
   highlighted: [],
   view: initialView,
+  hasChanges: false,
 };
 
 export const modelSlice = createSlice({
@@ -201,6 +202,12 @@ export const modelSlice = createSlice({
         },
       };
     },
+    setHasChanges(state, action) {
+      return {
+        ...state,
+        hasChanges: action.payload,
+      };
+    },
   },
 });
 
@@ -257,4 +264,13 @@ export function setView(
   subkey?: keyof ViewListItem
 ): AppThunk {
   return (dispatch) => dispatch(modelSlice.actions.setView({ key, subkey }));
+}
+
+export function setHasChanges(hasChanges?: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setHasChanges(hasChanges ?? false));
+}
+
+export function selectHasChanges() {
+  return (state: AppState) => state.model.hasChanges;
 }

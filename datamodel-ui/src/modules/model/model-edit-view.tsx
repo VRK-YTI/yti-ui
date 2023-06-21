@@ -1,4 +1,7 @@
-import { usePostModelMutation } from '@app/common/components/model/model.slice';
+import {
+  setHasChanges,
+  usePostModelMutation,
+} from '@app/common/components/model/model.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { ModelType } from '@app/common/interfaces/model.interface';
 import {
@@ -20,21 +23,23 @@ import ModelForm from '../model-form';
 import generatePayload from './generate-payload';
 import { FormUpdateErrors, validateFormUpdate } from './validate-form-update';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
+import { useStoreDispatch } from '@app/store';
 
 interface ModelEditViewProps {
   model: ModelType;
-  setShow: (value: boolean) => void;
+  hide: () => void;
   handleSuccess: () => void;
 }
 
 export default function ModelEditView({
   model,
-  setShow,
+  hide,
   handleSuccess,
 }: ModelEditViewProps) {
   const { t, i18n } = useTranslation('admin');
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
+  const dispatch = useStoreDispatch();
   const [errors, setErrors] = useState<FormUpdateErrors>();
   const [userPosted, setUserPosted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -93,6 +98,7 @@ export default function ModelEditView({
   const handleSubmit = () => {
     setUserPosted(true);
     disableConfirmation();
+    dispatch(setHasChanges());
 
     if (!formData) {
       return;
@@ -116,6 +122,7 @@ export default function ModelEditView({
 
   const handleUpdate = (data: ModelFormType) => {
     enableConfirmation();
+    dispatch(setHasChanges(true));
     setFormData(data);
   };
 
@@ -129,7 +136,7 @@ export default function ModelEditView({
             <Button
               variant="secondary"
               style={{ marginLeft: '10px' }}
-              onClick={() => setShow(false)}
+              onClick={() => hide()}
             >
               {t('cancel-variant')}
             </Button>

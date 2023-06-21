@@ -9,7 +9,10 @@ import {
   ModelTerminology,
   ModelType,
 } from '@app/common/interfaces/model.interface';
-import { usePostModelMutation } from '@app/common/components/model/model.slice';
+import {
+  setHasChanges,
+  usePostModelMutation,
+} from '@app/common/components/model/model.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import {
@@ -21,6 +24,7 @@ import CodeListModal from '../code-list-modal';
 import LinkedModel from '../linked-model';
 import LinkedItem from './linked-item';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
+import { useStoreDispatch } from '@app/store';
 
 export interface LinkedDataFormData {
   terminologies: ModelTerminology[];
@@ -47,6 +51,7 @@ export default function LinkedDataForm({
   const { t, i18n } = useTranslation('admin');
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
+  const dispatch = useStoreDispatch();
   const ref = useRef<HTMLDivElement>(null);
   const [postModel, result] = usePostModelMutation();
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -80,11 +85,14 @@ export default function LinkedDataForm({
 
   const handleUpdate = (data: DataInterface) => {
     enableConfirmation();
+    dispatch(setHasChanges(true));
     setData(data);
   };
 
   const handleSubmit = () => {
     disableConfirmation();
+    dispatch(setHasChanges(false));
+
     const internalNamespaces = data.internalNamespaces.map((n) => n.uri);
     const payload = generatePayload({ ...data, internalNamespaces });
     postModel({
@@ -124,7 +132,13 @@ export default function LinkedDataForm({
             }}
           >
             <Button onClick={() => handleSubmit()}>{t('save')}</Button>
-            <Button variant="secondary" onClick={() => handleReturn()}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                handleReturn();
+                dispatch(setHasChanges(false));
+              }}
+            >
               {t('cancel-variant')}
             </Button>
           </div>

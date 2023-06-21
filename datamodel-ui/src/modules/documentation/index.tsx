@@ -1,11 +1,4 @@
-import {
-  KeyboardEvent,
-  createRef,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { KeyboardEvent, createRef, useEffect, useRef, useState } from 'react';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
@@ -29,6 +22,7 @@ import {
 } from './documentation.styles';
 import { useTranslation } from 'next-i18next';
 import {
+  setHasChanges,
   useGetModelQuery,
   usePostModelMutation,
 } from '@app/common/components/model/model.slice';
@@ -53,6 +47,7 @@ import {
   previousCharIsNewLine,
 } from './utils';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
+import { useStoreDispatch } from '@app/store';
 
 export default function Documentation({
   modelId,
@@ -65,6 +60,7 @@ export default function Documentation({
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
   const ref = useRef<HTMLDivElement>(null);
+  const dispatch = useStoreDispatch();
   const textAreaRef = createRef<HTMLTextAreaElement>();
   const [headerHeight, setHeaderHeight] = useState(0);
   const [value, setValue] = useState<{ [key: string]: string }>({});
@@ -86,6 +82,7 @@ export default function Documentation({
 
   const handleSubmit = () => {
     disableConfirmation();
+    dispatch(setHasChanges(false));
 
     if (!modelData) {
       return;
@@ -125,13 +122,11 @@ export default function Documentation({
     });
   };
 
-  const handleUpdate = useCallback(
-    (data: { [key: string]: string }) => {
-      enableConfirmation();
-      setValue(data);
-    },
-    [enableConfirmation]
-  );
+  const handleUpdate = (data: { [key: string]: string }) => {
+    enableConfirmation();
+    dispatch(setHasChanges(true));
+    setValue(data);
+  };
 
   const handleButtonClick = (key: string) => {
     const addNewLine = getAddNewLine(value[currentLanguage], selection.start);
@@ -203,11 +198,11 @@ export default function Documentation({
 
   useEffect(() => {
     if (modelData && !isEdit) {
-      handleUpdate(modelData.documentation ?? '');
+      setValue(modelData.documentation ?? '');
     }
 
     if (modelData && Object.keys(value).length === 0) {
-      handleUpdate(modelData.documentation);
+      setValue(modelData.documentation);
       setCurrentLanguage(
         modelData.languages.includes(i18n.language)
           ? i18n.language
@@ -215,14 +210,15 @@ export default function Documentation({
               'fi'
       );
     }
-  }, [modelData, isEdit, i18n.language, value, handleUpdate]);
+  }, [modelData, isEdit, i18n.language, value]);
 
   useEffect(() => {
     if (result.isSuccess) {
       setIsEdit(false);
+      disableConfirmation();
       refetch();
     }
-  }, [result, refetch]);
+  }, [result, refetch, disableConfirmation]);
 
   useEffect(() => {
     if (!textAreaRef.current) {
@@ -255,7 +251,13 @@ export default function Documentation({
               }}
             >
               <Button onClick={() => handleSubmit()}>{t('save')}</Button>
-              <Button variant="secondary" onClick={() => setIsEdit(false)}>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setIsEdit(false);
+                  disableConfirmation();
+                }}
+              >
                 {t('cancel-variant')}
               </Button>
             </div>
