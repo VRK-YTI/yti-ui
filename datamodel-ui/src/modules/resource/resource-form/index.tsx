@@ -235,6 +235,7 @@ export default function ResourceForm({
             variant="secondaryNoBorder"
             onClick={() => handleReturn()}
             style={{ textTransform: 'uppercase' }}
+            id="back-button"
           >
             {t('back', { ns: 'common' })}
           </Button>
@@ -249,10 +250,15 @@ export default function ResourceForm({
             <Button
               onClick={() => handleSubmit()}
               style={{ marginRight: '15px' }}
+              id="submit-button"
             >
               {t('save')}
             </Button>
-            <Button variant="secondary" onClick={() => handleReturn()}>
+            <Button
+              variant="secondary"
+              onClick={() => handleReturn()}
+              id="cancel-button"
+            >
               {t('cancel-variant')}
             </Button>
           </div>
@@ -303,6 +309,7 @@ export default function ResourceForm({
                   })
                 }
                 status={userPosted && errors.label ? 'error' : 'default'}
+                id="label-input"
               />
             ))}
           </LanguageVersionedWrapper>
@@ -330,6 +337,7 @@ export default function ResourceForm({
             statusText={
               isSuccess && !identifierFree ? t('error-prefix-taken') : ''
             }
+            id="prefix-input"
           />
 
           {type === ResourceType.ATTRIBUTE && (
@@ -409,7 +417,11 @@ export default function ResourceForm({
               label: resource,
             }))}
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-upper-button"
+              >
                 {translateCommonForm('add-upper', type, t)}
               </Button>
             }
@@ -425,7 +437,11 @@ export default function ResourceForm({
             label={translateCommonForm('equivalent', type, t)}
             items={[]}
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-equivalent-button"
+              >
                 {translateCommonForm('add-equivalent', type, t)}
               </Button>
             }
@@ -438,6 +454,7 @@ export default function ResourceForm({
               labelText={t('status')}
               defaultValue="DRAFT"
               onChange={(e) => handleUpdate({ ...data, status: e as Status })}
+              id="status-dropdown"
             >
               {statuses.map((status) => (
                 <DropdownItem key={`status-${status}`} value={status}>
@@ -461,6 +478,7 @@ export default function ResourceForm({
                 }
                 optionalText={t('optional')}
                 className="wide-text"
+                id="note-input"
               />
             ))}
           </LanguageVersionedWrapper>
@@ -474,6 +492,7 @@ export default function ResourceForm({
             }
             hintText={t('editor-comment-hint')}
             className="wide-text"
+            id="editorial-note-input"
           />
         </FormWrapper>
       </DrawerContent>

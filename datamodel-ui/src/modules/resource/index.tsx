@@ -229,6 +229,7 @@ export default function ResourceView({
             fullWidth
             onChange={(e) => handleQueryChange(e?.toString() ?? '')}
             debounce={500}
+            id="search-input"
           />
         </StaticHeader>
 
