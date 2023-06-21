@@ -27,6 +27,7 @@ interface SideNavigationProps {
   active?: string;
   initialOpen?: boolean;
   navDisabled?: boolean;
+  openButtonExtraFunc?: () => void;
   children: React.ReactFragment;
 }
 
@@ -37,6 +38,7 @@ export default function Drawer({
   active,
   initialOpen,
   navDisabled,
+  openButtonExtraFunc,
   children,
 }: SideNavigationProps) {
   const { isSmall } = useBreakpoints();
@@ -65,6 +67,10 @@ export default function Drawer({
   const handleSetOpen = (value: boolean) => {
     if (!navDisabled) {
       setOpen(value);
+    }
+
+    if (openButtonExtraFunc) {
+      openButtonExtraFunc();
     }
   };
 

@@ -47,7 +47,10 @@ import { BasicBlock } from 'yti-common-ui/block';
 import ResourceInfo from '../class-view/resource-info';
 import ResourceForm from '../resource-form';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
-import { setHasChanges } from '@app/common/components/model/model.slice';
+import {
+  selectHasChanges,
+  setHasChanges,
+} from '@app/common/components/model/model.slice';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -77,6 +80,7 @@ export default function ClassForm({
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
   const data = useSelector(selectClass());
+  const hasChanges = useSelector(selectHasChanges());
   const [userPosted, setUserPosted] = useState(false);
   const [errors, setErrors] = useState<ClassFormErrors>(
     validateClassForm(data)
@@ -257,8 +261,9 @@ export default function ClassForm({
             icon={<IconArrowLeft />}
             variant="secondaryNoBorder"
             onClick={() => {
-              handleReturn();
-              dispatch(setHasChanges(false));
+              if (!hasChanges) {
+                handleReturn();
+              }
             }}
             style={{ textTransform: 'uppercase' }}
           >

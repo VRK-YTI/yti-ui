@@ -38,8 +38,14 @@ import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import ClassModal from '@app/modules/class-modal';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
-import { setSelected, setView } from '@app/common/components/model/model.slice';
+import {
+  selectHasChanges,
+  setHasChanges,
+  setSelected,
+  setView,
+} from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 
 interface ResourceFormProps {
   type: ResourceType;
@@ -61,11 +67,14 @@ export default function ResourceForm({
   handleReturn,
 }: ResourceFormProps) {
   const { t, i18n } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const statuses = statusList;
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const dispatch = useStoreDispatch();
   const data = useSelector(selectResource());
+  const hasChanges = useSelector(selectHasChanges());
   const [userPosted, setUserPosted] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [errors, setErrors] = useState(validateForm(data));
@@ -81,6 +90,8 @@ export default function ResourceForm({
   );
 
   const handleSubmit = () => {
+    disableConfirmation();
+    dispatch(setHasChanges(false));
     if (!userPosted) {
       setUserPosted(true);
     }
@@ -111,6 +122,8 @@ export default function ResourceForm({
   };
 
   const handleUpdate = (value: typeof data) => {
+    enableConfirmation();
+    dispatch(setHasChanges(true));
     if (userPosted && Object.values(errors).filter((val) => val).length > 0) {
       setErrors(validateForm(value));
     }
@@ -233,7 +246,11 @@ export default function ResourceForm({
           <Button
             icon={<IconArrowLeft />}
             variant="secondaryNoBorder"
-            onClick={() => handleReturn()}
+            onClick={() => {
+              if (!hasChanges) {
+                handleReturn();
+              }
+            }}
             style={{ textTransform: 'uppercase' }}
           >
             {t('back', { ns: 'common' })}
@@ -252,7 +269,13 @@ export default function ResourceForm({
             >
               {t('save')}
             </Button>
-            <Button variant="secondary" onClick={() => handleReturn()}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                handleReturn();
+                dispatch(setHasChanges(false));
+              }}
+            >
               {t('cancel-variant')}
             </Button>
           </div>

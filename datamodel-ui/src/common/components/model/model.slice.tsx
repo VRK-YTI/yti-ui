@@ -129,6 +129,7 @@ const initialState = {
   highlighted: [],
   view: initialView,
   hasChanges: false,
+  displayWarning: false,
 };
 
 export const modelSlice = createSlice({
@@ -203,10 +204,25 @@ export const modelSlice = createSlice({
       };
     },
     setHasChanges(state, action) {
+      if (action.payload === false) {
+        return {
+          ...state,
+          hasChanges: action.payload,
+          displayWarning: false,
+        };
+      }
       return {
         ...state,
         hasChanges: action.payload,
       };
+    },
+    setDisplayWarning(state, action) {
+      if (action.payload === true && state.hasChanges === true) {
+        return {
+          ...state,
+          displayWarning: action.payload,
+        };
+      }
     },
   },
 });
@@ -275,6 +291,14 @@ export function setHasChanges(hasChanges?: boolean): AppThunk {
     dispatch(modelSlice.actions.setHasChanges(hasChanges ?? false));
 }
 
+export function displayWarning(): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setDisplayWarning(true));
+}
+
 export function selectHasChanges() {
   return (state: AppState) => state.model.hasChanges;
+}
+
+export function selectDisplayWarning() {
+  return (state: AppState) => state.model.displayWarning;
 }

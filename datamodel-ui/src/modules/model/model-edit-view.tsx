@@ -15,7 +15,7 @@ import {
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
-import { Button, Heading } from 'suomifi-ui-components';
+import { Button, Text } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
@@ -130,7 +130,7 @@ export default function ModelEditView({
     <>
       <StaticHeader ref={ref}>
         <div>
-          <Heading variant="h2">{t('details', { ns: 'common' })}</Heading>
+          <Text variant="bold">{t('details', { ns: 'common' })}</Text>
           <div>
             <Button onClick={() => handleSubmit()}>{t('save')}</Button>
             <Button

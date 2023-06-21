@@ -51,7 +51,6 @@
   "copy-to-clipboard": "Copy to clipboard",
   "created": "Created",
   "data-vocabularies": "Data Vocabularies",
-  "datamodel-no-association": "Datamodel does not contain any associations.",
   "datamodel-no-attributes": "Datamodel does not contain any attributes.",
   "datamodel-no-classes": "Datamodel does not contain any classes",
   "datamodel-title": "Data Vocabularies",
