@@ -1,30 +1,4 @@
-import { useTranslation } from 'next-i18next';
-import { useEffect, useRef, useState } from 'react';
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  IconArrowLeft,
-  IconPlus,
-  Text,
-  Textarea,
-  TextInput,
-} from 'suomifi-ui-components';
-import ConceptBlock from '../concept-block';
-import { LanguageVersionedWrapper } from '../class-form/class-form.styles';
-import { statusList } from 'yti-common-ui/utils/status-list';
-import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
-import { FormWrapper } from './common-form.styles';
 import InlineListBlock from '@app/common/components/inline-list-block';
-import StaticHeader from 'yti-common-ui/drawer/static-header';
-import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
-import {
-  translateCommonForm,
-  translateCommonFormErrors,
-} from '@app/common/utils/translation-helpers';
-import { Status } from '@app/common/interfaces/status.interface';
-import validateForm from './validate-form';
-import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
   selectResource,
   setResource,
@@ -33,45 +7,67 @@ import {
 } from '@app/common/components/resource/resource.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import {
-  AxiosBaseQueryError,
-  AxiosQueryErrorFields,
-} from 'yti-common-ui/interfaces/axios-base-query.interface';
-import ClassModal from '../class-modal';
-import { BasicBlock } from 'yti-common-ui/block';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
+  translateCommonForm,
+  translateCommonFormErrors,
+} from '@app/common/utils/translation-helpers';
+import ConceptBlock from '@app/modules/concept-block';
 import { useStoreDispatch } from '@app/store';
+import { useTranslation } from 'next-i18next';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { IconArrowLeft, IconPlus } from 'suomifi-icons';
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  Text,
+  TextInput,
+  Textarea,
+} from 'suomifi-ui-components';
+import { BasicBlock } from 'yti-common-ui/block';
+import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
+import StaticHeader from 'yti-common-ui/drawer/static-header';
+import { Status } from 'yti-common-ui/interfaces/status.interface';
+import { FormWrapper, LanguageVersionedWrapper } from './resource-form.styles';
+import validateForm from './validate-form';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
+import { AxiosBaseQueryError } from 'yti-common-ui/interfaces/axios-base-query.interface';
+import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
+import { statusList } from 'yti-common-ui/utils/status-list';
+import ClassModal from '@app/modules/class-modal';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
+import { setSelected, setView } from '@app/common/components/model/model.slice';
+import { useRouter } from 'next/router';
 
-interface CommonFormProps {
-  handleReturn: () => void;
-  handleFollowUp: (id: string) => void;
-  type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
+interface ResourceFormProps {
+  type: ResourceType;
   modelId: string;
   languages: string[];
   terminologies: string[];
   isEdit: boolean;
   applicationProfile?: boolean;
+  handleReturn: () => void;
 }
 
-export default function CommonForm({
-  handleReturn,
-  handleFollowUp,
+export default function ResourceForm({
   type,
   modelId,
   languages,
   terminologies,
   isEdit,
   applicationProfile,
-}: CommonFormProps) {
+  handleReturn,
+}: ResourceFormProps) {
   const { t, i18n } = useTranslation('admin');
   const statuses = statusList;
   const ref = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const dispatch = useStoreDispatch();
   const data = useSelector(selectResource());
-  const [headerHeight, setHeaderHeight] = useState(0);
   const [userPosted, setUserPosted] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
   const [errors, setErrors] = useState(validateForm(data));
   const [putResource, result] = usePutResourceMutation();
   const { data: identifierFree, isSuccess } = useGetResourceIdentifierFreeQuery(
@@ -105,6 +101,7 @@ export default function CommonForm({
 
     // TODO: Remove subResourceOf clearing when other supported
     // are implemented
+
     putResource({
       modelId: modelId,
       data: { ...data, type: type, subResourceOf: [], label: usedLabels },
@@ -200,6 +197,26 @@ export default function CommonForm({
       setHeaderHeight(ref.current.clientHeight);
     }
 
+    if (result.isSuccess) {
+      dispatch(
+        setSelected(
+          data.identifier,
+          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
+        )
+      );
+      dispatch(
+        setView(
+          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+          'info'
+        )
+      );
+      router.replace(
+        `${modelId}/${
+          type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
+        }/${data.identifier}`
+      );
+    }
+
     if (
       ref.current &&
       userPosted &&
@@ -207,52 +224,17 @@ export default function CommonForm({
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors, userPosted, result.error]);
-
-  useEffect(() => {
-    if (result.isError && result.error && 'data' in result.error) {
-      const backendErrorFields = Array.isArray(
-        (result.error as AxiosQueryErrorFields).data?.details
-      )
-        ? (result.error as AxiosQueryErrorFields).data?.details?.map(
-            (d) => d.field
-          )
-        : [];
-
-      if (backendErrorFields.length > 0) {
-        setErrors({
-          identifier: backendErrorFields.includes('identifier'),
-          identifierInitChar: false,
-          identifierLength: false,
-          label: backendErrorFields.includes('label'),
-        });
-        return;
-      }
-
-      if (result.error?.status === 401) {
-        setErrors({
-          ...validateForm(data),
-          unauthorized: true,
-        });
-      }
-    }
-  }, [result.isError, result.error, data]);
-
-  useEffect(() => {
-    if (result.isSuccess) {
-      handleFollowUp(data.identifier);
-    }
-  }, [result.isSuccess, handleFollowUp, data.identifier]);
+  }, [ref, errors, userPosted, result, dispatch, type, router, modelId, data]);
 
   return (
     <>
       <StaticHeader ref={ref}>
         <div>
           <Button
-            variant="secondaryNoBorder"
             icon={<IconArrowLeft />}
-            style={{ textTransform: 'uppercase' }}
+            variant="secondaryNoBorder"
             onClick={() => handleReturn()}
+            style={{ textTransform: 'uppercase' }}
           >
             {t('back', { ns: 'common' })}
           </Button>
@@ -501,7 +483,15 @@ export default function CommonForm({
   function getErrors(): string[] {
     const translatedErrors = Object.entries(errors)
       .filter((e) => e[1])
-      .map((e) => translateCommonFormErrors(e[0], type, t));
+      .map((e) =>
+        translateCommonFormErrors(
+          e[0],
+          type === ResourceType.ASSOCIATION
+            ? ResourceType.ASSOCIATION
+            : ResourceType.ATTRIBUTE,
+          t
+        )
+      );
 
     if (isSuccess && !identifierFree) {
       return [...translatedErrors, t('error-prefix-taken')];

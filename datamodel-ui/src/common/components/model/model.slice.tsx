@@ -248,6 +248,10 @@ export function selectClassView() {
   return (state: AppState) => state.model.view.classes;
 }
 
+export function selectResourceView(type: 'associations' | 'attributes') {
+  return (state: AppState) => state.model.view[type];
+}
+
 export function selectCurrentViewName() {
   return (state: AppState) =>
     Object.entries(state.model.view).find((v) =>
