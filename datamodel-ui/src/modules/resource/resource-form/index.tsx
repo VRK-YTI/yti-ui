@@ -13,13 +13,15 @@ import {
 import ConceptBlock from '@app/modules/concept-block';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { IconArrowLeft, IconPlus } from 'suomifi-icons';
 import {
   Button,
   Dropdown,
   DropdownItem,
+  SingleSelect,
+  SingleSelectData,
   Text,
   TextInput,
   Textarea,
@@ -40,6 +42,7 @@ import ClassModal from '@app/modules/class-modal';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { setSelected, setView } from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
+import { useGetDatatypesQuery } from '@app/common/components/datatypes/datatypes.slice';
 
 interface ResourceFormProps {
   type: ResourceType;
@@ -70,6 +73,9 @@ export default function ResourceForm({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [errors, setErrors] = useState(validateForm(data));
   const [putResource, result] = usePutResourceMutation();
+  const { data: dataTypesResult, isSuccess: isDataTypesSuccess } =
+    useGetDatatypesQuery();
+
   const { data: identifierFree, isSuccess } = useGetResourceIdentifierFreeQuery(
     {
       prefix: modelId,
@@ -79,6 +85,17 @@ export default function ResourceForm({
       skip: isEdit || data.identifier === '',
     }
   );
+
+  const attributeRanges: SingleSelectData[] = useMemo(() => {
+    if (!isDataTypesSuccess) {
+      return [];
+    }
+
+    return dataTypesResult.map((result) => ({
+      labelText: result,
+      uniqueItemId: result,
+    }));
+  }, [dataTypesResult, isDataTypesSuccess, t]);
 
   const handleSubmit = () => {
     if (!userPosted) {
@@ -334,9 +351,27 @@ export default function ResourceForm({
 
           {type === ResourceType.ATTRIBUTE && (
             <>
-              <BasicBlock title={t('range')}>
-                {t('literal')} (rdfs:Literal)
-              </BasicBlock>
+              <SingleSelect
+                labelText={t('range')}
+                itemAdditionHelpText=""
+                ariaOptionsAvailableText={t('available-ranges') as string}
+                defaultSelectedItem={attributeRanges.find(
+                  (value) => value.uniqueItemId == '-1'
+                )}
+                selectedItem={attributeRanges.find((value) => {
+                  if (data.range != undefined) {
+                    return value.uniqueItemId == data.range.id;
+                  } else {
+                    return value.uniqueItemId == 'rdfs:Literal';
+                  }
+                })}
+                clearButtonLabel={t('clear-selection')}
+                onItemSelect={(e) =>
+                  e != undefined &&
+                  handleUpdate({ ...data, range: { id: e, label: e } })
+                }
+                items={attributeRanges}
+              />
 
               <InlineListBlock
                 addNewComponent={

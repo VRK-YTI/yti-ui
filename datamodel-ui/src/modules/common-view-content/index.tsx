@@ -72,7 +72,7 @@ export default function CommonViewContent({
       {data.type === ResourceType.ATTRIBUTE && (
         <>
           <BasicBlock title={t('range', { ns: 'admin' })}>
-            {t('literal', { ns: 'admin' })} (rdfs:Literal)
+            {data.range}
           </BasicBlock>
 
           <BasicBlock title={`${t('class', { ns: 'admin' })} (rdfs:domain)`}>
