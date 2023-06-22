@@ -35,12 +35,14 @@ export function resourceToResourceFormType(
           label: data.domain.split('/').pop()?.replace('#', ':') ?? data.domain,
         }
       : undefined,
-    range:
-      data.type === ResourceType.ASSOCIATION && data.range
-        ? {
-            id: data.range,
-            label: data.range.split('/').pop()?.replace('#', ':') ?? data.range,
-          }
-        : undefined,
+    range: data.range
+      ? {
+          id: data.range,
+          label:
+            data.type == ResourceType.ASSOCIATION
+              ? data.range.split('/').pop()?.replace('#', ':') ?? data.range
+              : data.range,
+        }
+      : undefined,
   };
 }

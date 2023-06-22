@@ -13,13 +13,15 @@ import {
 import ConceptBlock from '@app/modules/concept-block';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { IconArrowLeft, IconPlus } from 'suomifi-icons';
 import {
   Button,
   Dropdown,
   DropdownItem,
+  SingleSelect,
+  SingleSelectData,
   Text,
   TextInput,
   Textarea,
@@ -40,6 +42,7 @@ import ClassModal from '@app/modules/class-modal';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { setSelected, setView } from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
+import { useGetDatatypesQuery } from '@app/common/components/datatypes/datatypes.slice';
 
 interface ResourceFormProps {
   type: ResourceType;
@@ -48,6 +51,7 @@ interface ResourceFormProps {
   terminologies: string[];
   isEdit: boolean;
   applicationProfile?: boolean;
+  refetch: () => void;
   handleReturn: () => void;
 }
 
@@ -58,6 +62,7 @@ export default function ResourceForm({
   terminologies,
   isEdit,
   applicationProfile,
+  refetch,
   handleReturn,
 }: ResourceFormProps) {
   const { t, i18n } = useTranslation('admin');
@@ -70,6 +75,9 @@ export default function ResourceForm({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [errors, setErrors] = useState(validateForm(data));
   const [putResource, result] = usePutResourceMutation();
+  const { data: dataTypesResult, isSuccess: isDataTypesSuccess } =
+    useGetDatatypesQuery();
+
   const { data: identifierFree, isSuccess } = useGetResourceIdentifierFreeQuery(
     {
       prefix: modelId,
@@ -79,6 +87,17 @@ export default function ResourceForm({
       skip: isEdit || data.identifier === '',
     }
   );
+
+  const attributeRanges: SingleSelectData[] = useMemo(() => {
+    if (!isDataTypesSuccess) {
+      return [];
+    }
+
+    return dataTypesResult.map((result) => ({
+      labelText: result,
+      uniqueItemId: result,
+    }));
+  }, [dataTypesResult, isDataTypesSuccess, t]);
 
   const handleSubmit = () => {
     if (!userPosted) {
@@ -210,6 +229,7 @@ export default function ResourceForm({
           'info'
         )
       );
+      refetch();
       router.replace(
         `${modelId}/${
           type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
@@ -224,7 +244,18 @@ export default function ResourceForm({
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors, userPosted, result, dispatch, type, router, modelId, data]);
+  }, [
+    ref,
+    errors,
+    userPosted,
+    result,
+    dispatch,
+    type,
+    router,
+    modelId,
+    data,
+    refetch,
+  ]);
 
   return (
     <>
@@ -235,6 +266,7 @@ export default function ResourceForm({
             variant="secondaryNoBorder"
             onClick={() => handleReturn()}
             style={{ textTransform: 'uppercase' }}
+            id="back-button"
           >
             {t('back', { ns: 'common' })}
           </Button>
@@ -249,10 +281,15 @@ export default function ResourceForm({
             <Button
               onClick={() => handleSubmit()}
               style={{ marginRight: '15px' }}
+              id="submit-button"
             >
               {t('save')}
             </Button>
-            <Button variant="secondary" onClick={() => handleReturn()}>
+            <Button
+              variant="secondary"
+              onClick={() => handleReturn()}
+              id="cancel-button"
+            >
               {t('cancel-variant')}
             </Button>
           </div>
@@ -303,6 +340,7 @@ export default function ResourceForm({
                   })
                 }
                 status={userPosted && errors.label ? 'error' : 'default'}
+                id="label-input"
               />
             ))}
           </LanguageVersionedWrapper>
@@ -330,13 +368,32 @@ export default function ResourceForm({
             statusText={
               isSuccess && !identifierFree ? t('error-prefix-taken') : ''
             }
+            id="prefix-input"
           />
 
           {type === ResourceType.ATTRIBUTE && (
             <>
-              <BasicBlock title={t('range')}>
-                {t('literal')} (rdfs:Literal)
-              </BasicBlock>
+              <SingleSelect
+                labelText={t('range')}
+                itemAdditionHelpText=""
+                ariaOptionsAvailableText={t('available-ranges') as string}
+                defaultSelectedItem={attributeRanges.find(
+                  (value) => value.uniqueItemId == '-1'
+                )}
+                selectedItem={attributeRanges.find((value) => {
+                  if (data.range != undefined) {
+                    return value.uniqueItemId == data.range.id;
+                  } else {
+                    return value.uniqueItemId == 'rdfs:Literal';
+                  }
+                })}
+                clearButtonLabel={t('clear-selection')}
+                onItemSelect={(e) =>
+                  e != undefined &&
+                  handleUpdate({ ...data, range: { id: e, label: e } })
+                }
+                items={attributeRanges}
+              />
 
               <InlineListBlock
                 addNewComponent={
@@ -409,7 +466,11 @@ export default function ResourceForm({
               label: resource,
             }))}
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-upper-button"
+              >
                 {translateCommonForm('add-upper', type, t)}
               </Button>
             }
@@ -425,7 +486,11 @@ export default function ResourceForm({
             label={translateCommonForm('equivalent', type, t)}
             items={[]}
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-equivalent-button"
+              >
                 {translateCommonForm('add-equivalent', type, t)}
               </Button>
             }
@@ -438,6 +503,7 @@ export default function ResourceForm({
               labelText={t('status')}
               defaultValue="DRAFT"
               onChange={(e) => handleUpdate({ ...data, status: e as Status })}
+              id="status-dropdown"
             >
               {statuses.map((status) => (
                 <DropdownItem key={`status-${status}`} value={status}>
@@ -461,6 +527,7 @@ export default function ResourceForm({
                 }
                 optionalText={t('optional')}
                 className="wide-text"
+                id="note-input"
               />
             ))}
           </LanguageVersionedWrapper>
@@ -474,6 +541,7 @@ export default function ResourceForm({
             }
             hintText={t('editor-comment-hint')}
             className="wide-text"
+            id="editorial-note-input"
           />
         </FormWrapper>
       </DrawerContent>

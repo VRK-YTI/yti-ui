@@ -114,6 +114,7 @@ export default function LanguageSelector(
         noItemsText={props.noItemsText ?? ''}
         status={props.status}
         disabled={props.disabled}
+        id="language-selector"
       />
 
       {selectedItems.map((item, idx) => (
@@ -121,6 +122,7 @@ export default function LanguageSelector(
           padding="m"
           className="language-block"
           key={`${item.uniqueItemId}-${idx}`}
+          id={`language-block-${item.uniqueItemId}`}
         >
           <Paragraph marginBottomSpacing="m">
             <Text variant="bold">{item.labelText}</Text>
@@ -137,6 +139,7 @@ export default function LanguageSelector(
                 : 'default'
             }
             defaultValue={item.title}
+            id={`name-input-${item.uniqueItemId}`}
           />
           <DescriptionInput
             labelText={props.translations.textDescription}
@@ -146,6 +149,7 @@ export default function LanguageSelector(
               handleDescriptionChange(e.target.value, item.uniqueItemId)
             }
             defaultValue={item.description}
+            id={`description-input-${item.uniqueItemId}`}
           />
         </LanguageBlock>
       ))}

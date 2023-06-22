@@ -377,7 +377,7 @@ export default function ClassView({
               >
                 {t('actions')}
               </Button>
-              <TooltipWrapper>
+              <TooltipWrapper id="actions-tooltip">
                 <Tooltip
                   ariaCloseButtonLabelText=""
                   ariaToggleButtonLabelText=""
@@ -389,6 +389,7 @@ export default function ClassView({
                       <Button
                         variant="secondaryNoBorder"
                         onClick={() => handleEdit()}
+                        id="edit-class-button"
                       >
                         {t('edit', { ns: 'admin' })}
                       </Button>
@@ -396,6 +397,7 @@ export default function ClassView({
                       <Button
                         variant="secondaryNoBorder"
                         onClick={() => setShowDeleteModal(true)}
+                        id="delete-class-button"
                       >
                         {t('remove', { ns: 'admin' })}
                       </Button>
@@ -448,6 +450,7 @@ export default function ClassView({
                 variant="secondary"
                 onClick={() => navigator.clipboard.writeText(data.uri)}
                 style={{ width: 'max-content' }}
+                id="copy-uri-button"
               >
                 {t('copy-to-clipboard')}
               </Button>

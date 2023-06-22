@@ -215,13 +215,18 @@ export default function ResourcePicker({
             Object.values(selected).flatMap((s) => s).length < 1
           }
           onClick={() => handleSubmit()}
+          id="submit-button"
         >
           {formattedData.attributes.length > 0 ||
           formattedData.associations.length > 0
             ? t('add-selected')
             : t('continue')}
         </Button>
-        <Button variant="secondary" onClick={() => handleClose()}>
+        <Button
+          variant="secondary"
+          onClick={() => handleClose()}
+          id="cancel-button"
+        >
           {t('cancel-variant')}
         </Button>
       </ModalFooter>

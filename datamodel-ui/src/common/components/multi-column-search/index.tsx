@@ -179,6 +179,7 @@ export default function MultiColumnSearch({
             defaultValue={searchParams.query}
             onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
             debounce={300}
+            id="search-input"
           />
         </div>
       )}
@@ -193,6 +194,7 @@ export default function MultiColumnSearch({
             defaultValue={searchParams.query}
             onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
             debounce={300}
+            id="search-input"
           />
         )}
 
@@ -204,6 +206,7 @@ export default function MultiColumnSearch({
             onChange={(e) => {
               handleSearchChange('limitToModelType', e);
             }}
+            id="data-model-type-picker"
           >
             <DropdownItem value={'LIBRARY'}>
               {t('library', { ns: 'common' })}
@@ -221,6 +224,7 @@ export default function MultiColumnSearch({
           onChange={(item) => {
             handleAvailableDataModelsChange(item);
           }}
+          id="data-model-picker"
         >
           {dataModelType.map((type) => (
             <DropdownItem key={type.uniqueItemId} value={type.uniqueItemId}>
@@ -251,6 +255,7 @@ export default function MultiColumnSearch({
               : category.uniqueItemId === '-1'
           )}
           items={serviceCategories}
+          id="information-domain-picker"
         />
 
         <Dropdown
@@ -258,6 +263,7 @@ export default function MultiColumnSearch({
           defaultValue={'in-use'}
           onChange={(e) => handleSearchChange('status', e)}
           className="status-picker"
+          id="status-picker"
         >
           {statuses.map((status) => (
             <DropdownItem key={status.uniqueItemId} value={status.uniqueItemId}>
@@ -275,6 +281,7 @@ export default function MultiColumnSearch({
               )?.uniqueItemId ?? 'fi'
             }
             onChange={setContentLanguage}
+            id="content-language-picker"
           >
             {languages.map((lang) => (
               <DropdownItem key={lang.uniqueItemId} value={lang.uniqueItemId}>

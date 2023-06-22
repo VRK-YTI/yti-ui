@@ -31,6 +31,7 @@ export default function TypeCheckboxFilter({
           page: initialUrlState.page,
         })
       }
+      id="filter-by-type"
     />
   );
 }

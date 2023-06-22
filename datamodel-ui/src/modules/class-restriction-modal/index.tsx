@@ -169,6 +169,7 @@ export default function ClassRestrictionModal({
               onChange={(e) => setKeyword(e?.toString() ?? '')}
               defaultValue={keyword}
               debounce={300}
+              id="search-text-input"
             />
           </div>
 
@@ -200,13 +201,22 @@ export default function ClassRestrictionModal({
               data?.find((d) => d.id === selected)
             )
           }
+          id="select-class-restriction-button"
         >
           {t('select-class-restriction')}
         </Button>
-        <Button variant="secondary" onClick={() => handleFollowUp(true)}>
+        <Button
+          variant="secondary"
+          onClick={() => handleFollowUp(true)}
+          id="create-new-class-restriction-button"
+        >
           {t('create-new-class-restriction')}
         </Button>
-        <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
+        <Button
+          variant="secondaryNoBorder"
+          onClick={() => handleClose()}
+          id="cancel-button"
+        >
           {t('cancel-variant')}
         </Button>
       </ModalFooter>

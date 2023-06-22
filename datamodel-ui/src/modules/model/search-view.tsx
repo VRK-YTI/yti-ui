@@ -73,6 +73,7 @@ export default function SearchView({ modelId }: { modelId: string }) {
             fullWidth
             onChange={(e) => handleQueryChange(e?.toString() ?? '')}
             debounce={500}
+            id="model-search-input"
           />
         </div>
         <div>
