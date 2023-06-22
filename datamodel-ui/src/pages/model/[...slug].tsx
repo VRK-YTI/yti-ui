@@ -150,13 +150,23 @@ export const getServerSideProps = createCommonGetServerSideProps(
         await Promise.all(store.dispatch(getClassRunningQueriesThunk()));
       }
 
-      if (['association', 'attribute'].includes(resourceType)) {
+      if (
+        [
+          'association',
+          'attribute',
+          'attribute-ext',
+          'association-ext',
+        ].includes(resourceType)
+      ) {
         store.dispatch(
           setView(
-            resourceType === 'association' ? 'associations' : 'attributes',
+            resourceType.startsWith('association')
+              ? 'associations'
+              : 'attributes',
             'info'
           )
         );
+        // TODO: should check ends with -ext?
         store.dispatch(
           getResource.initiate({
             modelId: modelId,

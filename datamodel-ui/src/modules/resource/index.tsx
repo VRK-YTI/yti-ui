@@ -79,7 +79,7 @@ export default function ResourceView({
 
   const { data: resourceData } = useGetResourceQuery(
     {
-      modelId: modelId,
+      modelId: globalSelected.modelId ?? modelId,
       resourceIdentifier: currentResourceId ?? '',
       applicationProfile,
     },
@@ -93,7 +93,7 @@ export default function ResourceView({
     setCurrentPage(1);
   };
 
-  const handleShowResource = (id: string) => {
+  const handleShowResource = (id: string, modelPrefix: string) => {
     dispatch(
       setView(
         type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
@@ -103,13 +103,14 @@ export default function ResourceView({
     dispatch(
       setSelected(
         id,
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        modelPrefix
       )
     );
     router.replace(
       `${modelId}/${
         type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
-      }/${id}`
+      }${modelPrefix !== modelId ? '-ext' : ''}/${id}`
     );
   };
 
@@ -237,14 +238,18 @@ export default function ResourceView({
             <Text>{t('datamodel-no-attributes')}</Text>
           ) : (
             <DrawerItemList
-              items={data.responseObjects.map((item) => ({
-                label: getLanguageVersion({
-                  data: item.label,
-                  lang: i18n.language,
-                }),
-                subtitle: `${modelId}:${item.identifier}`,
-                onClick: () => handleShowResource(item.identifier),
-              }))}
+              items={data.responseObjects.map((item) => {
+                const prefix =
+                  item.namespace?.split('/')?.filter(Boolean)?.pop() ?? modelId;
+                return {
+                  label: getLanguageVersion({
+                    data: item.label,
+                    lang: i18n.language,
+                  }),
+                  subtitle: `${prefix}:${item.identifier}`,
+                  onClick: () => handleShowResource(item.identifier, prefix),
+                };
+              })}
             />
           )}
 
@@ -263,13 +268,14 @@ export default function ResourceView({
     if (!view.info || !resourceData) {
       return <></>;
     }
-
+    // TODO: globalSelected will be reset???
     return (
       <ResourceInfo
         data={resourceData}
         modelId={modelId}
         handleEdit={handleEdit}
         handleReturn={handleReturn}
+        isPartOfCurrentModel={globalSelected.modelId === modelId}
       />
     );
   }
