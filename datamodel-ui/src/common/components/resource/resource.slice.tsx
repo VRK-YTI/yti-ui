@@ -40,6 +40,10 @@ function pathForModelType(isApplicationProfile?: boolean) {
   return isApplicationProfile ? 'profile/' : 'library/';
 }
 
+function pathForResourceType(type: ResourceType) {
+  return type === ResourceType.ATTRIBUTE ? 'attribute' : 'association';
+}
+
 export const resourceApi = createApi({
   reducerPath: 'resourceApi',
   baseQuery: getDatamodelApiBaseQuery((headers) => ({
@@ -66,23 +70,16 @@ export const resourceApi = createApi({
         url: !value.resourceId
           ? `/resource/${pathForModelType(value.applicationProfile)}${
               value.modelId
-            }`
+            }/${pathForResourceType(value.data.type)}`
           : `/resource/${pathForModelType(value.applicationProfile)}${
               value.modelId
-            }/${value.resourceId}`,
+            }/${pathForResourceType(value.data.type)}/${value.resourceId}`,
         method: 'PUT',
-        data:
-          value.data.type === ResourceType.ATTRIBUTE
-            ? {
-                ...convertToPUT(value.data, value.resourceId ? true : false),
-                domain: value.data.domain ? value.data.domain.id : '',
-                range: '',
-              }
-            : {
-                ...convertToPUT(value.data, value.resourceId ? true : false),
-                domain: value.data.domain ? value.data.domain.id : '',
-                range: value.data.range ? value.data.range.id : '',
-              },
+        data: {
+          ...convertToPUT(value.data, value.resourceId ? true : false),
+          domain: value.data.domain ? value.data.domain.id : '',
+          range: value.data.range ? value.data.range.id : '',
+        },
       }),
     }),
     getResource: builder.query<
