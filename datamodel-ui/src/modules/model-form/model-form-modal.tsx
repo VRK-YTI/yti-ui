@@ -99,6 +99,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
         icon={<IconPlus />}
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}
+        id="new-model-button"
       >
         {t('add-new-model')}
       </Button>
@@ -137,8 +138,14 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
             />
           )}
 
-          <Button onClick={() => handleSubmit()}>{t('create-model')}</Button>
-          <Button variant="secondary" onClick={() => handleClose()}>
+          <Button onClick={() => handleSubmit()} id="submit-button">
+            {t('create-model')}
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => handleClose()}
+            id="cancel-button"
+          >
             {t('cancel')}
           </Button>
         </ModalFooter>

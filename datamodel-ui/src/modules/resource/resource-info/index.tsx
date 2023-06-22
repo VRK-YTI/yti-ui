@@ -62,6 +62,7 @@ export default function ResourceInfo({
             style={{ textTransform: 'uppercase' }}
             onClick={handleReturn}
             ref={toolTipRef}
+            id="back-button"
           >
             {data ? translateCommonForm('return', data.type, t) : t('back')}
           </Button>
@@ -72,10 +73,11 @@ export default function ResourceInfo({
                 iconRight={<IconMenu />}
                 style={{ height: 'min-content' }}
                 onClick={() => setShowTooltip(!showTooltip)}
+                id="actions-button"
               >
                 {t('actions')}
               </Button>
-              <TooltipWrapper>
+              <TooltipWrapper id="actions-tooltip">
                 <Tooltip
                   ariaCloseButtonLabelText=""
                   ariaToggleButtonLabelText=""
@@ -85,6 +87,7 @@ export default function ResourceInfo({
                   <Button
                     variant="secondaryNoBorder"
                     onClick={() => handleEdit()}
+                    id="edit-button"
                   >
                     {t('edit', { ns: 'admin' })}
                   </Button>
@@ -92,6 +95,7 @@ export default function ResourceInfo({
                   <Button
                     variant="secondaryNoBorder"
                     onClick={() => setVisible(true)}
+                    id="remove-button"
                   >
                     {t('remove', { ns: 'admin' })}
                   </Button>

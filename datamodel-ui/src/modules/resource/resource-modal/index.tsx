@@ -184,6 +184,7 @@ export default function ResourceModal({
         variant="secondary"
         icon={buttonIcon ? <IconPlus /> : undefined}
         onClick={() => handleOpen()}
+        id="add-resource-button"
       >
         {translateResourceAddition(type, t)}
       </Button>
@@ -213,7 +214,11 @@ export default function ResourceModal({
         </ModalContent>
 
         <ModalFooter>
-          <Button disabled={selectedId === ''} onClick={() => handleSubmit()}>
+          <Button
+            disabled={selectedId === ''}
+            onClick={() => handleSubmit()}
+            id="use-selected-button"
+          >
             {buttonTranslations.useSelected}
           </Button>
 
@@ -223,12 +228,17 @@ export default function ResourceModal({
               icon={<IconPlus />}
               disabled={selectedId !== ''}
               onClick={() => handleSubmit()}
+              id="create-new-button"
             >
               {buttonTranslations.createNew}
             </Button>
           )}
 
-          <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
+          <Button
+            variant="secondaryNoBorder"
+            onClick={() => handleClose()}
+            id="cancel-button"
+          >
             {t('cancel-variant')}
           </Button>
         </ModalFooter>

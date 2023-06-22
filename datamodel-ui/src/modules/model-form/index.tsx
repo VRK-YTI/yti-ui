@@ -279,6 +279,7 @@ export default function ModelForm({
                 status: e as Status | undefined,
               })
             }
+            id="status-dropdown"
           >
             <DropdownItem value={'DRAFT'}>
               {t('statuses.draft', { ns: 'common' })}
@@ -365,6 +366,7 @@ export default function ModelForm({
         noItemsText={''}
         disabled={disabled}
         defaultSelectedItems={formData.serviceCategories}
+        id="information-domains-selector"
       />
     );
   }
@@ -392,6 +394,7 @@ export default function ModelForm({
         ariaOptionChipRemovedText={''}
         noItemsText={''}
         defaultSelectedItems={formData.organizations}
+        id="contributors-selector"
       />
     );
   }

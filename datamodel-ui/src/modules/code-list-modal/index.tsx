@@ -148,6 +148,7 @@ export default function CodeListModal({
         variant="secondary"
         icon={<IconPlus />}
         onClick={() => setVisible(true)}
+        id="add-reference-data-button"
       >
         {t('add-reference-data')}
       </Button>
@@ -173,11 +174,13 @@ export default function CodeListModal({
                   setCurrPage(1);
                 }}
                 debounce={300}
+                id="search-text-input"
               />
 
               <Dropdown
                 labelText={t('select-server')}
                 defaultValue="koodistot.suomi.fi"
+                id="server-dropdown"
               >
                 <DropdownItem value="koodistot.suomi.fi">
                   koodistot.suomi.fi
@@ -197,6 +200,7 @@ export default function CodeListModal({
                   (g) => g.uniqueItemId === defaultGroup.uniqueItemId
                 )}
                 onItemSelect={(e) => handleGroupChange(e)}
+                id="group-dropdown"
               />
 
               <Dropdown
@@ -206,6 +210,7 @@ export default function CodeListModal({
                   setFilter({ ...filter, status: e });
                   setCurrPage(1);
                 }}
+                id="status-dropdown"
               >
                 {statuses.map((status) => (
                   <DropdownItem key={`status-${status}`} value={status}>
@@ -249,6 +254,7 @@ export default function CodeListModal({
                           )
                         }
                         checked={selected.includes(code.uri)}
+                        id="code-list-checkbox"
                       >
                         {getLanguageVersion({
                           data: code.prefLabel,
@@ -314,10 +320,18 @@ export default function CodeListModal({
         </ModalContent>
 
         <ModalFooter>
-          <Button disabled={selected.length < 1} onClick={() => handleSubmit()}>
+          <Button
+            disabled={selected.length < 1}
+            onClick={() => handleSubmit()}
+            id="submit-button"
+          >
             {t('add-selected')}
           </Button>
-          <Button variant="secondary" onClick={() => handleClose()}>
+          <Button
+            variant="secondary"
+            onClick={() => handleClose()}
+            id="cancel-button"
+          >
             {t('cancel-variant')}
           </Button>
         </ModalFooter>
