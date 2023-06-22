@@ -36,5 +36,5 @@ export const initialAttribute: AttributeFormType = {
   note: {},
   type: ResourceType.ATTRIBUTE,
   domain: undefined,
-  range: undefined,
+  range: { id: 'rdfs:Literal', label: 'rdfs:Literal' },
 };
