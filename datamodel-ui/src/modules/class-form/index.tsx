@@ -416,12 +416,12 @@ export default function ClassForm({
           <InlineListBlock
             label={t('utilizes-class-restriction')}
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button variant="secondary">
                 {t('select-class-restriction')}
               </Button>
             }
-            items={[]}
-            handleRemoval={() => null}
+            items={data.node ? [data.node] : []}
+            handleRemoval={() => handleUpdate({ ...data, node: undefined })}
           />
         ) : (
           <InlineListBlock

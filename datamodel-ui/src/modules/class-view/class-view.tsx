@@ -160,35 +160,37 @@ export default function ClassView({
     dispatch(setView('classes', 'edit'));
   };
 
-  const handleAppProfileFollowUpAction = (
-    value?: InternalClass,
+  const handleAppProfileFollowUpAction = (data?: {
+    value?: InternalClass;
+    targetClass?: InternalClass;
     associations?: {
       identifier: string;
       label: { [key: string]: string };
       modelId: string;
       uri: string;
-    }[],
+    }[];
     attributes?: {
       identifier: string;
       label: { [key: string]: string };
       modelId: string;
       uri: string;
-    }[]
-  ) => {
+    }[];
+  }) => {
     setShowAppProfileModal(false);
 
-    if (!value) {
+    if (!data || !data.value) {
       return;
     }
 
     dispatch(
       setClass(
         internalClassToClassForm(
-          value,
+          data.value,
           languages,
           applicationProfile,
-          associations,
-          attributes
+          data.targetClass,
+          data.associations,
+          data.attributes
         )
       )
     );
@@ -276,27 +278,7 @@ export default function ClassView({
                   <ApplicationProfileFlow
                     visible={showAppProfileModal}
                     selectedNodeShape={selectedNodeShape}
-                    handleFollowUp={(
-                      value?: InternalClass,
-                      associations?: {
-                        identifier: string;
-                        label: { [key: string]: string };
-                        modelId: string;
-                        uri: string;
-                      }[],
-                      attributes?: {
-                        identifier: string;
-                        label: { [key: string]: string };
-                        modelId: string;
-                        uri: string;
-                      }[]
-                    ) =>
-                      handleAppProfileFollowUpAction(
-                        value,
-                        associations,
-                        attributes
-                      )
-                    }
+                    handleFollowUp={handleAppProfileFollowUpAction}
                   />
                 )}
               </>

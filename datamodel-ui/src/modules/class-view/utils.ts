@@ -6,6 +6,7 @@ export function internalClassToClassForm(
   data: InternalClass,
   languages: string[],
   applicationProfile?: boolean,
+  targetClass?: InternalClass,
   associations?: {
     identifier: string;
     label: { [key: string]: string };
@@ -37,9 +38,11 @@ export function internalClassToClassForm(
 
   if (applicationProfile) {
     obj['targetClass'] = {
-      label:
-        data.id.split('/').pop()?.replace('#', ':') ??
-        `${data.isDefinedBy.split('/').pop()}:${data.identifier}`,
+      label: `${data.namespace
+        .replace(/\/$/, '')
+        .split('/')
+        .pop()
+        ?.replace('#', ':')}:${data.identifier}`,
       id: data.id,
     };
     obj['association'] = associations ?? [];
@@ -55,6 +58,18 @@ export function internalClassToClassForm(
       },
     ];
   }
+
+  if (targetClass) {
+    obj['node'] = {
+      label: `${targetClass.namespace
+        .replace(/\/$/, '')
+        .split('/')
+        .pop()
+        ?.replace('#', ':')}:${targetClass.identifier}`,
+      id: targetClass.id,
+    };
+  }
+
   return obj;
 }
 

@@ -81,11 +81,6 @@ export default function ResourcePicker({
               status: 'VALID',
               isValid: true,
             },
-            subClass: {
-              label: 'subClass',
-              link: 'link',
-              partOf: 'partOf',
-            },
           })) ?? [],
         attributes:
           classData.attribute?.map((attr) => ({
@@ -100,11 +95,6 @@ export default function ResourcePicker({
               note: 'note',
               status: 'VALID',
               isValid: true,
-            },
-            subClass: {
-              label: 'subClass',
-              link: 'link',
-              partOf: 'partOf',
             },
           })) ?? [],
       };

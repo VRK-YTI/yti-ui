@@ -13,21 +13,22 @@ export default function ApplicationProfileFlow({
     nodeShape: InternalClass;
     isAppProfile?: boolean;
   };
-  handleFollowUp: (
-    value?: InternalClass,
+  handleFollowUp: (data?: {
+    value?: InternalClass;
+    targetClass?: InternalClass;
     associations?: {
       identifier: string;
       label: { [key: string]: string };
       modelId: string;
       uri: string;
-    }[],
+    }[];
     attributes?: {
       identifier: string;
       label: { [key: string]: string };
       modelId: string;
       uri: string;
-    }[]
-  ) => void;
+    }[];
+  }) => void;
 }) {
   const [restrictionVisible, setRestrictionVisible] = useState(false);
   const [resourcePickerVisible, setResourcePickerVisible] = useState(false);
@@ -42,7 +43,10 @@ export default function ApplicationProfileFlow({
     setRestrictionVisible(false);
   };
 
-  const handleClassRestrictionFollowUp = (createNew?: boolean) => {
+  const handleClassRestrictionFollowUp = (
+    createNew?: boolean,
+    classRestriction?: InternalClass
+  ) => {
     setRestrictionVisible(false);
 
     if (createNew) {
@@ -52,7 +56,10 @@ export default function ApplicationProfileFlow({
 
     setRestrictionVisible(false);
     setResourcePickerVisible(false);
-    handleFollowUp(selectedNodeShape.nodeShape);
+    handleFollowUp({
+      value: selectedNodeShape.nodeShape,
+      targetClass: classRestriction,
+    });
   };
 
   const handleResourcePickerFollowUp = (value?: {
@@ -77,11 +84,11 @@ export default function ApplicationProfileFlow({
       return;
     }
 
-    handleFollowUp(
-      selectedNodeShape.nodeShape,
-      value.associations,
-      value.attributes
-    );
+    handleFollowUp({
+      value: selectedNodeShape.nodeShape,
+      associations: value.associations,
+      attributes: value.attributes,
+    });
   };
 
   return (
@@ -91,7 +98,9 @@ export default function ApplicationProfileFlow({
           hide={() => handleClassRestrictionClose()}
           visible={restrictionVisible}
           selectedNodeShape={selectedNodeShape.nodeShape}
-          handleFollowUp={(value) => handleClassRestrictionFollowUp(value)}
+          handleFollowUp={(createNew, classRestriction) =>
+            handleClassRestrictionFollowUp(createNew, classRestriction)
+          }
         />
       )}
 
@@ -100,7 +109,10 @@ export default function ApplicationProfileFlow({
           visible={resourcePickerVisible}
           selectedNodeShape={{
             modelId:
-              selectedNodeShape.nodeShape.isDefinedBy?.split('/').pop() ?? '',
+              selectedNodeShape.nodeShape.namespace
+                .replace(/\/$/, '')
+                .split('/')
+                .pop() ?? '',
             classId: selectedNodeShape.nodeShape.identifier ?? '',
             isAppProfile: selectedNodeShape.isAppProfile ?? false,
           }}

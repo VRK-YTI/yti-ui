@@ -32,6 +32,9 @@ function convertToPUT(
         }
       : {
           targetClass: data.targetClass?.id,
+          ...(data.node && {
+            targetNode: data.node.id,
+          }),
         }),
     ...(applicationProfile &&
       !basedOnNodeShape && {
@@ -49,6 +52,10 @@ function convertToPUT(
 
   if (basedOnNodeShape) {
     delete ret.targetClass;
+  }
+
+  if (data.node) {
+    delete ret.node;
   }
 
   return isEdit

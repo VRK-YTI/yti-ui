@@ -20,7 +20,10 @@ interface ClassRestrictionModalProps {
   visible: boolean;
   selectedNodeShape: InternalClass;
   hide: () => void;
-  handleFollowUp: (createNew?: boolean) => void;
+  handleFollowUp: (
+    createNew?: boolean,
+    classRestriction?: InternalClass
+  ) => void;
 }
 
 export default function ClassRestrictionModal({
@@ -87,7 +90,7 @@ export default function ClassRestrictionModal({
     if (isSuccess && data.length < 1) {
       handleFollowUp(true);
     }
-  }, [isSuccess, handleFollowUp, data]);
+  }, [isSuccess, handleFollowUp, data, selected]);
 
   return (
     <WideModal
@@ -175,7 +178,11 @@ export default function ClassRestrictionModal({
               items={
                 keyword === ''
                   ? nodeShapes
-                  : nodeShapes.filter((n) => n.target.label.includes(keyword))
+                  : nodeShapes.filter((n) =>
+                      n.target.label
+                        .toLowerCase()
+                        .includes(keyword.toLowerCase())
+                    )
               }
               primaryColumnName={t('class-name')}
               selected={selected}
@@ -187,7 +194,12 @@ export default function ClassRestrictionModal({
       <ModalFooter>
         <Button
           disabled={!selected || selected === ''}
-          onClick={() => handleFollowUp()}
+          onClick={() =>
+            handleFollowUp(
+              false,
+              data?.find((d) => d.id === selected)
+            )
+          }
         >
           {t('select-class-restriction')}
         </Button>
