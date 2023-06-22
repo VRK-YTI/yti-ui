@@ -227,7 +227,18 @@ export default function ResourceForm({
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors, userPosted, result, dispatch, type, router, modelId, data]);
+  }, [
+    ref,
+    errors,
+    userPosted,
+    result,
+    dispatch,
+    type,
+    router,
+    modelId,
+    data,
+    refetch,
+  ]);
 
   return (
     <>
