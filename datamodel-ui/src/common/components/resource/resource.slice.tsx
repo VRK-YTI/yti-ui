@@ -40,8 +40,14 @@ function pathForModelType(isApplicationProfile?: boolean) {
   return isApplicationProfile ? 'profile/' : 'library/';
 }
 
-function pathForResourceType(type: ResourceType) {
-  return type === ResourceType.ATTRIBUTE ? 'attribute' : 'association';
+function pathForResourceType(
+  type: ResourceType,
+  isApplicationProfile?: boolean
+) {
+  if (isApplicationProfile) {
+    return '';
+  }
+  return type === ResourceType.ATTRIBUTE ? '/attribute' : '/association';
 }
 
 export const resourceApi = createApi({
@@ -70,10 +76,13 @@ export const resourceApi = createApi({
         url: !value.resourceId
           ? `/resource/${pathForModelType(value.applicationProfile)}${
               value.modelId
-            }/${pathForResourceType(value.data.type)}`
+            }${pathForResourceType(value.data.type, value.applicationProfile)}`
           : `/resource/${pathForModelType(value.applicationProfile)}${
               value.modelId
-            }/${pathForResourceType(value.data.type)}/${value.resourceId}`,
+            }${pathForResourceType(
+              value.data.type,
+              value.applicationProfile
+            )}/${value.resourceId}`,
         method: 'PUT',
         data: {
           ...convertToPUT(value.data, value.resourceId ? true : false),

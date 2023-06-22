@@ -219,6 +219,7 @@ export default function ResourceView({
                 }}
                 handleFollowUp={handleFollowUp}
                 buttonIcon={true}
+                applicationProfile={applicationProfile}
               />
             )}
           </div>
@@ -288,7 +289,7 @@ export default function ResourceView({
         modelId={modelId}
         languages={languages}
         terminologies={terminologies}
-        applicationProfile={false}
+        applicationProfile={applicationProfile}
         isEdit={isEdit}
         refetch={refetchResource}
         handleReturn={isEdit ? handleFormReturn : handleReturn}
