@@ -51,6 +51,7 @@ interface ResourceFormProps {
   terminologies: string[];
   isEdit: boolean;
   applicationProfile?: boolean;
+  refetch: () => void;
   handleReturn: () => void;
 }
 
@@ -61,6 +62,7 @@ export default function ResourceForm({
   terminologies,
   isEdit,
   applicationProfile,
+  refetch,
   handleReturn,
 }: ResourceFormProps) {
   const { t, i18n } = useTranslation('admin');
@@ -227,6 +229,7 @@ export default function ResourceForm({
           'info'
         )
       );
+      refetch();
       router.replace(
         `${modelId}/${
           type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
@@ -241,7 +244,18 @@ export default function ResourceForm({
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors, userPosted, result, dispatch, type, router, modelId, data]);
+  }, [
+    ref,
+    errors,
+    userPosted,
+    result,
+    dispatch,
+    type,
+    router,
+    modelId,
+    data,
+    refetch,
+  ]);
 
   return (
     <>

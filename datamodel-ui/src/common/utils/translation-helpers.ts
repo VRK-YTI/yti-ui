@@ -328,3 +328,28 @@ export function translateResourceName(type: ResourceType, t: TFunction) {
       return '';
   }
 }
+
+export function translateCreateNewResource(type: ResourceType, t: TFunction) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('create-new-association', { ns: 'admin' });
+    case ResourceType.ATTRIBUTE:
+      return t('create-new-attribute', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateCreateNewResourceForSelected(
+  type: ResourceType,
+  t: TFunction
+) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('create-new-sub-association-for-selected', { ns: 'admin' });
+    case ResourceType.ATTRIBUTE:
+      return t('create-new-sub-attribute-for-selected', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
