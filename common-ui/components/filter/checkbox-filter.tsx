@@ -11,6 +11,7 @@ export interface CheckboxFilterProps {
   selectedItems: string[];
   onChange?: (selectedItems: string[]) => void;
   checkboxVariant: 'large' | 'small';
+  id?: string;
 }
 
 export default function CheckboxFilter({
@@ -19,9 +20,14 @@ export default function CheckboxFilter({
   selectedItems,
   onChange,
   checkboxVariant,
+  id,
 }: CheckboxFilterProps) {
   return (
-    <CheckboxGroup labelText={title} className="filter-checkbox-group">
+    <CheckboxGroup
+      labelText={title}
+      className="filter-checkbox-group"
+      id={id ?? `filter-checkbox-${title}`}
+    >
       {items.map(({ value, label }: Item) => (
         <Checkbox
           key={value}

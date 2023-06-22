@@ -58,6 +58,7 @@ export default function InlineList({
               variant="secondaryNoBorder"
               icon={<IconRemove />}
               onClick={() => handleRemoval(item.id)}
+              id="remove-button"
             >
               {t('remove')}
             </Button>

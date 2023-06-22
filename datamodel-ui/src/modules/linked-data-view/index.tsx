@@ -87,7 +87,7 @@ export default function LinkedDataView({
               >
                 {t('actions')}
               </Button>
-              <TooltipWrapper>
+              <TooltipWrapper id="actions-tooltip">
                 <Tooltip
                   ariaCloseButtonLabelText=""
                   ariaToggleButtonLabelText=""
@@ -97,6 +97,7 @@ export default function LinkedDataView({
                   <Button
                     variant="secondaryNoBorder"
                     onClick={() => handleShowForm()}
+                    id="edit-linked-data-button"
                   >
                     {t('edit', { ns: 'admin' })}
                   </Button>

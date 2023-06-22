@@ -168,6 +168,7 @@ export default function LinkedModel({
         variant="secondary"
         icon={<IconPlus />}
         onClick={() => setVisible(true)}
+        id="add-data-model-button"
       >
         {t('add-data-model')}
       </Button>
@@ -187,10 +188,15 @@ export default function LinkedModel({
                 ? Object.values(data).filter((val) => val !== '').length < 3
                 : selected.length < 1
             }
+            id="submit-button"
           >
             {showExternalForm ? <>{t('add')}</> : <>{t('add-selected')}</>}
           </Button>
-          <Button variant="secondary" onClick={() => handleClose()}>
+          <Button
+            variant="secondary"
+            onClick={() => handleClose()}
+            id="cancel-button"
+          >
             {t('cancel-variant')}
           </Button>
         </ModalFooter>
@@ -213,11 +219,13 @@ export default function LinkedModel({
               labelText={t('search-data-model')}
               onChange={(e) => setKeyword(e?.toString() ?? '')}
               debounce={300}
+              id="search-input"
             />
 
             <Button
               variant="secondary"
               onClick={() => setShowExternalForm(true)}
+              id="add-external-button"
             >
               {t('add-reference-to-external-data-model')}
             </Button>
@@ -231,6 +239,7 @@ export default function LinkedModel({
                   setSelected(selected.filter((s) => s !== select))
                 }
                 removable
+                id="selected-result-chip-button"
               >
                 {data
                   ? getLanguageVersion({
@@ -270,6 +279,7 @@ export default function LinkedModel({
                           uri: obj.id,
                         })
                       }
+                      id="data-model-checkbox"
                     >
                       {getLanguageVersion({
                         data: obj.label,
@@ -313,6 +323,7 @@ export default function LinkedModel({
             fullWidth
             onChange={(e) => setDataValue('name', e?.toString() ?? '')}
             status={userPosted && errors.name ? 'error' : 'default'}
+            id="data-model-name-input"
           />
 
           <TextInput
@@ -324,6 +335,7 @@ export default function LinkedModel({
             statusText={
               userPosted && errors.namespace ? t('namespace-is-not-valid') : ''
             }
+            id="namespace-input"
           />
 
           <TextInput
@@ -332,6 +344,7 @@ export default function LinkedModel({
             fullWidth
             onChange={(e) => setDataValue('prefix', e?.toString() ?? '')}
             status={userPosted && errors.prefix ? 'error' : 'default'}
+            id="prefix-input"
           />
         </ContentWrapper>
       </ModalContent>

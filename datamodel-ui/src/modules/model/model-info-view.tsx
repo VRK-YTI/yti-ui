@@ -145,10 +145,11 @@ export default function ModelInfoView() {
               onClick={() => setShowTooltip(!showTooltip)}
               iconRight={<IconMenu />}
               ref={toolTipRef}
+              id="actions-button"
             >
               {t('actions')}
             </Button>
-            <TooltipWrapper>
+            <TooltipWrapper id="actions-tooltip">
               <Tooltip
                 ariaCloseButtonLabelText=""
                 ariaToggleButtonLabelText=""
@@ -160,6 +161,7 @@ export default function ModelInfoView() {
                     variant="secondaryNoBorder"
                     onClick={() => handleEditViewItemClick(setShowEditView)}
                     disabled={!formData}
+                    id="edit-button"
                   >
                     {t('edit', { ns: 'admin' })}
                   </Button>
@@ -167,12 +169,14 @@ export default function ModelInfoView() {
                 <Button
                   variant="secondaryNoBorder"
                   onClick={() => handleModalChange('showAsFile', true)}
+                  id="show-as-file-button"
                 >
                   {t('show-as-file')}
                 </Button>
                 <Button
                   variant="secondaryNoBorder"
                   onClick={() => handleModalChange('downloadAsFile', true)}
+                  id="download-as-file-button"
                 >
                   {t('download-as-file')}
                 </Button>
@@ -181,12 +185,14 @@ export default function ModelInfoView() {
                     <Button
                       variant="secondaryNoBorder"
                       onClick={() => handleModalChange('updateStatuses', true)}
+                      id="update-statuses-button"
                     >
                       {t('update-models-resources-statuses', { ns: 'admin' })}
                     </Button>
                     <Button
                       variant="secondaryNoBorder"
                       onClick={() => handleModalChange('copyModel', true)}
+                      id="copy-model-button"
                     >
                       {t('create-copy-from-model', { ns: 'admin' })}
                     </Button>
@@ -195,6 +201,7 @@ export default function ModelInfoView() {
                       onClick={() =>
                         handleModalChange('getEmailNotification', true)
                       }
+                      id="get-email-notification-button"
                     >
                       {t('add-email-subscription')}
                     </Button>
@@ -202,6 +209,7 @@ export default function ModelInfoView() {
                     <Button
                       variant="secondaryNoBorder"
                       onClick={() => handleModalChange('delete', true)}
+                      id="delete-modal-button"
                     >
                       {t('remove', { ns: 'admin' })}
                     </Button>

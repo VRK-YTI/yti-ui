@@ -114,13 +114,16 @@ export default function LinkedDataForm({
               gap: '15px',
             }}
           >
-            <Button onClick={() => handleSubmit()}>{t('save')}</Button>
+            <Button onClick={() => handleSubmit()} id="submit-button">
+              {t('save')}
+            </Button>
             <Button
               variant="secondary"
               onClick={() => {
                 handleReturn();
                 dispatch(setHasChanges(false));
               }}
+              id="cancel-button"
             >
               {t('cancel-variant')}
             </Button>

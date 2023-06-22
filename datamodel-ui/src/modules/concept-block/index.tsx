@@ -137,6 +137,7 @@ export default function ConceptBlock({
           variant="secondary"
           style={{ width: 'min-content', whiteSpace: 'nowrap' }}
           onClick={() => handleOpen()}
+          id="select-concept-button"
         >
           {t('select-concept')}
         </Button>
@@ -156,6 +157,7 @@ export default function ConceptBlock({
                 searchButtonLabel={t('search-concept')}
                 onChange={(e) => handleSearchChange(e?.toString() ?? '')}
                 debounce={300}
+                id="concept-search-input"
               />
               <SingleSelect
                 clearButtonLabel={t('clear-selection')}
@@ -168,6 +170,7 @@ export default function ConceptBlock({
                 selectedItem={selectedOption}
                 items={terminologyOptions}
                 onItemSelectionChange={(e) => handleSearchChange(e)}
+                id="terminology-select"
               />
             </SearchBlock>
 
@@ -209,6 +212,7 @@ export default function ConceptBlock({
                             terminology: c.terminology,
                           })
                         }
+                        id="concept-radio-button"
                       />
                       <div>
                         <Text>
@@ -268,10 +272,18 @@ export default function ConceptBlock({
           </ModalContent>
 
           <ModalFooter>
-            <Button disabled={!selected} onClick={() => handleSubmit()}>
+            <Button
+              disabled={!selected}
+              onClick={() => handleSubmit()}
+              id="submit-button"
+            >
               {t('select-concept')}
             </Button>
-            <Button variant="secondary" onClick={() => handleClose()}>
+            <Button
+              variant="secondary"
+              onClick={() => handleClose()}
+              id="cancel-button"
+            >
               {t('cancel-variant')}
             </Button>
           </ModalFooter>

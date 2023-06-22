@@ -56,6 +56,7 @@ interface ResourceFormProps {
   terminologies: string[];
   isEdit: boolean;
   applicationProfile?: boolean;
+  refetch: () => void;
   handleReturn: () => void;
 }
 
@@ -66,6 +67,7 @@ export default function ResourceForm({
   terminologies,
   isEdit,
   applicationProfile,
+  refetch,
   handleReturn,
 }: ResourceFormProps) {
   const { t, i18n } = useTranslation('admin');
@@ -239,6 +241,7 @@ export default function ResourceForm({
           'info'
         )
       );
+      refetch();
       router.replace(
         `${modelId}/${
           type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
@@ -253,7 +256,18 @@ export default function ResourceForm({
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors, userPosted, result, dispatch, type, router, modelId, data]);
+  }, [
+    ref,
+    errors,
+    userPosted,
+    result,
+    dispatch,
+    type,
+    router,
+    modelId,
+    data,
+    refetch,
+  ]);
 
   return (
     <>
@@ -268,6 +282,7 @@ export default function ResourceForm({
               }
             }}
             style={{ textTransform: 'uppercase' }}
+            id="back-button"
           >
             {t('back', { ns: 'common' })}
           </Button>
@@ -282,6 +297,7 @@ export default function ResourceForm({
             <Button
               onClick={() => handleSubmit()}
               style={{ marginRight: '15px' }}
+              id="submit-button"
             >
               {t('save')}
             </Button>
@@ -291,6 +307,7 @@ export default function ResourceForm({
                 handleReturn();
                 dispatch(setHasChanges(false));
               }}
+              id="cancel-button"
             >
               {t('cancel-variant')}
             </Button>
@@ -342,6 +359,7 @@ export default function ResourceForm({
                   })
                 }
                 status={userPosted && errors.label ? 'error' : 'default'}
+                id="label-input"
               />
             ))}
           </LanguageVersionedWrapper>
@@ -369,6 +387,7 @@ export default function ResourceForm({
             statusText={
               isSuccess && !identifierFree ? t('error-prefix-taken') : ''
             }
+            id="prefix-input"
           />
 
           {type === ResourceType.ATTRIBUTE && (
@@ -466,7 +485,11 @@ export default function ResourceForm({
               label: resource,
             }))}
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-upper-button"
+              >
                 {translateCommonForm('add-upper', type, t)}
               </Button>
             }
@@ -482,7 +505,11 @@ export default function ResourceForm({
             label={translateCommonForm('equivalent', type, t)}
             items={[]}
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-equivalent-button"
+              >
                 {translateCommonForm('add-equivalent', type, t)}
               </Button>
             }
@@ -495,6 +522,7 @@ export default function ResourceForm({
               labelText={t('status')}
               defaultValue="DRAFT"
               onChange={(e) => handleUpdate({ ...data, status: e as Status })}
+              id="status-dropdown"
             >
               {statuses.map((status) => (
                 <DropdownItem key={`status-${status}`} value={status}>
@@ -518,6 +546,7 @@ export default function ResourceForm({
                 }
                 optionalText={t('optional')}
                 className="wide-text"
+                id="note-input"
               />
             ))}
           </LanguageVersionedWrapper>
@@ -531,6 +560,7 @@ export default function ResourceForm({
             }
             hintText={t('editor-comment-hint')}
             className="wide-text"
+            id="editorial-note-input"
           />
         </FormWrapper>
       </DrawerContent>

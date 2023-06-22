@@ -266,6 +266,7 @@ export default function ClassForm({
               }
             }}
             style={{ textTransform: 'uppercase' }}
+            id="back-button"
           >
             {t('back', { ns: 'common' })}
           </Button>
@@ -289,13 +290,16 @@ export default function ClassForm({
           </Text>
 
           <div style={{ display: 'flex', gap: '10px' }}>
-            <Button onClick={() => handleSubmit()}>{t('save')}</Button>
+            <Button onClick={() => handleSubmit()} id="submit-button">
+              {t('save')}
+            </Button>
             <Button
               variant="secondary"
               onClick={() => {
                 handleReturn();
                 dispatch(setHasChanges(false));
               }}
+              id="cancel-button"
             >
               {t('cancel-variant')}
             </Button>
@@ -346,6 +350,7 @@ export default function ClassForm({
               }
               status={userPosted && errors.label ? 'error' : 'default'}
               fullWidth
+              id="label-input"
             />
           ))}
         </LanguageVersionedWrapper>
@@ -379,12 +384,17 @@ export default function ClassForm({
               <Text>Tooltip sisältö</Text>
             </Tooltip>
           }
+          id="prefix-input"
         />
 
         {!applicationProfile ? (
           <InlineListBlock
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-upper-class-button"
+              >
                 {t('add-upper-class')}
               </Button>
             }
@@ -425,7 +435,11 @@ export default function ClassForm({
         ) : (
           <InlineListBlock
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-corresponding-class-button"
+              >
                 {t('add-corresponding-class')}
               </Button>
             }
@@ -439,7 +453,11 @@ export default function ClassForm({
           <InlineListBlock
             label={t('utilizes-class-restriction')}
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="select-class-restriction-button"
+              >
                 {t('select-class-restriction')}
               </Button>
             }
@@ -450,7 +468,11 @@ export default function ClassForm({
           <InlineListBlock
             label={t('disjoint-classes', { ns: 'common' })}
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-disjoint-class-button"
+              >
                 {t('add-disjoint-class')}
               </Button>
             }
@@ -464,6 +486,7 @@ export default function ClassForm({
             labelText={t('status')}
             defaultValue={data.status}
             onChange={(e) => handleUpdate({ ...data, status: e as Status })}
+            id="status-dropdown"
           >
             {statusList.map((status) => (
               <DropdownItem key={status} value={status}>
@@ -487,6 +510,7 @@ export default function ClassForm({
                 })
               }
               fullWidth
+              id="comment-input"
             />
           ))}
         </LanguageVersionedWrapper>
@@ -512,7 +536,11 @@ export default function ClassForm({
                       langs={languages}
                       type="attribute"
                     />
-                    <Button variant="secondary" style={{ marginTop: '10px' }}>
+                    <Button
+                      variant="secondary"
+                      style={{ marginTop: '10px' }}
+                      id="add-attribute-button"
+                    >
                       {t('add-attribute')}
                     </Button>
                   </div>
@@ -546,7 +574,11 @@ export default function ClassForm({
                       data={assoc}
                       modelId={applicationProfile ? assoc.modelId : modelId}
                     />
-                    <Button variant="secondary" style={{ marginTop: '10px' }}>
+                    <Button
+                      variant="secondary"
+                      style={{ marginTop: '10px' }}
+                      id="add-association-button"
+                    >
                       {t('add-association')}
                     </Button>
                   </div>
@@ -573,6 +605,7 @@ export default function ClassForm({
             handleUpdate({ ...data, editorialNote: e.target.value })
           }
           fullWidth
+          id="editor-comment-input"
         />
       </DrawerContent>
     </>
