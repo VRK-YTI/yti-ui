@@ -18,7 +18,10 @@ export default function getApiError(
   ) {
     if ('details' in error.data && error.data.details) {
       return (error as AxiosQueryErrorFields).data.details.map(
-        (detail) => `VALIDATION ERROR: ${detail.field} - ${detail.message}`
+        (detail) =>
+          `VALIDATION ERROR: Field: ${detail.field.toUpperCase()} | Error: ${
+            detail.message
+          }`
       );
     }
 

@@ -532,21 +532,6 @@ export default function ResourceForm({
     }
 
     if (result.error) {
-      // const error = result.error as AxiosBaseQueryError;
-      // const errorStatus = error.status ?? '';
-      // const errorTitle =
-      //   error.data &&
-      //   Object.entries(error.data).filter(
-      //     (entry) => entry[0] === 'title'
-      //   )?.[0]?.[1];
-      // const errorDetail =
-      //   error.data &&
-      //   Object.entries(error.data).filter(
-      //     (entry) => entry[0] === 'detail'
-      //   )?.[0]?.[1];
-      // const catchedError = `Error ${errorStatus}: ${
-      //   errorTitle ?? t('unexpected-error-title')
-      // } ${errorDetail}`;
       const catchedError = getApiError(result.error);
       return [...translatedErrors, ...catchedError];
     }

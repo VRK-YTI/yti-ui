@@ -166,7 +166,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
 
     if (result.isError) {
       const errorMessage = getApiError(result.error);
-      return [...langsWithError, ...otherErrors, errorMessage];
+      return [...langsWithError, ...otherErrors, ...errorMessage];
     }
 
     return [...langsWithError, ...otherErrors];
