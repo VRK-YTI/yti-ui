@@ -81,7 +81,7 @@ export default function ResourceView({
     resourceTypes: [type],
   });
 
-  const { data: resourceData } = useGetResourceQuery(
+  const { data: resourceData, refetch: refetchResource } = useGetResourceQuery(
     {
       modelId: modelId,
       resourceIdentifier: currentResourceId ?? '',
@@ -289,6 +289,7 @@ export default function ResourceView({
         terminologies={terminologies}
         applicationProfile={false}
         isEdit={isEdit}
+        refetch={refetchResource}
         handleReturn={isEdit ? handleFormReturn : handleReturn}
       />
     );
