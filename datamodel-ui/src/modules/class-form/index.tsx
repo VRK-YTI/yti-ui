@@ -273,7 +273,7 @@ export default function ClassForm({
           </Text>
 
           <div style={{ display: 'flex', gap: '10px' }}>
-            <Button onClick={() => handleSubmit()} id="submit-butotn">
+            <Button onClick={() => handleSubmit()} id="submit-button">
               {t('save')}
             </Button>
             <Button
