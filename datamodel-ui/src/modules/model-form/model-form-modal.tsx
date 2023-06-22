@@ -22,7 +22,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import generatePayload from './generate-payload';
 import { usePutModelMutation } from '@app/common/components/model/model.slice';
-import getApiError from '@app/common/utils/getApiErrors';
+import getApiError from '@app/common/utils/get-api-errors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 

@@ -40,6 +40,7 @@ import ClassModal from '@app/modules/class-modal';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { setSelected, setView } from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
+import getApiError from '@app/common/utils/get-api-errors';
 
 interface ResourceFormProps {
   type: ResourceType;
@@ -498,23 +499,23 @@ export default function ResourceForm({
     }
 
     if (result.error) {
-      const error = result.error as AxiosBaseQueryError;
-      const errorStatus = error.status ?? '';
-      const errorTitle =
-        error.data &&
-        Object.entries(error.data).filter(
-          (entry) => entry[0] === 'title'
-        )?.[0]?.[1];
-      const errorDetail =
-        error.data &&
-        Object.entries(error.data).filter(
-          (entry) => entry[0] === 'detail'
-        )?.[0]?.[1];
-      const catchedError = `Error ${errorStatus}: ${
-        errorTitle ?? t('unexpected-error-title')
-      } ${errorDetail}`;
-
-      return [...translatedErrors, catchedError];
+      // const error = result.error as AxiosBaseQueryError;
+      // const errorStatus = error.status ?? '';
+      // const errorTitle =
+      //   error.data &&
+      //   Object.entries(error.data).filter(
+      //     (entry) => entry[0] === 'title'
+      //   )?.[0]?.[1];
+      // const errorDetail =
+      //   error.data &&
+      //   Object.entries(error.data).filter(
+      //     (entry) => entry[0] === 'detail'
+      //   )?.[0]?.[1];
+      // const catchedError = `Error ${errorStatus}: ${
+      //   errorTitle ?? t('unexpected-error-title')
+      // } ${errorDetail}`;
+      const catchedError = getApiError(result.error);
+      return [...translatedErrors, ...catchedError];
     }
 
     return translatedErrors;
