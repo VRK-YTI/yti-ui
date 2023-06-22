@@ -34,6 +34,7 @@ interface ResourceModalProps {
   };
   handleFollowUp: (value?: { label: string; uri: string }) => void;
   buttonIcon?: boolean;
+  applicationProfile?: boolean;
 }
 
 export default function ResourceModal({
@@ -42,6 +43,7 @@ export default function ResourceModal({
   buttonTranslations,
   handleFollowUp,
   buttonIcon,
+  applicationProfile,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -207,6 +209,7 @@ export default function ResourceModal({
             searchParams={searchParams}
             setSearchParams={handleSearch}
             setContentLanguage={setContentLanguage}
+            applicationProfile={applicationProfile}
             languageVersioned
             modelId={modelId}
           />
