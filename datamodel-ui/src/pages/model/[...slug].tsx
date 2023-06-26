@@ -41,6 +41,7 @@ import {
   getRunningQueriesThunk as getResourceRunningQueriesThunk,
 } from '@app/common/components/resource/resource.slice';
 import { ModelType } from '@app/common/interfaces/model.interface';
+import { getStoreData } from '@app/common/utils/utils';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -166,11 +167,19 @@ export const getServerSideProps = createCommonGetServerSideProps(
             'info'
           )
         );
-        // TODO: should check ends with -ext?
+
+        const applicationProfile: boolean =
+          getStoreData({
+            state: store.getState(),
+            reduxKey: 'modelApi',
+            functionKey: 'getModel',
+          }).type.toLowerCase() === 'profile';
+
         store.dispatch(
           getResource.initiate({
             modelId: modelId,
             resourceIdentifier: resourceId,
+            applicationProfile,
           })
         );
 
