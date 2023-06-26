@@ -100,7 +100,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(
       getSearchModels.initiate({ urlState, lang: locale ?? 'fi' })
     );
-    store.dispatch(getCount.initiate());
+    store.dispatch(getCount.initiate(urlState));
 
     await Promise.all(
       store.dispatch(getServiceCategoriesRunningQueriesThunk())

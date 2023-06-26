@@ -5,10 +5,6 @@ import { CountsType } from '@app/common/interfaces/counts.interface';
 import { UrlState } from 'yti-common-ui/utils/hooks/use-url-state';
 
 function getUrl(urlState: UrlState) {
-  if (!urlState) {
-    return '/frontend/counts';
-  }
-
   const validEntries = Object.entries({
     query: urlState.q,
     language: urlState.lang ?? null,
