@@ -35,7 +35,7 @@ export interface ResultType {
     domains: string[];
     uri: string;
   };
-  subClass: {
+  subClass?: {
     label: string;
     link: string;
     partOf: string;
@@ -210,24 +210,26 @@ export default function ResourceList({
                 </div>
               )}
             </td>
-            <td>
-              <div>
-                {item.subClass.link && (
-                  <>
-                    <ExternalLink
-                      href={item.subClass.link}
-                      labelNewWindow={t('link-opens-new-window-external', {
-                        ns: 'common',
-                      })}
-                      id="subClass-link"
-                    >
-                      {item.subClass.label}
-                    </ExternalLink>
-                    <Text>{item.subClass.partOf}</Text>
-                  </>
-                )}
-              </div>
-            </td>
+            {item.subClass && (
+              <td>
+                <div>
+                  {item.subClass.link && (
+                    <>
+                      <ExternalLink
+                        href={item.subClass.link}
+                        labelNewWindow={t('link-opens-new-window-external', {
+                          ns: 'common',
+                        })}
+                        id="subClass-link"
+                      >
+                        {item.subClass.label}
+                      </ExternalLink>
+                      <Text>{item.subClass.partOf}</Text>
+                    </>
+                  )}
+                </div>
+              </td>
+            )}
             <td>
               <div>
                 <SanitizedTextContent text={item.target.note} />

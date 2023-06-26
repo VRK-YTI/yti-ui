@@ -461,8 +461,8 @@ export default function ClassForm({
                 {t('select-class-restriction')}
               </Button>
             }
-            items={[]}
-            handleRemoval={() => null}
+            items={data.node ? [data.node] : []}
+            handleRemoval={() => handleUpdate({ ...data, node: undefined })}
           />
         ) : (
           <InlineListBlock
