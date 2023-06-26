@@ -26,7 +26,6 @@ import {
   TextInput,
   Textarea,
 } from 'suomifi-ui-components';
-import { BasicBlock } from 'yti-common-ui/block';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { Status } from 'yti-common-ui/interfaces/status.interface';
@@ -40,8 +39,14 @@ import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import ClassModal from '@app/modules/class-modal';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
-import { setSelected, setView } from '@app/common/components/model/model.slice';
+import {
+  selectHasChanges,
+  setHasChanges,
+  setSelected,
+  setView,
+} from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useGetDatatypesQuery } from '@app/common/components/datatypes/datatypes.slice';
 
 interface ResourceFormProps {
@@ -66,11 +71,14 @@ export default function ResourceForm({
   handleReturn,
 }: ResourceFormProps) {
   const { t, i18n } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const statuses = statusList;
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const dispatch = useStoreDispatch();
   const data = useSelector(selectResource());
+  const hasChanges = useSelector(selectHasChanges());
   const [userPosted, setUserPosted] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [errors, setErrors] = useState(validateForm(data));
@@ -97,9 +105,11 @@ export default function ResourceForm({
       labelText: result,
       uniqueItemId: result,
     }));
-  }, [dataTypesResult, isDataTypesSuccess, t]);
+  }, [dataTypesResult, isDataTypesSuccess]);
 
   const handleSubmit = () => {
+    disableConfirmation();
+    dispatch(setHasChanges(false));
     if (!userPosted) {
       setUserPosted(true);
     }
@@ -130,6 +140,8 @@ export default function ResourceForm({
   };
 
   const handleUpdate = (value: typeof data) => {
+    enableConfirmation();
+    dispatch(setHasChanges(true));
     if (userPosted && Object.values(errors).filter((val) => val).length > 0) {
       setErrors(validateForm(value));
     }
@@ -264,7 +276,11 @@ export default function ResourceForm({
           <Button
             icon={<IconArrowLeft />}
             variant="secondaryNoBorder"
-            onClick={() => handleReturn()}
+            onClick={() => {
+              if (!hasChanges) {
+                handleReturn();
+              }
+            }}
             style={{ textTransform: 'uppercase' }}
             id="back-button"
           >
@@ -287,7 +303,10 @@ export default function ResourceForm({
             </Button>
             <Button
               variant="secondary"
-              onClick={() => handleReturn()}
+              onClick={() => {
+                handleReturn();
+                dispatch(setHasChanges(false));
+              }}
               id="cancel-button"
             >
               {t('cancel-variant')}

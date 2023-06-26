@@ -22,6 +22,7 @@ import {
 } from './documentation.styles';
 import { useTranslation } from 'next-i18next';
 import {
+  setHasChanges,
   useGetModelQuery,
   usePostModelMutation,
 } from '@app/common/components/model/model.slice';
@@ -41,6 +42,8 @@ import {
   injectSpecialCharacters,
   previousCharIsNewLine,
 } from './utils';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
+import { useStoreDispatch } from '@app/store';
 
 export default function Documentation({
   modelId,
@@ -50,7 +53,10 @@ export default function Documentation({
   languages: string[];
 }) {
   const { t, i18n } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const ref = useRef<HTMLDivElement>(null);
+  const dispatch = useStoreDispatch();
   const textAreaRef = createRef<HTMLTextAreaElement>();
   const [headerHeight, setHeaderHeight] = useState(0);
   const [value, setValue] = useState<{ [key: string]: string }>({});
@@ -71,6 +77,9 @@ export default function Documentation({
   const [postModel, result] = usePostModelMutation();
 
   const handleSubmit = () => {
+    disableConfirmation();
+    dispatch(setHasChanges(false));
+
     if (!modelData) {
       return;
     }
@@ -84,11 +93,17 @@ export default function Documentation({
     });
   };
 
+  const handleUpdate = (data: { [key: string]: string }) => {
+    enableConfirmation();
+    dispatch(setHasChanges(true));
+    setValue(data);
+  };
+
   const handleButtonClick = (key: string) => {
     const addNewLine = getAddNewLine(value[currentLanguage], selection.start);
     const elem = getSpecialCharacters(key, addNewLine);
 
-    setValue({
+    handleUpdate({
       ...value,
       [currentLanguage]: injectSpecialCharacters(
         value[currentLanguage],
@@ -115,7 +130,7 @@ export default function Documentation({
       e.preventDefault();
 
       if (previousCharIsNewLine(target.value, target.selectionStart)) {
-        setValue({
+        handleUpdate({
           ...value,
           [currentLanguage]: injectNewLine(rows, currRowNmb),
         });
@@ -132,7 +147,7 @@ export default function Documentation({
         ? '-'
         : `${getLastValue(rows[currRowNmb - 1])}.`;
 
-      setValue({
+      handleUpdate({
         ...value,
         [currentLanguage]: injectNewListRow(rows, currRowNmb, listStart),
       });
@@ -171,9 +186,10 @@ export default function Documentation({
   useEffect(() => {
     if (result.isSuccess) {
       setIsEdit(false);
+      disableConfirmation();
       refetch();
     }
-  }, [result, refetch]);
+  }, [result, refetch, disableConfirmation]);
 
   useEffect(() => {
     if (!textAreaRef.current) {
@@ -210,7 +226,10 @@ export default function Documentation({
               </Button>
               <Button
                 variant="secondary"
-                onClick={() => setIsEdit(false)}
+                onClick={() => {
+                  setIsEdit(false);
+                  disableConfirmation();
+                }}
                 id="cancel-button"
               >
                 {t('cancel-variant')}
@@ -340,7 +359,7 @@ export default function Documentation({
               labelMode="hidden"
               value={value[currentLanguage] ?? ''}
               onChange={(e) =>
-                setValue({
+                handleUpdate({
                   ...value,
                   [currentLanguage]: e.target.value ?? '',
                 })

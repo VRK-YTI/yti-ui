@@ -93,11 +93,9 @@
   "create-copy-from-model": "Create copy from model",
   "create-model": "Add model",
   "create-new-association": "Create new association",
-  "create-new-attribute": "Create new attribute",
   "create-new-class": "Create new class",
   "create-new-class-restriction": "Create new class restriction",
   "create-new-sub-association-for-selected": "Create new sub-association for selected",
-  "create-new-sub-attribute-for-selected": "Create new sub-attribute for selected",
   "create-prefix-automatically": "Create prefix automatically",
   "create-subclass-for-selected": "Create subclass for selected",
   "data-model": "Data model",
@@ -191,6 +189,7 @@
   "restrictions": "Restrictions",
   "return-to-front-page": "Return to front page",
   "save": "Save",
+  "save-or-cancel-changes": "Save or cancel changes.",
   "search": "Search",
   "search-by-class-name": "Search by class name",
   "search-concept": "Search concept",
@@ -235,5 +234,6 @@
   "upper-classes": "Upper classes",
   "uri-preview": "URI preview",
   "utilizes-class-restriction": "Utilizes class restriction",
-  "work-group-comment": "Work group comment"
+  "work-group-comment": "Work group comment",
+  "you-have-unsaved-changes": "You have unsaved changes."
 }

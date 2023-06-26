@@ -52,7 +52,7 @@ export function makeStore(ctx: NextIronContext) {
       [visualizationApi.reducerPath]: visualizationApi.reducer,
       [activeSlice.name]: activeSlice.reducer,
       [codeApi.reducerPath]: codeApi.reducer,
-      [datatypesApi.reducerPath]: datatypesApi.reducer
+      [datatypesApi.reducerPath]: datatypesApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>

@@ -5,7 +5,7 @@ import SaveSpinner from 'yti-common-ui/save-spinner';
 import { terminologySearchApi } from '@app/common/components/terminology-search/terminology-search.slice';
 import { usePostNewVocabularyMutation } from '@app/common/components/vocabulary/vocabulary.slice';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
-import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import {
   translateFileUploadError,
   translateHttpError,

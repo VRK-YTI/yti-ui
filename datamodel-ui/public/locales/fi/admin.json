@@ -93,11 +93,9 @@
   "create-copy-from-model": "Luo kopio tietomallista",
   "create-model": "Luo tietomalli",
   "create-new-association": "Luo uusi assosiaatio",
-  "create-new-attribute": "Luo uusi attribuutti",
   "create-new-class": "Luo uusi luokka",
   "create-new-class-restriction": "Luo uusi luokkarajoite",
   "create-new-sub-association-for-selected": "Luo valitulle uusi ala-assosiaatio",
-  "create-new-sub-attribute-for-selected": "Luo valitulle uusi ala-attribuutti",
   "create-prefix-automatically": "Luo tunnus automaattisesti",
   "create-subclass-for-selected": "Luo valitulle alaluokka",
   "data-model": "Tietomalli",
@@ -191,6 +189,7 @@
   "restrictions": "Rajoitteet",
   "return-to-front-page": "Palaa etusivulle",
   "save": "Tallenna",
+  "save-or-cancel-changes": "Tallenna muutokset tai peruuta.",
   "search": "Hae",
   "search-by-class-name": "Hae luokan nimellä",
   "search-concept": "Hae käsitettä",
@@ -235,5 +234,6 @@
   "upper-classes": "Yläluokat",
   "uri-preview": "URI:n esikatselu",
   "utilizes-class-restriction": "Hyödyntää luokkarajoitetta",
-  "work-group-comment": "Työryhmän sisäinen kommentti"
+  "work-group-comment": "Työryhmän sisäinen kommentti",
+  "you-have-unsaved-changes": "Sinulla on tallentamattomia muutoksia."
 }

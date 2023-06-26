@@ -46,6 +46,11 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { BasicBlock } from 'yti-common-ui/block';
 import ResourceInfo from '../class-view/resource-info';
 import ResourceForm from '../resource-form';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
+import {
+  selectHasChanges,
+  setHasChanges,
+} from '@app/common/components/model/model.slice';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -69,10 +74,13 @@ export default function ClassForm({
   basedOnNodeShape,
 }: ClassFormProps) {
   const { t, i18n } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
   const data = useSelector(selectClass());
+  const hasChanges = useSelector(selectHasChanges());
   const [userPosted, setUserPosted] = useState(false);
   const [errors, setErrors] = useState<ClassFormErrors>(
     validateClassForm(data)
@@ -91,10 +99,15 @@ export default function ClassForm({
     ) {
       setErrors(validateClassForm(value));
     }
+    enableConfirmation();
+    dispatch(setHasChanges(true));
     dispatch(setClass(value));
   };
 
   const handleSubmit = () => {
+    disableConfirmation();
+    dispatch(setHasChanges(false));
+
     if (!userPosted) {
       setUserPosted(true);
     }
@@ -247,7 +260,11 @@ export default function ClassForm({
           <Button
             icon={<IconArrowLeft />}
             variant="secondaryNoBorder"
-            onClick={() => handleReturn()}
+            onClick={() => {
+              if (!hasChanges) {
+                handleReturn();
+              }
+            }}
             style={{ textTransform: 'uppercase' }}
             id="back-button"
           >
@@ -278,7 +295,10 @@ export default function ClassForm({
             </Button>
             <Button
               variant="secondary"
-              onClick={() => handleReturn()}
+              onClick={() => {
+                handleReturn();
+                dispatch(setHasChanges(false));
+              }}
               id="cancel-button"
             >
               {t('cancel-variant')}
