@@ -34,7 +34,6 @@ import validateForm from './validate-form';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
-import { AxiosBaseQueryError } from 'yti-common-ui/interfaces/axios-base-query.interface';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import ClassModal from '@app/modules/class-modal';
@@ -46,6 +45,7 @@ import {
   setView,
 } from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
+import getApiError from '@app/common/utils/get-api-errors';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useGetDatatypesQuery } from '@app/common/components/datatypes/datatypes.slice';
 
@@ -585,23 +585,8 @@ export default function ResourceForm({
     }
 
     if (result.error) {
-      const error = result.error as AxiosBaseQueryError;
-      const errorStatus = error.status ?? '';
-      const errorTitle =
-        error.data &&
-        Object.entries(error.data).filter(
-          (entry) => entry[0] === 'title'
-        )?.[0]?.[1];
-      const errorDetail =
-        error.data &&
-        Object.entries(error.data).filter(
-          (entry) => entry[0] === 'detail'
-        )?.[0]?.[1];
-      const catchedError = `Error ${errorStatus}: ${
-        errorTitle ?? t('unexpected-error-title')
-      } ${errorDetail}`;
-
-      return [...translatedErrors, catchedError];
+      const catchedError = getApiError(result.error);
+      return [...translatedErrors, ...catchedError];
     }
 
     return translatedErrors;

@@ -33,10 +33,7 @@ import {
   useGetClassIdentifierFreeQuery,
   usePutClassMutation,
 } from '@app/common/components/class/class.slice';
-import {
-  AxiosBaseQueryError,
-  AxiosQueryErrorFields,
-} from 'yti-common-ui/interfaces/axios-base-query.interface';
+import { AxiosQueryErrorFields } from 'yti-common-ui/interfaces/axios-base-query.interface';
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '@app/store';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
@@ -46,6 +43,7 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { BasicBlock } from 'yti-common-ui/block';
 import ResourceInfo from '../class-view/resource-info';
 import ResourceForm from '../resource-form';
+import getApiError from '@app/common/utils/get-api-errors';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import {
   selectHasChanges,
@@ -621,23 +619,8 @@ export default function ClassForm({
     }
 
     if (putClassResult.error) {
-      const error = putClassResult.error as AxiosBaseQueryError;
-      const errorStatus = error.status ?? '';
-      const errorTitle =
-        error.data &&
-        Object.entries(error.data).filter(
-          (entry) => entry[0] === 'title'
-        )?.[0]?.[1];
-      const errorDetail =
-        error.data &&
-        Object.entries(error.data).filter(
-          (entry) => entry[0] === 'detail'
-        )?.[0]?.[1];
-      const catchedError = `Error ${errorStatus}: ${
-        errorTitle ?? t('unexpected-error-title')
-      } ${errorDetail}`;
-
-      return [...translatedErrors, catchedError];
+      const catchedError = getApiError(putClassResult.error);
+      return [...translatedErrors, ...catchedError];
     }
 
     return translatedErrors;
