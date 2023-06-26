@@ -189,6 +189,7 @@
     "superseded": "",
     "valid": ""
   },
+  "targets-library-class": "",
   "technical-description": "",
   "terminology": "",
   "terminology-footer-accessibility": "",
@@ -204,6 +205,7 @@
   "try-again": "",
   "upper-class": "",
   "uri": "",
+  "utilizes-class-restriction": "",
   "value-is-not-allowed": "",
   "vocabulary-filter-items": "",
   "vocabulary-filter-show-only": "",

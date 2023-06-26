@@ -82,7 +82,7 @@ export default function ClassInfo({
 
       return (
         <>
-          <BasicBlock title="Kohdistuu ydintietomallin luokkaan">
+          <BasicBlock title={t('targets-library-class')}>
             {data.targetClass ? (
               <ExternalLink
                 key={data.targetClass}
@@ -96,7 +96,8 @@ export default function ClassInfo({
               <Text smallScreen>{t('not-defined')}</Text>
             )}
           </BasicBlock>
-          <BasicBlock title="Hyödyntää luokkarajoitetta">
+
+          <BasicBlock title={t('utilizes-class-restriction')}>
             {data.targetNode ? (
               <ExternalLink
                 key={data.targetNode}
