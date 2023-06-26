@@ -136,6 +136,7 @@
   "no-upper-attributes": "Ei yläattribuutteja",
   "no-upper-classes": "Ei yläluokkia",
   "not-added": "Ei lisätty",
+  "not-defined": "Ei määritelty",
   "own-information": "Omat tiedot",
   "page-indicator-text": "Sivu numero {{currentPage}} kaikkiaan {{lastPage}} sivusta. Näytetään hakutuloksia numerosta {{firstShown}} numeroon {{lastShown}}",
   "page-number": "Sivunumero",

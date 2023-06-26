@@ -136,6 +136,7 @@
   "no-upper-attributes": "No upper attributes",
   "no-upper-classes": "No upper classes",
   "not-added": "Not added",
+  "not-defined": "Not defined",
   "own-information": "Own information",
   "page-indicator-text": "Page {{currentPage}} out of {{lastPage}}. Showing items from {{firstShown}} to {{lastShown}}",
   "page-number": "Page number",

@@ -2,7 +2,7 @@ import Drawer, { ViewType } from '@app/common/components/model-drawer';
 import { ContentWrapper } from './model.styles';
 import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
-import ClassView from '../class-view/class-view';
+import ClassView from '../class-view';
 import { useTranslation } from 'next-i18next';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { useMemo } from 'react';
