@@ -22,6 +22,7 @@ import {
 } from './documentation.styles';
 import { useTranslation } from 'next-i18next';
 import {
+  setHasChanges,
   useGetModelQuery,
   usePostModelMutation,
 } from '@app/common/components/model/model.slice';
@@ -41,6 +42,8 @@ import {
   injectSpecialCharacters,
   previousCharIsNewLine,
 } from './utils';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
+import { useStoreDispatch } from '@app/store';
 
 export default function Documentation({
   modelId,
@@ -50,7 +53,10 @@ export default function Documentation({
   languages: string[];
 }) {
   const { t, i18n } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const ref = useRef<HTMLDivElement>(null);
+  const dispatch = useStoreDispatch();
   const textAreaRef = createRef<HTMLTextAreaElement>();
   const [headerHeight, setHeaderHeight] = useState(0);
   const [value, setValue] = useState<{ [key: string]: string }>({});
@@ -71,6 +77,9 @@ export default function Documentation({
   const [postModel, result] = usePostModelMutation();
 
   const handleSubmit = () => {
+    disableConfirmation();
+    dispatch(setHasChanges(false));
+
     if (!modelData) {
       return;
     }
@@ -84,11 +93,17 @@ export default function Documentation({
     });
   };
 
+  const handleUpdate = (data: { [key: string]: string }) => {
+    enableConfirmation();
+    dispatch(setHasChanges(true));
+    setValue(data);
+  };
+
   const handleButtonClick = (key: string) => {
     const addNewLine = getAddNewLine(value[currentLanguage], selection.start);
     const elem = getSpecialCharacters(key, addNewLine);
 
-    setValue({
+    handleUpdate({
       ...value,
       [currentLanguage]: injectSpecialCharacters(
         value[currentLanguage],
@@ -115,7 +130,7 @@ export default function Documentation({
       e.preventDefault();
 
       if (previousCharIsNewLine(target.value, target.selectionStart)) {
-        setValue({
+        handleUpdate({
           ...value,
           [currentLanguage]: injectNewLine(rows, currRowNmb),
         });
@@ -132,7 +147,7 @@ export default function Documentation({
         ? '-'
         : `${getLastValue(rows[currRowNmb - 1])}.`;
 
-      setValue({
+      handleUpdate({
         ...value,
         [currentLanguage]: injectNewListRow(rows, currRowNmb, listStart),
       });
@@ -171,9 +186,10 @@ export default function Documentation({
   useEffect(() => {
     if (result.isSuccess) {
       setIsEdit(false);
+      disableConfirmation();
       refetch();
     }
-  }, [result, refetch]);
+  }, [result, refetch, disableConfirmation]);
 
   useEffect(() => {
     if (!textAreaRef.current) {
@@ -205,13 +221,26 @@ export default function Documentation({
                 gap: '15px',
               }}
             >
-              <Button onClick={() => handleSubmit()}>{t('save')}</Button>
-              <Button variant="secondary" onClick={() => setIsEdit(false)}>
+              <Button onClick={() => handleSubmit()} id="submit-button">
+                {t('save')}
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  setIsEdit(false);
+                  disableConfirmation();
+                }}
+                id="cancel-button"
+              >
                 {t('cancel-variant')}
               </Button>
             </div>
           ) : (
-            <Button variant="secondary" onClick={() => setIsEdit(true)}>
+            <Button
+              variant="secondary"
+              onClick={() => setIsEdit(true)}
+              id="edit-button"
+            >
               {t('edit')}
             </Button>
           )}
@@ -264,6 +293,7 @@ export default function Documentation({
                   variant="secondaryNoBorder"
                   $active={currentLanguage === lang}
                   onClick={() => setCurrentLanguage(lang)}
+                  id="language-selector-button"
                 >
                   {translateLanguage(lang, t)}
                 </LanguageSelectorBtn>
@@ -275,29 +305,46 @@ export default function Documentation({
             {/* First 3 buttons use chars instead of Icons because they aren't available yet */}
             <ControlsRow>
               <div>
-                <ControlButton onClick={() => handleButtonClick('bold')}>
+                <ControlButton
+                  onClick={() => handleButtonClick('bold')}
+                  id="bold-button"
+                >
                   B
                 </ControlButton>
-                <ControlButton onClick={() => handleButtonClick('italic')}>
+                <ControlButton
+                  onClick={() => handleButtonClick('italic')}
+                  id="italic-button"
+                >
                   I
                 </ControlButton>
-                <ControlButton onClick={() => handleButtonClick('quote')}>
+                <ControlButton
+                  onClick={() => handleButtonClick('quote')}
+                  id="quote-button"
+                >
                   ``
                 </ControlButton>
                 <ControlButton
                   onClick={() => handleButtonClick('listBulleted')}
+                  id="list-bulleted-button"
                 >
                   <IconListBulleted />
                 </ControlButton>
                 <ControlButton
                   onClick={() => handleButtonClick('listNumbered')}
+                  id="list-numbered-button"
                 >
                   <IconListNumbered />
                 </ControlButton>
-                <ControlButton onClick={() => handleButtonClick('link')}>
+                <ControlButton
+                  onClick={() => handleButtonClick('link')}
+                  id="link-button"
+                >
                   <IconAttachment />
                 </ControlButton>
-                <ControlButton onClick={() => handleButtonClick('image')}>
+                <ControlButton
+                  onClick={() => handleButtonClick('image')}
+                  id="image-button"
+                >
                   <IconImage />
                 </ControlButton>
               </div>
@@ -312,7 +359,7 @@ export default function Documentation({
               labelMode="hidden"
               value={value[currentLanguage] ?? ''}
               onChange={(e) =>
-                setValue({
+                handleUpdate({
                   ...value,
                   [currentLanguage]: e.target.value ?? '',
                 })
@@ -330,6 +377,7 @@ export default function Documentation({
                 })
               }
               onKeyDown={(e) => e.key === 'Enter' && handleEnterClick(e)}
+              id="documentation-textarea"
             />
           </div>
 

@@ -10,11 +10,16 @@ import {
   ModelTerminology,
   ModelType,
 } from '@app/common/interfaces/model.interface';
-import { usePostModelMutation } from '@app/common/components/model/model.slice';
+import {
+  setHasChanges,
+  usePostModelMutation,
+} from '@app/common/components/model/model.slice';
 import generatePayload from '../model/generate-payload';
 import CodeListModal from '../code-list-modal';
 import LinkedModel from '../linked-model';
 import LinkedItem from './linked-item';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
+import { useStoreDispatch } from '@app/store';
 
 export default function LinkedDataForm({
   hasCodelist,
@@ -26,6 +31,9 @@ export default function LinkedDataForm({
   handleReturn: () => void;
 }) {
   const { t } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
+  const dispatch = useStoreDispatch();
   const ref = useRef<HTMLDivElement>(null);
   const [postModel, result] = usePostModelMutation();
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -52,7 +60,16 @@ export default function LinkedDataForm({
     terminologies: model.terminologies ?? [],
   });
 
+  const handleUpdate = (value: typeof data) => {
+    enableConfirmation();
+    dispatch(setHasChanges(true));
+    setData(value);
+  };
+
   const handleSubmit = () => {
+    disableConfirmation();
+    dispatch(setHasChanges(false));
+
     const payload = generatePayload({
       ...model,
       codeLists: data.codeLists,
@@ -97,8 +114,17 @@ export default function LinkedDataForm({
               gap: '15px',
             }}
           >
-            <Button onClick={() => handleSubmit()}>{t('save')}</Button>
-            <Button variant="secondary" onClick={() => handleReturn()}>
+            <Button onClick={() => handleSubmit()} id="submit-button">
+              {t('save')}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                handleReturn();
+                dispatch(setHasChanges(false));
+              }}
+              id="cancel-button"
+            >
               {t('cancel-variant')}
             </Button>
           </div>
@@ -120,7 +146,7 @@ export default function LinkedDataForm({
             <div>
               <TerminologyModal
                 setFormData={(terminologies) =>
-                  setData({
+                  handleUpdate({
                     ...data,
                     terminologies: terminologies,
                   })
@@ -139,12 +165,12 @@ export default function LinkedDataForm({
                   type: 'terminology',
                 }}
                 handleRemove={(id) =>
-                  setData((data) => ({
+                  setData({
                     ...data,
                     terminologies: data.terminologies.filter(
                       (t) => t.uri !== id
                     ),
-                  }))
+                  })
                 }
               />
             ))}
@@ -167,7 +193,7 @@ export default function LinkedDataForm({
                 <CodeListModal
                   initialData={data.codeLists}
                   setData={(codeLists) =>
-                    setData({
+                    handleUpdate({
                       ...data,
                       codeLists: codeLists,
                     })
@@ -185,10 +211,10 @@ export default function LinkedDataForm({
                     type: 'codelist',
                   }}
                   handleRemove={(id) =>
-                    setData((data) => ({
+                    handleUpdate({
                       ...data,
                       codeLists: data.codeLists.filter((t) => t.id !== id),
-                    }))
+                    })
                   }
                 />
               ))}
@@ -215,7 +241,7 @@ export default function LinkedDataForm({
                   internalNamespaces: data.internalNamespaces,
                 }}
                 setInternalData={(internal) =>
-                  setData({
+                  handleUpdate({
                     ...data,
                     internalNamespaces: internal,
                   })
@@ -225,7 +251,7 @@ export default function LinkedDataForm({
                   namespace: string;
                   prefix: string;
                 }) =>
-                  setData({
+                  handleUpdate({
                     ...data,
                     externalNamespaces: [...data.externalNamespaces, external],
                   })
@@ -244,12 +270,12 @@ export default function LinkedDataForm({
                   type: 'datamodel-internal',
                 }}
                 handleRemove={(id) =>
-                  setData((data) => ({
+                  handleUpdate({
                     ...data,
                     internalNamespaces: data.internalNamespaces.filter(
                       (n) => n.uri !== id
                     ),
-                  }))
+                  })
                 }
               />
             ))}
@@ -260,31 +286,30 @@ export default function LinkedDataForm({
                 itemData={{
                   ...n,
                   type: 'datamodel-external',
-                  setData: (name) =>
-                    setData((data) => {
-                      const updated = data.externalNamespaces.map((ext) => {
-                        if (ext.prefix === n.prefix) {
-                          return {
-                            ...ext,
-                            name: name,
-                          };
-                        }
-                        return ext;
-                      });
+                  setData: (name) => {
+                    const updated = data.externalNamespaces.map((ext) => {
+                      if (ext.prefix === n.prefix) {
+                        return {
+                          ...ext,
+                          name: name,
+                        };
+                      }
+                      return ext;
+                    });
 
-                      return {
-                        ...data,
-                        externalNamespaces: updated,
-                      };
-                    }),
+                    handleUpdate({
+                      ...data,
+                      externalNamespaces: updated,
+                    });
+                  },
                 }}
                 handleRemove={(id) =>
-                  setData((data) => ({
+                  handleUpdate({
                     ...data,
                     externalNamespaces: data.externalNamespaces.filter(
                       (n) => n.namespace !== id
                     ),
-                  }))
+                  })
                 }
               />
             ))}

@@ -42,6 +42,7 @@ export default function InformationDomainFilter({
         })
       }
       checkboxVariant={isModal ? 'large' : 'small'}
+      id="filter-information-domain"
     />
   );
 }

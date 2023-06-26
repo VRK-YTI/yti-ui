@@ -44,6 +44,11 @@ import { BasicBlock } from 'yti-common-ui/block';
 import ResourceInfo from '../class-view/resource-info';
 import ResourceForm from '../resource-form';
 import getApiError from '@app/common/utils/get-api-errors';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
+import {
+  selectHasChanges,
+  setHasChanges,
+} from '@app/common/components/model/model.slice';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -67,10 +72,13 @@ export default function ClassForm({
   basedOnNodeShape,
 }: ClassFormProps) {
   const { t, i18n } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
   const data = useSelector(selectClass());
+  const hasChanges = useSelector(selectHasChanges());
   const [userPosted, setUserPosted] = useState(false);
   const [errors, setErrors] = useState<ClassFormErrors>(
     validateClassForm(data)
@@ -89,10 +97,15 @@ export default function ClassForm({
     ) {
       setErrors(validateClassForm(value));
     }
+    enableConfirmation();
+    dispatch(setHasChanges(true));
     dispatch(setClass(value));
   };
 
   const handleSubmit = () => {
+    disableConfirmation();
+    dispatch(setHasChanges(false));
+
     if (!userPosted) {
       setUserPosted(true);
     }
@@ -245,8 +258,13 @@ export default function ClassForm({
           <Button
             icon={<IconArrowLeft />}
             variant="secondaryNoBorder"
-            onClick={() => handleReturn()}
+            onClick={() => {
+              if (!hasChanges) {
+                handleReturn();
+              }
+            }}
             style={{ textTransform: 'uppercase' }}
+            id="back-button"
           >
             {t('back', { ns: 'common' })}
           </Button>
@@ -270,8 +288,17 @@ export default function ClassForm({
           </Text>
 
           <div style={{ display: 'flex', gap: '10px' }}>
-            <Button onClick={() => handleSubmit()}>{t('save')}</Button>
-            <Button variant="secondary" onClick={() => handleReturn()}>
+            <Button onClick={() => handleSubmit()} id="submit-button">
+              {t('save')}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                handleReturn();
+                dispatch(setHasChanges(false));
+              }}
+              id="cancel-button"
+            >
               {t('cancel-variant')}
             </Button>
           </div>
@@ -321,6 +348,7 @@ export default function ClassForm({
               }
               status={userPosted && errors.label ? 'error' : 'default'}
               fullWidth
+              id="label-input"
             />
           ))}
         </LanguageVersionedWrapper>
@@ -354,12 +382,17 @@ export default function ClassForm({
               <Text>Tooltip sisältö</Text>
             </Tooltip>
           }
+          id="prefix-input"
         />
 
         {!applicationProfile ? (
           <InlineListBlock
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-upper-class-button"
+              >
                 {t('add-upper-class')}
               </Button>
             }
@@ -400,7 +433,11 @@ export default function ClassForm({
         ) : (
           <InlineListBlock
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-corresponding-class-button"
+              >
                 {t('add-corresponding-class')}
               </Button>
             }
@@ -414,18 +451,26 @@ export default function ClassForm({
           <InlineListBlock
             label={t('utilizes-class-restriction')}
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="select-class-restriction-button"
+              >
                 {t('select-class-restriction')}
               </Button>
             }
-            items={[]}
-            handleRemoval={() => null}
+            items={data.node ? [data.node] : []}
+            handleRemoval={() => handleUpdate({ ...data, node: undefined })}
           />
         ) : (
           <InlineListBlock
             label={t('disjoint-classes', { ns: 'common' })}
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-disjoint-class-button"
+              >
                 {t('add-disjoint-class')}
               </Button>
             }
@@ -439,6 +484,7 @@ export default function ClassForm({
             labelText={t('status')}
             defaultValue={data.status}
             onChange={(e) => handleUpdate({ ...data, status: e as Status })}
+            id="status-dropdown"
           >
             {statusList.map((status) => (
               <DropdownItem key={status} value={status}>
@@ -462,6 +508,7 @@ export default function ClassForm({
                 })
               }
               fullWidth
+              id="comment-input"
             />
           ))}
         </LanguageVersionedWrapper>
@@ -487,7 +534,11 @@ export default function ClassForm({
                       langs={languages}
                       type="attribute"
                     />
-                    <Button variant="secondary" style={{ marginTop: '10px' }}>
+                    <Button
+                      variant="secondary"
+                      style={{ marginTop: '10px' }}
+                      id="add-attribute-button"
+                    >
                       {t('add-attribute')}
                     </Button>
                   </div>
@@ -521,7 +572,11 @@ export default function ClassForm({
                       data={assoc}
                       modelId={applicationProfile ? assoc.modelId : modelId}
                     />
-                    <Button variant="secondary" style={{ marginTop: '10px' }}>
+                    <Button
+                      variant="secondary"
+                      style={{ marginTop: '10px' }}
+                      id="add-association-button"
+                    >
                       {t('add-association')}
                     </Button>
                   </div>
@@ -548,6 +603,7 @@ export default function ClassForm({
             handleUpdate({ ...data, editorialNote: e.target.value })
           }
           fullWidth
+          id="editor-comment-input"
         />
       </DrawerContent>
     </>

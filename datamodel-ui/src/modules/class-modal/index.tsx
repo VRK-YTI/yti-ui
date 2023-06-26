@@ -174,6 +174,7 @@ export default function ClassModal({
         variant="secondary"
         icon={modalButtonLabel ? undefined : <IconPlus />}
         onClick={() => handleOpen()}
+        id="add-class-button"
       >
         {modalButtonLabel ? modalButtonLabel : t('add-class')}
       </Button>
@@ -208,6 +209,11 @@ export default function ClassModal({
               <Button
                 disabled={selectedId === ''}
                 onClick={() => handleSubmit()}
+                id={
+                  applicationProfile
+                    ? 'select-class-button'
+                    : 'create-subclass-button'
+                }
               >
                 {applicationProfile
                   ? t('select-class')
@@ -218,11 +224,16 @@ export default function ClassModal({
                   icon={<IconPlus />}
                   disabled={selectedId !== ''}
                   onClick={() => handleSubmit()}
+                  id="create-class-button"
                 >
                   {t('create-new-class')}
                 </Button>
               )}
-              <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
+              <Button
+                variant="secondaryNoBorder"
+                onClick={() => handleClose()}
+                id="cancel-button"
+              >
                 {t('cancel-variant')}
               </Button>
             </>
@@ -231,10 +242,15 @@ export default function ClassModal({
               <Button
                 disabled={selectedId === ''}
                 onClick={() => handleSubmit()}
+                id="submit-button"
               >
                 {modalButtonLabel}
               </Button>
-              <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
+              <Button
+                variant="secondaryNoBorder"
+                onClick={() => handleClose()}
+                id="cancel-button"
+              >
                 {t('cancel-variant')}
               </Button>
             </>

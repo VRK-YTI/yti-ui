@@ -35,7 +35,7 @@ export interface ResultType {
     domains: string[];
     uri: string;
   };
-  subClass: {
+  subClass?: {
     label: string;
     link: string;
     partOf: string;
@@ -96,6 +96,7 @@ export default function ResourceList({
                   : false
               }
               disabled={items.length < 1}
+              id="select-all-checkbox"
             />
           </div>
           <Text variant="bold">{primaryColumnName}</Text>
@@ -117,6 +118,7 @@ export default function ResourceList({
           <div
             onMouseDown={() => handleClick(id)}
             onKeyDown={(e) => e.key === 'Enter' && handleClick(id)}
+            id="select-single-radio-button"
           >
             <RadioButton value={id} checked={checkChecked(id)} />
           </div>
@@ -126,6 +128,7 @@ export default function ResourceList({
           <Checkbox
             onClick={() => handleClick(id)}
             checked={checkChecked(id)}
+            id="select-multiple-checkbox"
           />
         );
       default:
@@ -207,23 +210,26 @@ export default function ResourceList({
                 </div>
               )}
             </td>
-            <td>
-              <div>
-                {item.subClass.link && (
-                  <>
-                    <ExternalLink
-                      href={item.subClass.link}
-                      labelNewWindow={t('link-opens-new-window-external', {
-                        ns: 'common',
-                      })}
-                    >
-                      {item.subClass.label}
-                    </ExternalLink>
-                    <Text>{item.subClass.partOf}</Text>
-                  </>
-                )}
-              </div>
-            </td>
+            {item.subClass && (
+              <td>
+                <div>
+                  {item.subClass.link && (
+                    <>
+                      <ExternalLink
+                        href={item.subClass.link}
+                        labelNewWindow={t('link-opens-new-window-external', {
+                          ns: 'common',
+                        })}
+                        id="subClass-link"
+                      >
+                        {item.subClass.label}
+                      </ExternalLink>
+                      <Text>{item.subClass.partOf}</Text>
+                    </>
+                  )}
+                </div>
+              </td>
+            )}
             <td>
               <div>
                 <SanitizedTextContent text={item.target.note} />

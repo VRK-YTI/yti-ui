@@ -106,7 +106,7 @@ export default function DeleteModal({
         <Text>{translateDeleteModalSuccess(type, t)}</Text>
 
         <ButtonFooter>
-          <Button onClick={() => handleSuccessExit()}>
+          <Button onClick={() => handleSuccessExit()} id="close-button">
             {type === 'model'
               ? t('return-to-front-page')
               : t('close', { ns: 'common' })}
@@ -123,8 +123,14 @@ export default function DeleteModal({
         <Text>{translateDeleteModalDescription(type, t, label)}</Text>
 
         <ButtonFooter>
-          <Button onClick={() => handleDelete()}>{t('remove')}</Button>
-          <Button variant="secondary" onClick={() => handleClose()}>
+          <Button onClick={() => handleDelete()} id="delete-button">
+            {t('remove')}
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => handleClose()}
+            id="cancel-button"
+          >
             {t('cancel-variant')}
           </Button>
         </ButtonFooter>
@@ -141,8 +147,14 @@ export default function DeleteModal({
           {translateDeleteModalError(type, t)}
         </InlineAlert>
         <ButtonFooter>
-          <Button onClick={() => handleDelete()}>{t('try-again')}</Button>
-          <Button variant="secondary" onClick={() => handleClose()}>
+          <Button onClick={() => handleDelete()} id="try-again-button">
+            {t('try-again')}
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => handleClose()}
+            id="cancel-button"
+          >
             {t('cancel-variant')}
           </Button>
         </ButtonFooter>

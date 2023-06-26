@@ -26,7 +26,11 @@ import {
 } from '@app/common/components/resource/resource.slice';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
 import ResourceInfo from './resource-info/index';
-import { translateResourceCountTitle } from '@app/common/utils/translation-helpers';
+import {
+  translateCreateNewResource,
+  translateCreateNewResourceForSelected,
+  translateResourceCountTitle,
+} from '@app/common/utils/translation-helpers';
 import ResourceModal from './resource-modal';
 import ResourceForm from './resource-form';
 import { resourceToResourceFormType } from './utils';
@@ -77,7 +81,7 @@ export default function ResourceView({
     resourceTypes: [type],
   });
 
-  const { data: resourceData } = useGetResourceQuery(
+  const { data: resourceData, refetch: refetchResource } = useGetResourceQuery(
     {
       modelId: modelId,
       resourceIdentifier: currentResourceId ?? '',
@@ -210,13 +214,12 @@ export default function ResourceView({
                 modelId={modelId}
                 type={type}
                 buttonTranslations={{
-                  useSelected: t('create-new-sub-association-for-selected', {
-                    ns: 'admin',
-                  }),
-                  createNew: t('create-new-association', { ns: 'admin' }),
+                  useSelected: translateCreateNewResourceForSelected(type, t),
+                  createNew: translateCreateNewResource(type, t),
                 }}
                 handleFollowUp={handleFollowUp}
                 buttonIcon={true}
+                applicationProfile={applicationProfile}
               />
             )}
           </div>
@@ -229,6 +232,7 @@ export default function ResourceView({
             fullWidth
             onChange={(e) => handleQueryChange(e?.toString() ?? '')}
             debounce={500}
+            id="search-input"
           />
         </StaticHeader>
 
@@ -285,8 +289,9 @@ export default function ResourceView({
         modelId={modelId}
         languages={languages}
         terminologies={terminologies}
-        applicationProfile={false}
+        applicationProfile={applicationProfile}
         isEdit={isEdit}
+        refetch={refetchResource}
         handleReturn={isEdit ? handleFormReturn : handleReturn}
       />
     );

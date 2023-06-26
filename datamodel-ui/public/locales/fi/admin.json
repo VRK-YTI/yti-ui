@@ -40,6 +40,7 @@
   "attribute-name": "Attribuutin nimi",
   "attributes": "Attribuutit",
   "attributes-identifier": "Attribuutin yksilöivä tunnus",
+  "available-ranges": "Saatavilla olevan tietotyypit",
   "cancel": "Keskeytä",
   "cancel-variant": "Peruuta",
   "characters": "Merkkiä",
@@ -191,6 +192,7 @@
   "restrictions": "Rajoitteet",
   "return-to-front-page": "Palaa etusivulle",
   "save": "Tallenna",
+  "save-or-cancel-changes": "Tallenna muutokset tai peruuta.",
   "search": "Hae",
   "search-by-class-name": "Hae luokan nimellä",
   "search-concept": "Hae käsitettä",
@@ -235,5 +237,6 @@
   "upper-classes": "Yläluokat",
   "uri-preview": "URI:n esikatselu",
   "utilizes-class-restriction": "Hyödyntää luokkarajoitetta",
-  "work-group-comment": "Työryhmän sisäinen kommentti"
+  "work-group-comment": "Työryhmän sisäinen kommentti",
+  "you-have-unsaved-changes": "Sinulla on tallentamattomia muutoksia."
 }

@@ -40,6 +40,7 @@
   "attribute-name": "Attribute's name",
   "attributes": "Attributes",
   "attributes-identifier": "Attribute identifier",
+  "available-ranges": "Available ranges",
   "cancel": "Cancel",
   "cancel-variant": "Cancel",
   "characters": "Characters",
@@ -191,6 +192,7 @@
   "restrictions": "Restrictions",
   "return-to-front-page": "Return to front page",
   "save": "Save",
+  "save-or-cancel-changes": "Save or cancel changes.",
   "search": "Search",
   "search-by-class-name": "Search by class name",
   "search-concept": "Search concept",
@@ -235,5 +237,6 @@
   "upper-classes": "Upper classes",
   "uri-preview": "URI preview",
   "utilizes-class-restriction": "Utilizes class restriction",
-  "work-group-comment": "Work group comment"
+  "work-group-comment": "Work group comment",
+  "you-have-unsaved-changes": "You have unsaved changes."
 }

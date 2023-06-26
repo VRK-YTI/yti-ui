@@ -160,35 +160,37 @@ export default function ClassView({
     dispatch(setView('classes', 'edit'));
   };
 
-  const handleAppProfileFollowUpAction = (
-    value?: InternalClass,
+  const handleAppProfileFollowUpAction = (data?: {
+    value?: InternalClass;
+    targetClass?: InternalClass;
     associations?: {
       identifier: string;
       label: { [key: string]: string };
       modelId: string;
       uri: string;
-    }[],
+    }[];
     attributes?: {
       identifier: string;
       label: { [key: string]: string };
       modelId: string;
       uri: string;
-    }[]
-  ) => {
+    }[];
+  }) => {
     setShowAppProfileModal(false);
 
-    if (!value) {
+    if (!data || !data.value) {
       return;
     }
 
     dispatch(
       setClass(
         internalClassToClassForm(
-          value,
+          data.value,
           languages,
           applicationProfile,
-          associations,
-          attributes
+          data.targetClass,
+          data.associations,
+          data.attributes
         )
       )
     );
@@ -276,27 +278,7 @@ export default function ClassView({
                   <ApplicationProfileFlow
                     visible={showAppProfileModal}
                     selectedNodeShape={selectedNodeShape}
-                    handleFollowUp={(
-                      value?: InternalClass,
-                      associations?: {
-                        identifier: string;
-                        label: { [key: string]: string };
-                        modelId: string;
-                        uri: string;
-                      }[],
-                      attributes?: {
-                        identifier: string;
-                        label: { [key: string]: string };
-                        modelId: string;
-                        uri: string;
-                      }[]
-                    ) =>
-                      handleAppProfileFollowUpAction(
-                        value,
-                        associations,
-                        attributes
-                      )
-                    }
+                    handleFollowUp={handleAppProfileFollowUpAction}
                   />
                 )}
               </>
@@ -395,7 +377,7 @@ export default function ClassView({
               >
                 {t('actions')}
               </Button>
-              <TooltipWrapper>
+              <TooltipWrapper id="actions-tooltip">
                 <Tooltip
                   ariaCloseButtonLabelText=""
                   ariaToggleButtonLabelText=""
@@ -407,6 +389,7 @@ export default function ClassView({
                       <Button
                         variant="secondaryNoBorder"
                         onClick={() => handleEdit()}
+                        id="edit-class-button"
                       >
                         {t('edit', { ns: 'admin' })}
                       </Button>
@@ -414,6 +397,7 @@ export default function ClassView({
                       <Button
                         variant="secondaryNoBorder"
                         onClick={() => setShowDeleteModal(true)}
+                        id="delete-class-button"
                       >
                         {t('remove', { ns: 'admin' })}
                       </Button>
@@ -466,6 +450,7 @@ export default function ClassView({
                 variant="secondary"
                 onClick={() => navigator.clipboard.writeText(data.uri)}
                 style={{ width: 'max-content' }}
+                id="copy-uri-button"
               >
                 {t('copy-to-clipboard')}
               </Button>

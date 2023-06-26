@@ -65,6 +65,7 @@ export default function LinkedItem({
           variant="secondaryNoBorder"
           icon={<IconRemove />}
           onClick={() => handleRemove(getId())}
+          id="remove-linked-item-button"
         >
           {t('remove')}
         </Button>

@@ -38,9 +38,15 @@ import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import ClassModal from '@app/modules/class-modal';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
-import { setSelected, setView } from '@app/common/components/model/model.slice';
+import {
+  selectHasChanges,
+  setHasChanges,
+  setSelected,
+  setView,
+} from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
 import getApiError from '@app/common/utils/get-api-errors';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useGetDatatypesQuery } from '@app/common/components/datatypes/datatypes.slice';
 
 interface ResourceFormProps {
@@ -50,6 +56,7 @@ interface ResourceFormProps {
   terminologies: string[];
   isEdit: boolean;
   applicationProfile?: boolean;
+  refetch: () => void;
   handleReturn: () => void;
 }
 
@@ -60,14 +67,18 @@ export default function ResourceForm({
   terminologies,
   isEdit,
   applicationProfile,
+  refetch,
   handleReturn,
 }: ResourceFormProps) {
   const { t, i18n } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const statuses = statusList;
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const dispatch = useStoreDispatch();
   const data = useSelector(selectResource());
+  const hasChanges = useSelector(selectHasChanges());
   const [userPosted, setUserPosted] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [errors, setErrors] = useState(validateForm(data));
@@ -97,6 +108,8 @@ export default function ResourceForm({
   }, [dataTypesResult, isDataTypesSuccess]);
 
   const handleSubmit = () => {
+    disableConfirmation();
+    dispatch(setHasChanges(false));
     if (!userPosted) {
       setUserPosted(true);
     }
@@ -127,6 +140,8 @@ export default function ResourceForm({
   };
 
   const handleUpdate = (value: typeof data) => {
+    enableConfirmation();
+    dispatch(setHasChanges(true));
     if (userPosted && Object.values(errors).filter((val) => val).length > 0) {
       setErrors(validateForm(value));
     }
@@ -226,6 +241,7 @@ export default function ResourceForm({
           'info'
         )
       );
+      refetch();
       router.replace(
         `${modelId}/${
           type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
@@ -240,7 +256,18 @@ export default function ResourceForm({
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors, userPosted, result, dispatch, type, router, modelId, data]);
+  }, [
+    ref,
+    errors,
+    userPosted,
+    result,
+    dispatch,
+    type,
+    router,
+    modelId,
+    data,
+    refetch,
+  ]);
 
   return (
     <>
@@ -249,8 +276,13 @@ export default function ResourceForm({
           <Button
             icon={<IconArrowLeft />}
             variant="secondaryNoBorder"
-            onClick={() => handleReturn()}
+            onClick={() => {
+              if (!hasChanges) {
+                handleReturn();
+              }
+            }}
             style={{ textTransform: 'uppercase' }}
+            id="back-button"
           >
             {t('back', { ns: 'common' })}
           </Button>
@@ -265,10 +297,18 @@ export default function ResourceForm({
             <Button
               onClick={() => handleSubmit()}
               style={{ marginRight: '15px' }}
+              id="submit-button"
             >
               {t('save')}
             </Button>
-            <Button variant="secondary" onClick={() => handleReturn()}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                handleReturn();
+                dispatch(setHasChanges(false));
+              }}
+              id="cancel-button"
+            >
               {t('cancel-variant')}
             </Button>
           </div>
@@ -319,6 +359,7 @@ export default function ResourceForm({
                   })
                 }
                 status={userPosted && errors.label ? 'error' : 'default'}
+                id="label-input"
               />
             ))}
           </LanguageVersionedWrapper>
@@ -346,6 +387,7 @@ export default function ResourceForm({
             statusText={
               isSuccess && !identifierFree ? t('error-prefix-taken') : ''
             }
+            id="prefix-input"
           />
 
           {type === ResourceType.ATTRIBUTE && (
@@ -443,7 +485,11 @@ export default function ResourceForm({
               label: resource,
             }))}
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-upper-button"
+              >
                 {translateCommonForm('add-upper', type, t)}
               </Button>
             }
@@ -459,7 +505,11 @@ export default function ResourceForm({
             label={translateCommonForm('equivalent', type, t)}
             items={[]}
             addNewComponent={
-              <Button variant="secondary" icon={<IconPlus />}>
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-equivalent-button"
+              >
                 {translateCommonForm('add-equivalent', type, t)}
               </Button>
             }
@@ -472,6 +522,7 @@ export default function ResourceForm({
               labelText={t('status')}
               defaultValue="DRAFT"
               onChange={(e) => handleUpdate({ ...data, status: e as Status })}
+              id="status-dropdown"
             >
               {statuses.map((status) => (
                 <DropdownItem key={`status-${status}`} value={status}>
@@ -495,6 +546,7 @@ export default function ResourceForm({
                 }
                 optionalText={t('optional')}
                 className="wide-text"
+                id="note-input"
               />
             ))}
           </LanguageVersionedWrapper>
@@ -508,6 +560,7 @@ export default function ResourceForm({
             }
             hintText={t('editor-comment-hint')}
             className="wide-text"
+            id="editorial-note-input"
           />
         </FormWrapper>
       </DrawerContent>

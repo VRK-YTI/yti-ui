@@ -34,6 +34,7 @@ interface ResourceModalProps {
   };
   handleFollowUp: (value?: { label: string; uri: string }) => void;
   buttonIcon?: boolean;
+  applicationProfile?: boolean;
 }
 
 export default function ResourceModal({
@@ -42,6 +43,7 @@ export default function ResourceModal({
   buttonTranslations,
   handleFollowUp,
   buttonIcon,
+  applicationProfile,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -184,6 +186,7 @@ export default function ResourceModal({
         variant="secondary"
         icon={buttonIcon ? <IconPlus /> : undefined}
         onClick={() => handleOpen()}
+        id="add-resource-button"
       >
         {translateResourceAddition(type, t)}
       </Button>
@@ -207,13 +210,18 @@ export default function ResourceModal({
             searchParams={searchParams}
             setSearchParams={handleSearch}
             setContentLanguage={setContentLanguage}
+            applicationProfile={applicationProfile}
             languageVersioned
             modelId={modelId}
           />
         </ModalContent>
 
         <ModalFooter>
-          <Button disabled={selectedId === ''} onClick={() => handleSubmit()}>
+          <Button
+            disabled={selectedId === ''}
+            onClick={() => handleSubmit()}
+            id="use-selected-button"
+          >
             {buttonTranslations.useSelected}
           </Button>
 
@@ -223,12 +231,17 @@ export default function ResourceModal({
               icon={<IconPlus />}
               disabled={selectedId !== ''}
               onClick={() => handleSubmit()}
+              id="create-new-button"
             >
               {buttonTranslations.createNew}
             </Button>
           )}
 
-          <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
+          <Button
+            variant="secondaryNoBorder"
+            onClick={() => handleClose()}
+            id="cancel-button"
+          >
             {t('cancel-variant')}
           </Button>
         </ModalFooter>
