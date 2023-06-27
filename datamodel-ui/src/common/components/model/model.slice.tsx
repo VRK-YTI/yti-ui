@@ -22,7 +22,7 @@ export const modelApi = createApi({
   endpoints: (builder) => ({
     putModel: builder.mutation<string, NewModel>({
       query: (value) => ({
-        url: '/model',
+        url: `/model/${value.type === 'LIBRARY' ? 'library' : 'profile'}`,
         method: 'PUT',
         data: value,
       }),
@@ -38,10 +38,13 @@ export const modelApi = createApi({
       {
         payload: ModelUpdatePayload;
         prefix: string;
+        isApplicationProfile: boolean;
       }
     >({
       query: (value) => ({
-        url: `/model/${value.prefix}`,
+        url: `/model/${value.isApplicationProfile ? 'profile' : 'library'}/${
+          value.prefix
+        }`,
         method: 'POST',
         data: value.payload,
       }),
@@ -78,6 +81,7 @@ export interface ViewList {
   search: boolean;
   links: boolean;
   graph: boolean;
+  documentation: boolean;
   info: {
     edit: boolean;
     info: boolean;
@@ -91,6 +95,7 @@ const initialView: ViewList = {
   search: false,
   graph: false,
   links: false,
+  documentation: false,
   info: {
     info: false,
     edit: false,
@@ -123,6 +128,8 @@ const initialState = {
   },
   highlighted: [],
   view: initialView,
+  hasChanges: false,
+  displayWarning: false,
 };
 
 export const modelSlice = createSlice({
@@ -196,6 +203,27 @@ export const modelSlice = createSlice({
         },
       };
     },
+    setHasChanges(state, action) {
+      if (action.payload === false) {
+        return {
+          ...state,
+          hasChanges: action.payload,
+          displayWarning: false,
+        };
+      }
+      return {
+        ...state,
+        hasChanges: action.payload,
+      };
+    },
+    setDisplayWarning(state, action) {
+      if (action.payload === true && state.hasChanges === true) {
+        return {
+          ...state,
+          displayWarning: action.payload,
+        };
+      }
+    },
   },
 });
 
@@ -236,6 +264,10 @@ export function selectClassView() {
   return (state: AppState) => state.model.view.classes;
 }
 
+export function selectResourceView(type: 'associations' | 'attributes') {
+  return (state: AppState) => state.model.view[type];
+}
+
 export function selectCurrentViewName() {
   return (state: AppState) =>
     Object.entries(state.model.view).find((v) =>
@@ -252,4 +284,21 @@ export function setView(
   subkey?: keyof ViewListItem
 ): AppThunk {
   return (dispatch) => dispatch(modelSlice.actions.setView({ key, subkey }));
+}
+
+export function setHasChanges(hasChanges?: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setHasChanges(hasChanges ?? false));
+}
+
+export function displayWarning(): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setDisplayWarning(true));
+}
+
+export function selectHasChanges() {
+  return (state: AppState) => state.model.hasChanges;
+}
+
+export function selectDisplayWarning() {
+  return (state: AppState) => state.model.displayWarning;
 }

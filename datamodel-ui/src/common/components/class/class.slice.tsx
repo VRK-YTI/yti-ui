@@ -32,6 +32,9 @@ function convertToPUT(
         }
       : {
           targetClass: data.targetClass?.id,
+          ...(data.node && {
+            targetNode: data.node.id,
+          }),
         }),
     ...(applicationProfile &&
       !basedOnNodeShape && {
@@ -51,6 +54,10 @@ function convertToPUT(
     delete ret.targetClass;
   }
 
+  if (data.node) {
+    delete ret.node;
+  }
+
   return isEdit
     ? Object.fromEntries(
         Object.entries(ret).filter((e) => e[0] !== 'identifier')
@@ -59,7 +66,7 @@ function convertToPUT(
 }
 
 function pathForModelType(isApplicationProfile?: boolean) {
-  return isApplicationProfile ? 'profile/' : 'ontology/';
+  return isApplicationProfile ? 'profile/' : 'library/';
 }
 
 export const classApi = createApi({

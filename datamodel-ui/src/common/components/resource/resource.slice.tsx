@@ -37,7 +37,17 @@ function convertToPUT(
 }
 
 function pathForModelType(isApplicationProfile?: boolean) {
-  return isApplicationProfile ? 'profile/' : 'ontology/';
+  return isApplicationProfile ? 'profile/' : 'library/';
+}
+
+function pathForResourceType(
+  type: ResourceType,
+  isApplicationProfile?: boolean
+) {
+  if (isApplicationProfile) {
+    return '';
+  }
+  return type === ResourceType.ATTRIBUTE ? '/attribute' : '/association';
 }
 
 export const resourceApi = createApi({
@@ -66,23 +76,19 @@ export const resourceApi = createApi({
         url: !value.resourceId
           ? `/resource/${pathForModelType(value.applicationProfile)}${
               value.modelId
-            }`
+            }${pathForResourceType(value.data.type, value.applicationProfile)}`
           : `/resource/${pathForModelType(value.applicationProfile)}${
               value.modelId
-            }/${value.resourceId}`,
+            }${pathForResourceType(
+              value.data.type,
+              value.applicationProfile
+            )}/${value.resourceId}`,
         method: 'PUT',
-        data:
-          value.data.type === ResourceType.ATTRIBUTE
-            ? {
-                ...convertToPUT(value.data, value.resourceId ? true : false),
-                domain: value.data.domain ? value.data.domain.id : '',
-                range: '',
-              }
-            : {
-                ...convertToPUT(value.data, value.resourceId ? true : false),
-                domain: value.data.domain ? value.data.domain.id : '',
-                range: value.data.range ? value.data.range.id : '',
-              },
+        data: {
+          ...convertToPUT(value.data, value.resourceId ? true : false),
+          domain: value.data.domain ? value.data.domain.id : '',
+          range: value.data.range ? value.data.range.id : '',
+        },
       }),
     }),
     getResource: builder.query<

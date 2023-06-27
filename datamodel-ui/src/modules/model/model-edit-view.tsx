@@ -1,37 +1,45 @@
-import { usePostModelMutation } from '@app/common/components/model/model.slice';
+import {
+  setHasChanges,
+  usePostModelMutation,
+} from '@app/common/components/model/model.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { ModelType } from '@app/common/interfaces/model.interface';
 import {
   getIsPartOfWithId,
   getOrganizationsWithId,
 } from '@app/common/utils/get-value';
-import getApiError from '@app/common/utils/getApiErrors';
+import getApiError from '@app/common/utils/get-api-errors';
 import {
   translateLanguage,
   translateModelFormErrors,
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
-import { Button, Heading } from 'suomifi-ui-components';
+import { Button, Text } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import ModelForm from '../model-form';
 import generatePayload from './generate-payload';
 import { FormUpdateErrors, validateFormUpdate } from './validate-form-update';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
+import { useStoreDispatch } from '@app/store';
 
 interface ModelEditViewProps {
   model: ModelType;
-  setShow: (value: boolean) => void;
+  hide: () => void;
   handleSuccess: () => void;
 }
 
 export default function ModelEditView({
   model,
-  setShow,
+  hide,
   handleSuccess,
 }: ModelEditViewProps) {
   const { t, i18n } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
+  const dispatch = useStoreDispatch();
   const [errors, setErrors] = useState<FormUpdateErrors>();
   const [userPosted, setUserPosted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -41,17 +49,14 @@ export default function ModelEditView({
     contact: model.contact,
     externalNamespaces: model.externalNamespaces ?? [],
     internalNamespaces: model.internalNamespaces ?? [],
-    languages:
-      ['fi', 'sv', 'en'].map((lang) => ({
-        labelText: translateLanguage(lang, t),
-        uniqueItemId: lang,
-        title:
-          Object.entries(model.label).find((t) => t[0] === lang)?.[1] ?? '',
-        description:
-          Object.entries(model.description).find((d) => d[0] === lang)?.[1] ??
-          '',
-        selected: model.languages.includes(lang),
-      })) ?? [],
+    languages: model.languages.map((lang) => ({
+      labelText: lang.toUpperCase(),
+      uniqueItemId: lang,
+      title: Object.entries(model.label).find((t) => t[0] === lang)?.[1] ?? '',
+      description:
+        Object.entries(model.description).find((d) => d[0] === lang)?.[1] ?? '',
+      selected: model.languages.includes(lang),
+    })),
     organizations: getOrganizationsWithId(model, i18n.language) ?? [],
     prefix: model.prefix ?? '',
     serviceCategories: getIsPartOfWithId(model, i18n.language) ?? [],
@@ -59,6 +64,7 @@ export default function ModelEditView({
     type: model.type ?? 'PROFILE',
     terminologies: model.terminologies ?? [],
     codeLists: model.codeLists ?? [],
+    documentation: model.documentation ?? {},
   });
 
   useEffect(() => {
@@ -92,6 +98,8 @@ export default function ModelEditView({
 
   const handleSubmit = () => {
     setUserPosted(true);
+    disableConfirmation();
+    dispatch(setHasChanges());
 
     if (!formData) {
       return;
@@ -106,20 +114,30 @@ export default function ModelEditView({
 
     const payload = generatePayload(formData);
 
-    postModel({ payload: payload, prefix: formData.prefix });
+    postModel({
+      payload: payload,
+      prefix: formData.prefix,
+      isApplicationProfile: formData.type === 'PROFILE',
+    });
+  };
+
+  const handleUpdate = (data: ModelFormType) => {
+    enableConfirmation();
+    dispatch(setHasChanges(true));
+    setFormData(data);
   };
 
   return (
     <>
       <StaticHeader ref={ref}>
         <div>
-          <Heading variant="h2">{t('details', { ns: 'common' })}</Heading>
+          <Text variant="bold">{t('details', { ns: 'common' })}</Text>
           <div>
             <Button onClick={() => handleSubmit()}>{t('save')}</Button>
             <Button
               variant="secondary"
               style={{ marginLeft: '10px' }}
-              onClick={() => setShow(false)}
+              onClick={() => hide()}
             >
               {t('cancel-variant')}
             </Button>
@@ -137,7 +155,7 @@ export default function ModelEditView({
       <DrawerContent height={headerHeight}>
         <ModelForm
           formData={formData}
-          setFormData={setFormData}
+          setFormData={handleUpdate}
           userPosted={userPosted}
           editMode={true}
           errors={userPosted ? errors : undefined}
@@ -166,7 +184,7 @@ export default function ModelEditView({
 
     if (result.isError) {
       const errorMessage = getApiError(result.error);
-      return [...langsWithError, ...otherErrors, errorMessage];
+      return [...langsWithError, ...otherErrors, ...errorMessage];
     }
 
     return [...langsWithError, ...otherErrors];

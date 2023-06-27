@@ -291,3 +291,65 @@ export function translateDeleteModalError(
       });
   }
 }
+
+export function translateResourceCountTitle(
+  type: ResourceType,
+  t: TFunction,
+  count?: number
+) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('association-count-title', { count: count ?? 0 });
+    case ResourceType.ATTRIBUTE:
+      return t('attribute-count-title', { count: count ?? 0 });
+    default:
+      return '';
+  }
+}
+
+export function translateResourceAddition(type: ResourceType, t: TFunction) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('add-association', { ns: 'admin' });
+    case ResourceType.ATTRIBUTE:
+      return t('add-attribute', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateResourceName(type: ResourceType, t: TFunction) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('association-name', { ns: 'admin' });
+    case ResourceType.ATTRIBUTE:
+      return t('attribute-name', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateCreateNewResource(type: ResourceType, t: TFunction) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('create-new-association', { ns: 'admin' });
+    case ResourceType.ATTRIBUTE:
+      return t('create-new-attribute', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateCreateNewResourceForSelected(
+  type: ResourceType,
+  t: TFunction
+) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('create-new-sub-association-for-selected', { ns: 'admin' });
+    case ResourceType.ATTRIBUTE:
+      return t('create-new-sub-attribute-for-selected', { ns: 'admin' });
+    default:
+      return '';
+  }
+}

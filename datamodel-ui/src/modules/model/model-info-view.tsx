@@ -1,4 +1,5 @@
 import {
+  setHasChanges,
   setView,
   useGetModelQuery,
 } from '@app/common/components/model/model.slice';
@@ -33,6 +34,8 @@ import HasPermission from '@app/common/utils/has-permission';
 import DeleteModal from '../delete-modal';
 import { useStoreDispatch } from '@app/store';
 import { getModelId } from '@app/common/utils/parse-slug';
+import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
+import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -43,7 +46,16 @@ export default function ModelInfoView() {
   const [showEditView, setShowEditView] = useState(false);
   const [formData, setFormData] = useState<ModelFormType | undefined>();
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [openModals, setOpenModals] = useState({
+    showAsFile: false,
+    downloadAsFile: false,
+    updateStatuses: false,
+    copyModel: false,
+    getEmailNotification: false,
+    delete: false,
+  });
   const ref = useRef<HTMLDivElement>(null);
+  const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
   const hasPermission = HasPermission({ actions: ['ADMIN_DATA_MODEL'] });
   const { data: modelInfo, refetch } = useGetModelQuery(modelId);
 
@@ -88,6 +100,17 @@ export default function ModelInfoView() {
     setShowTooltip(false);
   };
 
+  const handleModalChange = (key: keyof typeof openModals, value?: boolean) => {
+    const newOpenModals = Object.keys(openModals).reduce(
+      (acc, curr) => ({
+        ...acc,
+        [curr]: curr === key ? (value ? curr == key : false) : false,
+      }),
+      {} as typeof openModals
+    );
+    setOpenModals(newOpenModals);
+  };
+
   useEffect(() => {
     if (ref.current) {
       setHeaderHeight(ref.current.clientHeight);
@@ -102,7 +125,10 @@ export default function ModelInfoView() {
     return (
       <ModelEditView
         model={modelInfo}
-        setShow={setShowEditView}
+        hide={() => {
+          setShowEditView(false);
+          dispatch(setHasChanges(false));
+        }}
         handleSuccess={handleSuccess}
       />
     );
@@ -118,10 +144,12 @@ export default function ModelInfoView() {
               variant="secondary"
               onClick={() => setShowTooltip(!showTooltip)}
               iconRight={<IconMenu />}
+              ref={toolTipRef}
+              id="actions-button"
             >
               {t('actions')}
             </Button>
-            <TooltipWrapper>
+            <TooltipWrapper id="actions-tooltip">
               <Tooltip
                 ariaCloseButtonLabelText=""
                 ariaToggleButtonLabelText=""
@@ -133,45 +161,65 @@ export default function ModelInfoView() {
                     variant="secondaryNoBorder"
                     onClick={() => handleEditViewItemClick(setShowEditView)}
                     disabled={!formData}
+                    id="edit-button"
                   >
                     {t('edit', { ns: 'admin' })}
                   </Button>
                 )}
-                <AsFileModal type="show" modelId={modelId} />
-                <AsFileModal
-                  type="download"
-                  modelId={modelId}
-                  filename={getLanguageVersion({
-                    data: modelInfo.label,
-                    lang: i18n.language,
-                  })}
-                />
+                <Button
+                  variant="secondaryNoBorder"
+                  onClick={() => handleModalChange('showAsFile', true)}
+                  id="show-as-file-button"
+                >
+                  {t('show-as-file')}
+                </Button>
+                <Button
+                  variant="secondaryNoBorder"
+                  onClick={() => handleModalChange('downloadAsFile', true)}
+                  id="download-as-file-button"
+                >
+                  {t('download-as-file')}
+                </Button>
                 {hasPermission && (
                   <>
-                    <Button variant="secondaryNoBorder">
+                    <Button
+                      variant="secondaryNoBorder"
+                      onClick={() => handleModalChange('updateStatuses', true)}
+                      id="update-statuses-button"
+                    >
                       {t('update-models-resources-statuses', { ns: 'admin' })}
                     </Button>
-                    <Button variant="secondaryNoBorder">
+                    <Button
+                      variant="secondaryNoBorder"
+                      onClick={() => handleModalChange('copyModel', true)}
+                      id="copy-model-button"
+                    >
                       {t('create-copy-from-model', { ns: 'admin' })}
                     </Button>
-                    <Button variant="secondaryNoBorder">
+                    <Button
+                      variant="secondaryNoBorder"
+                      onClick={() =>
+                        handleModalChange('getEmailNotification', true)
+                      }
+                      id="get-email-notification-button"
+                    >
                       {t('add-email-subscription')}
                     </Button>
                     <Separator />
-                    <DeleteModal
-                      modelId={modelId}
-                      label={getLanguageVersion({
-                        data: modelInfo.label,
-                        lang: i18n.language,
-                      })}
-                      type="model"
-                    />
+                    <Button
+                      variant="secondaryNoBorder"
+                      onClick={() => handleModalChange('delete', true)}
+                      id="delete-modal-button"
+                    >
+                      {t('remove', { ns: 'admin' })}
+                    </Button>
                   </>
                 )}
               </Tooltip>
             </TooltipWrapper>
           </div>
         </div>
+        {renderModals()}
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
@@ -187,7 +235,10 @@ export default function ModelInfoView() {
             <MultilingualBlock
               data={Object.entries(modelInfo.description)
                 .sort((a, b) => compareLocales(a[0], b[0]))
-                .map((d) => ({ lang: d[0], value: d[1] }))}
+                .map((d) => ({
+                  lang: d[0],
+                  value: <SanitizedTextContent text={d[1]} />,
+                }))}
             />
           ) : (
             t('not-added')
@@ -256,4 +307,41 @@ export default function ModelInfoView() {
       </DrawerContent>
     </>
   );
+
+  function renderModals() {
+    return (
+      <>
+        <AsFileModal
+          type="show"
+          modelId={modelId}
+          visible={openModals.showAsFile}
+          onClose={() => handleModalChange('showAsFile', false)}
+        />
+        {modelInfo && (
+          <>
+            <AsFileModal
+              type="download"
+              modelId={modelId}
+              filename={getLanguageVersion({
+                data: modelInfo.label,
+                lang: i18n.language,
+              })}
+              visible={openModals.downloadAsFile}
+              onClose={() => handleModalChange('downloadAsFile', false)}
+            />
+            <DeleteModal
+              modelId={modelId}
+              label={getLanguageVersion({
+                data: modelInfo.label,
+                lang: i18n.language,
+              })}
+              type="model"
+              visible={openModals.delete}
+              hide={() => handleModalChange('delete', false)}
+            />
+          </>
+        )}
+      </>
+    );
+  }
 }

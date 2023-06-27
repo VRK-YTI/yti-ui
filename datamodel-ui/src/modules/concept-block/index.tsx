@@ -29,6 +29,7 @@ import {
 import { useGetConceptsQuery } from '@app/common/components/concept-search/concept-search.slice';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
+import { DetachedPagination } from 'yti-common-ui/pagination';
 
 interface ConceptBlockProps {
   concept?: ConceptType;
@@ -46,13 +47,14 @@ export default function ConceptBlock({
   const [visible, setVisible] = useState(false);
   const [keyword, setKeyword] = useState('');
   const [selected, setSelected] = useState<ConceptType | undefined>(concept);
+  const [currentPage, setCurrentPage] = useState(1);
   const [terminologyOptions] = useState([
     {
       labelText: t('terminologies-linked-to-data-model'),
       uniqueItemId: 'linked',
     },
     {
-      labelText: 'Kaikki sanastot',
+      labelText: t('all-terminologies'),
       uniqueItemId: 'all',
     },
   ]);
@@ -65,6 +67,7 @@ export default function ConceptBlock({
     terminologies:
       selectedOption?.uniqueItemId === 'linked' ? terminologies : [],
     highlight: false,
+    pageFrom: currentPage,
   });
 
   const handleOpen = () => {
@@ -90,6 +93,21 @@ export default function ConceptBlock({
   const handleSubmit = () => {
     setConcept(selected);
     setVisible(false);
+  };
+
+  const handleSearchChange = (
+    value: string | { labelText: string; uniqueItemId: string } | null
+  ) => {
+    if (typeof value === 'string') {
+      setKeyword(value);
+    } else {
+      setSelectedOption(
+        value === null
+          ? terminologyOptions.find((o) => o.uniqueItemId === 'linked')
+          : value
+      );
+    }
+    setCurrentPage(1);
   };
 
   return (
@@ -119,6 +137,7 @@ export default function ConceptBlock({
           variant="secondary"
           style={{ width: 'min-content', whiteSpace: 'nowrap' }}
           onClick={() => handleOpen()}
+          id="select-concept-button"
         >
           {t('select-concept')}
         </Button>
@@ -136,8 +155,9 @@ export default function ConceptBlock({
                 labelText={t('search-concept')}
                 clearButtonLabel={t('clear-selection')}
                 searchButtonLabel={t('search-concept')}
-                onChange={(e) => setKeyword(e?.toString() ?? '')}
+                onChange={(e) => handleSearchChange(e?.toString() ?? '')}
                 debounce={300}
+                id="concept-search-input"
               />
               <SingleSelect
                 clearButtonLabel={t('clear-selection')}
@@ -149,15 +169,8 @@ export default function ConceptBlock({
                 allowItemAddition={false}
                 selectedItem={selectedOption}
                 items={terminologyOptions}
-                onItemSelectionChange={(e) =>
-                  setSelectedOption(
-                    e
-                      ? e
-                      : terminologyOptions.find(
-                          (o) => o.uniqueItemId === 'linked'
-                        )
-                  )
-                }
+                onItemSelectionChange={(e) => handleSearchChange(e)}
+                id="terminology-select"
               />
             </SearchBlock>
 
@@ -199,6 +212,7 @@ export default function ConceptBlock({
                             terminology: c.terminology,
                           })
                         }
+                        id="concept-radio-button"
                       />
                       <div>
                         <Text>
@@ -247,15 +261,29 @@ export default function ConceptBlock({
                     </div>
                   ))}
                 </SearchResultWrapper>
+                <DetachedPagination
+                  currentPage={currentPage}
+                  maxPages={Math.ceil((data?.totalHitCount ?? 0) / 20)}
+                  maxTotal={20}
+                  setCurrentPage={(number) => setCurrentPage(number)}
+                />
               </>
             )}
           </ModalContent>
 
           <ModalFooter>
-            <Button disabled={!selected} onClick={() => handleSubmit()}>
+            <Button
+              disabled={!selected}
+              onClick={() => handleSubmit()}
+              id="submit-button"
+            >
               {t('select-concept')}
             </Button>
-            <Button variant="secondary" onClick={() => handleClose()}>
+            <Button
+              variant="secondary"
+              onClick={() => handleClose()}
+              id="cancel-button"
+            >
               {t('cancel-variant')}
             </Button>
           </ModalFooter>

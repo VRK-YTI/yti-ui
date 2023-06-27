@@ -91,7 +91,7 @@ module.exports = () => {
           },
           {
             source: '/codelist-api/:path*',
-            destination: 'https://koodistot.suomi.fi/codelist-api/api/:path*',
+            destination: 'https://koodistot.suomi.fi/codelist-api/:path*',
           },
         ];
       },

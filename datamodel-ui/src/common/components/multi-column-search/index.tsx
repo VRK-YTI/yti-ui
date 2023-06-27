@@ -15,10 +15,14 @@ import { isEqual } from 'lodash';
 import { InternalResourcesSearchParams } from '../search-internal-resources/search-internal-resources.slice';
 import { Status } from 'yti-common-ui/interfaces/status.interface';
 import ResourceList, { ResultType } from '../resource-list';
+import { DetachedPagination } from 'yti-common-ui/pagination';
 
 interface MultiColumnSearchProps {
   primaryColumnName: string;
-  results: ResultType[];
+  result: {
+    totalHitCount?: number;
+    items: ResultType[];
+  };
   selectedId?: string;
   setSelectedId: (value: string) => void;
   searchParams: InternalResourcesSearchParams;
@@ -31,7 +35,7 @@ interface MultiColumnSearchProps {
 
 export default function MultiColumnSearch({
   primaryColumnName,
-  results,
+  result,
   selectedId,
   setSelectedId,
   searchParams,
@@ -46,6 +50,7 @@ export default function MultiColumnSearch({
     data: serviceCategoriesResult,
     isSuccess: serviceCategoriesIsSuccess,
   } = useGetServiceCategoriesQuery(i18n.language);
+  const [currentPage, setCurrentPage] = useState(1);
   const [dataModelType] = useState<SingleSelectData[]>([
     {
       labelText: t('data-models-added-to-this-model'),
@@ -111,19 +116,23 @@ export default function MultiColumnSearch({
         ...searchParams,
         ['limitToDataModel']: modelId,
         ['fromAddedNamespaces']: true,
+        pageFrom: 0,
       });
     } else {
       setSearchParams({
         ...searchParams,
         ['limitToDataModel']: '',
         ['fromAddedNamespaces']: false,
+        pageFrom: 0,
       });
     }
+
+    setCurrentPage(1);
   };
 
   const handleSearchChange = (
     key: keyof InternalResourcesSearchParams,
-    value: (typeof searchParams)[keyof InternalResourcesSearchParams]
+    value: typeof searchParams[keyof InternalResourcesSearchParams]
   ) => {
     if (key === 'groups' && isEqual(value, ['-1'])) {
       setSearchParams({ ...searchParams, [key]: [] });
@@ -141,12 +150,19 @@ export default function MultiColumnSearch({
       setSearchParams({
         ...searchParams,
         [key]: setStatuses,
+        pageFrom: 0,
       });
 
       return;
     }
 
-    setSearchParams({ ...searchParams, [key]: value });
+    setSearchParams({ ...searchParams, [key]: value, pageFrom: 0 });
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setSearchParams({ ...searchParams, pageFrom: (page - 1) * 2 });
   };
 
   return (
@@ -163,6 +179,7 @@ export default function MultiColumnSearch({
             defaultValue={searchParams.query}
             onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
             debounce={300}
+            id="search-input"
           />
         </div>
       )}
@@ -177,17 +194,19 @@ export default function MultiColumnSearch({
             defaultValue={searchParams.query}
             onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
             debounce={300}
+            id="search-input"
           />
         )}
 
         {applicationProfile && (
           <Dropdown
             className="data-model-type-picker"
-            labelText={'Tietomallin tyyppi'}
+            labelText={t('datamodel-type')}
             defaultValue={'LIBRARY'}
             onChange={(e) => {
               handleSearchChange('limitToModelType', e);
             }}
+            id="data-model-type-picker"
           >
             <DropdownItem value={'LIBRARY'}>
               {t('library', { ns: 'common' })}
@@ -205,6 +224,7 @@ export default function MultiColumnSearch({
           onChange={(item) => {
             handleAvailableDataModelsChange(item);
           }}
+          id="data-model-picker"
         >
           {dataModelType.map((type) => (
             <DropdownItem key={type.uniqueItemId} value={type.uniqueItemId}>
@@ -235,6 +255,7 @@ export default function MultiColumnSearch({
               : category.uniqueItemId === '-1'
           )}
           items={serviceCategories}
+          id="information-domain-picker"
         />
 
         <Dropdown
@@ -242,6 +263,7 @@ export default function MultiColumnSearch({
           defaultValue={'in-use'}
           onChange={(e) => handleSearchChange('status', e)}
           className="status-picker"
+          id="status-picker"
         >
           {statuses.map((status) => (
             <DropdownItem key={status.uniqueItemId} value={status.uniqueItemId}>
@@ -259,6 +281,7 @@ export default function MultiColumnSearch({
               )?.uniqueItemId ?? 'fi'
             }
             onChange={setContentLanguage}
+            id="content-language-picker"
           >
             {languages.map((lang) => (
               <DropdownItem key={lang.uniqueItemId} value={lang.uniqueItemId}>
@@ -271,10 +294,17 @@ export default function MultiColumnSearch({
 
       <ResourceList
         primaryColumnName={primaryColumnName}
-        items={results}
+        items={result.items}
         selected={selectedId}
         handleClick={handleRadioButtonClick}
         serviceCategories={serviceCategoriesResult}
+      />
+
+      <DetachedPagination
+        currentPage={currentPage}
+        maxPages={Math.ceil((result.totalHitCount ?? 0) / 20)}
+        maxTotal={20}
+        setCurrentPage={(number) => handlePageChange(number)}
       />
     </div>
   );

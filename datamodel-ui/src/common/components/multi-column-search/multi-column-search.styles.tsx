@@ -24,19 +24,17 @@ export const SearchToolsBlock = styled.div`
 
   .fi-dropdown_button {
     min-width: 135px !important;
+    overflow: hidden;
+
+    span {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 
   .status-picker {
     span {
       min-width: 150px !important;
-      white-space: nowrap !important;
-    }
-  }
-
-  .data-model-picker {
-    span {
-      min-width: 240px !important;
-      max-width: 330px !important;
       white-space: nowrap !important;
     }
   }

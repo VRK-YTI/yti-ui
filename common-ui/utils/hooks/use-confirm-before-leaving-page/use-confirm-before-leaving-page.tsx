@@ -64,5 +64,6 @@ export default function useConfirmBeforeLeavingPage(
   return {
     enableConfirmation,
     disableConfirmation,
+    confirmationState,
   };
 }

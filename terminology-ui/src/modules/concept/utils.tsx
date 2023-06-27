@@ -1,6 +1,9 @@
 import { Concept } from '@app/common/interfaces/concept.interface';
 import { Term } from '@app/common/interfaces/term.interface';
-import { compareLocales } from '@app/common/utils/compare-locals';
+import {
+  compareLocales,
+  sortPropertyListByLanguage,
+} from '@app/common/utils/compare-locals';
 import { TFunction } from 'next-i18next';
 
 const langOrder: { [key: string]: string } = {
@@ -68,14 +71,8 @@ export function getBlockData(t: TFunction, concept?: Concept) {
       ?.slice()
       .sort((t1, t2) => compareLocales(t1, t2)) ?? [];
 
-  const notes =
-    concept.properties.note?.slice().sort((t1, t2) => compareLocales(t1, t2)) ??
-    [];
-
-  const examples =
-    concept.properties.example
-      ?.slice()
-      .sort((t1, t2) => compareLocales(t1, t2)) ?? [];
+  const notes = sortPropertyListByLanguage(concept.properties.note);
+  const examples = sortPropertyListByLanguage(concept.properties.example);
 
   return { terms, definitions, notes, examples };
 }

@@ -32,28 +32,7 @@ export type AxiosBaseQueryError =
       data?: undefined;
       error: string;
     }
-  | {
-      status: number;
-      data: {
-        status: string;
-        message: string;
-        details: {
-          field: string;
-          rejectedValue: string;
-          message: string;
-        };
-      };
-    }
-  | {
-      status: number;
-      data: {
-        status: number;
-        title: string;
-        type: string;
-        detail: string;
-        instance: string;
-      };
-    }
+  | AxiosQuerySpringError
   | AxiosQueryErrorFields;
 
 export type AxiosQueryErrorFields = {
@@ -64,5 +43,16 @@ export type AxiosQueryErrorFields = {
       rejectedValue: string;
       message: string;
     }[];
+  };
+};
+
+export type AxiosQuerySpringError = {
+  status: number;
+  data: {
+    status: number;
+    title: string;
+    type: string;
+    detail: string;
+    instance: string;
   };
 };

@@ -1,3 +1,18 @@
+import MultiColumnSearch from '@app/common/components/multi-column-search';
+import { ResultType } from '@app/common/components/resource-list';
+import {
+  InternalResourcesSearchParams,
+  useGetInternalResourcesInfoMutation,
+} from '@app/common/components/search-internal-resources/search-internal-resources.slice';
+import WideModal from '@app/common/components/wide-modal';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import {
+  translateResourceAddition,
+  translateResourceName,
+  translateStatus,
+} from '@app/common/utils/translation-helpers';
+import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
   Button,
@@ -6,45 +21,36 @@ import {
   ModalFooter,
   ModalTitle,
 } from 'suomifi-ui-components';
-import { useBreakpoints } from 'yti-common-ui/media-query';
-import MultiColumnSearch from '@app/common/components/multi-column-search';
-import { LargeModal } from './attribute-modal.styles';
-import { useTranslation } from 'next-i18next';
-import {
-  InternalResourcesSearchParams,
-  useGetInternalResourcesInfoMutation,
-} from '@app/common/components/search-internal-resources/search-internal-resources.slice';
-import { ResourceType } from '@app/common/interfaces/resource-type.interface';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import format from 'yti-common-ui/formatted-date/format';
 import { Locale } from 'yti-common-ui/locale-chooser/use-locales';
-import { ResultType } from '@app/common/components/resource-list';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 
-interface AttributeModalProps {
+interface ResourceModalProps {
+  modelId: string;
+  type: ResourceType;
   buttonTranslations: {
     useSelected: string;
     createNew?: string;
   };
   handleFollowUp: (value?: { label: string; uri: string }) => void;
   buttonIcon?: boolean;
-  modelId: string;
+  applicationProfile?: boolean;
 }
 
-export default function AttributeModal({
+export default function ResourceModal({
+  modelId,
+  type,
   buttonTranslations,
   handleFollowUp,
   buttonIcon,
-  modelId,
-}: AttributeModalProps) {
+  applicationProfile,
+}: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const [selectedId, setSelectedId] = useState('');
-  const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
-  const [searchInternalResources, result] =
-    useGetInternalResourcesInfoMutation();
   const [contentLanguage, setContentLanguage] = useState<string>();
+  const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>({
       query: '',
@@ -56,8 +62,18 @@ export default function AttributeModal({
       limitToDataModel: modelId,
       limitToModelType: 'LIBRARY',
       fromAddedNamespaces: true,
-      resourceTypes: [ResourceType.ATTRIBUTE],
+      resourceTypes: [type],
     });
+  const [searchInternalResources, result] =
+    useGetInternalResourcesInfoMutation();
+
+  const handleSearch = (obj?: InternalResourcesSearchParams) => {
+    if (obj) {
+      setSearchParams(obj);
+    }
+
+    searchInternalResources(obj ?? searchParams);
+  };
 
   const handleOpen = () => {
     setVisible(true);
@@ -74,18 +90,10 @@ export default function AttributeModal({
       pageFrom: 0,
       limitToDataModel: modelId,
       limitToModelType: 'LIBRARY',
-      resourceTypes: [ResourceType.ATTRIBUTE],
+      resourceTypes: [type],
     });
     setContentLanguage(undefined);
     setVisible(false);
-  };
-
-  const handleSearch = (obj?: InternalResourcesSearchParams) => {
-    if (obj) {
-      setSearchParams(obj);
-    }
-
-    searchInternalResources(obj ?? searchParams);
   };
 
   const handleSubmit = () => {
@@ -98,14 +106,18 @@ export default function AttributeModal({
       (obj) => obj.identifier === selectedId
     );
 
-    selectedObj
-      ? handleFollowUp({
-          label: `${selectedObj.namespace.split('/').pop()?.replace('#', '')}:${
-            selectedObj.identifier
-          }`,
-          uri: selectedObj.id,
-        })
-      : handleFollowUp();
+    if (selectedObj) {
+      const domain =
+        selectedObj.namespace[selectedObj.namespace.length - 1] === '/'
+          ? selectedObj.namespace.slice(0, -1)?.split('/').pop()
+          : selectedObj.namespace.split('/').pop();
+      handleFollowUp({
+        label: `${domain}:${selectedObj.identifier}`,
+        uri: selectedObj.id,
+      });
+    } else {
+      handleClose();
+    }
   };
 
   const getLinkLabel = (ns: string, id: string) => {
@@ -123,7 +135,7 @@ export default function AttributeModal({
       setResultsFormatted(
         result.data.responseObjects.map((r) => ({
           target: {
-            identifier: r.identifier,
+            identifier: r.id,
             label: getLanguageVersion({
               data: r.label,
               lang: contentLanguage ?? i18n.language,
@@ -166,7 +178,7 @@ export default function AttributeModal({
         }))
       );
     }
-  }, [result, i18n.language, t, contentLanguage]);
+  }, [result, i18n.language, contentLanguage, t]);
 
   return (
     <div>
@@ -174,30 +186,42 @@ export default function AttributeModal({
         variant="secondary"
         icon={buttonIcon ? <IconPlus /> : undefined}
         onClick={() => handleOpen()}
+        id="add-resource-button"
       >
-        {t('add-attribute')}
+        {translateResourceAddition(type, t)}
       </Button>
-      <LargeModal
+
+      <WideModal
         appElementId="__next"
         visible={visible}
         variant={isSmall ? 'smallScreen' : 'default'}
+        onEscKeyDown={() => setVisible(false)}
       >
         <ModalContent>
-          <ModalTitle>{t('add-attribute')}</ModalTitle>
+          <ModalTitle>{translateResourceAddition(type, t)}</ModalTitle>
           <MultiColumnSearch
-            primaryColumnName={t('attribute-name')}
-            results={resultsFormatted}
+            primaryColumnName={translateResourceName(type, t)}
+            result={{
+              totalHitCount: result.data?.totalHitCount ?? 0,
+              items: resultsFormatted,
+            }}
             selectedId={selectedId}
             setSelectedId={setSelectedId}
             searchParams={searchParams}
             setSearchParams={handleSearch}
             setContentLanguage={setContentLanguage}
+            applicationProfile={applicationProfile}
             languageVersioned
             modelId={modelId}
           />
         </ModalContent>
+
         <ModalFooter>
-          <Button disabled={selectedId === ''} onClick={() => handleSubmit()}>
+          <Button
+            disabled={selectedId === ''}
+            onClick={() => handleSubmit()}
+            id="use-selected-button"
+          >
             {buttonTranslations.useSelected}
           </Button>
 
@@ -207,16 +231,21 @@ export default function AttributeModal({
               icon={<IconPlus />}
               disabled={selectedId !== ''}
               onClick={() => handleSubmit()}
+              id="create-new-button"
             >
               {buttonTranslations.createNew}
             </Button>
           )}
 
-          <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
+          <Button
+            variant="secondaryNoBorder"
+            onClick={() => handleClose()}
+            id="cancel-button"
+          >
             {t('cancel-variant')}
           </Button>
         </ModalFooter>
-      </LargeModal>
+      </WideModal>
     </div>
   );
 }

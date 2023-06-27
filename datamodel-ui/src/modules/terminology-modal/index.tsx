@@ -120,7 +120,7 @@ export default function TerminologyModal({
 
   const handleSearchChange = (
     key: keyof TerminologySearchParams,
-    value: (typeof searchParams)[keyof TerminologySearchParams]
+    value: typeof searchParams[keyof TerminologySearchParams]
   ) => {
     if (key === 'groups' && isEqual(value, ['-1'])) {
       setSearchParams({ ...searchParams, [key]: [], ['pageFrom']: 0 });
@@ -156,8 +156,8 @@ export default function TerminologyModal({
       <Button
         variant="secondary"
         icon={<IconPlus />}
-        id="terminologies"
         onClick={() => setVisible(true)}
+        id="add-terminology-button"
       >
         {t('add-terminology')}
       </Button>
@@ -176,10 +176,15 @@ export default function TerminologyModal({
           <Button
             disabled={selected.length === 0 && addedTerminologies.length === 0}
             onClick={() => handleSubmit()}
+            id="submit-button"
           >
             {t('add-selected')}
           </Button>
-          <Button variant="secondary" onClick={() => handleClose()}>
+          <Button
+            variant="secondary"
+            onClick={() => handleClose()}
+            id="cancel-button"
+          >
             {t('cancel-variant')}
           </Button>
         </ModalFooter>
@@ -199,6 +204,7 @@ export default function TerminologyModal({
             onBlur={(e) => handleSearchChange('query', e?.target.value ?? '')}
             onSearch={(e) => handleSearchChange('query', e ?? '')}
             debounce={500}
+            id="search-input"
           />
 
           <SingleSelect
@@ -219,16 +225,18 @@ export default function TerminologyModal({
                 e !== null && e !== '-1' ? [e] : ['-1']
               )
             }
+            id="information-domain-select"
           />
         </SearchBlock>
 
         {selected.length > 0 && (
-          <SelectedChipBlock>
+          <SelectedChipBlock id="selected-chips">
             {selected.map((s) => (
               <Chip
                 key={s.uri}
                 removable
                 onClick={() => handleChipClick(s.uri)}
+                id={`selected-terminology-${s.uri}`}
               >
                 {s.label[i18n.language]}
               </Chip>
@@ -258,6 +266,7 @@ export default function TerminologyModal({
                 <Checkbox
                   checked={selected.map((s) => s.uri).includes(result.uri)}
                   onClick={() => handleCheckboxClick(result.uri)}
+                  id={`checkbox-${result.uri}`}
                 />
               </div>
 

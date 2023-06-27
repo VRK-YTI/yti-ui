@@ -8,11 +8,17 @@ import {
   ModelPanel,
 } from './model-side-navigation.styles';
 import { useStoreDispatch } from '@app/store';
-import { selectCurrentViewName, setView } from '../model/model.slice';
+import {
+  displayWarning,
+  selectCurrentViewName,
+  selectHasChanges,
+  setView,
+} from '../model/model.slice';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import DrawerTopAlert from './drawer-top-alert';
 
-type ViewType = {
+export type ViewType = {
   id:
     | 'search'
     | 'graph'
@@ -20,7 +26,8 @@ type ViewType = {
     | 'links'
     | 'classes'
     | 'attributes'
-    | 'associations';
+    | 'associations'
+    | 'documentation';
   icon: ReactNode;
   buttonLabel: string;
   buttonLabelSm?: string;
@@ -34,6 +41,7 @@ interface SideNavigationProps {
 export default function Drawer({ views }: SideNavigationProps) {
   const { breakpoint, isSmall, isLarge } = useBreakpoints();
   const dispatch = useStoreDispatch();
+  const hasChanges = useSelector(selectHasChanges());
   const router = useRouter();
   const currentView = useSelector(selectCurrentViewName());
   const [activeView, setActiveView] = useState<ViewType | undefined>(
@@ -43,6 +51,11 @@ export default function Drawer({ views }: SideNavigationProps) {
   );
 
   const handleSetActiveView = (viewId: ViewType['id']) => {
+    if (hasChanges) {
+      dispatch(displayWarning());
+      return;
+    }
+
     if (['search', 'links', 'graph'].includes(viewId)) {
       dispatch(setView(viewId));
       return;
@@ -79,6 +92,7 @@ export default function Drawer({ views }: SideNavigationProps) {
                 $active={activeView?.id === view.id}
                 $breakpoint={breakpoint}
                 onClick={() => handleSetActiveView(view.id)}
+                id={`drawer-button-${view.id}`}
               >
                 {isLarge && view.buttonLabel}
               </DrawerButton>
@@ -97,8 +111,13 @@ export default function Drawer({ views }: SideNavigationProps) {
           }
           active={currentView}
           initialOpen
+          navDisabled={hasChanges}
+          openButtonExtraFunc={() => {
+            dispatch(displayWarning());
+          }}
         >
           <DrawerViewContainer>
+            <DrawerTopAlert />
             {activeView && activeView.component}
           </DrawerViewContainer>
         </CommonDrawer>
