@@ -1,9 +1,9 @@
 import InlineListBlock from '@app/common/components/inline-list-block';
+import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { ModelTerminology } from '@app/common/interfaces/model.interface';
 import { useTranslation } from 'next-i18next';
 import { Button, Label } from 'suomifi-ui-components';
-import TerminologyModal from '../terminology-modal';
 import { AddBlockWrapper } from './model-form.styles';
 
 export default function AddBlock({
@@ -23,12 +23,7 @@ export default function AddBlock({
         label={t('terminologies-in-use')}
         optionalText={t('optional')}
         labelRow={true}
-        addNewComponent={
-          <TerminologyModal
-            setFormData={setTerminologies}
-            addedTerminologies={data.terminologies}
-          />
-        }
+        addNewComponent={<UpdateWithFileModal />}
         items={data.terminologies.map((t) => ({
           id: t.uri,
           label: t.label[locale],

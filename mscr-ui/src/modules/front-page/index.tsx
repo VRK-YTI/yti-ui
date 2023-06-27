@@ -15,7 +15,12 @@ import { useTranslation } from 'next-i18next';
 import { useGetSearchModelsQuery } from '@app/common/components/search-models/search-models.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import { Modal, ModalContent, SingleSelectData } from 'suomifi-ui-components';
+import {
+  Button,
+  Modal,
+  ModalContent,
+  SingleSelectData,
+} from 'suomifi-ui-components';
 import useUrlState from 'yti-common-ui/utils/hooks/use-url-state';
 import {
   Description,
@@ -24,6 +29,9 @@ import {
 import Pagination from 'yti-common-ui/pagination';
 import { translateModelType } from '@app/common/utils/translation-helpers';
 import ModelFormModal from '../model-form/model-form-modal';
+import Separator from 'yti-common-ui/separator';
+import { ButtonBlock } from '@app/modules/front-page/front-page.styles';
+import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -150,12 +158,19 @@ export default function FrontPage() {
     refetchSearchModels();
   };
 
+  const registerSchema = () => {
+    // register a new schema
+  };
+
+  const registerCrossWalk = () => {
+    //Register a new crosswalk
+  };
+
   return (
     <main id="main">
       <Title
-        title={t('data-vocabularies')}
+        title={'Metadata Schema and Crosswalk Registry'}
         noBreadcrumbs={true}
-        editButton={<ModelFormModal refetch={refetchInfo} />}
         extra={
           <TitleDescriptionWrapper $isSmall={isSmall}>
             <Description id="page-description">
@@ -164,71 +179,17 @@ export default function FrontPage() {
           </TitleDescriptionWrapper>
         }
       />
-
-      {isSmall && (
-        <FilterMobileButton
-          variant="secondary"
-          fullWidth
-          onClick={() => setShowModal(!showModal)}
-          id="mobile-filter-button"
-        >
-          {t('filter-list')}
-        </FilterMobileButton>
-      )}
-      <ResultAndFilterContainer>
-        {!isSmall ? (
-          <FrontPageFilter
-            organizations={organizationsData}
-            serviceCategories={serviceCategoriesData}
-            languages={languages}
-          />
-        ) : (
-          <Modal
-            appElementId="__next"
-            visible={showModal}
-            onEscKeyDown={() => setShowModal(false)}
-            variant="smallScreen"
-            style={{ border: 'none' }}
-          >
-            <ModalContent style={{ padding: '0' }}>
-              <FrontPageFilter
-                isModal
-                onModalClose={() => setShowModal(false)}
-                resultCount={searchModels?.totalHitCount}
-                organizations={organizationsData}
-                serviceCategories={serviceCategoriesData}
-                languages={languages}
-              />
-            </ModalContent>
-          </Modal>
-        )}
-        <ResultAndStatsWrapper id="search-results-wrapper">
-          <SearchResults
-            data={data}
-            organizations={organizations}
-            domains={serviceCategories}
-            types={[
-              {
-                id: 'profile',
-                label: t('profile'),
-              },
-              {
-                id: 'library',
-                label: t('library-variant'),
-              },
-            ]}
-            partOfText={t('card-information-domains')}
-            noDescriptionText={t('no-description')}
-            tagsHiddenTitle={''}
-            tagsTitle={t('results-with-current', {
-              count: searchModels?.totalHitCount ?? 0,
-            })}
-          />
-          <Pagination
-            maxPages={Math.ceil((searchModels?.totalHitCount ?? 1) / 50)}
-          />
-        </ResultAndStatsWrapper>
-      </ResultAndFilterContainer>
+      <Separator isLarge />
+      <ButtonBlock>
+        <Button onClick={() => registerSchema()} id="submit-button">
+          {t('Register schema', { ns: 'admin' })}
+        </Button>
+        <Button onClick={() => registerCrossWalk()} id="submit-button">
+          {t('Register crosswalks', { ns: 'admin' })}
+        </Button>
+      </ButtonBlock>
+      <Separator />
+      <UpdateWithFileModal />
     </main>
   );
 }

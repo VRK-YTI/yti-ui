@@ -5,7 +5,6 @@ import { BasicBlock } from 'yti-common-ui/block';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { LinkedItemWrapper } from './linked-data-form.styles';
-import TerminologyModal from '../terminology-modal';
 import {
   ModelTerminology,
   ModelType,
@@ -113,19 +112,6 @@ export default function LinkedDataForm({
                 ({t('optional')})
               </Text>
             </>
-          }
-          extra={
-            <div>
-              <TerminologyModal
-                setFormData={(terminologies) =>
-                  setData({
-                    ...data,
-                    terminologies: terminologies,
-                  })
-                }
-                addedTerminologies={data.terminologies}
-              />
-            </div>
           }
         >
           <div>

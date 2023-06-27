@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button } from 'suomifi-ui-components';
+import { Block, Button } from 'suomifi-ui-components';
 
 export const ResultAndFilterContainer = styled.div`
   display: flex;
@@ -20,4 +20,9 @@ export const ResultAndStatsWrapper = styled.div`
 
 export const FilterMobileButton = styled(Button)`
   margin-top: ${(props) => props.theme.suomifi.spacing.xs};
+`;
+
+export const ButtonBlock = styled(Block)`
+  display: flex;
+  gap: 20px;
 `;

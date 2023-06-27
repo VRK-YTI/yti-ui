@@ -29,6 +29,8 @@ interface ModelFormModalProps {
   refetch: () => void;
 }
 
+// For the time bein, using as schema metadata form
+
 export default function ModelFormModal({ refetch }: ModelFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -99,7 +101,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}
       >
-        {t('add-new-model')}
+        {t('add-new-schema')}
       </Button>
 
       <Modal
@@ -109,7 +111,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
-          <ModalTitle>{t('add-new-model')}</ModalTitle>
+          <ModalTitle>{t('add-new-schema')}</ModalTitle>
           <Paragraph style={{ marginBottom: '30px' }}>
             {t('add-new-model-description')}
           </Paragraph>
