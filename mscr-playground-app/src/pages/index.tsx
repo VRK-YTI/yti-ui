@@ -18,6 +18,7 @@ import EditCollection from '@app/modules/edit-collection';
 import { ButtonBlock } from '@app/pages/schema/schema.styles';
 import Separator from 'yti-common-ui/separator';
 import { useRouter } from 'next/router';
+import { usePostImportJsonMutation } from '@app/common/components/import/import.slice';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -41,7 +42,10 @@ export default function IndexPage(props: IndexPageProps) {
   // May edit collection can be used to have the crosswalk list?
   return (
     <CommonContextProvider value={props}>
-      <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
+      <Layout
+        user={props.user ?? undefined}
+        fakeableUsers={props.fakeableUsers}
+      >
         <PageHead
           baseUrl="https://sanastot.suomi.fi"
           title={t('terminology-site-title')}

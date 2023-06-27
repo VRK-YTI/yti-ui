@@ -14,18 +14,31 @@ export const importApi = createApi({
   endpoints: (builder) => ({
     postImportJson: builder.mutation<ImportResponse, FormData>({
       query: (file) => ({
-        url: '/schema/34567/upload',
+        url: '/schema/urn:IAMNOTAPID:f8408012-9999-449c-84f1-29ef7b8053ee/upload?contentType=application/json',
         method: 'PUT',
         data: file,
       }),
     }),
-    postSchema: builder.mutation<ImportResponse, FormData>({
-      query: (props) => ({
+    /*
+    postImportJson: builder.mutation<ImportResponse, FormData>({
+      query: (file) => ({
         url: '/schema',
         method: 'PUT',
+        data: {
+          format: 'JSONSCHEMA',
+          status: 'INCOMPLETE',
+          label: {
+            en: 'string',
+          },
+          description: {
+            en: 'string',
+          },
+          languages: ['en'],
+          organizations: ['7d3a3c00-5a6b-489b-a3ed-63bb58c26a63'],
+        },
       }),
-    }),
+    }),*/
   }),
 });
 
-export const { usePostImportJsonMutation, usePostSchemaMutation } = importApi;
+export const { usePostImportJsonMutation } = importApi;

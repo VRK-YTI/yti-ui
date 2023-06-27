@@ -1,52 +1,26 @@
 const { i18n } = require('./next-i18next.config');
-const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
-const fs = require('fs');
 const withTM = require('next-transpile-modules')(['../common-ui']);
 
-module.exports = (phase, { defaultConfig }) => {
-  let versionInfo;
-
-  if (fs.existsSync('public/version.txt')) {
-    versionInfo = fs.readFileSync('public/version.txt', 'utf8');
-  } else {
-    versionInfo = 'dev-local';
-  }
-
+module.exports = () => {
   let config = {
-    experimental: {
-      scrollRestoration: true,
-    },
     compiler: {
       styledComponents: true,
     },
     reactStrictMode: true,
-    i18n,
     eslint: {
       dirs: ['src'],
     },
-    async redirects() {
-      return [
-        {
-          source: '/concepts/:path*',
-          destination: '/terminology/:path*',
-          permanent: true,
-        },
-      ];
-    },
-    publicRuntimeConfig: {
-      versionInfo,
-    },
+    i18n,
     async headers() {
       const isProd = process.env.NODE_ENV === 'production';
-      const matomoUrl = process.env.MATOMO_URL ?? '';
 
       const ProductionContentSecurityPolicy = [
         "base-uri 'self';",
         "default-src 'self';",
         "font-src 'self';",
         "img-src 'self' data:;",
-        `script-src 'self' 'unsafe-inline' ${matomoUrl};`,
-        `connect-src 'self' ${matomoUrl};`,
+        "script-src 'self' 'unsafe-inline';",
+        "connect-src 'self';",
         "style-src 'self' 'unsafe-inline' data:;",
         "frame-src 'self';",
       ];
@@ -56,8 +30,8 @@ module.exports = (phase, { defaultConfig }) => {
         "default-src 'self';",
         "font-src 'self';",
         "img-src 'self' 'unsafe-eval' 'unsafe-inline' data:;",
-        `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${matomoUrl};`,
-        `connect-src 'self' ${matomoUrl};`,
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval';",
+        "connect-src 'self';",
         "style-src 'self' 'unsafe-inline' data:;",
         "frame-src 'self';",
       ];
@@ -108,12 +82,12 @@ module.exports = (phase, { defaultConfig }) => {
       async rewrites() {
         return [
           {
-            source: '/terminology-api/:path*',
-            destination: 'http://localhost:9103/terminology-api/:path*',
+            source: '/datamodel-api/:path*',
+            destination: 'http://localhost:9004/datamodel-api/:path*',
           },
           {
-            source: '/messaging-api/:path*',
-            destination: 'http://localhost:9801/messaging-api/:path*',
+            source: '/terminology-api/:path*',
+            destination: 'http://localhost:9103/terminology-api/:path*',
           },
         ];
       },
@@ -128,13 +102,13 @@ module.exports = (phase, { defaultConfig }) => {
       async rewrites() {
         return [
           {
-            source: '/terminology-api/:path*',
-            destination:
-              'http://yti-terminology-api:9103/terminology-api/:path*',
+            source: '/datamodel-api/:path*',
+            destination: 'http://localhost:9004/datamodel-api/:path*',
           },
           {
-            source: '/messaging-api/:path*',
-            destination: 'http://yti-messaging-api:9801/messaging-api/:path*',
+            source: '/terminology-api/:path*',
+            destination:
+              'http://localhost:9103/terminology-api/:path*',
           },
         ];
       },

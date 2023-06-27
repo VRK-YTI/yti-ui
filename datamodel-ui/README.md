@@ -1,4 +1,4 @@
-# yti-datamodel-ui
+# mscr-ui
 
 A user interface for the datamodel editor
 

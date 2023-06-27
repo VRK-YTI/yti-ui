@@ -14,15 +14,16 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import FileDropArea from 'yti-common-ui/file-drop-area';
+import fakeableUserSlice, {
+  getFakeableUsers,
+  useGetFakeableUsersQuery,
+} from '../fakeable-user/fakeable-user.slice';
 import {
   createErrorMessage,
   ExcelError,
   ExcelErrorDetailBlock,
 } from '../import/excel.error';
-import {
-  usePostImportJsonMutation,
-  usePostSchemaMutation,
-} from '../import/import.slice';
+import { usePostImportJsonMutation } from '../import/import.slice';
 import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
 import {
   DownloadIndicator,
@@ -56,31 +57,25 @@ export default function UpdateWithFileModal() {
   };
 
   const sampleSchema = {
-    format: 'CSV',
-    aggregationKey: 'string',
+    format: 'JSONSCHEMA',
     status: 'INCOMPLETE',
     label: {
-      additionalProp1: 'string',
-      additionalProp2: 'string',
-      additionalProp3: 'string',
+      en: 'string',
     },
     description: {
-      additionalProp1: 'string',
-      additionalProp2: 'string',
-      additionalProp3: 'string',
+      en: 'string',
     },
-    languages: ['string'],
-    organization: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+    languages: ['en'],
+    organizations: ['7d3a3c00-5a6b-489b-a3ed-63bb58c26a63'],
   };
 
   const handlePost = () => {
     setUserPosted(true);
-    console.log();
+
+    console.log(getAuthenticatedUser());
 
     if (fileData) {
       const formData = new FormData();
-      formData.append('organization', '3fa85f64-5717-4562-b3fc-2c963f66afa6');
-      formData.append('format', 'csv');
       formData.append('file', fileData);
       setUserPosted(true);
       if (fileData.name.includes('.json')) {
@@ -160,7 +155,4 @@ export default function UpdateWithFileModal() {
       </ModalContentWrapper>
     );
   }
-}
-function postSchema(formData: FormData) {
-  throw new Error('Function not implemented.');
 }

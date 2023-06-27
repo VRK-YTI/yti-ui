@@ -22,7 +22,7 @@ export default function Schemas(props: SchemaIndexPageProps) {
   const { t } = useTranslation('schema');
 
   const schemaFileUplaod = () => {
-    // Open the modal for file chooser, may be new terminology modal can be used
+    // Open the modal for file chooser,
     console.log('Upload the schema file');
   };
 

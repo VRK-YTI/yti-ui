@@ -51,6 +51,8 @@ export const loginSlice = createSlice({
   },
 });
 
+// Getting the user, different in terminology UI
+
 export const loginApi = createApi({
   reducerPath: 'loginApi',
   baseQuery: getDatamodelApiBaseQuery(),
@@ -63,13 +65,13 @@ export const loginApi = createApi({
   endpoints: (builder) => ({
     getAuthenticatedUser: builder.query<User, void>({
       query: () => ({
-        url: '/authenticated-user',
+        url: '/fakeableUsers',
         method: 'GET',
       }),
     }),
     getAuthenticatedUserMut: builder.mutation<User, void>({
       query: () => ({
-        url: '/authenticated-user',
+        url: '/fakeableUsers',
         method: 'GET',
       }),
     }),
@@ -77,6 +79,7 @@ export const loginApi = createApi({
 });
 
 export function setLogin(userData: User): AppThunk {
+  console.log(userData);
   return (dispatch) => dispatch(loginSlice.actions.setLogin(userData));
 }
 
