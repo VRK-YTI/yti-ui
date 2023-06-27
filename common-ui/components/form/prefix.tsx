@@ -82,7 +82,7 @@ export default function Prefix({
   };
 
   return (
-    <PrefixContainer>
+    <PrefixContainer id="prefix-container">
       {!noAuto && (
         <RadioButtonGroup
           labelText={translations.label}

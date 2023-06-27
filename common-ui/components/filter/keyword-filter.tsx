@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { TextInput } from 'suomifi-ui-components';
+import { IconClose, TextInput } from 'suomifi-ui-components';
 import useUrlState, { initialUrlState } from '../../utils/hooks/use-url-state';
 import { SEARCH_FIELD_PATTERN, TEXT_INPUT_MAX } from '../../utils/constants';
 import { useTranslation } from 'next-i18next';
@@ -43,11 +43,11 @@ export default function KeywordFilter({
       <TextInput
         status={error ? 'error' : 'default'}
         statusText={error ? t('filter-character-not-allowed') : ''}
-        icon={inputValue ? 'close' : undefined}
-        iconProps={{
-          fill: 'hsl(212, 63%, 45%)',
-          onClick: () => update(''),
-        }}
+        icon={
+          inputValue ? (
+            <IconClose fill={'hsl(212, 63%, 45%)'} onClick={() => update('')} />
+          ) : undefined
+        }
         labelText={title}
         onBlur={() => update(inputValue)}
         onChange={(val) => handleChange(val?.toString() ?? '')}

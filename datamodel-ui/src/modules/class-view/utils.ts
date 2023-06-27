@@ -5,7 +5,20 @@ import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 export function internalClassToClassForm(
   data: InternalClass,
   languages: string[],
-  applicationProfile?: boolean
+  applicationProfile?: boolean,
+  targetClass?: InternalClass,
+  associations?: {
+    identifier: string;
+    label: { [key: string]: string };
+    modelId: string;
+    uri: string;
+  }[],
+  attributes?: {
+    identifier: string;
+    label: { [key: string]: string };
+    modelId: string;
+    uri: string;
+  }[]
 ): ClassFormType {
   const label = languages.reduce(
     (acc, lang) => ({ ...acc, [lang]: data.label[lang] }),
@@ -25,11 +38,15 @@ export function internalClassToClassForm(
 
   if (applicationProfile) {
     obj['targetClass'] = {
-      label:
-        data.id.split('/').pop()?.replace('#', ':') ??
-        `${data.isDefinedBy.split('/').pop()}:${data.identifier}`,
+      label: `${data.namespace
+        .replace(/\/$/, '')
+        .split('/')
+        .pop()
+        ?.replace('#', ':')}:${data.identifier}`,
       id: data.id,
     };
+    obj['association'] = associations ?? [];
+    obj['attribute'] = attributes ?? [];
   } else {
     obj['subClassOf'] = [
       {
@@ -41,6 +58,18 @@ export function internalClassToClassForm(
       },
     ];
   }
+
+  if (targetClass) {
+    obj['node'] = {
+      label: `${targetClass.namespace
+        .replace(/\/$/, '')
+        .split('/')
+        .pop()
+        ?.replace('#', ':')}:${targetClass.identifier}`,
+      id: targetClass.id,
+    };
+  }
+
   return obj;
 }
 
@@ -56,5 +85,11 @@ export function classTypeToClassForm(data: ClassType): ClassFormType {
     subClassOf: [],
     association: data.association,
     attribute: data.attribute,
+    targetClass: data.targetClass
+      ? {
+          id: data.targetClass,
+          label: data.targetClass,
+        }
+      : undefined,
   };
 }

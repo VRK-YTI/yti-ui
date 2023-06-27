@@ -22,6 +22,7 @@ export const conceptSearchApi = createApi({
       {
         keyword: string;
         terminologies: string[];
+        pageFrom: number;
         lang?: string;
         internal?: boolean;
         highlight?: boolean;
@@ -32,8 +33,8 @@ export const conceptSearchApi = createApi({
         method: 'POST',
         data: {
           highlight: data.highlight ?? true,
-          pageFrom: 0,
-          pageSize: 5000,
+          pageFrom: data.pageFrom ? (data.pageFrom - 1) * 20 : 0,
+          pageSize: 20,
           query: data.keyword,
           sortDirection: 'ASC',
           sortLanguage: data.lang ?? 'fi',

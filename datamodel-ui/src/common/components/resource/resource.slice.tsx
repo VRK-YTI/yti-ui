@@ -36,6 +36,20 @@ function convertToPUT(
   };
 }
 
+function pathForModelType(isApplicationProfile?: boolean) {
+  return isApplicationProfile ? 'profile/' : 'library/';
+}
+
+function pathForResourceType(
+  type: ResourceType,
+  isApplicationProfile?: boolean
+) {
+  if (isApplicationProfile) {
+    return '';
+  }
+  return type === ResourceType.ATTRIBUTE ? '/attribute' : '/association';
+}
+
 export const resourceApi = createApi({
   reducerPath: 'resourceApi',
   baseQuery: getDatamodelApiBaseQuery((headers) => ({
@@ -55,43 +69,64 @@ export const resourceApi = createApi({
         modelId: string;
         data: AssociationFormType | AttributeFormType;
         resourceId?: string;
+        applicationProfile?: boolean;
       }
     >({
       query: (value) => ({
         url: !value.resourceId
-          ? `/resource/${value.modelId}`
-          : `/resource/${value.modelId}/${value.resourceId}`,
+          ? `/resource/${pathForModelType(value.applicationProfile)}${
+              value.modelId
+            }${pathForResourceType(value.data.type, value.applicationProfile)}`
+          : `/resource/${pathForModelType(value.applicationProfile)}${
+              value.modelId
+            }${pathForResourceType(
+              value.data.type,
+              value.applicationProfile
+            )}/${value.resourceId}`,
         method: 'PUT',
-        data:
-          value.data.type === ResourceType.ATTRIBUTE
-            ? {
-                ...convertToPUT(value.data, value.resourceId ? true : false),
-                domain: value.data.domain ? value.data.domain.id : '',
-                range: '',
-              }
-            : {
-                ...convertToPUT(value.data, value.resourceId ? true : false),
-                domain: value.data.domain ? value.data.domain.id : '',
-                range: value.data.range ? value.data.range.id : '',
-              },
+        data: {
+          ...convertToPUT(value.data, value.resourceId ? true : false),
+          domain: value.data.domain ? value.data.domain.id : '',
+          range: value.data.range ? value.data.range.id : '',
+        },
       }),
     }),
     getResource: builder.query<
       Resource,
-      { modelId: string; resourceIdentifier: string }
+      {
+        modelId: string;
+        resourceIdentifier: string;
+        applicationProfile?: boolean;
+      }
     >({
       query: (value) => ({
-        url: `/resource/${value.modelId}/${value.resourceIdentifier}`,
+        url: `/resource/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }/${value.resourceIdentifier}`,
         method: 'GET',
       }),
     }),
     deleteResource: builder.mutation<
       string,
-      { modelId: string; resourceId: string }
+      { modelId: string; resourceId: string; applicationProfile?: boolean }
     >({
       query: (value) => ({
-        url: `/resource/${value.modelId}/${value.resourceId}`,
+        url: `/resource/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }/${value.resourceId}`,
         method: 'DELETE',
+      }),
+    }),
+    getResourceIdentifierFree: builder.query<
+      boolean,
+      {
+        prefix: string;
+        identifier: string;
+      }
+    >({
+      query: (props) => ({
+        url: `/resource/${props.prefix}/free-identifier/${props.identifier}`,
+        method: 'GET',
       }),
     }),
   }),
@@ -173,5 +208,6 @@ export const {
   usePutResourceMutation,
   useGetResourceQuery,
   useDeleteResourceMutation,
+  useGetResourceIdentifierFreeQuery,
   util: { getRunningQueriesThunk, getRunningMutationsThunk },
 } = resourceApi;

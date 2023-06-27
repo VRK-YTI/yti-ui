@@ -1,6 +1,6 @@
 import { BaseQueryFn } from '@reduxjs/toolkit/dist/query';
 import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
-import axios, { AxiosRequestHeaders } from 'axios';
+import axios, { RawAxiosRequestHeaders, isAxiosError } from 'axios';
 import { NextIronContext } from '.';
 import {
   AxiosBaseQuery,
@@ -13,7 +13,7 @@ const axiosBaseQuery =
     { baseUrl, prepareHeaders }: AxiosBaseQuery = { baseUrl: '/' }
   ): BaseQueryFn<AxiosBaseQueryArgs, unknown, AxiosBaseQueryError> =>
   async ({ url, method, data, params }, api) => {
-    let headers: AxiosRequestHeaders = {};
+    let headers: RawAxiosRequestHeaders = {};
     if (prepareHeaders) {
       headers = await prepareHeaders(
         api as BaseQueryApi & { extra: NextIronContext }
@@ -30,7 +30,7 @@ const axiosBaseQuery =
       });
       return { data: result.data };
     } catch (error) {
-      if (!axios.isAxiosError(error) || !error.response) {
+      if (!isAxiosError(error) || !error.response) {
         return {
           error: {
             status: 'GENERIC_ERROR',

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { Button } from 'suomifi-ui-components';
+import { Button, IconLogin } from 'suomifi-ui-components';
 import LoginModalView from '../login-modal';
 import { useBreakpoints } from '../media-query';
 import { LoginButtonsWrapper } from './authentication-panel.styles';
@@ -23,7 +23,7 @@ export default function LoginButtons({
     return (
       <LoginButtonsWrapper $breakpoint={breakpoint}>
         <Button
-          icon="login"
+          icon={<IconLogin />}
           onClick={() =>
             handleLoginModalClick ? handleLoginModalClick() : setVisible(true)
           }

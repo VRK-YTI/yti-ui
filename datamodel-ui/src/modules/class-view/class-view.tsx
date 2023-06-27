@@ -12,13 +12,15 @@ import {
   Button,
   ExpanderGroup,
   ExternalLink,
+  IconArrowLeft,
+  IconCopy,
+  IconMenu,
   Link,
   SearchInput,
   Text,
   Tooltip,
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
-import { StatusChip } from '@app/common/components/multi-column-search/multi-column-search.styles';
 import Separator from 'yti-common-ui/separator';
 import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
@@ -49,6 +51,10 @@ import ResourceInfo from './resource-info';
 import ConceptView from '../concept-view';
 import { useRouter } from 'next/router';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
+import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
+import ApplicationProfileFlow from './application-profile-flow';
+import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
+import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 
 interface ClassViewProps {
   modelId: string;
@@ -73,8 +79,19 @@ export default function ClassView({
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
+  const [showAppProfileModal, setShowAppProfileModal] = useState(false);
+  const [basedOnNodeShape, setBasedOnNodeShape] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedNodeShape, setSelectedNodeShape] = useState<
+    | {
+        nodeShape: InternalClass;
+        isAppProfile?: boolean;
+      }
+    | undefined
+  >();
   const globalSelected = useSelector(selectSelected());
   const view = useSelector(selectClassView());
+  const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
@@ -89,7 +106,7 @@ export default function ClassView({
       : undefined
   );
   const { data: classData, isSuccess } = useGetClassQuery(
-    { modelId: modelId, classId: currentClassId ?? '' },
+    { modelId: modelId, classId: currentClassId ?? '', applicationProfile },
     { skip: typeof currentClassId === 'undefined' }
   );
 
@@ -98,9 +115,22 @@ export default function ClassView({
     setCurrentPage(1);
   };
 
-  const handleFollowUpAction = (value?: InternalClass) => {
+  const handleFollowUpAction = (
+    value?: InternalClass,
+    targetIsAppProfile?: boolean
+  ) => {
     if (isEdit) {
       setIsEdit(false);
+    }
+    setBasedOnNodeShape(targetIsAppProfile ?? false);
+
+    if (applicationProfile && value && !targetIsAppProfile) {
+      setShowAppProfileModal(true);
+      setSelectedNodeShape({
+        nodeShape: value,
+        isAppProfile: targetIsAppProfile ?? false,
+      });
+      return;
     }
 
     if (!value) {
@@ -130,6 +160,43 @@ export default function ClassView({
     dispatch(setView('classes', 'edit'));
   };
 
+  const handleAppProfileFollowUpAction = (data?: {
+    value?: InternalClass;
+    targetClass?: InternalClass;
+    associations?: {
+      identifier: string;
+      label: { [key: string]: string };
+      modelId: string;
+      uri: string;
+    }[];
+    attributes?: {
+      identifier: string;
+      label: { [key: string]: string };
+      modelId: string;
+      uri: string;
+    }[];
+  }) => {
+    setShowAppProfileModal(false);
+
+    if (!data || !data.value) {
+      return;
+    }
+
+    dispatch(
+      setClass(
+        internalClassToClassForm(
+          data.value,
+          languages,
+          applicationProfile,
+          data.targetClass,
+          data.associations,
+          data.attributes
+        )
+      )
+    );
+    dispatch(setView('classes', 'edit'));
+  };
+
   const handleReturn = () => {
     dispatch(resetSelected());
     dispatch(resetClass());
@@ -143,6 +210,7 @@ export default function ClassView({
 
   const handleFollowUp = (classId: string) => {
     dispatch(setView('classes', 'info'));
+    dispatch(setSelected(classId, 'classes'));
     router.replace(`${modelId}/class/${classId}`);
   };
 
@@ -200,11 +268,20 @@ export default function ClassView({
               {t('classes', { count: data?.totalHitCount ?? 0 })}
             </Text>
             {hasPermission && (
-              <ClassModal
-                modelId={modelId}
-                handleFollowUp={handleFollowUpAction}
-                applicationProfile={applicationProfile}
-              />
+              <>
+                <ClassModal
+                  modelId={modelId}
+                  handleFollowUp={handleFollowUpAction}
+                  applicationProfile={applicationProfile}
+                />
+                {selectedNodeShape && (
+                  <ApplicationProfileFlow
+                    visible={showAppProfileModal}
+                    selectedNodeShape={selectedNodeShape}
+                    handleFollowUp={handleAppProfileFollowUpAction}
+                  />
+                )}
+              </>
             )}
           </div>
           <SearchInput
@@ -266,6 +343,7 @@ export default function ClassView({
         modelId={modelId}
         terminologies={terminologies}
         applicationProfile={applicationProfile}
+        basedOnNodeShape={basedOnNodeShape}
         isEdit={isEdit}
       />
     );
@@ -284,7 +362,7 @@ export default function ClassView({
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button
               variant="secondaryNoBorder"
-              icon="arrowLeft"
+              icon={<IconArrowLeft />}
               onClick={() => handleReturn()}
               style={{ textTransform: 'uppercase' }}
             >
@@ -293,12 +371,13 @@ export default function ClassView({
             <div>
               <Button
                 variant="secondary"
-                iconRight="menu"
+                iconRight={<IconMenu />}
                 onClick={() => setShowTooltip(!showTooltip)}
+                ref={toolTipRef}
               >
                 {t('actions')}
               </Button>
-              <TooltipWrapper>
+              <TooltipWrapper id="actions-tooltip">
                 <Tooltip
                   ariaCloseButtonLabelText=""
                   ariaToggleButtonLabelText=""
@@ -310,26 +389,41 @@ export default function ClassView({
                       <Button
                         variant="secondaryNoBorder"
                         onClick={() => handleEdit()}
+                        id="edit-class-button"
                       >
                         {t('edit', { ns: 'admin' })}
                       </Button>
                       <Separator />
-                      <DeleteModal
-                        modelId={modelId}
-                        resourceId={data.identifier}
-                        type="class"
-                        label={getLanguageVersion({
-                          data: data.label,
-                          lang: i18n.language,
-                        })}
-                        onClose={handleReturn}
-                      />
+                      <Button
+                        variant="secondaryNoBorder"
+                        onClick={() => setShowDeleteModal(true)}
+                        id="delete-class-button"
+                      >
+                        {t('remove', { ns: 'admin' })}
+                      </Button>
                     </>
                   )}
                 </Tooltip>
               </TooltipWrapper>
             </div>
           </div>
+          {data ? (
+            <DeleteModal
+              modelId={modelId}
+              resourceId={data.identifier}
+              type="class"
+              label={getLanguageVersion({
+                data: data.label,
+                lang: i18n.language,
+              })}
+              onClose={handleReturn}
+              applicationProfile={applicationProfile}
+              visible={showDeleteModal}
+              hide={() => setShowDeleteModal(false)}
+            />
+          ) : (
+            <></>
+          )}
         </StaticHeader>
 
         {isSuccess && data && (
@@ -345,20 +439,25 @@ export default function ClassView({
               </StatusChip>
             </div>
 
-            <BasicBlock title={t('concept')}>
-              <ConceptView data={data.subject} />
-            </BasicBlock>
-
             <BasicBlock title={t('class-identifier')}>
               {`${modelId}:${data.identifier}`}
+            </BasicBlock>
+
+            <BasicBlock title={t('uri')}>
+              {data.uri}
               <Button
-                icon="copy"
+                icon={<IconCopy />}
                 variant="secondary"
-                style={{ width: 'min-content', whiteSpace: 'nowrap' }}
-                onClick={() => navigator.clipboard.writeText(data.identifier)}
+                onClick={() => navigator.clipboard.writeText(data.uri)}
+                style={{ width: 'max-content' }}
+                id="copy-uri-button"
               >
                 {t('copy-to-clipboard')}
               </Button>
+            </BasicBlock>
+
+            <BasicBlock title={t('concept')}>
+              <ConceptView data={data.subject} />
             </BasicBlock>
 
             <BasicBlock title={t('upper-class')}>
@@ -402,8 +501,20 @@ export default function ClassView({
                 data: data.note,
                 lang: i18n.language,
                 appendLocale: true,
-              }) || t('no-note')}
+              }) !== '' ? (
+                <SanitizedTextContent
+                  text={getLanguageVersion({
+                    data: data.note,
+                    lang: i18n.language,
+                    appendLocale: true,
+                  })}
+                />
+              ) : (
+                t('no-note')
+              )}
             </BasicBlock>
+
+            <Separator />
 
             <BasicBlock
               title={t('attributes', { count: data.attribute?.length ?? 0 })}
@@ -418,7 +529,8 @@ export default function ClassView({
                     <ResourceInfo
                       key={`${data.identifier}-attr-${attr.identifier}`}
                       data={attr}
-                      modelId={modelId}
+                      modelId={attr.modelId}
+                      applicationProfile={applicationProfile}
                     />
                   ))}
                 </ExpanderGroup>
@@ -443,6 +555,7 @@ export default function ClassView({
                       key={`${data.identifier}-attr-${assoc.identifier}`}
                       data={assoc}
                       modelId={modelId}
+                      applicationProfile={applicationProfile}
                     />
                   ))}
                 </ExpanderGroup>
@@ -450,6 +563,8 @@ export default function ClassView({
                 t('no-assocations')
               )}
             </BasicBlock>
+
+            <Separator />
 
             <BasicBlock title={t('references-from-other-components')}>
               {t('no-references')}
@@ -459,17 +574,22 @@ export default function ClassView({
 
             <BasicBlock title={t('created')}>
               <FormattedDate date={data.created} />
+              {data.creator.name ? `, ${data.creator.name}` : ''}
             </BasicBlock>
 
             <BasicBlock title={t('modified-at')}>
-              <FormattedDate date={data.created} />
+              <FormattedDate date={data.modified} />
+              {data.modifier.name ? `, ${data.modifier.name}` : ''}
             </BasicBlock>
 
-            <BasicBlock title={t('editorial-note')}>
-              {data.editorialNote ?? t('no-editorial-note')}
-            </BasicBlock>
-
-            <BasicBlock title={t('uri')}>{data.uri}</BasicBlock>
+            {hasPermission ? (
+              <BasicBlock title={t('work-group-comment', { ns: 'admin' })}>
+                {data.editorialNote ??
+                  t('no-work-group-comment', { ns: 'admin' })}
+              </BasicBlock>
+            ) : (
+              <></>
+            )}
 
             <Separator />
 
@@ -490,7 +610,7 @@ export default function ClassView({
                   data: data.label,
                   lang: i18n.language,
                 })}`}
-                labelNewWindow=""
+                labelNewWindow={t('link-opens-new-window-external')}
               >
                 {t('class-contact')}
               </ExternalLink>

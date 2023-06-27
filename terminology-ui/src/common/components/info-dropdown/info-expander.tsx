@@ -5,6 +5,9 @@ import {
   ExpanderContent,
   ExpanderTitleButton,
   ExternalLink,
+  IconDownload,
+  IconEdit,
+  IconPlus,
   VisuallyHidden,
 } from 'suomifi-ui-components';
 import {
@@ -193,7 +196,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                   <ActionBlock>
                     <Link href={`/terminology/${terminologyId}/edit`}>
                       <Button
-                        icon="edit"
+                        icon={<IconEdit />}
                         variant="secondary"
                         id="edit-terminology-button"
                       >
@@ -250,7 +253,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
 
                     <Link href={`/terminology/${terminologyId}/new-collection`}>
                       <Button
-                        icon="plus"
+                        icon={<IconPlus />}
                         variant="secondary"
                         id="create-collection-button"
                       >
@@ -273,7 +276,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           extra={
             <BasicBlockExtraWrapper>
               <Button
-                icon="download"
+                icon={<IconDownload />}
                 variant="secondary"
                 onClick={() => handleDownloadClick()}
                 id="export-terminology-button"

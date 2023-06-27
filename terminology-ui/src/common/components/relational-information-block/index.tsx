@@ -8,6 +8,8 @@ import { useState } from 'react';
 import {
   Button,
   Chip,
+  IconArrowLeft,
+  IconArrowRight,
   Modal,
   ModalContent,
   ModalFooter,
@@ -315,8 +317,8 @@ function ManageRelationalInfoModal({
       <div>
         <Button
           variant="secondaryNoBorder"
-          icon={showChosen ? 'arrowLeft' : undefined}
-          iconRight={!showChosen ? 'arrowRight' : undefined}
+          icon={showChosen ? <IconArrowLeft /> : undefined}
+          iconRight={!showChosen ? <IconArrowRight /> : undefined}
           onClick={() => setShowChosen(!showChosen)}
           id="switch-view-button"
         >

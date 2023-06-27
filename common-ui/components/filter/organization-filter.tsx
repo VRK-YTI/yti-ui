@@ -33,7 +33,6 @@ export default function OrganizationFilter({
         items={organizations}
         selectedItem={selectedItem}
         visualPlaceholder={visualPlaceholder}
-        noItemsText={t('terminology-search-filter-no-matching-organizations')}
         ariaOptionsAvailableText={
           'terminology-search-filter-organizations-available'
         }
@@ -43,6 +42,7 @@ export default function OrganizationFilter({
             page: initialUrlState.page,
           })
         }
+        itemAdditionHelpText=""
         id="filter-organization-selector"
       />
     </DropdownWrapper>

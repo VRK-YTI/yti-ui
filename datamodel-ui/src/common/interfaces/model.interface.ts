@@ -6,15 +6,29 @@ export interface ModelType {
   status: Status;
   label: { [key: string]: string };
   description: { [key: string]: string };
+  documentation: { [key: string]: string };
   languages: string[];
   organizations: Organization[];
   groups: Group[];
   contact: string;
-  internalNamespaces: [];
-  externalNamespaces: [];
+  internalNamespaces: string[];
+  externalNamespaces: {
+    name: string;
+    namespace: string;
+    prefix: string;
+  }[];
   terminologies: ModelTerminology[];
+  codeLists: ModelCodeList[];
   created: string;
+  creator: {
+    id: string;
+    name: string;
+  };
   modified: string;
+  modifier: {
+    id: string;
+    name: string;
+  };
 }
 
 export interface Group {
@@ -40,6 +54,12 @@ export interface Link {
 export interface ModelTerminology {
   uri: string;
   label: { [key: string]: string };
+}
+
+export interface ModelCodeList {
+  id: string;
+  prefLabel: { [key: string]: string };
+  status: Status;
 }
 
 export interface ReferenceData {
@@ -73,8 +93,14 @@ export interface ModelUpdatePayload {
   languages: string[];
   organizations: string[];
   groups: string[];
-  // Namespaces need better typing
   internalNamespaces: string[];
-  externalNamespaces: string[];
+  externalNamespaces: {
+    name: string;
+    namespace: string;
+    prefix: string;
+  }[];
   terminologies: string[];
+  codeLists: string[];
+  documentation: { [key: string]: string };
+  contact: string;
 }

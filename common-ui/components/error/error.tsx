@@ -75,7 +75,7 @@ export default function Error({ errorCode }: ErrorProps) {
 
   return (
     <ErrorCard $isSmall={isSmall}>
-      <ErrorIcon icon="failure" />
+      <ErrorIcon />
       <TextBlock>
         <div>
           <ParagraphTitle variant="h2">Tapahtui virhe</ParagraphTitle>

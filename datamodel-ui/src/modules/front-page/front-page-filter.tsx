@@ -13,6 +13,7 @@ import Filter, {
   TypeFilterCheckbox,
 } from 'yti-common-ui/filter';
 import Separator from 'yti-common-ui/separator';
+import useUrlState from 'yti-common-ui/utils/hooks/use-url-state';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 
 interface FrontPageFilterProps {
@@ -33,7 +34,8 @@ export default function FrontPageFilter({
   languages,
 }: FrontPageFilterProps) {
   const { t, i18n } = useTranslation('common');
-  const { data: counts } = useGetCountQuery();
+  const { urlState } = useUrlState();
+  const { data: counts } = useGetCountQuery(urlState);
 
   if (!organizations || !serviceCategories) {
     return <></>;

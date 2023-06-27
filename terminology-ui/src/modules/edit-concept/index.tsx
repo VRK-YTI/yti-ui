@@ -32,7 +32,7 @@ import {
   useGetAuthenticatedUserQuery,
 } from '@app/common/components/login/login.slice';
 import { Notification, Paragraph, Text } from 'suomifi-ui-components';
-import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import validateForm, { FormError } from './validate-form';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { translateStatus } from '@app/common/utils/translation-helpers';

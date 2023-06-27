@@ -117,7 +117,7 @@ export default function FileUpload({
           <FileUploadWrapper>
             {importStatus.data?.status.toLowerCase() === 'success' ? (
               <>
-                <SuccessIndicator icon="check" color="white" />
+                <SuccessIndicator color="white" />
                 <Text variant="bold">{t('percent-done', { count: 100 })}</Text>
               </>
             ) : (

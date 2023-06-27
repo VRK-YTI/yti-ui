@@ -1,6 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Button, BaseIconKeys } from 'suomifi-ui-components';
+import {
+  Button,
+  IconChevronLeft,
+  IconChevronRight,
+} from 'suomifi-ui-components';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -17,7 +21,7 @@ const ButtonContainer = styled.div`
 
 const ScrollableButtons = styled.div`
   display: flex;
-  white-space: nowrap;
+  white-space: pre;
   overflow: hidden;
 
   > button {
@@ -45,7 +49,7 @@ export default function ScrollableButtonMenu({
 }: {
   buttons: {
     id: string;
-    icon: BaseIconKeys;
+    icon: ReactNode;
     label: string;
     onClick: () => void;
   }[];
@@ -113,7 +117,7 @@ export default function ScrollableButtonMenu({
     <ButtonContainer>
       <Button
         variant="secondaryNoBorder"
-        icon="chevronLeft"
+        icon={<IconChevronLeft />}
         onClick={() => handleChevronClick(-1)}
       />
       <ScrollableButtons>
@@ -133,7 +137,7 @@ export default function ScrollableButtonMenu({
       </ScrollableButtons>
       <Button
         variant="secondaryNoBorder"
-        icon="chevronRight"
+        icon={<IconChevronRight />}
         onClick={() => handleChevronClick(1)}
       />
     </ButtonContainer>

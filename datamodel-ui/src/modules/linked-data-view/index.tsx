@@ -1,6 +1,12 @@
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
-import { Button, ExternalLink, Text, Tooltip } from 'suomifi-ui-components';
+import {
+  Button,
+  ExternalLink,
+  IconMenu,
+  Text,
+  Tooltip,
+} from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
@@ -14,6 +20,7 @@ import LinkedDataForm from '../linked-data-form';
 import HasPermission from '@app/common/utils/has-permission';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 
 export default function LinkedDataView({
   modelId,
@@ -30,6 +37,7 @@ export default function LinkedDataView({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
   const [renderForm, setRenderForm] = useState(false);
+  const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
   const { data, refetch } = useGetModelQuery(modelId);
 
   const handleShowForm = () => {
@@ -73,12 +81,13 @@ export default function LinkedDataView({
             <div>
               <Button
                 variant="secondary"
-                iconRight="menu"
+                iconRight={<IconMenu />}
                 onClick={() => setShowTooltip(!showTooltip)}
+                ref={toolTipRef}
               >
                 {t('actions')}
               </Button>
-              <TooltipWrapper>
+              <TooltipWrapper id="actions-tooltip">
                 <Tooltip
                   ariaCloseButtonLabelText=""
                   ariaToggleButtonLabelText=""
@@ -88,6 +97,7 @@ export default function LinkedDataView({
                   <Button
                     variant="secondaryNoBorder"
                     onClick={() => handleShowForm()}
+                    id="edit-linked-data-button"
                   >
                     {t('edit', { ns: 'admin' })}
                   </Button>
@@ -100,7 +110,6 @@ export default function LinkedDataView({
 
       <DrawerContent height={headerHeight}>
         <BasicBlock title={t('linked-terminologies')}>
-          {/* <BasicBlock title="Linkitetyt sanastot"> */}
           {data && data.terminologies.length > 0 ? (
             <LinkedWrapper>
               {data.terminologies.map((terminology, idx) => {
@@ -124,25 +133,81 @@ export default function LinkedDataView({
             </LinkedWrapper>
           ) : (
             <>{t('no-linked-terminologies')}</>
-            // <>Ei linkitettyjä sanastoja.</>
           )}
         </BasicBlock>
 
         {isApplicationProfile ? (
-          // TODO: Add codelist visualization
           <BasicBlock title={t('linked-codelists')}>
-            {t('no-linked-codelists')}
+            {data && data.codeLists.length > 0 ? (
+              <LinkedWrapper>
+                {data.codeLists.map((codeList, idx) => {
+                  const label = getLanguageVersion({
+                    data: codeList.prefLabel,
+                    lang: i18n.language,
+                    appendLocale: true,
+                  });
+
+                  return (
+                    <LinkedItem key={`linked-codeList-${idx}`}>
+                      <ExternalLink
+                        labelNewWindow={t('link-opens-new-window-external')}
+                        href={codeList.id}
+                      >
+                        {label !== '' ? label : codeList.id}
+                      </ExternalLink>
+                    </LinkedItem>
+                  );
+                })}
+              </LinkedWrapper>
+            ) : (
+              <>{t('no-linked-codelists')}</>
+            )}
           </BasicBlock>
         ) : (
-          // <BasicBlock title="Koodistot">Ei linkitettyjä koodistoja.</BasicBlock>
           <></>
         )}
 
-        {/* <BasicBlock title="Linkitetyt tietomallit"> */}
         <BasicBlock title={t('linked-datamodels')}>
-          {/* TODO: Add datamodel visualization */}
-          <>{t('no-linked-datamodels')}</>
-          {/* <>Ei linkitettyjä tietomalleja.</> */}
+          {data &&
+          (data.internalNamespaces.length > 0 ||
+            data.externalNamespaces.length > 0) ? (
+            <LinkedWrapper>
+              {data.internalNamespaces.map((namespace, idx) => {
+                return (
+                  <LinkedItem key={`linked-terminology-${idx}`}>
+                    <LinkExtraInfo>
+                      <ExternalLink
+                        labelNewWindow={t('link-opens-new-window-external')}
+                        href={namespace}
+                      >
+                        {namespace}
+                      </ExternalLink>
+                      <div>Tunnus: {namespace.split('/').pop()}</div>
+                      <div>{namespace}</div>
+                    </LinkExtraInfo>
+                  </LinkedItem>
+                );
+              })}
+              {data.externalNamespaces.map((namespace, idx) => {
+                return (
+                  <LinkedItem key={`linked-ext-terminology-${idx}`}>
+                    <LinkExtraInfo>
+                      <ExternalLink
+                        labelNewWindow={t('link-opens-new-window-external')}
+                        href={namespace.namespace}
+                      >
+                        {namespace.name}
+                      </ExternalLink>
+                      <div>Tunnus: {namespace.prefix}</div>
+                      <div>{namespace.namespace}</div>
+                    </LinkExtraInfo>
+                  </LinkedItem>
+                );
+              })}
+            </LinkedWrapper>
+          ) : (
+            <>{t('no-linked-datamodels')}</>
+          )}
         </BasicBlock>
       </DrawerContent>
     </>

@@ -1,5 +1,6 @@
 import { ResourceType } from './resource-type.interface';
 import { Status } from './status.interface';
+import { Type } from './type.interface';
 
 export interface InternalClass {
   created: string;
@@ -17,4 +18,25 @@ export interface InternalClass {
   };
   resourceType: ResourceType;
   status: Status;
+}
+
+export interface InternalClassInfo extends InternalClass {
+  dataModelInfo: {
+    label: {
+      [key: string]: string;
+    };
+    groups: string[];
+    status: Status;
+    modelType: Type;
+    uri: string;
+  };
+  conceptInfo: {
+    conceptURI: string;
+    conceptLabel: {
+      [key: string]: string;
+    };
+    terminologyLabel: {
+      [key: string]: string;
+    };
+  };
 }

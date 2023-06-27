@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AppState } from '@app/store';
 
 interface FuncProps {
@@ -7,13 +8,15 @@ interface FuncProps {
 }
 
 export function getStoreData({ state, reduxKey, functionKey }: FuncProps) {
-  const key = Object.keys(state[reduxKey]?.queries ?? {}).filter((k) =>
-    k.includes(functionKey)
-  )?.[0];
+  const data = state[reduxKey] as any;
 
-  if (!key) {
-    return {};
+  if (typeof data !== 'undefined' && Object.keys(data).includes('queries')) {
+    const key = Object.keys(data.queries).filter((k) =>
+      k.includes(functionKey)
+    )?.[0];
+
+    return key ? data.queries[key].data : {};
   }
 
-  return state[reduxKey].queries[key].data;
+  return {};
 }

@@ -3,7 +3,11 @@ import { useRouter } from 'next/router';
 import { MouseEventHandler, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useTheme } from 'styled-components';
-import { Icon, Link as SuomiFiLink } from 'suomifi-ui-components';
+import {
+  IconChevronDown,
+  IconChevronUp,
+  Link as SuomiFiLink,
+} from 'suomifi-ui-components';
 import {
   NavigationDropdownItem,
   NavigationDropdownList,
@@ -48,10 +52,11 @@ export default function DesktopNavigation({
       >
         <SuomiFiLink className="main" href="" onClick={handleDropdown}>
           {t('site-tools')}
-          <Icon
-            color={theme.suomifi.colors.highlightBase}
-            icon={open ? 'chevronUp' : 'chevronDown'}
-          />
+          {open ? (
+            <IconChevronUp color={theme.suomifi.colors.highlightBase} />
+          ) : (
+            <IconChevronDown color={theme.suomifi.colors.highlightBase} />
+          )}
         </SuomiFiLink>
         {open && (
           <ClickOutsideListener onClickOutside={() => setOpen(false)}>

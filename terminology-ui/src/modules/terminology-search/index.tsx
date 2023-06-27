@@ -16,6 +16,7 @@ import Pagination from 'yti-common-ui/pagination';
 import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
+  IconRegisters,
   Modal,
   ModalContent,
   Paragraph,
@@ -77,7 +78,7 @@ export default function TerminologySearch() {
             lang: i18n.language,
           })
         : '',
-      icon: 'registers',
+      icon: <IconRegisters />,
       status: terminology.status,
       partOf: terminology.informationDomains.map((d) =>
         getPrefLabel({ prefLabels: d.label, lang: i18n.language })

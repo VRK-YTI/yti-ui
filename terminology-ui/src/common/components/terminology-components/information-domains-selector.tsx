@@ -62,24 +62,25 @@ export default function InformationDomainsSelector({
   return (
     <BlankFieldset>
       <MultiselectSmBot
-        labelText={t('info-domains')}
-        hintText={t('info-domains-hint')}
         items={infoDomains}
+        hintText={t('info-domains-hint')}
+        labelText={t('info-domains')}
+        visualPlaceholder={t('info-domains-placeholder')}
+        noItemsText={t('no-info-domains-available')}
+        loading={false}
         chipListVisible={true}
-        ariaChipActionLabel={t('aria-chip-action-label')}
         ariaSelectedAmountText={t('info-domains-selected')}
         ariaOptionsAvailableText={t('info-domains-available')}
         ariaOptionChipRemovedText={t('aria-option-chip-removed-text')}
-        noItemsText={t('no-info-domains-available')}
-        visualPlaceholder={t('info-domains-placeholder')}
-        onItemSelectionsChange={(e) => handleChange(e)}
+        ariaChipActionLabel={t('aria-chip-action-label')}
         $isSmall={isSmall ? true : undefined}
+        disabled={disabled}
         status={
           userPosted && selectedInfoDomains.length === 0 ? 'error' : 'default'
         }
         defaultSelectedItems={selectedInfoDomains}
+        onItemSelectionsChange={(e) => handleChange(e)}
         id="information-domain-selector"
-        disabled={disabled}
       />
     </BlankFieldset>
   );
