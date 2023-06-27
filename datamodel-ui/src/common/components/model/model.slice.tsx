@@ -238,7 +238,6 @@ export function setSelected(
   type: keyof typeof initialView,
   modelId?: string
 ): AppThunk {
-  console.info('set selected', id, modelId);
   return (dispatch) =>
     dispatch(modelSlice.actions.setSelected({ id, type, modelId }));
 }

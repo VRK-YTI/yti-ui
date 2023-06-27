@@ -13,7 +13,7 @@ export function resourceToResourceFormType(
     status: 'DRAFT',
     equivalentResource: [],
     subResourceOf:
-      data.subResourceOf.length > 0
+      data.subResourceOf?.length > 0
         ? data.subResourceOf.map((sro) => {
             if (
               sro.endsWith('/owl#topDataProperty') ||

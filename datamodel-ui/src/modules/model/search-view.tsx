@@ -59,9 +59,9 @@ export default function SearchView({ modelId }: { modelId: string }) {
       )
     );
     router.replace(
-      `${modelId}/${data.resourceType.toLowerCase()}${
-        resourceModelId !== modelId ? '-ext' : ''
-      }/${data.identifier}`
+      `${modelId}/${data.resourceType.toLowerCase()}/${
+        resourceModelId !== modelId ? `${resourceModelId}:` : ''
+      }${data.identifier}`
     );
   };
 

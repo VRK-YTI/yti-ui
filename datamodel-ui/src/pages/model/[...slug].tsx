@@ -11,6 +11,7 @@ import ModelHeader from '@app/modules/model/model-header';
 import {
   getModel,
   getRunningQueriesThunk,
+  setSelected,
   setView,
   useGetModelQuery,
 } from '@app/common/components/model/model.slice';
@@ -130,14 +131,14 @@ export const getServerSideProps = createCommonGetServerSideProps(
       const resourceType = query.slug[1];
       const resourceId = query.slug[2];
 
-      if (resourceType === 'class') {
-        const modelType = (
-          store.getState().modelApi.queries[`getModel("${modelId}")`]?.data as
-            | ModelType
-            | undefined
-            | null
-        )?.type;
+      const modelType = (
+        store.getState().modelApi.queries[`getModel("${modelId}")`]?.data as
+          | ModelType
+          | undefined
+          | null
+      )?.type;
 
+      if (resourceType === 'class') {
         store.dispatch(setView('classes', 'info'));
         store.dispatch(
           getClass.initiate({
@@ -150,27 +151,26 @@ export const getServerSideProps = createCommonGetServerSideProps(
         await Promise.all(store.dispatch(getClassRunningQueriesThunk()));
       }
 
-      if (
-        [
-          'association',
-          'attribute',
-          'attribute-ext',
-          'association-ext',
-        ].includes(resourceType)
-      ) {
-        store.dispatch(
-          setView(
-            resourceType.startsWith('association')
-              ? 'associations'
-              : 'attributes',
-            'info'
-          )
-        );
-        // TODO: should check ends with -ext?
+      if (['association', 'attribute'].includes(resourceType)) {
+        const view =
+          resourceType === 'association' ? 'associations' : 'attributes';
+
+        let resourceModelId = modelId;
+        let identifier = resourceId;
+
+        const resourceParts = resourceId.split(':');
+        if (resourceParts.length === 2) {
+          resourceModelId = resourceParts[0];
+          identifier = resourceParts[1];
+        }
+        store.dispatch(setView(view, 'info'));
+        store.dispatch(setSelected(identifier, view, resourceModelId));
+
         store.dispatch(
           getResource.initiate({
-            modelId: modelId,
-            resourceIdentifier: resourceId,
+            modelId: resourceModelId,
+            resourceIdentifier: identifier,
+            applicationProfile: modelType === 'PROFILE',
           })
         );
 

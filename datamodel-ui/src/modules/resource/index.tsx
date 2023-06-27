@@ -65,13 +65,6 @@ export default function ResourceView({
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [isEdit, setIsEdit] = useState(false);
-  const [currentResourceId, setCurrentResourceId] = useState<
-    string | undefined
-  >(
-    getResourceInfo(router.query.slug)?.type === type.toString().toLowerCase()
-      ? getResourceInfo(router.query.slug)?.id
-      : undefined
-  );
 
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
@@ -84,11 +77,11 @@ export default function ResourceView({
   const { data: resourceData, refetch: refetchResource } = useGetResourceQuery(
     {
       modelId: globalSelected.modelId ?? modelId,
-      resourceIdentifier: currentResourceId ?? '',
+      resourceIdentifier: globalSelected.id ?? '',
       applicationProfile,
     },
     {
-      skip: typeof currentResourceId === 'undefined',
+      skip: !globalSelected.id,
     }
   );
 
@@ -111,10 +104,11 @@ export default function ResourceView({
         modelPrefix
       )
     );
+
     router.replace(
       `${modelId}/${
         type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
-      }${modelPrefix !== modelId ? '-ext' : ''}/${id}`
+      }/${modelPrefix !== modelId ? `${modelPrefix}:` : ''}${id}`
     );
   };
 
@@ -178,17 +172,6 @@ export default function ResourceView({
       setHeaderHeight(ref.current.clientHeight);
     }
   }, [ref, view]);
-
-  useEffect(() => {
-    if (
-      type === ResourceType.ASSOCIATION
-        ? globalSelected.type === 'associations'
-        : globalSelected.type === 'attributes' &&
-          currentResourceId !== globalSelected.id
-    ) {
-      setCurrentResourceId(globalSelected.id);
-    }
-  }, [globalSelected, currentResourceId, type]);
 
   return (
     <>
@@ -272,7 +255,6 @@ export default function ResourceView({
     if (!view.info || !resourceData) {
       return <></>;
     }
-    // TODO: globalSelected will be reset???
     return (
       <ResourceInfo
         data={resourceData}
@@ -285,7 +267,7 @@ export default function ResourceView({
   }
 
   function renderEdit() {
-    if (!view.edit || !hasPermission) {
+    if (!view.edit || !hasPermission || globalSelected.modelId !== modelId) {
       return <></>;
     }
 
