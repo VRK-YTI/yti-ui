@@ -104,7 +104,6 @@ export default function ResourceView({
         modelPrefix
       )
     );
-
     router.replace(
       `${modelId}/${
         type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
