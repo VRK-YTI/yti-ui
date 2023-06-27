@@ -1,6 +1,0 @@
-User-agent: *
-Disallow: /own-information/
-Disallow: /terminology/*/new-concept/
-Disallow: /terminology/*/new-collection/
-
-Sitemap: https://sanastot.suomi.fi/sitemap.xml
