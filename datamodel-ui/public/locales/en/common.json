@@ -136,6 +136,7 @@
   "no-upper-attributes": "No upper attributes",
   "no-upper-classes": "No upper classes",
   "not-added": "Not added",
+  "not-defined": "Not defined",
   "own-information": "Own information",
   "page-indicator-text": "Page {{currentPage}} out of {{lastPage}}. Showing items from {{firstShown}} to {{lastShown}}",
   "page-number": "Page number",
@@ -188,6 +189,7 @@
     "superseded": "Superseded",
     "valid": "Valid"
   },
+  "targets-library-class": "Targets library class",
   "technical-description": "Technical description",
   "terminology": "Terminology",
   "terminology-footer-accessibility": "Accessibility",
@@ -203,6 +205,7 @@
   "try-again": "Try again",
   "upper-class": "Upper class",
   "uri": "URI",
+  "utilizes-class-restriction": "Utilizes class restriction",
   "value-is-not-allowed": "\"{{value}}\" is not allowed",
   "vocabulary-filter-items": "items",
   "vocabulary-filter-show-only": "",

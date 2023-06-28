@@ -136,6 +136,7 @@
   "no-upper-attributes": "Ei yläattribuutteja",
   "no-upper-classes": "Ei yläluokkia",
   "not-added": "Ei lisätty",
+  "not-defined": "Ei määritelty",
   "own-information": "Omat tiedot",
   "page-indicator-text": "Sivu numero {{currentPage}} kaikkiaan {{lastPage}} sivusta. Näytetään hakutuloksia numerosta {{firstShown}} numeroon {{lastShown}}",
   "page-number": "Sivunumero",
@@ -188,6 +189,7 @@
     "superseded": "Korvattu",
     "valid": "Voimassa oleva"
   },
+  "targets-library-class": "Kohdistuu ydintietomallin luokkaan",
   "technical-description": "Tekninen kuvaus",
   "terminology": "Sanasto",
   "terminology-footer-accessibility": "Saavutettavuus",
@@ -203,6 +205,7 @@
   "try-again": "Yritä uudestaan",
   "upper-class": "Yläluokka",
   "uri": "URI",
+  "utilizes-class-restriction": "Hyödyntää luokkarajoitetta",
   "value-is-not-allowed": "\"{{value}}\" ei sallittu",
   "vocabulary-filter-items": "kpl",
   "vocabulary-filter-show-only": "",
