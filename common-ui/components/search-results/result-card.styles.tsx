@@ -36,6 +36,10 @@ export const TitleLink = styled(Link)`
   > svg {
     padding-top: 6px;
   }
+
+  .fi-icon {
+    min-width: max-content;
+  }
 `;
 
 export const Subtitle = styled.p`

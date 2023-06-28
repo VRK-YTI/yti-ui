@@ -64,12 +64,12 @@ export default function StatusSelector({
   return (
     <BlankFieldset>
       <StatusSingleSelect
-        ariaOptionsAvailableText={t('statuses-available')}
+        ariaOptionsAvailableText={t('statuses-available') as string}
         clearButtonLabel={t('clear-button-label')}
         items={statuses}
         labelText={t('terminology-status')}
-        noItemsText={t('no-statuses-available')}
         hintText={t('statuses-hint-text')}
+        itemAdditionHelpText=""
         defaultSelectedItem={
           statuses.find((status) => status.uniqueItemId === defaultValue) ??
           undefined

@@ -2,6 +2,7 @@ import { useGetAuthenticatedUserMutMutation } from '@app/common/components/login
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
+  IconPlus,
   InlineAlert,
   Modal,
   ModalContent,
@@ -21,7 +22,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import generatePayload from './generate-payload';
 import { usePutModelMutation } from '@app/common/components/model/model.slice';
-import getApiError from '@app/common/utils/getApiErrors';
+import getApiError from '@app/common/utils/get-api-errors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 
@@ -38,7 +39,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
   const [formData, setFormData] = useState(modelFormInitialData);
   const [errors, setErrors] = useState<FormErrors>();
   const [userPosted, setUserPosted] = useState(false);
-  const [getAuthenticatedUser, authenticateUser] =
+  const [getAuthenticatedUser, authenticatedUser] =
     useGetAuthenticatedUserMutMutation();
   const [putModel, result] = usePutModelMutation();
 
@@ -95,9 +96,10 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
   return (
     <>
       <Button
-        icon="plus"
+        icon={<IconPlus />}
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}
+        id="new-model-button"
       >
         {t('add-new-model')}
       </Button>
@@ -117,12 +119,14 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
             formData={formData}
             setFormData={setFormData}
             userPosted={userPosted}
-            disabled={authenticateUser.data && authenticateUser.data.anonymous}
+            disabled={
+              authenticatedUser.data && authenticatedUser.data.anonymous
+            }
             errors={userPosted ? errors : undefined}
           />
         </ModalContent>
         <ModalFooter>
-          {authenticateUser.data && authenticateUser.data.anonymous && (
+          {authenticatedUser.data && authenticatedUser.data.anonymous && (
             <InlineAlert status="error" role="alert" id="unauthenticated-alert">
               {t('error-unauthenticated')}
             </InlineAlert>
@@ -134,8 +138,14 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
             />
           )}
 
-          <Button onClick={() => handleSubmit()}>{t('create-model')}</Button>
-          <Button variant="secondary" onClick={() => handleClose()}>
+          <Button onClick={() => handleSubmit()} id="submit-button">
+            {t('create-model')}
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => handleClose()}
+            id="cancel-button"
+          >
             {t('cancel')}
           </Button>
         </ModalFooter>
@@ -163,7 +173,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
 
     if (result.isError) {
       const errorMessage = getApiError(result.error);
-      return [...langsWithError, ...otherErrors, errorMessage];
+      return [...langsWithError, ...otherErrors, ...errorMessage];
     }
 
     return [...langsWithError, ...otherErrors];

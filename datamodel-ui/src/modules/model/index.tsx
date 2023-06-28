@@ -1,13 +1,28 @@
-import Drawer from '@app/common/components/model-drawer';
-import { ContentWrapper, ModelFlow } from './model.styles';
+import Drawer, { ViewType } from '@app/common/components/model-drawer';
+import { ContentWrapper } from './model.styles';
 import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
 import ClassView from '../class-view/class-view';
-import AttributeView from '../attribute-view';
-import AssociationView from '../association-view';
 import { useTranslation } from 'next-i18next';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { useMemo } from 'react';
+import Graph from '../graph';
+import LinkedDataView from '../linked-data-view';
+import { compareLocales } from '@app/common/utils/compare-locals';
+import Documentation from '../documentation';
+import HasPermission from '@app/common/utils/has-permission';
+import {
+  IconApplicationProfile,
+  IconInfo,
+  IconLink,
+  IconRows,
+  IconSearch,
+  IconSwapVertical,
+  IconWindow,
+  IconRegisters,
+} from 'suomifi-ui-components';
+import ResourceView from '../resource';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 interface ModelProps {
   modelId: string;
@@ -15,6 +30,9 @@ interface ModelProps {
 
 export default function Model({ modelId }: ModelProps) {
   const { t } = useTranslation('common');
+  const hasPermission = HasPermission({
+    actions: 'ADMIN_DATA_MODEL',
+  });
   const { data: modelInfo } = useGetModelQuery(modelId);
 
   const languages: string[] = useMemo(() => {
@@ -22,8 +40,98 @@ export default function Model({ modelId }: ModelProps) {
       return [];
     }
 
-    return modelInfo.languages;
+    return [...modelInfo.languages].sort((a, b) => compareLocales(a, b));
   }, [modelInfo]);
+
+  const views: ViewType[] = useMemo(() => {
+    const v = [
+      {
+        id: 'search',
+        icon: <IconSearch />,
+        buttonLabel: t('search-variant'),
+        component: <SearchView modelId={modelId} />,
+      },
+      {
+        id: 'graph',
+        icon: <IconApplicationProfile />,
+        buttonLabel: t('graph'),
+      },
+      {
+        id: 'info',
+        icon: <IconInfo />,
+        buttonLabel: t('details'),
+        component: <ModelInfoView />,
+      },
+      {
+        id: 'links',
+        icon: <IconLink />,
+        buttonLabel: t('links'),
+        component: (
+          <LinkedDataView
+            modelId={modelId}
+            isApplicationProfile={modelInfo?.type === 'PROFILE'}
+          />
+        ),
+      },
+      {
+        id: 'classes',
+        icon: <IconWindow />,
+        buttonLabel: t('classes'),
+        component: (
+          <ClassView
+            modelId={modelId}
+            languages={languages}
+            applicationProfile={modelInfo?.type === 'PROFILE'}
+            terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
+          />
+        ),
+      },
+      {
+        id: 'attributes',
+        icon: <IconRows />,
+        buttonLabel: t('attributes'),
+        buttonLabelSm: t('attributes-abbreviation'),
+        component: (
+          <ResourceView
+            modelId={modelId}
+            type={ResourceType.ATTRIBUTE}
+            languages={languages}
+            applicationProfile={modelInfo?.type === 'PROFILE'}
+            terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
+          />
+        ),
+      },
+      {
+        id: 'associations',
+        icon: <IconSwapVertical />,
+        buttonLabel: t('associations'),
+        buttonLabelSm: t('associations-abbreviation'),
+        component: (
+          <ResourceView
+            modelId={modelId}
+            type={ResourceType.ASSOCIATION}
+            languages={languages}
+            applicationProfile={modelInfo?.type === 'PROFILE'}
+            terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
+          />
+        ),
+      },
+    ];
+
+    if (hasPermission) {
+      return [
+        ...v,
+        {
+          id: 'documentation',
+          icon: <IconRegisters />,
+          buttonLabel: t('documentation-fitted', { ns: 'admin' }),
+          component: <Documentation modelId={modelId} languages={languages} />,
+        },
+      ] as ViewType[];
+    }
+
+    return v as ViewType[];
+  }, [hasPermission, languages, modelId, modelInfo, t]);
 
   return (
     <div
@@ -35,104 +143,9 @@ export default function Model({ modelId }: ModelProps) {
       }}
     >
       <ContentWrapper>
-        <ModelFlow
-          nodes={[
-            {
-              id: '1',
-              position: { x: 300, y: 300 },
-              data: { label: '1' },
-              style: {
-                border: '1px solid black',
-                width: 'min-content',
-                padding: '5px',
-              },
-            },
-            {
-              id: '2',
-              position: { x: 400, y: 300 },
-              data: { label: '2' },
-              style: {
-                border: '1px solid black',
-                width: 'min-content',
-                padding: '5px',
-              },
-            },
-            {
-              id: '3',
-              position: { x: 500, y: 300 },
-              data: { label: '3' },
-              style: {
-                border: '1px solid black',
-                width: 'min-content',
-                padding: '5px',
-              },
-            },
-            {
-              id: '4',
-              position: { x: 600, y: 300 },
-              data: { label: '4' },
-              style: {
-                border: '1px solid black',
-                width: 'min-content',
-                padding: '5px',
-              },
-            },
-          ]}
-        >
-          <Drawer
-            views={[
-              {
-                id: 'search',
-                icon: 'search',
-                buttonLabel: t('search-variant'),
-                component: <SearchView />,
-              },
-              {
-                id: 'graph-small',
-                icon: 'applicationProfile',
-                buttonLabel: t('graph'),
-              },
-              {
-                id: 'info',
-                icon: 'info',
-                buttonLabel: t('details'),
-                component: <ModelInfoView />,
-              },
-              {
-                id: 'link',
-                icon: 'attachment',
-                buttonLabel: 'Linkitykset',
-                component: <></>,
-              },
-              {
-                id: 'classes',
-                icon: 'chatHeart',
-                buttonLabel: t('classes'),
-                component: (
-                  <ClassView modelId={modelId} languages={languages} />
-                ),
-              },
-              {
-                id: 'attributes',
-                icon: 'history',
-                buttonLabel: t('attributes'),
-                buttonLabelSm: t('attributes-abbreviation'),
-                component: (
-                  <AttributeView modelId={modelId} languages={languages} />
-                ),
-              },
-              {
-                id: 'associations',
-                icon: 'swapVertical',
-                buttonLabel: t('associations'),
-                buttonLabelSm: t('associations-abbreviation'),
-                component: (
-                  <AssociationView modelId={modelId} languages={languages} />
-                ),
-              },
-            ]}
-          />
-        </ModelFlow>
+        <Graph modelId={modelId}>
+          <Drawer views={views} />
+        </Graph>
       </ContentWrapper>
     </div>
   );

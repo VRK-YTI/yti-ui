@@ -1,34 +1,45 @@
+import { ConceptType } from './concept-interface';
 import { Status } from './status.interface';
 
 export interface ClassFormType {
   editorialNote: string;
-  concept: object;
+  concept?: ConceptType;
   equivalentClass: {
     label: { [key: string]: string };
     identifier: string;
   }[];
   identifier: string;
   label: { [key: string]: string };
-  inheritedAttributes: string[];
   note: { [key: string]: string };
-  ownAttributes: string[];
   subClassOf: {
     label: string;
     identifier: string;
     attributes: string[];
   }[];
   status: Status;
+  targetClass?: { label: string; id: string };
+  node?: { label: string; id: string };
+  attribute?: {
+    identifier: string;
+    label: { [key: string]: string };
+    modelId: string;
+    uri: string;
+  }[];
+  association?: {
+    identifier: string;
+    label: { [key: string]: string };
+    modelId: string;
+    uri: string;
+  }[];
 }
 
 export const initialClassForm: ClassFormType = {
   editorialNote: '',
-  concept: {},
+  concept: undefined,
   equivalentClass: [],
   identifier: '',
   label: {},
-  inheritedAttributes: [],
   note: {},
-  ownAttributes: [],
   subClassOf: [],
   status: 'DRAFT',
 };

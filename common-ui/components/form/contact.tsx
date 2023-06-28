@@ -18,6 +18,7 @@ interface ContactProps {
     optional: string;
   };
   disabled?: boolean;
+  error?: boolean;
 }
 
 export default function Contact({
@@ -25,6 +26,7 @@ export default function Contact({
   setContact,
   translations,
   disabled,
+  error,
 }: ContactProps) {
   const [defaultContact] = useState(contact);
 
@@ -43,6 +45,7 @@ export default function Contact({
         defaultValue={defaultContact}
         onBlur={(e) => setContact(e.target.value ?? '')}
         disabled={disabled}
+        status={!error ? 'default' : 'error'}
       />
     </ContactWrapper>
   );

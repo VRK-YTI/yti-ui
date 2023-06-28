@@ -46,22 +46,20 @@ export default function generateNewTerminology({
     },
   ];
 
-  postData.properties.description = data.description[0].map((desc) => ({
-    lang: desc.lang,
-    regex: regex,
-    value: desc.description,
+  postData.properties.prefLabel = data.languages.map((lang) => ({
+    lang: lang.uniqueItemId,
+    regex,
+    value: lang.title,
   }));
-
-  postData.properties.prefLabel = data.description[0].map((desc) => ({
-    lang: desc.lang,
-    regex: regex,
-    value: desc.name,
+  postData.properties.description = data.languages.map((lang) => ({
+    lang: lang.uniqueItemId,
+    regex,
+    value: lang.description,
   }));
-
-  postData.properties.language = data.description[0].map((desc) => ({
+  postData.properties.language = data.languages.map((lang) => ({
     lang: '',
-    regex: regex,
-    value: desc.lang,
+    regex,
+    value: lang.uniqueItemId,
   }));
 
   postData.properties.terminologyType = [

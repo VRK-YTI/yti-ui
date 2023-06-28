@@ -89,6 +89,10 @@ module.exports = () => {
             source: '/terminology-api/:path*',
             destination: 'http://localhost:9103/terminology-api/:path*',
           },
+          {
+            source: '/codelist-api/:path*',
+            destination: 'https://koodistot.suomi.fi/codelist-api/:path*',
+          },
         ];
       },
     };
@@ -109,6 +113,11 @@ module.exports = () => {
             source: '/terminology-api/:path*',
             destination:
               'http://yti-terminology-api:9103/terminology-api/:path*',
+          },
+          {
+            source: '/codelist-api/:path*',
+            destination:
+              'http://yti-codelist-public-api-service:9601/codelist-api/:path*',
           },
         ];
       },

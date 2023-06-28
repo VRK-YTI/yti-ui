@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { ExternalLink, Button, Text } from 'suomifi-ui-components';
+import { ExternalLink, Button, Text, IconRemove } from 'suomifi-ui-components';
 import { List, ListItem } from './inline-list.styles';
 
 export interface InlineListProps {
@@ -9,12 +9,14 @@ export interface InlineListProps {
   }[];
   handleRemoval: (value: string) => void;
   labelRow?: boolean;
+  deleteDisabled: string[] | boolean;
 }
 
 export default function InlineList({
   items,
   handleRemoval,
   labelRow,
+  deleteDisabled,
 }: InlineListProps) {
   const { t } = useTranslation('admin');
 
@@ -48,13 +50,19 @@ export default function InlineList({
               {item.label}
             </ExternalLink>
           )}
-          <Button
-            variant="secondaryNoBorder"
-            icon="remove"
-            onClick={() => handleRemoval(item.id)}
-          >
-            {t('remove')}
-          </Button>
+
+          {Array.isArray(deleteDisabled) && deleteDisabled.includes(item.id) ? (
+            <></>
+          ) : (
+            <Button
+              variant="secondaryNoBorder"
+              icon={<IconRemove />}
+              onClick={() => handleRemoval(item.id)}
+              id="remove-button"
+            >
+              {t('remove')}
+            </Button>
+          )}
         </ListItem>
       ))}
     </List>

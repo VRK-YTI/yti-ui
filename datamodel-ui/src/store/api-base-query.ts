@@ -1,8 +1,10 @@
-import { AxiosRequestHeaders } from 'axios';
+import { RawAxiosRequestHeaders } from 'axios';
 import axiosBaseQuery from './axios-base-query';
 
 export const getDatamodelApiBaseQuery = (
-  getAdditionalHeaders?: (headers: AxiosRequestHeaders) => AxiosRequestHeaders
+  getAdditionalHeaders?: (
+    headers: RawAxiosRequestHeaders
+  ) => RawAxiosRequestHeaders
 ) =>
   axiosBaseQuery({
     baseUrl: process.env.DATAMODEL_API_URL
@@ -42,7 +44,7 @@ export const getDatamodelApiBaseQuery = (
         }
       }
 
-      let headers: AxiosRequestHeaders = {
+      let headers: RawAxiosRequestHeaders = {
         'content-type': 'application/json',
       };
 
@@ -94,7 +96,9 @@ export const getDatamodelApiBaseQuery = (
   });
 
 export const getTerminologyBaseQuery = (
-  getAdditionalHeaders?: (headers: AxiosRequestHeaders) => AxiosRequestHeaders
+  getAdditionalHeaders?: (
+    headers: RawAxiosRequestHeaders
+  ) => RawAxiosRequestHeaders
 ) =>
   axiosBaseQuery({
     baseUrl: process.env.TERMINOLOGY_API_URL
@@ -134,7 +138,7 @@ export const getTerminologyBaseQuery = (
         }
       }
 
-      let headers: AxiosRequestHeaders = {
+      let headers: RawAxiosRequestHeaders = {
         'content-type': 'application/json',
       };
 
@@ -183,4 +187,11 @@ export const getTerminologyBaseQuery = (
 
       return headers;
     },
+  });
+
+export const getCodeListApiBaseQuery = () =>
+  axiosBaseQuery({
+    baseUrl: process.env.CODELIST_API_URL
+      ? `${process.env.CODELIST_API_URL}/api/v1`
+      : '/codelist-api/api/v1',
   });

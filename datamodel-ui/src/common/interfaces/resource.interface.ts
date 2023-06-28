@@ -1,3 +1,4 @@
+import { ConceptType } from './concept-interface';
 import { ResourceType } from './resource-type.interface';
 import { Status } from './status.interface';
 
@@ -8,11 +9,19 @@ export interface Resource {
   status: Status;
   subResourceOf: string[];
   equivalentResource: string[];
-  subject?: string;
+  subject?: ConceptType;
   identifier: string;
   note: { [key: string]: string };
   modified: string;
+  modifier: {
+    id: string;
+    name: string;
+  };
   created: string;
+  creator: {
+    id: string;
+    name: string;
+  };
   contact?: string;
   contributor?: [
     {
@@ -22,4 +31,6 @@ export interface Resource {
     }
   ];
   uri: string;
+  domain?: string;
+  range?: string;
 }

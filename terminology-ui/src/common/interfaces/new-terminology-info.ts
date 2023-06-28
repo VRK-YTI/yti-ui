@@ -1,13 +1,8 @@
+import { LanguageBlockType } from 'yti-common-ui/form/language-selector';
+
 export interface NewTerminologyInfo {
   contact: string;
-  description: [
-    {
-      lang: string;
-      name: string;
-      description: string;
-    }[],
-    boolean
-  ];
+  languages: LanguageBlockType[];
   infoDomains: {
     groupId: string;
     labelText: string;

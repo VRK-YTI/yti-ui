@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { BaseIconKeys } from 'suomifi-ui-components';
+import { ReactNode, useEffect, useState } from 'react';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { default as CommonDrawer } from 'yti-common-ui/drawer';
 import { DrawerButton } from 'yti-common-ui/drawer/drawer.styles';
@@ -8,10 +7,28 @@ import {
   DrawerViewContainer,
   ModelPanel,
 } from './model-side-navigation.styles';
+import { useStoreDispatch } from '@app/store';
+import {
+  displayWarning,
+  selectCurrentViewName,
+  selectHasChanges,
+  setView,
+} from '../model/model.slice';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import DrawerTopAlert from './drawer-top-alert';
 
-type ViewType = {
-  id: string;
-  icon: BaseIconKeys;
+export type ViewType = {
+  id:
+    | 'search'
+    | 'graph'
+    | 'info'
+    | 'links'
+    | 'classes'
+    | 'attributes'
+    | 'associations'
+    | 'documentation';
+  icon: ReactNode;
   buttonLabel: string;
   buttonLabelSm?: string;
   component?: React.ReactFragment;
@@ -23,20 +40,50 @@ interface SideNavigationProps {
 
 export default function Drawer({ views }: SideNavigationProps) {
   const { breakpoint, isSmall, isLarge } = useBreakpoints();
+  const dispatch = useStoreDispatch();
+  const hasChanges = useSelector(selectHasChanges());
+  const router = useRouter();
+  const currentView = useSelector(selectCurrentViewName());
   const [activeView, setActiveView] = useState<ViewType | undefined>(
-    isSmall ? undefined : views?.[0] ?? undefined
+    isSmall
+      ? views.find((v) => v.id === 'graph')
+      : views.find((v) => v.id === 'info')
   );
 
-  const handleSetActiveView = (viewId: string) => {
-    setActiveView(views.find((view) => view.id === viewId));
+  const handleSetActiveView = (viewId: ViewType['id']) => {
+    if (hasChanges) {
+      dispatch(displayWarning());
+      return;
+    }
+
+    if (['search', 'links', 'graph'].includes(viewId)) {
+      dispatch(setView(viewId));
+      return;
+    }
+
+    dispatch(setView(viewId, viewId === 'info' ? 'info' : 'list'));
   };
 
+  useEffect(() => {
+    if (currentView !== activeView?.id) {
+      setActiveView(views.find((v) => v.id === currentView));
+    }
+
+    if (
+      currentView === 'info' &&
+      router.query.slug &&
+      router.query.slug.length > 1
+    ) {
+      router.replace(router.query.slug[0]);
+    }
+  }, [activeView, currentView, views, router]);
+
   return (
-    <ModelPanel position="top-left" $isSmall={isSmall}>
+    <ModelPanel position="bottom-left" $isSmall={isSmall}>
       <ModelDrawerContainer $isSmall={isSmall}>
         <CommonDrawer
           buttons={views
-            .filter((view) => (isSmall ? true : !view.id.includes('-small')))
+            .filter((view) => (isSmall ? true : !view.id.includes('graph')))
             .map((view) => (
               <DrawerButton
                 key={view.id}
@@ -45,12 +92,13 @@ export default function Drawer({ views }: SideNavigationProps) {
                 $active={activeView?.id === view.id}
                 $breakpoint={breakpoint}
                 onClick={() => handleSetActiveView(view.id)}
+                id={`drawer-button-${view.id}`}
               >
                 {isLarge && view.buttonLabel}
               </DrawerButton>
             ))}
           smallButtons={views
-            .filter((view) => (isSmall ? true : !view.id.includes('-small')))
+            .filter((view) => (isSmall ? true : !view.id.includes('graph')))
             .map((view) => ({
               id: view.id,
               icon: view.icon,
@@ -61,11 +109,17 @@ export default function Drawer({ views }: SideNavigationProps) {
             typeof activeView !== 'undefined' &&
             typeof activeView.component !== 'undefined'
           }
+          active={currentView}
+          initialOpen
+          navDisabled={hasChanges}
+          openButtonExtraFunc={() => {
+            dispatch(displayWarning());
+          }}
         >
-          {typeof activeView !== 'undefined' &&
-            typeof activeView.component !== 'undefined' && (
-              <DrawerViewContainer>{activeView.component}</DrawerViewContainer>
-            )}
+          <DrawerViewContainer>
+            <DrawerTopAlert />
+            {activeView && activeView.component}
+          </DrawerViewContainer>
         </CommonDrawer>
       </ModelDrawerContainer>
     </ModelPanel>

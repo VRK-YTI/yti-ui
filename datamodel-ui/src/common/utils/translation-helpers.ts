@@ -5,11 +5,22 @@ import { Type } from '../interfaces/type.interface';
 export function translateModelType(type: Type, t: TFunction) {
   switch (type) {
     case 'LIBRARY':
-      return t('library');
+      return t('library', { ns: 'common' });
     case 'PROFILE':
-      return t('profile');
+      return t('profile', { ns: 'common' });
     default:
-      return t('profile');
+      return t('profile', { ns: 'common' });
+  }
+}
+
+export function translateResourceType(type: ResourceType, t: TFunction) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('association');
+    case ResourceType.ATTRIBUTE:
+      return t('attribute');
+    default:
+      return t('class');
   }
 }
 
@@ -21,10 +32,16 @@ export function translateModelFormErrors(error: string, t: TFunction) {
       return t('missing-language-title', { ns: 'admin' });
     case 'prefix':
       return t('missing-prefix', { ns: 'admin' });
+    case 'prefixInitChar':
+      return t('prefix-invalid-initial-character', { ns: 'admin' });
+    case 'prefixLength':
+      return t('prefix-invalid-length', { ns: 'admin' });
     case 'serviceCategories':
       return t('missing-information-domain', { ns: 'admin' });
     case 'organizations':
       return t('missing-organizations', { ns: 'admin' });
+    case 'contact':
+      return t('missing-contact', { ns: 'admin' });
     default:
       return t('missing-general', { ns: 'admin' });
   }
@@ -34,6 +51,10 @@ export function translateClassFormErrors(error: string, t: TFunction) {
   switch (error) {
     case 'identifier':
       return t('class-missing-identifier', { ns: 'admin' });
+    case 'identifierInitChar':
+      return t('class-invalid-identifier-first-character', { ns: 'admin' });
+    case 'identifierLength':
+      return t('class-invalid-identifier-length', { ns: 'admin' });
     case 'label':
       return t('class-missing-language-title', { ns: 'admin' });
     case 'unauthorized':
@@ -123,8 +144,8 @@ export function translateCommonForm(
       return type === ResourceType.ASSOCIATION
         ? t('common-form.associations-note', { ns: 'admin' })
         : t('common-form.attributes-note', { ns: 'admin' });
-    case 'editorial-note':
-      return t('common-form.editorial-note', { ns: 'admin' });
+    case 'work-group-comment':
+      return t('common-form.work-group-comment', { ns: 'admin' });
     case 'contact':
       return type === ResourceType.ASSOCIATION
         ? t('common-view.associations-contact', { ns: 'common' })
@@ -152,6 +173,14 @@ export function translateCommonFormErrors(
       return type === ResourceType.ASSOCIATION
         ? t('association-missing-identifier', { ns: 'admin' })
         : t('attribute-missing-identifier', { ns: 'admin' });
+    case 'identifierInitChar':
+      return type === ResourceType.ASSOCIATION
+        ? t('association-invalid-identifier-first-character', { ns: 'admin' })
+        : t('attribute-invalid-identifier-first-character', { ns: 'admin' });
+    case 'identifierLength':
+      return type === ResourceType.ASSOCIATION
+        ? t('association-invalid-identifier-length', { ns: 'admin' })
+        : t('attribute-invalid-identifier-length', { ns: 'admin' });
     case 'unauthorized':
       return t('error-unauthenticated', { ns: 'admin' });
     default:
@@ -260,5 +289,67 @@ export function translateDeleteModalError(
         ns: 'admin',
         targetName: targetName,
       });
+  }
+}
+
+export function translateResourceCountTitle(
+  type: ResourceType,
+  t: TFunction,
+  count?: number
+) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('association-count-title', { count: count ?? 0 });
+    case ResourceType.ATTRIBUTE:
+      return t('attribute-count-title', { count: count ?? 0 });
+    default:
+      return '';
+  }
+}
+
+export function translateResourceAddition(type: ResourceType, t: TFunction) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('add-association', { ns: 'admin' });
+    case ResourceType.ATTRIBUTE:
+      return t('add-attribute', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateResourceName(type: ResourceType, t: TFunction) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('association-name', { ns: 'admin' });
+    case ResourceType.ATTRIBUTE:
+      return t('attribute-name', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateCreateNewResource(type: ResourceType, t: TFunction) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('create-new-association', { ns: 'admin' });
+    case ResourceType.ATTRIBUTE:
+      return t('create-new-attribute', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateCreateNewResourceForSelected(
+  type: ResourceType,
+  t: TFunction
+) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('create-new-sub-association-for-selected', { ns: 'admin' });
+    case ResourceType.ATTRIBUTE:
+      return t('create-new-sub-attribute-for-selected', { ns: 'admin' });
+    default:
+      return '';
   }
 }

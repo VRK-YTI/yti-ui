@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { FakeableUser } from '../interfaces/fakeable-user.interface';
 
 export default function generateFakeableUsers(
@@ -25,8 +26,10 @@ export default function generateFakeableUsers(
 }
 
 function generateImpersonate(email: string, language: string): () => string {
+  const { asPath } = useRouter();
+
   return () =>
     (window.location.href = `/api/auth/fake-login?fake.login.mail=${encodeURIComponent(
       email
-    )}&target=/${language ?? 'fi'}`);
+    )}&target=/${language ?? 'fi'}${asPath}`);
 }

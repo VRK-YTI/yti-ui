@@ -2,11 +2,9 @@ import {
   Button,
   Dropdown,
   DropdownItem,
-  Expander,
   ExpanderGroup,
-  ExpanderTitleButton,
-  Heading,
-  Label,
+  IconArrowLeft,
+  IconPlus,
   Text,
   Textarea,
   TextInput,
@@ -14,15 +12,11 @@ import {
 } from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
 import { LanguageVersionedWrapper } from './class-form.styles';
-import AttributeModal from '../attribute-modal';
 import { useTranslation } from 'next-i18next';
 import { Status } from '@app/common/interfaces/status.interface';
-import ConceptBlock from './concept-block';
-import {
-  ClassFormType,
-  initialClassForm,
-} from '@app/common/interfaces/class-form.interface';
-import { ClassFormErrors, classFormToClass, validateClassForm } from './utils';
+import ConceptBlock from '../concept-block';
+import { ClassFormType } from '@app/common/interfaces/class-form.interface';
+import { ClassFormErrors, validateClassForm } from './utils';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import {
@@ -33,38 +27,68 @@ import { useEffect, useRef, useState } from 'react';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import InlineListBlock from '@app/common/components/inline-list-block';
-import { usePutClassMutation } from '@app/common/components/class/class.slice';
 import {
-  AxiosBaseQueryError,
-  AxiosQueryErrorFields,
-} from 'yti-common-ui/interfaces/axios-base-query.interface';
+  selectClass,
+  setClass,
+  useGetClassIdentifierFreeQuery,
+  usePutClassMutation,
+} from '@app/common/components/class/class.slice';
+import { AxiosQueryErrorFields } from 'yti-common-ui/interfaces/axios-base-query.interface';
+import { useSelector } from 'react-redux';
+import { useStoreDispatch } from '@app/store';
+import { ConceptType } from '@app/common/interfaces/concept-interface';
+import ClassModal from '../class-modal';
+import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { BasicBlock } from 'yti-common-ui/block';
+import ResourceInfo from '../class-view/resource-info';
+import ResourceForm from '../resource-form';
+import getApiError from '@app/common/utils/get-api-errors';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
+import {
+  selectHasChanges,
+  setHasChanges,
+} from '@app/common/components/model/model.slice';
 
 export interface ClassFormProps {
-  initialData: ClassFormType;
   handleReturn: () => void;
   handleFollowUp: (value: string) => void;
   languages: string[];
   modelId: string;
+  terminologies: string[];
+  isEdit: boolean;
+  applicationProfile?: boolean;
+  basedOnNodeShape?: boolean;
 }
 
 export default function ClassForm({
-  initialData,
   handleReturn,
   handleFollowUp,
   languages,
   modelId,
+  terminologies,
+  isEdit,
+  applicationProfile,
+  basedOnNodeShape,
 }: ClassFormProps) {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-  const [data, setData] = useState<ClassFormType>(
-    initialData ?? initialClassForm
-  );
+  const dispatch = useStoreDispatch();
+  const data = useSelector(selectClass());
+  const hasChanges = useSelector(selectHasChanges());
   const [userPosted, setUserPosted] = useState(false);
   const [errors, setErrors] = useState<ClassFormErrors>(
     validateClassForm(data)
   );
   const [putClass, putClassResult] = usePutClassMutation();
+
+  const { data: identifierFree, isSuccess } = useGetClassIdentifierFreeQuery(
+    { prefix: modelId, identifier: data.identifier },
+    { skip: isEdit || data.identifier === '' }
+  );
 
   const handleUpdate = (value: ClassFormType) => {
     if (
@@ -73,11 +97,15 @@ export default function ClassForm({
     ) {
       setErrors(validateClassForm(value));
     }
-
-    setData(value);
+    enableConfirmation();
+    dispatch(setHasChanges(true));
+    dispatch(setClass(value));
   };
 
   const handleSubmit = () => {
+    disableConfirmation();
+    dispatch(setHasChanges(false));
+
     if (!userPosted) {
       setUserPosted(true);
     }
@@ -85,20 +113,91 @@ export default function ClassForm({
     const errors = validateClassForm(data);
     setErrors(errors);
 
-    if (Object.values(errors).filter((val) => val === true).length > 0) {
+    if (
+      Object.values(errors).filter((val) => val === true).length > 0 ||
+      (isSuccess && !identifierFree)
+    ) {
       return;
     }
 
-    const convertedData = classFormToClass(data);
+    const usedLabels = Object.fromEntries(
+      Object.entries(data.label).filter((obj) => obj[1] !== '')
+    );
 
-    putClass({ modelId: modelId, data: convertedData });
+    putClass({
+      modelId: modelId,
+      data: {
+        ...data,
+        label: Object.keys(usedLabels).length > 0 ? usedLabels : {},
+      },
+      classId: isEdit ? data.identifier : undefined,
+      applicationProfile,
+      basedOnNodeShape: basedOnNodeShape,
+    });
+  };
+
+  const handleSetConcept = (value?: ConceptType) => {
+    const label =
+      value && 'label' in value
+        ? Object.fromEntries(
+            Object.entries(data.label)
+              .map((obj) => {
+                if (value.label[obj[0]] != null) {
+                  return [[obj[0]], value.label[obj[0]]];
+                }
+                return [[obj[0]], data.label[obj[0]]];
+              })
+              .filter(
+                (obj) =>
+                  data.label[Array.isArray(obj[0]) ? obj[0][0] : obj[0]] === ''
+              )
+          )
+        : undefined;
+
+    handleUpdate({
+      ...data,
+      concept: value ? value : undefined,
+      label: label ? { ...data.label, ...label } : data.label,
+    });
+  };
+
+  const handleTargetClassUpdate = (value?: InternalClass | undefined) => {
+    if (!value) {
+      return;
+    }
+
+    const classInfo = {
+      id: value.id,
+      label:
+        value.id.split('/').pop()?.replace('#', ':') ??
+        `${value.isDefinedBy.split('/').pop()}:${value.identifier}`,
+    };
+
+    handleUpdate({ ...data, targetClass: classInfo });
   };
 
   const handleSubClassOfRemoval = (id: string) => {
-    handleUpdate({
-      ...data,
-      subClassOf: data.subClassOf.filter((s) => s.identifier !== id),
-    });
+    const newSubClasses = data.subClassOf.filter(
+      (subclass) => subclass.identifier !== id
+    );
+
+    if (newSubClasses.length < 1) {
+      handleUpdate({
+        ...data,
+        subClassOf: [
+          {
+            attributes: [],
+            identifier: 'owl:Thing',
+            label: 'owl:Thing',
+          },
+        ],
+      });
+    } else {
+      handleUpdate({
+        ...data,
+        subClassOf: newSubClasses,
+      });
+    }
   };
 
   useEffect(() => {
@@ -125,14 +224,19 @@ export default function ClassForm({
       putClassResult.error &&
       'data' in putClassResult.error
     ) {
-      const backendErrorFields =
-        (putClassResult.error as AxiosQueryErrorFields).data?.details?.map(
-          (d) => d.field
-        ) ?? [];
+      const backendErrorFields = Array.isArray(
+        (putClassResult.error as AxiosQueryErrorFields).data?.details
+      )
+        ? (putClassResult.error as AxiosQueryErrorFields).data.details.map(
+            (d) => d.field
+          )
+        : [];
 
       if (backendErrorFields.length > 0) {
         setErrors({
           identifier: backendErrorFields.includes('identifier'),
+          identifierInitChar: false,
+          identifierLength: false,
           label: backendErrorFields.includes('label'),
         });
         return;
@@ -152,10 +256,15 @@ export default function ClassForm({
       <StaticHeader ref={ref}>
         <div>
           <Button
-            icon="arrowLeft"
+            icon={<IconArrowLeft />}
             variant="secondaryNoBorder"
-            onClick={() => handleReturn()}
+            onClick={() => {
+              if (!hasChanges) {
+                handleReturn();
+              }
+            }}
             style={{ textTransform: 'uppercase' }}
+            id="back-button"
           >
             {t('back', { ns: 'common' })}
           </Button>
@@ -163,13 +272,33 @@ export default function ClassForm({
 
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Text variant="bold">
-            {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
-              t('class-name')}
+            {Object.values(data.label).filter(
+              (l) => l !== '' && typeof l !== 'undefined'
+            ).length > 0
+              ? getLanguageVersion({
+                  data: Object.fromEntries(
+                    Object.entries(data.label).filter(
+                      (l) => l[1] !== '' && typeof l[1] !== 'undefined'
+                    )
+                  ),
+                  lang: i18n.language,
+                  appendLocale: true,
+                })
+              : t('class-name')}
           </Text>
 
           <div style={{ display: 'flex', gap: '10px' }}>
-            <Button onClick={() => handleSubmit()}>{t('save')}</Button>
-            <Button variant="secondary" onClick={() => handleReturn()}>
+            <Button onClick={() => handleSubmit()} id="submit-button">
+              {t('save')}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                handleReturn();
+                dispatch(setHasChanges(false));
+              }}
+              id="cancel-button"
+            >
               {t('cancel-variant')}
             </Button>
           </div>
@@ -177,7 +306,8 @@ export default function ClassForm({
 
         {userPosted &&
         (Object.values(errors).filter((e) => e).length > 0 ||
-          putClassResult.isError) ? (
+          putClassResult.isError ||
+          (isSuccess && !identifierFree)) ? (
           <div>
             <FormFooterAlert
               labelText={
@@ -199,31 +329,9 @@ export default function ClassForm({
 
       <DrawerContent height={headerHeight} spaced>
         <ConceptBlock
-          concept={
-            data.equivalentClass.length > 0
-              ? data.equivalentClass[0]
-              : undefined
-          }
-          setConcept={(
-            value: ClassFormType['equivalentClass'][0] | undefined
-          ) => {
-            const label = value
-              ? Object.fromEntries(
-                  Object.entries(data.label).map((obj) => {
-                    if (value.label[obj[0]] != null) {
-                      return [[obj[0]], value.label[obj[0]]];
-                    }
-                    return [[obj[0]], data.label[obj[0]]];
-                  })
-                )
-              : undefined;
-
-            handleUpdate({
-              ...data,
-              equivalentClass: value ? [value] : [],
-              label: label ? label : data.label,
-            });
-          }}
+          concept={data.concept}
+          setConcept={handleSetConcept}
+          terminologies={terminologies}
         />
 
         <LanguageVersionedWrapper>
@@ -240,6 +348,7 @@ export default function ClassForm({
               }
               status={userPosted && errors.label ? 'error' : 'default'}
               fullWidth
+              id="label-input"
             />
           ))}
         </LanguageVersionedWrapper>
@@ -248,9 +357,22 @@ export default function ClassForm({
           labelText={t('class-identifier')}
           visualPlaceholder={t('input-class-identifier')}
           defaultValue={data.identifier}
-          status={userPosted && errors.identifier ? 'error' : 'default'}
+          status={
+            (userPosted &&
+              (errors.identifier ||
+                errors.identifierInitChar ||
+                errors.identifierLength)) ||
+            (isSuccess && !identifierFree)
+              ? 'error'
+              : 'default'
+          }
+          disabled={isEdit}
           onChange={(e) =>
             handleUpdate({ ...data, identifier: e?.toString() ?? '' })
+          }
+          debounce={300}
+          statusText={
+            isSuccess && !identifierFree ? t('error-prefix-taken') : ''
           }
           tooltipComponent={
             <Tooltip
@@ -260,38 +382,109 @@ export default function ClassForm({
               <Text>Tooltip sisältö</Text>
             </Tooltip>
           }
+          id="prefix-input"
         />
 
-        <InlineListBlock
-          addNewComponent={
-            <Button variant="secondary">{t('add-upper-class')}</Button>
-          }
-          items={
-            data.subClassOf.length > 0
-              ? data.subClassOf.map((s) => ({
-                  label: s.label,
-                  id: s.identifier,
-                }))
-              : []
-          }
-          label={t('upper-classes')}
-          handleRemoval={() => null}
-        />
+        {!applicationProfile ? (
+          <InlineListBlock
+            addNewComponent={
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-upper-class-button"
+              >
+                {t('add-upper-class')}
+              </Button>
+            }
+            items={
+              data.subClassOf.length > 0
+                ? data.subClassOf.map((s) => ({
+                    label: s.label,
+                    id: s.identifier,
+                  }))
+                : []
+            }
+            label={t('upper-classes')}
+            handleRemoval={(id: string) => handleSubClassOfRemoval(id)}
+            deleteDisabled={['owl:Thing']}
+          />
+        ) : (
+          <></>
+        )}
 
-        <InlineListBlock
-          addNewComponent={
-            <Button variant="secondary">{t('add-corresponding-class')}</Button>
-          }
-          items={[]}
-          label={t('corresponding-classes')}
-          handleRemoval={() => null}
-        />
+        {applicationProfile ? (
+          <InlineListBlock
+            addNewComponent={
+              <ClassModal
+                modelId={modelId}
+                mode={'select'}
+                modalButtonLabel={t('select-class')}
+                handleFollowUp={handleTargetClassUpdate}
+                applicationProfile
+                initialSelected={data.targetClass?.id}
+              />
+            }
+            items={data.targetClass ? [data.targetClass] : []}
+            label={t('target-class-profile')}
+            handleRemoval={() =>
+              handleUpdate({ ...data, targetClass: undefined })
+            }
+          />
+        ) : (
+          <InlineListBlock
+            addNewComponent={
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-corresponding-class-button"
+              >
+                {t('add-corresponding-class')}
+              </Button>
+            }
+            items={[]}
+            label={t('corresponding-classes')}
+            handleRemoval={() => null}
+          />
+        )}
+
+        {applicationProfile ? (
+          <InlineListBlock
+            label={t('utilizes-class-restriction')}
+            addNewComponent={
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="select-class-restriction-button"
+              >
+                {t('select-class-restriction')}
+              </Button>
+            }
+            items={data.node ? [data.node] : []}
+            handleRemoval={() => handleUpdate({ ...data, node: undefined })}
+          />
+        ) : (
+          <InlineListBlock
+            label={t('disjoint-classes', { ns: 'common' })}
+            addNewComponent={
+              <Button
+                variant="secondary"
+                icon={<IconPlus />}
+                id="add-disjoint-class-button"
+              >
+                {t('add-disjoint-class')}
+              </Button>
+            }
+            items={[]}
+            handleRemoval={() => null}
+          />
+        )}
 
         <div>
           <Dropdown
             labelText={t('status')}
             defaultValue={data.status}
             onChange={(e) => handleUpdate({ ...data, status: e as Status })}
+            id="status-dropdown"
           >
             {statusList.map((status) => (
               <DropdownItem key={status} value={status}>
@@ -305,7 +498,7 @@ export default function ClassForm({
           {languages.map((lang) => (
             <Textarea
               key={`comment-${lang}`}
-              labelText={`${t('additional-information')}, ${lang}`}
+              labelText={`${t('technical-description')}, ${lang}`}
               optionalText={t('optional')}
               defaultValue={data.note[lang as keyof typeof data.note]}
               onChange={(e) =>
@@ -315,91 +508,94 @@ export default function ClassForm({
                 })
               }
               fullWidth
+              id="comment-input"
             />
           ))}
         </LanguageVersionedWrapper>
 
         <Separator />
 
-        <div>
-          <Heading variant="h3">{t('attributes')}</Heading>
-        </div>
+        <BasicBlock title={t('attributes')}>
+          {(!applicationProfile && !isEdit) ||
+          !data.attribute ||
+          data.attribute.length < 1 ? (
+            t('no-attributes', { ns: 'common' })
+          ) : (
+            <ExpanderGroup
+              closeAllText=""
+              openAllText=""
+              showToggleAllButton={false}
+            >
+              {data.attribute.map((attr) =>
+                applicationProfile ? (
+                  <div key={`${data.identifier}-attr-${attr.identifier}`}>
+                    <ResourceForm
+                      data={attr}
+                      langs={languages}
+                      type="attribute"
+                    />
+                    <Button
+                      variant="secondary"
+                      style={{ marginTop: '10px' }}
+                      id="add-attribute-button"
+                    >
+                      {t('add-attribute')}
+                    </Button>
+                  </div>
+                ) : (
+                  <ResourceInfo
+                    key={`${data.identifier}-attr-${attr.identifier}`}
+                    data={attr}
+                    modelId={applicationProfile ? attr.modelId : modelId}
+                  />
+                )
+              )}
+            </ExpanderGroup>
+          )}
+        </BasicBlock>
 
-        <InlineListBlock
-          items={[]}
-          label={t('attributes-added-to-class', { count: 0 })}
-          addNewComponent={
-            <AttributeModal
-              buttonTranslations={{
-                useSelected: t('use-as-is'),
-              }}
-              handleFollowUp={() => null}
-              modelId={modelId}
-            />
-          }
-          handleRemoval={() => null}
-        />
-
-        {/* TODO:
-         * Change this use InlineListBlock possibly
-         * after it's been decided whether all attributes are
-         * listed together
-         */}
-        <div className="spread-content">
-          <Label>
-            {t('attributes-inherited-from-upper-classes', {
-              count:
-                data.subClassOf.length > 0
-                  ? data.subClassOf[0].attributes.length
-                  : 0,
-            })}
-          </Label>
-          <ExpanderGroup
-            closeAllText=""
-            openAllText=""
-            showToggleAllButton={false}
-          >
-            {data.subClassOf.length > 0 ? (
-              data.subClassOf[0].attributes.map((attr) => (
-                <Expander key={attr}>
-                  <ExpanderTitleButton>{attr}</ExpanderTitleButton>
-                </Expander>
-              ))
-            ) : (
-              <Text smallScreen>{t('no-inherited-attributes')}</Text>
-            )}
-          </ExpanderGroup>
-        </div>
-
-        <div>
-          <Heading variant="h3">{t('associations')}</Heading>
-        </div>
-
-        <InlineListBlock
-          items={[]}
-          label={t('associations-added-to-class', { count: 0 })}
-          addNewComponent={
-            <Button variant="secondary">{t('add-association')}</Button>
-          }
-          handleRemoval={() => null}
-        />
-
-        {/* TODO:
-         * Change this use InlineListBlock possibly
-         * after it's been decided whether all assocations are
-         * listed together
-         */}
-        <div className="spread-content">
-          <Label>
-            {t('associations-inherited-from-upper-classes', { count: 0 })}
-          </Label>
-          <Text smallScreen>{t('no-inherited-associations')}</Text>
-        </div>
+        <BasicBlock title={t('associations')}>
+          {(!applicationProfile && !isEdit) ||
+          !data.association ||
+          data.association.length < 1 ? (
+            t('no-assocations', { ns: 'common' })
+          ) : (
+            <ExpanderGroup
+              closeAllText=""
+              openAllText=""
+              showToggleAllButton={false}
+            >
+              {data.association.map((assoc) =>
+                applicationProfile ? (
+                  <div key={`${data.identifier}-assoc-${assoc.identifier}`}>
+                    <ResourceInfo
+                      data={assoc}
+                      modelId={applicationProfile ? assoc.modelId : modelId}
+                    />
+                    <Button
+                      variant="secondary"
+                      style={{ marginTop: '10px' }}
+                      id="add-association-button"
+                    >
+                      {t('add-association')}
+                    </Button>
+                  </div>
+                ) : (
+                  <ResourceInfo
+                    key={`${data.identifier}-assoc-${assoc.identifier}`}
+                    data={assoc}
+                    modelId={applicationProfile ? assoc.modelId : modelId}
+                  />
+                )
+              )}
+            </ExpanderGroup>
+          )}
+        </BasicBlock>
 
         <Separator />
 
         <Textarea
-          labelText={t('editor-comment')}
+          labelText={t('work-group-comment')}
           optionalText={t('optional')}
           hintText={t('editor-comment-hint')}
           defaultValue={data.editorialNote}
@@ -407,6 +603,7 @@ export default function ClassForm({
             handleUpdate({ ...data, editorialNote: e.target.value })
           }
           fullWidth
+          id="editor-comment-input"
         />
       </DrawerContent>
     </>
@@ -417,24 +614,13 @@ export default function ClassForm({
       .filter((e) => e[1])
       .map((e) => translateClassFormErrors(e[0], t));
 
-    if (putClassResult.error) {
-      const error = putClassResult.error as AxiosBaseQueryError;
-      const errorStatus = error.status ?? '';
-      const errorTitle =
-        error.data &&
-        Object.entries(error.data).filter(
-          (entry) => entry[0] === 'title'
-        )?.[0]?.[1];
-      const errorDetail =
-        error.data &&
-        Object.entries(error.data).filter(
-          (entry) => entry[0] === 'detail'
-        )?.[0]?.[1];
-      const catchedError = `Error ${errorStatus}: ${
-        errorTitle ?? t('unexpected-error-title')
-      } ${errorDetail}`;
+    if (isSuccess && !identifierFree) {
+      return [...translatedErrors, t('error-prefix-taken')];
+    }
 
-      return [...translatedErrors, catchedError];
+    if (putClassResult.error) {
+      const catchedError = getApiError(putClassResult.error);
+      return [...translatedErrors, ...catchedError];
     }
 
     return translatedErrors;

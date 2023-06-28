@@ -1,77 +1,56 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import {
   Dropdown,
   DropdownItem,
-  ExternalLink,
-  Icon,
-  RadioButton,
   SearchInput,
   SingleSelect,
   SingleSelectData,
-  Text,
 } from 'suomifi-ui-components';
-import {
-  ResultsTable,
-  SearchToolsBlock,
-  StatusChip,
-} from './multi-column-search.styles';
+import { SearchToolsBlock } from './multi-column-search.styles';
 import { useGetServiceCategoriesQuery } from '../service-categories/service-categories.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { isEqual } from 'lodash';
 import { InternalResourcesSearchParams } from '../search-internal-resources/search-internal-resources.slice';
 import { Status } from 'yti-common-ui/interfaces/status.interface';
-
-export interface ResultType {
-  target: {
-    identifier: string;
-    label: string;
-    linkLabel: string;
-    link: string;
-    modified: string;
-    status: string;
-    isValid?: boolean;
-  };
-  partOf: {
-    label: string;
-    type: string;
-    domains: string[];
-  };
-  subClass: {
-    label: string;
-    link: string;
-    partOf: string;
-  };
-}
+import ResourceList, { ResultType } from '../resource-list';
+import { DetachedPagination } from 'yti-common-ui/pagination';
 
 interface MultiColumnSearchProps {
   primaryColumnName: string;
-  results: ResultType[];
+  result: {
+    totalHitCount?: number;
+    items: ResultType[];
+  };
   selectedId?: string;
   setSelectedId: (value: string) => void;
   searchParams: InternalResourcesSearchParams;
   setSearchParams: (value: InternalResourcesSearchParams) => void;
+  setContentLanguage: (value: string) => void;
   languageVersioned?: boolean;
+  applicationProfile?: boolean;
   modelId: string;
 }
 
 export default function MultiColumnSearch({
   primaryColumnName,
-  results,
+  result,
   selectedId,
   setSelectedId,
   searchParams,
   setSearchParams,
+  setContentLanguage,
   languageVersioned,
   modelId,
+  applicationProfile,
 }: MultiColumnSearchProps) {
   const { t, i18n } = useTranslation('admin');
   const {
     data: serviceCategoriesResult,
     isSuccess: serviceCategoriesIsSuccess,
   } = useGetServiceCategoriesQuery(i18n.language);
+  const [currentPage, setCurrentPage] = useState(1);
   const [dataModelType] = useState<SingleSelectData[]>([
     {
       labelText: t('data-models-added-to-this-model'),
@@ -126,24 +105,29 @@ export default function MultiColumnSearch({
     );
   }, [serviceCategoriesResult, serviceCategoriesIsSuccess, t, i18n.language]);
 
-  const handleRadioButtonClick = (id: string) => {
-    setSelectedId(selectedId === id ? '' : id);
+  const handleRadioButtonClick = (id: string | string[]) => {
+    const targetId = Array.isArray(id) ? id[0] : id;
+    setSelectedId(selectedId === targetId ? '' : targetId);
   };
 
   const handleAvailableDataModelsChange = (value: string | null) => {
-    if (value === 'this') {
+    if (value === 'self') {
       setSearchParams({
         ...searchParams,
         ['limitToDataModel']: modelId,
         ['fromAddedNamespaces']: true,
+        pageFrom: 0,
       });
     } else {
       setSearchParams({
         ...searchParams,
         ['limitToDataModel']: '',
         ['fromAddedNamespaces']: false,
+        pageFrom: 0,
       });
     }
+
+    setCurrentPage(1);
   };
 
   const handleSearchChange = (
@@ -166,27 +150,72 @@ export default function MultiColumnSearch({
       setSearchParams({
         ...searchParams,
         [key]: setStatuses,
+        pageFrom: 0,
       });
 
       return;
     }
 
-    setSearchParams({ ...searchParams, [key]: value });
+    setSearchParams({ ...searchParams, [key]: value, pageFrom: 0 });
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setSearchParams({ ...searchParams, pageFrom: (page - 1) * 2 });
   };
 
   return (
     <div>
+      {applicationProfile && (
+        <div style={{ marginBottom: '20px' }}>
+          <SearchInput
+            className="wider"
+            clearButtonLabel={t('clear-keyword-filter')}
+            labelText={t('search', { ns: 'common' })}
+            labelMode="hidden"
+            searchButtonLabel={t('search-by-keyword', { ns: 'common' })}
+            visualPlaceholder={t('search-by-keyword', { ns: 'common' })}
+            defaultValue={searchParams.query}
+            onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
+            debounce={300}
+            id="search-input"
+          />
+        </div>
+      )}
       <SearchToolsBlock>
-        <SearchInput
-          className="wider"
-          clearButtonLabel={t('clear-keyword-filter')}
-          labelText={t('search', { ns: 'common' })}
-          searchButtonLabel={t('search-by-keyword', { ns: 'common' })}
-          visualPlaceholder={t('search-by-keyword', { ns: 'common' })}
-          defaultValue={searchParams.query}
-          onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
-          debounce={300}
-        />
+        {!applicationProfile && (
+          <SearchInput
+            className="wider"
+            clearButtonLabel={t('clear-keyword-filter')}
+            labelText={t('search', { ns: 'common' })}
+            searchButtonLabel={t('search-by-keyword', { ns: 'common' })}
+            visualPlaceholder={t('search-by-keyword', { ns: 'common' })}
+            defaultValue={searchParams.query}
+            onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
+            debounce={300}
+            id="search-input"
+          />
+        )}
+
+        {applicationProfile && (
+          <Dropdown
+            className="data-model-type-picker"
+            labelText={t('datamodel-type')}
+            defaultValue={'LIBRARY'}
+            onChange={(e) => {
+              handleSearchChange('limitToModelType', e);
+            }}
+            id="data-model-type-picker"
+          >
+            <DropdownItem value={'LIBRARY'}>
+              {t('library', { ns: 'common' })}
+            </DropdownItem>
+            <DropdownItem value={'PROFILE'}>
+              {t('profile', { ns: 'common' })}
+            </DropdownItem>
+          </Dropdown>
+        )}
 
         <Dropdown
           className="data-model-picker"
@@ -195,6 +224,7 @@ export default function MultiColumnSearch({
           onChange={(item) => {
             handleAvailableDataModelsChange(item);
           }}
+          id="data-model-picker"
         >
           {dataModelType.map((type) => (
             <DropdownItem key={type.uniqueItemId} value={type.uniqueItemId}>
@@ -206,7 +236,9 @@ export default function MultiColumnSearch({
         <SingleSelect
           labelText={t('information-domain')}
           itemAdditionHelpText=""
-          ariaOptionsAvailableText={t('information-domains-available')}
+          ariaOptionsAvailableText={
+            t('information-domains-available') as string
+          }
           clearButtonLabel={t('clear-selection')}
           defaultSelectedItem={serviceCategories.find(
             (category) => category.uniqueItemId === '-1'
@@ -223,6 +255,7 @@ export default function MultiColumnSearch({
               : category.uniqueItemId === '-1'
           )}
           items={serviceCategories}
+          id="information-domain-picker"
         />
 
         <Dropdown
@@ -230,6 +263,7 @@ export default function MultiColumnSearch({
           defaultValue={'in-use'}
           onChange={(e) => handleSearchChange('status', e)}
           className="status-picker"
+          id="status-picker"
         >
           {statuses.map((status) => (
             <DropdownItem key={status.uniqueItemId} value={status.uniqueItemId}>
@@ -246,6 +280,8 @@ export default function MultiColumnSearch({
                 (lang) => lang.uniqueItemId === i18n.language ?? 'fi'
               )?.uniqueItemId ?? 'fi'
             }
+            onChange={setContentLanguage}
+            id="content-language-picker"
           >
             {languages.map((lang) => (
               <DropdownItem key={lang.uniqueItemId} value={lang.uniqueItemId}>
@@ -256,86 +292,20 @@ export default function MultiColumnSearch({
         )}
       </SearchToolsBlock>
 
-      <ResultsTable cellSpacing={0}>
-        <tbody>
-          <tr>
-            <td>
-              <Text variant="bold">{primaryColumnName}</Text>
-            </td>
-            <td>
-              <Text variant="bold">{t('data-model')}</Text>
-            </td>
-            <td>
-              <Text variant="bold">{t('concept')}</Text>
-            </td>
-            <td>
-              <Text variant="bold">{t('modified')}</Text>
-            </td>
-          </tr>
+      <ResourceList
+        primaryColumnName={primaryColumnName}
+        items={result.items}
+        selected={selectedId}
+        handleClick={handleRadioButtonClick}
+        serviceCategories={serviceCategoriesResult}
+      />
 
-          {results.map((result) => (
-            <tr key={`result-${result.target.identifier}`}>
-              <td className="td-with-radio-button">
-                <div
-                  onMouseDown={() =>
-                    handleRadioButtonClick(result.target.identifier)
-                  }
-                  onKeyDown={(e) =>
-                    e.key === 'Enter' &&
-                    handleRadioButtonClick(result.target.identifier)
-                  }
-                >
-                  <RadioButton
-                    value={result.target.identifier}
-                    checked={result.target.identifier === selectedId}
-                  />
-                </div>
-                <div>
-                  {result.target.label}
-                  <ExternalLink
-                    href={result.target.link}
-                    labelNewWindow={t('link-opens-new-window-external', {
-                      ns: 'common',
-                    })}
-                  >
-                    {result.target.linkLabel}
-                  </ExternalLink>
-                </div>
-              </td>
-              <td style={{ width: '40%' }}>
-                <div>
-                  <Text>{result.partOf.label}</Text>
-                  <Text>
-                    <Icon icon="calendar" /> {result.partOf.type}
-                  </Text>
-                  <Text>{result.partOf.domains.join(', ')}</Text>
-                </div>
-              </td>
-              <td style={{ width: '20%' }}>
-                <div>
-                  <ExternalLink
-                    href={result.subClass.link}
-                    labelNewWindow={t('link-opens-new-window-external', {
-                      ns: 'common',
-                    })}
-                  >
-                    {result.subClass.label}
-                  </ExternalLink>
-                  <Text>{result.subClass.partOf}</Text>
-                </div>
-              </td>
-              <td style={{ width: '15%' }}>
-                <div>
-                  <Text>{result.target.modified}</Text>
-                  <StatusChip $isValid={result.target.isValid}>
-                    {result.target.status}
-                  </StatusChip>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </ResultsTable>
+      <DetachedPagination
+        currentPage={currentPage}
+        maxPages={Math.ceil((result.totalHitCount ?? 0) / 20)}
+        maxTotal={20}
+        setCurrentPage={(number) => handlePageChange(number)}
+      />
     </div>
   );
 }

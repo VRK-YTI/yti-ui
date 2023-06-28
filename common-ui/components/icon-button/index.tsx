@@ -1,9 +1,9 @@
-import React from 'react';
-import { ButtonProps, Icon } from 'suomifi-ui-components';
+import React, { ReactNode } from 'react';
+import { ButtonProps } from 'suomifi-ui-components';
 import { StyledButton } from './icon-button.styles';
 
 export interface IconButtonProps extends ButtonProps {
-  icon: ButtonProps['icon'];
+  icon: ReactNode;
   color?: string;
 }
 
@@ -15,7 +15,7 @@ export default function IconButton({
 }: IconButtonProps) {
   return (
     <StyledButton color={color} variant={variant} {...props}>
-      {icon && <Icon icon={icon} />}
+      {icon}
     </StyledButton>
   );
 }

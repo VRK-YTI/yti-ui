@@ -166,7 +166,7 @@ export const DrawerButton = styled(Button)<{
   gap: 5px;
   align-items: center;
   justify-content: center;
-  white-space: nowrap;
+  white-space: pre;
   border-radius: 0;
 
   ${(props) =>
@@ -206,34 +206,5 @@ export const DrawerButton = styled(Button)<{
     width: 24px !important;
     height: auto !important;
     margin: 0 !important;
-  }
-`;
-
-export const MoveButton = styled(Button)`
-  position: relative;
-
-  > * {
-    position: absolute;
-    left: 50%;
-    right: 50%;
-
-    width: 10px !important;
-    height: auto !important;
-  }
-
-  #up {
-    transform: translate(-50%, -75%);
-  }
-
-  #right {
-    transform: translate(-25%, -50%);
-  }
-
-  #down {
-    transform: translate(-50%, -25%);
-  }
-
-  #left {
-    transform: translate(-75%, -50%);
   }
 `;

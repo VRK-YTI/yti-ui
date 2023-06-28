@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import {
   Button,
   ExternalLink,
+  IconUpload,
   InlineAlert,
   Modal,
   ModalContent,
@@ -93,7 +94,11 @@ export default function UpdateWithFileModal() {
 
   return (
     <>
-      <Button variant="secondary" icon="upload" onClick={() => handleVisible()}>
+      <Button
+        variant="secondary"
+        icon={<IconUpload />}
+        onClick={() => handleVisible()}
+      >
         {t('update-terminology-with-file')}
       </Button>
 
@@ -178,7 +183,7 @@ export default function UpdateWithFileModal() {
               </>
             ) : (
               <>
-                <SuccessIcon icon="checkCircleFilled" />
+                <SuccessIcon />
                 <Text variant="bold">{t('percent-done', { count: 100 })}</Text>
               </>
             )}

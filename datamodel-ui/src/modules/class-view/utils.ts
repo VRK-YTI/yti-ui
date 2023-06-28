@@ -1,22 +1,54 @@
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
+import { ClassType } from '@app/common/interfaces/class.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 
 export function internalClassToClassForm(
   data: InternalClass,
-  languages: string[]
+  languages: string[],
+  applicationProfile?: boolean,
+  targetClass?: InternalClass,
+  associations?: {
+    identifier: string;
+    label: { [key: string]: string };
+    modelId: string;
+    uri: string;
+  }[],
+  attributes?: {
+    identifier: string;
+    label: { [key: string]: string };
+    modelId: string;
+    uri: string;
+  }[]
 ): ClassFormType {
-  const label = languages.reduce((acc, lang) => ({ ...acc, [lang]: '' }), {});
-
-  return {
+  const label = languages.reduce(
+    (acc, lang) => ({ ...acc, [lang]: data.label[lang] }),
+    {}
+  );
+  const obj = {
     editorialNote: '',
-    concept: {},
     equivalentClass: [],
-    identifier: '',
+    identifier: applicationProfile ? data.identifier : '',
     label: label,
     inheritedAttributes: [],
     note: {},
+    subClassOf: [],
     ownAttributes: [],
-    subClassOf: [
+    status: 'DRAFT',
+  } as ClassFormType;
+
+  if (applicationProfile) {
+    obj['targetClass'] = {
+      label: `${data.namespace
+        .replace(/\/$/, '')
+        .split('/')
+        .pop()
+        ?.replace('#', ':')}:${data.identifier}`,
+      id: data.id,
+    };
+    obj['association'] = associations ?? [];
+    obj['attribute'] = attributes ?? [];
+  } else {
+    obj['subClassOf'] = [
       {
         label:
           data.id.split('/').pop()?.replace('#', ':') ??
@@ -24,7 +56,40 @@ export function internalClassToClassForm(
         identifier: `${data.isDefinedBy}/${data.identifier}`,
         attributes: ['Attribuutti #1', 'Attribuutti #2'],
       },
-    ],
-    status: 'DRAFT',
+    ];
+  }
+
+  if (targetClass) {
+    obj['node'] = {
+      label: `${targetClass.namespace
+        .replace(/\/$/, '')
+        .split('/')
+        .pop()
+        ?.replace('#', ':')}:${targetClass.identifier}`,
+      id: targetClass.id,
+    };
+  }
+
+  return obj;
+}
+
+export function classTypeToClassForm(data: ClassType): ClassFormType {
+  return {
+    concept: data.subject,
+    editorialNote: data.editorialNote ?? '',
+    equivalentClass: [],
+    identifier: data.identifier,
+    label: data.label,
+    note: data.note,
+    status: data.status,
+    subClassOf: [],
+    association: data.association,
+    attribute: data.attribute,
+    targetClass: data.targetClass
+      ? {
+          id: data.targetClass,
+          label: data.targetClass,
+        }
+      : undefined,
   };
 }

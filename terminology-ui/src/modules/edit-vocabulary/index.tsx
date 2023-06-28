@@ -9,7 +9,7 @@ import PropertyValue from '@app/common/components/property-value';
 import SaveSpinner from 'yti-common-ui/save-spinner';
 import Title from 'yti-common-ui/title';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
-import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
@@ -55,7 +55,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
     id: terminologyId,
   });
   const user = useSelector(selectLogin());
-  const [data, setData] = useState(generateInitialData(i18n.language, info));
+  const [data, setData] = useState(generateInitialData(i18n.language, t, info));
   const [isValid, setIsValid] = useState(true);
   const [userPosted, setUserPosted] = useState(false);
   const [isCreating, setIsCreating] = useState(false);

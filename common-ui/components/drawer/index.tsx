@@ -1,6 +1,11 @@
 import { useBreakpoints } from '../media-query';
-import { useEffect, useState, MouseEvent as ReactMouseEvent } from 'react';
-import { Icon, BaseIconKeys } from 'suomifi-ui-components';
+import {
+  useEffect,
+  useState,
+  MouseEvent as ReactMouseEvent,
+  ReactNode,
+} from 'react';
+import { IconChevronLeft, IconChevronRight } from 'suomifi-ui-components';
 import {
   DrawerButtonGroup,
   DrawerContainer,
@@ -14,11 +19,15 @@ interface SideNavigationProps {
   buttons: React.ReactFragment;
   smallButtons: {
     id: string;
-    icon: BaseIconKeys;
+    icon: ReactNode;
     label: string;
     onClick: () => void;
   }[];
   viewOpen?: boolean;
+  active?: string;
+  initialOpen?: boolean;
+  navDisabled?: boolean;
+  openButtonExtraFunc?: () => void;
   children: React.ReactFragment;
 }
 
@@ -26,10 +35,14 @@ export default function Drawer({
   buttons,
   smallButtons,
   viewOpen,
+  active,
+  initialOpen,
+  navDisabled,
+  openButtonExtraFunc,
   children,
 }: SideNavigationProps) {
   const { isSmall } = useBreakpoints();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(initialOpen ?? false);
   const [width, setWidth] = useState(390);
 
   const handleResize = (e: ReactMouseEvent<HTMLDivElement>) => {
@@ -51,6 +64,16 @@ export default function Drawer({
     window.addEventListener('mouseup', onMouseUp, { once: true });
   };
 
+  const handleSetOpen = (value: boolean) => {
+    if (!navDisabled) {
+      setOpen(value);
+    }
+
+    if (openButtonExtraFunc) {
+      openButtonExtraFunc();
+    }
+  };
+
   useEffect(() => {
     if (isSmall) {
       setWidth(390);
@@ -62,11 +85,11 @@ export default function Drawer({
       {!isSmall && (
         <div>
           <ToggleButton
-            onClick={() => setOpen(!open)}
+            onClick={() => handleSetOpen(!open)}
             variant="secondaryNoBorder"
             $open={open}
           >
-            <Icon icon={open ? 'chevronLeft' : 'chevronRight'} />
+            {open ? <IconChevronLeft /> : <IconChevronRight />}
           </ToggleButton>
 
           {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions*/}
@@ -88,7 +111,7 @@ export default function Drawer({
               {children}
             </DrawerContent>
           )}
-          <ScrollableButtonMenu buttons={smallButtons} />
+          <ScrollableButtonMenu buttons={smallButtons} active={active} />
         </div>
       ) : (
         <DrawerWrapper $open={open}>
