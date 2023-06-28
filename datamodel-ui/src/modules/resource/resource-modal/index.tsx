@@ -94,6 +94,7 @@ export default function ResourceModal({
     });
     setContentLanguage(undefined);
     setVisible(false);
+    setSelectedId('');
   };
 
   const handleSubmit = () => {
@@ -103,7 +104,7 @@ export default function ResourceModal({
     }
 
     const selectedObj = result.data.responseObjects.find(
-      (obj) => obj.identifier === selectedId
+      (obj) => obj.id === selectedId
     );
 
     if (selectedObj) {
@@ -211,6 +212,7 @@ export default function ResourceModal({
             setSearchParams={handleSearch}
             setContentLanguage={setContentLanguage}
             applicationProfile={applicationProfile}
+            resourceRestriction
             languageVersioned
             modelId={modelId}
           />

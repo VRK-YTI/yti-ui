@@ -26,6 +26,7 @@ import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listene
 interface CommonViewProps {
   data?: Resource;
   modelId: string;
+  applicationProfile?: boolean;
   handleReturn: () => void;
   handleEdit: () => void;
 }
@@ -33,6 +34,7 @@ interface CommonViewProps {
 export default function ResourceInfo({
   data,
   modelId,
+  applicationProfile,
   handleReturn,
   handleEdit,
 }: CommonViewProps) {
@@ -133,7 +135,13 @@ export default function ResourceInfo({
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
-        {data && <CommonViewContent modelId={modelId} data={data} />}
+        {data && (
+          <CommonViewContent
+            modelId={modelId}
+            data={data}
+            applicationProfile={applicationProfile}
+          />
+        )}
       </DrawerContent>
     </>
   );

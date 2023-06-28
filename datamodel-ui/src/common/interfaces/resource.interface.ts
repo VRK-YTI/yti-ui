@@ -3,25 +3,8 @@ import { ResourceType } from './resource-type.interface';
 import { Status } from './status.interface';
 
 export interface Resource {
-  type: ResourceType;
-  label: { [key: string]: string };
-  editorialNote?: string;
-  status: Status;
-  subResourceOf: string[];
-  equivalentResource: string[];
-  subject?: ConceptType;
-  identifier: string;
-  note: { [key: string]: string };
-  modified: string;
-  modifier: {
-    id: string;
-    name: string;
-  };
-  created: string;
-  creator: {
-    id: string;
-    name: string;
-  };
+  allowedValues?: any[];
+  classType: any;
   contact?: string;
   contributor?: [
     {
@@ -30,7 +13,34 @@ export interface Resource {
       parentOrganization: string;
     }
   ];
-  uri: string;
+  created: string;
+  creator: {
+    id: string;
+    name: string;
+  };
+  dataType?: any;
+  defaultValue?: any;
   domain?: string;
+  editorialNote?: string;
+  equivalentResource: string[];
+  hasValue?: any;
+  identifier: string;
+  label: { [key: string]: string };
+  maxCount?: any;
+  maxLength?: any;
+  minCount?: any;
+  minLength?: any;
+  modified: string;
+  modifier: {
+    id: string;
+    name: string;
+  };
+  note: { [key: string]: string };
+  path?: string;
   range?: string;
+  status: Status;
+  subject?: ConceptType;
+  subResourceOf: string[];
+  type: ResourceType;
+  uri: string;
 }

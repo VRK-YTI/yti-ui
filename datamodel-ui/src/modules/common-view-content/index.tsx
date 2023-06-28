@@ -15,10 +15,12 @@ export default function CommonViewContent({
   modelId,
   data,
   displayLabel,
+  applicationProfile,
 }: {
   modelId: string;
   data: Resource;
   displayLabel?: boolean;
+  applicationProfile?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
@@ -34,6 +36,124 @@ export default function CommonViewContent({
       default:
         return t('name');
     }
+  }
+
+  function renderInfoTopPart() {
+    if (!data) {
+      return <></>;
+    }
+
+    if (applicationProfile) {
+      return (
+        <>
+          <BasicBlock title="Kohdistuu assosiaatioon"></BasicBlock>
+
+          <BasicBlock title="Assosiaation kohteen luokka"></BasicBlock>
+
+          <BasicBlock title="Vähimmäismäärä">{data.minCount}</BasicBlock>
+
+          <BasicBlock title="Enimmäismäärä">{data.maxCount}</BasicBlock>
+
+          <BasicBlock title={translateCommonForm('note', data.type, t)}>
+            {getLanguageVersion({
+              data: data.note,
+              lang: i18n.language,
+            }) !== '' ? (
+              <SanitizedTextContent
+                text={getLanguageVersion({
+                  data: data.note,
+                  lang: i18n.language,
+                })}
+              />
+            ) : (
+              t('no-note')
+            )}
+          </BasicBlock>
+        </>
+      );
+    }
+
+    return (
+      <>
+        {data.type === ResourceType.ATTRIBUTE && (
+          <>
+            <BasicBlock title={t('range', { ns: 'admin' })}>
+              {data.range}
+            </BasicBlock>
+
+            <BasicBlock title={`${t('class', { ns: 'admin' })} (rdfs:domain)`}>
+              {data.domain
+                ? (data.domain as string).split('/').pop()?.replace('#', ':')
+                : t('no-upper-attributes')}
+            </BasicBlock>
+          </>
+        )}
+
+        {data.type === ResourceType.ASSOCIATION && (
+          <>
+            <BasicBlock title={t('source-class', { ns: 'admin' })}>
+              {data.range
+                ? data.range.split('/').pop()?.replace('#', ':')
+                : t('no-source-class')}
+            </BasicBlock>
+
+            <BasicBlock title={t('target-class', { ns: 'admin' })}>
+              {data.domain
+                ? (data.domain as string).split('/').pop()?.replace('#', ':')
+                : t('no-target-class')}
+            </BasicBlock>
+          </>
+        )}
+
+        <BasicBlock title={translateCommonForm('upper', data.type, t)}>
+          {!data.subResourceOf || data.subResourceOf.length === 0 ? (
+            <>{translateCommonForm('no-upper', data.type, t)}</>
+          ) : (
+            <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
+              {data.subResourceOf.map((c) => (
+                <li key={c}>
+                  <Link key={c} href={c} style={{ fontSize: '16px' }}>
+                    {c.split('/').pop()?.replace('#', ':')}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </BasicBlock>
+
+        <BasicBlock title={translateCommonForm('equivalent', data.type, t)}>
+          {!data.equivalentResource || data.equivalentResource.length === 0 ? (
+            <>{translateCommonForm('no-equivalent', data.type, t)}</>
+          ) : (
+            <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
+              {data.equivalentResource.map((c) => (
+                <li key={c}>
+                  <Link key={c} href={c} style={{ fontSize: '16px' }}>
+                    {c.split('/').pop()?.replace('#', ':')}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </BasicBlock>
+
+        <BasicBlock title={translateCommonForm('note', data.type, t)}>
+          {getLanguageVersion({
+            data: data.note,
+            lang: i18n.language,
+          }) !== '' ? (
+            <SanitizedTextContent
+              text={getLanguageVersion({
+                data: data.note,
+                lang: i18n.language,
+              })}
+            />
+          ) : (
+            t('no-note')
+          )}
+        </BasicBlock>
+      </>
+    );
   }
 
   return (
@@ -70,83 +190,7 @@ export default function CommonViewContent({
         <ConceptView data={data.subject} />
       </BasicBlock>
 
-      {data.type === ResourceType.ATTRIBUTE && (
-        <>
-          <BasicBlock title={t('range', { ns: 'admin' })}>
-            {data.range}
-          </BasicBlock>
-
-          <BasicBlock title={`${t('class', { ns: 'admin' })} (rdfs:domain)`}>
-            {data.domain
-              ? (data.domain as string).split('/').pop()?.replace('#', ':')
-              : t('no-upper-attributes')}
-          </BasicBlock>
-        </>
-      )}
-
-      {data.type === ResourceType.ASSOCIATION && (
-        <>
-          <BasicBlock title={t('source-class', { ns: 'admin' })}>
-            {data.range
-              ? data.range.split('/').pop()?.replace('#', ':')
-              : t('no-source-class')}
-          </BasicBlock>
-
-          <BasicBlock title={t('target-class', { ns: 'admin' })}>
-            {data.domain
-              ? (data.domain as string).split('/').pop()?.replace('#', ':')
-              : t('no-target-class')}
-          </BasicBlock>
-        </>
-      )}
-
-      <BasicBlock title={translateCommonForm('upper', data.type, t)}>
-        {!data.subResourceOf || data.subResourceOf.length === 0 ? (
-          <>{translateCommonForm('no-upper', data.type, t)}</>
-        ) : (
-          <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
-            {data.subResourceOf.map((c) => (
-              <li key={c}>
-                <Link key={c} href={c} style={{ fontSize: '16px' }}>
-                  {c.split('/').pop()?.replace('#', ':')}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </BasicBlock>
-
-      <BasicBlock title={translateCommonForm('equivalent', data.type, t)}>
-        {!data.equivalentResource || data.equivalentResource.length === 0 ? (
-          <>{translateCommonForm('no-equivalent', data.type, t)}</>
-        ) : (
-          <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
-            {data.equivalentResource.map((c) => (
-              <li key={c}>
-                <Link key={c} href={c} style={{ fontSize: '16px' }}>
-                  {c.split('/').pop()?.replace('#', ':')}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </BasicBlock>
-
-      <BasicBlock title={translateCommonForm('note', data.type, t)}>
-        {getLanguageVersion({
-          data: data.note,
-          lang: i18n.language,
-        }) !== '' ? (
-          <SanitizedTextContent
-            text={getLanguageVersion({
-              data: data.note,
-              lang: i18n.language,
-            })}
-          />
-        ) : (
-          t('no-note')
-        )}
-      </BasicBlock>
+      {renderInfoTopPart()}
 
       <Separator />
 

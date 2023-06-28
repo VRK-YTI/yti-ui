@@ -13,6 +13,48 @@ import { Resource } from '@app/common/interfaces/resource.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { Status } from '@app/common/interfaces/status.interface';
+
+interface LibraryResourcePutType {
+  label: {
+    [key: string]: string;
+  };
+  identifier: string;
+  subject: string;
+  note: {
+    [key: string]: string;
+  };
+  editorialNote: string;
+  status: Status;
+  subResourceOf: string[];
+  equivalentResource: string[];
+  domain: string;
+  range: string;
+}
+
+interface ApplicationProfileResourcePutType {
+  label: {
+    [key: string]: string;
+  };
+  identifier: string;
+  subject: string;
+  note: {
+    [key: string]: string;
+  };
+  editorialNote: string;
+  status: Status;
+  path: string;
+  classType: string;
+  type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
+  dataType: string;
+  allowedValue: string[];
+  defaultValue: string;
+  hasValue: string;
+  maxLength: number;
+  minLength: number;
+  maxCount: number;
+  minCount: number;
+}
 
 function convertToPUT(
   data: AssociationFormType | AttributeFormType,

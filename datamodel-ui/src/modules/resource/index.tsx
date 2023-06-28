@@ -209,14 +209,27 @@ export default function ResourceView({
             <Text variant="bold">
               {translateResourceCountTitle(type, t, data?.totalHitCount)}
             </Text>
+
             {hasPermission && (
               <ResourceModal
                 modelId={modelId}
                 type={type}
-                buttonTranslations={{
-                  useSelected: translateCreateNewResourceForSelected(type, t),
-                  createNew: translateCreateNewResource(type, t),
-                }}
+                buttonTranslations={
+                  applicationProfile
+                    ? {
+                        useSelected:
+                          type === ResourceType.ATTRIBUTE
+                            ? 'Luo uusi attribuuttirajoite'
+                            : 'Luo uusi assosiaatiorajoite',
+                      }
+                    : {
+                        useSelected: translateCreateNewResourceForSelected(
+                          type,
+                          t
+                        ),
+                        createNew: translateCreateNewResource(type, t),
+                      }
+                }
                 handleFollowUp={handleFollowUp}
                 buttonIcon={true}
                 applicationProfile={applicationProfile}
@@ -274,6 +287,7 @@ export default function ResourceView({
         modelId={modelId}
         handleEdit={handleEdit}
         handleReturn={handleReturn}
+        applicationProfile={applicationProfile}
       />
     );
   }

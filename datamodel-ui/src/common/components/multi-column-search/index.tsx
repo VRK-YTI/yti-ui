@@ -30,6 +30,7 @@ interface MultiColumnSearchProps {
   setContentLanguage: (value: string) => void;
   languageVersioned?: boolean;
   applicationProfile?: boolean;
+  resourceRestriction?: boolean;
   modelId: string;
 }
 
@@ -44,6 +45,7 @@ export default function MultiColumnSearch({
   languageVersioned,
   modelId,
   applicationProfile,
+  resourceRestriction,
 }: MultiColumnSearchProps) {
   const { t, i18n } = useTranslation('admin');
   const {
@@ -167,7 +169,7 @@ export default function MultiColumnSearch({
 
   return (
     <div>
-      {applicationProfile && (
+      {applicationProfile && !resourceRestriction && (
         <div style={{ marginBottom: '20px' }}>
           <SearchInput
             className="wider"
@@ -184,7 +186,8 @@ export default function MultiColumnSearch({
         </div>
       )}
       <SearchToolsBlock>
-        {!applicationProfile && (
+        {(!applicationProfile ||
+          (applicationProfile && resourceRestriction)) && (
           <SearchInput
             className="wider"
             clearButtonLabel={t('clear-keyword-filter')}
@@ -198,7 +201,7 @@ export default function MultiColumnSearch({
           />
         )}
 
-        {applicationProfile && (
+        {applicationProfile && !resourceRestriction && (
           <Dropdown
             className="data-model-type-picker"
             labelText={t('datamodel-type')}

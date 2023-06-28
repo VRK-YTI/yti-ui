@@ -10,7 +10,7 @@ export function resourceToResourceFormType(
     label: data.label,
     editorialNote: data.editorialNote,
     concept: data.subject,
-    status: 'DRAFT',
+    status: data.status,
     equivalentResource: [],
     subResourceOf:
       data.subResourceOf.length > 0
