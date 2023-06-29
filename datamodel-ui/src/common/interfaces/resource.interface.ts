@@ -3,8 +3,8 @@ import { ResourceType } from './resource-type.interface';
 import { Status } from './status.interface';
 
 export interface Resource {
-  allowedValues?: any[];
-  classType: any;
+  allowedValues?: string[];
+  classType?: string;
   contact?: string;
   contributor?: [
     {
@@ -18,18 +18,18 @@ export interface Resource {
     id: string;
     name: string;
   };
-  dataType?: any;
-  defaultValue?: any;
+  dataType?: string;
+  defaultValue?: string;
   domain?: string;
   editorialNote?: string;
   equivalentResource: string[];
-  hasValue?: any;
+  hasValue?: string;
   identifier: string;
   label: { [key: string]: string };
-  maxCount?: any;
-  maxLength?: any;
-  minCount?: any;
-  minLength?: any;
+  maxCount?: number;
+  maxLength?: number;
+  minCount?: number;
+  minLength?: number;
   modified: string;
   modifier: {
     id: string;

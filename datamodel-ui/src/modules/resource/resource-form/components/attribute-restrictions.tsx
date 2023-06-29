@@ -115,7 +115,7 @@ export default function AttributeRestrictions({
       />
 
       <TextInput
-        labelText="Pieenmpi kuin"
+        labelText="Pienempi kuin"
         optionalText={t('optional')}
         visualPlaceholder="Kirjoita arvo"
       />

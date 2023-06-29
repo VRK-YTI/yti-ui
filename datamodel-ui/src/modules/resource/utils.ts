@@ -1,11 +1,8 @@
-import { AssociationFormType } from '@app/common/interfaces/association-form.interface';
-import { AttributeFormType } from '@app/common/interfaces/attribute-form.interface';
+import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Resource } from '@app/common/interfaces/resource.interface';
 
-export function resourceToResourceFormType(
-  data: Resource
-): AssociationFormType | AttributeFormType {
+export function resourceToResourceFormType(data: Resource): ResourceFormType {
   return {
     label: data.label,
     editorialNote: data.editorialNote,

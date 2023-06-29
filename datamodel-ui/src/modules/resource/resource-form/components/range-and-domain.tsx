@@ -1,8 +1,7 @@
 import { useGetDatatypesQuery } from '@app/common/components/datatypes/datatypes.slice';
 import InlineListBlock from '@app/common/components/inline-list-block';
-import { AssociationFormType } from '@app/common/interfaces/association-form.interface';
-import { AttributeFormType } from '@app/common/interfaces/attribute-form.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import ClassModal from '@app/modules/class-modal';
@@ -18,10 +17,10 @@ export default function RangeAndDomain({
   handleUpdate,
 }: {
   applicationProfile?: boolean;
-  data: AssociationFormType | AttributeFormType;
+  data: ResourceFormType;
   modelId: string;
   type: ResourceType;
-  handleUpdate: (value: AssociationFormType | AttributeFormType) => void;
+  handleUpdate: (value: ResourceFormType) => void;
 }) {
   const { t, i18n } = useTranslation('admin');
   const { data: dataTypesResult, isSuccess: isDataTypesSuccess } =

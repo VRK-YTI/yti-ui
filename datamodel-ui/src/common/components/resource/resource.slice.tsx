@@ -1,65 +1,17 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
-import {
-  AssociationFormType,
-  initialAssociation,
-} from '@app/common/interfaces/association-form.interface';
-import {
-  AttributeFormType,
-  initialAttribute,
-} from '@app/common/interfaces/attribute-form.interface';
 import { Resource } from '@app/common/interfaces/resource.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
-import { Status } from '@app/common/interfaces/status.interface';
+import {
+  ResourceFormType,
+  initialAttribute,
+  initialAssociation,
+} from '@app/common/interfaces/resource-form.interface';
 
-interface LibraryResourcePutType {
-  label: {
-    [key: string]: string;
-  };
-  identifier: string;
-  subject: string;
-  note: {
-    [key: string]: string;
-  };
-  editorialNote: string;
-  status: Status;
-  subResourceOf: string[];
-  equivalentResource: string[];
-  domain: string;
-  range: string;
-}
-
-interface ApplicationProfileResourcePutType {
-  label: {
-    [key: string]: string;
-  };
-  identifier: string;
-  subject: string;
-  note: {
-    [key: string]: string;
-  };
-  editorialNote: string;
-  status: Status;
-  path: string;
-  classType: string;
-  type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
-  dataType: string;
-  allowedValue: string[];
-  defaultValue: string;
-  hasValue: string;
-  maxLength: number;
-  minLength: number;
-  maxCount: number;
-  minCount: number;
-}
-
-function convertToPUT(
-  data: AssociationFormType | AttributeFormType,
-  isEdit: boolean
-): object {
+function convertToPUT(data: ResourceFormType, isEdit: boolean): object {
   const removeKeys: string[] = isEdit
     ? ['identifier', 'type', 'concept']
     : ['concept'];
@@ -109,7 +61,7 @@ export const resourceApi = createApi({
       null,
       {
         modelId: string;
-        data: AssociationFormType | AttributeFormType;
+        data: ResourceFormType;
         resourceId?: string;
         applicationProfile?: boolean;
       }
@@ -178,8 +130,8 @@ function resourceInitialData(
   type: ResourceType,
   languages?: string[],
   initialSubResourceOf?: string
-): AssociationFormType | AttributeFormType {
-  let retValue = {} as AssociationFormType | AttributeFormType;
+): ResourceFormType {
+  let retValue = {} as ResourceFormType;
 
   if (!initialSubResourceOf) {
     retValue =
@@ -220,9 +172,7 @@ export function selectResource() {
   return (state: AppState) => state.resource;
 }
 
-export function setResource(
-  data: AssociationFormType | AttributeFormType
-): AppThunk {
+export function setResource(data: ResourceFormType): AppThunk {
   return (dispatch) => dispatch(resourceSlice.actions.setResource(data));
 }
 
