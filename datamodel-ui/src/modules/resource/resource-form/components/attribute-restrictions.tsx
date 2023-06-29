@@ -1,4 +1,5 @@
 import InlineListBlock from '@app/common/components/inline-list-block';
+import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { useTranslation } from 'next-i18next';
 import {
@@ -13,9 +14,14 @@ import Separator from 'yti-common-ui/separator';
 export default function AttributeRestrictions({
   type,
   applicationProfile,
+  handleUpdate,
 }: {
   type: ResourceType;
   applicationProfile?: boolean;
+  handleUpdate: (
+    key: keyof ResourceFormType,
+    value: ResourceFormType[typeof key]
+  ) => void;
 }) {
   const { t } = useTranslation('admin');
 
@@ -76,24 +82,28 @@ export default function AttributeRestrictions({
         labelText="Vähimmäispituus"
         optionalText={t('optional')}
         visualPlaceholder="Kirjoita arvo"
+        onChange={(e) => handleUpdate('minLength', e?.toString() ?? '')}
       />
 
       <TextInput
         labelText="Enimmäispituus"
         optionalText={t('optional')}
         visualPlaceholder="Kirjoita arvo"
+        onChange={(e) => handleUpdate('maxLength', e?.toString() ?? '')}
       />
 
       <TextInput
         labelText="Vähimmäismäärä"
         optionalText={t('optional')}
         visualPlaceholder="Kirjoita arvo"
+        onChange={(e) => handleUpdate('minCount', e?.toString() ?? '')}
       />
 
       <TextInput
         labelText="Enimmäismäärä"
         optionalText={t('optional')}
         visualPlaceholder="Kirjoita arvo"
+        onChange={(e) => handleUpdate('maxCount', e?.toString() ?? '')}
       />
 
       <TextInput

@@ -24,7 +24,7 @@ export interface ResourceFormType {
   maxLength?: number;
   minCount?: number;
   minLength?: number;
-  note: { [key: string]: string };
+  note?: { [key: string]: string };
   path?: string;
   range?: {
     id: string;
@@ -49,6 +49,14 @@ export const initialAssociation: ResourceFormType = {
   range: undefined,
 };
 
+export const initialAppAssociation: ResourceFormType = {
+  label: {},
+  identifier: '',
+  note: {},
+  status: 'DRAFT',
+  type: ResourceType.ASSOCIATION,
+};
+
 export const initialAttribute: ResourceFormType = {
   label: {},
   editorialNote: '',
@@ -61,4 +69,12 @@ export const initialAttribute: ResourceFormType = {
   type: ResourceType.ATTRIBUTE,
   domain: undefined,
   range: { id: 'rdfs:Literal', label: 'rdfs:Literal' },
+};
+
+export const initialAppAttribute: ResourceFormType = {
+  label: {},
+  identifier: '',
+  note: {},
+  status: 'DRAFT',
+  type: ResourceType.ATTRIBUTE,
 };

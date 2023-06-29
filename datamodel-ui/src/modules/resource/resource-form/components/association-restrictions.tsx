@@ -1,4 +1,5 @@
 import InlineListBlock from '@app/common/components/inline-list-block';
+import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { useTranslation } from 'next-i18next';
 import { Button, TextInput } from 'suomifi-ui-components';
@@ -6,9 +7,14 @@ import { Button, TextInput } from 'suomifi-ui-components';
 export default function AssociationRestrictions({
   type,
   applicationProfile,
+  handleUpdate,
 }: {
   type: ResourceType;
   applicationProfile?: boolean;
+  handleUpdate: (
+    key: keyof ResourceFormType,
+    value: ResourceFormType[typeof key]
+  ) => void;
 }) {
   const { t } = useTranslation('admin');
 
@@ -35,9 +41,17 @@ export default function AssociationRestrictions({
           label="Assosiaation kohteen luokka"
         />
 
-        <TextInput labelText="Vähimmäismäärä" optionalText={t('optional')} />
+        <TextInput
+          labelText="Vähimmäismäärä"
+          optionalText={t('optional')}
+          onChange={(e) => handleUpdate('minCount', e?.toString() ?? '')}
+        />
 
-        <TextInput labelText="Enimmäismäärä" optionalText={t('optional')} />
+        <TextInput
+          labelText="Enimmäismäärä"
+          optionalText={t('optional')}
+          onChange={(e) => handleUpdate('maxLength', e?.toString() ?? '')}
+        />
       </>
     );
   }

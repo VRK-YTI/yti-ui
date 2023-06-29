@@ -21,6 +21,7 @@ import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import {
   initializeResource,
+  resetResource,
   setResource,
   useGetResourceQuery,
 } from '@app/common/components/resource/resource.slice';
@@ -125,6 +126,7 @@ export default function ResourceView({
         'list'
       )
     );
+    dispatch(resetResource());
     refetch();
 
     if (isEdit) {
@@ -139,6 +141,7 @@ export default function ResourceView({
         'info'
       )
     );
+    dispatch(resetResource());
 
     if (isEdit) {
       setIsEdit(false);
@@ -146,7 +149,9 @@ export default function ResourceView({
   };
 
   const handleFollowUp = (value?: { label: string; uri: string }) => {
-    dispatch(initializeResource(type, languages, value?.label));
+    dispatch(
+      initializeResource(type, languages, value?.label, applicationProfile)
+    );
     dispatch(
       setView(
         type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',

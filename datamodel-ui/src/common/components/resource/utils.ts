@@ -34,7 +34,7 @@ export interface ApplicationProfileResourcePutType {
   classType?: string;
   type?: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
   dataType?: string;
-  allowedValue?: string[];
+  allowedValues?: string[];
   defaultValue?: string;
   hasValue?: string;
   maxLength?: number;
@@ -43,7 +43,7 @@ export interface ApplicationProfileResourcePutType {
   minCount?: number;
 }
 
-export function convertToPUTTEST(
+export function convertToPUT(
   data: ResourceFormType,
   isEdit: boolean,
   applicationProfile?: boolean
@@ -61,15 +61,15 @@ export function convertToPUTTEST(
           return false;
         }
 
+        if (e[1] === undefined || e[1] === null || e[1] === '') {
+          return false;
+        }
+
         if (Array.isArray(e[1]) && e[1].length < 1) {
           return false;
         }
 
         if (typeof e[1] === 'object' && Object.keys(e[1]).length < 1) {
-          return false;
-        }
-
-        if (e[1] === undefined || e[1] === null || e[1] === '') {
           return false;
         }
 

@@ -9,26 +9,10 @@ import {
   ResourceFormType,
   initialAttribute,
   initialAssociation,
+  initialAppAssociation,
+  initialAppAttribute,
 } from '@app/common/interfaces/resource-form.interface';
-
-function convertToPUT(data: ResourceFormType, isEdit: boolean): object {
-  const removeKeys: string[] = isEdit
-    ? ['identifier', 'type', 'concept']
-    : ['concept'];
-
-  const ret = Object.fromEntries(
-    Object.entries(data).filter((e) => !removeKeys.includes(e[0]))
-  );
-
-  if (!data.concept) {
-    return ret;
-  }
-
-  return {
-    ...ret,
-    subject: data.concept.conceptURI,
-  };
-}
+import { convertToPUT } from './utils';
 
 function pathForModelType(isApplicationProfile?: boolean) {
   return isApplicationProfile ? 'profile/' : 'library/';
@@ -78,11 +62,11 @@ export const resourceApi = createApi({
               value.applicationProfile
             )}/${value.resourceId}`,
         method: 'PUT',
-        data: {
-          ...convertToPUT(value.data, value.resourceId ? true : false),
-          domain: value.data.domain ? value.data.domain.id : '',
-          range: value.data.range ? value.data.range.id : '',
-        },
+        data: convertToPUT(
+          value.data,
+          value.resourceId ? true : false,
+          value.applicationProfile
+        ),
       }),
     }),
     getResource: builder.query<
@@ -129,20 +113,28 @@ export const resourceApi = createApi({
 function resourceInitialData(
   type: ResourceType,
   languages?: string[],
-  initialSubResourceOf?: string
+  initialSubResourceOf?: string,
+  applicationProfile?: boolean
 ): ResourceFormType {
   let retValue = {} as ResourceFormType;
 
-  if (!initialSubResourceOf) {
+  if (applicationProfile) {
     retValue =
       type === ResourceType.ASSOCIATION
-        ? { ...initialAssociation, subResourceOf: ['owl:TopObjectProperty'] }
-        : { ...initialAttribute, subResourceOf: ['owl:topDataProperty'] };
+        ? initialAppAssociation
+        : initialAppAttribute;
   } else {
-    retValue =
-      type === ResourceType.ASSOCIATION
-        ? { ...initialAssociation, subResourceOf: [initialSubResourceOf] }
-        : { ...initialAttribute, subResourceOf: [initialSubResourceOf] };
+    if (!initialSubResourceOf) {
+      retValue =
+        type === ResourceType.ASSOCIATION
+          ? { ...initialAssociation, subResourceOf: ['owl:TopObjectProperty'] }
+          : { ...initialAttribute, subResourceOf: ['owl:topDataProperty'] };
+    } else {
+      retValue =
+        type === ResourceType.ASSOCIATION
+          ? { ...initialAssociation, subResourceOf: [initialSubResourceOf] }
+          : { ...initialAttribute, subResourceOf: [initialSubResourceOf] };
+    }
   }
 
   if (languages) {
@@ -157,13 +149,16 @@ function resourceInitialData(
 
 export const resourceSlice = createSlice({
   name: 'resource',
-  initialState: resourceInitialData(ResourceType.ASSOCIATION),
+  initialState: {
+    label: {},
+    identifier: '',
+    note: {},
+    status: 'DRAFT',
+    type: ResourceType.ASSOCIATION,
+  } as ResourceFormType,
   reducers: {
-    setResource(state, action) {
-      return {
-        ...state,
-        ...action.payload,
-      };
+    setResource(_state, action) {
+      return action.payload;
     },
   },
 });
@@ -179,19 +174,33 @@ export function setResource(data: ResourceFormType): AppThunk {
 export function initializeResource(
   type: ResourceType,
   langs: string[],
-  initialSubResourceOf?: string
+  initialSubResourceOf?: string,
+  applicationProfile?: boolean
 ): AppThunk {
   return (dispatch) =>
     dispatch(
       resourceSlice.actions.setResource(
-        resourceInitialData(type, langs, initialSubResourceOf)
+        resourceInitialData(
+          type,
+          langs,
+          initialSubResourceOf,
+          applicationProfile
+        )
       )
     );
 }
 
 export function resetResource(): AppThunk {
   return (dispatch) =>
-    dispatch(resourceSlice.actions.setResource(initialAssociation));
+    dispatch(
+      resourceSlice.actions.setResource({
+        label: {},
+        identifier: '',
+        note: {},
+        status: 'DRAFT',
+        type: ResourceType.ASSOCIATION,
+      } as ResourceFormType)
+    );
 }
 
 export const { putResource, getResource } = resourceApi.endpoints;

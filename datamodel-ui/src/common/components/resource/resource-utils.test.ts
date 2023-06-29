@@ -1,7 +1,7 @@
 import {
   ApplicationProfileResourcePutType,
   LibraryResourcePutType,
-  convertToPUTTEST,
+  convertToPUT,
 } from './utils';
 import {
   applicationProfileAssociation,
@@ -17,7 +17,7 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 describe('resource-utils', () => {
   it('should return payload for the most simple new library attribute', () => {
-    const gotten = convertToPUTTEST(libraryAttributeSm, false);
+    const gotten = convertToPUT(libraryAttributeSm, false);
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi' },
@@ -30,7 +30,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the most simple new library association', () => {
-    const gotten = convertToPUTTEST(libraryAssociationSm, false);
+    const gotten = convertToPUT(libraryAssociationSm, false);
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi' },
@@ -42,7 +42,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the entirely filled new library attribute', () => {
-    const gotten = convertToPUTTEST(libraryAttribute, false);
+    const gotten = convertToPUT(libraryAttribute, false);
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
@@ -61,7 +61,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the entirely filled new library association', () => {
-    const gotten = convertToPUTTEST(libraryAssociation, false);
+    const gotten = convertToPUT(libraryAssociation, false);
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
@@ -80,7 +80,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the edited library attribute', () => {
-    const gotten = convertToPUTTEST(libraryAttribute, true);
+    const gotten = convertToPUT(libraryAttribute, true);
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
@@ -98,7 +98,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the edited library association', () => {
-    const gotten = convertToPUTTEST(libraryAssociation, true);
+    const gotten = convertToPUT(libraryAssociation, true);
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
@@ -116,7 +116,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the most simple new application profile attribute', () => {
-    const gotten = convertToPUTTEST(applicationProfileAttributeSm, false, true);
+    const gotten = convertToPUT(applicationProfileAttributeSm, false, true);
 
     const expected: ApplicationProfileResourcePutType = {
       label: { fi: 'label-fi' },
@@ -128,11 +128,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the most simple new application profile association', () => {
-    const gotten = convertToPUTTEST(
-      applicationProfileAssociationSm,
-      false,
-      true
-    );
+    const gotten = convertToPUT(applicationProfileAssociationSm, false, true);
 
     const expected: ApplicationProfileResourcePutType = {
       label: { fi: 'label-fi' },
@@ -145,7 +141,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the entirely filled new application profile attribute', () => {
-    const gotten = convertToPUTTEST(applicationProfileAttribute, false, true);
+    const gotten = convertToPUT(applicationProfileAttribute, false, true);
 
     const expected: ApplicationProfileResourcePutType = {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
@@ -158,7 +154,7 @@ describe('resource-utils', () => {
       classType: 'class-type',
       type: ResourceType.ATTRIBUTE,
       dataType: 'data-type',
-      allowedValue: ['allowed-1', 'allowed-2'],
+      allowedValues: ['allowed-1', 'allowed-2'],
       defaultValue: 'default-value',
       hasValue: 'has-value',
       maxLength: 10,
@@ -171,7 +167,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the entirely filled new application profile association', () => {
-    const gotten = convertToPUTTEST(applicationProfileAssociation, false, true);
+    const gotten = convertToPUT(applicationProfileAssociation, false, true);
 
     const expected: ApplicationProfileResourcePutType = {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
@@ -184,7 +180,7 @@ describe('resource-utils', () => {
       classType: 'class-type',
       type: ResourceType.ASSOCIATION,
       dataType: 'data-type',
-      allowedValue: ['allowed-1', 'allowed-2'],
+      allowedValues: ['allowed-1', 'allowed-2'],
       defaultValue: 'default-value',
       hasValue: 'has-value',
       maxLength: 10,

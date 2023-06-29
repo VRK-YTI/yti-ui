@@ -45,7 +45,8 @@ import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-b
 import RangeAndDomain from './components/range-and-domain';
 import AttributeRestrictions from './components/attribute-restrictions';
 import ApplicationProfileTop from './components/application-profile-top';
-import AssociationRestrictions from './components/association-restrications';
+import AssociationRestrictions from './components/association-restrictions';
+import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 
 interface ResourceFormProps {
   type: ResourceType;
@@ -124,7 +125,7 @@ export default function ResourceForm({
     });
   };
 
-  const handleUpdate = (value: typeof data) => {
+  const handleUpdate = (value: ResourceFormType) => {
     enableConfirmation();
     dispatch(setHasChanges(true));
     if (userPosted && Object.values(errors).filter((val) => val).length > 0) {
@@ -132,6 +133,13 @@ export default function ResourceForm({
     }
 
     dispatch(setResource(value));
+  };
+
+  const handleUpdateByKey = <T extends keyof ResourceFormType>(
+    key: T,
+    value: ResourceFormType[T]
+  ) => {
+    handleUpdate({ ...data, [key]: value });
   };
 
   const handleSetConcept = (value?: ConceptType) => {
@@ -177,7 +185,11 @@ export default function ResourceForm({
           'info'
         )
       );
-      refetch();
+
+      if (isEdit) {
+        refetch();
+      }
+
       router.replace(
         `${modelId}/${
           type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
@@ -203,6 +215,7 @@ export default function ResourceForm({
     modelId,
     data,
     refetch,
+    isEdit,
   ]);
 
   return (
@@ -343,10 +356,12 @@ export default function ResourceForm({
             <>
               <InlineListBlock
                 label={translateCommonForm('upper', type, t)}
-                items={data.subResourceOf.map((resource) => ({
-                  id: resource,
-                  label: resource,
-                }))}
+                items={
+                  data.subResourceOf?.map((resource) => ({
+                    id: resource,
+                    label: resource,
+                  })) ?? []
+                }
                 addNewComponent={
                   <Button
                     variant="secondary"
@@ -385,6 +400,7 @@ export default function ResourceForm({
           <AssociationRestrictions
             type={type}
             applicationProfile={applicationProfile}
+            handleUpdate={handleUpdateByKey}
           />
 
           <div>
@@ -405,6 +421,7 @@ export default function ResourceForm({
           <AttributeRestrictions
             type={type}
             applicationProfile={applicationProfile}
+            handleUpdate={handleUpdateByKey}
           />
 
           <LanguageVersionedWrapper>
@@ -412,7 +429,7 @@ export default function ResourceForm({
               <Textarea
                 key={`label-${lang}`}
                 labelText={`${translateCommonForm('note', type, t)}, ${lang}`}
-                defaultValue={data.note[lang] ?? ''}
+                defaultValue={data.note?.[lang] ?? ''}
                 onChange={(e) =>
                   handleUpdate({
                     ...data,
