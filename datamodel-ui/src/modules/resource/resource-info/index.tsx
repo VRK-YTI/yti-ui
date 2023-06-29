@@ -28,6 +28,7 @@ interface CommonViewProps {
   modelId: string;
   handleReturn: () => void;
   handleEdit: () => void;
+  isPartOfCurrentModel: boolean;
 }
 
 export default function ResourceInfo({
@@ -35,6 +36,7 @@ export default function ResourceInfo({
   modelId,
   handleReturn,
   handleEdit,
+  isPartOfCurrentModel,
 }: CommonViewProps) {
   const { t, i18n } = useTranslation('common');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -66,7 +68,7 @@ export default function ResourceInfo({
           >
             {data ? translateCommonForm('return', data.type, t) : t('back')}
           </Button>
-          {hasPermission && data && (
+          {hasPermission && isPartOfCurrentModel && data && (
             <div>
               <Button
                 variant="secondary"

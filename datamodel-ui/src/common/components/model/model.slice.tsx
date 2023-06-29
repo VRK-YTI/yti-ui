@@ -121,6 +121,7 @@ const initialState = {
   selected: {
     id: '',
     type: '',
+    modelId: null,
   },
   hovered: {
     id: '',
@@ -159,6 +160,7 @@ export const modelSlice = createSlice({
         selected: {
           id: action.payload.id,
           type: action.payload.type,
+          modelId: action.payload.modelId,
         },
         view: {
           ...initialView,
@@ -233,9 +235,11 @@ export function selectSelected() {
 
 export function setSelected(
   id: string,
-  type: keyof typeof initialView
+  type: keyof typeof initialView,
+  modelId?: string
 ): AppThunk {
-  return (dispatch) => dispatch(modelSlice.actions.setSelected({ id, type }));
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setSelected({ id, type, modelId }));
 }
 
 export function resetSelected(): AppThunk {

@@ -13,6 +13,7 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateResourceType } from '@app/common/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { SearchInput, Text } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
@@ -33,6 +34,7 @@ export default function SearchView({ modelId }: { modelId: string }) {
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [],
   });
+  const router = useRouter();
 
   const getResourceType = (type: ResourceType): keyof ViewList => {
     switch (type) {
@@ -46,8 +48,21 @@ export default function SearchView({ modelId }: { modelId: string }) {
   };
 
   const handleItemClick = (data: InternalClass) => {
+    const resourceModelId = data.namespace.split('/').filter(Boolean).pop();
+
     dispatch(setView(getResourceType(data.resourceType), 'info'));
-    dispatch(setSelected(data.identifier, getResourceType(data.resourceType)));
+    dispatch(
+      setSelected(
+        data.identifier,
+        getResourceType(data.resourceType),
+        resourceModelId
+      )
+    );
+    router.replace(
+      `${modelId}/${data.resourceType.toLowerCase()}/${
+        resourceModelId !== modelId ? `${resourceModelId}:` : ''
+      }${data.identifier}`
+    );
   };
 
   const handleQueryChange = (e: string) => {
@@ -100,7 +115,10 @@ export default function SearchView({ modelId }: { modelId: string }) {
                     </Text>
                   </>
                 ),
-                subtitle: `${modelId}:${item.identifier}`,
+                subtitle: `${item.namespace
+                  ?.split('/')
+                  ?.filter(Boolean)
+                  ?.pop()}:${item.identifier}`,
                 onClick: () => handleItemClick(item),
                 onMouseEnter: () => {
                   dispatch(
