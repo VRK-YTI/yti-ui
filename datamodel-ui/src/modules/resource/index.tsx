@@ -266,7 +266,7 @@ export default function ResourceView({
   }
 
   function renderEdit() {
-    if (!view.edit || !hasPermission || globalSelected.modelId !== modelId) {
+    if (!view.edit || !hasPermission) {
       return <></>;
     }
 
