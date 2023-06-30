@@ -19,6 +19,7 @@ export interface Resource {
     name: string;
   };
   dataType?: string;
+  dataTypeProperty?: string;
   defaultValue?: string;
   domain?: string;
   editorialNote?: string;

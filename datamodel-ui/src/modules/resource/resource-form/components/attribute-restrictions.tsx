@@ -12,10 +12,12 @@ import {
 import Separator from 'yti-common-ui/separator';
 
 export default function AttributeRestrictions({
+  data,
   type,
   applicationProfile,
   handleUpdate,
 }: {
+  data: ResourceFormType;
   type: ResourceType;
   applicationProfile?: boolean;
   handleUpdate: (
@@ -82,6 +84,7 @@ export default function AttributeRestrictions({
         labelText="Vähimmäispituus"
         optionalText={t('optional')}
         visualPlaceholder="Kirjoita arvo"
+        defaultValue={data.minLength}
         onChange={(e) => handleUpdate('minLength', e?.toString() ?? '')}
       />
 
@@ -89,6 +92,7 @@ export default function AttributeRestrictions({
         labelText="Enimmäispituus"
         optionalText={t('optional')}
         visualPlaceholder="Kirjoita arvo"
+        defaultValue={data.maxLength}
         onChange={(e) => handleUpdate('maxLength', e?.toString() ?? '')}
       />
 
@@ -96,6 +100,7 @@ export default function AttributeRestrictions({
         labelText="Vähimmäismäärä"
         optionalText={t('optional')}
         visualPlaceholder="Kirjoita arvo"
+        defaultValue={data.minCount}
         onChange={(e) => handleUpdate('minCount', e?.toString() ?? '')}
       />
 
@@ -103,6 +108,7 @@ export default function AttributeRestrictions({
         labelText="Enimmäismäärä"
         optionalText={t('optional')}
         visualPlaceholder="Kirjoita arvo"
+        defaultValue={data.maxCount}
         onChange={(e) => handleUpdate('maxCount', e?.toString() ?? '')}
       />
 

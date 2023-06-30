@@ -3,7 +3,13 @@ import { Resource } from '@app/common/interfaces/resource.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateCommonForm } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import { Button, ExternalLink, IconCopy, Link } from 'suomifi-ui-components';
+import {
+  Button,
+  ExternalLink,
+  IconCopy,
+  Link,
+  Text,
+} from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import Separator from 'yti-common-ui/separator';
@@ -46,29 +52,114 @@ export default function CommonViewContent({
     if (applicationProfile) {
       return (
         <>
-          <BasicBlock title="Kohdistuu assosiaatioon"></BasicBlock>
+          {data.type === ResourceType.ASSOCIATION ? (
+            <>
+              <BasicBlock title="Kohdistuu assosiaatioon">
+                Ei määritelty
+              </BasicBlock>
 
-          <BasicBlock title="Assosiaation kohteen luokka"></BasicBlock>
+              <BasicBlock title="Assosiaation kohteen luokka">
+                Ei määritelty
+              </BasicBlock>
 
-          <BasicBlock title="Vähimmäismäärä">{data.minCount}</BasicBlock>
+              <BasicBlock title="Vähimmäismäärä">
+                {data.minCount ?? 'Ei määritelty'}
+              </BasicBlock>
 
-          <BasicBlock title="Enimmäismäärä">{data.maxCount}</BasicBlock>
+              <BasicBlock title="Enimmäismäärä">
+                {data.maxCount ?? 'Ei määritelty'}
+              </BasicBlock>
 
-          <BasicBlock title={translateCommonForm('note', data.type, t)}>
-            {getLanguageVersion({
-              data: data.note,
-              lang: i18n.language,
-            }) !== '' ? (
-              <SanitizedTextContent
-                text={getLanguageVersion({
+              <BasicBlock title={translateCommonForm('note', data.type, t)}>
+                {getLanguageVersion({
                   data: data.note,
                   lang: i18n.language,
-                })}
-              />
-            ) : (
-              t('no-note')
-            )}
-          </BasicBlock>
+                }) !== '' ? (
+                  <SanitizedTextContent
+                    text={getLanguageVersion({
+                      data: data.note,
+                      lang: i18n.language,
+                    })}
+                  />
+                ) : (
+                  t('no-note')
+                )}
+              </BasicBlock>
+            </>
+          ) : (
+            <>
+              <BasicBlock title="Kohdistuu attribuuttiin">
+                {data.dataTypeProperty ?? 'Ei määritelty'}
+              </BasicBlock>
+              <BasicBlock title="Tietotyyppi">{data.dataType}</BasicBlock>
+              <Separator />
+              <div>
+                <Text variant="bold">Rajoitteet</Text>
+              </div>
+
+              <BasicBlock title="Koodisto">Ei määritelty</BasicBlock>
+
+              <BasicBlock title="Sallitut arvot">Valitut koodistot</BasicBlock>
+
+              <BasicBlock title="Oletusarvo">Ei määritelty</BasicBlock>
+
+              <BasicBlock title="Pakollinen arvo">Ei määritelty</BasicBlock>
+
+              <BasicBlock title="Vähimmäispituus">
+                {data.minLength ?? 'Ei määritelty'}
+              </BasicBlock>
+
+              <BasicBlock title="Enimmäispituus">
+                {data.maxLength ?? 'Ei määritelty'}
+              </BasicBlock>
+
+              <BasicBlock title="Vähimmäismäärä">
+                {data.minCount ?? 'Ei määritelty'}
+              </BasicBlock>
+
+              <BasicBlock title="Enimmäismäärä">
+                {data.maxCount ?? 'Ei määritelty'}
+              </BasicBlock>
+
+              <BasicBlock title="Suurempi tai yhtä suuri kuin">
+                Ei määritelty
+              </BasicBlock>
+
+              <BasicBlock title="Pienempi tai yhtä pieni kuin">
+                Ei määritelty
+              </BasicBlock>
+
+              <BasicBlock title="Suurempi kuin">Ei määritelty</BasicBlock>
+
+              <BasicBlock title="Pienempi kuin">Ei määritelty</BasicBlock>
+
+              <BasicBlock title="Merkkijonoattribuutin muoto">
+                Ei määritelty
+              </BasicBlock>
+
+              <BasicBlock title="Merkkijonoattribuutin kielet">
+                Ei määritelty
+              </BasicBlock>
+
+              <Separator />
+
+              <BasicBlock title={translateCommonForm('note', data.type, t)}>
+                {getLanguageVersion({
+                  data: data.note,
+                  lang: i18n.language,
+                }) !== '' ? (
+                  <SanitizedTextContent
+                    text={getLanguageVersion({
+                      data: data.note,
+                      lang: i18n.language,
+                    })}
+                  />
+                ) : (
+                  t('no-note')
+                )}
+              </BasicBlock>
+            </>
+          )}
         </>
       );
     }

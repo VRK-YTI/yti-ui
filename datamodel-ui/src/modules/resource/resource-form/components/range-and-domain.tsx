@@ -93,6 +93,7 @@ export default function RangeAndDomain({
   }
 
   if (type === ResourceType.ATTRIBUTE) {
+    console.log('data', data);
     return (
       <>
         {applicationProfile && (
@@ -101,7 +102,7 @@ export default function RangeAndDomain({
               <Button variant="secondary">Valitse attribuutti</Button>
             }
             handleRemoval={() => null}
-            items={[]}
+            items={data.dataTypeProperty ? [data.dataTypeProperty] : []}
             label="Kohdistuu attribuuttiin"
           />
         )}
@@ -114,8 +115,10 @@ export default function RangeAndDomain({
             (value) => value.uniqueItemId == '-1'
           )}
           selectedItem={attributeRanges.find((value) => {
-            if (data.range != undefined) {
+            if (!applicationProfile && data.range != undefined) {
               return value.uniqueItemId == data.range.id;
+            } else if (applicationProfile && data.dataType) {
+              return value.uniqueItemId == data.dataType.id;
             } else {
               return value.uniqueItemId == 'rdfs:Literal';
             }
@@ -123,7 +126,12 @@ export default function RangeAndDomain({
           clearButtonLabel={t('clear-selection')}
           onItemSelect={(e) =>
             e != undefined &&
-            handleUpdate({ ...data, range: { id: e, label: e } })
+            handleUpdate({
+              ...data,
+              ...(applicationProfile
+                ? { dataType: { id: e, label: e } }
+                : { range: { id: e, label: e } }),
+            })
           }
           items={attributeRanges}
         />

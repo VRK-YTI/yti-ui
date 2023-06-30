@@ -5,10 +5,12 @@ import { useTranslation } from 'next-i18next';
 import { Button, TextInput } from 'suomifi-ui-components';
 
 export default function AssociationRestrictions({
+  data,
   type,
   applicationProfile,
   handleUpdate,
 }: {
+  data: ResourceFormType;
   type: ResourceType;
   applicationProfile?: boolean;
   handleUpdate: (
@@ -29,8 +31,8 @@ export default function AssociationRestrictions({
           addNewComponent={
             <Button variant="secondary">Valitse assosiaatio</Button>
           }
-          handleRemoval={() => null}
-          items={[]}
+          handleRemoval={() => handleUpdate('path', undefined)}
+          items={data.path ? [data.path] : []}
           label="Kohdistuu assosiaatioon"
         />
 
@@ -44,13 +46,15 @@ export default function AssociationRestrictions({
         <TextInput
           labelText="Vähimmäismäärä"
           optionalText={t('optional')}
+          defaultValue={data.minCount?.toString() ?? ''}
           onChange={(e) => handleUpdate('minCount', e?.toString() ?? '')}
         />
 
         <TextInput
           labelText="Enimmäismäärä"
           optionalText={t('optional')}
-          onChange={(e) => handleUpdate('maxLength', e?.toString() ?? '')}
+          defaultValue={data.maxCount?.toString() ?? ''}
+          onChange={(e) => handleUpdate('maxCount', e?.toString() ?? '')}
         />
       </>
     );

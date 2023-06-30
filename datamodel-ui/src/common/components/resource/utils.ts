@@ -76,7 +76,12 @@ export function convertToPUT(
         return true;
       })
       .map((e) => {
-        if (e[0] === 'range' || e[0] === 'domain') {
+        if (
+          e[0] === 'range' ||
+          e[0] === 'domain' ||
+          e[0] === 'path' ||
+          e[0] === 'dataType'
+        ) {
           return [e[0], e[1].id];
         }
 

@@ -121,8 +121,18 @@ function resourceInitialData(
   if (applicationProfile) {
     retValue =
       type === ResourceType.ASSOCIATION
-        ? initialAppAssociation
-        : initialAppAttribute;
+        ? {
+            ...initialAppAssociation,
+            path: initialSubResourceOf
+              ? { id: initialSubResourceOf, label: initialSubResourceOf }
+              : undefined,
+          }
+        : {
+            ...initialAppAttribute,
+            dataTypeProperty: initialSubResourceOf
+              ? { id: initialSubResourceOf, label: initialSubResourceOf }
+              : undefined,
+          };
   } else {
     if (!initialSubResourceOf) {
       retValue =

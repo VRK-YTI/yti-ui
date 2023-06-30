@@ -5,6 +5,11 @@ import { Resource } from '@app/common/interfaces/resource.interface';
 export function resourceToResourceFormType(data: Resource): ResourceFormType {
   return {
     ...data,
+    dataType: data.dataType
+      ? { id: data.dataType, label: data.dataType }
+      : undefined,
+    // TODO: Change to correct form after backend is updated
+    dataTypeProperty: undefined,
     domain: data.domain
       ? {
           id: data.domain,
@@ -12,6 +17,15 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
         }
       : undefined,
     equivalentResource: [],
+    path: data.path
+      ? {
+          id: data.path,
+          label:
+            data.type == ResourceType.ASSOCIATION
+              ? data.path.split('/').pop()?.replace('#', ':') ?? data.path
+              : data.path,
+        }
+      : undefined,
     range: data.range
       ? {
           id: data.range,

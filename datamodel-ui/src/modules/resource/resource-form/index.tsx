@@ -398,6 +398,7 @@ export default function ResourceForm({
           )}
 
           <AssociationRestrictions
+            data={data}
             type={type}
             applicationProfile={applicationProfile}
             handleUpdate={handleUpdateByKey}
@@ -419,6 +420,7 @@ export default function ResourceForm({
           </div>
 
           <AttributeRestrictions
+            data={data}
             type={type}
             applicationProfile={applicationProfile}
             handleUpdate={handleUpdateByKey}

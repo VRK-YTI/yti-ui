@@ -6,7 +6,14 @@ export interface ResourceFormType {
   allowedValues?: string[];
   classType?: string;
   concept?: ConceptType;
-  dataType?: string;
+  dataType?: {
+    id: string;
+    label: string;
+  };
+  dataTypeProperty?: {
+    id: string;
+    label: string;
+  };
   defaultValue?: string;
   domain?: {
     id: string;
@@ -25,7 +32,10 @@ export interface ResourceFormType {
   minCount?: number;
   minLength?: number;
   note?: { [key: string]: string };
-  path?: string;
+  path?: {
+    id: string;
+    label: string;
+  };
   range?: {
     id: string;
     label: string;
@@ -77,4 +87,5 @@ export const initialAppAttribute: ResourceFormType = {
   note: {},
   status: 'DRAFT',
   type: ResourceType.ATTRIBUTE,
+  range: { id: 'rdfs:Literal', label: 'rdfs:Literal' },
 };
