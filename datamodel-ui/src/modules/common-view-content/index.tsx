@@ -54,20 +54,20 @@ export default function CommonViewContent({
         <>
           {data.type === ResourceType.ASSOCIATION ? (
             <>
-              <BasicBlock title="Kohdistuu assosiaatioon">
-                Ei määritelty
+              <BasicBlock title={t('target-association', { ns: 'admin' })}>
+                {t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock title="Assosiaation kohteen luokka">
-                Ei määritelty
+              <BasicBlock title={t('association-targets-class')}>
+                {t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock title="Vähimmäismäärä">
-                {data.minCount ?? 'Ei määritelty'}
+              <BasicBlock title={t('minimum-count')}>
+                {data.minCount ?? t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock title="Enimmäismäärä">
-                {data.maxCount ?? 'Ei määritelty'}
+              <BasicBlock title={t('maximum-count')}>
+                {data.maxCount ?? t('not-defined')}
               </BasicBlock>
 
               <BasicBlock title={translateCommonForm('note', data.type, t)}>
@@ -88,57 +88,71 @@ export default function CommonViewContent({
             </>
           ) : (
             <>
-              <BasicBlock title="Kohdistuu attribuuttiin">
-                {data.dataTypeProperty ?? 'Ei määritelty'}
+              <BasicBlock title={t('target-attribute', { ns: 'admin' })}>
+                {data.dataTypeProperty ?? t('not-defined')}
               </BasicBlock>
-              <BasicBlock title="Tietotyyppi">{data.dataType}</BasicBlock>
+              <BasicBlock title={t('data-type')}>{data.dataType}</BasicBlock>
               <Separator />
               <div>
-                <Text variant="bold">Rajoitteet</Text>
+                <Text variant="bold">{t('restrictions')}</Text>
               </div>
 
-              <BasicBlock title="Koodisto">Ei määritelty</BasicBlock>
-
-              <BasicBlock title="Sallitut arvot">Valitut koodistot</BasicBlock>
-
-              <BasicBlock title="Oletusarvo">Ei määritelty</BasicBlock>
-
-              <BasicBlock title="Pakollinen arvo">Ei määritelty</BasicBlock>
-
-              <BasicBlock title="Vähimmäispituus">
-                {data.minLength ?? 'Ei määritelty'}
+              <BasicBlock title={t('codelist', { ns: 'admin' })}>
+                {t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock title="Enimmäispituus">
-                {data.maxLength ?? 'Ei määritelty'}
+              <BasicBlock title={t('allowed-values')}>
+                {t('selected-codelists')}
               </BasicBlock>
 
-              <BasicBlock title="Vähimmäismäärä">
-                {data.minCount ?? 'Ei määritelty'}
+              <BasicBlock title={t('default-value', { ns: 'admin' })}>
+                {t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock title="Enimmäismäärä">
-                {data.maxCount ?? 'Ei määritelty'}
+              <BasicBlock title={t('required-value', { ns: 'admin' })}>
+                {t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock title="Suurempi tai yhtä suuri kuin">
-                Ei määritelty
+              <BasicBlock title={t('minimum-length', { ns: 'admin' })}>
+                {data.minLength ?? t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock title="Pienempi tai yhtä pieni kuin">
-                Ei määritelty
+              <BasicBlock title={t('maximum-length', { ns: 'admin' })}>
+                {data.maxLength ?? t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock title="Suurempi kuin">Ei määritelty</BasicBlock>
-
-              <BasicBlock title="Pienempi kuin">Ei määritelty</BasicBlock>
-
-              <BasicBlock title="Merkkijonoattribuutin muoto">
-                Ei määritelty
+              <BasicBlock title={t('minimum-amount', { ns: 'admin' })}>
+                {data.minCount ?? t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock title="Merkkijonoattribuutin kielet">
-                Ei määritelty
+              <BasicBlock title={t('maximum-amount', { ns: 'admin' })}>
+                {data.maxCount ?? t('not-defined')}
+              </BasicBlock>
+
+              <BasicBlock title={t('larger-or-as-large-as', { ns: 'admin' })}>
+                {t('not-defined')}
+              </BasicBlock>
+
+              <BasicBlock title={t('smaller-or-as-small-as', { ns: 'admin' })}>
+                {t('not-defined')}
+              </BasicBlock>
+
+              <BasicBlock title={t('larger-than', { ns: 'admin' })}>
+                {t('not-defined')}
+              </BasicBlock>
+
+              <BasicBlock title={t('smaller-than', { ns: 'admin' })}>
+                {t('not-defined')}
+              </BasicBlock>
+
+              <BasicBlock title={t('string-attribute-format', { ns: 'admin' })}>
+                {t('not-defined')}
+              </BasicBlock>
+
+              <BasicBlock
+                title={t('string-attribute-languages', { ns: 'admin' })}
+              >
+                {t('not-defined')}
               </BasicBlock>
 
               <Separator />
@@ -285,8 +299,8 @@ export default function CommonViewContent({
 
       <Separator />
 
-      <BasicBlock title="Viittaukset muista komponenteista">
-        Ei viittauksia
+      <BasicBlock title={t('references-from-other-components')}>
+        {t('no-references')}
       </BasicBlock>
 
       <Separator />

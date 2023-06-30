@@ -29,29 +29,31 @@ export default function AssociationRestrictions({
       <>
         <InlineListBlock
           addNewComponent={
-            <Button variant="secondary">Valitse assosiaatio</Button>
+            <Button variant="secondary">{t('select-association')}</Button>
           }
           handleRemoval={() => handleUpdate('path', undefined)}
           items={data.path ? [data.path] : []}
-          label="Kohdistuu assosiaatioon"
+          label={t('target-association')}
         />
 
         <InlineListBlock
-          addNewComponent={<Button variant="secondary">Valitse luokka</Button>}
+          addNewComponent={
+            <Button variant="secondary">{t('select-class')}</Button>
+          }
           handleRemoval={() => null}
           items={[]}
-          label="Assosiaation kohteen luokka"
+          label={t('association-targets-class', { ns: 'common' })}
         />
 
         <TextInput
-          labelText="Vähimmäismäärä"
+          labelText={t('minimum-amount')}
           optionalText={t('optional')}
           defaultValue={data.minCount?.toString() ?? ''}
           onChange={(e) => handleUpdate('minCount', e?.toString() ?? '')}
         />
 
         <TextInput
-          labelText="Enimmäismäärä"
+          labelText={t('maximum-amount')}
           optionalText={t('optional')}
           defaultValue={data.maxCount?.toString() ?? ''}
           onChange={(e) => handleUpdate('maxCount', e?.toString() ?? '')}

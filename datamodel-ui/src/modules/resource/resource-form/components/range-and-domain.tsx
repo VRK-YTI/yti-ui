@@ -93,17 +93,16 @@ export default function RangeAndDomain({
   }
 
   if (type === ResourceType.ATTRIBUTE) {
-    console.log('data', data);
     return (
       <>
         {applicationProfile && (
           <InlineListBlock
             addNewComponent={
-              <Button variant="secondary">Valitse attribuutti</Button>
+              <Button variant="secondary">{t('select-attribute')}</Button>
             }
             handleRemoval={() => null}
             items={data.dataTypeProperty ? [data.dataTypeProperty] : []}
-            label="Kohdistuu attribuuttiin"
+            label={t('target-attribute')}
           />
         )}
 

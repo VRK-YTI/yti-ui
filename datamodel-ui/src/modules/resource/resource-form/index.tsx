@@ -290,6 +290,7 @@ export default function ResourceForm({
         <FormWrapper>
           <ApplicationProfileTop
             defaultChecked={true}
+            type={type}
             applicationProfile={applicationProfile}
           />
 

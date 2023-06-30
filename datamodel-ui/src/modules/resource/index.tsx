@@ -224,8 +224,12 @@ export default function ResourceView({
                     ? {
                         useSelected:
                           type === ResourceType.ATTRIBUTE
-                            ? 'Luo uusi attribuuttirajoite'
-                            : 'Luo uusi assosiaatiorajoite',
+                            ? t('create-new-attribute-constraint', {
+                                ns: 'admin',
+                              })
+                            : t('create-new-association-constraint', {
+                                ns: 'admin',
+                              }),
                       }
                     : {
                         useSelected: translateCreateNewResourceForSelected(

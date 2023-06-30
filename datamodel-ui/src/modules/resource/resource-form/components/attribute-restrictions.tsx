@@ -36,120 +36,120 @@ export default function AttributeRestrictions({
       <Separator />
 
       <div style={{ marginBottom: '10px' }}>
-        <Text variant="bold">Rajoitteet</Text>
+        <Text variant="bold">{t('restrictions')}</Text>
       </div>
 
       <InlineListBlock
         addNewComponent={
           <Button variant="secondary" icon={<IconPlus />}>
-            Lisää koodisto
+            {t('add-reference-data')}
           </Button>
         }
         handleRemoval={() => null}
         items={[]}
-        label="Koodisto"
+        label={t('codelist')}
       />
 
       <SingleSelect
-        labelText="Sallitut arvot"
+        labelText={t('allowed-values')}
         clearButtonLabel=""
         itemAdditionHelpText=""
         ariaOptionsAvailableText=""
         items={[]}
         optionalText={t('optional')}
-        visualPlaceholder="Valitse arvot"
+        visualPlaceholder={t('select-values')}
       />
 
       <SingleSelect
-        labelText="Oletusarvo"
+        labelText={t('default-value')}
         clearButtonLabel=""
         itemAdditionHelpText=""
         ariaOptionsAvailableText=""
         items={[]}
         optionalText={t('optional')}
-        visualPlaceholder="Valitse arvo"
+        visualPlaceholder={t('select-value')}
       />
 
       <SingleSelect
-        labelText="Pakollinen arvo"
+        labelText={t('required-value')}
         clearButtonLabel=""
         itemAdditionHelpText=""
         ariaOptionsAvailableText=""
         items={[]}
         optionalText={t('optional')}
-        visualPlaceholder="Valitse arvo"
+        visualPlaceholder={t('select-value')}
       />
 
       <TextInput
-        labelText="Vähimmäispituus"
+        labelText={t('minimum-length')}
         optionalText={t('optional')}
-        visualPlaceholder="Kirjoita arvo"
+        visualPlaceholder={t('input-value')}
         defaultValue={data.minLength}
         onChange={(e) => handleUpdate('minLength', e?.toString() ?? '')}
       />
 
       <TextInput
-        labelText="Enimmäispituus"
+        labelText={t('maximum-length')}
         optionalText={t('optional')}
-        visualPlaceholder="Kirjoita arvo"
+        visualPlaceholder={t('input-value')}
         defaultValue={data.maxLength}
         onChange={(e) => handleUpdate('maxLength', e?.toString() ?? '')}
       />
 
       <TextInput
-        labelText="Vähimmäismäärä"
+        labelText={t('minimum-amount')}
         optionalText={t('optional')}
-        visualPlaceholder="Kirjoita arvo"
+        visualPlaceholder={t('input-value')}
         defaultValue={data.minCount}
         onChange={(e) => handleUpdate('minCount', e?.toString() ?? '')}
       />
 
       <TextInput
-        labelText="Enimmäismäärä"
+        labelText={t('maximum-amount')}
         optionalText={t('optional')}
-        visualPlaceholder="Kirjoita arvo"
+        visualPlaceholder={t('input-value')}
         defaultValue={data.maxCount}
         onChange={(e) => handleUpdate('maxCount', e?.toString() ?? '')}
       />
 
       <TextInput
-        labelText="Suurempi tai yhtä suuri kuin"
+        labelText={t('larger-or-as-large-as')}
         optionalText={t('optional')}
-        visualPlaceholder="Kirjoita arvo"
+        visualPlaceholder={t('input-value')}
       />
 
       <TextInput
-        labelText="Pienempi tai yhtä pieni kuin"
+        labelText={t('smaller-or-as-small-as')}
         optionalText={t('optional')}
-        visualPlaceholder="Kirjoita arvo"
+        visualPlaceholder={t('input-value')}
       />
 
       <TextInput
-        labelText="Suurempi kuin"
+        labelText={t('larger-than')}
         optionalText={t('optional')}
-        visualPlaceholder="Kirjoita arvo"
+        visualPlaceholder={t('input-value')}
       />
 
       <TextInput
-        labelText="Pienempi kuin"
+        labelText={t('smaller-than')}
         optionalText={t('optional')}
-        visualPlaceholder="Kirjoita arvo"
+        visualPlaceholder={t('input-value')}
       />
 
       <TextInput
-        labelText="Merkkijonattribuutin muoto"
+        labelText={t('string-attribute-format')}
         optionalText={t('optional')}
-        visualPlaceholder="Kirjoita arvo"
+        visualPlaceholder={t('input-value')}
       />
 
       <SingleSelect
-        labelText="Merkkijonoattribuutin sallitut kielet"
+        labelText={t('string-attribute-languages')}
         clearButtonLabel=""
         itemAdditionHelpText=""
         ariaOptionsAvailableText=""
         items={[]}
         optionalText={t('optional')}
-        visualPlaceholder="Valitse kielet"
+        visualPlaceholder={t('select-languages')}
       />
 
       <Separator />

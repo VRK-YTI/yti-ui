@@ -1,3 +1,5 @@
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { InlineAlert, Text, ToggleButton } from 'suomifi-ui-components';
@@ -22,11 +24,14 @@ const ToggleWrapper = styled.div`
 
 export default function ApplicationProfileTop({
   defaultChecked,
+  type,
   applicationProfile,
 }: {
   defaultChecked: boolean;
+  type: ResourceType;
   applicationProfile?: boolean;
 }) {
+  const { t } = useTranslation('admin');
   const [toggle, setToggle] = useState(defaultChecked);
 
   if (!applicationProfile) {
@@ -36,21 +41,22 @@ export default function ApplicationProfileTop({
   return (
     <Wrapper>
       <InlineAlert status="neutral">
-        Huomioi, että attribuutin muokkaus vaikuttaa jokaiseen attribuutin
-        esiintymään.
+        {type === ResourceType.ASSOCIATION
+          ? t('association-constraint-toggle-description')
+          : t('attribute-constraint-toggle-description')}
       </InlineAlert>
 
       <ToggleWrapper>
         <div>
           <Text variant="bold" smallScreen>
-            Käytössä tässä tietomallissa
+            {t('in-use-in-this-model')}
           </Text>
         </div>
         <ToggleButton
           defaultChecked={toggle}
           onClick={() => setToggle(!toggle)}
         >
-          {toggle ? 'Käytössä' : 'Ei käytössä'}
+          {toggle ? t('in-use') : t('not-in-use')}
         </ToggleButton>
       </ToggleWrapper>
     </Wrapper>
