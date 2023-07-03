@@ -15,10 +15,12 @@ export default function CommonViewContent({
   modelId,
   data,
   displayLabel,
+  applicationProfile,
 }: {
   modelId: string;
   data: Resource;
   displayLabel?: boolean;
+  applicationProfile?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
@@ -73,7 +75,7 @@ export default function CommonViewContent({
       {data.type === ResourceType.ATTRIBUTE && (
         <>
           <BasicBlock title={t('range', { ns: 'admin' })}>
-            {data.range}
+            {applicationProfile ? data.dataType : data.range}
           </BasicBlock>
 
           <BasicBlock title={`${t('class', { ns: 'admin' })} (rdfs:domain)`}>

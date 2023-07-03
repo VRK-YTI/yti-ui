@@ -51,6 +51,7 @@ export default function ResourceInfo({
             data={resourceData}
             modelId={modelId}
             displayLabel
+            applicationProfile={applicationProfile}
           />
         )}
       </ExpanderContent>

@@ -139,6 +139,14 @@ export default function ResourceForm({
     });
   };
 
+  const handleSetDataType = (value: string) => {
+    if (applicationProfile) {
+      handleUpdate({ ...data, dataType: value });
+    } else {
+      handleUpdate({ ...data, range: { id: value, label: value } });
+    }
+  };
+
   const handleUpdate = (value: typeof data) => {
     enableConfirmation();
     dispatch(setHasChanges(true));
@@ -407,10 +415,9 @@ export default function ResourceForm({
                   }
                 })}
                 clearButtonLabel={t('clear-selection')}
-                onItemSelect={(e) =>
-                  e != undefined &&
-                  handleUpdate({ ...data, range: { id: e, label: e } })
-                }
+                onItemSelect={(e) => {
+                  e != undefined && handleSetDataType(e);
+                }}
                 items={attributeRanges}
               />
 

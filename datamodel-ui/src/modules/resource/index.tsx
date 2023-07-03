@@ -261,6 +261,7 @@ export default function ResourceView({
         handleEdit={handleEdit}
         handleReturn={handleReturn}
         isPartOfCurrentModel={globalSelected.modelId === modelId}
+        applicationProfile={applicationProfile}
       />
     );
   }
