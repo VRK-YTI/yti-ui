@@ -23,6 +23,7 @@ export interface AttributeFormType {
     id: string;
     label: string;
   };
+  dataType?: string;
 }
 
 export const initialAttribute: AttributeFormType = {
@@ -37,4 +38,5 @@ export const initialAttribute: AttributeFormType = {
   type: ResourceType.ATTRIBUTE,
   domain: undefined,
   range: { id: 'rdfs:Literal', label: 'rdfs:Literal' },
+  dataType: undefined,
 };

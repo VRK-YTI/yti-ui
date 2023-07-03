@@ -33,4 +33,5 @@ export interface Resource {
   uri: string;
   domain?: string;
   range?: string;
+  dataType?: string;
 }

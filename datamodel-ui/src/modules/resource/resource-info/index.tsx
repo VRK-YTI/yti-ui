@@ -31,6 +31,7 @@ interface CommonViewProps {
   handleShowResource: (id: string, modelPrefix: string) => void;
   handleEdit: () => void;
   isPartOfCurrentModel: boolean;
+  applicationProfile?: boolean;
   currentModelId?: string;
 }
 
@@ -41,6 +42,7 @@ export default function ResourceInfo({
   handleShowResource,
   handleEdit,
   isPartOfCurrentModel,
+  applicationProfile,
   currentModelId,
 }: CommonViewProps) {
   const { t, i18n } = useTranslation('common');
@@ -163,7 +165,13 @@ export default function ResourceInfo({
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
-        {data && <CommonViewContent modelId={modelId} data={data} />}
+        {data && (
+          <CommonViewContent
+            applicationProfile={applicationProfile}
+            modelId={modelId}
+            data={data}
+          />
+        )}
       </DrawerContent>
     </>
   );
