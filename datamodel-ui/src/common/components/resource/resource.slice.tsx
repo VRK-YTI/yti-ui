@@ -113,28 +113,35 @@ export const resourceApi = createApi({
 function resourceInitialData(
   type: ResourceType,
   languages?: string[],
-  initialSubResourceOf?: string,
+  initialSubResourceOf?:
+    | string
+    | {
+        id: string;
+        label: string;
+        uri: string;
+      },
   applicationProfile?: boolean
 ): ResourceFormType {
   let retValue = {} as ResourceFormType;
 
   if (applicationProfile) {
+    const path =
+      initialSubResourceOf && typeof initialSubResourceOf !== 'string'
+        ? initialSubResourceOf
+        : undefined;
+
     retValue =
       type === ResourceType.ASSOCIATION
         ? {
             ...initialAppAssociation,
-            path: initialSubResourceOf
-              ? { id: initialSubResourceOf, label: initialSubResourceOf }
-              : undefined,
+            path: path,
           }
         : {
             ...initialAppAttribute,
-            dataTypeProperty: initialSubResourceOf
-              ? { id: initialSubResourceOf, label: initialSubResourceOf }
-              : undefined,
+            path: path,
           };
   } else {
-    if (!initialSubResourceOf) {
+    if (!initialSubResourceOf || typeof initialSubResourceOf !== 'string') {
       retValue =
         type === ResourceType.ASSOCIATION
           ? { ...initialAssociation, subResourceOf: ['owl:TopObjectProperty'] }
@@ -184,7 +191,13 @@ export function setResource(data: ResourceFormType): AppThunk {
 export function initializeResource(
   type: ResourceType,
   langs: string[],
-  initialSubResourceOf?: string,
+  initialSubResourceOf?:
+    | string
+    | {
+        id: string;
+        label: string;
+        uri: string;
+      },
   applicationProfile?: boolean
 ): AppThunk {
   return (dispatch) =>

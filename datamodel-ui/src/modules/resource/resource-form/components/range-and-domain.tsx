@@ -101,7 +101,7 @@ export default function RangeAndDomain({
               <Button variant="secondary">{t('select-attribute')}</Button>
             }
             handleRemoval={() => null}
-            items={data.dataTypeProperty ? [data.dataTypeProperty] : []}
+            items={data.path ? [data.path] : []}
             label={t('target-attribute')}
           />
         )}

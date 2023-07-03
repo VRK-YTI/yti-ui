@@ -5,6 +5,7 @@ import { useTranslation } from 'next-i18next';
 import {
   Button,
   IconPlus,
+  MultiSelect,
   SingleSelect,
   Text,
   TextInput,
@@ -50,14 +51,35 @@ export default function AttributeRestrictions({
         label={t('codelist')}
       />
 
-      <SingleSelect
+      <MultiSelect
         labelText={t('allowed-values')}
-        clearButtonLabel=""
         itemAdditionHelpText=""
         ariaOptionsAvailableText=""
-        items={[]}
+        ariaOptionChipRemovedTextFunction={() => ''}
+        ariaSelectedAmountTextFunction={() => ''}
         optionalText={t('optional')}
         visualPlaceholder={t('select-values')}
+        items={
+          data.allowedValues
+            ? data.allowedValues.map((av) => ({
+                labelText: av,
+                uniqueItemId: av,
+              }))
+            : []
+        }
+        defaultSelectedItems={
+          data.allowedValues
+            ? data.allowedValues.map((av) => ({
+                labelText: av,
+                uniqueItemId: av,
+              }))
+            : []
+        }
+        allowItemAddition
+        chipListVisible
+        onItemSelectionsChange={(e) =>
+          handleUpdate('allowedValues', e.map((val) => val.uniqueItemId) ?? '')
+        }
       />
 
       <SingleSelect
@@ -65,9 +87,26 @@ export default function AttributeRestrictions({
         clearButtonLabel=""
         itemAdditionHelpText=""
         ariaOptionsAvailableText=""
-        items={[]}
+        items={
+          data.allowedValues
+            ? data.allowedValues.map((av) => ({
+                labelText: av,
+                uniqueItemId: av,
+              }))
+            : []
+        }
+        defaultSelectedItem={
+          data.defaultValue
+            ? {
+                labelText: data.defaultValue,
+                uniqueItemId: data.defaultValue,
+              }
+            : undefined
+        }
         optionalText={t('optional')}
         visualPlaceholder={t('select-value')}
+        allowItemAddition
+        onItemSelect={(e) => handleUpdate('defaultValue', e ?? '')}
       />
 
       <SingleSelect
@@ -75,9 +114,26 @@ export default function AttributeRestrictions({
         clearButtonLabel=""
         itemAdditionHelpText=""
         ariaOptionsAvailableText=""
-        items={[]}
+        items={
+          data.allowedValues
+            ? data.allowedValues.map((av) => ({
+                labelText: av,
+                uniqueItemId: av,
+              }))
+            : []
+        }
+        defaultSelectedItem={
+          data.hasValue
+            ? {
+                labelText: data.hasValue,
+                uniqueItemId: data.hasValue,
+              }
+            : undefined
+        }
         optionalText={t('optional')}
         visualPlaceholder={t('select-value')}
+        allowItemAddition
+        onItemSelect={(e) => handleUpdate('hasValue', e ?? '')}
       />
 
       <TextInput

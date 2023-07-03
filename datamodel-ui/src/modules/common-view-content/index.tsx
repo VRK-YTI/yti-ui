@@ -89,9 +89,29 @@ export default function CommonViewContent({
           ) : (
             <>
               <BasicBlock title={t('target-attribute', { ns: 'admin' })}>
-                {data.dataTypeProperty ?? t('not-defined')}
+                {data.path ? (
+                  <Link href={data.path}>
+                    {data.path
+                      .split('/')
+                      .map((item, index) => {
+                        const length: number = data.path
+                          ? data.path.split('/').length
+                          : 0;
+                        if (index === length - 1 || index === length - 2) {
+                          return item;
+                        }
+                        return undefined;
+                      })
+                      .filter(Boolean)
+                      .join(':') ?? data.path}
+                  </Link>
+                ) : (
+                  t('not-defined')
+                )}
               </BasicBlock>
-              <BasicBlock title={t('data-type')}>{data.dataType}</BasicBlock>
+              <BasicBlock title={t('data-type')}>
+                {data.dataType ?? t('not-defined')}
+              </BasicBlock>
               <Separator />
               <div>
                 <Text variant="bold">{t('restrictions')}</Text>
@@ -102,15 +122,17 @@ export default function CommonViewContent({
               </BasicBlock>
 
               <BasicBlock title={t('allowed-values')}>
-                {t('selected-codelists')}
+                {data.allowedValues && data.allowedValues.length > 0
+                  ? data.allowedValues.join(', ')
+                  : t('selected-codelists')}
               </BasicBlock>
 
               <BasicBlock title={t('default-value', { ns: 'admin' })}>
-                {t('not-defined')}
+                {data.defaultValue ?? t('not-defined')}
               </BasicBlock>
 
               <BasicBlock title={t('required-value', { ns: 'admin' })}>
-                {t('not-defined')}
+                {data.hasValue ?? t('not-defined')}
               </BasicBlock>
 
               <BasicBlock title={t('minimum-length', { ns: 'admin' })}>

@@ -142,9 +142,27 @@ export default function ResourceView({
   };
 
   const handleFollowUp = (value?: { label: string; uri: string }) => {
-    dispatch(
-      initializeResource(type, languages, value?.label, applicationProfile)
-    );
+    if (applicationProfile) {
+      dispatch(
+        initializeResource(
+          type,
+          languages,
+          value
+            ? {
+                id: value.label,
+                label: value.label,
+                uri: value.uri,
+              }
+            : undefined,
+          applicationProfile
+        )
+      );
+    } else {
+      dispatch(
+        initializeResource(type, languages, value?.label, applicationProfile)
+      );
+    }
+
     dispatch(
       setView(
         type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',

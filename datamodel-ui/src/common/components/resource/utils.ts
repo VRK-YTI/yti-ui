@@ -76,12 +76,7 @@ export function convertToPUT(
         return true;
       })
       .map((e) => {
-        if (
-          e[0] === 'range' ||
-          e[0] === 'domain' ||
-          e[0] === 'path' ||
-          e[0] === 'dataType'
-        ) {
+        if (e[0] === 'range' || e[0] === 'domain' || e[0] === 'dataType') {
           return [e[0], e[1].id];
         }
 
@@ -93,6 +88,10 @@ export function convertToPUT(
                 r.identifier
             ),
           ];
+        }
+
+        if (e[0] === 'path' && typeof e[1] !== 'string') {
+          return [e[0], e[1].uri];
         }
 
         return e;
