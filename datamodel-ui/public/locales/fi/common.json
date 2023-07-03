@@ -196,6 +196,7 @@
     "superseded": "Korvattu",
     "valid": "Voimassa oleva"
   },
+  "targets-library-class": "Kohdistuu ydintietomallin luokkaan",
   "technical-description": "Tekninen kuvaus",
   "terminology": "Sanasto",
   "terminology-footer-accessibility": "Saavutettavuus",
@@ -211,6 +212,7 @@
   "try-again": "Yritä uudestaan",
   "upper-class": "Yläluokka",
   "uri": "URI",
+  "utilizes-class-restriction": "Hyödyntää luokkarajoitetta",
   "value-is-not-allowed": "\"{{value}}\" ei sallittu",
   "vocabulary-filter-items": "kpl",
   "vocabulary-filter-show-only": "",

@@ -196,6 +196,7 @@
     "superseded": "Superseded",
     "valid": "Valid"
   },
+  "targets-library-class": "Targets library class",
   "technical-description": "Technical description",
   "terminology": "Terminology",
   "terminology-footer-accessibility": "Accessibility",
@@ -211,6 +212,7 @@
   "try-again": "Try again",
   "upper-class": "Upper class",
   "uri": "URI",
+  "utilizes-class-restriction": "Utilizes class restriction",
   "value-is-not-allowed": "\"{{value}}\" is not allowed",
   "vocabulary-filter-items": "items",
   "vocabulary-filter-show-only": "",

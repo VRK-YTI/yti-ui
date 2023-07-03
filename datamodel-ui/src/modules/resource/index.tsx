@@ -25,7 +25,6 @@ import {
   setResource,
   useGetResourceQuery,
 } from '@app/common/components/resource/resource.slice';
-import { getResourceInfo } from '@app/common/utils/parse-slug';
 import ResourceInfo from './resource-info/index';
 import {
   translateCreateNewResource,
@@ -66,13 +65,6 @@ export default function ResourceView({
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [isEdit, setIsEdit] = useState(false);
-  const [currentResourceId, setCurrentResourceId] = useState<
-    string | undefined
-  >(
-    getResourceInfo(router.query.slug)?.type === type.toString().toLowerCase()
-      ? getResourceInfo(router.query.slug)?.id
-      : undefined
-  );
 
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
@@ -84,12 +76,12 @@ export default function ResourceView({
 
   const { data: resourceData, refetch: refetchResource } = useGetResourceQuery(
     {
-      modelId: modelId,
-      resourceIdentifier: currentResourceId ?? '',
+      modelId: globalSelected.modelId ?? modelId,
+      resourceIdentifier: globalSelected.id ?? '',
       applicationProfile,
     },
     {
-      skip: typeof currentResourceId === 'undefined',
+      skip: !globalSelected.id,
     }
   );
 
@@ -98,7 +90,7 @@ export default function ResourceView({
     setCurrentPage(1);
   };
 
-  const handleShowResource = (id: string) => {
+  const handleShowResource = (id: string, modelPrefix: string) => {
     dispatch(
       setView(
         type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
@@ -108,13 +100,14 @@ export default function ResourceView({
     dispatch(
       setSelected(
         id,
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        modelPrefix
       )
     );
     router.replace(
       `${modelId}/${
         type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
-      }/${id}`
+      }/${modelPrefix !== modelId ? `${modelPrefix}:` : ''}${id}`
     );
   };
 
@@ -182,17 +175,6 @@ export default function ResourceView({
       setHeaderHeight(ref.current.clientHeight);
     }
   }, [ref, view]);
-
-  useEffect(() => {
-    if (
-      type === ResourceType.ASSOCIATION
-        ? globalSelected.type === 'associations'
-        : globalSelected.type === 'attributes' &&
-          currentResourceId !== globalSelected.id
-    ) {
-      setCurrentResourceId(globalSelected.id);
-    }
-  }, [globalSelected, currentResourceId, type]);
 
   return (
     <>
@@ -263,14 +245,18 @@ export default function ResourceView({
             <Text>{t('datamodel-no-attributes')}</Text>
           ) : (
             <DrawerItemList
-              items={data.responseObjects.map((item) => ({
-                label: getLanguageVersion({
-                  data: item.label,
-                  lang: i18n.language,
-                }),
-                subtitle: `${modelId}:${item.identifier}`,
-                onClick: () => handleShowResource(item.identifier),
-              }))}
+              items={data.responseObjects.map((item) => {
+                const prefix =
+                  item.namespace?.split('/')?.filter(Boolean)?.pop() ?? modelId;
+                return {
+                  label: getLanguageVersion({
+                    data: item.label,
+                    lang: i18n.language,
+                  }),
+                  subtitle: `${prefix}:${item.identifier}`,
+                  onClick: () => handleShowResource(item.identifier, prefix),
+                };
+              })}
             />
           )}
 
@@ -289,7 +275,6 @@ export default function ResourceView({
     if (!view.info || !resourceData) {
       return <></>;
     }
-
     return (
       <ResourceInfo
         data={resourceData}
@@ -297,6 +282,7 @@ export default function ResourceView({
         handleEdit={handleEdit}
         handleReturn={handleReturn}
         applicationProfile={applicationProfile}
+        isPartOfCurrentModel={globalSelected.modelId === modelId}
       />
     );
   }

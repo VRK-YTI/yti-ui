@@ -41,5 +41,6 @@ export interface ClassType {
   contact?: string;
   note: { [key: string]: string };
   targetClass?: string;
+  targetNode?: string;
   uri: string;
 }
