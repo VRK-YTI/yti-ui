@@ -107,6 +107,20 @@ export const resourceApi = createApi({
         method: 'GET',
       }),
     }),
+    makeLocalCopyPropertyShape: builder.mutation<
+      null,
+      {
+        modelid: string;
+        resourceId: string;
+        targetPrefix: string;
+        newIdentifier: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/resource/profile/${value.modelid}/${value.resourceId}?targetPrefix=${value.targetPrefix}&newIdentifier=${value.newIdentifier}`,
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -233,5 +247,6 @@ export const {
   useGetResourceQuery,
   useDeleteResourceMutation,
   useGetResourceIdentifierFreeQuery,
+  useMakeLocalCopyPropertyShapeMutation,
   util: { getRunningQueriesThunk, getRunningMutationsThunk },
 } = resourceApi;
