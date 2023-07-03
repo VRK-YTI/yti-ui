@@ -3,13 +3,26 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Resource } from '@app/common/interfaces/resource.interface';
 
 export function resourceToResourceFormType(data: Resource): ResourceFormType {
+  const pathLabel = data.path
+    ? data.path
+        .split('/')
+        .map((p, idx) => {
+          const length = data.path ? data.path.split('/').length : 0;
+          if (idx === length - 1 || idx === length - 2) {
+            return p;
+          }
+
+          return undefined;
+        })
+        .filter(Boolean)
+        .join(':')
+    : undefined;
+
   return {
     ...data,
     dataType: data.dataType
       ? { id: data.dataType, label: data.dataType }
       : undefined,
-    // TODO: Change to correct form after backend is updated
-    dataTypeProperty: undefined,
     domain: data.domain
       ? {
           id: data.domain,
@@ -19,11 +32,9 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
     equivalentResource: [],
     path: data.path
       ? {
-          id: data.path,
-          label:
-            data.type == ResourceType.ASSOCIATION
-              ? data.path.split('/').pop()?.replace('#', ':') ?? data.path
-              : data.path,
+          id: pathLabel ?? data.path,
+          label: pathLabel ?? data.path,
+          uri: data.path,
         }
       : undefined,
     range: data.range
