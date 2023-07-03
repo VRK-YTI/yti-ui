@@ -257,10 +257,14 @@ export default function ResourceView({
     return (
       <ResourceInfo
         data={resourceData}
-        modelId={modelId}
+        modelId={globalSelected.modelId ?? modelId}
         handleEdit={handleEdit}
         handleReturn={handleReturn}
+        handleShowResource={handleShowResource}
         isPartOfCurrentModel={globalSelected.modelId === modelId}
+        currentModelId={
+          globalSelected.modelId !== modelId ? modelId : undefined
+        }
       />
     );
   }
