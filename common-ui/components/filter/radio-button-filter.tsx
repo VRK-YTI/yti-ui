@@ -42,6 +42,7 @@ export default function RadioButtonFilter({
             variant={radioButtonVariant}
             className="filter-radio-button-item"
             hintText={hintText}
+            id={`filter-radio-button-${value}`}
           >
             {label}
           </FilterRadioButton>
