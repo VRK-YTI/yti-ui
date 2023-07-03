@@ -93,6 +93,12 @@ export default function Documentation({
     });
   };
 
+  const handleCancel = () => {
+    setIsEdit(false);
+    dispatch(setHasChanges(false));
+    disableConfirmation();
+  };
+
   const handleUpdate = (data: { [key: string]: string }) => {
     enableConfirmation();
     dispatch(setHasChanges(true));
@@ -226,10 +232,7 @@ export default function Documentation({
               </Button>
               <Button
                 variant="secondary"
-                onClick={() => {
-                  setIsEdit(false);
-                  disableConfirmation();
-                }}
+                onClick={() => handleCancel()}
                 id="cancel-button"
               >
                 {t('cancel-variant')}
