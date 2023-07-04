@@ -299,9 +299,9 @@ export default function ResourceView({
         modelId={globalSelected.modelId ?? modelId}
         handleEdit={handleEdit}
         handleReturn={handleReturn}
-        applicationProfile={applicationProfile}
         handleShowResource={handleShowResource}
         isPartOfCurrentModel={globalSelected.modelId === modelId}
+        applicationProfile={applicationProfile}
         currentModelId={
           globalSelected.modelId !== modelId ? modelId : undefined
         }

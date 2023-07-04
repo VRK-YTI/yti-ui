@@ -547,6 +547,7 @@ export default function ClassForm({
                     key={`${data.identifier}-attr-${attr.identifier}`}
                     data={attr}
                     modelId={applicationProfile ? attr.modelId : modelId}
+                    applicationProfile={applicationProfile}
                   />
                 )
               )}
@@ -571,6 +572,7 @@ export default function ClassForm({
                     <ResourceInfo
                       data={assoc}
                       modelId={applicationProfile ? assoc.modelId : modelId}
+                      applicationProfile={applicationProfile}
                     />
                     <Button
                       variant="secondary"
@@ -585,6 +587,7 @@ export default function ClassForm({
                     key={`${data.identifier}-assoc-${assoc.identifier}`}
                     data={assoc}
                     modelId={applicationProfile ? assoc.modelId : modelId}
+                    applicationProfile={applicationProfile}
                   />
                 )
               )}

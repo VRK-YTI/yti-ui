@@ -27,22 +27,22 @@ import LocalCopyModal from '@app/modules/local-copy-modal';
 interface CommonViewProps {
   data?: Resource;
   modelId: string;
-  applicationProfile?: boolean;
   handleReturn: () => void;
   handleShowResource: (id: string, modelPrefix: string) => void;
   handleEdit: () => void;
   isPartOfCurrentModel: boolean;
+  applicationProfile?: boolean;
   currentModelId?: string;
 }
 
 export default function ResourceInfo({
   data,
   modelId,
-  applicationProfile,
   handleReturn,
   handleShowResource,
   handleEdit,
   isPartOfCurrentModel,
+  applicationProfile,
   currentModelId,
 }: CommonViewProps) {
   const { t, i18n } = useTranslation('common');
@@ -167,9 +167,9 @@ export default function ResourceInfo({
       <DrawerContent height={headerHeight}>
         {data && (
           <CommonViewContent
+            applicationProfile={applicationProfile}
             modelId={modelId}
             data={data}
-            applicationProfile={applicationProfile}
           />
         )}
       </DrawerContent>
