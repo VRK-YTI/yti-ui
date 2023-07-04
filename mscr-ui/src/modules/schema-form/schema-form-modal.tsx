@@ -12,7 +12,6 @@ import {
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import ModelForm from '.';
 import { FormErrors, validateForm } from './validate-form';
-import { useInitialModelForm } from '@app/common/utils/hooks/use-initial-model-form';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
   translateLanguage,
@@ -24,20 +23,21 @@ import { usePutModelMutation } from '@app/common/components/model/model.slice';
 import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
+import { useInitialSchemaForm } from '@app/common/utils/hooks/use-initial-schema-form';
 
 interface ModelFormModalProps {
   refetch: () => void;
 }
 
-// For the time bein, using as schema metadata form
+// For the time being, using as schema metadata form, Need to update the props accordingly
 
-export default function ModelFormModal({ refetch }: ModelFormModalProps) {
+export default function SchemaFormModal({ refetch }: ModelFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
   const [visible, setVisible] = useState(false);
-  const [modelFormInitialData] = useState(useInitialModelForm());
-  const [formData, setFormData] = useState(modelFormInitialData);
+  const [schemaFormInitialData] = useState(useInitialSchemaForm());
+  const [formData, setFormData] = useState(schemaFormInitialData);
   const [errors, setErrors] = useState<FormErrors>();
   const [userPosted, setUserPosted] = useState(false);
   const [getAuthenticatedUser, authenticateUser] =
@@ -52,8 +52,8 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
   const handleClose = useCallback(() => {
     setVisible(false);
     setUserPosted(false);
-    setFormData(modelFormInitialData);
-  }, [modelFormInitialData]);
+    setFormData(schemaFormInitialData);
+  }, [schemaFormInitialData]);
 
   useEffect(() => {
     if (userPosted && result.isSuccess) {
@@ -90,6 +90,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
     setErrors(errors);
   }, [userPosted, formData]);
 
+  // Need to add action type create_schema
   if (!HasPermission({ actions: ['CREATE_DATA_MODEL'] })) {
     return null;
   }

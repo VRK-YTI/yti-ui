@@ -4,7 +4,7 @@ import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { ModelTerminology } from '@app/common/interfaces/model.interface';
 import { useTranslation } from 'next-i18next';
 import { Button, Label } from 'suomifi-ui-components';
-import { AddBlockWrapper } from './model-form.styles';
+import { AddBlockWrapper } from './crosswalk-form.styles';
 
 export default function AddBlock({
   data,

@@ -1,6 +1,8 @@
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { NewModel } from '@app/common/interfaces/new-model.interface';
 
+// here we can create the schema payloaf
+
 export default function generatePayload(data: ModelFormType): NewModel {
   const SUOMI_FI_NAMESPACE = 'http://uri.suomi.fi/datamodel/ns/';
 

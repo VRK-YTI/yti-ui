@@ -1,7 +1,9 @@
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
+import { Schema } from '@app/common/interfaces/schema.interface';
 import { useTranslation } from 'next-i18next';
 
-export function useInitialModelForm(): ModelFormType {
+// Here we need initial schema form data defined according to schema interface
+export function useInitialSchemaForm(): Schema {
   const { t } = useTranslation('admin');
 
   return {

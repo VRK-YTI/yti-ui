@@ -8,6 +8,7 @@ import {
 } from '../components/login/login.slice';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 
+// Need to specify the acctions permitted for each type of user
 const actions = [
   'ADMIN_DATA_MODEL',
   'CREATE_DATA_MODEL',

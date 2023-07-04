@@ -28,10 +28,11 @@ import {
 } from 'yti-common-ui/title/title.styles';
 import Pagination from 'yti-common-ui/pagination';
 import { translateModelType } from '@app/common/utils/translation-helpers';
-import ModelFormModal from '../model-form/model-form-modal';
 import Separator from 'yti-common-ui/separator';
 import { ButtonBlock } from '@app/modules/front-page/front-page.styles';
 import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
+import SchemaForm from '../schema-form';
+import SchemaFormModal from '../schema-form/schema-form-modal';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -152,6 +153,7 @@ export default function FrontPage() {
     t,
   ]);
 
+  // Need to decide what data we want to fetch loading the application
   const refetchInfo = () => {
     refetchOrganizationsData();
     refetchServiceCategoriesData();
@@ -159,7 +161,9 @@ export default function FrontPage() {
   };
 
   const registerSchema = () => {
-    // register a new schema
+    return (
+      <SchemaFormModal refetch={refetchInfo}  ></SchemaFormModal>
+    );
   };
 
   const registerCrossWalk = () => {
@@ -180,14 +184,7 @@ export default function FrontPage() {
         }
       />
       <Separator isLarge />
-      <ButtonBlock>
-        <Button onClick={() => registerSchema()} id="submit-button">
-          {t('Register schema', { ns: 'admin' })}
-        </Button>
-        <Button onClick={() => registerCrossWalk()} id="submit-button">
-          {t('Register crosswalks', { ns: 'admin' })}
-        </Button>
-      </ButtonBlock>
+      <SchemaFormModal refetch={refetchInfo}  ></SchemaFormModal>
       <Separator />
       <UpdateWithFileModal />
     </main>
