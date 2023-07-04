@@ -21,10 +21,10 @@ import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import {
   initializeResource,
+  resetResource,
   setResource,
   useGetResourceQuery,
 } from '@app/common/components/resource/resource.slice';
-import { getResourceInfo } from '@app/common/utils/parse-slug';
 import ResourceInfo from './resource-info/index';
 import {
   translateCreateNewResource,
@@ -119,6 +119,7 @@ export default function ResourceView({
         'list'
       )
     );
+    dispatch(resetResource());
     refetch();
 
     if (isEdit) {
@@ -133,6 +134,7 @@ export default function ResourceView({
         'info'
       )
     );
+    dispatch(resetResource());
 
     if (isEdit) {
       setIsEdit(false);
@@ -140,7 +142,27 @@ export default function ResourceView({
   };
 
   const handleFollowUp = (value?: { label: string; uri: string }) => {
-    dispatch(initializeResource(type, languages, value?.label));
+    if (applicationProfile) {
+      dispatch(
+        initializeResource(
+          type,
+          languages,
+          value
+            ? {
+                id: value.label,
+                label: value.label,
+                uri: value.uri,
+              }
+            : undefined,
+          applicationProfile
+        )
+      );
+    } else {
+      dispatch(
+        initializeResource(type, languages, value?.label, applicationProfile)
+      );
+    }
+
     dispatch(
       setView(
         type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
@@ -192,14 +214,31 @@ export default function ResourceView({
             <Text variant="bold">
               {translateResourceCountTitle(type, t, data?.totalHitCount)}
             </Text>
+
             {hasPermission && (
               <ResourceModal
                 modelId={modelId}
                 type={type}
-                buttonTranslations={{
-                  useSelected: translateCreateNewResourceForSelected(type, t),
-                  createNew: translateCreateNewResource(type, t),
-                }}
+                buttonTranslations={
+                  applicationProfile
+                    ? {
+                        useSelected:
+                          type === ResourceType.ATTRIBUTE
+                            ? t('create-new-attribute-constraint', {
+                                ns: 'admin',
+                              })
+                            : t('create-new-association-constraint', {
+                                ns: 'admin',
+                              }),
+                      }
+                    : {
+                        useSelected: translateCreateNewResourceForSelected(
+                          type,
+                          t
+                        ),
+                        createNew: translateCreateNewResource(type, t),
+                      }
+                }
                 handleFollowUp={handleFollowUp}
                 buttonIcon={true}
                 applicationProfile={applicationProfile}

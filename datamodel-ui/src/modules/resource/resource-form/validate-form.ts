@@ -1,5 +1,4 @@
-import { AssociationFormType } from '@app/common/interfaces/association-form.interface';
-import { AttributeFormType } from '@app/common/interfaces/attribute-form.interface';
+import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 
 interface CommonFormErrors {
   label: boolean;
@@ -9,9 +8,7 @@ interface CommonFormErrors {
   unauthorized?: boolean;
 }
 
-export default function validateForm(
-  data: AttributeFormType | AssociationFormType
-): CommonFormErrors {
+export default function validateForm(data: ResourceFormType): CommonFormErrors {
   const errors: CommonFormErrors = {
     label: true,
     identifier: true,
