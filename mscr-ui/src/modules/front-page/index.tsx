@@ -161,9 +161,7 @@ export default function FrontPage() {
   };
 
   const registerSchema = () => {
-    return (
-      <SchemaFormModal refetch={refetchInfo}  ></SchemaFormModal>
-    );
+    return <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>;
   };
 
   const registerCrossWalk = () => {
@@ -184,7 +182,7 @@ export default function FrontPage() {
         }
       />
       <Separator isLarge />
-      <SchemaFormModal refetch={refetchInfo}  ></SchemaFormModal>
+      <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>
       <Separator />
       <UpdateWithFileModal />
     </main>

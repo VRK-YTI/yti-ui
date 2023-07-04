@@ -1,15 +1,15 @@
-export interface Schema{
- "id":string;
- "format": string;
- "status": string;
- "label":{
+export interface Schema {
+  id: string;
+  format: string;
+  status: string;
+  label: {
     [key: string]: string;
- };
- "description":{
+  };
+  description: {
     [key: string]: string;
- };
- "languages":{
+  };
+  languages: {
     [key: string]: string;
- };
- "organiztaion":[string];
+  };
+  organiztaion: [string];
 }

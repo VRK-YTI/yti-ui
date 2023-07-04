@@ -4,12 +4,7 @@ import getOrganizations from '@app/common/utils/get-organizations';
 import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
-import {
-  Dropdown,
-  DropdownItem,
-  Label,
-  Text,
-} from 'suomifi-ui-components';
+import { Dropdown, DropdownItem, Label, Text } from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
 import {
   BlockContainer,
@@ -80,7 +75,6 @@ export default function SchemaForm({
     <ModelFormContainer>
       {renderSchemaFormat()}
       {renderLanguages()}
-  
 
       <BlockContainer>
         {renderUsedBlock()}
@@ -92,15 +86,13 @@ export default function SchemaForm({
     </ModelFormContainer>
   );
 
- function renderSchemaFormat(){
-  return( 
-    <div>
-      <TextInput
-            labelText={"Format"}
-          />
-    </div>
-    )
- }
+  function renderSchemaFormat() {
+    return (
+      <div>
+        <TextInput labelText={'Format'} />
+      </div>
+    );
+  }
 
   function renderLanguages() {
     return (
@@ -217,7 +209,6 @@ export default function SchemaForm({
     );
   }
 
- 
   function renderContributors() {
     return (
       <WideMultiSelect
@@ -262,6 +253,4 @@ export default function SchemaForm({
       />
     );
   }
-
- 
 }
