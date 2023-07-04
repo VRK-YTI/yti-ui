@@ -5,7 +5,7 @@ import {
   ModalFooter,
   ModalTitle,
 } from 'suomifi-ui-components';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import ResourceList, { ResultType } from '@app/common/components/resource-list';
 import { useGetClassQuery } from '@app/common/components/class/class.slice';
@@ -154,6 +154,19 @@ export default function ResourcePicker({
     });
   };
 
+  useEffect(() => {
+    if (
+      !visible &&
+      selected.associations.length > 0 &&
+      selected.attributes.length > 0
+    ) {
+      setSelected({
+        associations: [],
+        attributes: [],
+      });
+    }
+  }, [visible, selected]);
+
   return (
     <WideModal
       appElementId="__next"
@@ -182,6 +195,7 @@ export default function ResourcePicker({
               </td>
             </tr>
           }
+          id="attribute-list"
         />
 
         <div style={{ height: '50px' }} />
@@ -204,6 +218,7 @@ export default function ResourcePicker({
               </td>
             </tr>
           }
+          id="association-list"
         />
       </ModalContent>
 

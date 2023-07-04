@@ -152,6 +152,7 @@ export default function ClassRestrictionModal({
                 },
               ]}
               primaryColumnName={t('class-name')}
+              id="selected-class-restriction"
             />
           </div>
 
@@ -187,6 +188,7 @@ export default function ClassRestrictionModal({
               }
               primaryColumnName={t('class-name')}
               selected={selected}
+              id="available-class-restrictions"
             />
           </div>
         </ModalContentWrapper>

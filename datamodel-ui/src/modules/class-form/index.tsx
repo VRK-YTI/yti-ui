@@ -49,6 +49,7 @@ import {
   selectHasChanges,
   setHasChanges,
 } from '@app/common/components/model/model.slice';
+import ResourcePicker from '../resource-picker-modal';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -83,6 +84,22 @@ export default function ClassForm({
   const [errors, setErrors] = useState<ClassFormErrors>(
     validateClassForm(data)
   );
+  const [showResourcePicker, setShowResourcePicker] = useState(false);
+  const [selectedTargetClass, setSelectedTargetClass] = useState<{
+    modelId: string;
+    classInfo: {
+      id: string;
+      identifier: string;
+      label: string;
+    };
+  }>({
+    modelId: '',
+    classInfo: {
+      id: '',
+      identifier: '',
+      label: '',
+    },
+  });
   const [putClass, putClassResult] = usePutClassMutation();
 
   const { data: identifierFree, isSuccess } = useGetClassIdentifierFreeQuery(
@@ -166,14 +183,45 @@ export default function ClassForm({
       return;
     }
 
-    const classInfo = {
-      id: value.id,
-      label:
-        value.id.split('/').pop()?.replace('#', ':') ??
-        `${value.isDefinedBy.split('/').pop()}:${value.identifier}`,
-    };
+    setSelectedTargetClass({
+      modelId: value.namespace.split('/').filter(Boolean).pop() ?? '',
+      classInfo: {
+        identifier: value.identifier,
+        id: value.id,
+        label: `${value.namespace.split('/').filter(Boolean).pop()}:${
+          value.identifier
+        }`,
+      },
+    });
+    setShowResourcePicker(true);
+  };
 
-    handleUpdate({ ...data, targetClass: classInfo });
+  const handleResourceUpdate = (value?: {
+    associations: {
+      identifier: string;
+      label: { [key: string]: string };
+      modelId: string;
+      uri: string;
+    }[];
+    attributes: {
+      identifier: string;
+      label: { [key: string]: string };
+      modelId: string;
+      uri: string;
+    }[];
+  }) => {
+    setShowResourcePicker(false);
+    const targetClass = {
+      id: selectedTargetClass.classInfo.id,
+      label: selectedTargetClass.classInfo.label,
+      identifier: selectedTargetClass.classInfo.identifier,
+    };
+    handleUpdate({
+      ...data,
+      targetClass: targetClass,
+      association: value?.associations ?? [],
+      attribute: value?.attributes ?? [],
+    });
   };
 
   const handleSubClassOfRemoval = (id: string) => {
@@ -413,23 +461,36 @@ export default function ClassForm({
         )}
 
         {applicationProfile ? (
-          <InlineListBlock
-            addNewComponent={
-              <ClassModal
-                modelId={modelId}
-                mode={'select'}
-                modalButtonLabel={t('select-class')}
-                handleFollowUp={handleTargetClassUpdate}
-                applicationProfile
-                initialSelected={data.targetClass?.id}
-              />
-            }
-            items={data.targetClass ? [data.targetClass] : []}
-            label={t('target-class-profile')}
-            handleRemoval={() =>
-              handleUpdate({ ...data, targetClass: undefined })
-            }
-          />
+          <>
+            <InlineListBlock
+              addNewComponent={
+                <ClassModal
+                  modelId={modelId}
+                  mode={'select'}
+                  modalButtonLabel={t('select-class')}
+                  handleFollowUp={handleTargetClassUpdate}
+                  initialSelected={data.targetClass?.id}
+                  applicationProfile
+                  resourceRestriction
+                />
+              }
+              items={data.targetClass ? [data.targetClass] : []}
+              label={t('target-class-profile')}
+              handleRemoval={() =>
+                handleUpdate({ ...data, targetClass: undefined })
+              }
+            />
+
+            <ResourcePicker
+              visible={showResourcePicker}
+              selectedNodeShape={{
+                modelId: selectedTargetClass.modelId,
+                classId: selectedTargetClass.classInfo.identifier,
+                isAppProfile: false,
+              }}
+              handleFollowUp={handleResourceUpdate}
+            />
+          </>
         ) : (
           <InlineListBlock
             addNewComponent={
