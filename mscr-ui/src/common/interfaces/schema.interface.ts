@@ -1,7 +1,6 @@
-import { MultiSelectData } from 'suomifi-ui-components';
-import { LanguageBlockType } from 'yti-common-ui/components/form/language-selector';
-import { ModelType, ModelTerminology } from './model.interface';
-import { Status } from './status.interface';
+import { MultiSelectData } from "suomifi-ui-components";
+import { LanguageBlockType } from "yti-common-ui/components/form/language-selector";
+import { Status } from "./status.interface";
 
 export interface Schema {
   id: string;
@@ -13,13 +12,15 @@ export interface Schema {
   description: {
     [key: string]: string;
   };
-  languages: string;
-  organiztaion: [string];
+  languages:string,
+  organiztaions: [string];
 }
 
 export interface SchemaFormType {
-  contact: string;
-  languages: (LanguageBlockType & { selected: boolean })[];
-  organizations: MultiSelectData[];
-  status?: Status;
-}
+   contact: string;
+   languages: (LanguageBlockType & { selected: boolean })[];
+   organizations: MultiSelectData[];
+   status?: Status;
+   
+ }
+ 
