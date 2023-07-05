@@ -44,19 +44,6 @@ export default function SchemaForm({
   );
   const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
 
-  const serviceCategories = useMemo(() => {
-    if (!serviceCategoriesData) {
-      return [];
-    }
-
-    return getServiceCategories(serviceCategoriesData, i18n.language)
-      .map((c) => ({
-        labelText: c.label,
-        uniqueItemId: c.id,
-      }))
-      .sort((c1, c2) => (c1.labelText > c2.labelText ? 1 : -1));
-  }, [serviceCategoriesData, i18n.language]);
-
   const organizations = useMemo(() => {
     if (!organizationsData) {
       return [];

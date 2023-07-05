@@ -14,10 +14,6 @@ import {
   getServiceCategories,
   getRunningQueriesThunk as getServiceCategoriesRunningQueriesThunk,
 } from '@app/common/components/service-categories/service-categories.slice';
-import {
-  getSearchModels,
-  getRunningQueriesThunk as getSearchModelsRunningQueriesThunk,
-} from '@app/common/components/search-models/search-models.slice';
 import { initialUrlState } from 'yti-common-ui/utils/hooks/use-url-state';
 import PageHead from 'yti-common-ui/page-head';
 import {
@@ -97,16 +93,12 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
-    store.dispatch(
-      getSearchModels.initiate({ urlState, lang: locale ?? 'fi' })
-    );
     store.dispatch(getCount.initiate());
 
     await Promise.all(
       store.dispatch(getServiceCategoriesRunningQueriesThunk())
     );
-    await Promise.all(store.dispatch(getOrganizationsRunningQueriesThunk()));
-    await Promise.all(store.dispatch(getSearchModelsRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getOrganizationsRunningQueriesThunk())); 
     await Promise.all(store.dispatch(getCountRunningQueriesThunk()));
 
     return {};

@@ -1,4 +1,4 @@
-import { ModelFormType } from '@app/common/interfaces/model-form.interface';
+import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 
 export interface FormErrors {
   languageAmount: boolean;
@@ -8,7 +8,7 @@ export interface FormErrors {
   organizations: boolean;
 }
 
-export function validateForm(data: ModelFormType) {
+export function validateForm(data: SchemaFormType) {
   const errors: FormErrors = {
     languageAmount: false,
     titleAmount: [],
@@ -37,16 +37,6 @@ export function validateForm(data: ModelFormType) {
       .map((lang) => lang.uniqueItemId);
 
     errors.titleAmount = langsWithError ?? [];
-  }
-
-  // Prefix should be defined
-  if (!data.prefix || data.prefix.length < 1 || data.prefix === '') {
-    errors.prefix = true;
-  }
-
-  // Should have at least one service category set
-  if (data.serviceCategories.length < 1) {
-    errors.serviceCategories = true;
   }
 
   // Should have at least one organization set

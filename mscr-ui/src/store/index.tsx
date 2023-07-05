@@ -5,23 +5,23 @@ import { useDispatch } from 'react-redux';
 import { loginApi, loginSlice } from '@app/common/components/login/login.slice';
 import { serviceCategoriesApi } from '@app/common/components/service-categories/service-categories.slice';
 import { organizationsApi } from '@app/common/components/organizations/organizations.slice';
-import { searchModelsApi } from '@app/common/components/search-models/search-models.slice';
 import { fakeableUsersApi } from '@app/common/components/fakeable-users/fakeable-users.slice';
 import { prefixApi } from '@app/common/components/prefix';
-import { modelApi, modelSlice } from '@app/common/components/model/model.slice';
 import { classApi, classSlice } from '@app/common/components/class/class.slice';
 import { searchInternalResourcesApi } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import {
   resourceApi,
   resourceSlice,
 } from '@app/common/components/resource/resource.slice';
-import { searchTerminologyApi } from '@app/common/components/terminology-search/search-terminology.slice';
 import { countApi } from '@app/common/components/counts/counts.slice';
-import { conceptSearchApi } from '@app/common/components/concept-search/concept-search.slice';
 import { graphSlice } from '@app/common/components/graph/graph.slice';
 import { visualizationApi } from '@app/common/components/visualization/visualization.slice';
 import { activeSlice } from '@app/common/components/active/active.slice';
 import { importApi } from '@app/common/components/import/import.slice';
+import {
+  schemaApi,
+  schemaSlice,
+} from '@app/common/components/schema/schema.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -33,20 +33,18 @@ export function makeStore(ctx: NextIronContext) {
       [loginApi.reducerPath]: loginApi.reducer,
       [serviceCategoriesApi.reducerPath]: serviceCategoriesApi.reducer,
       [organizationsApi.reducerPath]: organizationsApi.reducer,
-      [searchModelsApi.reducerPath]: searchModelsApi.reducer,
+
       [fakeableUsersApi.reducerPath]: fakeableUsersApi.reducer,
       [prefixApi.reducerPath]: prefixApi.reducer,
-      [modelApi.reducerPath]: modelApi.reducer,
-      [modelSlice.name]: modelSlice.reducer,
+      [schemaApi.reducerPath]: schemaApi.reducer,
+      [schemaSlice.name]: schemaSlice.reducer,
       [classApi.reducerPath]: classApi.reducer,
       [classSlice.name]: classSlice.reducer,
       [searchInternalResourcesApi.reducerPath]:
         searchInternalResourcesApi.reducer,
       [resourceApi.reducerPath]: resourceApi.reducer,
       [resourceSlice.name]: resourceSlice.reducer,
-      [searchTerminologyApi.reducerPath]: searchTerminologyApi.reducer,
       [countApi.reducerPath]: countApi.reducer,
-      [conceptSearchApi.reducerPath]: conceptSearchApi.reducer,
       [graphSlice.name]: graphSlice.reducer,
       [visualizationApi.reducerPath]: visualizationApi.reducer,
       [activeSlice.name]: activeSlice.reducer,
@@ -59,16 +57,13 @@ export function makeStore(ctx: NextIronContext) {
         loginApi.middleware,
         serviceCategoriesApi.middleware,
         organizationsApi.middleware,
-        searchModelsApi.middleware,
         fakeableUsersApi.middleware,
         prefixApi.middleware,
-        modelApi.middleware,
+        schemaApi.middleware,
         classApi.middleware,
         searchInternalResourcesApi.middleware,
         resourceApi.middleware,
-        searchTerminologyApi.middleware,
         countApi.middleware,
-        conceptSearchApi.middleware,
         visualizationApi.middleware,
         fakeableUsersApi.middleware,
         importApi.middleware

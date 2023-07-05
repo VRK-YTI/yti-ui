@@ -9,44 +9,46 @@ import {
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
 import isHydrate from '@app/store/isHydrate';
+import { Schema } from '@app/common/interfaces/schema.interface';
 
-export const modelApi = createApi({
-  reducerPath: 'modelApi',
+export const schemaApi = createApi({
+  reducerPath: 'schemaApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['modelApi'],
+  tagTypes: ['schemaApi'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];
     }
   },
   endpoints: (builder) => ({
-    putModel: builder.mutation<string, NewModel>({
+    putSchema: builder.mutation<string, Schema>({
       query: (value) => ({
         url: '/model',
         method: 'PUT',
         data: value,
       }),
     }),
-    getModel: builder.query<ModelType, string>({
-      query: (modelId) => ({
-        url: `/model/${modelId}`,
+    getSchema: builder.query<Schema, string>({
+      query: (pid) => ({
+        url: `/schema/${pid}`,
         method: 'GET',
       }),
     }),
-    postModel: builder.mutation<
+    postSchema: builder.mutation<
       string,
       {
-        payload: ModelUpdatePayload;
+        // Need to check How it works with our api
+        payload: Schema;
         prefix: string;
       }
     >({
       query: (value) => ({
-        url: `/model/${value.prefix}`,
+        url: `/schema/${value.prefix}`,
         method: 'POST',
         data: value.payload,
       }),
     }),
-    deleteModel: builder.mutation<string, string>({
+    deleteSchema: builder.mutation<string, string>({
       query: (value) => ({
         url: `/model/${value}`,
         method: 'DELETE',
@@ -56,15 +58,15 @@ export const modelApi = createApi({
 });
 
 export const {
-  usePutModelMutation,
-  useGetModelQuery,
-  usePostModelMutation,
-  useDeleteModelMutation,
+  usePutSchemaMutation,
+  useGetSchemaQuery,
+  usePostSchemaMutation,
+  useDeleteSchemaMutation,
   util: { getRunningQueriesThunk },
-} = modelApi;
+} = schemaApi;
 
-export const { putModel, getModel, postModel, deleteModel } =
-  modelApi.endpoints;
+export const { putSchema, getSchema, postSchema, deleteSchema } =
+  schemaApi.endpoints;
 
 // Slice setup below
 
@@ -125,8 +127,8 @@ const initialState = {
   view: initialView,
 };
 
-export const modelSlice = createSlice({
-  name: 'model',
+export const schemaSlice = createSlice({
+  name: 'schema',
   initialState: {
     ...initialState,
     view: {
@@ -141,7 +143,7 @@ export const modelSlice = createSlice({
     builder.addMatcher(isHydrate, (state, action) => {
       return {
         ...state,
-        ...action.payload.model,
+        ...action.payload.schema,
       };
     });
   },
@@ -200,56 +202,56 @@ export const modelSlice = createSlice({
 });
 
 export function selectSelected() {
-  return (state: AppState) => state.model.selected;
+  // return (state: AppState) => state.schema.selected;
 }
 
 export function setSelected(
   id: string,
   type: keyof typeof initialView
 ): AppThunk {
-  return (dispatch) => dispatch(modelSlice.actions.setSelected({ id, type }));
+  return (dispatch) => dispatch(schemaSlice.actions.setSelected({ id, type }));
 }
 
 export function resetSelected(): AppThunk {
   return (dispatch) =>
-    dispatch(modelSlice.actions.setSelected({ id: '', type: '' }));
+    dispatch(schemaSlice.actions.setSelected({ id: '', type: '' }));
 }
 
 export function selectHovered() {
-  return (state: AppState) => state.model.hovered;
+  //return (state: AppState) => state.model.hovered;
 }
 
 export function setHovered(id: string, type: keyof ViewList): AppThunk {
-  return (dispatch) => dispatch(modelSlice.actions.setHovered({ id, type }));
+  return (dispatch) => dispatch(schemaSlice.actions.setHovered({ id, type }));
 }
 
 export function resetHovered(): AppThunk {
   return (dispatch) =>
-    dispatch(modelSlice.actions.setHovered({ id: '', type: '' }));
+    dispatch(schemaSlice.actions.setHovered({ id: '', type: '' }));
 }
 
 export function selectViews() {
-  return (state: AppState) => state.model.view;
+  //return (state: AppState) => state.model.view;
 }
 
 export function selectClassView() {
-  return (state: AppState) => state.model.view.classes;
+  //return (state: AppState) => state.model.view.classes;
 }
 
 export function selectCurrentViewName() {
-  return (state: AppState) =>
+  /* return (state: AppState) =>
     Object.entries(state.model.view).find((v) =>
       typeof v[1] === 'object'
         ? Object.entries(v[1]).filter(
             (val) => Object.values(val).filter((c) => c === true).length > 0
           ).length > 0
         : v[1] === true
-    )?.[0] ?? 'search';
+    )?.[0] ?? 'search';*/
 }
 
 export function setView(
   key: keyof ViewList,
   subkey?: keyof ViewListItem
 ): AppThunk {
-  return (dispatch) => dispatch(modelSlice.actions.setView({ key, subkey }));
+  return (dispatch) => dispatch(schemaSlice.actions.setView({ key, subkey }));
 }

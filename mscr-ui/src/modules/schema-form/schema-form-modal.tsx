@@ -19,19 +19,19 @@ import {
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import generatePayload from './generate-payload';
-import { usePutModelMutation } from '@app/common/components/model/model.slice';
 import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import { useInitialSchemaForm } from '@app/common/utils/hooks/use-initial-schema-form';
+import { usePutSchemaMutation } from '@app/common/components/schema/schema.slice';
 
-interface ModelFormModalProps {
+interface SchemaFormModalProps {
   refetch: () => void;
 }
 
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
-export default function SchemaFormModal({ refetch }: ModelFormModalProps) {
+export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function SchemaFormModal({ refetch }: ModelFormModalProps) {
   const [userPosted, setUserPosted] = useState(false);
   const [getAuthenticatedUser, authenticateUser] =
     useGetAuthenticatedUserMutMutation();
-  const [putModel, result] = usePutModelMutation();
+  const [putSchema, result] = usePutSchemaMutation();
 
   const handleOpen = () => {
     setVisible(true);
@@ -59,9 +59,10 @@ export default function SchemaFormModal({ refetch }: ModelFormModalProps) {
     if (userPosted && result.isSuccess) {
       refetch();
       handleClose();
-      router.push(`/model/${formData.prefix}`);
+      // After post route to  saved schema get by PID
+      // router.push(`/schema/${formData.pid}`);
     }
-  }, [result, refetch, userPosted, handleClose, router, formData.prefix]);
+  }, [result, refetch, userPosted, handleClose, router, formData]);
 
   const handleSubmit = () => {
     setUserPosted(true);
@@ -78,7 +79,7 @@ export default function SchemaFormModal({ refetch }: ModelFormModalProps) {
 
     const payload = generatePayload(formData);
 
-    putModel(payload);
+    putSchema(payload);
   };
 
   useEffect(() => {
