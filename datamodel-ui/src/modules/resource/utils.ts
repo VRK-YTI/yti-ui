@@ -29,7 +29,12 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
           label: data.domain.split('/').pop()?.replace('#', ':') ?? data.domain,
         }
       : undefined,
-    equivalentResource: [],
+    equivalentResource: data.equivalentResource
+      ? data.equivalentResource.map((er) => ({
+          label: er,
+          uri: er,
+        }))
+      : [],
     path: data.path
       ? {
           id: pathLabel ?? data.path,
@@ -54,10 +59,17 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
               sro.endsWith('/owl#topObjectProperty') ||
               sro.endsWith('/owl#TopObjectProperty')
             ) {
-              return sro.split('/').pop()?.replace('#', ':') ?? sro;
+              const value = sro.split('/').pop()?.replace('#', ':') ?? sro;
+              return {
+                label: value,
+                uri: value,
+              };
             }
 
-            return sro;
+            return {
+              label: sro,
+              uri: sro,
+            };
           })
         : [],
   };

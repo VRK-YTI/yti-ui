@@ -31,6 +31,7 @@ interface ResourceModalProps {
   buttonTranslations: {
     useSelected: string;
     createNew?: string;
+    openButton?: string;
   };
   handleFollowUp: (value?: { label: string; uri: string }) => void;
   buttonIcon?: boolean;
@@ -100,6 +101,7 @@ export default function ResourceModal({
   const handleSubmit = () => {
     if (!selectedId || selectedId === '' || !result.data) {
       handleFollowUp();
+      handleClose();
       return;
     }
 
@@ -116,9 +118,8 @@ export default function ResourceModal({
         label: `${domain}:${selectedObj.identifier}`,
         uri: selectedObj.id,
       });
-    } else {
-      handleClose();
     }
+    handleClose();
   };
 
   const getLinkLabel = (ns: string, id: string) => {
@@ -189,7 +190,7 @@ export default function ResourceModal({
         onClick={() => handleOpen()}
         id="add-resource-button"
       >
-        {translateResourceAddition(type, t)}
+        {buttonTranslations.openButton ?? translateResourceAddition(type, t)}
       </Button>
 
       <WideModal

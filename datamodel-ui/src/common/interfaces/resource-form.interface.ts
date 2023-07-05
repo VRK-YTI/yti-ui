@@ -17,8 +17,8 @@ export interface ResourceFormType {
   };
   editorialNote?: string;
   equivalentResource?: {
-    label: { [key: string]: string };
-    identifier: string;
+    label: string;
+    uri: string;
   }[];
   hasValue?: string;
   identifier: string;
@@ -38,7 +38,10 @@ export interface ResourceFormType {
     label: string;
   };
   status: Status;
-  subResourceOf?: string[];
+  subResourceOf?: {
+    label: string;
+    uri: string;
+  }[];
   type: ResourceType;
 }
 

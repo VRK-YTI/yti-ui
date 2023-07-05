@@ -38,11 +38,9 @@ export function internalClassToClassForm(
 
   if (applicationProfile) {
     obj['targetClass'] = {
-      label: `${data.namespace
-        .replace(/\/$/, '')
-        .split('/')
-        .pop()
-        ?.replace('#', ':')}:${data.identifier}`,
+      label: `${data.namespace.split('/').filter(Boolean).pop()}:${
+        data.identifier
+      }`,
       id: data.id,
     };
     obj['association'] = associations ?? [];
@@ -50,10 +48,10 @@ export function internalClassToClassForm(
   } else {
     obj['subClassOf'] = [
       {
-        label:
-          data.id.split('/').pop()?.replace('#', ':') ??
-          `${data.isDefinedBy.split('/').pop()}:${data.identifier}`,
-        identifier: `${data.isDefinedBy}/${data.identifier}`,
+        label: `${data.namespace.split('/').filter(Boolean).pop()}:${
+          data.identifier
+        }`,
+        identifier: data.id,
         attributes: ['Attribuutti #1', 'Attribuutti #2'],
       },
     ];
@@ -77,12 +75,31 @@ export function classTypeToClassForm(data: ClassType): ClassFormType {
   return {
     concept: data.subject,
     editorialNote: data.editorialNote ?? '',
-    equivalentClass: [],
+    equivalentClass:
+      data.equivalentClass.map((ec) => ({
+        identifier: ec,
+        label: ec,
+      })) ?? [],
     identifier: data.identifier,
     label: data.label,
     note: data.note,
     status: data.status,
-    subClassOf: [],
+    subClassOf:
+      data.subClassOf.filter(
+        (soc) => soc !== 'http://www.w3.org/2002/07/owl#Thing'
+      ).length > 0
+        ? data.subClassOf.map((sco) => ({
+            identifier: sco,
+            label: sco,
+            attributes: [],
+          }))
+        : [
+            {
+              identifier: 'owl:Thing',
+              label: 'owl:Thing',
+              attributes: [],
+            },
+          ],
     association: data.association,
     attribute: data.attribute,
     targetClass: data.targetClass

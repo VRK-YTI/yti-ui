@@ -15,7 +15,7 @@ import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { IconArrowLeft, IconPlus } from 'suomifi-icons';
+import { IconArrowLeft } from 'suomifi-icons';
 import {
   Button,
   Dropdown,
@@ -47,6 +47,7 @@ import AttributeRestrictions from './components/attribute-restrictions';
 import ApplicationProfileTop from './components/application-profile-top';
 import AssociationRestrictions from './components/association-restrictions';
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
+import ResourceModal from '../resource-modal';
 
 interface ResourceFormProps {
   type: ResourceType;
@@ -114,12 +115,9 @@ export default function ResourceForm({
       Object.entries(data.label).filter((obj) => obj[1] !== '')
     );
 
-    // TODO: Remove subResourceOf clearing when other supported
-    // are implemented
-
     putResource({
       modelId: modelId,
-      data: { ...data, type: type, subResourceOf: [], label: usedLabels },
+      data: { ...data, type: type, label: usedLabels },
       resourceId: isEdit ? data.identifier : undefined,
       applicationProfile,
     });
@@ -164,6 +162,69 @@ export default function ResourceForm({
       ...data,
       concept: value ? value : undefined,
       label: label ? { ...data.label, ...label } : data.label,
+    });
+  };
+
+  const handleResourceUpdate = (
+    value?: {
+      label: string;
+      uri: string;
+    },
+    key?: 'equivalentResource' | 'subResourceOf'
+  ) => {
+    if (!value || !key) {
+      return;
+    }
+
+    if (
+      key === 'subResourceOf' &&
+      data.subResourceOf &&
+      data.subResourceOf.length === 1 &&
+      [
+        'owl:topDataProperty',
+        'owl:TopObjectProperty',
+        'owl:topObjectProperty',
+      ].includes(data.subResourceOf[0].uri)
+    ) {
+      handleUpdate({
+        ...data,
+        subResourceOf: [value],
+      });
+      return;
+    }
+
+    const initData = Array.isArray(data[key]) ? data[key] : [];
+
+    handleUpdate({
+      ...data,
+      [key]: [...(initData ?? []), value],
+    });
+  };
+
+  const handleResourceRemove = (
+    id: string,
+    key: 'equivalentResource' | 'subResourceOf'
+  ) => {
+    if (key === 'subResourceOf' && data.subResourceOf?.length === 1) {
+      const value =
+        type === ResourceType.ASSOCIATION
+          ? 'owl:TopObjectProperty'
+          : 'owl:topDataProperty';
+      handleUpdate({
+        ...data,
+        subResourceOf: [
+          {
+            label: value,
+            uri: value,
+          },
+        ],
+      });
+      return;
+    }
+
+    handleUpdate({
+      ...data,
+      [key]: data[key]?.filter((r) => r.uri !== id) ?? [],
     });
   };
 
@@ -359,41 +420,70 @@ export default function ResourceForm({
                 label={translateCommonForm('upper', type, t)}
                 items={
                   data.subResourceOf?.map((resource) => ({
-                    id: resource,
-                    label: resource,
+                    id: resource.uri,
+                    label: resource.label,
                   })) ?? []
                 }
                 addNewComponent={
-                  <Button
-                    variant="secondary"
-                    icon={<IconPlus />}
-                    id="add-upper-button"
-                  >
-                    {translateCommonForm('add-upper', type, t)}
-                  </Button>
+                  <ResourceModal
+                    buttonTranslations={{
+                      useSelected: translateCommonForm('add-upper', type, t),
+                      openButton: translateCommonForm('add-upper', type, t),
+                    }}
+                    handleFollowUp={(e) =>
+                      handleResourceUpdate(e, 'subResourceOf')
+                    }
+                    modelId={modelId}
+                    type={type}
+                    applicationProfile={applicationProfile}
+                    buttonIcon
+                  />
                 }
                 deleteDisabled={[
                   'owl:topDataProperty',
                   'owl:TopObjectProperty',
                   'owl:topObjectProperty',
                 ]}
-                handleRemoval={() => null}
+                handleRemoval={(id: string) =>
+                  handleResourceRemove(id, 'subResourceOf')
+                }
               />
 
               <InlineListBlock
                 label={translateCommonForm('equivalent', type, t)}
-                items={[]}
+                items={
+                  data.equivalentResource?.map((r) => ({
+                    id: r.uri,
+                    label: r.label,
+                  })) ?? []
+                }
                 addNewComponent={
-                  <Button
-                    variant="secondary"
-                    icon={<IconPlus />}
-                    id="add-equivalent-button"
-                  >
-                    {translateCommonForm('add-equivalent', type, t)}
-                  </Button>
+                  <ResourceModal
+                    buttonTranslations={{
+                      useSelected: translateCommonForm(
+                        'add-equivalent',
+                        type,
+                        t
+                      ),
+                      openButton: translateCommonForm(
+                        'add-equivalent',
+                        type,
+                        t
+                      ),
+                    }}
+                    handleFollowUp={(e) =>
+                      handleResourceUpdate(e, 'equivalentResource')
+                    }
+                    modelId={modelId}
+                    type={type}
+                    applicationProfile={applicationProfile}
+                    buttonIcon
+                  />
                 }
                 optionalText={t('optional')}
-                handleRemoval={() => null}
+                handleRemoval={(id: string) =>
+                  handleResourceRemove(id, 'equivalentResource')
+                }
               />
             </>
           )}

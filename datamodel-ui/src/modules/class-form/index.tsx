@@ -161,7 +161,7 @@ export default function ClassForm({
     });
   };
 
-  const handleTargetClassUpdate = (value?: InternalClass | undefined) => {
+  const handleTargetClassUpdate = (value?: InternalClass) => {
     if (!value) {
       return;
     }
@@ -176,27 +176,88 @@ export default function ClassForm({
     handleUpdate({ ...data, targetClass: classInfo });
   };
 
-  const handleSubClassOfRemoval = (id: string) => {
-    const newSubClasses = data.subClassOf.filter(
-      (subclass) => subclass.identifier !== id
-    );
+  const handleClassOfRemoval = (
+    id: string,
+    key: 'subClassOf' | 'equivalentClass'
+  ) => {
+    if (key === 'subClassOf') {
+      const newSubClasses = data.subClassOf.filter(
+        (subclass) => subclass.identifier !== id
+      );
 
-    if (newSubClasses.length < 1) {
+      if (newSubClasses.length < 1) {
+        handleUpdate({
+          ...data,
+          subClassOf: [
+            {
+              attributes: [],
+              identifier: 'owl:Thing',
+              label: 'owl:Thing',
+            },
+          ],
+        });
+      } else {
+        handleUpdate({
+          ...data,
+          subClassOf: newSubClasses,
+        });
+      }
+      return;
+    }
+
+    handleUpdate({
+      ...data,
+      [key]: data[key]
+        ? data[key].filter((item) => item.identifier !== id)
+        : [],
+    });
+  };
+
+  const handleClassUpdate = (
+    value?: InternalClass,
+    key?: keyof ClassFormType
+  ) => {
+    if (!value || !key) {
+      return;
+    }
+
+    if (key === 'subClassOf') {
+      const initData =
+        data.subClassOf.length === 1 &&
+        data.subClassOf[0].identifier === 'owl:Thing'
+          ? []
+          : data.subClassOf;
+
       handleUpdate({
         ...data,
         subClassOf: [
+          ...initData,
           {
             attributes: [],
-            identifier: 'owl:Thing',
-            label: 'owl:Thing',
+            identifier: value.id,
+            label: `${value.namespace.split('/').filter(Boolean).pop()}:${
+              value.identifier
+            }`,
           },
         ],
       });
-    } else {
+      return;
+    }
+
+    if (key === 'equivalentClass') {
       handleUpdate({
         ...data,
-        subClassOf: newSubClasses,
+        equivalentClass: [
+          ...data.equivalentClass,
+          {
+            label: `${value.namespace.split('/').filter(Boolean).pop()}:${
+              value.identifier
+            }`,
+            identifier: value.id,
+          },
+        ],
       });
+      return;
     }
   };
 
@@ -388,13 +449,14 @@ export default function ClassForm({
         {!applicationProfile ? (
           <InlineListBlock
             addNewComponent={
-              <Button
-                variant="secondary"
-                icon={<IconPlus />}
-                id="add-upper-class-button"
-              >
-                {t('add-upper-class')}
-              </Button>
+              <ClassModal
+                modelId={modelId}
+                handleFollowUp={(e) => handleClassUpdate(e, 'subClassOf')}
+                mode={'select'}
+                applicationProfile={applicationProfile}
+                modalButtonLabel={t('add-upper-class')}
+                plusIcon
+              />
             }
             items={
               data.subClassOf.length > 0
@@ -405,7 +467,9 @@ export default function ClassForm({
                 : []
             }
             label={t('upper-classes')}
-            handleRemoval={(id: string) => handleSubClassOfRemoval(id)}
+            handleRemoval={(id: string) =>
+              handleClassOfRemoval(id, 'subClassOf')
+            }
             deleteDisabled={['owl:Thing']}
           />
         ) : (
@@ -433,17 +497,27 @@ export default function ClassForm({
         ) : (
           <InlineListBlock
             addNewComponent={
-              <Button
-                variant="secondary"
-                icon={<IconPlus />}
-                id="add-corresponding-class-button"
-              >
-                {t('add-corresponding-class')}
-              </Button>
+              <ClassModal
+                modelId={modelId}
+                handleFollowUp={(e) => handleClassUpdate(e, 'equivalentClass')}
+                mode={'select'}
+                applicationProfile={applicationProfile}
+                modalButtonLabel={t('add-corresponding-class')}
+                plusIcon
+              />
             }
-            items={[]}
+            items={
+              data.equivalentClass
+                ? data.equivalentClass.map((ec) => ({
+                    label: ec.label,
+                    id: ec.identifier,
+                  }))
+                : []
+            }
             label={t('corresponding-classes')}
-            handleRemoval={() => null}
+            handleRemoval={(id: string) =>
+              handleClassOfRemoval(id, 'equivalentClass')
+            }
           />
         )}
 
@@ -466,13 +540,14 @@ export default function ClassForm({
           <InlineListBlock
             label={t('disjoint-classes', { ns: 'common' })}
             addNewComponent={
-              <Button
-                variant="secondary"
-                icon={<IconPlus />}
-                id="add-disjoint-class-button"
-              >
-                {t('add-disjoint-class')}
-              </Button>
+              <ClassModal
+                modelId={modelId}
+                handleFollowUp={() => null}
+                mode={'select'}
+                applicationProfile={applicationProfile}
+                modalButtonLabel={t('add-disjoint-class')}
+                plusIcon
+              />
             }
             items={[]}
             handleRemoval={() => null}
