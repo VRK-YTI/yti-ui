@@ -2,14 +2,10 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { NewModel } from '@app/common/interfaces/new-model.interface';
-import {
-  ModelType,
-  ModelUpdatePayload,
-} from '@app/common/interfaces/model.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
 import isHydrate from '@app/store/isHydrate';
-import { Schema } from '@app/common/interfaces/schema.interface';
+import { Schema, SchemaFormType } from '@app/common/interfaces/schema.interface';
 
 export const schemaApi = createApi({
   reducerPath: 'schemaApi',
@@ -21,9 +17,9 @@ export const schemaApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putSchema: builder.mutation<string, Schema>({
+    putSchema: builder.mutation<string, SchemaFormType>({
       query: (value) => ({
-        url: '/model',
+        url: '/schema',
         method: 'PUT',
         data: value,
       }),
@@ -50,7 +46,7 @@ export const schemaApi = createApi({
     }),
     deleteSchema: builder.mutation<string, string>({
       query: (value) => ({
-        url: `/model/${value}`,
+        url: `/schema/${value}`,
         method: 'DELETE',
       }),
     }),

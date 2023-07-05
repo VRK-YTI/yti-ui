@@ -1,5 +1,6 @@
 import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 
+// Not yet modified according to mscr validation errors
 export interface FormErrors {
   languageAmount: boolean;
   titleAmount: string[];

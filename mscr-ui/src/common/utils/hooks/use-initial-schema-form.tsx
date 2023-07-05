@@ -1,4 +1,3 @@
-import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 import { useTranslation } from 'next-i18next';
 
@@ -7,7 +6,8 @@ export function useInitialSchemaForm(): SchemaFormType {
   const { t } = useTranslation('admin');
 
   return {
-    contact: '',
+    format:'',
+    label:'',
     languages: [
       {
         labelText: t('language-finnish-with-suffix'),

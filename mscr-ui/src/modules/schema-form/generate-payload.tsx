@@ -1,7 +1,4 @@
-import { ModelFormType } from '@app/common/interfaces/model-form.interface';
-import { NewModel } from '@app/common/interfaces/new-model.interface';
 import {
-  Schema,
   SchemaFormType,
 } from '@app/common/interfaces/schema.interface';
 
@@ -12,7 +9,6 @@ export default function generatePayload(data: SchemaFormType): SchemaFormType {
 
   return {
     // id will be pid , during post no id
-    id: `${SUOMI_FI_NAMESPACE}${data}`,
     description: data.languages
       .filter((l) => l.description !== '')
       .reduce(
@@ -36,5 +32,6 @@ export default function generatePayload(data: SchemaFormType): SchemaFormType {
       .map((l) => l.uniqueItemId),
     organizations: data.organizations.map((o) => o.uniqueItemId),
     status: 'DRAFT',
+    format:'JSONSCHEMA'
   };
 }

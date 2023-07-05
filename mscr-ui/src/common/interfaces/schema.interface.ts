@@ -17,7 +17,8 @@ export interface Schema {
 }
 
 export interface SchemaFormType {
-   contact: string;
+   format:string;
+   label:string;
    languages: (LanguageBlockType & { selected: boolean })[];
    organizations: MultiSelectData[];
    status?: Status;
