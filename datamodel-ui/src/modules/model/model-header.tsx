@@ -1,38 +1,33 @@
 import { MainTitle, BadgeBar, Badge } from 'yti-common-ui/title-block';
-import { TitleWrapper } from './model.styles';
+import { LanguagePickerWrapper, TitleWrapper } from './model.styles';
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import {
-  Button,
+  Dropdown,
+  DropdownItem,
   IconApplicationProfile,
-  IconDownload,
-  IconFullscreen,
   IconGrid,
-  IconMapMyLocation,
-  IconMenu,
-  IconMinus,
-  IconPlus,
-  IconSave,
-  IconSwapRounded,
 } from 'suomifi-ui-components';
 import { getStatus, getTitle, getType } from '@app/common/utils/get-value';
 import {
   translateModelType,
   translateStatus,
 } from '@app/common/utils/translation-helpers';
-import { ToolsButtonGroup } from 'yti-common-ui/drawer/drawer.styles';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
-import { useBreakpoints } from 'yti-common-ui/media-query';
 import { ModelType } from '@app/common/interfaces/model.interface';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 
 export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
-  const { isSmall, isLarge } = useBreakpoints();
   const { t, i18n } = useTranslation('common');
+  const { isSmall } = useBreakpoints();
 
   const model = useMemo(
     () => ({
       title: getTitle(modelInfo, i18n.language),
       status: getStatus(modelInfo),
+      languages: modelInfo
+        ? [...modelInfo.languages].sort((a, b) => (a > b ? 1 : -1))
+        : [],
     }),
     [modelInfo, i18n.language]
   );
@@ -74,23 +69,23 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
         </BadgeBar>
       </div>
 
-      {isLarge && (
-        <div className="tools">
-          <>
-            <ToolsButtonGroup $isSmall={isSmall}>
-              <>
-                <Button icon={<IconPlus />} />
-                <Button icon={<IconMinus />} />
-                <Button icon={<IconFullscreen />} />
-                <Button icon={<IconSwapRounded />} />
-                <Button icon={<IconMapMyLocation />} />
-                <Button icon={<IconDownload />} />
-                <Button icon={<IconSave />} />
-                <Button icon={<IconMenu />} variant="secondary" />
-              </>
-            </ToolsButtonGroup>
-          </>
-        </div>
+      {!isSmall && (
+        <LanguagePickerWrapper>
+          <Dropdown
+            labelText=""
+            defaultValue={
+              model.languages.includes(i18n.language)
+                ? i18n.language
+                : model.languages[0]
+            }
+          >
+            {model.languages.map((lang) => (
+              <DropdownItem value={lang} key={lang}>
+                {t('content-in-language')} {lang}
+              </DropdownItem>
+            ))}
+          </Dropdown>
+        </LanguagePickerWrapper>
       )}
     </TitleWrapper>
   );

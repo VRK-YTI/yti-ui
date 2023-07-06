@@ -35,7 +35,7 @@ import { useTranslation } from 'next-i18next';
 
 interface GraphProps {
   modelId: string;
-  children: JSX.Element;
+  children: JSX.Element[];
 }
 
 const GraphContent = ({ modelId, children }: GraphProps) => {
