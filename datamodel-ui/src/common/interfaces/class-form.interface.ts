@@ -5,7 +5,7 @@ export interface ClassFormType {
   editorialNote: string;
   concept?: ConceptType;
   equivalentClass: {
-    label: { [key: string]: string };
+    label: string;
     identifier: string;
   }[];
   identifier: string;

@@ -148,7 +148,7 @@ export default function RangeAndDomain({
             }
             handleRemoval={() => handleDomainOrRangeRemoval('domain')}
             items={data.domain ? [data.domain] : []}
-            label={`${t('class')} (rdfs:domain)`}
+            label={t('class')}
             optionalText={t('optional')}
           />
         )}

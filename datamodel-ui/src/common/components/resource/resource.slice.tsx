@@ -158,13 +158,45 @@ function resourceInitialData(
     if (!initialSubResourceOf || typeof initialSubResourceOf !== 'string') {
       retValue =
         type === ResourceType.ASSOCIATION
-          ? { ...initialAssociation, subResourceOf: ['owl:TopObjectProperty'] }
-          : { ...initialAttribute, subResourceOf: ['owl:topDataProperty'] };
+          ? {
+              ...initialAssociation,
+              subResourceOf: [
+                {
+                  label: 'owl:TopObjectProperty',
+                  uri: 'owl:TopObjectProperty',
+                },
+              ],
+            }
+          : {
+              ...initialAttribute,
+              subResourceOf: [
+                {
+                  label: 'owl:topDataProperty',
+                  uri: 'owl:topDataProperty',
+                },
+              ],
+            };
     } else {
       retValue =
         type === ResourceType.ASSOCIATION
-          ? { ...initialAssociation, subResourceOf: [initialSubResourceOf] }
-          : { ...initialAttribute, subResourceOf: [initialSubResourceOf] };
+          ? {
+              ...initialAssociation,
+              subResourceOf: [
+                {
+                  label: initialSubResourceOf,
+                  uri: initialSubResourceOf,
+                },
+              ],
+            }
+          : {
+              ...initialAttribute,
+              subResourceOf: [
+                {
+                  label: initialSubResourceOf,
+                  uri: initialSubResourceOf,
+                },
+              ],
+            };
     }
   }
 
