@@ -83,7 +83,6 @@ export const DrawerWrapper = styled.div<{ $open: boolean }>`
 export const DrawerButtonGroup = styled.div<{ $isSmall: boolean }>`
   display: flex;
   flex-direction: ${(props) => (props.$isSmall ? 'row' : 'column')};
-  font: 12px;
   height: 100%;
   background: ${(props) => props.theme.suomifi.colors.highlightLight3};
 
@@ -103,6 +102,9 @@ export const DrawerButtonGroup = styled.div<{ $isSmall: boolean }>`
   > button {
     border-top: 1px solid ${props.theme.suomifi.colors.whiteBase} !important;
     border-bottom: 1px solid ${props.theme.suomifi.colors.whiteBase} !important;
+    font-size: 12px;
+    padding: 20px 10px;
+    height: min-content;
   }
   `}
 `;
@@ -159,6 +161,7 @@ export const DrawerButton = styled(Button)<{
   width: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '100px')};
   min-height: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '85px')};
   min-width: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '100px')};
+  max-height: 100px !important;
   text-transform: uppercase;
   font-weight: ${(props) => (props.$active ? '600' : '400')};
   display: flex;
@@ -168,6 +171,10 @@ export const DrawerButton = styled(Button)<{
   justify-content: center;
   white-space: pre;
   border-radius: 0;
+
+  .fi-button_icon--right {
+    display: none;
+  }
 
   ${(props) =>
     props.$breakpoint === 'small' &&

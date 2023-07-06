@@ -23,6 +23,7 @@ import {
 } from 'suomifi-ui-components';
 import ResourceView from '../resource';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { translateDrawerButton } from '@app/common/utils/translation-helpers';
 
 interface ModelProps {
   modelId: string;
@@ -76,7 +77,12 @@ export default function Model({ modelId }: ModelProps) {
       {
         id: 'classes',
         icon: <IconWindow />,
-        buttonLabel: t('classes'),
+        // buttonLabel: t('classes'),
+        buttonLabel: translateDrawerButton(
+          'classes',
+          modelInfo?.type === 'PROFILE',
+          t
+        ),
         component: (
           <ClassView
             modelId={modelId}
@@ -89,7 +95,12 @@ export default function Model({ modelId }: ModelProps) {
       {
         id: 'attributes',
         icon: <IconRows />,
-        buttonLabel: t('attributes'),
+        // buttonLabel: t('attributes'),
+        buttonLabel: translateDrawerButton(
+          'attributes',
+          modelInfo?.type === 'PROFILE',
+          t
+        ),
         buttonLabelSm: t('attributes-abbreviation'),
         component: (
           <ResourceView
@@ -104,7 +115,12 @@ export default function Model({ modelId }: ModelProps) {
       {
         id: 'associations',
         icon: <IconSwapVertical />,
-        buttonLabel: t('associations'),
+        // buttonLabel: t('associations'),
+        buttonLabel: translateDrawerButton(
+          'associations',
+          modelInfo?.type === 'PROFILE',
+          t
+        ),
         buttonLabelSm: t('associations-abbreviation'),
         component: (
           <ResourceView

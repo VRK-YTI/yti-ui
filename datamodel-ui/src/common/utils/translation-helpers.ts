@@ -353,3 +353,22 @@ export function translateCreateNewResourceForSelected(
       return '';
   }
 }
+
+export function translateDrawerButton(
+  key: 'classes' | 'associations' | 'attributes',
+  applicationProfile: boolean,
+  t: TFunction
+) {
+  switch (key) {
+    case 'classes':
+      return applicationProfile ? t('class-restrictions') : t('classes');
+    case 'associations':
+      return applicationProfile
+        ? t('association-restrictions')
+        : t('associations');
+    case 'attributes':
+      return applicationProfile ? t('attribute-restrictions') : t('attributes');
+    default:
+      return '';
+  }
+}
