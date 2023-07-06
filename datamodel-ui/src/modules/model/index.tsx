@@ -77,7 +77,6 @@ export default function Model({ modelId }: ModelProps) {
       {
         id: 'classes',
         icon: <IconWindow />,
-        // buttonLabel: t('classes'),
         buttonLabel: translateDrawerButton(
           'classes',
           modelInfo?.type === 'PROFILE',
@@ -95,7 +94,6 @@ export default function Model({ modelId }: ModelProps) {
       {
         id: 'attributes',
         icon: <IconRows />,
-        // buttonLabel: t('attributes'),
         buttonLabel: translateDrawerButton(
           'attributes',
           modelInfo?.type === 'PROFILE',
@@ -115,7 +113,6 @@ export default function Model({ modelId }: ModelProps) {
       {
         id: 'associations',
         icon: <IconSwapVertical />,
-        // buttonLabel: t('associations'),
         buttonLabel: translateDrawerButton(
           'associations',
           modelInfo?.type === 'PROFILE',
