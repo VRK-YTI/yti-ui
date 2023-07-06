@@ -31,6 +31,7 @@ export interface ClassModalProps {
   applicationProfile?: boolean;
   initialSelected?: string;
   plusIcon?: boolean;
+  resourceRestriction?: boolean;
 }
 
 export default function ClassModal({
@@ -41,6 +42,7 @@ export default function ClassModal({
   applicationProfile,
   initialSelected,
   plusIcon,
+  resourceRestriction,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -203,6 +205,7 @@ export default function ClassModal({
             modelId={modelId}
             applicationProfile={applicationProfile}
             languageVersioned
+            resourceRestriction={resourceRestriction}
           />
         </ModalContent>
         <ModalFooter>

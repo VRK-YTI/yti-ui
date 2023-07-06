@@ -301,6 +301,7 @@ export default function MultiColumnSearch({
         selected={selectedId}
         handleClick={handleRadioButtonClick}
         serviceCategories={serviceCategoriesResult}
+        id="search-list"
       />
 
       <DetachedPagination
