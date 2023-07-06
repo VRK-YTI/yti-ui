@@ -45,6 +45,7 @@ export interface ResultType {
 interface ResourceListProps {
   primaryColumnName: string;
   items: ResultType[];
+  id: string;
   type?: 'single' | 'multiple' | 'display';
   selected?: string | string[];
   extraHeader?: React.ReactFragment;
@@ -55,6 +56,7 @@ interface ResourceListProps {
 export default function ResourceList({
   primaryColumnName,
   items,
+  id,
   type = 'single',
   selected,
   extraHeader,
@@ -96,7 +98,7 @@ export default function ResourceList({
                   : false
               }
               disabled={items.length < 1}
-              id="select-all-checkbox"
+              id={`select-all-checkbox-${id}`}
             />
           </div>
           <Text variant="bold">{primaryColumnName}</Text>
@@ -128,7 +130,7 @@ export default function ResourceList({
           <Checkbox
             onClick={() => handleClick(id)}
             checked={checkChecked(id)}
-            id="select-multiple-checkbox"
+            id={`select-multiple-checkbox-${id}`}
           />
         );
       default:
