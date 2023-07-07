@@ -71,7 +71,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
     const errors = validateForm(formData);
     setErrors(errors);
 
-    if (Object.values(errors).includes(true)) {
+    if (Object.values(errors).includes(true) || errors.titleAmount.length > 0) {
       return;
     }
 
