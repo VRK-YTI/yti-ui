@@ -32,6 +32,7 @@ export const ToggleButtonGroup = styled.div`
 
   .fi-toggle--button > * > .fi-text--body {
     word-break: normal !important;
+    white-space: nowrap;
     font-size: 16px;
   }
 `;

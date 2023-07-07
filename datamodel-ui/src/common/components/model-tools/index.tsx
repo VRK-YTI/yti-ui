@@ -20,8 +20,10 @@ import {
 import { ToolsButtonGroup } from 'yti-common-ui/drawer/drawer.styles';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { ToggleButtonGroup, ToolsTooltip } from './model-tools.styles';
+import { useTranslation } from 'next-i18next';
 
 export default function ModelTools() {
+  const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
@@ -59,23 +61,25 @@ export default function ModelTools() {
             {tooltipOpen && (
               <ToolsTooltip>
                 <div>
-                  <Text variant="bold">Kaavion asetukset</Text>
+                  <Text variant="bold">{t('graph-settings')}</Text>
                 </div>
 
                 <ToggleButtonGroup>
-                  <HintText>Näytä</HintText>
-                  <ToggleButton>Assosiaatiorajoitteet</ToggleButton>
-                  <ToggleButton>Attribuuttirajoitteet</ToggleButton>
+                  <HintText>{t('show')}</HintText>
+                  <ToggleButton>{t('association-restr')}</ToggleButton>
+                  <ToggleButton>{t('attribute-restr')}</ToggleButton>
                 </ToggleButtonGroup>
 
                 <div>
                   <RadioButtonGroup
-                    labelText="Näytä resurssista"
+                    labelText={t('show-from-resource')}
                     name="resource"
                     defaultValue="name"
                   >
-                    <RadioButton value="name">Nimi</RadioButton>
-                    <RadioButton value="id">Tunnus / Tekninen nimi</RadioButton>
+                    <RadioButton value="name">{t('name')}</RadioButton>
+                    <RadioButton value="id">
+                      {t('prefix')} / {t('technical-name')}
+                    </RadioButton>
                   </RadioButtonGroup>
                 </div>
               </ToolsTooltip>
