@@ -2,6 +2,7 @@ import DrawerItemList from '@app/common/components/drawer-item-list';
 import {
   ViewList,
   resetHovered,
+  selectDisplayLang,
   setHovered,
   setSelected,
   setView,
@@ -15,6 +16,7 @@ import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { SearchInput, Text } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
@@ -24,6 +26,7 @@ export default function SearchView({ modelId }: { modelId: string }) {
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
+  const displayLang = useSelector(selectDisplayLang());
   const [headerHeight, setHeaderHeight] = useState(0);
   const [query, setQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,11 +61,16 @@ export default function SearchView({ modelId }: { modelId: string }) {
         resourceModelId
       )
     );
-    router.replace(
-      `${modelId}/${data.resourceType.toLowerCase()}/${
+    router.replace({
+      pathname: `${modelId}/${data.resourceType.toLowerCase()}/${
         resourceModelId !== modelId ? `${resourceModelId}:` : ''
-      }${data.identifier}`
-    );
+      }${data.identifier}`,
+      query: {
+        lang: Array.isArray(router.query.lang)
+          ? router.query.lang[0]
+          : router.query.lang,
+      },
+    });
   };
 
   const handleQueryChange = (e: string) => {
@@ -107,7 +115,7 @@ export default function SearchView({ modelId }: { modelId: string }) {
                   <>
                     {getLanguageVersion({
                       data: item.label,
-                      lang: i18n.language,
+                      lang: displayLang ?? i18n.language,
                       appendLocale: true,
                     })}{' '}
                     <Text smallScreen>

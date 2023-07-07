@@ -23,6 +23,8 @@ import CommonViewContent from '@app/modules/common-view-content';
 import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
 import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 import LocalCopyModal from '@app/modules/local-copy-modal';
+import { useSelector } from 'react-redux';
+import { selectDisplayLang } from '@app/common/components/model/model.slice';
 
 interface CommonViewProps {
   data?: Resource;
@@ -48,6 +50,7 @@ export default function ResourceInfo({
   const { t, i18n } = useTranslation('common');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const displayLang = useSelector(selectDisplayLang());
   const hasPermission = HasPermission({
     actions: ['ADMIN_ASSOCIATION', 'ADMIN_ATTRIBUTE'],
   });
@@ -154,7 +157,7 @@ export default function ResourceInfo({
               {data &&
                 getLanguageVersion({
                   data: data.label,
-                  lang: i18n.language,
+                  lang: displayLang ?? i18n.language,
                 })}
             </Text>
             <StatusChip $isValid={data && data.status === 'VALID'}>

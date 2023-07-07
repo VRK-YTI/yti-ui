@@ -27,6 +27,8 @@ import { TooltipWrapper } from '../model/model.styles';
 import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 import HasPermission from '@app/common/utils/has-permission';
 import DeleteModal from '../delete-modal';
+import { useSelector } from 'react-redux';
+import { selectDisplayLang } from '@app/common/components/model/model.slice';
 
 interface ClassInfoProps {
   data?: ClassType;
@@ -49,6 +51,7 @@ export default function ClassInfo({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const displayLang = useSelector(selectDisplayLang());
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
 
   useEffect(() => {
@@ -156,13 +159,13 @@ export default function ClassInfo({
         <BasicBlock title={t('technical-description')}>
           {getLanguageVersion({
             data: data.note,
-            lang: i18n.language,
+            lang: displayLang ?? i18n.language,
             appendLocale: true,
           }) !== '' ? (
             <SanitizedTextContent
               text={getLanguageVersion({
                 data: data.note,
-                lang: i18n.language,
+                lang: displayLang ?? i18n.language,
                 appendLocale: true,
               })}
             />
@@ -232,7 +235,7 @@ export default function ClassInfo({
             type="class"
             label={getLanguageVersion({
               data: data.label,
-              lang: i18n.language,
+              lang: displayLang ?? i18n.language,
             })}
             onClose={handleReturn}
             applicationProfile={applicationProfile}
@@ -248,7 +251,10 @@ export default function ClassInfo({
         <DrawerContent height={headerHeight}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <Text variant="bold">
-              {getLanguageVersion({ data: data.label, lang: i18n.language })}
+              {getLanguageVersion({
+                data: data.label,
+                lang: displayLang ?? i18n.language,
+              })}
             </Text>
             <StatusChip $isValid={data.status === 'VALID'}>
               {translateStatus(data.status, t)}
@@ -378,7 +384,7 @@ export default function ClassInfo({
                 data.contact ?? 'yhteentoimivuus@dvv.fi'
               }?subject=${getLanguageVersion({
                 data: data.label,
-                lang: i18n.language,
+                lang: displayLang ?? i18n.language,
               })}`}
               labelNewWindow={t('link-opens-new-window-external')}
             >

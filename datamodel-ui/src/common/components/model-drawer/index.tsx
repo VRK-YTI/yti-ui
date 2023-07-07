@@ -74,7 +74,14 @@ export default function Drawer({ views }: SideNavigationProps) {
       router.query.slug &&
       router.query.slug.length > 1
     ) {
-      router.replace(router.query.slug[0]);
+      router.replace({
+        pathname: router.query.slug[0],
+        query: {
+          lang: Array.isArray(router.query.lang)
+            ? router.query.lang[0]
+            : router.query.lang,
+        },
+      });
     }
   }, [activeView, currentView, views, router]);
 

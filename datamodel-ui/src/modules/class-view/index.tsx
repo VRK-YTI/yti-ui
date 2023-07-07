@@ -24,6 +24,7 @@ import {
   resetHovered,
   resetSelected,
   selectClassView,
+  selectDisplayLang,
   selectSelected,
   setHovered,
   setSelected,
@@ -53,6 +54,7 @@ export default function ClassView({
   const dispatch = useStoreDispatch();
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
   const router = useRouter();
+  const displayLang = useSelector(selectDisplayLang());
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -187,13 +189,27 @@ export default function ClassView({
   const handleFollowUp = (classId: string) => {
     dispatch(setView('classes', 'info'));
     dispatch(setSelected(classId, 'classes'));
-    router.replace(`${modelId}/class/${classId}`);
+    router.replace({
+      pathname: `${modelId}/class/${classId}`,
+      query: {
+        lang: Array.isArray(router.query.lang)
+          ? router.query.lang[0]
+          : router.query.lang,
+      },
+    });
   };
 
   const handleActive = (classId: string) => {
     dispatch(setSelected(classId, 'classes'));
     dispatch(resetHovered());
-    router.replace(`${modelId}/class/${classId}`);
+    router.replace({
+      pathname: `${modelId}/class/${classId}`,
+      query: {
+        lang: Array.isArray(router.query.lang)
+          ? router.query.lang[0]
+          : router.query.lang,
+      },
+    });
   };
 
   const handleEdit = () => {
@@ -279,7 +295,8 @@ export default function ClassView({
               items={data.responseObjects.map((item) => ({
                 label: getLanguageVersion({
                   data: item.label,
-                  lang: i18n.language,
+                  lang: displayLang ?? i18n.language,
+                  appendLocale: true,
                 }),
                 subtitle: `${modelId}:${item.identifier}`,
                 onClick: () => {
