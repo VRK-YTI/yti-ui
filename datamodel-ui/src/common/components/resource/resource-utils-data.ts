@@ -34,15 +34,24 @@ export const libraryAttribute: ResourceFormType = {
   status: 'VALID',
   equivalentResource: [
     {
-      label: { fi: 'eq-1-fi', en: 'eq-1-en', fr: 'eq-1-fr' },
-      identifier: 'eq-1',
+      label: 'eq-1',
+      uri: 'eq-1',
     },
     {
-      label: { fi: 'eq-2-fi', en: 'eq-2-en', fr: 'eq-2-fr' },
-      identifier: 'eq-2',
+      label: 'eq-2',
+      uri: 'eq-2',
     },
   ],
-  subResourceOf: ['sub-1', 'sub-2'],
+  subResourceOf: [
+    {
+      label: 'sub-1',
+      uri: 'sub-1',
+    },
+    {
+      label: 'sub-2',
+      uri: 'sub-2',
+    },
+  ],
   note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
   type: ResourceType.ATTRIBUTE,
   range: {
@@ -72,15 +81,24 @@ export const libraryAssociation: ResourceFormType = {
   status: 'VALID',
   equivalentResource: [
     {
-      label: { fi: 'eq-1-fi', en: 'eq-1-en', fr: 'eq-1-fr' },
-      identifier: 'eq-1',
+      label: 'eq-1',
+      uri: 'eq-1',
     },
     {
-      label: { fi: 'eq-2-fi', en: 'eq-2-en', fr: 'eq-2-fr' },
-      identifier: 'eq-2',
+      label: 'eq-2',
+      uri: 'eq-2',
     },
   ],
-  subResourceOf: ['sub-1', 'sub-2'],
+  subResourceOf: [
+    {
+      label: 'sub-1',
+      uri: 'sub-1',
+    },
+    {
+      label: 'sub-2',
+      uri: 'sub-2',
+    },
+  ],
   note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
   type: ResourceType.ASSOCIATION,
   range: {

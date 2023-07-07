@@ -212,7 +212,7 @@ export default function ConceptBlock({
                             terminology: c.terminology,
                           })
                         }
-                        id="concept-radio-button"
+                        id={`concept-radio-button-${c.uri}`}
                       />
                       <div>
                         <Text>

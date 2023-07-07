@@ -30,6 +30,7 @@ export interface ClassModalProps {
   ) => void;
   applicationProfile?: boolean;
   initialSelected?: string;
+  plusIcon?: boolean;
   resourceRestriction?: boolean;
 }
 
@@ -40,6 +41,7 @@ export default function ClassModal({
   handleFollowUp,
   applicationProfile,
   initialSelected,
+  plusIcon,
   resourceRestriction,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
@@ -174,7 +176,7 @@ export default function ClassModal({
     <>
       <Button
         variant="secondary"
-        icon={modalButtonLabel ? undefined : <IconPlus />}
+        icon={modalButtonLabel && !plusIcon ? undefined : <IconPlus />}
         onClick={() => handleOpen()}
         id="add-class-button"
       >

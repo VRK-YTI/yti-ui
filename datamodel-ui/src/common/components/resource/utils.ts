@@ -80,13 +80,19 @@ export function convertToPUT(
           return [e[0], e[1].id];
         }
 
-        if (e[0] === 'equivalentResource') {
+        if (e[0] === 'subResourceOf' || e[0] === 'equivalentResource') {
           return [
             e[0],
-            e[1].map(
-              (r: { label: { [key: string]: string }; identifier: string }) =>
-                r.identifier
-            ),
+            e[1]
+              .map((r: { label: string; uri: string }) => r.uri)
+              .filter(
+                (r: string) =>
+                  [
+                    'owl:topDataProperty',
+                    'owl:TopObjectProperty',
+                    'owl:topObjectProperty',
+                  ].includes(r) === false
+              ),
           ];
         }
 

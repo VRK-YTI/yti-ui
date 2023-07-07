@@ -65,7 +65,7 @@
   "common-form": {
     "add-equivalent-association": "Lisää vastaava assosiaatio",
     "add-equivalent-attribute": "Lisää vastaava attribuutti",
-    "add-upper-association": "Lisää assosiaatio",
+    "add-upper-association": "Lisää yläassosiaatio",
     "add-upper-attribute": "Lisää yläattribuutti",
     "associations-identifier": "Assosiaation yksilöivä tunnus",
     "associations-name": "$t(association-name)",
