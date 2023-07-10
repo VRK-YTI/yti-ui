@@ -17,8 +17,8 @@ export interface ClassType {
   label: { [key: string]: string };
   editorialNote?: string;
   status: Status;
-  equivalentClass: string[];
-  subClassOf: string[];
+  equivalentClass?: string[];
+  subClassOf?: string[];
   subject?: ConceptType;
   identifier: string;
   created: string;

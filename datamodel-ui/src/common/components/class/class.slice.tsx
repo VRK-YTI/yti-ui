@@ -21,10 +21,12 @@ function convertToPUT(
 
   const ret = {
     ...retVal,
-    equivalentClass: data.equivalentClass.map((eq) => eq.identifier),
+    equivalentClass: data.equivalentClass?.map((eq) => eq.identifier) ?? [],
     subClassOf: data.subClassOf
-      .filter((soc) => soc.identifier !== 'owl:Thing')
-      .map((sco) => sco.identifier),
+      ? data.subClassOf
+          .filter((soc) => soc.identifier !== 'owl:Thing')
+          .map((sco) => sco.identifier)
+      : [],
     subject: conceptURI,
     ...(basedOnNodeShape
       ? {
@@ -171,19 +173,6 @@ export const classSlice = createSlice({
       };
     },
   },
-  // extraReducers: (builder) => {
-  //   builder.addMatcher(
-  //     classApi.endpoints.getClass.matchFulfilled, (state, action) => {
-  //       if (isEqual(state, action.payload)) {
-  //         return state;
-  //       }
-  //       return action.payload;
-  //     }
-  //   );
-  //   builder.addMatcher(isHydrate, (_, action) => {
-  //     return action.payload.model;
-  //   });
-  // }
 });
 
 export function selectClass() {

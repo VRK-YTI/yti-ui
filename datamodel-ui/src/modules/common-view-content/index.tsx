@@ -127,7 +127,7 @@ export default function CommonViewContent({
               <BasicBlock title={t('allowed-values')}>
                 {data.allowedValues && data.allowedValues.length > 0
                   ? data.allowedValues.join(', ')
-                  : t('selected-codelists')}
+                  : t('not-defined')}
               </BasicBlock>
 
               <BasicBlock title={t('default-value', { ns: 'admin' })}>
