@@ -4,14 +4,14 @@ import { Status } from './status.interface';
 export interface ClassFormType {
   editorialNote: string;
   concept?: ConceptType;
-  equivalentClass: {
+  equivalentClass?: {
     label: string;
     identifier: string;
   }[];
   identifier: string;
   label: { [key: string]: string };
   note: { [key: string]: string };
-  subClassOf: {
+  subClassOf?: {
     label: string;
     identifier: string;
     attributes: string[];

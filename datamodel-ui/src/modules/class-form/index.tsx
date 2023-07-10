@@ -229,9 +229,9 @@ export default function ClassForm({
     key: 'subClassOf' | 'equivalentClass'
   ) => {
     if (key === 'subClassOf') {
-      const newSubClasses = data.subClassOf.filter(
-        (subclass) => subclass.identifier !== id
-      );
+      const newSubClasses = data.subClassOf
+        ? data.subClassOf.filter((subclass) => subclass.identifier !== id)
+        : [];
 
       if (newSubClasses.length < 1) {
         handleUpdate({
@@ -255,8 +255,8 @@ export default function ClassForm({
 
     handleUpdate({
       ...data,
-      [key]: data[key]
-        ? data[key].filter((item) => item.identifier !== id)
+      [key]: data.equivalentClass
+        ? data.equivalentClass.filter((item) => item.identifier !== id)
         : [],
     });
   };
@@ -271,10 +271,11 @@ export default function ClassForm({
 
     if (key === 'subClassOf') {
       const initData =
+        data.subClassOf &&
         data.subClassOf.length === 1 &&
         data.subClassOf[0].identifier === 'owl:Thing'
           ? []
-          : data.subClassOf;
+          : data.subClassOf ?? [];
 
       handleUpdate({
         ...data,
@@ -296,7 +297,7 @@ export default function ClassForm({
       handleUpdate({
         ...data,
         equivalentClass: [
-          ...data.equivalentClass,
+          ...(data.equivalentClass ?? []),
           {
             label: `${value.namespace.split('/').filter(Boolean).pop()}:${
               value.identifier
@@ -507,7 +508,7 @@ export default function ClassForm({
               />
             }
             items={
-              data.subClassOf.length > 0
+              data.subClassOf && data.subClassOf.length > 0
                 ? data.subClassOf.map((s) => ({
                     label: s.label,
                     id: s.identifier,

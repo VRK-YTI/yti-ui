@@ -76,7 +76,7 @@ export function classTypeToClassForm(data: ClassType): ClassFormType {
     concept: data.subject,
     editorialNote: data.editorialNote ?? '',
     equivalentClass:
-      data.equivalentClass.map((ec) => ({
+      data.equivalentClass?.map((ec) => ({
         identifier: ec,
         label: ec,
       })) ?? [],
@@ -85,10 +85,11 @@ export function classTypeToClassForm(data: ClassType): ClassFormType {
     note: data.note,
     status: data.status,
     subClassOf:
+      data.subClassOf &&
       data.subClassOf.filter(
         (soc) => soc !== 'http://www.w3.org/2002/07/owl#Thing'
       ).length > 0
-        ? data.subClassOf.map((sco) => ({
+        ? data.subClassOf?.map((sco) => ({
             identifier: sco,
             label: sco,
             attributes: [],
