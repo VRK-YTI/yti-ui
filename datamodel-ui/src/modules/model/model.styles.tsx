@@ -111,3 +111,18 @@ export const StaticHeaderWrapper = styled.div`
     padding-bottom: 0;
   }
 `;
+
+export const LanguagePickerWrapper = styled.div`
+  margin-top: -80px;
+  padding-right: 3px;
+
+  .fi-dropdown {
+    width: min-content;
+  }
+
+  .fi-dropdown_button {
+    min-width: max-content !important;
+    word-break: keep-all !important;
+    white-space: nowrap !important;
+  }
+`;

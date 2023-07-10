@@ -131,6 +131,7 @@ const initialState = {
   view: initialView,
   hasChanges: false,
   displayWarning: false,
+  displayLang: 'fi',
 };
 
 export const modelSlice = createSlice({
@@ -226,6 +227,12 @@ export const modelSlice = createSlice({
         };
       }
     },
+    setDisplayLang(state, action) {
+      return {
+        ...state,
+        displayLang: action.payload,
+      };
+    },
   },
 });
 
@@ -305,4 +312,12 @@ export function selectHasChanges() {
 
 export function selectDisplayWarning() {
   return (state: AppState) => state.model.displayWarning;
+}
+
+export function setDisplayLang(value: string): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setDisplayLang(value));
+}
+
+export function selectDisplayLang() {
+  return (state: AppState) => state.model.displayLang;
 }

@@ -16,6 +16,8 @@ import Separator from 'yti-common-ui/separator';
 import ConceptView from '../concept-view';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import HasPermission from '@app/common/utils/has-permission';
+import { useSelector } from 'react-redux';
+import { selectDisplayLang } from '@app/common/components/model/model.slice';
 
 export default function CommonViewContent({
   modelId,
@@ -32,6 +34,7 @@ export default function CommonViewContent({
   const hasPermission = HasPermission({
     actions: ['ADMIN_ASSOCIATION', 'ADMIN_ATTRIBUTE'],
   });
+  const displayLang = useSelector(selectDisplayLang());
 
   function getDisplayLabelTitle(type: ResourceType) {
     switch (type) {
@@ -73,12 +76,12 @@ export default function CommonViewContent({
               <BasicBlock title={translateCommonForm('note', data.type, t)}>
                 {getLanguageVersion({
                   data: data.note,
-                  lang: i18n.language,
+                  lang: displayLang ?? i18n.language,
                 }) !== '' ? (
                   <SanitizedTextContent
                     text={getLanguageVersion({
                       data: data.note,
-                      lang: i18n.language,
+                      lang: displayLang ?? i18n.language,
                     })}
                   />
                 ) : (
@@ -182,12 +185,12 @@ export default function CommonViewContent({
               <BasicBlock title={translateCommonForm('note', data.type, t)}>
                 {getLanguageVersion({
                   data: data.note,
-                  lang: i18n.language,
+                  lang: displayLang ?? i18n.language,
                 }) !== '' ? (
                   <SanitizedTextContent
                     text={getLanguageVersion({
                       data: data.note,
-                      lang: i18n.language,
+                      lang: displayLang ?? i18n.language,
                     })}
                   />
                 ) : (
@@ -267,12 +270,12 @@ export default function CommonViewContent({
         <BasicBlock title={translateCommonForm('note', data.type, t)}>
           {getLanguageVersion({
             data: data.note,
-            lang: i18n.language,
+            lang: displayLang ?? i18n.language,
           }) !== '' ? (
             <SanitizedTextContent
               text={getLanguageVersion({
                 data: data.note,
-                lang: i18n.language,
+                lang: displayLang ?? i18n.language,
               })}
             />
           ) : (
@@ -289,7 +292,7 @@ export default function CommonViewContent({
         <BasicBlock title={getDisplayLabelTitle(data.type)}>
           {getLanguageVersion({
             data: data.label,
-            lang: i18n.language,
+            lang: displayLang ?? i18n.language,
             appendLocale: true,
           })}
         </BasicBlock>
@@ -362,7 +365,7 @@ export default function CommonViewContent({
             data.contact ?? 'yhteentoimivuus@dvv.fi'
           }?subject=${getLanguageVersion({
             data: data.label,
-            lang: i18n.language,
+            lang: displayLang ?? i18n.language,
           })}`}
           labelNewWindow={t('link-opens-new-window-external')}
         >

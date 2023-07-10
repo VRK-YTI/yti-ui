@@ -11,6 +11,7 @@ import ModelHeader from '@app/modules/model/model-header';
 import {
   getModel,
   getRunningQueriesThunk,
+  setDisplayLang,
   setSelected,
   setView,
   useGetModelQuery,
@@ -42,6 +43,7 @@ import {
   getRunningQueriesThunk as getResourceRunningQueriesThunk,
 } from '@app/common/components/resource/resource.slice';
 import { ModelType } from '@app/common/interfaces/model.interface';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -127,16 +129,30 @@ export const getServerSideProps = createCommonGetServerSideProps(
     );
     await Promise.all(store.dispatch(getVisualizationRunningQueriesThunk()));
 
+    const model = store.getState().modelApi.queries[`getModel("${modelId}")`]
+      ?.data as ModelType | undefined | null;
+
+    if (query.lang) {
+      store.dispatch(
+        setDisplayLang(Array.isArray(query.lang) ? query.lang[0] : query.lang)
+      );
+    } else if (model?.languages && !model.languages.includes(locale ?? 'fi')) {
+      store.dispatch(
+        setDisplayLang(
+          [...model.languages].sort((a, b) => compareLocales(a, b))[0]
+        )
+      );
+    } else if (locale) {
+      store.dispatch(setDisplayLang(locale));
+    } else {
+      store.dispatch(setDisplayLang('fi'));
+    }
+
     if (query.slug.length >= 3) {
       const resourceType = query.slug[1];
       const resourceId = query.slug[2];
 
-      const modelType = (
-        store.getState().modelApi.queries[`getModel("${modelId}")`]?.data as
-          | ModelType
-          | undefined
-          | null
-      )?.type;
+      const modelType = model?.type;
 
       if (resourceType === 'class') {
         store.dispatch(setView('classes', 'info'));

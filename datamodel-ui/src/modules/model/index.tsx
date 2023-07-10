@@ -23,6 +23,7 @@ import {
 } from 'suomifi-ui-components';
 import ResourceView from '../resource';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import ModelTools from '@app/common/components/model-tools';
 import { translateDrawerButton } from '@app/common/utils/translation-helpers';
 
 interface ModelProps {
@@ -158,6 +159,7 @@ export default function Model({ modelId }: ModelProps) {
       <ContentWrapper>
         <Graph modelId={modelId}>
           <Drawer views={views} />
+          <ModelTools />
         </Graph>
       </ContentWrapper>
     </div>

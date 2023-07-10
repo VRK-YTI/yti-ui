@@ -133,9 +133,9 @@ export const ToolsButtonGroup = styled.div<{
 }>`
   padding: 6px 2px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 6px;
-  align-items: center;
+  align-items: flex-end;
   width: min-content;
 
   button {

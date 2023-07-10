@@ -1,6 +1,7 @@
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import {
   resetSelected,
+  selectDisplayLang,
   selectResourceView,
   selectSelected,
   setSelected,
@@ -61,6 +62,7 @@ export default function ResourceView({
   );
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const displayLang = useSelector(selectDisplayLang());
   const [headerHeight, setHeaderHeight] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
@@ -104,11 +106,16 @@ export default function ResourceView({
         modelPrefix
       )
     );
-    router.replace(
-      `${modelId}/${
+    router.replace({
+      pathname: `${modelId}/${
         type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
-      }/${modelPrefix !== modelId ? `${modelPrefix}:` : ''}${id}`
-    );
+      }/${modelPrefix !== modelId ? `${modelPrefix}:` : ''}${id}`,
+      query: {
+        lang: Array.isArray(router.query.lang)
+          ? router.query.lang[0]
+          : router.query.lang,
+      },
+    });
   };
 
   const handleReturn = () => {
@@ -269,7 +276,8 @@ export default function ResourceView({
                 return {
                   label: getLanguageVersion({
                     data: item.label,
-                    lang: i18n.language,
+                    lang: displayLang ?? i18n.language,
+                    appendLocale: true,
                   }),
                   subtitle: `${prefix}:${item.identifier}`,
                   onClick: () => handleShowResource(item.identifier, prefix),
