@@ -132,7 +132,7 @@ export default function LinkedModel({
       setExternalData({
         ...data,
         namespace:
-          !data.namespace.startsWith('http://') ||
+          !data.namespace.startsWith('http://') &&
           !data.namespace.startsWith('https://')
             ? `http://${data.namespace}`
             : data.namespace,
