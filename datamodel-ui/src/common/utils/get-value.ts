@@ -26,6 +26,8 @@ function getLangObject(data: { [key: string]: string }) {
   });
 }
 
+export const ADMIN_EMAIL = 'yhteentoimivuus@dvv.fi';
+
 export function getTitle(data?: ModelType, lang?: string): string {
   if (!data) {
     return '';
@@ -95,7 +97,7 @@ export function getComments(data?: ModelType): LangObject[] {
 }
 
 export function getContact(data?: ModelType): string {
-  return data?.contact ?? 'yhteentoimivuus@dvv.fi';
+  return data?.contact ?? ADMIN_EMAIL;
 }
 
 export function getDocumentation(data?: ModelType): string {

@@ -184,6 +184,7 @@
   "missing-prefix": "Prefix hasn't been set",
   "namespace": "Namespace",
   "namespace-is-not-valid": "Namespace isn't valid",
+  "namespace-missing-info": "If you didn't find the namespace you need, please contact the administrator",
   "namespace-with-examples": "Namespace (URI, URN etc.)",
   "no-terminologies-available": "No terminologies available",
   "no-work-group-comment": "No work group comment",

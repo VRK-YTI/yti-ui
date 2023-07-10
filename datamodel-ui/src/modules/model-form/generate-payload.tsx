@@ -1,5 +1,6 @@
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { NewModel } from '@app/common/interfaces/new-model.interface';
+import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 
 export default function generatePayload(data: ModelFormType): NewModel {
   const SUOMI_FI_NAMESPACE = 'http://uri.suomi.fi/datamodel/ns/';
@@ -28,6 +29,6 @@ export default function generatePayload(data: ModelFormType): NewModel {
     prefix: data.prefix,
     status: 'DRAFT',
     type: data.type.toUpperCase(),
-    contact: data.contact !== '' ? data.contact : 'yhteentoimivuus@dvv.fi',
+    contact: data.contact !== '' ? data.contact : ADMIN_EMAIL,
   };
 }
