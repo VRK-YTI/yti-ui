@@ -5,12 +5,13 @@ import {
   selectDisplayLang,
   setHovered,
   setSelected,
-  setView,
+  // setView,
 } from '@app/common/components/model/model.slice';
 import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import useSetView from '@app/common/utils/hooks/use-set-view';
 import { translateResourceType } from '@app/common/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
@@ -25,6 +26,7 @@ import { DetachedPagination } from 'yti-common-ui/pagination';
 export default function SearchView({ modelId }: { modelId: string }) {
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
+  const { setView } = useSetView();
   const dispatch = useStoreDispatch();
   const displayLang = useSelector(selectDisplayLang());
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -53,7 +55,8 @@ export default function SearchView({ modelId }: { modelId: string }) {
   const handleItemClick = (data: InternalClass) => {
     const resourceModelId = data.namespace.split('/').filter(Boolean).pop();
 
-    dispatch(setView(getResourceType(data.resourceType), 'info'));
+    // dispatch(setView(getResourceType(data.resourceType), 'info'));
+    setView(getResourceType(data.resourceType), 'info');
     dispatch(
       setSelected(
         data.identifier,

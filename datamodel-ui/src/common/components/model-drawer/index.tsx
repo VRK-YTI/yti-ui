@@ -17,6 +17,7 @@ import {
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import DrawerTopAlert from './drawer-top-alert';
+import useSetView from '@app/common/utils/hooks/use-set-view';
 
 export type ViewType = {
   id:
@@ -49,6 +50,7 @@ export default function Drawer({ views }: SideNavigationProps) {
       ? views.find((v) => v.id === 'graph')
       : views.find((v) => v.id === 'info')
   );
+  const { setView } = useSetView();
 
   const handleSetActiveView = (viewId: ViewType['id']) => {
     if (hasChanges) {
@@ -57,11 +59,10 @@ export default function Drawer({ views }: SideNavigationProps) {
     }
 
     if (['search', 'links', 'graph'].includes(viewId)) {
-      dispatch(setView(viewId));
+      setView(viewId);
       return;
     }
-
-    dispatch(setView(viewId, viewId === 'info' ? 'info' : 'list'));
+    setView(viewId, viewId === 'info' ? 'info' : 'list');
   };
 
   useEffect(() => {

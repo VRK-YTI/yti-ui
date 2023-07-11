@@ -9,6 +9,8 @@ import PageHead from 'yti-common-ui/page-head';
 import Model from '@app/modules/model';
 import ModelHeader from '@app/modules/model/model-header';
 import {
+  ViewList,
+  ViewListItem,
   getModel,
   getRunningQueriesThunk,
   setDisplayLang,
@@ -147,6 +149,17 @@ export const getServerSideProps = createCommonGetServerSideProps(
     } else {
       store.dispatch(setDisplayLang('fi'));
     }
+
+    store.dispatch(
+      setView(
+        query.slug[1] ? (query.slug[1] as keyof ViewList) : 'info',
+        ['classes', 'attributes', 'associations'].includes(query.slug[1])
+          ? query.slug[2]
+            ? (query.slug[2] as keyof ViewListItem)
+            : 'list'
+          : undefined
+      )
+    );
 
     if (query.slug.length >= 3) {
       const resourceType = query.slug[1];

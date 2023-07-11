@@ -5,7 +5,7 @@ import {
   selectResourceView,
   selectSelected,
   setSelected,
-  setView,
+  // setView,
 } from '@app/common/components/model/model.slice';
 import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
@@ -35,6 +35,7 @@ import {
 import ResourceModal from './resource-modal';
 import ResourceForm from './resource-form';
 import { resourceToResourceFormType } from './utils';
+import useSetView from '@app/common/utils/hooks/use-set-view';
 
 interface ResourceViewProps {
   modelId: string;
@@ -62,6 +63,7 @@ export default function ResourceView({
   );
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { setView } = useSetView();
   const displayLang = useSelector(selectDisplayLang());
   const [headerHeight, setHeaderHeight] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -93,12 +95,12 @@ export default function ResourceView({
   };
 
   const handleShowResource = (id: string, modelPrefix: string) => {
-    dispatch(
-      setView(
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-        'info'
-      )
+    // dispatch(
+    setView(
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+      'info'
     );
+    // );
     dispatch(
       setSelected(
         id,
@@ -120,12 +122,12 @@ export default function ResourceView({
 
   const handleReturn = () => {
     dispatch(resetSelected());
-    dispatch(
-      setView(
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-        'list'
-      )
+    // dispatch(
+    setView(
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+      'list'
     );
+    // );
     dispatch(resetResource());
     refetch();
 
@@ -135,12 +137,12 @@ export default function ResourceView({
   };
 
   const handleFormReturn = () => {
-    dispatch(
-      setView(
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-        'info'
-      )
+    // dispatch(
+    setView(
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+      'info'
     );
+    // );
     dispatch(resetResource());
 
     if (isEdit) {
@@ -170,12 +172,12 @@ export default function ResourceView({
       );
     }
 
-    dispatch(
-      setView(
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-        'edit'
-      )
+    // dispatch(
+    setView(
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+      'edit'
     );
+    // );
 
     if (isEdit) {
       setIsEdit(false);
@@ -184,12 +186,12 @@ export default function ResourceView({
 
   const handleEdit = () => {
     if (resourceData) {
-      dispatch(
-        setView(
-          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-          'edit'
-        )
+      // dispatch(
+      setView(
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        'edit'
       );
+      // );
       dispatch(setResource(resourceToResourceFormType(resourceData)));
       setIsEdit(true);
     }

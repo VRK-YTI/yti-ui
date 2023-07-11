@@ -28,13 +28,14 @@ import {
   selectSelected,
   setHovered,
   setSelected,
-  setView,
+  // setView,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { getResourceInfo } from '@app/common/utils/parse-slug';
 import ApplicationProfileFlow from './application-profile-flow';
 import ClassInfo from './class-info';
+import useSetView from '@app/common/utils/hooks/use-set-view';
 
 interface ClassViewProps {
   modelId: string;
@@ -54,6 +55,7 @@ export default function ClassView({
   const dispatch = useStoreDispatch();
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
   const router = useRouter();
+  const { setView } = useSetView();
   const displayLang = useSelector(selectDisplayLang());
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
@@ -127,7 +129,8 @@ export default function ClassView({
           ],
         })
       );
-      dispatch(setView('classes', 'edit'));
+      // dispatch(setView('classes', 'edit'));
+      setView('classes', 'edit');
       return;
     }
 
@@ -135,7 +138,8 @@ export default function ClassView({
       setClass(internalClassToClassForm(value, languages, applicationProfile))
     );
 
-    dispatch(setView('classes', 'edit'));
+    // dispatch(setView('classes', 'edit'));
+    setView('classes', 'edit');
   };
 
   const handleAppProfileFollowUpAction = (data?: {
@@ -172,13 +176,15 @@ export default function ClassView({
         )
       )
     );
-    dispatch(setView('classes', 'edit'));
+    // dispatch(setView('classes', 'edit'));
+    setView('classes', 'edit');
   };
 
   const handleReturn = () => {
     dispatch(resetSelected());
     dispatch(resetClass());
-    dispatch(setView('classes', 'list'));
+    // dispatch(setView('classes', 'list'));
+    setView('classes', 'list');
     refetch();
 
     if (isEdit) {
@@ -187,7 +193,8 @@ export default function ClassView({
   };
 
   const handleFollowUp = (classId: string) => {
-    dispatch(setView('classes', 'info'));
+    // dispatch(setView('classes', 'info'));
+    setView('classes', 'info');
     dispatch(setSelected(classId, 'classes'));
     router.replace({
       pathname: `${modelId}/class/${classId}`,
@@ -214,7 +221,8 @@ export default function ClassView({
 
   const handleEdit = () => {
     if (isSuccess) {
-      dispatch(setView('classes', 'edit'));
+      // dispatch(setView('classes', 'edit'));
+      setView('classes', 'edit');
       dispatch(setClass(classTypeToClassForm(classData)));
       setIsEdit(true);
     }
