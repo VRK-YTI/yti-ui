@@ -44,7 +44,7 @@ export default function RelationalInformationBlock({
   fromOther,
 }: RelationalInformationBlockProps) {
   const [chosen, setChosen] = useState<Concepts[] | RelationInfoType[]>(
-    fromOther ? data[infoKey] : []
+    data[infoKey] ?? []
   );
   const { t } = useTranslation('admin');
   const router = useRouter();
@@ -239,19 +239,10 @@ function ManageRelationalInfoModal({
     handleClose();
   };
 
-  const handleSetVisible = () => {
-    if (!fromOther) {
-      setChosen(
-        searchResults.filter((result) => selectedConceptIds.includes(result.id))
-      );
-    }
-    setVisible(true);
-  };
-
   return (
     <>
       <Button
-        onClick={() => handleSetVisible()}
+        onClick={() => setVisible(true)}
         variant="secondary"
         className="relational-info-modal-button"
       >
