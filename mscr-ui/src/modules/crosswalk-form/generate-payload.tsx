@@ -1,13 +1,14 @@
-import { ModelFormType } from '@app/common/interfaces/model-form.interface';
-import { NewModel } from '@app/common/interfaces/new-model.interface';
+import {
+  Crosswalk,
+  CrosswalkFormType,
+} from '@app/common/interfaces/crosswalk.interface';
 
-// here we can create the schema payloaf
+// here we are creating crosswalk payload by converting the form data to crosswalk type
 
-export default function generatePayload(data: ModelFormType): NewModel {
-  const SUOMI_FI_NAMESPACE = 'http://uri.suomi.fi/datamodel/ns/';
-
+export default function generatePayload(data: CrosswalkFormType): Crosswalk {
   return {
-    id: `${SUOMI_FI_NAMESPACE}${data.prefix}`,
+    pid: '',
+    format: 'CSV',
     description: data.languages
       .filter((l) => l.description !== '')
       .reduce(
@@ -26,13 +27,12 @@ export default function generatePayload(data: ModelFormType): NewModel {
         }),
         {}
       ),
-    groups: data.serviceCategories.map((s) => s.uniqueItemId),
     languages: data.languages
       .filter((l) => l.title !== '')
       .map((l) => l.uniqueItemId),
     organizations: data.organizations.map((o) => o.uniqueItemId),
-    prefix: data.prefix,
     status: 'DRAFT',
-    type: data.type.toUpperCase(),
+    sourceSchema: data.sourceSchema,
+    targetSchema: data.targetSchema,
   };
 }

@@ -17,6 +17,8 @@ import { translateModelType } from '@app/common/utils/translation-helpers';
 import Separator from 'yti-common-ui/separator';
 import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 import SchemaFormModal from '../schema-form/schema-form-modal';
+import CrosswalkFormModal from '../crosswalk-form/crosswalk-form-modal';
+import { ButtonBlock } from './front-page.styles';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -58,7 +60,6 @@ export default function FrontPage() {
     refetchServiceCategoriesData();
   };
 
-
   return (
     <main id="main">
       <Title
@@ -73,8 +74,10 @@ export default function FrontPage() {
         }
       />
       <Separator isLarge />
-      <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>
-    
+      <ButtonBlock>
+        <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>
+        <CrosswalkFormModal refetch={refetchInfo}></CrosswalkFormModal>
+      </ButtonBlock>
     </main>
   );
 }

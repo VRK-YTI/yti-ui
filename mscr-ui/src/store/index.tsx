@@ -7,14 +7,13 @@ import { serviceCategoriesApi } from '@app/common/components/service-categories/
 import { organizationsApi } from '@app/common/components/organizations/organizations.slice';
 import { fakeableUsersApi } from '@app/common/components/fakeable-users/fakeable-users.slice';
 import { prefixApi } from '@app/common/components/prefix';
-import { classApi, classSlice } from '@app/common/components/class/class.slice';
 import { searchInternalResourcesApi } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import {
   resourceApi,
   resourceSlice,
 } from '@app/common/components/resource/resource.slice';
 import { countApi } from '@app/common/components/counts/counts.slice';
-import { graphSlice } from '@app/common/components/graph/graph.slice';
+
 import { visualizationApi } from '@app/common/components/visualization/visualization.slice';
 import { activeSlice } from '@app/common/components/active/active.slice';
 import { importApi } from '@app/common/components/import/import.slice';
@@ -22,6 +21,10 @@ import {
   schemaApi,
   schemaSlice,
 } from '@app/common/components/schema/schema.slice';
+import {
+  crosswalkApi,
+  crosswalkSlice,
+} from '@app/common/components/crosswalk/crosswalk.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -38,14 +41,13 @@ export function makeStore(ctx: NextIronContext) {
       [prefixApi.reducerPath]: prefixApi.reducer,
       [schemaApi.reducerPath]: schemaApi.reducer,
       [schemaSlice.name]: schemaSlice.reducer,
-      [classApi.reducerPath]: classApi.reducer,
-      [classSlice.name]: classSlice.reducer,
+      [crosswalkApi.reducerPath]: crosswalkApi.reducer,
+      [crosswalkSlice.name]: crosswalkSlice.reducer,
       [searchInternalResourcesApi.reducerPath]:
         searchInternalResourcesApi.reducer,
       [resourceApi.reducerPath]: resourceApi.reducer,
       [resourceSlice.name]: resourceSlice.reducer,
       [countApi.reducerPath]: countApi.reducer,
-      [graphSlice.name]: graphSlice.reducer,
       [visualizationApi.reducerPath]: visualizationApi.reducer,
       [activeSlice.name]: activeSlice.reducer,
       [fakeableUsersApi.reducerPath]: fakeableUsersApi.reducer,
@@ -60,7 +62,7 @@ export function makeStore(ctx: NextIronContext) {
         fakeableUsersApi.middleware,
         prefixApi.middleware,
         schemaApi.middleware,
-        classApi.middleware,
+        crosswalkApi.middleware,
         searchInternalResourcesApi.middleware,
         resourceApi.middleware,
         countApi.middleware,

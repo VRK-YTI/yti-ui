@@ -21,6 +21,9 @@ import { FormUpdateErrors } from './validate-form-update';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import { TextInput } from 'suomifi-ui-components';
 
+interface SchemaProps {
+  pid: string;
+}
 interface SchemaFormProps {
   formData: Schema;
   setFormData: (value: Schema) => void;
@@ -38,7 +41,7 @@ export default function SchemaForm({
   errors,
   editMode,
 }: SchemaFormProps) {
-  const { t, i18n } = useTranslation('admin');
+  const { t, i18n } = useTranslation('schema');
   const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
     i18n.language
   );
@@ -69,6 +72,7 @@ export default function SchemaForm({
       </BlockContainer>
 
       <Separator isLarge />
+      {renderStaus()}
       {editMode && renderContributors()}
     </ModelFormContainer>
   );
@@ -118,81 +122,36 @@ export default function SchemaForm({
     );
   }
 
-  function renderPrefix() {
-    if (editMode) {
-      return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div>
-            <Label>{t('prefix')}</Label>
-            <Text smallScreen>{formData.prefix}</Text>
-          </div>
-          <div>
-            <Label>{t('namespace')}</Label>
-            <Text
-              smallScreen
-            >{`http://uri.suomi.fi/datamodel/ns/${formData.prefix}`}</Text>
-          </div>
-
-          <Dropdown
-            labelText={'Tila'}
-            defaultValue={formData.status ?? ''}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                status: e as Status | undefined,
-              })
-            }
-          >
-            <DropdownItem value={'DRAFT'}>
-              {t('statuses.draft', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'VALID'}>
-              {t('statuses.valid', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'SUPERSEDED'}>
-              {t('statuses.superseded', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'RETIRED'}>
-              {t('statuses.retired', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'INVALID'}>
-              {t('statuses.invalid', { ns: 'common' })}
-            </DropdownItem>
-          </Dropdown>
-        </div>
-      );
-    }
-
+  function renderStaus() {
     return (
-      <>
-        <Prefix
-          prefix={formData.prefix}
-          setPrefix={(e) =>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <Dropdown
+          labelText={'Tila'}
+          defaultValue={formData.status ?? ''}
+          onChange={(e) =>
             setFormData({
               ...formData,
-              prefix: e,
+              status: e as Status | undefined,
             })
           }
-          validatePrefixMutation={useGetFreePrefixMutation}
-          typeInUri={'datamodel/ns'}
-          error={errors && 'prefix' in errors ? errors?.prefix : false}
-          translations={{
-            automatic: t('create-prefix-automatically'),
-            errorInvalid: t('error-prefix-invalid'),
-            errorTaken: t('error-prefix-taken'),
-            hintText: t('prefix-input-hint-text'),
-            label: t('prefix'),
-            manual: t('input-prefix-manually'),
-            textInputHint: t('input-prefix'),
-            textInputLabel: t('prefix'),
-            uriPreview: t('uri-preview'),
-          }}
-          disabled={disabled}
-          noAuto
-          fullWidth
-        />
-        <Separator />
-      </>
+        >
+          <DropdownItem value={'DRAFT'}>
+            {t('statuses.draft', { ns: 'common' })}
+          </DropdownItem>
+          <DropdownItem value={'VALID'}>
+            {t('statuses.valid', { ns: 'common' })}
+          </DropdownItem>
+          <DropdownItem value={'SUPERSEDED'}>
+            {t('statuses.superseded', { ns: 'common' })}
+          </DropdownItem>
+          <DropdownItem value={'RETIRED'}>
+            {t('statuses.retired', { ns: 'common' })}
+          </DropdownItem>
+          <DropdownItem value={'INVALID'}>
+            {t('statuses.invalid', { ns: 'common' })}
+          </DropdownItem>
+        </Dropdown>
+      </div>
     );
   }
 

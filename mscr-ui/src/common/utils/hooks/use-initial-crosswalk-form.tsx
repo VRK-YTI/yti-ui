@@ -1,8 +1,8 @@
-import { SchemaFormType } from '@app/common/interfaces/schema.interface';
+import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import { useTranslation } from 'next-i18next';
 
-// Here we need initial schema form data defined in SchemaFormType
-export function useInitialSchemaForm(): SchemaFormType {
+// Here we need initial crosswalk form data defined in CrosswalkFormType
+export function useInitialCrosswalkForm(): CrosswalkFormType {
   const { t } = useTranslation('admin');
 
   return {
@@ -33,5 +33,7 @@ export function useInitialSchemaForm(): SchemaFormType {
       },
     ],
     organizations: [],
+    sourceSchema: '',
+    targetSchema: '',
   };
 }

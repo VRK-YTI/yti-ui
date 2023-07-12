@@ -12,11 +12,12 @@ export interface Schema {
   description: {
     [key: string]: string;
   };
-  languages:string,
+  languages:[string],
   organiztaions: [string];
 }
 
 export interface SchemaFormType {
+   pid:string;
    format:string;
    label:string;
    languages: (LanguageBlockType & { selected: boolean })[];

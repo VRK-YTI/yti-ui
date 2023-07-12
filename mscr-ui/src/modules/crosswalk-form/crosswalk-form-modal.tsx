@@ -10,7 +10,6 @@ import {
   Paragraph,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import ModelForm from '.';
 import { FormErrors, validateForm } from './validate-form';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
@@ -22,6 +21,9 @@ import generatePayload from './generate-payload';
 import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
+import { useInitialCrosswalkForm } from '@app/common/utils/hooks/use-initial-crosswalk-form';
+import { usePutCrosswalkMutation } from '@app/common/components/crosswalk/crosswalk.slice';
+import CrosswalkForm from '.';
 
 interface CrosswalkFormModalProps {
   refetch: () => void;
@@ -29,18 +31,20 @@ interface CrosswalkFormModalProps {
 
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
-export default function SchemaFormModal({ refetch }: CrosswalkFormModalProps) {
+export default function CrosswalkFormModal({
+  refetch,
+}: CrosswalkFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
   const [visible, setVisible] = useState(false);
-  const [modelFormInitialData] = useState(useInitialModelForm());
-  const [formData, setFormData] = useState(modelFormInitialData);
+  const [crosswalkFormInitialData] = useState(useInitialCrosswalkForm());
+  const [formData, setFormData] = useState(crosswalkFormInitialData);
   const [errors, setErrors] = useState<FormErrors>();
   const [userPosted, setUserPosted] = useState(false);
   const [getAuthenticatedUser, authenticateUser] =
     useGetAuthenticatedUserMutMutation();
-  const [putModel, result] = usePutModelMutation();
+  const [putCrosswalk, result] = usePutCrosswalkMutation();
 
   const handleOpen = () => {
     setVisible(true);
@@ -50,16 +54,15 @@ export default function SchemaFormModal({ refetch }: CrosswalkFormModalProps) {
   const handleClose = useCallback(() => {
     setVisible(false);
     setUserPosted(false);
-    setFormData(modelFormInitialData);
-  }, [modelFormInitialData]);
+    setFormData(crosswalkFormInitialData);
+  }, [crosswalkFormInitialData]);
 
   useEffect(() => {
     if (userPosted && result.isSuccess) {
       refetch();
       handleClose();
-      router.push(`/model/${formData.prefix}`);
     }
-  }, [result, refetch, userPosted, handleClose, router, formData.prefix]);
+  }, [result, refetch, userPosted, handleClose, router]);
 
   const handleSubmit = () => {
     setUserPosted(true);
@@ -76,7 +79,7 @@ export default function SchemaFormModal({ refetch }: CrosswalkFormModalProps) {
 
     const payload = generatePayload(formData);
 
-    putModel(payload);
+    putCrosswalk(payload);
   };
 
   useEffect(() => {
@@ -88,7 +91,7 @@ export default function SchemaFormModal({ refetch }: CrosswalkFormModalProps) {
     setErrors(errors);
   }, [userPosted, formData]);
 
-  if (!HasPermission({ actions: ['CREATE_DATA_MODEL'] })) {
+  if (!HasPermission({ actions: ['CREATE_CROSSWALK'] })) {
     return null;
   }
 
@@ -99,7 +102,7 @@ export default function SchemaFormModal({ refetch }: CrosswalkFormModalProps) {
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}
       >
-        {t('add-new-schema')}
+        {'Add New Crosswalk'}
       </Button>
 
       <Modal
@@ -109,11 +112,11 @@ export default function SchemaFormModal({ refetch }: CrosswalkFormModalProps) {
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
-          <ModalTitle>{t('add-new-schema')}</ModalTitle>
+          <ModalTitle>{'Add New Crosswalk'}</ModalTitle>
           <Paragraph style={{ marginBottom: '30px' }}>
-            {t('add-new-model-description')}
+            {'Add New Crosswalk Description'}
           </Paragraph>
-          <ModelForm
+          <CrosswalkForm
             formData={formData}
             setFormData={setFormData}
             userPosted={userPosted}

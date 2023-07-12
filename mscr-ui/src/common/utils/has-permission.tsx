@@ -26,6 +26,11 @@ const actions = [
   'CREATE_ATTRIBUTE',
   'EDIT_ATTRIBUTE',
   'DELETE_ATTRIBUTE',
+  'CREATE_SCHEMA',
+  'EDIT_SCHEMA',
+  'DELETE_SCHEMA',
+  'CREATE_CROSSWALK',
+  'DELETE_CROSSWALK',
 ] as const;
 
 export type Actions = typeof actions[number];

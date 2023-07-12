@@ -29,6 +29,10 @@ interface SchemaFormModalProps {
   refetch: () => void;
 }
 
+interface SchemaProps {
+  pid: string;
+}
+
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
 export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
@@ -57,10 +61,11 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
 
   useEffect(() => {
     if (userPosted && result.isSuccess) {
+      //Get the pid from the result
       refetch();
       handleClose();
       // After post route to  saved schema get by PID
-      // router.push(`/schema/${formData.pid}`);
+      router.push(`/schema/${result.data.pid}`);
     }
   }, [result, refetch, userPosted, handleClose, router, formData]);
 
@@ -86,13 +91,12 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
     if (!userPosted) {
       return;
     }
-
     const errors = validateForm(formData);
     setErrors(errors);
   }, [userPosted, formData]);
 
   // Need to add action type create_schema
-  if (!HasPermission({ actions: ['CREATE_DATA_MODEL'] })) {
+  if (!HasPermission({ actions: ['CREATE_SCHEMA'] })) {
     return null;
   }
 
@@ -115,7 +119,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
         <ModalContent>
           <ModalTitle>{t('add-new-schema')}</ModalTitle>
           <Paragraph style={{ marginBottom: '30px' }}>
-            {t('add-new-model-description')}
+            {t('add-new-schema-description')}
           </Paragraph>
           <ModelForm
             formData={formData}
@@ -138,7 +142,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
             />
           )}
 
-          <Button onClick={() => handleSubmit()}>{t('create-model')}</Button>
+          <Button onClick={() => handleSubmit()}>{t('create-schema')}</Button>
           <Button variant="secondary" onClick={() => handleClose()}>
             {t('cancel')}
           </Button>
