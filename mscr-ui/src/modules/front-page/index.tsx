@@ -74,8 +74,7 @@ export default function FrontPage() {
       />
       <Separator isLarge />
       <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>
-      <Separator />
-      <UpdateWithFileModal />
+    
     </main>
   );
 }

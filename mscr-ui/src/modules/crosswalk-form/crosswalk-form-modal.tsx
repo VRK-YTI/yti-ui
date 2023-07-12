@@ -12,7 +12,6 @@ import {
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import ModelForm from '.';
 import { FormErrors, validateForm } from './validate-form';
-import { useInitialModelForm } from '@app/common/utils/hooks/use-initial-model-form';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
   translateLanguage,
@@ -20,7 +19,6 @@ import {
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import generatePayload from './generate-payload';
-import { usePutModelMutation } from '@app/common/components/model/model.slice';
 import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';

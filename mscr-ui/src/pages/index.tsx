@@ -15,7 +15,6 @@ import {
   getRunningQueriesThunk as getServiceCategoriesRunningQueriesThunk,
 } from '@app/common/components/service-categories/service-categories.slice';
 import { initialUrlState } from 'yti-common-ui/utils/hooks/use-url-state';
-import PageHead from 'yti-common-ui/page-head';
 import {
   getCount,
   getRunningQueriesThunk as getCountRunningQueriesThunk,
@@ -34,12 +33,6 @@ export default function IndexPage(props: IndexPageProps) {
         user={props.user ?? undefined}
         fakeableUsers={props.fakeableUsers}
       >
-        <PageHead
-          baseUrl="https://tietomallit.suomi.fi"
-          title={t('datamodel-title')}
-          description={t('service-description')}
-        />
-
         <FrontPage />
       </Layout>
     </CommonContextProvider>
