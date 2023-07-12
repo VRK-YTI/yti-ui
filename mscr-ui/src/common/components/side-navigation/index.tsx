@@ -13,11 +13,12 @@ export default function SideNavigationPanel({}) {
       <SideNavigation heading="Workspaces" aria-label="Main">
         <SideNavigationItem
           subLevel={1}
+          expanded
           content={<RouterLink href="/">Personal workspace</RouterLink>}
         >
           <SideNavigationItem
             subLevel={2}
-            selected
+            expanded
             content={<RouterLink href="/">Tim's workspace</RouterLink>}
           >
             <SideNavigationItem
@@ -32,14 +33,17 @@ export default function SideNavigationPanel({}) {
         </SideNavigationItem>
         <SideNavigationItem
           subLevel={1}
+          expanded
           content={<RouterLink href="/">Group workspace</RouterLink>}
         >
           <SideNavigationItem
             subLevel={2}
+            expanded
             content={<RouterLink href="/">Dilligent professionals</RouterLink>}
           />
           <SideNavigationItem
             subLevel={2}
+            expanded
             content={<RouterLink href="/">Science 4 ever</RouterLink>}
           />
         </SideNavigationItem>
