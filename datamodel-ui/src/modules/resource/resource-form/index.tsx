@@ -37,7 +37,6 @@ import {
   selectHasChanges,
   setHasChanges,
   setSelected,
-  // setView,
 } from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
 import getApiError from '@app/common/utils/get-api-errors';
@@ -242,12 +241,11 @@ export default function ResourceForm({
           type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
         )
       );
-      // dispatch(
       setView(
         type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-        'info'
+        'info',
+        data.identifier
       );
-      // );
 
       if (isEdit) {
         refetch();

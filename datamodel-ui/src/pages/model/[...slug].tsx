@@ -176,6 +176,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
             applicationProfile: modelType === 'PROFILE' ?? false,
           })
         );
+        store.dispatch(setSelected(resourceId, 'classes', modelId));
 
         await Promise.all(store.dispatch(getClassRunningQueriesThunk()));
       }
@@ -205,6 +206,10 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
         await Promise.all(store.dispatch(getResourceRunningQueriesThunk()));
       }
+    }
+
+    if (query.lang) {
+      store.dispatch(setDisplayLang(query.lang as string));
     }
 
     return {

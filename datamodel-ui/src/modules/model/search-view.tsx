@@ -5,7 +5,6 @@ import {
   selectDisplayLang,
   setHovered,
   setSelected,
-  // setView,
 } from '@app/common/components/model/model.slice';
 import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
@@ -55,7 +54,6 @@ export default function SearchView({ modelId }: { modelId: string }) {
   const handleItemClick = (data: InternalClass) => {
     const resourceModelId = data.namespace.split('/').filter(Boolean).pop();
 
-    // dispatch(setView(getResourceType(data.resourceType), 'info'));
     setView(getResourceType(data.resourceType), 'info');
     dispatch(
       setSelected(

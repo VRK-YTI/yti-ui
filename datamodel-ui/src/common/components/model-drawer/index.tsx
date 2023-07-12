@@ -12,7 +12,6 @@ import {
   displayWarning,
   selectCurrentViewName,
   selectHasChanges,
-  setView,
 } from '../model/model.slice';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -68,21 +67,6 @@ export default function Drawer({ views }: SideNavigationProps) {
   useEffect(() => {
     if (currentView !== activeView?.id) {
       setActiveView(views.find((v) => v.id === currentView));
-    }
-
-    if (
-      currentView === 'info' &&
-      router.query.slug &&
-      router.query.slug.length > 1
-    ) {
-      router.replace({
-        pathname: router.query.slug[0],
-        query: {
-          lang: Array.isArray(router.query.lang)
-            ? router.query.lang[0]
-            : router.query.lang,
-        },
-      });
     }
   }, [activeView, currentView, views, router]);
 

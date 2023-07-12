@@ -5,7 +5,6 @@ import {
   selectResourceView,
   selectSelected,
   setSelected,
-  // setView,
 } from '@app/common/components/model/model.slice';
 import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
@@ -13,7 +12,6 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import HasPermission from '@app/common/utils/has-permission';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { SearchInput, Text } from 'suomifi-ui-components';
@@ -62,7 +60,6 @@ export default function ResourceView({
     )
   );
   const ref = useRef<HTMLDivElement>(null);
-  const router = useRouter();
   const { setView } = useSetView();
   const displayLang = useSelector(selectDisplayLang());
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -85,7 +82,9 @@ export default function ResourceView({
       applicationProfile,
     },
     {
-      skip: !globalSelected.id,
+      skip:
+        !['associations', 'attributes'].includes(globalSelected.type) ||
+        !globalSelected.id,
     }
   );
 
@@ -95,12 +94,11 @@ export default function ResourceView({
   };
 
   const handleShowResource = (id: string, modelPrefix: string) => {
-    // dispatch(
     setView(
       type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-      'info'
+      'info',
+      id
     );
-    // );
     dispatch(
       setSelected(
         id,
@@ -108,26 +106,14 @@ export default function ResourceView({
         modelPrefix
       )
     );
-    router.replace({
-      pathname: `${modelId}/${
-        type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
-      }/${modelPrefix !== modelId ? `${modelPrefix}:` : ''}${id}`,
-      query: {
-        lang: Array.isArray(router.query.lang)
-          ? router.query.lang[0]
-          : router.query.lang,
-      },
-    });
   };
 
   const handleReturn = () => {
     dispatch(resetSelected());
-    // dispatch(
     setView(
       type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
       'list'
     );
-    // );
     dispatch(resetResource());
     refetch();
 
@@ -137,12 +123,11 @@ export default function ResourceView({
   };
 
   const handleFormReturn = () => {
-    // dispatch(
     setView(
       type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-      'info'
+      'info',
+      globalSelected.id
     );
-    // );
     dispatch(resetResource());
 
     if (isEdit) {
@@ -172,12 +157,10 @@ export default function ResourceView({
       );
     }
 
-    // dispatch(
     setView(
       type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
       'edit'
     );
-    // );
 
     if (isEdit) {
       setIsEdit(false);
@@ -186,12 +169,10 @@ export default function ResourceView({
 
   const handleEdit = () => {
     if (resourceData) {
-      // dispatch(
       setView(
         type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
         'edit'
       );
-      // );
       dispatch(setResource(resourceToResourceFormType(resourceData)));
       setIsEdit(true);
     }

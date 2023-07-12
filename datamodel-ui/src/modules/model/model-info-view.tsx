@@ -1,6 +1,5 @@
 import {
   setHasChanges,
-  // setView,
   useGetModelQuery,
 } from '@app/common/components/model/model.slice';
 import { useTranslation } from 'next-i18next';
@@ -98,7 +97,6 @@ export default function ModelInfoView() {
 
   const handleEditViewItemClick = (setItem: (value: boolean) => void) => {
     setItem(true);
-    // dispatch(setView('info', 'edit'));
     setView('info', 'edit');
     setShowTooltip(false);
   };
