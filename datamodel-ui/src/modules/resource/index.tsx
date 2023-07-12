@@ -34,6 +34,7 @@ import ResourceModal from './resource-modal';
 import ResourceForm from './resource-form';
 import { resourceToResourceFormType } from './utils';
 import useSetView from '@app/common/utils/hooks/use-set-view';
+import useSetPage from '@app/common/utils/hooks/use-set-page';
 
 interface ResourceViewProps {
   modelId: string;
@@ -61,9 +62,10 @@ export default function ResourceView({
   );
   const ref = useRef<HTMLDivElement>(null);
   const { setView } = useSetView();
+  const { setPage, getPage } = useSetPage();
   const displayLang = useSelector(selectDisplayLang());
   const [headerHeight, setHeaderHeight] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(getPage());
   const [query, setQuery] = useState('');
   const [isEdit, setIsEdit] = useState(false);
 
@@ -273,7 +275,10 @@ export default function ResourceView({
             currentPage={currentPage}
             maxPages={Math.ceil((data?.totalHitCount ?? 0) / 20)}
             maxTotal={20}
-            setCurrentPage={(number) => setCurrentPage(number)}
+            setCurrentPage={(number) => {
+              setCurrentPage(number);
+              setPage(number);
+            }}
           />
         </DrawerContent>
       </>

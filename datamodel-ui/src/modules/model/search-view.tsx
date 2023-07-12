@@ -10,6 +10,7 @@ import { useQueryInternalResourcesQuery } from '@app/common/components/search-in
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import useSetPage from '@app/common/utils/hooks/use-set-page';
 import useSetView from '@app/common/utils/hooks/use-set-view';
 import { translateResourceType } from '@app/common/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
@@ -26,11 +27,13 @@ export default function SearchView({ modelId }: { modelId: string }) {
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
   const { setView } = useSetView();
+  const { setPage, getPage } = useSetPage();
   const dispatch = useStoreDispatch();
   const displayLang = useSelector(selectDisplayLang());
   const [headerHeight, setHeaderHeight] = useState(0);
   const [query, setQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(getPage());
+
   const { data } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
@@ -147,7 +150,10 @@ export default function SearchView({ modelId }: { modelId: string }) {
               currentPage={currentPage}
               maxPages={Math.ceil((data?.totalHitCount ?? 0) / 20)}
               maxTotal={20}
-              setCurrentPage={(number) => setCurrentPage(number)}
+              setCurrentPage={(number) => {
+                setCurrentPage(number);
+                setPage(number);
+              }}
             />
           </>
         ) : (

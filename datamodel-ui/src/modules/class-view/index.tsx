@@ -33,6 +33,7 @@ import { useSelector } from 'react-redux';
 import ApplicationProfileFlow from './application-profile-flow';
 import ClassInfo from './class-info';
 import useSetView from '@app/common/utils/hooks/use-set-view';
+import useSetPage from '@app/common/utils/hooks/use-set-page';
 
 interface ClassViewProps {
   modelId: string;
@@ -52,8 +53,9 @@ export default function ClassView({
   const dispatch = useStoreDispatch();
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
   const { setView } = useSetView();
+  const { setPage, getPage } = useSetPage();
   const displayLang = useSelector(selectDisplayLang());
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(getPage());
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
@@ -288,7 +290,10 @@ export default function ClassView({
             currentPage={currentPage}
             maxPages={Math.ceil((data?.totalHitCount ?? 0) / 20)}
             maxTotal={20}
-            setCurrentPage={(number) => setCurrentPage(number)}
+            setCurrentPage={(number) => {
+              setCurrentPage(number);
+              setPage(number);
+            }}
           />
         </DrawerContent>
       </>
