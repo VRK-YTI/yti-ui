@@ -184,6 +184,7 @@
   "missing-prefix": "",
   "namespace": "",
   "namespace-is-not-valid": "",
+  "namespace-missing-info": "",
   "namespace-with-examples": "",
   "no-terminologies-available": "",
   "no-work-group-comment": "",

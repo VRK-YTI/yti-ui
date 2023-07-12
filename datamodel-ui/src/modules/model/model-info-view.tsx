@@ -15,6 +15,7 @@ import {
 } from 'suomifi-ui-components';
 import { BasicBlock, MultilingualBlock } from 'yti-common-ui/block';
 import {
+  ADMIN_EMAIL,
   getIsPartOfWithId,
   getOrganizationsWithId,
   getUri,
@@ -294,14 +295,14 @@ export default function ModelInfoView() {
             href={`mailto:${
               modelInfo.contact && modelInfo.contact !== ''
                 ? modelInfo.contact
-                : 'yhteentoimivuus@dvv.fi'
+                : ADMIN_EMAIL
             }?subject=${getLanguageVersion({
               data: modelInfo.label,
               lang: i18n.language,
             })}`}
             labelNewWindow={t('link-opens-new-window-external')}
           >
-            {modelInfo.contact ?? 'yhteentoimivuus@dvv.fi'}
+            {modelInfo.contact ?? ADMIN_EMAIL}
           </ExternalLink>
         </BasicBlock>
       </DrawerContent>

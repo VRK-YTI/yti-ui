@@ -184,6 +184,7 @@
   "missing-prefix": "Tietomallin tunnusta ei ole määritelty",
   "namespace": "Nimiavaruus",
   "namespace-is-not-valid": "Nimiavaruus ei ole laillisessa muodossa",
+  "namespace-missing-info": "Mikäli et löydä tarvitsemaasi tietomallia, ota yhteyttä ylläpitoon",
   "namespace-with-examples": "Nimiavaruus (URI, URN tms.)",
   "no-terminologies-available": "Sanastoja ei saatavilla",
   "no-work-group-comment": "Ei työryhmän sisäistä kommenttia",

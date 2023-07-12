@@ -18,6 +18,7 @@ import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import HasPermission from '@app/common/utils/has-permission';
 import { useSelector } from 'react-redux';
 import { selectDisplayLang } from '@app/common/components/model/model.slice';
+import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 
 export default function CommonViewContent({
   modelId,
@@ -362,7 +363,7 @@ export default function CommonViewContent({
         {translateCommonForm('contact-description', data.type, t)}
         <ExternalLink
           href={`mailto:${
-            data.contact ?? 'yhteentoimivuus@dvv.fi'
+            data.contact ?? ADMIN_EMAIL
           }?subject=${getLanguageVersion({
             data: data.label,
             lang: displayLang ?? i18n.language,

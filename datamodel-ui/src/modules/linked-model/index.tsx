@@ -5,6 +5,7 @@ import {
   Chip,
   ExternalLink,
   IconPlus,
+  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
@@ -17,6 +18,9 @@ import { useGetSearchModelsQuery } from '@app/common/components/search-models/se
 import { useTranslation } from 'next-i18next';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import isURL from 'validator/lib/isURL';
+import { useGetNamespacesQuery } from '@app/common/components/namespaces/namespaces.slice';
+import { WideSingleSelect } from '../model-form/model-form.styles';
+import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 
 export default function LinkedModel({
   initialData,
@@ -78,6 +82,10 @@ export default function LinkedModel({
     },
     { skip: keyword === '' }
   );
+
+  const { data: namespaces } = useGetNamespacesQuery(void null, {
+    skip: !showExternalForm,
+  });
 
   const setDataValue = (key: keyof typeof data, value: string) => {
     if (userPosted && Object.values(errors).some((val) => val === true)) {
@@ -214,7 +222,7 @@ export default function LinkedModel({
         <ModalTitle>{t('add-reference-to-data-model')}</ModalTitle>
 
         <ContentWrapper>
-          <div>
+          <div className="namespaceInternal">
             <TextInput
               labelText={t('search-data-model')}
               onChange={(e) => setKeyword(e?.toString() ?? '')}
@@ -317,6 +325,34 @@ export default function LinkedModel({
         <ModalTitle>{t('add-reference-to-data-model-outside')}</ModalTitle>
 
         <ContentWrapper>
+          <WideSingleSelect
+            labelText={t('namespace-with-examples')}
+            items={
+              namespaces?.map((ns) => ({
+                uniqueItemId: ns,
+                labelText: ns,
+              })) ?? []
+            }
+            visualPlaceholder={t('input-uri-namespace')}
+            clearButtonLabel=""
+            itemAdditionHelpText=""
+            ariaOptionsAvailableText=""
+            onItemSelect={(e) => setDataValue('namespace', e?.toString() ?? '')}
+            id="namespaces-dropdown"
+            status={userPosted && errors.namespace ? 'error' : 'default'}
+            statusText={
+              userPosted && errors.namespace ? t('namespace-is-not-valid') : ''
+            }
+          />
+          <InlineAlert>
+            {t('namespace-missing-info')}{' '}
+            <ExternalLink
+              href={`mailto:${ADMIN_EMAIL}`}
+              labelNewWindow={t('link-opens-new-window-external')}
+            >
+              {ADMIN_EMAIL}
+            </ExternalLink>
+          </InlineAlert>
           <TextInput
             labelText={t('data-model-name')}
             visualPlaceholder={t('input-data-model-name')}
@@ -324,18 +360,6 @@ export default function LinkedModel({
             onChange={(e) => setDataValue('name', e?.toString() ?? '')}
             status={userPosted && errors.name ? 'error' : 'default'}
             id="data-model-name-input"
-          />
-
-          <TextInput
-            labelText={t('namespace-with-examples')}
-            visualPlaceholder={t('input-uri-namespace')}
-            fullWidth
-            onChange={(e) => setDataValue('namespace', e?.toString() ?? '')}
-            status={userPosted && errors.namespace ? 'error' : 'default'}
-            statusText={
-              userPosted && errors.namespace ? t('namespace-is-not-valid') : ''
-            }
-            id="namespace-input"
           />
 
           <TextInput
