@@ -18,6 +18,7 @@ import { User } from 'yti-common-ui/interfaces/user.interface';
 import MSCRSideBar from '../sidebar/MSCRSideBar';
 import { Block } from 'suomifi-ui-components';
 import SideNavigationPanel from '../side-navigation';
+import Title from 'yti-common-ui/title';
 
 export default function Layout({
   children,
@@ -85,11 +86,15 @@ export default function Layout({
           />
 
           <Block style={styles.navigationMainRow}>
-            {/* <MSCRSideBar /> */}
             <SideNavigationPanel />
             <ContentContainer>
               {alerts && alerts}
               <MarginContainer $breakpoint={breakpoint}>
+                <Title
+                  title={
+                    user ? user.firstName + `'s workspace` : 'Anonymous user'
+                  }
+                />
                 {children}
               </MarginContainer>
             </ContentContainer>

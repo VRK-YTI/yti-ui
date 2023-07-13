@@ -98,7 +98,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(
       store.dispatch(getServiceCategoriesRunningQueriesThunk())
     );
-    await Promise.all(store.dispatch(getOrganizationsRunningQueriesThunk())); 
+    await Promise.all(store.dispatch(getOrganizationsRunningQueriesThunk()));
     await Promise.all(store.dispatch(getCountRunningQueriesThunk()));
 
     return {};
