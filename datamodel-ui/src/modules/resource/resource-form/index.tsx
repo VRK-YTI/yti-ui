@@ -37,7 +37,6 @@ import {
   selectHasChanges,
   setHasChanges,
   setSelected,
-  setView,
 } from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
 import getApiError from '@app/common/utils/get-api-errors';
@@ -48,6 +47,7 @@ import ApplicationProfileTop from './components/application-profile-top';
 import AssociationRestrictions from './components/association-restrictions';
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import ResourceModal from '../resource-modal';
+import useSetView from '@app/common/utils/hooks/use-set-view';
 
 interface ResourceFormProps {
   type: ResourceType;
@@ -79,6 +79,7 @@ export default function ResourceForm({
   const dispatch = useStoreDispatch();
   const data = useSelector(selectResource());
   const hasChanges = useSelector(selectHasChanges());
+  const { setView } = useSetView();
   const [userPosted, setUserPosted] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [errors, setErrors] = useState(validateForm(data));
@@ -240,11 +241,10 @@ export default function ResourceForm({
           type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
         )
       );
-      dispatch(
-        setView(
-          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-          'info'
-        )
+      setView(
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        'info',
+        data.identifier
       );
 
       if (isEdit) {
@@ -277,6 +277,7 @@ export default function ResourceForm({
     data,
     refetch,
     isEdit,
+    setView,
   ]);
 
   return (

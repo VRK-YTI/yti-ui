@@ -5,7 +5,6 @@ import {
   selectResourceView,
   selectSelected,
   setSelected,
-  setView,
 } from '@app/common/components/model/model.slice';
 import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
@@ -13,7 +12,6 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import HasPermission from '@app/common/utils/has-permission';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { SearchInput, Text } from 'suomifi-ui-components';
@@ -35,6 +33,8 @@ import {
 import ResourceModal from './resource-modal';
 import ResourceForm from './resource-form';
 import { resourceToResourceFormType } from './utils';
+import useSetView from '@app/common/utils/hooks/use-set-view';
+import useSetPage from '@app/common/utils/hooks/use-set-page';
 
 interface ResourceViewProps {
   modelId: string;
@@ -61,10 +61,11 @@ export default function ResourceView({
     )
   );
   const ref = useRef<HTMLDivElement>(null);
-  const router = useRouter();
+  const { setView } = useSetView();
+  const { setPage, getPage } = useSetPage();
   const displayLang = useSelector(selectDisplayLang());
   const [headerHeight, setHeaderHeight] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(getPage());
   const [query, setQuery] = useState('');
   const [isEdit, setIsEdit] = useState(false);
 
@@ -83,7 +84,9 @@ export default function ResourceView({
       applicationProfile,
     },
     {
-      skip: !globalSelected.id,
+      skip:
+        !['associations', 'attributes'].includes(globalSelected.type) ||
+        !globalSelected.id,
     }
   );
 
@@ -93,11 +96,10 @@ export default function ResourceView({
   };
 
   const handleShowResource = (id: string, modelPrefix: string) => {
-    dispatch(
-      setView(
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-        'info'
-      )
+    setView(
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+      'info',
+      id
     );
     dispatch(
       setSelected(
@@ -106,25 +108,13 @@ export default function ResourceView({
         modelPrefix
       )
     );
-    router.replace({
-      pathname: `${modelId}/${
-        type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
-      }/${modelPrefix !== modelId ? `${modelPrefix}:` : ''}${id}`,
-      query: {
-        lang: Array.isArray(router.query.lang)
-          ? router.query.lang[0]
-          : router.query.lang,
-      },
-    });
   };
 
   const handleReturn = () => {
     dispatch(resetSelected());
-    dispatch(
-      setView(
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-        'list'
-      )
+    setView(
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+      'list'
     );
     dispatch(resetResource());
     refetch();
@@ -135,11 +125,10 @@ export default function ResourceView({
   };
 
   const handleFormReturn = () => {
-    dispatch(
-      setView(
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-        'info'
-      )
+    setView(
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+      'info',
+      globalSelected.id
     );
     dispatch(resetResource());
 
@@ -170,11 +159,9 @@ export default function ResourceView({
       );
     }
 
-    dispatch(
-      setView(
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-        'edit'
-      )
+    setView(
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+      'edit'
     );
 
     if (isEdit) {
@@ -184,11 +171,9 @@ export default function ResourceView({
 
   const handleEdit = () => {
     if (resourceData) {
-      dispatch(
-        setView(
-          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-          'edit'
-        )
+      setView(
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        'edit'
       );
       dispatch(setResource(resourceToResourceFormType(resourceData)));
       setIsEdit(true);
@@ -290,7 +275,10 @@ export default function ResourceView({
             currentPage={currentPage}
             maxPages={Math.ceil((data?.totalHitCount ?? 0) / 20)}
             maxTotal={20}
-            setCurrentPage={(number) => setCurrentPage(number)}
+            setCurrentPage={(number) => {
+              setCurrentPage(number);
+              setPage(number);
+            }}
           />
         </DrawerContent>
       </>
