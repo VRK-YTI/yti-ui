@@ -17,7 +17,10 @@
     "lint-staged": "lint-staged"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@fontsource/source-sans-pro": "^4.5.9",
+    "@mui/material": "^5.14.0",
     "@reduxjs/toolkit": "^1.8.2",
     "axios": "^0.27.2",
     "iron-session": "^6.2.1",

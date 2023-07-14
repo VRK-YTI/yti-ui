@@ -26,6 +26,7 @@ import { User } from 'yti-common-ui/interfaces/user.interface';
 import GroupWorkspace from '../../modules/group-home-component';
 import PersonalWorkspace from '../../modules/personal-home';
 import { useEffect } from 'react';
+import BasicTable from '@app/common/components/table';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -75,6 +76,8 @@ export default function IndexPage(props: IndexPageProps) {
           slug={(router.query.homepage as string) ?? undefined}
           user={props.user ?? undefined}
         />
+
+        <BasicTable />
 
         <FrontPage />
       </Layout>
