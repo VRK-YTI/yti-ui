@@ -20,7 +20,6 @@ import {
   getCount,
   getRunningQueriesThunk as getCountRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
-import PersonalWorkspace from '@app/modules/personal-home';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -40,9 +39,7 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('datamodel-title')}
           description={t('service-description')}
         />
-
-        <PersonalWorkspace user={props.user ?? undefined} />
-
+        props.children
         <FrontPage />
       </Layout>
     </CommonContextProvider>

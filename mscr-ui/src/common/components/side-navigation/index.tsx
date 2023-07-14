@@ -3,10 +3,11 @@ import {
   SideNavigation,
   SideNavigationItem,
 } from 'suomifi-ui-components';
+import { User } from 'yti-common-ui/interfaces/user.interface';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { SideNavigationWrapper } from './side-navigation.styles';
 
-export default function SideNavigationPanel({}) {
+export default function SideNavigationPanel({ user }: { user?: User }) {
   const { breakpoint } = useBreakpoints();
   return (
     <SideNavigationWrapper $breakpoint={breakpoint} id="sidebar">
@@ -14,37 +15,53 @@ export default function SideNavigationPanel({}) {
         <SideNavigationItem
           subLevel={1}
           expanded
-          content={<RouterLink href="/">Personal workspace</RouterLink>}
+          content={
+            <RouterLink href="/personal-home">Personal workspace</RouterLink>
+          }
         >
           <SideNavigationItem
             subLevel={2}
             expanded
-            content={<RouterLink href="/">Tim's workspace</RouterLink>}
+            content={
+              <RouterLink href="/personal-home">
+                {user?.firstName}'s workspace
+              </RouterLink>
+            }
           >
             <SideNavigationItem
               subLevel={3}
-              content={<RouterLink href="/">Workspace content</RouterLink>}
+              content={
+                <RouterLink href="/personal-home">Workspace content</RouterLink>
+              }
             />
             <SideNavigationItem
               subLevel={3}
-              content={<RouterLink href="/">Workspace settings</RouterLink>}
+              content={
+                <RouterLink href="/personal-home">
+                  Workspace settings
+                </RouterLink>
+              }
             />
           </SideNavigationItem>
         </SideNavigationItem>
         <SideNavigationItem
           subLevel={1}
           expanded
-          content={<RouterLink href="/">Group workspace</RouterLink>}
+          content={<RouterLink href="/group-home">Group workspace</RouterLink>}
         >
           <SideNavigationItem
             subLevel={2}
             expanded
-            content={<RouterLink href="/">Dilligent professionals</RouterLink>}
+            content={
+              <RouterLink href="/group-home">
+                Dilligent professionals
+              </RouterLink>
+            }
           />
           <SideNavigationItem
             subLevel={2}
             expanded
-            content={<RouterLink href="/">Science 4 ever</RouterLink>}
+            content={<RouterLink href="/group-home">Science 4 ever</RouterLink>}
           />
         </SideNavigationItem>
       </SideNavigation>

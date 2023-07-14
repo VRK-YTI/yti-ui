@@ -86,15 +86,10 @@ export default function Layout({
           />
 
           <Block style={styles.navigationMainRow}>
-            <SideNavigationPanel />
+            <SideNavigationPanel user={user ?? undefined} />
             <ContentContainer>
               {alerts && alerts}
               <MarginContainer $breakpoint={breakpoint}>
-                <Title
-                  title={
-                    user ? user.firstName + `'s workspace` : 'Anonymous user'
-                  }
-                />
                 {children}
               </MarginContainer>
             </ContentContainer>

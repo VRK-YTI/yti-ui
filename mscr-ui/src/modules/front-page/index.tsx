@@ -58,7 +58,6 @@ export default function FrontPage() {
     refetchServiceCategoriesData();
   };
 
-
   return (
     <main id="main">
       <Title
