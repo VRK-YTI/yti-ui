@@ -15,10 +15,11 @@ import {
 } from 'yti-common-ui/title/title.styles';
 import { translateModelType } from '@app/common/utils/translation-helpers';
 import Separator from 'yti-common-ui/separator';
-import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 import SchemaFormModal from '../schema-form/schema-form-modal';
 import CrosswalkFormModal from '../crosswalk-form/crosswalk-form-modal';
 import { ButtonBlock } from './front-page.styles';
+import PersonalWorkspace from '../personal-home';
+import CreateCrosswalk from '../create-crosswalk';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -77,7 +78,9 @@ export default function FrontPage() {
       <ButtonBlock>
         <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>
         <CrosswalkFormModal refetch={refetchInfo}></CrosswalkFormModal>
+        <CreateCrosswalk></CreateCrosswalk>
       </ButtonBlock>
+      <Separator isLarge />
     </main>
   );
 }

@@ -72,14 +72,14 @@ export default function IndexPage(props: IndexPageProps) {
           description={t('service-description')}
         />
 
+        <FrontPage></FrontPage>
+
         <DisplayedComponent
           slug={(router.query.homepage as string) ?? undefined}
           user={props.user ?? undefined}
         />
 
         <BasicTable />
-
-        <FrontPage />
       </Layout>
     </CommonContextProvider>
   );

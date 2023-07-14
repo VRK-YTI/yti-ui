@@ -5,7 +5,6 @@ import {
 import Layout from '@app/common/components/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
-import FrontPage from '@app/modules/front-page';
 import {
   getOrganizations,
   getRunningQueriesThunk as getOrganizationsRunningQueriesThunk,
@@ -20,6 +19,7 @@ import {
   getRunningQueriesThunk as getCountRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
 import PersonalWorkspace from '@app/modules/personal-home';
+import PageHead from 'yti-common-ui/page-head';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -39,10 +39,7 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('datamodel-title')}
           description={t('service-description')}
         />
-
         <PersonalWorkspace user={props.user ?? undefined} />
-
-        <FrontPage />
       </Layout>
     </CommonContextProvider>
   );
