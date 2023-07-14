@@ -61,6 +61,7 @@ export default function CrosswalkFormModal({
     if (userPosted && result.isSuccess) {
       refetch();
       handleClose();
+      router.push(`/crosswalk/${result.data.pid}`);
     }
   }, [result, refetch, userPosted, handleClose, router]);
 
@@ -78,7 +79,7 @@ export default function CrosswalkFormModal({
     }
 
     const payload = generatePayload(formData);
-
+    console.log(payload);
     putCrosswalk(payload);
   };
 

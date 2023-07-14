@@ -24,6 +24,7 @@ import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import { useInitialSchemaForm } from '@app/common/utils/hooks/use-initial-schema-form';
 import { usePutSchemaMutation } from '@app/common/components/schema/schema.slice';
+import SchemaForm from '.';
 
 interface SchemaFormModalProps {
   refetch: () => void;
@@ -121,7 +122,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
           <Paragraph style={{ marginBottom: '30px' }}>
             {t('add-new-schema-description')}
           </Paragraph>
-          <ModelForm
+          <SchemaForm
             formData={formData}
             setFormData={setFormData}
             userPosted={userPosted}

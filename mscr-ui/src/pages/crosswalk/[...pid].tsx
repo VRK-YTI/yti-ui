@@ -17,9 +17,11 @@ import { getRunningQueriesThunk as getInternalResourcesRunningQueriesThunk } fro
 import { getRunningQueriesThunk as getVisualizationRunningQueriesThunk } from '@app/common/components/visualization/visualization.slice';
 import { useRouter } from 'next/router';
 import { useGetSchemaQuery } from '@app/common/components/schema/schema.slice';
-import { Schema } from '@app/common/interfaces/schema.interface';
 import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 import Separator from 'yti-common-ui/components/separator';
+import { Crosswalk } from '@app/common/interfaces/crosswalk.interface';
+import { useGetCrosswalkQuery } from '@app/common/components/crosswalk/crosswalk.slice';
+import { Paragraph } from 'suomifi-ui-components';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -28,17 +30,17 @@ interface IndexPageProps extends CommonContextState {
 
 export default function SchemaPage(props: IndexPageProps) {
   const { query, asPath } = useRouter();
-  const schemaId = (query?.pid ?? '') as string;
-  let schema: Schema;
+  const crosswalkId = (query?.pid ?? '') as string;
+  let crosswalk: Crosswalk;
 
   const { data, isLoading, isSuccess, isError, error } =
-    useGetSchemaQuery(schemaId);
+    useGetCrosswalkQuery(crosswalkId);
 
   function renderSchema() {
     console.log(data);
-    let schemaContent;
+    let crosswalkContent;
     if (isLoading) {
-      schemaContent = (
+      crosswalkContent = (
         <div className="d-flex justify-content-center">
           <div className="spinner-border" role="status">
             <span className="visually-hidden">Loading...</span>
@@ -46,30 +48,32 @@ export default function SchemaPage(props: IndexPageProps) {
         </div>
       );
     } else if (isSuccess) {
-      schema = data;
-      schemaContent = (
+      crosswalk = data;
+      crosswalkContent = (
         <div className="col-lg-12 mb-3 ">
           <div className="card">
             <div className="card-body">
-              <h5 className="card-title">{schema.pid}</h5>
+              <h5 className="card-title">Crosswalk PID:{crosswalk.pid}</h5>
               <ul>
-                <li>{schema.description?.fi}</li>
-                <li>{schema.description?.en}</li>
+                <h5>Description</h5>
+                <li>{crosswalk.description?.fi}</li>
+                <li>{crosswalk.description?.en}</li>
+                <li>{crosswalk.description?.sv}</li>
               </ul>
+              <Paragraph>
+                <label>Source Schema:{crosswalk.sourceSchema}</label>
+                <label>Target Schema:{crosswalk.targetSchema}</label>
+                <label>Status: {crosswalk.status}</label>
+              </Paragraph>
             </div>
           </div>
           <Separator />
-          <UpdateWithFileModal
-            pid={schemaId}
-            refetch={function (): void {
-              throw new Error('Function not implemented.');
-            }}
-          />
+          <UpdateWithFileModal pid={crosswalkId} />
         </div>
       );
     }
 
-    return schemaContent;
+    return crosswalkContent;
   }
 
   return (

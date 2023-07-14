@@ -63,3 +63,9 @@ export const DownloadIndicator = styled.div`
     animation: ${rotate} 1.2s linear infinite;
   }
 `;
+
+export const ImportDescriptionBlock = styled(Block)`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;

@@ -273,3 +273,22 @@ export function translateDeleteModalError(
       });
   }
 }
+
+export function translateFileUploadError(
+  error: 'none' | 'upload-error' | 'incorrect-file-type',
+  fileTypes: string[],
+  t: TFunction
+) {
+  switch (error) {
+    case 'upload-error':
+      return t('file-upload-error.upload-error', { ns: 'admin' });
+    case 'incorrect-file-type':
+      return t('file-upload-error.incorrect-file-type', {
+        ns: 'admin',
+        count: fileTypes.length,
+        fileTypes: fileTypes.join(', '),
+      });
+    default:
+      return;
+  }
+}

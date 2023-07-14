@@ -1,7 +1,6 @@
 import InlineListBlock from '@app/common/components/inline-list-block';
 import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
-import { ModelFormType } from '@app/common/interfaces/model-form.interface';
-import { ModelTerminology } from '@app/common/interfaces/model.interface';
+import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import { useTranslation } from 'next-i18next';
 import { Button, Label } from 'suomifi-ui-components';
 import { AddBlockWrapper } from './crosswalk-form.styles';
@@ -9,28 +8,26 @@ import { AddBlockWrapper } from './crosswalk-form.styles';
 export default function AddBlock({
   data,
   locale,
-  setTerminologies,
 }: {
-  data: ModelFormType;
+  data: CrosswalkFormType;
   locale: string;
-  setTerminologies: (t: ModelTerminology[]) => void;
 }) {
   const { t } = useTranslation('admin');
-
+  // Need to check if we can add file in the same form?
   return (
     <AddBlockWrapper>
       <InlineListBlock
         label={t('terminologies-in-use')}
         optionalText={t('optional')}
         labelRow={true}
-        addNewComponent={<UpdateWithFileModal />}
-        items={data.terminologies.map((t) => ({
-          id: t.uri,
-          label: t.label[locale],
+        addNewComponent={<UpdateWithFileModal pid={''} />}
+        items={data.languages.map((t) => ({
+          id: t.labelText,
+          label: t.description,
         }))}
-        handleRemoval={(item) =>
-          setTerminologies(data.terminologies.filter((t) => t.uri !== item))
-        }
+        handleRemoval={function (id: string): void {
+          throw new Error('Function not implemented.');
+        }}
       ></InlineListBlock>
 
       <Label htmlFor="codes" optionalText={t('optional')}>

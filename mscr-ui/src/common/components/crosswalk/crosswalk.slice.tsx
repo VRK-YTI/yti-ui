@@ -20,7 +20,7 @@ export const crosswalkApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putCrosswalk: builder.mutation<string, Crosswalk>({
+    putCrosswalk: builder.mutation<Crosswalk, Crosswalk>({
       query: (value) => ({
         url: '/crosswalk',
         method: 'PUT',

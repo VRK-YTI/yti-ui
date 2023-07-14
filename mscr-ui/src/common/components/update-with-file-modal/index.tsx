@@ -14,28 +14,41 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import FileDropArea from 'yti-common-ui/file-drop-area';
-import fakeableUserSlice, {
-  getFakeableUsers,
-  useGetFakeableUsersQuery,
-} from '../fakeable-users/fakeable-users.slice';
-
-import { usePostImportJsonMutation } from '../import/import.slice';
-import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
-  DownloadIndicator,
-  ModalContentWrapper,
-  SuccessIcon,
+  usePostCrosswalkFileMutation,
+  usePostSchemaFileMutation,
+} from '../import/import.slice';
+import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
+import FileUpload from './file-upload';
+import {
   UpdateDescriptionBlock,
+  ImportDescriptionBlock,
 } from './update-with-file-modal.styles';
 
-export default function UpdateWithFileModal() {
+interface UpdateWithFileModalProps {
+  pid: string;
+  unauthenticatedUser?: boolean;
+  refetch: () => void;
+}
+
+export default function UpdateWithFileModal({
+  pid,
+  unauthenticatedUser,
+  refetch,
+}: UpdateWithFileModalProps) {
   const { t } = useTranslation('schema');
+  const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const [userPosted, setUserPosted] = useState(false);
   const [fileData, setFileData] = useState<File | null>();
+  const [fileType, setFileType] = useState<'csv' | 'json' | null>();
   const [getStatusRetries, setGetStatusRetries] = useState(0);
-  const [postImportJson, importJson] = usePostImportJsonMutation();
+  const [startFileUpload, setStartFileUpload] = useState(false);
+  const [postSchemaFile, ImportResponse] = usePostSchemaFileMutation();
+  const [postCrosswalkFile, CrosswalkImportResponse] =
+    usePostCrosswalkFileMutation();
   const [getAuthenticatedUser, authenticatedUser] =
     useGetAuthenticatedUserMutMutation();
 
@@ -44,6 +57,10 @@ export default function UpdateWithFileModal() {
     setIsValid(false);
     setUserPosted(false);
     setFileData(null);
+    setStartFileUpload(false);
+    if (ImportResponse.isSuccess) {
+      alert('File Uploading finished');
+    }
   };
 
   const handleVisible = () => {
@@ -51,32 +68,22 @@ export default function UpdateWithFileModal() {
     setVisible(true);
   };
 
-  const sampleSchema = {
-    format: 'JSONSCHEMA',
-    status: 'INCOMPLETE',
-    label: {
-      en: 'string',
-    },
-    description: {
-      en: 'string',
-    },
-    languages: ['en'],
-    organizations: ['7d3a3c00-5a6b-489b-a3ed-63bb58c26a63'],
-  };
-
   const handlePost = () => {
     setUserPosted(true);
-
-    console.log(getAuthenticatedUser());
-
     if (fileData) {
       const formData = new FormData();
       formData.append('file', fileData);
+      //We need the file upload status to set the progress indication
+      //setStartFileUpload(true);
       setUserPosted(true);
       if (fileData.name.includes('.json')) {
+        setFileType('json');
         console.log('start posting');
-        postImportJson(formData);
-        //postSchema(formData);
+        postSchemaFile({ pid: pid, file: formData });
+      } else if (fileData.name.includes('.csv')) {
+        setFileType('csv');
+        console.log('start posting');
+        postCrosswalkFile({ pid: pid, file: formData });
       }
     }
   };
@@ -98,56 +105,65 @@ export default function UpdateWithFileModal() {
         visible={visible}
         onEscKeyDown={() => handleClose()}
       >
-        {!userPosted ? renderSetup() : renderProcess()}
+        {renderWithStatus()}
       </Modal>
     </>
   );
 
-  function renderSetup() {
+  function renderWithStatus() {
     return (
-      <>
-        <ModalContent>
-          <ModalTitle>{t('schema-file-upload-title')}</ModalTitle>
-          <UpdateDescriptionBlock>
-            <Paragraph>{t('schema-file-upload-description')} </Paragraph>
-          </UpdateDescriptionBlock>
-          <FileDropArea
-            setFileData={setFileData}
-            setIsValid={setIsValid}
-            validFileTypes={['json', 'xslt']}
-            translateFileUploadError={translateFileUploadError}
-          />
+      <Modal
+        appElementId="__next"
+        visible={visible}
+        onEscKeyDown={() => handleClose()}
+        variant={!isSmall ? 'default' : 'smallScreen'}
+      >
+        <ModalContent style={userPosted ? { paddingBottom: '18px' } : {}}>
+          <ModalTitle>
+            {!startFileUpload ? 'upload file' : t('downloading-file')}
+          </ModalTitle>
+          {!startFileUpload ? (
+            <>
+              <ImportDescriptionBlock>
+                <Paragraph>{'import file description'} </Paragraph>
+              </ImportDescriptionBlock>
+
+              <FileDropArea
+                setFileData={setFileData}
+                setIsValid={setIsValid}
+                validFileTypes={['csv', 'json']}
+                translateFileUploadError={translateFileUploadError}
+              />
+            </>
+          ) : (
+            <FileUpload
+              importResponseStatus={
+                fileType === 'json'
+                  ? ImportResponse.status
+                  : ImportResponse.status
+              }
+              handlePost={handlePost}
+              handleClose={handleClose}
+            />
+          )}
         </ModalContent>
-        <ModalFooter>
-          {authenticatedUser.data?.anonymous && (
+        <ModalFooter id="file-import-modal-footer">
+          {unauthenticatedUser && (
             <InlineAlert status="error" role="alert" id="unauthenticated-alert">
               {t('error-occurred_unauthenticated', { ns: 'alert' })}
             </InlineAlert>
           )}
-          <Button disabled={!isValid} onClick={() => handlePost()}>
-            {t('upload-file')}
+          <Button
+            disabled={!isValid || unauthenticatedUser}
+            onClick={handlePost}
+          >
+            {'upload file'}
           </Button>
-          <Button variant="secondary" onClick={() => handleClose()}>
-            {t('cancel')}
+          <Button variant="secondary" onClick={handleClose}>
+            {'cancel'}
           </Button>
         </ModalFooter>
-      </>
-    );
-  }
-
-  function renderProcess() {
-    return (
-      <ModalContentWrapper>
-        <ModalTitle>{t('updating-schema')}</ModalTitle>
-
-        <Button
-          disabled={authenticatedUser.data?.anonymous}
-          variant="secondary"
-          onClick={() => handleClose()}
-        >
-          {t('close')}
-        </Button>
-      </ModalContentWrapper>
+      </Modal>
     );
   }
 }

@@ -5,7 +5,10 @@ import { NewModel } from '@app/common/interfaces/new-model.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
 import isHydrate from '@app/store/isHydrate';
-import { Schema, SchemaFormType } from '@app/common/interfaces/schema.interface';
+import {
+  Schema,
+  SchemaFormType,
+} from '@app/common/interfaces/schema.interface';
 
 export const schemaApi = createApi({
   reducerPath: 'schemaApi',
@@ -17,7 +20,7 @@ export const schemaApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putSchema: builder.mutation<string, SchemaFormType>({
+    putSchema: builder.mutation<Schema, string>({
       query: (value) => ({
         url: '/schema',
         method: 'PUT',

@@ -1,6 +1,4 @@
-import {
-  SchemaFormType,
-} from '@app/common/interfaces/schema.interface';
+import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 
 // here we can create the schema payload
 
@@ -32,6 +30,6 @@ export default function generatePayload(data: SchemaFormType): SchemaFormType {
       .map((l) => l.uniqueItemId),
     organizations: data.organizations.map((o) => o.uniqueItemId),
     status: 'DRAFT',
-    format:'JSONSCHEMA'
+    format: 'JSONSCHEMA',
   };
 }
