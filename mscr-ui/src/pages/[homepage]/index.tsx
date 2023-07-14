@@ -15,11 +15,18 @@ import {
   getRunningQueriesThunk as getServiceCategoriesRunningQueriesThunk,
 } from '@app/common/components/service-categories/service-categories.slice';
 import { initialUrlState } from 'yti-common-ui/utils/hooks/use-url-state';
+import PageHead from 'yti-common-ui/page-head';
 import {
   getCount,
   getRunningQueriesThunk as getCountRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
-import PersonalWorkspace from '@app/modules/personal-home';
+
+import { useRouter } from 'next/router';
+import { User } from 'yti-common-ui/interfaces/user.interface';
+import GroupWorkspace from '../../modules/group-home-component';
+import PersonalWorkspace from '../../modules/personal-home';
+import { useEffect } from 'react';
+import BasicTable from '@app/common/components/table';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -27,6 +34,31 @@ interface IndexPageProps extends CommonContextState {
 
 export default function IndexPage(props: IndexPageProps) {
   const { t } = useTranslation('common');
+
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log(router.query);
+  }, [router.query]);
+
+  function DisplayedComponent({
+    slug,
+    user,
+  }: {
+    slug?: string;
+    user?: User;
+  }): React.ReactElement {
+    if (slug === 'group-home') {
+      console.log('SOMETHING');
+      return <GroupWorkspace />;
+    } else {
+      console.log(slug);
+      console.log('I AM HERE');
+      return <PersonalWorkspace user={user} />;
+    }
+  }
+
+  console.log(router);
 
   return (
     <CommonContextProvider value={props}>
@@ -40,7 +72,12 @@ export default function IndexPage(props: IndexPageProps) {
           description={t('service-description')}
         />
 
-        <PersonalWorkspace user={props.user ?? undefined} />
+        <DisplayedComponent
+          slug={(router.query.homepage as string) ?? undefined}
+          user={props.user ?? undefined}
+        />
+
+        <BasicTable />
 
         <FrontPage />
       </Layout>

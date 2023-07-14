@@ -1,6 +1,6 @@
 import { FakeableUser } from 'yti-common-ui/interfaces/fakeable-user.interface';
 import { User } from 'yti-common-ui/interfaces/user.interface';
-import { default as CommonLayout } from 'yti-common-ui/layout/layout';
+import { default as CommonLayout } from './layout';
 
 interface LayoutProps {
   user?: User | null;
