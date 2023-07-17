@@ -13,6 +13,6 @@ export interface VisualizationType {
   associations: {
     identifier: string;
     label: { [key: string]: string };
-    path: string[];
+    route: string[];
   }[];
 }
