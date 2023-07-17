@@ -14,7 +14,7 @@ import {
 } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import {
-  useGetResourceIdentifierFreeQuery,
+  useGetResourceExistsQuery,
   useMakeLocalCopyPropertyShapeMutation,
 } from '@app/common/components/resource/resource.slice';
 import getApiError from '@app/common/utils/get-api-errors';
@@ -44,7 +44,7 @@ export default function LocalCopyModal({
   const [makeLocalCopy, makeLocalCopyResult] =
     useMakeLocalCopyPropertyShapeMutation();
 
-  const { data: identifierFree, isSuccess } = useGetResourceIdentifierFreeQuery(
+  const { data: resourceAlreadyExists, isSuccess } = useGetResourceExistsQuery(
     { prefix: targetModelId, identifier: newIdentifier },
     { skip: newIdentifier === '' }
   );
@@ -98,9 +98,9 @@ export default function LocalCopyModal({
           onChange={(e) => handleChange(e?.toString() ?? '')}
           debounce={300}
           id="prefix-input"
-          status={isSuccess && !identifierFree ? 'error' : 'default'}
+          status={isSuccess && resourceAlreadyExists ? 'error' : 'default'}
           statusText={
-            isSuccess && !identifierFree ? t('error-prefix-taken') : ''
+            isSuccess && resourceAlreadyExists ? t('error-prefix-taken') : ''
           }
         />
         {makeLocalCopyResult.error && error && (

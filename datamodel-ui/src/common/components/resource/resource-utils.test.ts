@@ -1,7 +1,7 @@
 import {
   ApplicationProfileResourcePutType,
   LibraryResourcePutType,
-  convertToPUT,
+  convertToPayload,
 } from './utils';
 import {
   applicationProfileAssociation,
@@ -17,7 +17,7 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 describe('resource-utils', () => {
   it('should return payload for the most simple new library attribute', () => {
-    const gotten = convertToPUT(libraryAttributeSm, false);
+    const gotten = convertToPayload(libraryAttributeSm, false);
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi' },
@@ -30,7 +30,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the most simple new library association', () => {
-    const gotten = convertToPUT(libraryAssociationSm, false);
+    const gotten = convertToPayload(libraryAssociationSm, false);
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi' },
@@ -42,7 +42,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the entirely filled new library attribute', () => {
-    const gotten = convertToPUT(libraryAttribute, false);
+    const gotten = convertToPayload(libraryAttribute, false);
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
@@ -61,7 +61,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the entirely filled new library association', () => {
-    const gotten = convertToPUT(libraryAssociation, false);
+    const gotten = convertToPayload(libraryAssociation, false);
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
@@ -80,7 +80,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the edited library attribute', () => {
-    const gotten = convertToPUT(libraryAttribute, true);
+    const gotten = convertToPayload(libraryAttribute, true);
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
@@ -98,7 +98,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the edited library association', () => {
-    const gotten = convertToPUT(libraryAssociation, true);
+    const gotten = convertToPayload(libraryAssociation, true);
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
@@ -116,7 +116,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the most simple new application profile attribute', () => {
-    const gotten = convertToPUT(applicationProfileAttributeSm, false, true);
+    const gotten = convertToPayload(applicationProfileAttributeSm, false, true);
 
     const expected: ApplicationProfileResourcePutType = {
       label: { fi: 'label-fi' },
@@ -128,7 +128,11 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the most simple new application profile association', () => {
-    const gotten = convertToPUT(applicationProfileAssociationSm, false, true);
+    const gotten = convertToPayload(
+      applicationProfileAssociationSm,
+      false,
+      true
+    );
 
     const expected: ApplicationProfileResourcePutType = {
       label: { fi: 'label-fi' },
@@ -141,7 +145,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the entirely filled new application profile attribute', () => {
-    const gotten = convertToPUT(applicationProfileAttribute, false, true);
+    const gotten = convertToPayload(applicationProfileAttribute, false, true);
 
     const expected: ApplicationProfileResourcePutType = {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
@@ -167,7 +171,7 @@ describe('resource-utils', () => {
   });
 
   it('should return payload for the entirely filled new application profile association', () => {
-    const gotten = convertToPUT(applicationProfileAssociation, false, true);
+    const gotten = convertToPayload(applicationProfileAssociation, false, true);
 
     const expected: ApplicationProfileResourcePutType = {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },

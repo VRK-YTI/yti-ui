@@ -43,7 +43,7 @@ export interface ApplicationProfileResourcePutType {
   minCount?: number;
 }
 
-export function convertToPUT(
+export function convertToPayload(
   data: ResourceFormType,
   isEdit: boolean,
   applicationProfile?: boolean
@@ -112,4 +112,14 @@ export function convertToPUT(
     ...ret,
     subject: data.concept.conceptURI,
   };
+}
+
+export function pathForResourceType(
+  type: ResourceType,
+  isApplicationProfile?: boolean
+) {
+  if (isApplicationProfile) {
+    return '';
+  }
+  return type === ResourceType.ATTRIBUTE ? '/attribute' : '/association';
 }

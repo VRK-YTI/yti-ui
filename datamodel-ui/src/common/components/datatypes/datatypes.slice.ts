@@ -17,7 +17,7 @@ export const datatypesApi = createApi({
   endpoints: (builder) => ({
     getDatatypes: builder.query<string[], void>({
       query: () => ({
-        url: '/frontend/dataTypes',
+        url: '/frontend/data-types',
         method: 'GET',
       }),
     }),

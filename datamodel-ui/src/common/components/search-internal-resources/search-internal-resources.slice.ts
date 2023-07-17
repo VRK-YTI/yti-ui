@@ -25,8 +25,8 @@ export interface InternalResourcesSearchParams {
 
 function createUrl(obj: InternalResourcesSearchParams): string {
   const basePath = obj.extend
-    ? '/frontend/searchInternalResourcesInfo'
-    : '/frontend/searchInternalResources';
+    ? '/frontend/search-internal-resources-info'
+    : '/frontend/search-internal-resources';
 
   let baseQuery = `${basePath}?query=${obj.query}&pageSize=${
     obj.pageSize ?? 50
