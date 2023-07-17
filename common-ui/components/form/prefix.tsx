@@ -15,7 +15,7 @@ interface PrefixProps {
   setPrefix: (value: string) => void;
   // Using 'any' here same way useMutation() is implemented
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  validatePrefixMutation: UseMutation<any>;
+  modelExistsMutation: UseMutation<any>;
   typeInUri: string;
   error: boolean;
   translations: {
@@ -38,7 +38,7 @@ interface PrefixProps {
 export default function Prefix({
   prefix,
   setPrefix,
-  validatePrefixMutation,
+  modelExistsMutation,
   typeInUri,
   error,
   translations,
@@ -53,7 +53,7 @@ export default function Prefix({
     noAuto ? 'manual' : 'automatic'
   );
   const [prefixValid, setPrefixValid] = useState(true);
-  const [validatePrefix, validPrefix] = validatePrefixMutation();
+  const [validatePrefix, modelExists] = modelExistsMutation();
 
   const handleInputTypeChange = (e: typeof inputType) => {
     setInputType(e);
@@ -121,7 +121,7 @@ export default function Prefix({
             status={
               (prefix !== '' &&
                 (!prefixValid ||
-                  validPrefix.data === (invertCheck ? true : false))) ||
+                  modelExists.data === (invertCheck ? false : true))) ||
               error
                 ? 'error'
                 : 'default'
@@ -129,7 +129,7 @@ export default function Prefix({
             statusText={
               (prefix !== '' &&
                 ((!prefixValid && translations.errorInvalid) ||
-                  (validPrefix.data === (invertCheck ? true : false) &&
+                  (modelExists.data === (invertCheck ? false : true) &&
                     translations.errorTaken))) ||
               ''
             }

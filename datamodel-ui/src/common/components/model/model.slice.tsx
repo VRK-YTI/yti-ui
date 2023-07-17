@@ -20,10 +20,10 @@ export const modelApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putModel: builder.mutation<string, NewModel>({
+    createModel: builder.mutation<string, NewModel>({
       query: (value) => ({
         url: `/model/${value.type === 'LIBRARY' ? 'library' : 'profile'}`,
-        method: 'PUT',
+        method: 'POST',
         data: value,
       }),
     }),
@@ -33,7 +33,7 @@ export const modelApi = createApi({
         method: 'GET',
       }),
     }),
-    postModel: builder.mutation<
+    updateModel: builder.mutation<
       string,
       {
         payload: ModelUpdatePayload;
@@ -45,7 +45,7 @@ export const modelApi = createApi({
         url: `/model/${value.isApplicationProfile ? 'profile' : 'library'}/${
           value.prefix
         }`,
-        method: 'POST',
+        method: 'PUT',
         data: value.payload,
       }),
     }),
@@ -59,14 +59,14 @@ export const modelApi = createApi({
 });
 
 export const {
-  usePutModelMutation,
+  useCreateModelMutation,
   useGetModelQuery,
-  usePostModelMutation,
+  useUpdateModelMutation,
   useDeleteModelMutation,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
-export const { putModel, getModel, postModel, deleteModel } =
+export const { createModel, getModel, updateModel, deleteModel } =
   modelApi.endpoints;
 
 // Slice setup below

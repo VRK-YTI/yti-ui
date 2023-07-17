@@ -18,7 +18,7 @@ export const serviceCategoriesApi = createApi({
   endpoints: (builder) => ({
     getServiceCategories: builder.query<ServiceCategory[], string>({
       query: (value) => ({
-        url: `/frontend/serviceCategories?sortLang=${value}`,
+        url: `/frontend/service-categories?sortLang=${value}`,
         method: 'GET',
       }),
     }),

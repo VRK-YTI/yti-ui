@@ -12,22 +12,14 @@ import {
   initialAppAssociation,
   initialAppAttribute,
 } from '@app/common/interfaces/resource-form.interface';
-import { convertToPUT } from './utils';
+import { convertToPayload, pathForResourceType } from './utils';
+import { pathForModelType } from '@app/common/utils/api-utils';
 
-function pathForModelType(isApplicationProfile?: boolean) {
-  return isApplicationProfile ? 'profile/' : 'library/';
+interface ResourceData {
+  modelId: string;
+  data: ResourceFormType;
+  applicationProfile?: boolean;
 }
-
-function pathForResourceType(
-  type: ResourceType,
-  isApplicationProfile?: boolean
-) {
-  if (isApplicationProfile) {
-    return '';
-  }
-  return type === ResourceType.ATTRIBUTE ? '/attribute' : '/association';
-}
-
 export const resourceApi = createApi({
   reducerPath: 'resourceApi',
   baseQuery: getDatamodelApiBaseQuery((headers) => ({
@@ -41,32 +33,24 @@ export const resourceApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putResource: builder.mutation<
-      null,
-      {
-        modelId: string;
-        data: ResourceFormType;
-        resourceId?: string;
-        applicationProfile?: boolean;
-      }
-    >({
+    updateResource: builder.mutation<null, ResourceData>({
       query: (value) => ({
-        url: !value.resourceId
-          ? `/resource/${pathForModelType(value.applicationProfile)}${
-              value.modelId
-            }${pathForResourceType(value.data.type, value.applicationProfile)}`
-          : `/resource/${pathForModelType(value.applicationProfile)}${
-              value.modelId
-            }${pathForResourceType(
-              value.data.type,
-              value.applicationProfile
-            )}/${value.resourceId}`,
+        url: `/resource/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }${pathForResourceType(value.data.type, value.applicationProfile)}/${
+          value.data.identifier
+        }`,
         method: 'PUT',
-        data: convertToPUT(
-          value.data,
-          value.resourceId ? true : false,
-          value.applicationProfile
-        ),
+        data: convertToPayload(value.data, true, value.applicationProfile),
+      }),
+    }),
+    createResource: builder.mutation<null, ResourceData>({
+      query: (value) => ({
+        url: `/resource/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }${pathForResourceType(value.data.type, value.applicationProfile)}`,
+        method: 'POST',
+        data: convertToPayload(value.data, false, value.applicationProfile),
       }),
     }),
     getResource: builder.query<
@@ -95,7 +79,7 @@ export const resourceApi = createApi({
         method: 'DELETE',
       }),
     }),
-    getResourceIdentifierFree: builder.query<
+    getResourceExists: builder.query<
       boolean,
       {
         prefix: string;
@@ -103,7 +87,7 @@ export const resourceApi = createApi({
       }
     >({
       query: (props) => ({
-        url: `/resource/${props.prefix}/free-identifier/${props.identifier}`,
+        url: `/resource/${props.prefix}/${props.identifier}/exists`,
         method: 'GET',
       }),
     }),
@@ -272,13 +256,15 @@ export function resetResource(): AppThunk {
     );
 }
 
-export const { putResource, getResource } = resourceApi.endpoints;
+export const { updateResource, createResource, getResource } =
+  resourceApi.endpoints;
 
 export const {
-  usePutResourceMutation,
+  useUpdateResourceMutation,
+  useCreateResourceMutation,
   useGetResourceQuery,
   useDeleteResourceMutation,
-  useGetResourceIdentifierFreeQuery,
+  useGetResourceExistsQuery,
   useMakeLocalCopyPropertyShapeMutation,
   util: { getRunningQueriesThunk, getRunningMutationsThunk },
 } = resourceApi;

@@ -25,7 +25,7 @@ import {
   selectDisplayLang,
   setHasChanges,
   useGetModelQuery,
-  usePostModelMutation,
+  useUpdateModelMutation,
 } from '@app/common/components/model/model.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import generatePayload from '../model/generate-payload';
@@ -77,7 +77,7 @@ export default function Documentation({
   });
 
   const { data: modelData, refetch } = useGetModelQuery(modelId);
-  const [postModel, result] = usePostModelMutation();
+  const [updateModel, result] = useUpdateModelMutation();
 
   const handleSubmit = () => {
     disableConfirmation();
@@ -89,7 +89,7 @@ export default function Documentation({
 
     const payload = generatePayload({ ...modelData, documentation: value });
 
-    postModel({
+    updateModel({
       payload: payload,
       prefix: modelData.prefix,
       isApplicationProfile: modelData.type === 'PROFILE',
