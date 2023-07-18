@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 
-export const EdgeContent = styled.div<{
-  $labelX: number;
-  $labelY: number;
-  $highlight: boolean;
-}>`
+export const EdgeContent = styled.div.attrs(
+  (props: { $labelX: number; $labelY: number; $highlight: boolean }) => ({
+    style: {
+      transform: `translate(-50%, -50%) translate(${props.$labelX}px, ${props.$labelY}px)`,
+    },
+  })
+)<{ $highlight: boolean }>`
   pointer-events: all;
   position: absolute;
   background: #ffffff;
@@ -14,8 +16,6 @@ export const EdgeContent = styled.div<{
   fontsize: 16px;
   fontweight: 400;
   paddingright: 20px;
-  transform: translate(-50%, -50%)
-    translate(${(props) => props.$labelX}px, ${(props) => props.$labelY}px);
 
   ${(props) =>
     props.$highlight &&
