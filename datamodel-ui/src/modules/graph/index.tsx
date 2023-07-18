@@ -24,6 +24,7 @@ import LabeledEdge from './labeled-edge';
 import { useGetVisualizationQuery } from '@app/common/components/visualization/visualization.slice';
 import { useStoreDispatch } from '@app/store';
 import {
+  selectDisplayLang,
   selectSelected,
   setSelected,
 } from '@app/common/components/model/model.slice';
@@ -44,6 +45,7 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const { project } = useReactFlow();
   const globalSelected = useSelector(selectSelected());
+  const displayLang = useSelector(selectDisplayLang());
   const nodeTypes: NodeTypes = useMemo(
     () => ({ classNode: ClassNode, cornerNode: EdgeCorner }),
     []
@@ -126,14 +128,14 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
     [setEdges, setNodes, project, deleteEdgeById]
   );
 
-  const onNodeClick = useCallback(
-    (e, node) => {
-      if (globalSelected.id !== node.id) {
-        dispatch(setSelected(node.id, 'classes'));
-      }
-    },
-    [dispatch, globalSelected.id]
-  );
+  // const onNodeClick = useCallback(
+  //   (e, node) => {
+  //     if (globalSelected.id !== node.id) {
+  //       dispatch(setSelected(node.id, 'classes'));
+  //     }
+  //   },
+  //   [dispatch, globalSelected.id]
+  // );
 
   const onEdgeClick = useCallback(
     (e, edge) => {
@@ -163,7 +165,7 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
 
   useEffect(() => {
     if (isSuccess) {
-      setNodes(convertToNodes(data, i18n.language));
+      setNodes(convertToNodes(data, displayLang ?? i18n.language));
       setEdges(
         generateInitialEdges(data, deleteEdgeById, splitEdge, i18n.language)
       );
@@ -176,6 +178,7 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
     deleteEdgeById,
     splitEdge,
     i18n.language,
+    displayLang,
   ]);
 
   useEffect(() => {
@@ -203,9 +206,10 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
-        onNodeClick={onNodeClick}
+        // onNodeClick={onNodeClick}
         onEdgeClick={onEdgeClick}
         fitView
+        maxZoom={100}
       >
         {children}
       </ModelFlow>

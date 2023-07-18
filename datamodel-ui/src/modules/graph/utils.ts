@@ -1,6 +1,6 @@
 import { VisualizationType } from '@app/common/interfaces/visualization.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { Edge, MarkerType, Node, XYPosition } from 'reactflow';
+import { Edge, MarkerType, Node, Position, XYPosition } from 'reactflow';
 
 export function convertToNodes(
   data: VisualizationType[],
@@ -91,6 +91,7 @@ export function createNewAssociationEdge(
       type: MarkerType.ArrowClosed,
       height: 30,
       width: 30,
+      color: '#222',
     },
     label: label,
     data: {
@@ -228,4 +229,191 @@ export function handleEdgeDelete(edgeId: string, edges: Edge[]) {
   }
 
   return edges;
+}
+
+function getEdgePosition(node: Node, intersectionPoint: XYPosition) {
+  const n = { ...node.position, ...node };
+  const nx = Math.round(n.x);
+  const ny = Math.round(n.y);
+  const px = Math.round(intersectionPoint.x);
+  const py = Math.round(intersectionPoint.y);
+
+  if (px <= nx + 1) {
+    return Position.Left;
+  }
+  if (px >= nx + (n.width ?? 0) - 1) {
+    return Position.Right;
+  }
+  if (py <= ny + 1) {
+    return Position.Top;
+  }
+  if (py >= n.y + (n.height ?? 0) - 1) {
+    return Position.Bottom;
+  }
+
+  return Position.Top;
+}
+
+function getPoints(
+  source: Node,
+  target: Node
+): {
+  source: XYPosition;
+  target: XYPosition;
+} {
+  if (source.type === 'cornerNode' && target.type === 'cornerNode') {
+    return {
+      source: {
+        x: source.position.x + 20,
+        y: source.position.y,
+      },
+      target: {
+        x: target.position.x + 20,
+        y: target.position.y,
+      },
+    };
+  }
+
+  let sourceX = 0;
+  let sourceY = 0;
+  let targetX = 0;
+  let targetY = 0;
+
+  const sx = source.position.x;
+  const sy = source.position.y;
+  const sw = source.width ?? 0;
+  const sh = source.height ?? 0;
+
+  const tx = target.position.x;
+  const ty = target.position.y;
+  const tw = target.width ?? 0;
+  const th = target.height ?? 0;
+
+  if (sx > tx + tw) {
+    sourceX = sx;
+    targetX = tx + tw;
+  } else if (sx + sw < tx) {
+    sourceX = sx + sw;
+    targetX = tx;
+  } else {
+    if (source.type === 'cornerNode' || target.type === 'cornerNode') {
+      const x = source.type === 'cornerNode' ? sx + 20 : tx + 20;
+      sourceX = x;
+      targetX = x;
+    } else {
+      if (sx >= tx) {
+        const x = sx + (tx + (tw - 5) - sx) / 2;
+        sourceX = x;
+        targetX = x;
+      } else {
+        const x = tx + (sx + (sw - 5) - tx) / 2;
+        sourceX = x;
+        targetX = x;
+      }
+    }
+  }
+
+  if (sy > ty + th) {
+    sourceY = sy;
+    targetY = ty + th;
+  } else if (sy + sh < ty) {
+    sourceY = sy + sh;
+    targetY = ty;
+  } else {
+    if (source.type === 'cornerNode' || target.type === 'cornerNode') {
+      const y = source.type === 'cornerNode' ? sy : ty;
+      sourceY = y;
+      targetY = y;
+    } else {
+      if (sh === th) {
+        sourceY = sy + sh / 2;
+        targetY = ty + th / 2;
+      } else {
+        const sourceSmaller = sh < th;
+        const smy = sourceSmaller ? sy : ty;
+        const smh = sourceSmaller ? sh : th;
+        const ly = sourceSmaller ? ty : sy;
+        const lh = sourceSmaller ? th : sh;
+
+        const sMid = smy + smh / 2;
+        const sourceInside = smy > ly && smy + smh < ly + lh;
+        const sourceUpper = smy < ly + lh / 2;
+
+        if (sourceUpper) {
+          const yNew = smy + smh - (smy + smh - ly) / 2;
+
+          switch (sourceSmaller) {
+            case true:
+              sourceY = yNew < sMid ? sMid : yNew;
+              break;
+            default:
+              targetY = yNew < sMid ? sMid : yNew;
+          }
+        } else {
+          const yNew = ly + lh - (ly + lh - smy) / 2;
+
+          switch (sourceSmaller) {
+            case true:
+              sourceY = yNew < sMid ? sMid : yNew;
+              break;
+            default:
+              targetY = yNew < sMid ? sMid : yNew;
+          }
+        }
+
+        switch (sourceSmaller) {
+          case true:
+            targetY = sourceUpper ? ly : ly + lh;
+            targetY = sourceInside ? sourceY : targetY;
+            break;
+          default:
+            sourceY = sourceUpper ? ly : ly + lh;
+            sourceY = sourceInside ? targetY : sourceY;
+        }
+      }
+    }
+  }
+
+  return {
+    source:
+      source.type === 'cornerNode'
+        ? {
+            x: source.position.x + 20,
+            y: source.position.y,
+          }
+        : {
+            x: sourceX,
+            y: sourceY,
+          },
+    target:
+      target.type === 'cornerNode'
+        ? {
+            x: target.position.x + 20,
+            y: target.position.y,
+          }
+        : {
+            x: targetX,
+            y: targetY,
+          },
+  };
+}
+
+export function getEdgeParams(source?: Node, target?: Node) {
+  if (!source || !target) {
+    return {};
+  }
+
+  const points = getPoints(source, target);
+
+  const sourcePos = getEdgePosition(source, points.source);
+  const targetPos = getEdgePosition(target, points.target);
+
+  return {
+    sx: points.source.x,
+    sy: points.source.y,
+    tx: points.target.x,
+    ty: points.target.y,
+    sourcePos,
+    targetPos,
+  };
 }

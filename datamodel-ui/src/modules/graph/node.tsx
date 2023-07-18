@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
   selectHovered,
   selectSelected,
@@ -29,6 +31,12 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
   const [showAttributes, setShowAttributes] = useState(true);
   const [hover, setHover] = useState(false);
 
+  const handleTitleClick = () => {
+    if (globalSelected.id !== id) {
+      dispatch(setSelected(id, 'classes'));
+    }
+  };
+
   return (
     <ClassNodeDiv
       onMouseEnter={() => setHover(true)}
@@ -42,7 +50,7 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
     >
       <Handle type="target" position={Position.Top} id={id} />
       <div className="node-title">
-        <div>{data.label}</div>
+        <div onClick={() => handleTitleClick()}>{data.label}</div>
         <button onClick={() => setShowAttributes(!showAttributes)}>
           {showAttributes ? <IconChevronUp /> : <IconChevronDown />}
         </button>
@@ -56,6 +64,11 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
             key={`${id}-child-${r.identifier}`}
             className="node-resource"
             onClick={() => dispatch(setSelected(r.identifier, 'attributes'))}
+            $highlight={
+              globalSelected.type === 'attributes' &&
+              globalSelected.id !== '' &&
+              globalSelected.id === r.identifier
+            }
           >
             {r.label}
           </Attribute>

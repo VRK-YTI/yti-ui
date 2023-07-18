@@ -5,11 +5,17 @@ import {
   selectSelected,
   setSelected,
 } from '@app/common/components/model/model.slice';
-import { MouseEvent } from 'react';
-import { EdgeLabelRenderer, EdgeProps, getStraightPath } from 'reactflow';
+import { MouseEvent, useCallback } from 'react';
+import {
+  EdgeLabelRenderer,
+  EdgeProps,
+  getStraightPath,
+  useStore,
+} from 'reactflow';
 import { DeleteEdgeButton, EdgeContent } from './edge.styles';
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '@app/store';
+import { getEdgeParams } from './utils';
 
 export default function LabeledEdge({
   id,
@@ -26,11 +32,25 @@ export default function LabeledEdge({
 }: EdgeProps) {
   const dispatch = useStoreDispatch();
   const globalSelected = useSelector(selectSelected());
+  const sourceNode = useStore(
+    useCallback((store) => store.nodeInternals.get(source), [source])
+  );
+  const targetNode = useStore(
+    useCallback((store) => store.nodeInternals.get(target), [target])
+  );
+
+  const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(
+    sourceNode,
+    targetNode
+  );
+
   const [edgePath, labelX, labelY] = getStraightPath({
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
+    sourceX: sx,
+    sourceY: sy,
+    sourcePosition: sourcePos,
+    targetPosition: targetPos,
+    targetX: tx,
+    targetY: ty,
   });
 
   const onDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
