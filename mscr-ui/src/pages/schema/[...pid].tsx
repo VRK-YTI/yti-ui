@@ -20,6 +20,8 @@ import { useGetSchemaQuery } from '@app/common/components/schema/schema.slice';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 import Separator from 'yti-common-ui/components/separator';
+import { Description } from 'yti-common-ui/title/title.styles';
+import EditCollection from '@app/modules/edit-collection';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -51,14 +53,17 @@ export default function SchemaPage(props: IndexPageProps) {
         <div className="col-lg-12 mb-3 ">
           <div className="card">
             <div className="card-body">
-              <h5 className="card-title">{schema.pid}</h5>
+              <h5 className="card-title">PID:{schema.pid}</h5>
               <ul>
+                <label>Description</label>
                 <li>{schema.description?.fi}</li>
                 <li>{schema.description?.en}</li>
+                <li>{schema.description?.sv}</li>
               </ul>
             </div>
           </div>
           <Separator />
+          <EditCollection schema={schema}></EditCollection>
           <UpdateWithFileModal
             pid={schemaId}
             refetch={function (): void {
