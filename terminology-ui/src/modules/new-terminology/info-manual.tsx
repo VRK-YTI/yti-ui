@@ -226,7 +226,7 @@ export default function InfoManual({
             data: [value, true],
           })
         }
-        validatePrefixMutation={useGetIfNamespaceInUseMutation}
+        inUseMutation={useGetIfNamespaceInUseMutation}
         typeInUri={'terminology'}
         error={false}
         translations={{
@@ -240,7 +240,6 @@ export default function InfoManual({
           textInputLabel: t('prefix'),
           uriPreview: t('url-preview'),
         }}
-        invertCheck
       />
 
       <TallerSeparator />
