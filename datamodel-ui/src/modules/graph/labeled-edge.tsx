@@ -21,11 +21,7 @@ export default function LabeledEdge({
   id,
   data,
   source,
-  sourceX,
-  sourceY,
   target,
-  targetX,
-  targetY,
   label,
   markerEnd,
   selected,
@@ -39,16 +35,11 @@ export default function LabeledEdge({
     useCallback((store) => store.nodeInternals.get(target), [target])
   );
 
-  const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(
-    sourceNode,
-    targetNode
-  );
+  const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode);
 
   const [edgePath, labelX, labelY] = getStraightPath({
     sourceX: sx,
     sourceY: sy,
-    sourcePosition: sourcePos,
-    targetPosition: targetPos,
     targetX: tx,
     targetY: ty,
   });

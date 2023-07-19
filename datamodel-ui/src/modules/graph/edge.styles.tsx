@@ -6,7 +6,7 @@ export const EdgeContent = styled.div.attrs(
       transform: `translate(-50%, -50%) translate(${props.$labelX}px, ${props.$labelY}px)`,
     },
   })
-)<{ $highlight: boolean }>`
+)<{ $labelX: number; $labelY: number; $highlight: boolean }>`
   pointer-events: all;
   position: absolute;
   background: #ffffff;

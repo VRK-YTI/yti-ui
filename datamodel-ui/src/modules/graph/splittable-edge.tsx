@@ -32,13 +32,7 @@ export default function SplittableEdge({
   id,
   data,
   source,
-  sourceX,
-  sourceY,
   target,
-  targetX,
-  targetY,
-  label,
-  markerEnd,
   selected,
 }: EdgeProps) {
   const sourceNode = useStore(
@@ -48,26 +42,14 @@ export default function SplittableEdge({
     useCallback((store) => store.nodeInternals.get(target), [target])
   );
 
-  const { sx, sy, tx, ty, sourcePos, targetPos } = getEdgeParams(
-    sourceNode,
-    targetNode
-  );
+  const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode);
 
   const [edgePath, labelX, labelY] = getStraightPath({
     sourceX: sx,
     sourceY: sy,
-    sourcePosition: sourcePos,
-    targetPosition: targetPos,
     targetX: tx,
     targetY: ty,
   });
-
-  // const [edgePath, labelX, labelY] = getStraightPath({
-  //   sourceX,
-  //   sourceY,
-  //   targetX,
-  //   targetY,
-  // });
 
   const onDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();

@@ -1,6 +1,6 @@
 import { VisualizationType } from '@app/common/interfaces/visualization.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { Edge, MarkerType, Node, Position, XYPosition } from 'reactflow';
+import { Edge, MarkerType, Node, XYPosition } from 'reactflow';
 
 export function convertToNodes(
   data: VisualizationType[],
@@ -231,29 +231,6 @@ export function handleEdgeDelete(edgeId: string, edges: Edge[]) {
   return edges;
 }
 
-function getEdgePosition(node: Node, intersectionPoint: XYPosition) {
-  const n = { ...node.position, ...node };
-  const nx = Math.round(n.x);
-  const ny = Math.round(n.y);
-  const px = Math.round(intersectionPoint.x);
-  const py = Math.round(intersectionPoint.y);
-
-  if (px <= nx + 1) {
-    return Position.Left;
-  }
-  if (px >= nx + (n.width ?? 0) - 1) {
-    return Position.Right;
-  }
-  if (py <= ny + 1) {
-    return Position.Top;
-  }
-  if (py >= n.y + (n.height ?? 0) - 1) {
-    return Position.Bottom;
-  }
-
-  return Position.Top;
-}
-
 function getPoints(
   source: Node,
   target: Node
@@ -279,15 +256,35 @@ function getPoints(
   let targetX = 0;
   let targetY = 0;
 
-  const sx = source.position.x;
-  const sy = source.position.y;
-  const sw = source.width ?? 0;
-  const sh = source.height ?? 0;
+  const sx = source.position.x + 5;
+  const sy = source.position.y + 5;
+  const sw =
+    source.type === 'cornerNode'
+      ? source.width ?? 0
+      : source.width
+      ? source.width - 10
+      : 0;
+  const sh =
+    source.type === 'cornerNode'
+      ? source.height ?? 0
+      : source.height
+      ? source.height - 10
+      : 0;
 
-  const tx = target.position.x;
-  const ty = target.position.y;
-  const tw = target.width ?? 0;
-  const th = target.height ?? 0;
+  const tx = target.position.x + 5;
+  const ty = target.position.y + 5;
+  const tw =
+    target.type === 'cornerNode'
+      ? target.width ?? 0
+      : target.width
+      ? target.width - 10
+      : 0;
+  const th =
+    source.type === 'cornerNode'
+      ? target.height ?? 0
+      : target.height
+      ? target.height - 10
+      : 0;
 
   if (sx > tx + tw) {
     sourceX = sx;
@@ -297,7 +294,7 @@ function getPoints(
     targetX = tx;
   } else {
     if (source.type === 'cornerNode' || target.type === 'cornerNode') {
-      const x = source.type === 'cornerNode' ? sx + 20 : tx + 20;
+      const x = source.type === 'cornerNode' ? sx + 15 : tx + 15;
       sourceX = x;
       targetX = x;
     } else {
@@ -321,7 +318,7 @@ function getPoints(
     targetY = ty;
   } else {
     if (source.type === 'cornerNode' || target.type === 'cornerNode') {
-      const y = source.type === 'cornerNode' ? sy : ty;
+      const y = source.type === 'cornerNode' ? sy - 5 : ty - 5;
       sourceY = y;
       targetY = y;
     } else {
@@ -336,7 +333,7 @@ function getPoints(
         const lh = sourceSmaller ? th : sh;
 
         const sMid = smy + smh / 2;
-        const sourceInside = smy > ly && smy + smh < ly + lh;
+        const sourceInside = smy > ly && smy + smh < ly + lh + 1;
         const sourceUpper = smy < ly + lh / 2;
 
         if (sourceUpper) {
@@ -354,7 +351,7 @@ function getPoints(
 
           switch (sourceSmaller) {
             case true:
-              sourceY = yNew < sMid ? sMid : yNew;
+              sourceY = yNew > sMid ? sMid : yNew;
               break;
             default:
               targetY = yNew < sMid ? sMid : yNew;
@@ -378,7 +375,7 @@ function getPoints(
     source:
       source.type === 'cornerNode'
         ? {
-            x: source.position.x + 20,
+            x: source.position.x + (source.width ?? 0),
             y: source.position.y,
           }
         : {
@@ -388,7 +385,7 @@ function getPoints(
     target:
       target.type === 'cornerNode'
         ? {
-            x: target.position.x + 20,
+            x: target.position.x + (target.width ?? 0),
             y: target.position.y,
           }
         : {
@@ -400,20 +397,20 @@ function getPoints(
 
 export function getEdgeParams(source?: Node, target?: Node) {
   if (!source || !target) {
-    return {};
+    return {
+      sx: 0,
+      sy: 0,
+      tx: 0,
+      ty: 0,
+    };
   }
 
   const points = getPoints(source, target);
-
-  const sourcePos = getEdgePosition(source, points.source);
-  const targetPos = getEdgePosition(target, points.target);
 
   return {
     sx: points.source.x,
     sy: points.source.y,
     tx: points.target.x,
     ty: points.target.y,
-    sourcePos,
-    targetPos,
   };
 }
