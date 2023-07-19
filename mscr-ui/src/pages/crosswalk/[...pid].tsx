@@ -22,6 +22,7 @@ import Separator from 'yti-common-ui/components/separator';
 import { Crosswalk } from '@app/common/interfaces/crosswalk.interface';
 import { useGetCrosswalkQuery } from '@app/common/components/crosswalk/crosswalk.slice';
 import { Paragraph } from 'suomifi-ui-components';
+import EditCollection from '@app/modules/edit-collection';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -68,7 +69,13 @@ export default function SchemaPage(props: IndexPageProps) {
             </div>
           </div>
           <Separator />
-          <UpdateWithFileModal pid={crosswalkId} />
+          <UpdateWithFileModal
+            pid={crosswalkId}
+            refetch={function (): void {
+              throw new Error('Function not implemented.');
+            }}
+          />
+          <Separator />
         </div>
       );
     }

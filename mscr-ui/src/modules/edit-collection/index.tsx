@@ -32,6 +32,7 @@ import {
 } from '@app/common/components/login/login.slice';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import { Collection } from '@app/common/interfaces/collection.interface';
+import { Crosswalk } from '@app/common/interfaces/crosswalk.interface';
 
 interface EditCollectionProps {
   schema: Schema;
