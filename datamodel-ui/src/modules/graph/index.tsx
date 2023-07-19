@@ -163,9 +163,14 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
 
   useEffect(() => {
     if (isSuccess) {
-      setNodes(convertToNodes(data, i18n.language));
+      setNodes(convertToNodes(data.nodes, i18n.language));
       setEdges(
-        generateInitialEdges(data, deleteEdgeById, splitEdge, i18n.language)
+        generateInitialEdges(
+          data.nodes,
+          deleteEdgeById,
+          splitEdge,
+          i18n.language
+        )
       );
     }
   }, [
