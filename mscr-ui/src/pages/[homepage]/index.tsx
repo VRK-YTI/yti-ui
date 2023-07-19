@@ -27,6 +27,9 @@ import GroupWorkspace from '../../modules/group-home-component';
 import PersonalWorkspace from '../../modules/personal-home';
 import { useEffect } from 'react';
 import BasicTable from '@app/common/components/table';
+import MSCRSideBar from '@app/common/components/sidebar/MSCRSideBar';
+import { TableAndSidebarWrapper } from './homepage.styles';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -37,9 +40,7 @@ export default function IndexPage(props: IndexPageProps) {
 
   const router = useRouter();
 
-  useEffect(() => {
-    console.log(router.query);
-  }, [router.query]);
+  const { breakpoint } = useBreakpoints();
 
   function DisplayedComponent({
     slug,
@@ -57,8 +58,6 @@ export default function IndexPage(props: IndexPageProps) {
       return <PersonalWorkspace user={user} />;
     }
   }
-
-  console.log(router);
 
   return (
     <CommonContextProvider value={props}>
@@ -79,7 +78,10 @@ export default function IndexPage(props: IndexPageProps) {
           user={props.user ?? undefined}
         />
 
-        <BasicTable />
+        <TableAndSidebarWrapper $breakpoint={breakpoint} id="table-and-sidebar">
+          <MSCRSideBar />
+          <BasicTable />
+        </TableAndSidebarWrapper>
       </Layout>
     </CommonContextProvider>
   );

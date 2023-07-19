@@ -4,6 +4,9 @@ import { small } from 'yti-common-ui/media-query/styled-helpers';
 
 export const SidebarWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  order: 1;
   background-color: ${(props) => props.theme.suomifi.colors.depthSecondary};
   max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
   padding: ${(props) => props.theme.suomifi.spacing.m};
@@ -12,7 +15,7 @@ export const SidebarWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
     padding: 0;
   }
 
-  width: 20%;
+  // width: 20%;
 `;
 
 export const SidebarHeader = styled.h2`

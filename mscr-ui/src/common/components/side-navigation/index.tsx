@@ -1,3 +1,5 @@
+import { Link as MUILink } from '@mui/material';
+import Link from 'next/link';
 import {
   RouterLink,
   SideNavigation,
@@ -11,21 +13,23 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
   const { breakpoint } = useBreakpoints();
   return (
     <SideNavigationWrapper $breakpoint={breakpoint} id="sidebar">
-      <SideNavigation heading="Workspaces" aria-label="Main">
+      <SideNavigation
+        heading="Workspaces"
+        aria-label="Main"
+        variant="smallScreen"
+      >
         <SideNavigationItem
           subLevel={1}
           expanded
-          content={
-            <RouterLink href="/personal-home">Personal workspace</RouterLink>
-          }
+          content={<Link href="/personal-home">Personal workspace</Link>}
         >
           <SideNavigationItem
             subLevel={2}
             expanded
             content={
-              <RouterLink href="/personal-home">
+              <MUILink href="/personal-home">
                 {user?.firstName}'s workspace
-              </RouterLink>
+              </MUILink>
             }
           >
             <SideNavigationItem
