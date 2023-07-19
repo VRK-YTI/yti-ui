@@ -89,8 +89,8 @@ export function createNewAssociationEdge(
     type: 'associationEdge',
     markerEnd: {
       type: MarkerType.ArrowClosed,
-      height: 30,
-      width: 30,
+      height: 20,
+      width: 20,
       color: '#222',
     },
     label: label,
@@ -99,6 +99,10 @@ export function createNewAssociationEdge(
       handleDelete: handleDelete,
       splitEdge: splitEdge,
     },
+    // markerEnd: 'clearArrow',
+    // style: {
+    //   strokeDasharray: '0 4 0',
+    // }
   };
 }
 

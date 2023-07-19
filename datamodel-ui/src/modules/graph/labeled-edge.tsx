@@ -25,6 +25,7 @@ export default function LabeledEdge({
   label,
   markerEnd,
   selected,
+  style,
 }: EdgeProps) {
   const dispatch = useStoreDispatch();
   const globalSelected = useSelector(selectSelected());
@@ -64,6 +65,7 @@ export default function LabeledEdge({
         className="react-flow__edge-path"
         d={edgePath}
         markerEnd={markerEnd}
+        style={style}
       />
       <EdgeLabelRenderer>
         <EdgeContent

@@ -33,6 +33,8 @@ import EdgeCorner from './edge-corner';
 import SplittableEdge from './splittable-edge';
 import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
+import ExtNode from './ext-node';
+import ClearArrow from './marker-ends/clear-arrow';
 
 interface GraphProps {
   modelId: string;
@@ -47,7 +49,11 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   const globalSelected = useSelector(selectSelected());
   const displayLang = useSelector(selectDisplayLang());
   const nodeTypes: NodeTypes = useMemo(
-    () => ({ classNode: ClassNode, cornerNode: EdgeCorner }),
+    () => ({
+      classNode: ClassNode,
+      cornerNode: EdgeCorner,
+      externalNode: ExtNode,
+    }),
     []
   );
   const edgeTypes: EdgeTypes = useMemo(
@@ -219,8 +225,12 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
 
 export default function Graph({ modelId, children }: GraphProps) {
   return (
-    <ReactFlowProvider>
-      <GraphContent modelId={modelId}>{children}</GraphContent>
-    </ReactFlowProvider>
+    <>
+      <ClearArrow />
+
+      <ReactFlowProvider>
+        <GraphContent modelId={modelId}>{children}</GraphContent>
+      </ReactFlowProvider>
+    </>
   );
 }

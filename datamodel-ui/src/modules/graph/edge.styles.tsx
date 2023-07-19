@@ -12,7 +12,7 @@ export const EdgeContent = styled.div.attrs(
   background: #ffffff;
   padding: 5px 20px 5px 10px;
   border-radius: 2px;
-  border: 2px solid ${(props) => props.theme.suomifi.colors.accentTertiary};
+  border: 2px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   fontsize: 16px;
   fontweight: 400;
   paddingright: 20px;
