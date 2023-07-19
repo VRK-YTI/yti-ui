@@ -78,7 +78,11 @@ export default function ClassView({
     resourceTypes: [ResourceType.CLASS],
   });
 
-  const { data: classData, isSuccess } = useGetClassQuery(
+  const {
+    data: classData,
+    isSuccess,
+    refetch: refetchData,
+  } = useGetClassQuery(
     { modelId: modelId, classId: globalSelected.id ?? '', applicationProfile },
     { skip: globalSelected.type !== 'classes' }
   );
@@ -331,6 +335,7 @@ export default function ClassView({
         applicationProfile={applicationProfile}
         handleReturn={handleReturn}
         handleEdit={handleEdit}
+        handleRefecth={refetchData}
       />
     );
   }

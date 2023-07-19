@@ -37,6 +37,7 @@ interface ClassInfoProps {
   applicationProfile?: boolean;
   handleReturn: () => void;
   handleEdit: () => void;
+  handleRefecth: () => void;
 }
 
 export default function ClassInfo({
@@ -45,6 +46,7 @@ export default function ClassInfo({
   applicationProfile,
   handleReturn,
   handleEdit,
+  handleRefecth,
 }: ClassInfoProps) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
@@ -300,8 +302,12 @@ export default function ClassInfo({
                   <ResourceInfo
                     key={`${data.identifier}-attr-${attr.identifier}`}
                     data={attr}
-                    modelId={attr.modelId}
+                    modelId={modelId}
+                    classId={data.identifier}
+                    hasPermission={hasPermission}
                     applicationProfile={applicationProfile}
+                    handlePropertyDelete={handleRefecth}
+                    attribute
                   />
                 ))}
               </ExpanderGroup>
@@ -326,6 +332,9 @@ export default function ClassInfo({
                     key={`${data.identifier}-attr-${assoc.identifier}`}
                     data={assoc}
                     modelId={modelId}
+                    classId={data.identifier}
+                    hasPermission={hasPermission}
+                    handlePropertyDelete={handleRefecth}
                     applicationProfile={applicationProfile}
                   />
                 ))}

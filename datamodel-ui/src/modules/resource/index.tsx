@@ -67,7 +67,6 @@ export default function ResourceView({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [currentPage, setCurrentPage] = useState(getPage());
   const [query, setQuery] = useState('');
-  const [isEdit, setIsEdit] = useState(false);
 
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
@@ -118,10 +117,6 @@ export default function ResourceView({
     );
     dispatch(resetResource());
     refetch();
-
-    if (isEdit) {
-      setIsEdit(false);
-    }
   };
 
   const handleFormReturn = () => {
@@ -131,10 +126,6 @@ export default function ResourceView({
       globalSelected.id
     );
     dispatch(resetResource());
-
-    if (isEdit) {
-      setIsEdit(false);
-    }
   };
 
   const handleFollowUp = (value?: { label: string; uri: string }) => {
@@ -161,12 +152,8 @@ export default function ResourceView({
 
     setView(
       type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-      'edit'
+      'create'
     );
-
-    if (isEdit) {
-      setIsEdit(false);
-    }
   };
 
   const handleEdit = () => {
@@ -176,7 +163,6 @@ export default function ResourceView({
         'edit'
       );
       dispatch(setResource(resourceToResourceFormType(resourceData)));
-      setIsEdit(true);
     }
   };
 
@@ -306,7 +292,7 @@ export default function ResourceView({
   }
 
   function renderEdit() {
-    if (!view.edit || !hasPermission) {
+    if ((!view.edit && !view.create) || !hasPermission) {
       return <></>;
     }
 
@@ -317,9 +303,9 @@ export default function ResourceView({
         languages={languages}
         terminologies={terminologies}
         applicationProfile={applicationProfile}
-        isEdit={isEdit}
+        isEdit={view.edit}
         refetch={refetchResource}
-        handleReturn={isEdit ? handleFormReturn : handleReturn}
+        handleReturn={view.edit ? handleFormReturn : handleReturn}
       />
     );
   }

@@ -43,7 +43,6 @@ import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { BasicBlock } from 'yti-common-ui/block';
 import ResourceInfo from '../class-view/resource-info';
-import ResourceForm from '../resource-form';
 import getApiError from '@app/common/utils/get-api-errors';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import {
@@ -683,14 +682,27 @@ export default function ClassForm({
               openAllText=""
               showToggleAllButton={false}
             >
-              {data.attribute.map((attr) =>
-                applicationProfile ? (
-                  <div key={`${data.identifier}-attr-${attr.identifier}`}>
-                    <ResourceForm
-                      data={attr}
-                      langs={languages}
-                      type="attribute"
-                    />
+              {data.attribute.map((attr) => (
+                <div key={`${data.identifier}-attr-${attr.identifier}`}>
+                  <ResourceInfo
+                    key={`${data.identifier}-attr-${attr.identifier}`}
+                    data={attr}
+                    modelId={modelId}
+                    classId={data.identifier}
+                    applicationProfile={applicationProfile}
+                    hasPermission
+                    handlePropertyDelete={() => {
+                      const newAttributes = data.attribute
+                        ? data.attribute.filter(
+                            (attribute) =>
+                              attribute.identifier !== attr.identifier
+                          )
+                        : [];
+                      handleUpdate({ ...data, attribute: newAttributes });
+                    }}
+                    attribute
+                  />
+                  {applicationProfile && (
                     <Button
                       variant="secondary"
                       style={{ marginTop: '10px' }}
@@ -698,16 +710,9 @@ export default function ClassForm({
                     >
                       {t('add-attribute')}
                     </Button>
-                  </div>
-                ) : (
-                  <ResourceInfo
-                    key={`${data.identifier}-attr-${attr.identifier}`}
-                    data={attr}
-                    modelId={applicationProfile ? attr.modelId : modelId}
-                    applicationProfile={applicationProfile}
-                  />
-                )
-              )}
+                  )}
+                </div>
+              ))}
             </ExpanderGroup>
           )}
         </BasicBlock>
@@ -723,14 +728,25 @@ export default function ClassForm({
               openAllText=""
               showToggleAllButton={false}
             >
-              {data.association.map((assoc) =>
-                applicationProfile ? (
-                  <div key={`${data.identifier}-assoc-${assoc.identifier}`}>
-                    <ResourceInfo
-                      data={assoc}
-                      modelId={applicationProfile ? assoc.modelId : modelId}
-                      applicationProfile={applicationProfile}
-                    />
+              {data.association.map((assoc) => (
+                <div key={`${data.identifier}-assoc-${assoc.identifier}`}>
+                  <ResourceInfo
+                    data={assoc}
+                    modelId={modelId}
+                    classId={data.identifier}
+                    applicationProfile={applicationProfile}
+                    hasPermission
+                    handlePropertyDelete={() => {
+                      const newAssociations = data.association
+                        ? data.association.filter(
+                            (association) =>
+                              association.identifier !== assoc.identifier
+                          )
+                        : [];
+                      handleUpdate({ ...data, association: newAssociations });
+                    }}
+                  />
+                  {applicationProfile && (
                     <Button
                       variant="secondary"
                       style={{ marginTop: '10px' }}
@@ -738,16 +754,9 @@ export default function ClassForm({
                     >
                       {t('add-association')}
                     </Button>
-                  </div>
-                ) : (
-                  <ResourceInfo
-                    key={`${data.identifier}-assoc-${assoc.identifier}`}
-                    data={assoc}
-                    modelId={applicationProfile ? assoc.modelId : modelId}
-                    applicationProfile={applicationProfile}
-                  />
-                )
-              )}
+                  )}
+                </div>
+              ))}
             </ExpanderGroup>
           )}
         </BasicBlock>

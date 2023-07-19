@@ -167,7 +167,6 @@
   "search-results_one": "{{count}} item",
   "search-results_other": "{{count}} items",
   "search-variant": "Search",
-  "selected-codelists": "Selected code lists",
   "service-description": "The Data Vocabularies Tool is a service for describing libraries and application profiles as linked data models. This tool allows the logical data modeling process of public administration data to be open and public, which eases the utilization of data models across organizational boundaries.",
   "show": "Show",
   "show-as-file": "Show as file",

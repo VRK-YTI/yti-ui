@@ -55,7 +55,7 @@ export default function useSetView() {
   ) => {
     dispatch(setReduxView(key, subkey));
 
-    if (subkey === 'edit') {
+    if (subkey === 'edit' || subkey === 'create') {
       return;
     }
 

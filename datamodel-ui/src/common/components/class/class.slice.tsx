@@ -108,6 +108,18 @@ export const classApi = createApi({
         method: 'GET',
       }),
     }),
+    deleteNodeShapePropertyReference: builder.mutation<
+      string,
+      { prefix: string; nodeshapeId: string; uri: string }
+    >({
+      query: (value) => ({
+        url: `/class/profile/${value.prefix}/${value.nodeshapeId}/properties`,
+        params: {
+          uri: value.uri,
+        },
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
@@ -144,6 +156,7 @@ export const {
   useGetNodeShapesQuery,
   useDeleteClassMutation,
   useGetClassExistsQuery,
+  useDeleteNodeShapePropertyReferenceMutation,
   util: { getRunningQueriesThunk },
 } = classApi;
 

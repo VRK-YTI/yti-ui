@@ -167,7 +167,6 @@
   "search-results_one": "{{count}} tulos",
   "search-results_other": "{{count}} tulosta",
   "search-variant": "Hae",
-  "selected-codelists": "Valitut koodistot",
   "service-description": "Tietomallit-työkalulla kuvataan tietojärjestelmien ja rajapintojen tietosisältöjä ja -rakennetta. Tietomallit-työkalu tekee julkishallinnon julkisten tietojen loogisesta tietomallityöstö avointa ja julkista, joka helpottaa tietomallien hyödyntämistä yli organisaatiorajojen.",
   "show": "Näytä",
   "show-as-file": "Näytä tiedostona",
