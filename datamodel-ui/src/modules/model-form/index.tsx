@@ -319,7 +319,7 @@ export default function ModelForm({
               prefix: e,
             })
           }
-          modelExistsMutation={useGetModelExistsMutation}
+          inUseMutation={useGetModelExistsMutation}
           typeInUri={'datamodel/ns'}
           error={errorInPrefix()}
           translations={{
