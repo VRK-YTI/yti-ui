@@ -26,10 +26,10 @@ import {
   PrimaryTextWrapper,
   SecondaryTextWrapper,
 } from './resource-info-styles';
-import { SimplePropertyShape } from '@app/common/interfaces/simple-property-shape.interface';
+import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 
 interface ResourceInfoProps {
-  data: SimplePropertyShape;
+  data: SimpleResource;
   modelId: string;
   classId: string;
   hasPermission: boolean;
@@ -69,95 +69,121 @@ export default function ResourceInfo({
     }
   };
 
+  function renderTitleButtonContent() {
+    if (!applicationProfile) {
+      return (
+        <>
+          {getLanguageVersion({
+            data: data.label,
+            lang: i18n.language,
+            appendLocale: true,
+          })}
+        </>
+      );
+    }
+
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <div>
+          <PrimaryTextWrapper>
+            {getLanguageVersion({
+              data: data.label,
+              lang: i18n.language,
+              appendLocale: true,
+            })}
+          </PrimaryTextWrapper>
+          <SecondaryTextWrapper>
+            {`${data.modelId}:${data.identifier}`}
+          </SecondaryTextWrapper>
+        </div>
+        <Text>
+          {data.deactivated
+            ? t('not-in-use', { ns: 'admin' })
+            : t('in-use', { ns: 'admin' })}
+        </Text>
+      </div>
+    );
+  }
+
+  function renderActions() {
+    if (!applicationProfile) {
+      return <></>;
+    }
+
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <BasicBlock title={t('in-use-in-this-model', { ns: 'admin' })}>
+          {data.deactivated
+            ? t('not-in-use', { ns: 'admin' })
+            : t('in-use', { ns: 'admin' })}
+        </BasicBlock>
+        {hasPermission && modelId === data.modelId && (
+          <div>
+            <Button
+              variant="secondary"
+              iconRight={<IconMenu />}
+              onClick={() => setShowTooltip(!showTooltip)}
+            >
+              {t('actions')}
+            </Button>
+            <TooltipWrapper id="actions-tooltip">
+              <Tooltip
+                ariaCloseButtonLabelText=""
+                ariaToggleButtonLabelText=""
+                open={showTooltip}
+                onCloseButtonClick={() => setShowTooltip(false)}
+              >
+                <Button
+                  variant="secondaryNoBorder"
+                  onClick={handleEdit}
+                  id="edit-reference-button"
+                >
+                  {t('edit', { ns: 'admin' })}
+                </Button>
+                {!data.fromShNode && (
+                  <RemoveReferenceModal
+                    modelId={modelId}
+                    classId={classId}
+                    uri={data.uri}
+                    handleReturn={handlePropertyDelete}
+                    name={getLanguageVersion({
+                      data: data.label,
+                      lang: i18n.language,
+                      appendLocale: true,
+                    })}
+                    resourceType={
+                      attribute
+                        ? ResourceType.ATTRIBUTE
+                        : ResourceType.ASSOCIATION
+                    }
+                  />
+                )}
+              </Tooltip>
+            </TooltipWrapper>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <Expander open={open} onOpenChange={() => setOpen(!open)}>
-      <ExpanderTitleButton>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <div>
-            <PrimaryTextWrapper>
-              {getLanguageVersion({
-                data: data.label,
-                lang: i18n.language,
-                appendLocale: true,
-              })}
-            </PrimaryTextWrapper>
-            <SecondaryTextWrapper>
-              {`${data.modelId}:${data.identifier}`}
-            </SecondaryTextWrapper>
-          </div>
-          <Text>
-            {data.deactivated
-              ? t('not-in-use', { ns: 'admin' })
-              : t('in-use', { ns: 'admin' })}
-          </Text>
-        </div>
-      </ExpanderTitleButton>
+      <ExpanderTitleButton>{renderTitleButtonContent()}</ExpanderTitleButton>
       <ExpanderContent>
         {isSuccess && (
           <>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
-              <BasicBlock title={t('in-use-in-this-model', { ns: 'admin' })}>
-                {data.deactivated
-                  ? t('not-in-use', { ns: 'admin' })
-                  : t('in-use', { ns: 'admin' })}
-              </BasicBlock>
-              {hasPermission && modelId === data.modelId && (
-                <div>
-                  <Button
-                    variant="secondary"
-                    iconRight={<IconMenu />}
-                    onClick={() => setShowTooltip(!showTooltip)}
-                  >
-                    {t('actions')}
-                  </Button>
-                  <TooltipWrapper id="actions-tooltip">
-                    <Tooltip
-                      ariaCloseButtonLabelText=""
-                      ariaToggleButtonLabelText=""
-                      open={showTooltip}
-                      onCloseButtonClick={() => setShowTooltip(false)}
-                    >
-                      <Button
-                        variant="secondaryNoBorder"
-                        onClick={handleEdit}
-                        id="edit-reference-button"
-                      >
-                        {t('edit', { ns: 'admin' })}
-                      </Button>
-                      {!data.fromShNode && (
-                        <RemoveReferenceModal
-                          modelId={modelId}
-                          classId={classId}
-                          uri={data.uri}
-                          handleReturn={handlePropertyDelete}
-                          name={getLanguageVersion({
-                            data: data.label,
-                            lang: i18n.language,
-                            appendLocale: true,
-                          })}
-                          resourceType={
-                            attribute
-                              ? ResourceType.ATTRIBUTE
-                              : ResourceType.ASSOCIATION
-                          }
-                        />
-                      )}
-                    </Tooltip>
-                  </TooltipWrapper>
-                </div>
-              )}
-            </div>
+            {renderActions()}
             <CommonViewContent
               data={resourceData}
               modelId={data.modelId}

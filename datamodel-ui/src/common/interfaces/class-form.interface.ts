@@ -1,5 +1,5 @@
 import { ConceptType } from './concept-interface';
-import { SimplePropertyShape } from './simple-property-shape.interface';
+import { SimpleResource } from './simple-resource.interface';
 import { Status } from './status.interface';
 
 export interface ClassFormType {
@@ -20,8 +20,8 @@ export interface ClassFormType {
   status: Status;
   targetClass?: { label: string; id: string };
   node?: { label: string; id: string };
-  attribute?: SimplePropertyShape[];
-  association?: SimplePropertyShape[];
+  attribute?: SimpleResource[];
+  association?: SimpleResource[];
 }
 
 export const initialClassForm: ClassFormType = {

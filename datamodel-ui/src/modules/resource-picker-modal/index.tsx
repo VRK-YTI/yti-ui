@@ -11,7 +11,7 @@ import ResourceList, { ResultType } from '@app/common/components/resource-list';
 import { useGetClassQuery } from '@app/common/components/class/class.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import WideModal from '@app/common/components/wide-modal';
-import { SimplePropertyShape } from '@app/common/interfaces/simple-property-shape.interface';
+import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 
 interface ResourcePickerProps {
   visible: boolean;
@@ -21,8 +21,8 @@ interface ResourcePickerProps {
     isAppProfile: boolean;
   };
   handleFollowUp: (value?: {
-    associations: SimplePropertyShape[];
-    attributes: SimplePropertyShape[];
+    associations: SimpleResource[];
+    attributes: SimpleResource[];
   }) => void;
 }
 

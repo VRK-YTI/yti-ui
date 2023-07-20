@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Text } from 'suomifi-ui-components';
 
 export const PrimaryTextWrapper = styled(Text)`
-  display: block;
+  display: flex;
   color: ${(props) => props.theme.suomifi.colors.highlightBase};
   font-size: 18px;
   font-weight: 600;
