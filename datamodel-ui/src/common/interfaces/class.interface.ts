@@ -1,19 +1,10 @@
 import { ConceptType } from './concept-interface';
+import { SimplePropertyShape } from './simple-property-shape.interface';
 import { Status } from './status.interface';
 
 export interface ClassType {
-  attribute?: {
-    identifier: string;
-    label: { [key: string]: string };
-    modelId: string;
-    uri: string;
-  }[];
-  association?: {
-    identifier: string;
-    label: { [key: string]: string };
-    modelId: string;
-    uri: string;
-  }[];
+  attribute?: SimplePropertyShape[];
+  association?: SimplePropertyShape[];
   label: { [key: string]: string };
   editorialNote?: string;
   status: Status;

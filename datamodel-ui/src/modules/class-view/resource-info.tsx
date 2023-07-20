@@ -6,6 +6,7 @@ import {
   ExpanderTitleButton,
   IconMenu,
   Tooltip,
+  Text,
 } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import {
@@ -21,16 +22,14 @@ import { useStoreDispatch } from '@app/store';
 import { resourceToResourceFormType } from '../resource/utils';
 import RemoveReferenceModal from './remove-reference-modal';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import {
+  PrimaryTextWrapper,
+  SecondaryTextWrapper,
+} from './resource-info-styles';
+import { SimplePropertyShape } from '@app/common/interfaces/simple-property-shape.interface';
 
 interface ResourceInfoProps {
-  data: {
-    identifier: string;
-    label: {
-      [key: string]: string;
-    };
-    modelId: string;
-    uri: string;
-  };
+  data: SimplePropertyShape;
   modelId: string;
   classId: string;
   hasPermission: boolean;
@@ -50,7 +49,6 @@ export default function ResourceInfo({
 }: ResourceInfoProps) {
   const { t, i18n } = useTranslation('common');
   const [open, setOpen] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const dispatch = useStoreDispatch();
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -74,11 +72,31 @@ export default function ResourceInfo({
   return (
     <Expander open={open} onOpenChange={() => setOpen(!open)}>
       <ExpanderTitleButton>
-        {getLanguageVersion({
-          data: data.label,
-          lang: i18n.language,
-          appendLocale: true,
-        })}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <div>
+            <PrimaryTextWrapper>
+              {getLanguageVersion({
+                data: data.label,
+                lang: i18n.language,
+                appendLocale: true,
+              })}
+            </PrimaryTextWrapper>
+            <SecondaryTextWrapper>
+              {`${data.modelId}:${data.identifier}`}
+            </SecondaryTextWrapper>
+          </div>
+          <Text>
+            {data.deactivated
+              ? t('not-in-use', { ns: 'admin' })
+              : t('in-use', { ns: 'admin' })}
+          </Text>
+        </div>
       </ExpanderTitleButton>
       <ExpanderContent>
         {isSuccess && (
@@ -90,7 +108,9 @@ export default function ResourceInfo({
               }}
             >
               <BasicBlock title={t('in-use-in-this-model', { ns: 'admin' })}>
-                {t('in-use', { ns: 'admin' })}
+                {data.deactivated
+                  ? t('not-in-use', { ns: 'admin' })
+                  : t('in-use', { ns: 'admin' })}
               </BasicBlock>
               {hasPermission && modelId === data.modelId && (
                 <div>
@@ -115,32 +135,24 @@ export default function ResourceInfo({
                       >
                         {t('edit', { ns: 'admin' })}
                       </Button>
-
-                      <Button
-                        variant="secondaryNoBorder"
-                        onClick={() => setShowModal(true)}
-                        id="remove-reference-button"
-                      >
-                        {t('remove-reference', { ns: 'admin' })}
-                      </Button>
-                      <RemoveReferenceModal
-                        modelId={modelId}
-                        classId={classId}
-                        uri={data.uri}
-                        visible={showModal}
-                        hide={() => setShowModal(false)}
-                        handleReturn={handlePropertyDelete}
-                        name={getLanguageVersion({
-                          data: data.label,
-                          lang: i18n.language,
-                          appendLocale: true,
-                        })}
-                        resourceType={
-                          attribute
-                            ? ResourceType.ATTRIBUTE
-                            : ResourceType.ASSOCIATION
-                        }
-                      />
+                      {!data.fromShNode && (
+                        <RemoveReferenceModal
+                          modelId={modelId}
+                          classId={classId}
+                          uri={data.uri}
+                          handleReturn={handlePropertyDelete}
+                          name={getLanguageVersion({
+                            data: data.label,
+                            lang: i18n.language,
+                            appendLocale: true,
+                          })}
+                          resourceType={
+                            attribute
+                              ? ResourceType.ATTRIBUTE
+                              : ResourceType.ASSOCIATION
+                          }
+                        />
+                      )}
                     </Tooltip>
                   </TooltipWrapper>
                 </div>

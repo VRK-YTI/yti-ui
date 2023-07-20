@@ -50,6 +50,7 @@ import {
   setHasChanges,
 } from '@app/common/components/model/model.slice';
 import ResourcePicker from '../resource-picker-modal';
+import { SimplePropertyShape } from '@app/common/interfaces/simple-property-shape.interface';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -199,18 +200,8 @@ export default function ClassForm({
   };
 
   const handleResourceUpdate = (value?: {
-    associations: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
-    attributes: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
+    associations: SimplePropertyShape[];
+    attributes: SimplePropertyShape[];
   }) => {
     setShowResourcePicker(false);
     const targetClass = {
