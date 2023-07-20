@@ -30,8 +30,9 @@ import InlineListBlock from '@app/common/components/inline-list-block';
 import {
   selectClass,
   setClass,
-  useGetClassIdentifierFreeQuery,
-  usePutClassMutation,
+  useCreateClassMutation,
+  useGetClassExistsQuery,
+  useUpdateClassMutation,
 } from '@app/common/components/class/class.slice';
 import { AxiosQueryErrorFields } from 'yti-common-ui/interfaces/axios-base-query.interface';
 import { useSelector } from 'react-redux';
@@ -42,7 +43,6 @@ import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { BasicBlock } from 'yti-common-ui/block';
 import ResourceInfo from '../class-view/resource-info';
-import ResourceForm from '../resource-form';
 import getApiError from '@app/common/utils/get-api-errors';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import {
@@ -100,9 +100,10 @@ export default function ClassForm({
       label: '',
     },
   });
-  const [putClass, putClassResult] = usePutClassMutation();
+  const [updateClass, updateResult] = useUpdateClassMutation();
+  const [createClass, createResult] = useCreateClassMutation();
 
-  const { data: identifierFree, isSuccess } = useGetClassIdentifierFreeQuery(
+  const { data: classAlreadyExists, isSuccess } = useGetClassExistsQuery(
     { prefix: modelId, identifier: data.identifier },
     { skip: isEdit || data.identifier === '' }
   );
@@ -132,7 +133,7 @@ export default function ClassForm({
 
     if (
       Object.values(errors).filter((val) => val === true).length > 0 ||
-      (isSuccess && !identifierFree)
+      (isSuccess && classAlreadyExists)
     ) {
       return;
     }
@@ -141,16 +142,17 @@ export default function ClassForm({
       Object.entries(data.label).filter((obj) => obj[1] !== '')
     );
 
-    putClass({
+    const payload = {
       modelId: modelId,
       data: {
         ...data,
         label: Object.keys(usedLabels).length > 0 ? usedLabels : {},
       },
-      classId: isEdit ? data.identifier : undefined,
       applicationProfile,
       basedOnNodeShape: basedOnNodeShape,
-    });
+    };
+
+    isEdit ? updateClass(payload) : createClass(payload);
   };
 
   const handleSetConcept = (value?: ConceptType) => {
@@ -318,48 +320,64 @@ export default function ClassForm({
     if (
       ref.current &&
       (Object.values(errors).filter((val) => val).length > 0 ||
-        putClassResult.isError)
+        updateResult.isError ||
+        createResult.isError)
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors, putClassResult]);
+  }, [ref, errors, updateResult, createResult]);
 
   useEffect(() => {
-    if (putClassResult.isSuccess) {
+    if (updateResult.isSuccess || createResult.isSuccess) {
       handleFollowUp(data.identifier);
     }
 
+    let backendErrorFields: string[] = [];
     if (
-      putClassResult.isError &&
-      putClassResult.error &&
-      'data' in putClassResult.error
+      createResult.isError &&
+      createResult.error &&
+      'data' in createResult.error
     ) {
-      const backendErrorFields = Array.isArray(
-        (putClassResult.error as AxiosQueryErrorFields).data?.details
-      )
-        ? (putClassResult.error as AxiosQueryErrorFields).data.details.map(
-            (d) => d.field
-          )
-        : [];
-
-      if (backendErrorFields.length > 0) {
-        setErrors({
-          identifier: backendErrorFields.includes('identifier'),
-          identifierInitChar: false,
-          identifierLength: false,
-          label: backendErrorFields.includes('label'),
-        });
-        return;
-      }
-
-      if (putClassResult.error?.status === 401) {
+      if (createResult.error?.status === 401) {
         setErrors({
           ...validateClassForm(data),
           unauthorized: true,
         });
+        return;
       }
+      const asFields = (createResult.error as AxiosQueryErrorFields).data
+        ?.details;
+      backendErrorFields = Array.isArray(asFields)
+        ? asFields.map((d) => d.field)
+        : [];
+    } else if (
+      updateResult.isError &&
+      updateResult.error &&
+      'data' in updateResult.error
+    ) {
+      if (updateResult.error?.status === 401) {
+        setErrors({
+          ...validateClassForm(data),
+          unauthorized: true,
+        });
+        return;
+      }
+      const asFields = (updateResult.error as AxiosQueryErrorFields).data
+        ?.details;
+      backendErrorFields = Array.isArray(asFields)
+        ? asFields.map((d) => d.field)
+        : [];
     }
-  }, [putClassResult, data, handleFollowUp]);
+
+    if (backendErrorFields.length > 0) {
+      setErrors({
+        identifier: backendErrorFields.includes('identifier'),
+        identifierInitChar: false,
+        identifierLength: false,
+        label: backendErrorFields.includes('label'),
+      });
+    }
+  }, [updateResult, createResult, data, handleFollowUp]);
 
   return (
     <>
@@ -416,8 +434,9 @@ export default function ClassForm({
 
         {userPosted &&
         (Object.values(errors).filter((e) => e).length > 0 ||
-          putClassResult.isError ||
-          (isSuccess && !identifierFree)) ? (
+          updateResult.isError ||
+          createResult.isError ||
+          (isSuccess && classAlreadyExists)) ? (
           <div>
             <FormFooterAlert
               labelText={
@@ -472,7 +491,7 @@ export default function ClassForm({
               (errors.identifier ||
                 errors.identifierInitChar ||
                 errors.identifierLength)) ||
-            (isSuccess && !identifierFree)
+            (isSuccess && classAlreadyExists)
               ? 'error'
               : 'default'
           }
@@ -482,7 +501,7 @@ export default function ClassForm({
           }
           debounce={300}
           statusText={
-            isSuccess && !identifierFree ? t('error-prefix-taken') : ''
+            isSuccess && classAlreadyExists ? t('error-prefix-taken') : ''
           }
           tooltipComponent={
             <Tooltip
@@ -663,14 +682,27 @@ export default function ClassForm({
               openAllText=""
               showToggleAllButton={false}
             >
-              {data.attribute.map((attr) =>
-                applicationProfile ? (
-                  <div key={`${data.identifier}-attr-${attr.identifier}`}>
-                    <ResourceForm
-                      data={attr}
-                      langs={languages}
-                      type="attribute"
-                    />
+              {data.attribute.map((attr) => (
+                <div key={`${data.identifier}-attr-${attr.identifier}`}>
+                  <ResourceInfo
+                    key={`${data.identifier}-attr-${attr.identifier}`}
+                    data={attr}
+                    modelId={modelId}
+                    classId={data.identifier}
+                    applicationProfile={applicationProfile}
+                    hasPermission
+                    handlePropertyDelete={() => {
+                      const newAttributes = data.attribute
+                        ? data.attribute.filter(
+                            (attribute) =>
+                              attribute.identifier !== attr.identifier
+                          )
+                        : [];
+                      handleUpdate({ ...data, attribute: newAttributes });
+                    }}
+                    attribute
+                  />
+                  {applicationProfile && (
                     <Button
                       variant="secondary"
                       style={{ marginTop: '10px' }}
@@ -678,16 +710,9 @@ export default function ClassForm({
                     >
                       {t('add-attribute')}
                     </Button>
-                  </div>
-                ) : (
-                  <ResourceInfo
-                    key={`${data.identifier}-attr-${attr.identifier}`}
-                    data={attr}
-                    modelId={applicationProfile ? attr.modelId : modelId}
-                    applicationProfile={applicationProfile}
-                  />
-                )
-              )}
+                  )}
+                </div>
+              ))}
             </ExpanderGroup>
           )}
         </BasicBlock>
@@ -703,14 +728,25 @@ export default function ClassForm({
               openAllText=""
               showToggleAllButton={false}
             >
-              {data.association.map((assoc) =>
-                applicationProfile ? (
-                  <div key={`${data.identifier}-assoc-${assoc.identifier}`}>
-                    <ResourceInfo
-                      data={assoc}
-                      modelId={applicationProfile ? assoc.modelId : modelId}
-                      applicationProfile={applicationProfile}
-                    />
+              {data.association.map((assoc) => (
+                <div key={`${data.identifier}-assoc-${assoc.identifier}`}>
+                  <ResourceInfo
+                    data={assoc}
+                    modelId={modelId}
+                    classId={data.identifier}
+                    applicationProfile={applicationProfile}
+                    hasPermission
+                    handlePropertyDelete={() => {
+                      const newAssociations = data.association
+                        ? data.association.filter(
+                            (association) =>
+                              association.identifier !== assoc.identifier
+                          )
+                        : [];
+                      handleUpdate({ ...data, association: newAssociations });
+                    }}
+                  />
+                  {applicationProfile && (
                     <Button
                       variant="secondary"
                       style={{ marginTop: '10px' }}
@@ -718,16 +754,9 @@ export default function ClassForm({
                     >
                       {t('add-association')}
                     </Button>
-                  </div>
-                ) : (
-                  <ResourceInfo
-                    key={`${data.identifier}-assoc-${assoc.identifier}`}
-                    data={assoc}
-                    modelId={applicationProfile ? assoc.modelId : modelId}
-                    applicationProfile={applicationProfile}
-                  />
-                )
-              )}
+                  )}
+                </div>
+              ))}
             </ExpanderGroup>
           )}
         </BasicBlock>
@@ -754,15 +783,17 @@ export default function ClassForm({
       .filter((e) => e[1])
       .map((e) => translateClassFormErrors(e[0], t));
 
-    if (isSuccess && !identifierFree) {
+    if (isSuccess && classAlreadyExists) {
       return [...translatedErrors, t('error-prefix-taken')];
     }
 
-    if (putClassResult.error) {
-      const catchedError = getApiError(putClassResult.error);
+    if (updateResult.error) {
+      const catchedError = getApiError(updateResult.error);
+      return [...translatedErrors, ...catchedError];
+    } else if (createResult.error) {
+      const catchedError = getApiError(createResult.error);
       return [...translatedErrors, ...catchedError];
     }
-
     return translatedErrors;
   }
 }

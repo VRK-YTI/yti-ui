@@ -2,8 +2,9 @@ import InlineListBlock from '@app/common/components/inline-list-block';
 import {
   selectResource,
   setResource,
-  useGetResourceIdentifierFreeQuery,
-  usePutResourceMutation,
+  useGetResourceExistsQuery,
+  useUpdateResourceMutation,
+  useCreateResourceMutation,
 } from '@app/common/components/resource/resource.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import {
@@ -37,7 +38,6 @@ import {
   selectHasChanges,
   setHasChanges,
   setSelected,
-  setView,
 } from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
 import getApiError from '@app/common/utils/get-api-errors';
@@ -48,6 +48,7 @@ import ApplicationProfileTop from './components/application-profile-top';
 import AssociationRestrictions from './components/association-restrictions';
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import ResourceModal from '../resource-modal';
+import useSetView from '@app/common/utils/hooks/use-set-view';
 
 interface ResourceFormProps {
   type: ResourceType;
@@ -79,12 +80,14 @@ export default function ResourceForm({
   const dispatch = useStoreDispatch();
   const data = useSelector(selectResource());
   const hasChanges = useSelector(selectHasChanges());
+  const { setView } = useSetView();
   const [userPosted, setUserPosted] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [errors, setErrors] = useState(validateForm(data));
-  const [putResource, result] = usePutResourceMutation();
+  const [updateResource, updateResult] = useUpdateResourceMutation();
+  const [createResource, createResult] = useCreateResourceMutation();
 
-  const { data: identifierFree, isSuccess } = useGetResourceIdentifierFreeQuery(
+  const { data: resourceAlreadyExists, isSuccess } = useGetResourceExistsQuery(
     {
       prefix: modelId,
       identifier: data.identifier,
@@ -106,7 +109,7 @@ export default function ResourceForm({
 
     if (
       Object.values(errors).filter((val) => val).length > 0 ||
-      (isSuccess && !identifierFree)
+      (isSuccess && resourceAlreadyExists)
     ) {
       return;
     }
@@ -115,12 +118,13 @@ export default function ResourceForm({
       Object.entries(data.label).filter((obj) => obj[1] !== '')
     );
 
-    putResource({
+    const payload = {
       modelId: modelId,
       data: { ...data, type: type, label: usedLabels },
-      resourceId: isEdit ? data.identifier : undefined,
       applicationProfile,
-    });
+    };
+
+    isEdit ? updateResource(payload) : createResource(payload);
   };
 
   const handleUpdate = (value: ResourceFormType) => {
@@ -233,18 +237,17 @@ export default function ResourceForm({
       setHeaderHeight(ref.current.clientHeight);
     }
 
-    if (result.isSuccess) {
+    if (updateResult.isSuccess || createResult.isSuccess) {
       dispatch(
         setSelected(
           data.identifier,
           type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
         )
       );
-      dispatch(
-        setView(
-          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-          'info'
-        )
+      setView(
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        'info',
+        data.identifier
       );
 
       if (isEdit) {
@@ -261,7 +264,9 @@ export default function ResourceForm({
     if (
       ref.current &&
       userPosted &&
-      (Object.values(errors).filter((val) => val).length > 0 || result.error)
+      (Object.values(errors).filter((val) => val).length > 0 ||
+        updateResult.error ||
+        createResult.error)
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
@@ -269,7 +274,8 @@ export default function ResourceForm({
     ref,
     errors,
     userPosted,
-    result,
+    updateResult,
+    createResult,
     dispatch,
     type,
     router,
@@ -277,6 +283,7 @@ export default function ResourceForm({
     data,
     refetch,
     isEdit,
+    setView,
   ]);
 
   return (
@@ -326,8 +333,9 @@ export default function ResourceForm({
 
         {userPosted &&
         (Object.values(errors).filter((val) => val).length > 0 ||
-          result.isError ||
-          (isSuccess && !identifierFree)) ? (
+          updateResult.isError ||
+          createResult.isError ||
+          (isSuccess && resourceAlreadyExists)) ? (
           <div>
             <FormFooterAlert
               labelText={
@@ -394,14 +402,14 @@ export default function ResourceForm({
                 (errors.identifier ||
                   errors.identifierInitChar ||
                   errors.identifierLength)) ||
-              (isSuccess && !identifierFree)
+              (isSuccess && resourceAlreadyExists)
                 ? 'error'
                 : 'default'
             }
             disabled={isEdit}
             debounce={300}
             statusText={
-              isSuccess && !identifierFree ? t('error-prefix-taken') : ''
+              isSuccess && resourceAlreadyExists ? t('error-prefix-taken') : ''
             }
             id="prefix-input"
           />
@@ -565,15 +573,19 @@ export default function ResourceForm({
         )
       );
 
-    if (isSuccess && !identifierFree) {
+    if (isSuccess && resourceAlreadyExists) {
       return [...translatedErrors, t('error-prefix-taken')];
     }
 
-    if (result.error) {
-      const catchedError = getApiError(result.error);
+    if (updateResult.error) {
+      const catchedError = getApiError(updateResult.error);
       return [...translatedErrors, ...catchedError];
     }
 
+    if (createResult.error) {
+      const catchedError = getApiError(createResult.error);
+      return [...translatedErrors, ...catchedError];
+    }
     return translatedErrors;
   }
 }

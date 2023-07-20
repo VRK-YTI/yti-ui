@@ -45,7 +45,7 @@ function getUrl(urlState: UrlState, lang?: string) {
         : typeof item[1] !== 'undefined')
   );
 
-  const uri = `/frontend/searchModels?${validEntries
+  const uri = `/frontend/search-models?${validEntries
     .map((e) => `${e[0]}=${Array.isArray(e[1]) ? e[1].join(',') : e[1]}`)
     .join('&')}`;
 

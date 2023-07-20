@@ -21,7 +21,7 @@ export const visualizationTypeArray: VisualizationType[] = [
           fi: 'assoc-1-fi',
           en: 'assoc-1-en',
         },
-        path: ['2'],
+        referenceTarget: '2',
       },
     ],
   },
@@ -42,7 +42,7 @@ export const visualizationTypeArray: VisualizationType[] = [
         label: {
           en: 'assoc-2-en',
         },
-        path: ['3'],
+        referenceTarget: '3',
       },
     ],
   },

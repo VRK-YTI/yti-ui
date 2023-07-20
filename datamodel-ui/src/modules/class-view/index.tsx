@@ -28,13 +28,12 @@ import {
   selectSelected,
   setHovered,
   setSelected,
-  setView,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { getResourceInfo } from '@app/common/utils/parse-slug';
 import ApplicationProfileFlow from './application-profile-flow';
 import ClassInfo from './class-info';
+import useSetView from '@app/common/utils/hooks/use-set-view';
+import useSetPage from '@app/common/utils/hooks/use-set-page';
 
 interface ClassViewProps {
   modelId: string;
@@ -53,9 +52,10 @@ export default function ClassView({
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
-  const router = useRouter();
+  const { setView } = useSetView();
+  const { setPage, getPage } = useSetPage();
   const displayLang = useSelector(selectDisplayLang());
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(getPage());
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
@@ -78,14 +78,13 @@ export default function ClassView({
     resourceTypes: [ResourceType.CLASS],
   });
 
-  const [currentClassId, setCurrentClassId] = useState<string | undefined>(
-    getResourceInfo(router.query.slug)?.type === 'class'
-      ? getResourceInfo(router.query.slug)?.id
-      : undefined
-  );
-  const { data: classData, isSuccess } = useGetClassQuery(
-    { modelId: modelId, classId: currentClassId ?? '', applicationProfile },
-    { skip: typeof currentClassId === 'undefined' }
+  const {
+    data: classData,
+    isSuccess,
+    refetch: refetchData,
+  } = useGetClassQuery(
+    { modelId: modelId, classId: globalSelected.id ?? '', applicationProfile },
+    { skip: globalSelected.type !== 'classes' }
   );
 
   const handleQueryChange = (value: string) => {
@@ -127,7 +126,7 @@ export default function ClassView({
           ],
         })
       );
-      dispatch(setView('classes', 'edit'));
+      setView('classes', 'edit');
       return;
     }
 
@@ -135,7 +134,7 @@ export default function ClassView({
       setClass(internalClassToClassForm(value, languages, applicationProfile))
     );
 
-    dispatch(setView('classes', 'edit'));
+    setView('classes', 'edit');
   };
 
   const handleAppProfileFollowUpAction = (data?: {
@@ -172,14 +171,18 @@ export default function ClassView({
         )
       )
     );
-    dispatch(setView('classes', 'edit'));
+    setView('classes', 'edit');
   };
 
   const handleReturn = () => {
-    dispatch(resetSelected());
-    dispatch(resetClass());
-    dispatch(setView('classes', 'list'));
-    refetch();
+    if (view.edit) {
+      setView('classes', 'info', globalSelected.id);
+    } else {
+      dispatch(resetSelected());
+      dispatch(resetClass());
+      setView('classes', 'list');
+      refetch();
+    }
 
     if (isEdit) {
       setIsEdit(false);
@@ -187,34 +190,18 @@ export default function ClassView({
   };
 
   const handleFollowUp = (classId: string) => {
-    dispatch(setView('classes', 'info'));
+    setView('classes', 'info', classId);
     dispatch(setSelected(classId, 'classes'));
-    router.replace({
-      pathname: `${modelId}/class/${classId}`,
-      query: {
-        lang: Array.isArray(router.query.lang)
-          ? router.query.lang[0]
-          : router.query.lang,
-      },
-    });
   };
 
   const handleActive = (classId: string) => {
     dispatch(setSelected(classId, 'classes'));
     dispatch(resetHovered());
-    router.replace({
-      pathname: `${modelId}/class/${classId}`,
-      query: {
-        lang: Array.isArray(router.query.lang)
-          ? router.query.lang[0]
-          : router.query.lang,
-      },
-    });
   };
 
   const handleEdit = () => {
     if (isSuccess) {
-      dispatch(setView('classes', 'edit'));
+      setView('classes', 'edit');
       dispatch(setClass(classTypeToClassForm(classData)));
       setIsEdit(true);
     }
@@ -229,15 +216,6 @@ export default function ClassView({
       setHeaderHeight(ref.current.clientHeight);
     }
   }, [ref, view]);
-
-  useEffect(() => {
-    if (
-      globalSelected.type === 'classes' &&
-      currentClassId !== globalSelected.id
-    ) {
-      setCurrentClassId(globalSelected.id);
-    }
-  }, [globalSelected, currentClassId]);
 
   return (
     <>
@@ -300,8 +278,8 @@ export default function ClassView({
                 }),
                 subtitle: `${modelId}:${item.identifier}`,
                 onClick: () => {
-                  setCurrentClassId(item.identifier);
                   handleActive(item.identifier);
+                  setView('classes', 'info', item.identifier);
                 },
                 onMouseEnter: () => {
                   dispatch(setHovered(item.identifier, 'classes'));
@@ -316,7 +294,10 @@ export default function ClassView({
             currentPage={currentPage}
             maxPages={Math.ceil((data?.totalHitCount ?? 0) / 20)}
             maxTotal={20}
-            setCurrentPage={(number) => setCurrentPage(number)}
+            setCurrentPage={(number) => {
+              setCurrentPage(number);
+              setPage(number);
+            }}
           />
         </DrawerContent>
       </>
@@ -354,6 +335,7 @@ export default function ClassView({
         applicationProfile={applicationProfile}
         handleReturn={handleReturn}
         handleEdit={handleEdit}
+        handleRefecth={refetchData}
       />
     );
   }

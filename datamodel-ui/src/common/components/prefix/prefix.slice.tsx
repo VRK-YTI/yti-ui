@@ -12,9 +12,9 @@ export const prefixApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    getFreePrefix: builder.mutation<boolean, string>({
+    getModelExists: builder.mutation<boolean, string>({
       query: (prefix) => ({
-        url: `/model/free-prefix/${prefix}`,
+        url: `/model/${prefix}/exists`,
         method: 'GET',
       }),
     }),
@@ -22,8 +22,8 @@ export const prefixApi = createApi({
 });
 
 export const {
-  useGetFreePrefixMutation,
+  useGetModelExistsMutation,
   util: { getRunningQueriesThunk },
 } = prefixApi;
 
-export const { getFreePrefix } = prefixApi.endpoints;
+export const { getModelExists } = prefixApi.endpoints;

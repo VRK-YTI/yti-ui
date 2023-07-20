@@ -12,7 +12,7 @@ import {
 } from '@app/common/interfaces/model.interface';
 import {
   setHasChanges,
-  usePostModelMutation,
+  useUpdateModelMutation,
 } from '@app/common/components/model/model.slice';
 import generatePayload from '../model/generate-payload';
 import CodeListModal from '../code-list-modal';
@@ -35,7 +35,7 @@ export default function LinkedDataForm({
     useConfirmBeforeLeavingPage('disabled');
   const dispatch = useStoreDispatch();
   const ref = useRef<HTMLDivElement>(null);
-  const [postModel, result] = usePostModelMutation();
+  const [updateModel, result] = useUpdateModelMutation();
   const [headerHeight, setHeaderHeight] = useState(0);
   const [data, setData] = useState<{
     codeLists: ModelCodeList[];
@@ -78,7 +78,7 @@ export default function LinkedDataForm({
       terminologies: data.terminologies,
     });
 
-    postModel({
+    updateModel({
       payload: payload,
       prefix: model.prefix,
       isApplicationProfile: model.type === 'PROFILE',

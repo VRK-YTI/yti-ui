@@ -67,9 +67,9 @@ export function generateInitialEdges(
           {
             source: obj.identifier,
             sourceHandle: obj.identifier,
-            target: assoc.path[0],
-            targetHandle: assoc.path[0],
-            id: `reactflow__edge-${obj.identifier}-${assoc.path[0]}`,
+            target: assoc.referenceTarget,
+            targetHandle: assoc.referenceTarget,
+            id: `reactflow__edge-${obj.identifier}-${assoc.referenceTarget}`,
           }
         )
       )

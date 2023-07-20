@@ -45,9 +45,12 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
 
   const handleDisplayLangChange = (lang: string) => {
     dispatch(setDisplayLang(lang));
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { slug, ...query } = router.query;
     router.replace({
-      pathname: router.asPath.split('?lang')[0],
-      query: { lang: lang },
+      pathname: router.asPath.split('?')[0],
+      query: { ...query, lang: lang },
     });
   };
 

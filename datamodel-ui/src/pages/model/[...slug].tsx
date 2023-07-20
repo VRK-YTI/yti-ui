@@ -9,6 +9,8 @@ import PageHead from 'yti-common-ui/page-head';
 import Model from '@app/modules/model';
 import ModelHeader from '@app/modules/model/model-header';
 import {
+  ViewList,
+  ViewListItem,
   getModel,
   getRunningQueriesThunk,
   selectFullScreen,
@@ -152,6 +154,17 @@ export const getServerSideProps = createCommonGetServerSideProps(
       store.dispatch(setDisplayLang('fi'));
     }
 
+    store.dispatch(
+      setView(
+        query.slug[1] ? (query.slug[1] as keyof ViewList) : 'info',
+        ['classes', 'attributes', 'associations'].includes(query.slug[1])
+          ? query.slug[2]
+            ? (query.slug[2] as keyof ViewListItem)
+            : 'list'
+          : undefined
+      )
+    );
+
     if (query.slug.length >= 3) {
       const resourceType = query.slug[1];
       const resourceId = query.slug[2];
@@ -167,6 +180,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
             applicationProfile: modelType === 'PROFILE' ?? false,
           })
         );
+        store.dispatch(setSelected(resourceId, 'classes', modelId));
 
         await Promise.all(store.dispatch(getClassRunningQueriesThunk()));
       }
@@ -196,6 +210,10 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
         await Promise.all(store.dispatch(getResourceRunningQueriesThunk()));
       }
+    }
+
+    if (query.lang) {
+      store.dispatch(setDisplayLang(query.lang as string));
     }
 
     return {
