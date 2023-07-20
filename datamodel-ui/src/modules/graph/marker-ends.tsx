@@ -1,6 +1,9 @@
-export default function ClearArrow() {
+export function ClearArrow() {
   return (
-    <svg style={{ position: 'absolute', top: 0, left: 0 }}>
+    <svg
+      style={{ position: 'absolute', top: 0, left: 0, width: 0, height: 0 }}
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <defs>
         <marker
           id="clearArrow"

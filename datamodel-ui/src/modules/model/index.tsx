@@ -159,7 +159,7 @@ export default function Model({ modelId }: ModelProps) {
       <ContentWrapper>
         <Graph modelId={modelId}>
           <Drawer views={views} />
-          <ModelTools />
+          <ModelTools applicationProfile={modelInfo?.type === 'PROFILE'} />
         </Graph>
       </ContentWrapper>
     </div>

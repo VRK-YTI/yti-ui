@@ -34,7 +34,7 @@ import SplittableEdge from './splittable-edge';
 import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
 import ExtNode from './ext-node';
-import ClearArrow from './marker-ends/clear-arrow';
+import { ClearArrow } from './marker-ends';
 
 interface GraphProps {
   modelId: string;
@@ -226,11 +226,11 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
 export default function Graph({ modelId, children }: GraphProps) {
   return (
     <>
-      <ClearArrow />
-
       <ReactFlowProvider>
         <GraphContent modelId={modelId}>{children}</GraphContent>
       </ReactFlowProvider>
+
+      <ClearArrow />
     </>
   );
 }

@@ -132,6 +132,17 @@ const initialState = {
   hasChanges: false,
   displayWarning: false,
   displayLang: 'fi',
+  tools: {
+    showAttributes: false,
+    showCardinality: false,
+    showStatus: false,
+    showNotes: false,
+    showOriginalClass: false,
+    showAssociationRestrictions: false,
+    showAttributeRestrictions: false,
+    showByName: true,
+    showById: false,
+  },
 };
 
 export const modelSlice = createSlice({
@@ -233,6 +244,29 @@ export const modelSlice = createSlice({
         displayLang: action.payload,
       };
     },
+    setTools(state, action) {
+      if (
+        action.payload.key === 'showByName' ||
+        action.payload.key === 'showById'
+      ) {
+        return {
+          ...state,
+          tools: {
+            ...state.tools,
+            showByName: action.payload.key === 'showByName' ? true : false,
+            showById: action.payload.key === 'showById' ? true : false,
+          },
+        };
+      }
+
+      return {
+        ...state,
+        tools: {
+          ...state.tools,
+          [action.payload.key]: action.payload.value,
+        },
+      };
+    },
   },
 });
 
@@ -320,4 +354,12 @@ export function setDisplayLang(value: string): AppThunk {
 
 export function selectDisplayLang() {
   return (state: AppState) => state.model.displayLang;
+}
+
+export function setModelTools(key: string, value: boolean): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setTools({ key, value }));
+}
+
+export function selectModelTools() {
+  return (state: AppState) => state.model.tools;
 }
