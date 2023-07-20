@@ -133,13 +133,14 @@ const initialState = {
   displayWarning: false,
   displayLang: 'fi',
   tools: {
-    showAttributes: false,
+    fullScreen: false,
+    showAttributes: true,
     showCardinality: false,
     showStatus: false,
     showNotes: false,
     showOriginalClass: false,
-    showAssociationRestrictions: false,
-    showAttributeRestrictions: false,
+    showAssociationRestrictions: true,
+    showAttributeRestrictions: true,
     showByName: true,
     showById: false,
   },
@@ -362,4 +363,13 @@ export function setModelTools(key: string, value: boolean): AppThunk {
 
 export function selectModelTools() {
   return (state: AppState) => state.model.tools;
+}
+
+export function setFullScreen(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setTools({ key: 'fullScreen', value }));
+}
+
+export function selectFullScreen() {
+  return (state: AppState) => state.model.tools.fullScreen;
 }

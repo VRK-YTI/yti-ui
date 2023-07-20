@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Panel } from 'reactflow';
+import { Panel, useStore, useReactFlow } from 'reactflow';
 import {
   Button,
   HintText,
@@ -23,18 +23,53 @@ import { ToggleButtonGroup, ToolsTooltip } from './model-tools.styles';
 import { useTranslation } from 'next-i18next';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
-import { selectModelTools, setModelTools } from '../model/model.slice';
+import {
+  selectModelTools,
+  selectSelected,
+  setModelTools,
+} from '../model/model.slice';
+import { useGetVisualizationQuery } from '../visualization/visualization.slice';
 
 export default function ModelTools({
   applicationProfile,
+  modelId,
 }: {
   applicationProfile: boolean;
+  modelId: string;
 }) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
+  const { setViewport, setCenter, getNode } = useReactFlow();
   const dispatch = useStoreDispatch();
   const tools = useSelector(selectModelTools());
+  const globalSelected = useSelector(selectSelected());
+  const transform = useStore((state) => state.transform);
   const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  const { data } = useGetVisualizationQuery(modelId);
+
+  // TODO: Add support for associations, now id is incorrectly set and
+  // too much of a work to parse as is
+  const handleCenterNode = () => {
+    if (!globalSelected.id || globalSelected.id === '') {
+      return;
+    }
+
+    const node = getNode(globalSelected.id);
+
+    if (!node) {
+      return;
+    }
+
+    setCenter(
+      node.position.x + (node.width ?? 1) / 2,
+      node.position.y + (node.height ?? 1) / 2,
+      {
+        duration: 500,
+        zoom: 3,
+      }
+    );
+  };
 
   if (isSmall) {
     return <></>;
@@ -48,11 +83,37 @@ export default function ModelTools({
         }}
       >
         <ToolsButtonGroup $isSmall={isSmall}>
-          <Button icon={<IconPlus />} />
-          <Button icon={<IconMinus />} />
-          <Button icon={<IconFullscreen />} />
+          <Button
+            icon={<IconPlus />}
+            onClick={() =>
+              setViewport({
+                x: transform[0],
+                y: transform[1],
+                zoom: transform[2] + 0.25,
+              })
+            }
+          />
+          <Button
+            icon={<IconMinus />}
+            onClick={() =>
+              setViewport({
+                x: transform[0],
+                y: transform[1],
+                zoom: transform[2] - 0.25,
+              })
+            }
+          />
+          <Button
+            icon={<IconFullscreen />}
+            onClick={() => {
+              dispatch(setModelTools('fullScreen', !tools.fullScreen));
+            }}
+          />
           <Button icon={<IconSwapRounded />} />
-          <Button icon={<IconMapMyLocation />} />
+          <Button
+            icon={<IconMapMyLocation />}
+            onClick={() => handleCenterNode()}
+          />
           <Button icon={<IconDownload />} />
           <Button icon={<IconSave />} />
           <div
@@ -103,7 +164,7 @@ export default function ModelTools({
                 checked={tools.showCardinality}
                 onClick={() =>
                   dispatch(
-                    setModelTools('showCardinality', !tools.showAttributes)
+                    setModelTools('showCardinality', !tools.showCardinality)
                   )
                 }
               >
@@ -112,7 +173,7 @@ export default function ModelTools({
               <ToggleButton
                 checked={tools.showStatus}
                 onClick={() =>
-                  dispatch(setModelTools('showStatus', !tools.showAttributes))
+                  dispatch(setModelTools('showStatus', !tools.showStatus))
                 }
               >
                 {t('show-statuses', { ns: 'admin' })}
@@ -120,7 +181,7 @@ export default function ModelTools({
               <ToggleButton
                 checked={tools.showNotes}
                 onClick={() =>
-                  dispatch(setModelTools('showNotes', !tools.showAttributes))
+                  dispatch(setModelTools('showNotes', !tools.showNotes))
                 }
               >
                 {t('show-notes')}
@@ -129,7 +190,7 @@ export default function ModelTools({
                 checked={tools.showOriginalClass}
                 onClick={() =>
                   dispatch(
-                    setModelTools('showOriginalClass', !tools.showAttributes)
+                    setModelTools('showOriginalClass', !tools.showOriginalClass)
                   )
                 }
               >

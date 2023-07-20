@@ -11,6 +11,7 @@ import ModelHeader from '@app/modules/model/model-header';
 import {
   getModel,
   getRunningQueriesThunk,
+  selectFullScreen,
   setDisplayLang,
   setSelected,
   setView,
@@ -44,6 +45,7 @@ import {
 } from '@app/common/components/resource/resource.slice';
 import { ModelType } from '@app/common/interfaces/model.interface';
 import { compareLocales } from '@app/common/utils/compare-locals';
+import { useSelector } from 'react-redux';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -52,6 +54,7 @@ interface IndexPageProps extends CommonContextState {
 
 export default function ModelPage(props: IndexPageProps) {
   const { data } = useGetModelQuery(props.modelId);
+  const fullScreen = useSelector(selectFullScreen());
 
   return (
     <CommonContextProvider value={props}>
@@ -59,10 +62,11 @@ export default function ModelPage(props: IndexPageProps) {
         user={props.user ?? undefined}
         fakeableUsers={props.fakeableUsers}
         fullScreenElements={<ModelHeader modelInfo={data} />}
+        headerHidden={fullScreen}
       >
         <PageHead baseUrl="https://tietomallit.suomi.fi" />
 
-        <Model modelId={props.modelId} />
+        <Model modelId={props.modelId} fullScreen={fullScreen} />
       </Layout>
     </CommonContextProvider>
   );
