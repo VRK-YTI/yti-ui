@@ -96,8 +96,8 @@ export function classTypeToClassForm(data: ClassType): ClassFormType {
     attribute: data.attribute,
     targetClass: data.targetClass
       ? {
-          id: data.targetClass,
-          label: data.targetClass,
+          id: data.targetClass.uri,
+          label: data.targetClass.curie,
         }
       : undefined,
   };

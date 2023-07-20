@@ -94,21 +94,7 @@ export default function CommonViewContent({
             <>
               <BasicBlock title={t('target-attribute', { ns: 'admin' })}>
                 {data.path ? (
-                  <Link href={data.path}>
-                    {data.path
-                      .split('/')
-                      .map((item, index) => {
-                        const length: number = data.path
-                          ? data.path.split('/').length
-                          : 0;
-                        if (index === length - 1 || index === length - 2) {
-                          return item;
-                        }
-                        return undefined;
-                      })
-                      .filter(Boolean)
-                      .join(':') ?? data.path}
-                  </Link>
+                  <Link href={data.path.uri}>{data.path.curie}</Link>
                 ) : (
                   t('not-defined')
                 )}
@@ -209,13 +195,11 @@ export default function CommonViewContent({
         {data.type === ResourceType.ATTRIBUTE && (
           <>
             <BasicBlock title={t('range', { ns: 'admin' })}>
-              {data.range}
+              {data.range?.curie}
             </BasicBlock>
 
             <BasicBlock title={`${t('class', { ns: 'admin' })} (rdfs:domain)`}>
-              {data.domain
-                ? (data.domain as string).split('/').pop()?.replace('#', ':')
-                : t('no-upper-attributes')}
+              {data.domain ? data.domain?.curie : t('no-upper-attributes')}
             </BasicBlock>
           </>
         )}
@@ -223,15 +207,11 @@ export default function CommonViewContent({
         {data.type === ResourceType.ASSOCIATION && (
           <>
             <BasicBlock title={t('source-class', { ns: 'admin' })}>
-              {data.range
-                ? data.range.split('/').pop()?.replace('#', ':')
-                : t('no-source-class')}
+              {data.range ? data.range?.curie : t('no-source-class')}
             </BasicBlock>
 
             <BasicBlock title={t('target-class', { ns: 'admin' })}>
-              {data.domain
-                ? (data.domain as string).split('/').pop()?.replace('#', ':')
-                : t('no-target-class')}
+              {data.domain ? data.domain?.curie : t('no-target-class')}
             </BasicBlock>
           </>
         )}
@@ -242,9 +222,9 @@ export default function CommonViewContent({
           ) : (
             <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
               {data.subResourceOf.map((c) => (
-                <li key={c}>
-                  <Link key={c} href={c} style={{ fontSize: '16px' }}>
-                    {c.split('/').pop()?.replace('#', ':')}
+                <li key={c.uri}>
+                  <Link key={c.uri} href={c.uri} style={{ fontSize: '16px' }}>
+                    {c.curie}
                   </Link>
                 </li>
               ))}
@@ -258,9 +238,9 @@ export default function CommonViewContent({
           ) : (
             <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
               {data.equivalentResource.map((c) => (
-                <li key={c}>
-                  <Link key={c} href={c} style={{ fontSize: '16px' }}>
-                    {c.split('/').pop()?.replace('#', ':')}
+                <li key={c.uri}>
+                  <Link key={c.uri} href={c.uri} style={{ fontSize: '16px' }}>
+                    {c.curie}
                   </Link>
                 </li>
               ))}

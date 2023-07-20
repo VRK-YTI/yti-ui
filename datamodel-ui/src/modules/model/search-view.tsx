@@ -10,6 +10,7 @@ import { useQueryInternalResourcesQuery } from '@app/common/components/search-in
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { getPrefixFromURI } from '@app/common/utils/get-value';
 import useSetPage from '@app/common/utils/hooks/use-set-page';
 import useSetView from '@app/common/utils/hooks/use-set-view';
 import { translateResourceType } from '@app/common/utils/translation-helpers';
@@ -55,7 +56,7 @@ export default function SearchView({ modelId }: { modelId: string }) {
   };
 
   const handleItemClick = (data: InternalClass) => {
-    const resourceModelId = data.namespace.split('/').filter(Boolean).pop();
+    const resourceModelId = getPrefixFromURI(data.namespace);
 
     setView(getResourceType(data.resourceType), 'info');
     dispatch(

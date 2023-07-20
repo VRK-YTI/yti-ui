@@ -187,11 +187,11 @@ export function getUri(data?: ModelType): string {
 }
 
 export function getCurie(namespace: string, identifier: string) {
-  return `${getNamespaceFromURI(namespace)?.replace('#', ':')}:${identifier}`;
+  return `${getPrefixFromURI(namespace)}:${identifier}`;
 }
 
-export function getNamespaceFromURI(namespace: string) {
-  return namespace.split('/').filter(Boolean).pop();
+export function getPrefixFromURI(namespace: string) {
+  return namespace.split('/').filter(Boolean).pop()?.replace('#', '');
 }
 
 export function getTerminology(

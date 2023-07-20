@@ -1,6 +1,7 @@
 import { ConceptType } from './concept-interface';
 import { ResourceType } from './resource-type.interface';
 import { Status } from './status.interface';
+import { UriData } from './uri.interface';
 
 export interface Resource {
   allowedValues?: string[];
@@ -21,9 +22,9 @@ export interface Resource {
   dataType?: string;
   dataTypeProperty?: string;
   defaultValue?: string;
-  domain?: string;
+  domain?: UriData;
   editorialNote?: string;
-  equivalentResource: string[];
+  equivalentResource: UriData[];
   hasValue?: string;
   identifier: string;
   label: { [key: string]: string };
@@ -37,11 +38,11 @@ export interface Resource {
     name: string;
   };
   note: { [key: string]: string };
-  path?: string;
-  range?: string;
+  path?: UriData;
+  range?: UriData;
   status: Status;
   subject?: ConceptType;
-  subResourceOf: string[];
+  subResourceOf: UriData[];
   type: ResourceType;
   uri: string;
   curie: string;

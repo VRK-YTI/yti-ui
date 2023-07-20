@@ -69,34 +69,17 @@ export default function ClassInfo({
     }
 
     if (applicationProfile) {
-      const tcLength = data.targetClass
-        ? data.targetClass.split('/').filter(Boolean).length
-        : 0;
-      const tcLabel = data.targetClass
-        ? `${data.targetClass.split('/').filter(Boolean)[tcLength - 2]}:${
-            data.targetClass.split('/').filter(Boolean)[tcLength - 1]
-          }`
-        : '';
-      const tnLength = data.targetNode
-        ? data.targetNode.split('/').filter(Boolean).length
-        : 0;
-      const tnLabel = data.targetNode
-        ? `${data.targetNode.split('/').filter(Boolean)[tnLength - 2]}:${
-            data.targetNode.split('/').filter(Boolean)[tnLength - 1]
-          }`
-        : '';
-
       return (
         <>
           <BasicBlock title={t('targets-library-class')}>
             {data.targetClass ? (
               <ExternalLink
-                key={data.targetClass}
-                href={data.targetClass}
+                key={data.targetClass.uri}
+                href={data.targetClass.uri}
                 style={{ fontSize: '16px' }}
                 labelNewWindow={t('link-opens-new-window-external')}
               >
-                {tcLabel}
+                {data.targetClass.curie}
               </ExternalLink>
             ) : (
               <Text smallScreen>{t('not-defined')}</Text>
@@ -106,12 +89,12 @@ export default function ClassInfo({
           <BasicBlock title={t('utilizes-class-restriction')}>
             {data.targetNode ? (
               <ExternalLink
-                key={data.targetNode}
-                href={data.targetNode}
+                key={data.targetNode.uri}
+                href={data.targetNode.uri}
                 style={{ fontSize: '16px' }}
                 labelNewWindow={t('link-opens-new-window-external')}
               >
-                {tnLabel}
+                {data.targetNode.curie}
               </ExternalLink>
             ) : (
               <Text smallScreen>{t('not-defined')}</Text>

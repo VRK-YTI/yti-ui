@@ -51,7 +51,7 @@ import {
 } from '@app/common/components/model/model.slice';
 import ResourcePicker from '../resource-picker-modal';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
-import { getCurie } from '@app/common/utils/get-value';
+import { getCurie, getPrefixFromURI } from '@app/common/utils/get-value';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -188,7 +188,7 @@ export default function ClassForm({
     }
 
     setSelectedTargetClass({
-      modelId: value.namespace.split('/').filter(Boolean).pop() ?? '',
+      modelId: getPrefixFromURI(value.namespace) ?? '',
       classInfo: {
         identifier: value.identifier,
         id: value.id,
