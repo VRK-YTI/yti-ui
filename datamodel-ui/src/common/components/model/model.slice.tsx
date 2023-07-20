@@ -73,6 +73,7 @@ export const { createModel, getModel, updateModel, deleteModel } =
 
 export type ViewListItem = {
   edit: boolean;
+  create: boolean;
   info: boolean;
   list: boolean;
 };
@@ -104,16 +105,19 @@ const initialView: ViewList = {
     list: false,
     info: false,
     edit: false,
+    create: false,
   },
   attributes: {
     list: false,
     info: false,
     edit: false,
+    create: false,
   },
   associations: {
     list: false,
     info: false,
     edit: false,
+    create: false,
   },
 };
 

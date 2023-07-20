@@ -372,3 +372,24 @@ export function translateDrawerButton(
       return '';
   }
 }
+
+export function translateDeleteReferenceModalDescription(
+  type: ResourceType,
+  name: string,
+  t: TFunction
+) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('remove-reference-description-association', {
+        ns: 'admin',
+        name: name,
+      });
+    case ResourceType.ATTRIBUTE:
+      return t('remove-reference-description-attribute', {
+        ns: 'admin',
+        name: name,
+      });
+    default:
+      return '';
+  }
+}
