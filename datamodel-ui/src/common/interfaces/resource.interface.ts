@@ -44,4 +44,5 @@ export interface Resource {
   subResourceOf: string[];
   type: ResourceType;
   uri: string;
+  curie: string;
 }

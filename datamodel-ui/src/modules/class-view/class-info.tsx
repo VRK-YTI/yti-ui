@@ -129,9 +129,9 @@ export default function ClassInfo({
           ) : (
             <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
               {data.subClassOf.map((c) => (
-                <li key={c}>
-                  <Link key={c} href={c} style={{ fontSize: '16px' }}>
-                    {c.split('/').pop()?.replace('#', ':')}
+                <li key={c.uri}>
+                  <Link key={c.uri} href={c.uri} style={{ fontSize: '16px' }}>
+                    {c.curie}
                   </Link>
                 </li>
               ))}
@@ -145,9 +145,9 @@ export default function ClassInfo({
           ) : (
             <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
               {data.equivalentClass.map((c) => (
-                <li key={c}>
-                  <Link key={c} href={c} style={{ fontSize: '16px' }}>
-                    {c.split('/').pop()?.replace('#', ':')}
+                <li key={c.uri}>
+                  <Link key={c.uri} href={c.uri} style={{ fontSize: '16px' }}>
+                    {c.curie}
                   </Link>
                 </li>
               ))}
@@ -264,9 +264,7 @@ export default function ClassInfo({
             </StatusChip>
           </div>
 
-          <BasicBlock title={t('class-identifier')}>
-            {`${modelId}:${data.identifier}`}
-          </BasicBlock>
+          <BasicBlock title={t('class-identifier')}>{data.curie}</BasicBlock>
 
           <BasicBlock title={t('uri')}>
             {data.uri}

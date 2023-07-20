@@ -242,16 +242,18 @@ export default function ResourceView({
           ) : (
             <DrawerItemList
               items={data.responseObjects.map((item) => {
-                const prefix =
-                  item.namespace?.split('/')?.filter(Boolean)?.pop() ?? modelId;
                 return {
                   label: getLanguageVersion({
                     data: item.label,
                     lang: displayLang ?? i18n.language,
                     appendLocale: true,
                   }),
-                  subtitle: `${prefix}:${item.identifier}`,
-                  onClick: () => handleShowResource(item.identifier, prefix),
+                  subtitle: item.curie,
+                  onClick: () =>
+                    handleShowResource(
+                      item.identifier,
+                      item.curie.split(':')[0]
+                    ),
                 };
               })}
             />

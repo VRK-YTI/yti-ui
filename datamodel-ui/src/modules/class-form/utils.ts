@@ -32,6 +32,7 @@ export function classFormToClass(data: ClassFormType): ClassType {
       },
     ],
     uri: '',
+    curie: '',
   };
 }
 

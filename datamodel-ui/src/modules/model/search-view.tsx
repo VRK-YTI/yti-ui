@@ -127,10 +127,7 @@ export default function SearchView({ modelId }: { modelId: string }) {
                     </Text>
                   </>
                 ),
-                subtitle: `${item.namespace
-                  ?.split('/')
-                  ?.filter(Boolean)
-                  ?.pop()}:${item.identifier}`,
+                subtitle: item.curie,
                 onClick: () => handleItemClick(item),
                 onMouseEnter: () => {
                   dispatch(

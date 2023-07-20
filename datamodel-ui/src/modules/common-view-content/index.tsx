@@ -300,7 +300,7 @@ export default function CommonViewContent({
       )}
 
       <BasicBlock title={translateCommonForm('identifier', data.type, t)}>
-        {`${modelId}:${data.identifier}`}
+        {data.curie}
       </BasicBlock>
 
       <BasicBlock title={t('uri')}>

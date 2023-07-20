@@ -51,6 +51,7 @@ import {
 } from '@app/common/components/model/model.slice';
 import ResourcePicker from '../resource-picker-modal';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
+import { getCurie } from '@app/common/utils/get-value';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -191,9 +192,7 @@ export default function ClassForm({
       classInfo: {
         identifier: value.identifier,
         id: value.id,
-        label: `${value.namespace.split('/').filter(Boolean).pop()}:${
-          value.identifier
-        }`,
+        label: `${getCurie(value.namespace, value.identifier)}`,
       },
     });
     setShowResourcePicker(true);
@@ -231,7 +230,6 @@ export default function ClassForm({
           ...data,
           subClassOf: [
             {
-              attributes: [],
               identifier: 'owl:Thing',
               label: 'owl:Thing',
             },
@@ -275,11 +273,8 @@ export default function ClassForm({
         subClassOf: [
           ...initData,
           {
-            attributes: [],
             identifier: value.id,
-            label: `${value.namespace.split('/').filter(Boolean).pop()}:${
-              value.identifier
-            }`,
+            label: `${getCurie(value.namespace, value.identifier)}`,
           },
         ],
       });
@@ -292,9 +287,7 @@ export default function ClassForm({
         equivalentClass: [
           ...(data.equivalentClass ?? []),
           {
-            label: `${value.namespace.split('/').filter(Boolean).pop()}:${
-              value.identifier
-            }`,
+            label: `${getCurie(value.namespace, value.identifier)}`,
             identifier: value.id,
           },
         ],

@@ -5,6 +5,7 @@ import { Type } from './type.interface';
 export interface InternalClass {
   created: string;
   id: string;
+  curie: string;
   identifier: string;
   isDefinedBy: string;
   label: {
