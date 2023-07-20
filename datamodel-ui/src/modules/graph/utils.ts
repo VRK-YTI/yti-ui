@@ -6,7 +6,7 @@ export function convertToNodes(
   data: VisualizationType[],
   lang?: string
 ): Node[] {
-  if (data.length < 1) {
+  if (!data || data.length < 1) {
     return [];
   }
 
@@ -45,6 +45,7 @@ export function generateInitialEdges(
   lang?: string
 ): Edge[] {
   if (
+    !data ||
     data.length < 1 ||
     data.filter((obj) => obj.associations.length > 0).length < 1
   ) {
@@ -64,6 +65,7 @@ export function generateInitialEdges(
           }),
           handleDelete,
           splitEdge,
+          assoc.identifier,
           {
             source: obj.identifier,
             sourceHandle: obj.identifier,
@@ -80,6 +82,7 @@ export function createNewAssociationEdge(
   label: string,
   handleDelete: (id: string, source: string, target: string) => void,
   splitEdge: (source: string, target: string, x: number, y: number) => void,
+  identifier: string,
   // This needs to be typed as "any" to correlate with specs of React Flow edge parameters
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params: any
@@ -98,6 +101,7 @@ export function createNewAssociationEdge(
       ...params.data,
       handleDelete: handleDelete,
       splitEdge: splitEdge,
+      identifier: identifier,
     },
     // markerEnd: 'clearArrow',
     // style: {
@@ -235,6 +239,10 @@ export function handleEdgeDelete(edgeId: string, edges: Edge[]) {
   return edges;
 }
 
+function getValueInsideRange(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
 function getPoints(
   source: Node,
   target: Node
@@ -284,7 +292,7 @@ function getPoints(
       ? target.width - 10
       : 0;
   const th =
-    source.type === 'cornerNode'
+    target.type === 'cornerNode'
       ? target.height ?? 0
       : target.height
       ? target.height - 10
@@ -298,9 +306,10 @@ function getPoints(
     targetX = tx;
   } else {
     if (source.type === 'cornerNode' || target.type === 'cornerNode') {
-      const x = source.type === 'cornerNode' ? sx + 15 : tx + 15;
-      sourceX = x;
-      targetX = x;
+      const sourceIsCorner = source.type === 'cornerNode';
+      const x = sourceIsCorner ? sx + 15 : tx + 15;
+      sourceX = sourceIsCorner ? x : getValueInsideRange(x, sx, sx + sw);
+      targetX = sourceIsCorner ? getValueInsideRange(x, tx, tx + tw) : x;
     } else {
       if (sx >= tx) {
         const x = sx + (tx + (tw - 5) - sx) / 2;
@@ -322,9 +331,10 @@ function getPoints(
     targetY = ty;
   } else {
     if (source.type === 'cornerNode' || target.type === 'cornerNode') {
-      const y = source.type === 'cornerNode' ? sy - 5 : ty - 5;
-      sourceY = y;
-      targetY = y;
+      const sourceIsCorner = source.type === 'cornerNode';
+      const y = sourceIsCorner ? sy - 5 : ty - 5;
+      sourceY = sourceIsCorner ? y : getValueInsideRange(y, sy, sy + sh);
+      targetY = sourceIsCorner ? getValueInsideRange(y, ty, ty + th) : y;
     } else {
       if (sh === th) {
         sourceY = sy + sh / 2;

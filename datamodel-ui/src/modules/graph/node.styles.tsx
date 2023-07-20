@@ -43,9 +43,7 @@ export const ClassNodeDiv = styled.div<{
   }
 
   .react-flow__handle {
-    padding: 0;
-    width: 10px;
-    height: 10px;
+    display: none;
   }
 
   button {

@@ -5,7 +5,6 @@ import 'reactflow/dist/style.css';
 import {
   useEdgesState,
   useNodesState,
-  addEdge,
   NodeTypes,
   EdgeTypes,
   ReactFlowProvider,
@@ -13,7 +12,6 @@ import {
 } from 'reactflow';
 import {
   convertToNodes,
-  createNewAssociationEdge,
   createNewCornerEdge,
   createNewCornerNode,
   generateInitialEdges,
@@ -25,7 +23,9 @@ import { useGetVisualizationQuery } from '@app/common/components/visualization/v
 import { useStoreDispatch } from '@app/store';
 import {
   selectDisplayLang,
+  selectResetPosition,
   selectSelected,
+  setResetPosition,
   setSelected,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
@@ -48,6 +48,7 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   const { project } = useReactFlow();
   const globalSelected = useSelector(selectSelected());
   const displayLang = useSelector(selectDisplayLang());
+  const resetPosition = useSelector(selectResetPosition());
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
@@ -134,43 +135,17 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
     [setEdges, setNodes, project, deleteEdgeById]
   );
 
-  // const onNodeClick = useCallback(
-  //   (e, node) => {
-  //     if (globalSelected.id !== node.id) {
-  //       dispatch(setSelected(node.id, 'classes'));
-  //     }
-  //   },
-  //   [dispatch, globalSelected.id]
-  // );
-
   const onEdgeClick = useCallback(
     (e, edge) => {
-      if (globalSelected.id !== edge.id) {
-        dispatch(setSelected(edge.id, 'associations'));
+      if (globalSelected.id !== edge.data.identifier) {
+        dispatch(setSelected(edge.data.identifier, 'associations'));
       }
     },
     [dispatch, globalSelected.id]
   );
 
-  const onConnect = useCallback(
-    (params) => {
-      setEdges((edges) =>
-        addEdge(
-          createNewAssociationEdge(
-            'Assosiaatio',
-            deleteEdgeById,
-            splitEdge,
-            params
-          ),
-          edges
-        )
-      );
-    },
-    [setEdges, deleteEdgeById, splitEdge]
-  );
-
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess || (isSuccess && resetPosition)) {
       setNodes(convertToNodes(data.nodes, i18n.language));
       setEdges(
         generateInitialEdges(
@@ -180,6 +155,10 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
           i18n.language
         )
       );
+
+      if (resetPosition) {
+        dispatch(setResetPosition(false));
+      }
     }
   }, [
     data,
@@ -190,6 +169,8 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
     splitEdge,
     i18n.language,
     displayLang,
+    resetPosition,
+    dispatch,
   ]);
 
   useEffect(() => {
@@ -214,7 +195,7 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
+        // onConnect={onConnect}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         // onNodeClick={onNodeClick}

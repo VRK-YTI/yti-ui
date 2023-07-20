@@ -49,13 +49,14 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
       $hover={hover || globalHover.id === id}
     >
       <Handle type="target" position={Position.Top} id={id} />
+      <Handle type="source" position={Position.Bottom} id={id} />
+
       <div className="node-title">
         <div onClick={() => handleTitleClick()}>{data.label}</div>
         <button onClick={() => setShowAttributes(!showAttributes)}>
           {showAttributes ? <IconChevronUp /> : <IconChevronDown />}
         </button>
       </div>
-      <Handle type="source" position={Position.Bottom} id={id} />
 
       {showAttributes &&
         data.resources &&

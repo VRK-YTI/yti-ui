@@ -73,7 +73,8 @@ export default function LabeledEdge({
           $labelX={labelX}
           $labelY={labelY}
           $highlight={
-            globalSelected.type === 'associations' && globalSelected.id === id
+            globalSelected.type === 'associations' &&
+            globalSelected.id === data.identifier
           }
         >
           <div>{label}</div>

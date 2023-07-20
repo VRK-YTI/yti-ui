@@ -138,6 +138,7 @@ const initialState = {
   displayLang: 'fi',
   tools: {
     fullScreen: false,
+    resetPosition: false,
     showAttributes: true,
     showCardinality: false,
     showStatus: false,
@@ -376,4 +377,13 @@ export function setFullScreen(value: boolean): AppThunk {
 
 export function selectFullScreen() {
   return (state: AppState) => state.model.tools.fullScreen;
+}
+
+export function setResetPosition(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setTools({ key: 'resetPosition', value }));
+}
+
+export function selectResetPosition() {
+  return (state: AppState) => state.model.tools.resetPosition;
 }

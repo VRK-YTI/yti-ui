@@ -27,15 +27,13 @@ import {
   selectModelTools,
   selectSelected,
   setModelTools,
+  setResetPosition,
 } from '../model/model.slice';
-import { useGetVisualizationQuery } from '../visualization/visualization.slice';
 
 export default function ModelTools({
   applicationProfile,
-  modelId,
 }: {
   applicationProfile: boolean;
-  modelId: string;
 }) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
@@ -46,10 +44,10 @@ export default function ModelTools({
   const transform = useStore((state) => state.transform);
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
-  const { data } = useGetVisualizationQuery(modelId);
+  const handleResetPosition = () => {
+    dispatch(setResetPosition(true));
+  };
 
-  // TODO: Add support for associations, now id is incorrectly set and
-  // too much of a work to parse as is
   const handleCenterNode = () => {
     if (!globalSelected.id || globalSelected.id === '') {
       return;
@@ -109,7 +107,10 @@ export default function ModelTools({
               dispatch(setModelTools('fullScreen', !tools.fullScreen));
             }}
           />
-          <Button icon={<IconSwapRounded />} />
+          <Button
+            icon={<IconSwapRounded />}
+            onClick={() => handleResetPosition()}
+          />
           <Button
             icon={<IconMapMyLocation />}
             onClick={() => handleCenterNode()}
