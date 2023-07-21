@@ -45,8 +45,8 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
               sro.uri.endsWith('/owl#TopObjectProperty')
             ) {
               return {
-                label: 'owl:topDataProperty',
-                uri: 'owl:topDataProperty',
+                label: sro.curie,
+                uri: sro.curie,
               };
             }
 
