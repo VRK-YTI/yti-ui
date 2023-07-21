@@ -28,7 +28,9 @@ import {
   selectSelected,
   setModelTools,
   setResetPosition,
+  setSavePosition,
 } from '../model/model.slice';
+import HasPermission from '@app/common/utils/has-permission';
 
 export default function ModelTools({
   applicationProfile,
@@ -37,6 +39,7 @@ export default function ModelTools({
 }) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
+  const hasPermission = HasPermission({ actions: 'ADMIN_DATA_MODEL' });
   const { setViewport, setCenter, getNode } = useReactFlow();
   const dispatch = useStoreDispatch();
   const tools = useSelector(selectModelTools());
@@ -116,7 +119,14 @@ export default function ModelTools({
             onClick={() => handleCenterNode()}
           />
           <Button icon={<IconDownload />} />
-          <Button icon={<IconSave />} />
+
+          {hasPermission && (
+            <Button
+              icon={<IconSave />}
+              onClick={() => dispatch(setSavePosition(true))}
+            />
+          )}
+
           <div
             style={{
               display: 'flex',

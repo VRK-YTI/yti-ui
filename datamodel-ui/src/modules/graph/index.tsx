@@ -28,8 +28,10 @@ import { useStoreDispatch } from '@app/store';
 import {
   selectDisplayLang,
   selectResetPosition,
+  selectSavePosition,
   selectSelected,
   setResetPosition,
+  setSavePosition,
   setSelected,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
@@ -52,6 +54,7 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   const { project } = useReactFlow();
   const globalSelected = useSelector(selectSelected());
   const displayLang = useSelector(selectDisplayLang());
+  const savePosition = useSelector(selectSavePosition());
   const resetPosition = useSelector(selectResetPosition());
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -70,8 +73,6 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   );
   const { data, isSuccess } = useGetVisualizationQuery(modelId);
   const [putPositions, result] = usePutPositionsMutation();
-
-  // console.log('visualization data', data);
 
   const deleteEdgeById = useCallback(
     (id: string) => {
@@ -151,12 +152,6 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
     [dispatch, globalSelected.id]
   );
 
-  const handlePost = () => {
-    const positions = generatePositionsPayload(nodes, edges);
-
-    putPositions({ modelId, data: positions });
-  };
-
   useEffect(() => {
     if (isSuccess || (isSuccess && resetPosition)) {
       setNodes(convertToNodes(data.nodes, i18n.language));
@@ -187,6 +182,17 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   ]);
 
   useEffect(() => {
+    console.log(savePosition, result);
+    if (savePosition && !result.isLoading) {
+      const positions = generatePositionsPayload(nodes, edges);
+
+      putPositions({ modelId, data: positions });
+
+      dispatch(setSavePosition(false));
+    }
+  }, [savePosition, edges, modelId, nodes, putPositions, result, dispatch]);
+
+  useEffect(() => {
     const cleanCorners = () => {
       const ids = getUnusedCornerIds(nodes, edges);
 
@@ -203,7 +209,6 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
 
   return (
     <div ref={reactFlowWrapper} style={{ height: '100%', width: '100%' }}>
-      <button onClick={() => handlePost()}>POST</button>
       <ModelFlow
         nodes={nodes}
         edges={edges}
