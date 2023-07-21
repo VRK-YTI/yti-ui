@@ -318,13 +318,15 @@ export function initialEdges(handleDelete: jest.Mock, splitEdge: jest.Mock) {
       type: 'associationEdge',
       markerEnd: {
         type: 'arrowclosed' as MarkerType,
-        height: 30,
-        width: 30,
+        height: 20,
+        width: 20,
+        color: '#222',
       },
       label: 'assoc-1-fi',
       data: {
         handleDelete: handleDelete,
         splitEdge: splitEdge,
+        identifier: 'association-1',
       },
       id: 'reactflow__edge-1-2',
     },
@@ -336,15 +338,391 @@ export function initialEdges(handleDelete: jest.Mock, splitEdge: jest.Mock) {
       type: 'associationEdge',
       markerEnd: {
         type: 'arrowclosed' as MarkerType,
-        height: 30,
-        width: 30,
+        height: 20,
+        width: 20,
+        color: '#222',
       },
       label: 'assoc-2-en (en)',
       data: {
         handleDelete: handleDelete,
         splitEdge: splitEdge,
+        identifier: 'association-2',
       },
       id: 'reactflow__edge-2-3',
     },
   ];
 }
+
+export const noCornerNodes = [
+  {
+    data: {
+      identifier: 'class-1',
+      label: 'Class 1',
+      resources: [],
+    },
+    height: 10,
+    id: 'class-1',
+    position: {
+      x: 0,
+      y: 0,
+    },
+    type: 'classNode',
+    width: 10,
+  },
+  {
+    data: {
+      identifier: 'class-2',
+      label: 'Class 2',
+      resources: [],
+    },
+    height: 10,
+    id: 'class-2',
+    position: {
+      x: 0,
+      y: 100,
+    },
+    type: 'classNode',
+    width: 10,
+  },
+];
+
+export const noCornerEdges = [
+  {
+    data: {
+      handleDelete: jest.fn(),
+      splitEdge: jest.fn(),
+      identifier: 'association-1',
+    },
+    id: 'reactflow__edge-class-1-class-2',
+    label: 'Association 1',
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      height: 20,
+      width: 20,
+      color: '#222',
+    },
+    source: 'class-1',
+    sourceHandle: 'class-1',
+    target: 'class-2',
+    targetHandle: 'class-2',
+    type: 'associationEdge',
+  },
+];
+
+export const oneCornerNodes = [
+  {
+    data: {
+      identifier: 'class-1',
+      label: 'Class 1',
+      resources: [],
+    },
+    height: 10,
+    id: 'class-1',
+    position: {
+      x: 0,
+      y: 0,
+    },
+    type: 'classNode',
+    width: 10,
+  },
+  {
+    data: {
+      identifier: 'class-2',
+      label: 'Class 2',
+      resources: [],
+    },
+    height: 10,
+    id: 'class-2',
+    position: {
+      x: 0,
+      y: 100,
+    },
+    type: 'classNode',
+    width: 10,
+  },
+  {
+    data: {},
+    height: 10,
+    id: '#corner-12345678',
+    position: {
+      x: 5,
+      y: 50,
+    },
+    type: 'cornerNode',
+    width: 10,
+  },
+];
+
+export const oneCornerEdges = [
+  {
+    data: {
+      handleDelete: jest.fn(),
+      splitEdge: jest.fn(),
+      identifier: 'association-1',
+    },
+    id: 'reactflow__edge-#corner-12345678-class-2',
+    label: 'Association 1',
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      height: 20,
+      width: 20,
+      color: '#222',
+    },
+    source: '#corner-12345678',
+    sourceHandle: '#corner-12345678',
+    target: 'class-2',
+    targetHandle: 'class-2',
+    type: 'associationEdge',
+  },
+  {
+    data: {
+      handleDelete: jest.fn(),
+      splitEdge: jest.fn(),
+    },
+    id: 'reactflow__edge-class-1-#corner-12345678',
+    source: 'class-1',
+    sourceHandle: 'class-1',
+    target: '#corner-12345678',
+    targetHandle: '#corner-12345678',
+    type: 'defaultEdge',
+  },
+];
+
+export const twoCornerNodes = [
+  {
+    data: {
+      identifier: 'class-1',
+      label: 'Class 1',
+      resources: [],
+    },
+    height: 10,
+    id: 'class-1',
+    position: {
+      x: 0,
+      y: 0,
+    },
+    type: 'classNode',
+    width: 10,
+  },
+  {
+    data: {
+      identifier: 'class-2',
+      label: 'Class 2',
+      resources: [],
+    },
+    height: 10,
+    id: 'class-2',
+    position: {
+      x: 0,
+      y: 100,
+    },
+    type: 'classNode',
+    width: 10,
+  },
+  {
+    data: {},
+    height: 10,
+    id: '#corner-12345678',
+    position: {
+      x: 5,
+      y: 50,
+    },
+    type: 'cornerNode',
+    width: 10,
+  },
+  {
+    data: {},
+    height: 10,
+    id: '#corner-87654321',
+    position: {
+      x: 15,
+      y: 50,
+    },
+    type: 'cornerNode',
+    width: 10,
+  },
+];
+
+export const twoCornerEdges = [
+  {
+    data: {
+      handleDelete: jest.fn(),
+      splitEdge: jest.fn(),
+    },
+    id: 'reactflow__edge-class-1-#corner-12345678',
+    source: 'class-1',
+    sourceHandle: 'class-1',
+    target: '#corner-12345678',
+    targetHandle: '#corner-12345678',
+    type: 'defaultEdge',
+  },
+  {
+    data: {
+      handleDelete: jest.fn(),
+      splitEdge: jest.fn(),
+    },
+    id: 'reactflow__edge-#corner-12345678-#corner-87654321',
+    source: '#corner-12345678',
+    sourceHandle: '#corner-12345678',
+    target: '#corner-87654321',
+    targetHandle: '#corner-87654321',
+    type: 'defaultEdge',
+  },
+  {
+    data: {
+      handleDelete: jest.fn(),
+      splitEdge: jest.fn(),
+      identifier: 'association-1',
+    },
+    id: 'reactflow__edge-#corner-87654321-class-2',
+    label: 'Association 1',
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      height: 20,
+      width: 20,
+      color: '#222',
+    },
+    source: '#corner-87654321',
+    sourceHandle: '#corner-87654321',
+    target: 'class-2',
+    targetHandle: 'class-2',
+    type: 'associationEdge',
+  },
+];
+
+export const multipleFromOneCornerNodes = [
+  {
+    data: {
+      identifier: 'class-1',
+      label: 'Class 1',
+      resources: [],
+    },
+    height: 10,
+    id: 'class-1',
+    position: {
+      x: 0,
+      y: 0,
+    },
+    type: 'classNode',
+    width: 10,
+  },
+  {
+    data: {
+      identifier: 'class-2',
+      label: 'Class 2',
+      resources: [],
+    },
+    height: 10,
+    id: 'class-2',
+    position: {
+      x: 0,
+      y: 100,
+    },
+    type: 'classNode',
+    width: 10,
+  },
+  {
+    data: {
+      identifier: 'class-3',
+      label: 'Class 3',
+      resources: [],
+    },
+    height: 10,
+    id: 'class-3',
+    position: {
+      x: 100,
+      y: 100,
+    },
+    type: 'classNode',
+    width: 10,
+  },
+  {
+    data: {},
+    height: 10,
+    id: '#corner-12345678',
+    position: {
+      x: 5,
+      y: 50,
+    },
+    type: 'cornerNode',
+    width: 10,
+  },
+  {
+    data: {},
+    height: 10,
+    id: '#corner-87654321',
+    position: {
+      x: 50,
+      y: 50,
+    },
+    type: 'cornerNode',
+    width: 10,
+  },
+];
+
+export const multipleFromOneCornerEdges = [
+  {
+    data: {
+      handleDelete: jest.fn(),
+      splitEdge: jest.fn(),
+    },
+    id: 'reactflow__edge-class-1-#corner-12345678',
+    source: 'class-1',
+    sourceHandle: 'class-1',
+    target: '#corner-12345678',
+    targetHandle: '#corner-12345678',
+    type: 'defaultEdge',
+  },
+  {
+    data: {
+      handleDelete: jest.fn(),
+      splitEdge: jest.fn(),
+    },
+    id: 'reactflow__edge-class-1-#corner-87654321',
+    source: 'class-1',
+    sourceHandle: 'class-1',
+    target: '#corner-87654321',
+    targetHandle: '#corner-87654321',
+    type: 'defaultEdge',
+  },
+  {
+    data: {
+      handleDelete: jest.fn(),
+      splitEdge: jest.fn(),
+      identifier: 'association-1',
+    },
+    id: 'reactflow__edge-#corner-12345678-class-2',
+    label: 'Association 1',
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      height: 20,
+      width: 20,
+      color: '#222',
+    },
+    source: '#corner-12345678',
+    sourceHandle: '#corner-12345678',
+    target: 'class-2',
+    targetHandle: 'class-2',
+    type: 'associationEdge',
+  },
+  {
+    data: {
+      handleDelete: jest.fn(),
+      splitEdge: jest.fn(),
+      identifier: 'association-2',
+    },
+    id: 'reactflow__edge-#corner-87654321-class-3',
+    label: 'Association 2',
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      height: 20,
+      width: 20,
+      color: '#222',
+    },
+    source: '#corner-87654321',
+    sourceHandle: '#corner-87654321',
+    target: 'class-3',
+    targetHandle: 'class-3',
+    type: 'associationEdge',
+  },
+];

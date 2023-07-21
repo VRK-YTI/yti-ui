@@ -1,4 +1,7 @@
-import { VisualizationType } from '@app/common/interfaces/visualization.interface';
+import {
+  VisualizationPutType,
+  VisualizationType,
+} from '@app/common/interfaces/visualization.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { Edge, MarkerType, Node, XYPosition } from 'reactflow';
 
@@ -15,7 +18,10 @@ export function convertToNodes(
 
   return data.map((obj, idx) => ({
     id: obj.identifier,
-    position: { x: 400 * (idx % spread), y: 200 * Math.floor(idx / spread) },
+    position:
+      obj.position.x !== 0 && obj.position.y
+        ? { x: obj.position.x, y: obj.position.y }
+        : { x: 400 * (idx % spread), y: 200 * Math.floor(idx / spread) },
     data: {
       identifier: obj.identifier,
       label: getLanguageVersion({
@@ -427,4 +433,40 @@ export function getEdgeParams(source?: Node, target?: Node) {
     tx: points.target.x,
     ty: points.target.y,
   };
+}
+
+// Disabling warnings to match the React Flow node specs
+export function generatePositionsPayload(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  nodes: Node<any>[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  edges: Edge<any>[]
+): VisualizationPutType[] {
+  if (!nodes || nodes.length < 1) {
+    return [];
+  }
+
+  return nodes.map((node) => {
+    const referenceTargets = edges
+      .filter((edge) => edge.source === node.id)
+      .map((edge) => {
+        if (
+          edge.target.startsWith('#corner') ||
+          (edge.source.startsWith('#corner') &&
+            !edge.target.startsWith('#corner'))
+        ) {
+          return edge.target.replace('#corner', 'corner');
+        }
+      })
+      .filter((value) => typeof value === 'string' && value !== '') as string[];
+
+    return {
+      identifier: node.id.startsWith('#corner')
+        ? node.id.replace('#corner', 'corner')
+        : node.id,
+      x: node.position.x,
+      y: node.position.y,
+      referenceTargets: referenceTargets,
+    };
+  });
 }

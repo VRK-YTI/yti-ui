@@ -15,11 +15,15 @@ import {
   createNewCornerEdge,
   createNewCornerNode,
   generateInitialEdges,
+  generatePositionsPayload,
   getUnusedCornerIds,
   handleEdgeDelete,
 } from './utils';
 import LabeledEdge from './labeled-edge';
-import { useGetVisualizationQuery } from '@app/common/components/visualization/visualization.slice';
+import {
+  useGetVisualizationQuery,
+  usePutPositionsMutation,
+} from '@app/common/components/visualization/visualization.slice';
 import { useStoreDispatch } from '@app/store';
 import {
   selectDisplayLang,
@@ -49,6 +53,9 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   const globalSelected = useSelector(selectSelected());
   const displayLang = useSelector(selectDisplayLang());
   const resetPosition = useSelector(selectResetPosition());
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
@@ -62,9 +69,9 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
     []
   );
   const { data, isSuccess } = useGetVisualizationQuery(modelId);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
+  const [putPositions, result] = usePutPositionsMutation();
+
+  // console.log('visualization data', data);
 
   const deleteEdgeById = useCallback(
     (id: string) => {
@@ -144,6 +151,12 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
     [dispatch, globalSelected.id]
   );
 
+  const handlePost = () => {
+    const positions = generatePositionsPayload(nodes, edges);
+
+    putPositions({ modelId, data: positions });
+  };
+
   useEffect(() => {
     if (isSuccess || (isSuccess && resetPosition)) {
       setNodes(convertToNodes(data.nodes, i18n.language));
@@ -190,6 +203,7 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
 
   return (
     <div ref={reactFlowWrapper} style={{ height: '100%', width: '100%' }}>
+      <button onClick={() => handlePost()}>POST</button>
       <ModelFlow
         nodes={nodes}
         edges={edges}

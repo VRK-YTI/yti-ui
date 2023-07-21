@@ -19,11 +19,9 @@ export interface VisualizationType {
 
 export interface VisualizationPutType {
   identifier: string;
-  position: {
-    x: number;
-    y: number;
-  };
-  referenceTarget: string;
+  x: number;
+  y: number;
+  referenceTargets: string[];
 }
 
 export interface VisualizationHiddenNode {

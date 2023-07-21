@@ -23,7 +23,7 @@ export const visualizationApi = createApi({
       }),
     }),
     putPositions: builder.mutation<
-      any,
+      null,
       {
         modelId: string;
         data: VisualizationPutType[];
