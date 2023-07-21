@@ -186,6 +186,14 @@ export function getUri(data?: ModelType): string {
   return `http://uri.suomi.fi/datamodel/ns/${data?.prefix}`;
 }
 
+export function getCurie(namespace: string, identifier: string) {
+  return `${getPrefixFromURI(namespace)}:${identifier}`;
+}
+
+export function getPrefixFromURI(namespace: string) {
+  return namespace.split('/').filter(Boolean).pop()?.replace('#', '');
+}
+
 export function getTerminology(
   data?: ModelType,
   lang?: string

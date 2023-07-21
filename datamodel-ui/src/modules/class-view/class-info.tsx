@@ -69,34 +69,17 @@ export default function ClassInfo({
     }
 
     if (applicationProfile) {
-      const tcLength = data.targetClass
-        ? data.targetClass.split('/').filter(Boolean).length
-        : 0;
-      const tcLabel = data.targetClass
-        ? `${data.targetClass.split('/').filter(Boolean)[tcLength - 2]}:${
-            data.targetClass.split('/').filter(Boolean)[tcLength - 1]
-          }`
-        : '';
-      const tnLength = data.targetNode
-        ? data.targetNode.split('/').filter(Boolean).length
-        : 0;
-      const tnLabel = data.targetNode
-        ? `${data.targetNode.split('/').filter(Boolean)[tnLength - 2]}:${
-            data.targetNode.split('/').filter(Boolean)[tnLength - 1]
-          }`
-        : '';
-
       return (
         <>
           <BasicBlock title={t('targets-library-class')}>
             {data.targetClass ? (
               <ExternalLink
-                key={data.targetClass}
-                href={data.targetClass}
+                key={data.targetClass.uri}
+                href={data.targetClass.uri}
                 style={{ fontSize: '16px' }}
                 labelNewWindow={t('link-opens-new-window-external')}
               >
-                {tcLabel}
+                {data.targetClass.curie}
               </ExternalLink>
             ) : (
               <Text smallScreen>{t('not-defined')}</Text>
@@ -106,12 +89,12 @@ export default function ClassInfo({
           <BasicBlock title={t('utilizes-class-restriction')}>
             {data.targetNode ? (
               <ExternalLink
-                key={data.targetNode}
-                href={data.targetNode}
+                key={data.targetNode.uri}
+                href={data.targetNode.uri}
                 style={{ fontSize: '16px' }}
                 labelNewWindow={t('link-opens-new-window-external')}
               >
-                {tnLabel}
+                {data.targetNode.curie}
               </ExternalLink>
             ) : (
               <Text smallScreen>{t('not-defined')}</Text>
@@ -129,9 +112,9 @@ export default function ClassInfo({
           ) : (
             <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
               {data.subClassOf.map((c) => (
-                <li key={c}>
-                  <Link key={c} href={c} style={{ fontSize: '16px' }}>
-                    {c.split('/').pop()?.replace('#', ':')}
+                <li key={c.uri}>
+                  <Link key={c.uri} href={c.uri} style={{ fontSize: '16px' }}>
+                    {c.curie}
                   </Link>
                 </li>
               ))}
@@ -145,9 +128,9 @@ export default function ClassInfo({
           ) : (
             <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
               {data.equivalentClass.map((c) => (
-                <li key={c}>
-                  <Link key={c} href={c} style={{ fontSize: '16px' }}>
-                    {c.split('/').pop()?.replace('#', ':')}
+                <li key={c.uri}>
+                  <Link key={c.uri} href={c.uri} style={{ fontSize: '16px' }}>
+                    {c.curie}
                   </Link>
                 </li>
               ))}
@@ -264,9 +247,7 @@ export default function ClassInfo({
             </StatusChip>
           </div>
 
-          <BasicBlock title={t('class-identifier')}>
-            {`${modelId}:${data.identifier}`}
-          </BasicBlock>
+          <BasicBlock title={t('class-identifier')}>{data.curie}</BasicBlock>
 
           <BasicBlock title={t('uri')}>
             {data.uri}

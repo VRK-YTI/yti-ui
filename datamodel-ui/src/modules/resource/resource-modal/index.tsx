@@ -7,6 +7,7 @@ import {
 import WideModal from '@app/common/components/wide-modal';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { getCurie } from '@app/common/utils/get-value';
 import {
   translateResourceAddition,
   translateResourceName,
@@ -110,26 +111,12 @@ export default function ResourceModal({
     );
 
     if (selectedObj) {
-      const domain =
-        selectedObj.namespace[selectedObj.namespace.length - 1] === '/'
-          ? selectedObj.namespace.slice(0, -1)?.split('/').pop()
-          : selectedObj.namespace.split('/').pop();
       handleFollowUp({
-        label: `${domain}:${selectedObj.identifier}`,
+        label: getCurie(selectedObj.namespace, selectedObj.identifier),
         uri: selectedObj.id,
       });
     }
     handleClose();
-  };
-
-  const getLinkLabel = (ns: string, id: string) => {
-    const namespace =
-      ns
-        .split('/')
-        .filter((val) => val !== '')
-        .pop()
-        ?.replace('#', '') ?? ns;
-    return `${namespace}:${id}`;
   };
 
   useEffect(() => {
@@ -143,7 +130,7 @@ export default function ResourceModal({
               lang: contentLanguage ?? i18n.language,
               appendLocale: true,
             }),
-            linkLabel: getLinkLabel(r.namespace, r.identifier),
+            linkLabel: r.curie,
             link: r.id,
             status: translateStatus(r.status, t),
             isValid: r.status === 'VALID',

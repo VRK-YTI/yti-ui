@@ -119,7 +119,6 @@ export default function ClassView({
           label: label,
           subClassOf: [
             {
-              attributes: [],
               identifier: 'owl:Thing',
               label: 'owl:Thing',
             },
@@ -276,7 +275,7 @@ export default function ClassView({
                   lang: displayLang ?? i18n.language,
                   appendLocale: true,
                 }),
-                subtitle: `${modelId}:${item.identifier}`,
+                subtitle: item.curie,
                 onClick: () => {
                   handleActive(item.identifier);
                   setView('classes', 'info', item.identifier);

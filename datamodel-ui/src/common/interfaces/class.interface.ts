@@ -1,6 +1,7 @@
 import { ConceptType } from './concept-interface';
 import { SimpleResource } from './simple-resource.interface';
 import { Status } from './status.interface';
+import { UriData } from './uri.interface';
 
 export interface ClassType {
   attribute?: SimpleResource[];
@@ -8,8 +9,8 @@ export interface ClassType {
   label: { [key: string]: string };
   editorialNote?: string;
   status: Status;
-  equivalentClass?: string[];
-  subClassOf?: string[];
+  equivalentClass?: UriData[];
+  subClassOf?: UriData[];
   subject?: ConceptType;
   identifier: string;
   created: string;
@@ -31,7 +32,8 @@ export interface ClassType {
   ];
   contact?: string;
   note: { [key: string]: string };
-  targetClass?: string;
-  targetNode?: string;
+  targetClass?: UriData;
+  targetNode?: UriData;
   uri: string;
+  curie: string;
 }

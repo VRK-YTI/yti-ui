@@ -15,7 +15,6 @@ export interface ClassFormType {
   subClassOf?: {
     label: string;
     identifier: string;
-    attributes: string[];
   }[];
   status: Status;
   targetClass?: { label: string; id: string };
