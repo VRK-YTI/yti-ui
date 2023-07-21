@@ -1,19 +1,10 @@
 import { ConceptType } from './concept-interface';
+import { SimpleResource } from './simple-resource.interface';
 import { Status } from './status.interface';
 
 export interface ClassType {
-  attribute?: {
-    identifier: string;
-    label: { [key: string]: string };
-    modelId: string;
-    uri: string;
-  }[];
-  association?: {
-    identifier: string;
-    label: { [key: string]: string };
-    modelId: string;
-    uri: string;
-  }[];
+  attribute?: SimpleResource[];
+  association?: SimpleResource[];
   label: { [key: string]: string };
   editorialNote?: string;
   status: Status;

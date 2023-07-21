@@ -13,8 +13,6 @@ import { translateDeleteReferenceModalDescription } from '@app/common/utils/tran
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 interface RemoveReferenceModalProps {
-  visible: boolean;
-  hide: () => void;
   name: string;
   resourceType: ResourceType;
   modelId: string;
@@ -24,8 +22,6 @@ interface RemoveReferenceModalProps {
 }
 
 export default function RemoveReferenceModal({
-  visible,
-  hide,
   name,
   resourceType,
   modelId,
@@ -38,9 +34,10 @@ export default function RemoveReferenceModal({
   const [error, setError] = useState(false);
   const [deleteReference, result] =
     useDeleteNodeShapePropertyReferenceMutation();
+  const [showModal, setShowModal] = useState(false);
 
   const handleClose = () => {
-    hide();
+    setShowModal(false);
     setError(false);
   };
 
@@ -62,31 +59,44 @@ export default function RemoveReferenceModal({
   }, [result]);
 
   return (
-    <NarrowModal
-      appElementId="__next"
-      visible={visible}
-      variant={isSmall ? 'smallScreen' : 'default'}
-      onEscKeyDown={() => hide()}
-    >
-      <SimpleModalContent>
-        <ModalTitle>{t('remove-reference')}</ModalTitle>
-        <Text>
-          {translateDeleteReferenceModalDescription(resourceType, name, t)}
-        </Text>
-        {result.error && error && (
-          <InlineAlert status="error">
-            {getApiError(result.error)[0]}
-          </InlineAlert>
-        )}
-        <ButtonFooter>
-          <Button onClick={handleDelete} id="delete-button">
-            {t('remove')}
-          </Button>
-          <Button variant="secondary" onClick={handleClose} id="cancel-button">
-            {t('cancel-variant')}
-          </Button>
-        </ButtonFooter>
-      </SimpleModalContent>
-    </NarrowModal>
+    <>
+      <Button
+        variant="secondaryNoBorder"
+        onClick={() => setShowModal(true)}
+        id="remove-reference-button"
+      >
+        {t('remove-reference', { ns: 'admin' })}
+      </Button>
+      <NarrowModal
+        appElementId="__next"
+        visible={showModal}
+        variant={isSmall ? 'smallScreen' : 'default'}
+        onEscKeyDown={() => setShowModal(false)}
+      >
+        <SimpleModalContent>
+          <ModalTitle>{t('remove-reference')}</ModalTitle>
+          <Text>
+            {translateDeleteReferenceModalDescription(resourceType, name, t)}
+          </Text>
+          {result.error && error && (
+            <InlineAlert status="error">
+              {getApiError(result.error)[0]}
+            </InlineAlert>
+          )}
+          <ButtonFooter>
+            <Button onClick={handleDelete} id="delete-button">
+              {t('remove')}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={handleClose}
+              id="cancel-button"
+            >
+              {t('cancel-variant')}
+            </Button>
+          </ButtonFooter>
+        </SimpleModalContent>
+      </NarrowModal>
+    </>
   );
 }
