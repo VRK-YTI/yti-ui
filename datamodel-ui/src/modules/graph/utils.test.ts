@@ -12,7 +12,10 @@ import {
   connectedEdgesRemovedMultiple,
   convertedExpected,
   convertedLangVersionedExpected,
+  convertedWithHiddenExpected,
+  convertedWithHiddenLangVersionedExpected,
   initialEdges,
+  initialEdgesWithHidden,
   multipleFromOneCornerEdges,
   multipleFromOneCornerNodes,
   noCornerEdges,
@@ -23,13 +26,15 @@ import {
   twoCornerEdges,
   twoCornerNodes,
   twoEdgesOneSplit,
+  visualizationHiddenTypeArray,
   visualizationTypeArray,
+  visualizationTypeArrayWithHidden,
 } from './util.test.data';
 import { MarkerType } from 'reactflow';
 
 describe('graph-util', () => {
   it('should return an empty array if given an empty array', () => {
-    const returned = convertToNodes([]);
+    const returned = convertToNodes([], []);
 
     expect(returned).toStrictEqual([]);
   });
@@ -40,10 +45,24 @@ describe('graph-util', () => {
     const expected = convertedExpected;
     const expectedLangVersioned = convertedLangVersionedExpected;
 
-    const returned = convertToNodes(input);
+    const returned = convertToNodes(input, []);
     expect(returned).toStrictEqual(expected);
 
-    const returnedLangVersioned = convertToNodes(input, 'en');
+    const returnedLangVersioned = convertToNodes(input, [], 'en');
+    expect(returnedLangVersioned).toStrictEqual(expectedLangVersioned);
+  });
+
+  it('should convert VisualizationType[] and VisualizationHiddenNode[] to a Node[]', () => {
+    const input = visualizationTypeArray;
+    const inputHidden = visualizationHiddenTypeArray;
+
+    const expected = convertedWithHiddenExpected;
+    const expectedLangVersioned = convertedWithHiddenLangVersionedExpected;
+
+    const returned = convertToNodes(input, inputHidden);
+    expect(returned).toStrictEqual(expected);
+
+    const returnedLangVersioned = convertToNodes(input, inputHidden, 'en');
     expect(returnedLangVersioned).toStrictEqual(expectedLangVersioned);
   });
 
@@ -239,12 +258,30 @@ describe('graph-util', () => {
 
     const input = generateInitialEdges(
       visualizationTypeArray,
+      [],
       mockDelete,
       mockSplit,
       'fi'
     );
 
     const expected = initialEdges(mockDelete, mockSplit);
+
+    expect(input).toStrictEqual(expected);
+  });
+
+  it('should generate edges between classes and corners', () => {
+    const mockDelete = jest.fn();
+    const mockSplit = jest.fn();
+
+    const input = generateInitialEdges(
+      visualizationTypeArrayWithHidden,
+      visualizationHiddenTypeArray,
+      mockDelete,
+      mockSplit,
+      'fi'
+    );
+
+    const expected = initialEdgesWithHidden(mockDelete, mockSplit);
 
     expect(input).toStrictEqual(expected);
   });

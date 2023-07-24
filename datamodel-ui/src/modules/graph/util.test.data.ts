@@ -1,4 +1,7 @@
-import { VisualizationType } from '@app/common/interfaces/visualization.interface';
+import {
+  VisualizationType,
+  VisualizationHiddenNode,
+} from '@app/common/interfaces/visualization.interface';
 import { Edge, MarkerType } from 'reactflow';
 
 export const visualizationTypeArray: VisualizationType[] = [
@@ -69,6 +72,96 @@ export const visualizationTypeArray: VisualizationType[] = [
       },
     ],
     associations: [],
+  },
+];
+
+export const visualizationTypeArrayWithHidden: VisualizationType[] = [
+  {
+    identifier: '1',
+    label: {
+      fi: 'label-1-fi',
+      en: 'label-1-en',
+    },
+    parentClasses: [],
+    position: {
+      x: 0,
+      y: 0,
+    },
+    attributes: [],
+    associations: [
+      {
+        identifier: 'association-1',
+        label: {
+          fi: 'assoc-1-fi',
+          en: 'assoc-1-en',
+        },
+        referenceTarget: 'corner-1',
+      },
+    ],
+  },
+  {
+    identifier: '2',
+    label: {
+      en: 'label-2-en',
+    },
+    parentClasses: [],
+    position: {
+      x: 0,
+      y: 0,
+    },
+    attributes: [],
+    associations: [
+      {
+        identifier: 'association-2',
+        label: {
+          en: 'assoc-2-en',
+        },
+        referenceTarget: 'corner-2',
+      },
+    ],
+  },
+  {
+    identifier: '3',
+    label: {
+      fi: 'label-3-fi',
+      en: 'label-3-en',
+      sv: 'label-3-sv',
+    },
+    parentClasses: [],
+    position: {
+      x: 0,
+      y: 0,
+    },
+    attributes: [
+      {
+        identifier: '3-1',
+        label: {
+          fi: 'attr-1-fi',
+          en: 'attr-1-en',
+          sv: 'attr-1-sv',
+        },
+      },
+    ],
+    associations: [],
+  },
+];
+
+export const visualizationHiddenTypeArray: VisualizationHiddenNode[] = [
+  {
+    identifier: 'corner-1',
+    position: {
+      x: 0,
+      y: 0,
+    },
+    referenceTarget: '2',
+  },
+  {
+    identifier: 'corner-2',
+    position: {
+      x: 0,
+      y: 0,
+    },
+    referenceTarget: '1',
   },
 ];
 
@@ -246,6 +339,71 @@ export const convertedExpected = [
   },
 ];
 
+export const convertedWithHiddenExpected = [
+  {
+    id: '1',
+    position: {
+      x: 0,
+      y: 0,
+    },
+    data: {
+      identifier: '1',
+      label: 'label-1-fi',
+      resources: [],
+    },
+    type: 'classNode',
+  },
+  {
+    id: '2',
+    position: {
+      x: 0,
+      y: 200,
+    },
+    data: {
+      identifier: '2',
+      label: 'label-2-en (en)',
+      resources: [],
+    },
+    type: 'classNode',
+  },
+  {
+    id: '3',
+    position: {
+      x: 0,
+      y: 400,
+    },
+    data: {
+      identifier: '3',
+      label: 'label-3-fi',
+      resources: [
+        {
+          identifier: '3-1',
+          label: 'attr-1-fi',
+        },
+      ],
+    },
+    type: 'classNode',
+  },
+  {
+    id: '#corner-1',
+    position: {
+      x: 0,
+      y: 0,
+    },
+    data: {},
+    type: 'cornerNode',
+  },
+  {
+    id: '#corner-2',
+    position: {
+      x: 0,
+      y: 0,
+    },
+    data: {},
+    type: 'cornerNode',
+  },
+];
+
 export const convertedLangVersionedExpected = [
   {
     id: '1',
@@ -290,6 +448,71 @@ export const convertedLangVersionedExpected = [
       ],
     },
     type: 'classNode',
+  },
+];
+
+export const convertedWithHiddenLangVersionedExpected = [
+  {
+    id: '1',
+    position: {
+      x: 0,
+      y: 0,
+    },
+    data: {
+      identifier: '1',
+      label: 'label-1-en',
+      resources: [],
+    },
+    type: 'classNode',
+  },
+  {
+    id: '2',
+    position: {
+      x: 0,
+      y: 200,
+    },
+    data: {
+      identifier: '2',
+      label: 'label-2-en',
+      resources: [],
+    },
+    type: 'classNode',
+  },
+  {
+    id: '3',
+    position: {
+      x: 0,
+      y: 400,
+    },
+    data: {
+      identifier: '3',
+      label: 'label-3-en',
+      resources: [
+        {
+          identifier: '3-1',
+          label: 'attr-1-en',
+        },
+      ],
+    },
+    type: 'classNode',
+  },
+  {
+    id: '#corner-1',
+    position: {
+      x: 0,
+      y: 0,
+    },
+    data: {},
+    type: 'cornerNode',
+  },
+  {
+    id: '#corner-2',
+    position: {
+      x: 0,
+      y: 0,
+    },
+    data: {},
+    type: 'cornerNode',
   },
 ];
 
@@ -349,6 +572,78 @@ export function initialEdges(handleDelete: jest.Mock, splitEdge: jest.Mock) {
         identifier: 'association-2',
       },
       id: 'reactflow__edge-2-3',
+    },
+  ];
+}
+
+export function initialEdgesWithHidden(
+  handleDelete: jest.Mock,
+  splitEdge: jest.Mock
+) {
+  return [
+    {
+      data: {
+        handleDelete: handleDelete,
+        splitEdge: splitEdge,
+      },
+      source: '1',
+      sourceHandle: '1',
+      target: '#corner-1',
+      targetHandle: '#corner-1',
+      type: 'defaultEdge',
+      id: 'reactflow__edge-1-#corner-#corner-1',
+    },
+    {
+      data: {
+        handleDelete: handleDelete,
+        splitEdge: splitEdge,
+      },
+      source: '2',
+      sourceHandle: '2',
+      target: '#corner-2',
+      targetHandle: '#corner-2',
+      type: 'defaultEdge',
+      id: 'reactflow__edge-2-#corner-#corner-2',
+    },
+    {
+      source: '#corner-1',
+      sourceHandle: '#corner-1',
+      target: '2',
+      targetHandle: '2',
+      type: 'associationEdge',
+      markerEnd: {
+        type: 'arrowclosed' as MarkerType,
+        height: 20,
+        width: 20,
+        color: '#222',
+      },
+      data: {
+        handleDelete: handleDelete,
+        splitEdge: splitEdge,
+        identifier: '2',
+      },
+      id: 'reactflow__edge-#corner-1-2',
+      label: 'label-2-en (en)',
+    },
+    {
+      source: '#corner-2',
+      sourceHandle: '#corner-2',
+      target: '1',
+      targetHandle: '1',
+      type: 'associationEdge',
+      markerEnd: {
+        type: 'arrowclosed' as MarkerType,
+        height: 20,
+        width: 20,
+        color: '#222',
+      },
+      data: {
+        handleDelete: handleDelete,
+        splitEdge: splitEdge,
+        identifier: '1',
+      },
+      id: 'reactflow__edge-#corner-2-1',
+      label: 'label-1-fi',
     },
   ];
 }

@@ -1,4 +1,5 @@
 import {
+  VisualizationHiddenNode,
   VisualizationPutType,
   VisualizationType,
 } from '@app/common/interfaces/visualization.interface';
@@ -6,31 +7,32 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { Edge, MarkerType, Node, XYPosition } from 'reactflow';
 
 export function convertToNodes(
-  data: VisualizationType[],
+  nodes: VisualizationType[],
+  hiddenNodes: VisualizationHiddenNode[],
   lang?: string
 ): Node[] {
-  if (!data || data.length < 1) {
+  if (!nodes || nodes.length < 1) {
     return [];
   }
 
-  const size = data.length;
+  const size = nodes.length;
   const spread = Math.floor(Math.sqrt(size));
 
-  return data.map((obj, idx) => ({
-    id: obj.identifier,
+  const retNodes = nodes.map((node, idx) => ({
+    id: node.identifier,
     position:
-      obj.position.x !== 0 && obj.position.y
-        ? { x: obj.position.x, y: obj.position.y }
+      node.position.x !== 0 && node.position.y
+        ? { x: node.position.x, y: node.position.y }
         : { x: 400 * (idx % spread), y: 200 * Math.floor(idx / spread) },
     data: {
-      identifier: obj.identifier,
+      identifier: node.identifier,
       label: getLanguageVersion({
-        data: obj.label,
+        data: node.label,
         lang: lang ? lang : 'fi',
         appendLocale: true,
       }),
-      resources: obj.attributes
-        ? obj.attributes.map((attr) => ({
+      resources: node.attributes
+        ? node.attributes.map((attr) => ({
             identifier: attr.identifier,
             label: getLanguageVersion({
               data: attr.label,
@@ -42,28 +44,57 @@ export function convertToNodes(
     },
     type: 'classNode',
   }));
+
+  if (!hiddenNodes || hiddenNodes.length < 1) {
+    return retNodes;
+  }
+
+  const retHiddenNodes = hiddenNodes.map((node) => ({
+    id: `#${node.identifier}`,
+    data: {},
+    position: {
+      x: node.position.x,
+      y: node.position.y,
+    },
+    type: 'cornerNode',
+  }));
+
+  return [...retNodes, ...retHiddenNodes];
 }
 
 export function generateInitialEdges(
-  data: VisualizationType[],
+  nodes: VisualizationType[],
+  hiddenNodes: VisualizationHiddenNode[],
   handleDelete: (id: string, source: string, target: string) => void,
   splitEdge: (source: string, target: string, x: number, y: number) => void,
   lang?: string
 ): Edge[] {
   if (
-    !data ||
-    data.length < 1 ||
-    data.filter((obj) => obj.associations.length > 0).length < 1
+    !nodes ||
+    nodes.length < 1 ||
+    nodes.filter((node) => node.associations.length > 0).length < 1
   ) {
     return [];
   }
 
-  // TODO: Support for path generation
-  return data
-    .filter((obj) => obj.associations.length > 0)
-    .flatMap((obj) =>
-      obj.associations.flatMap((assoc) =>
-        createNewAssociationEdge(
+  const edges = nodes
+    .filter(
+      (node) => node.associations.length > 0 || node.parentClasses.length > 0
+    )
+    .flatMap((node) => [
+      ...node.associations.flatMap((assoc) => {
+        if (assoc.referenceTarget.startsWith('corner')) {
+          return createNewCornerEdge(
+            node.identifier,
+            `#${assoc.referenceTarget}`,
+            {
+              handleDelete,
+              splitEdge,
+            }
+          );
+        }
+
+        return createNewAssociationEdge(
           getLanguageVersion({
             data: assoc.label,
             lang: lang ?? 'fi',
@@ -73,15 +104,75 @@ export function generateInitialEdges(
           splitEdge,
           assoc.identifier,
           {
-            source: obj.identifier,
-            sourceHandle: obj.identifier,
+            source: node.identifier,
+            sourceHandle: node.identifier,
             target: assoc.referenceTarget,
             targetHandle: assoc.referenceTarget,
-            id: `reactflow__edge-${obj.identifier}-${assoc.referenceTarget}`,
+            id: `reactflow__edge-${node.identifier}-${assoc.referenceTarget}`,
           }
-        )
-      )
+        );
+      }),
+      ...node.parentClasses.flatMap((parent) => {
+        const parentNode = nodes.find((n) => n.identifier === parent);
+
+        return createNewAssociationEdge(
+          getLanguageVersion({
+            data: parentNode?.label,
+            lang: lang ?? 'fi',
+            appendLocale: true,
+          }),
+          handleDelete,
+          splitEdge,
+          parent,
+          {
+            source: parent,
+            sourceHandle: parent,
+            target: node.identifier,
+            targetHandle: node.identifier,
+            id: `reactflow__edge-${parent}-${node.identifier}`,
+          }
+        );
+      }),
+    ]);
+
+  if (!hiddenNodes || hiddenNodes.length < 1) {
+    return edges;
+  }
+
+  const splitEdges = hiddenNodes.map((node) => {
+    const nodeIdentifier = `#${node.identifier}`;
+
+    if (node.referenceTarget.startsWith('corner')) {
+      return createNewCornerEdge(nodeIdentifier, node.referenceTarget, {
+        handleDelete,
+        splitEdge,
+      });
+    }
+
+    const targetClass = nodes.find(
+      (n) => n.identifier === node.referenceTarget
     );
+
+    return createNewAssociationEdge(
+      getLanguageVersion({
+        data: targetClass?.label,
+        lang: lang ?? 'fi',
+        appendLocale: true,
+      }),
+      handleDelete,
+      splitEdge,
+      node.referenceTarget,
+      {
+        source: nodeIdentifier,
+        sourceHandle: nodeIdentifier,
+        target: node.referenceTarget,
+        targetHandle: node.referenceTarget,
+        id: `reactflow__edge-${nodeIdentifier}-${node.referenceTarget}`,
+      }
+    );
+  });
+
+  return [...edges, ...splitEdges];
 }
 
 export function createNewAssociationEdge(

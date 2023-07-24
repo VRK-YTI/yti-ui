@@ -154,10 +154,11 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
 
   useEffect(() => {
     if (isSuccess || (isSuccess && resetPosition)) {
-      setNodes(convertToNodes(data.nodes, i18n.language));
+      setNodes(convertToNodes(data.nodes, data.hiddenNodes, i18n.language));
       setEdges(
         generateInitialEdges(
           data.nodes,
+          data.hiddenNodes,
           deleteEdgeById,
           splitEdge,
           i18n.language
@@ -182,7 +183,6 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   ]);
 
   useEffect(() => {
-    console.log(savePosition, result);
     if (savePosition && !result.isLoading) {
       const positions = generatePositionsPayload(nodes, edges);
 
