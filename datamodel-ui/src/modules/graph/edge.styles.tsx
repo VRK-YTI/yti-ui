@@ -1,21 +1,21 @@
 import styled from 'styled-components';
 
-export const EdgeContent = styled.div<{
-  $labelX: number;
-  $labelY: number;
-  $highlight: boolean;
-}>`
+export const EdgeContent = styled.div.attrs(
+  (props: { $labelX: number; $labelY: number; $highlight: boolean }) => ({
+    style: {
+      transform: `translate(-50%, -50%) translate(${props.$labelX}px, ${props.$labelY}px)`,
+    },
+  })
+)<{ $labelX: number; $labelY: number; $highlight: boolean }>`
   pointer-events: all;
   position: absolute;
   background: #ffffff;
   padding: 5px 20px 5px 10px;
   border-radius: 2px;
-  border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+  border: 2px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   fontsize: 16px;
   fontweight: 400;
   paddingright: 20px;
-  transform: translate(-50%, -50%)
-    translate(${(props) => props.$labelX}px, ${(props) => props.$labelY}px);
 
   ${(props) =>
     props.$highlight &&

@@ -53,4 +53,8 @@ export const ModelFlow = styled(ReactFlow)`
       border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
     }
   }
+
+  .react-flow__edge-path {
+    stroke: ${(props) => props.theme.suomifi.colors.blackBase};;
+  }
 `;
