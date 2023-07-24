@@ -1,9 +1,12 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
   selectHovered,
+  selectModelTools,
   selectSelected,
   setSelected,
 } from '@app/common/components/model/model.slice';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Handle, Position } from 'reactflow';
 import { IconChevronDown, IconChevronUp } from 'suomifi-ui-components';
@@ -26,8 +29,23 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
   const dispatch = useStoreDispatch();
   const globalSelected = useSelector(selectSelected());
   const globalHover = useSelector(selectHovered());
+  const globalShowAttributes = useSelector(selectModelTools()).showAttributes;
   const [showAttributes, setShowAttributes] = useState(true);
   const [hover, setHover] = useState(false);
+
+  const handleTitleClick = () => {
+    if (globalSelected.id !== id) {
+      dispatch(setSelected(id, 'classes'));
+    }
+  };
+
+  const handleShowAttributesClick = () => {
+    setShowAttributes(!showAttributes);
+  };
+
+  useEffect(() => {
+    setShowAttributes(globalShowAttributes);
+  }, [globalShowAttributes]);
 
   return (
     <ClassNodeDiv
@@ -41,13 +59,14 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
       $hover={hover || globalHover.id === id}
     >
       <Handle type="target" position={Position.Top} id={id} />
+      <Handle type="source" position={Position.Bottom} id={id} />
+
       <div className="node-title">
-        <div>{data.label}</div>
-        <button onClick={() => setShowAttributes(!showAttributes)}>
+        <div onClick={() => handleTitleClick()}>{data.label}</div>
+        <button onClick={() => handleShowAttributesClick()}>
           {showAttributes ? <IconChevronUp /> : <IconChevronDown />}
         </button>
       </div>
-      <Handle type="source" position={Position.Bottom} id={id} />
 
       {showAttributes &&
         data.resources &&
@@ -56,6 +75,11 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
             key={`${id}-child-${r.identifier}`}
             className="node-resource"
             onClick={() => dispatch(setSelected(r.identifier, 'attributes'))}
+            $highlight={
+              globalSelected.type === 'attributes' &&
+              globalSelected.id !== '' &&
+              globalSelected.id === r.identifier
+            }
           >
             {r.label}
           </Attribute>

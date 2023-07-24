@@ -36,18 +36,14 @@ export const ClassNodeDiv = styled.div<{
     border: 1px solid #86499c;
     border-radius: 2px 2px 0px 0px;
     font-weight: 600;
-  }
 
-  .node-resource {
-    background: #f7f7f8;
-    border: 1px solid #c8cdd0;
-    border-radius: 2px;
+    *:first-child {
+      flex-grow: 1;
+    }
   }
 
   .react-flow__handle {
-    padding: 0;
-    width: 10px;
-    height: 10px;
+    display: none;
   }
 
   button {
@@ -63,6 +59,8 @@ export const ClassNodeDiv = styled.div<{
       padding 0;
       margin 0;
       color: ${(props) => props.theme.suomifi.colors.whiteBase};
+      width: 24px;
+      height: 24px;
     }
 
     &:hover {
@@ -77,8 +75,20 @@ export const ClassNodeDiv = styled.div<{
   }
 `;
 
-export const Attribute = styled.div`
+export const Attribute = styled.div<{ $highlight?: boolean }>`
+  background: #f7f7f8;
+  border: 1px solid #c8cdd0;
+  border-radius: 2px;
+  margin: 2px;
+
   &:hover {
     background: ${(props) => props.theme.suomifi.colors.depthLight2};
   }
+
+  ${(props) =>
+    props.$highlight &&
+    `
+    border: 3px solid #FAAF00;
+    margin: 0;
+    `}
 `;

@@ -88,7 +88,7 @@ export default function RangeAndDomain({
     });
   };
 
-  if (type === ResourceType.ASSOCIATION) {
+  if (applicationProfile && type === ResourceType.ASSOCIATION) {
     return <></>;
   }
 
