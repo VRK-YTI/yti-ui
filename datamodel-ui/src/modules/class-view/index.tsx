@@ -331,6 +331,8 @@ export default function ClassView({
       <ClassInfo
         data={classData}
         modelId={modelId}
+        languages={languages}
+        terminologies={terminologies}
         applicationProfile={applicationProfile}
         handleReturn={handleReturn}
         handleEdit={handleEdit}

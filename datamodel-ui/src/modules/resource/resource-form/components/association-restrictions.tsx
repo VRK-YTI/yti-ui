@@ -6,12 +6,10 @@ import { Button, TextInput } from 'suomifi-ui-components';
 
 export default function AssociationRestrictions({
   data,
-  type,
   applicationProfile,
   handleUpdate,
 }: {
   data: ResourceFormType;
-  type: ResourceType;
   applicationProfile?: boolean;
   handleUpdate: (
     key: keyof ResourceFormType,
@@ -20,7 +18,7 @@ export default function AssociationRestrictions({
 }) {
   const { t } = useTranslation('admin');
 
-  if (type !== ResourceType.ASSOCIATION) {
+  if (data.type !== ResourceType.ASSOCIATION) {
     return <></>;
   }
 

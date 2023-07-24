@@ -307,23 +307,39 @@ export function translateResourceCountTitle(
   }
 }
 
-export function translateResourceAddition(type: ResourceType, t: TFunction) {
+export function translateResourceAddition(
+  type: ResourceType,
+  t: TFunction,
+  applicationProfile?: boolean
+) {
   switch (type) {
     case ResourceType.ASSOCIATION:
-      return t('add-association', { ns: 'admin' });
+      return applicationProfile
+        ? t('add-association-restriction', { ns: 'admin' })
+        : t('add-association', { ns: 'admin' });
     case ResourceType.ATTRIBUTE:
-      return t('add-attribute', { ns: 'admin' });
+      return applicationProfile
+        ? t('add-attribute-restriction', { ns: 'admin' })
+        : t('add-attribute', { ns: 'admin' });
     default:
       return '';
   }
 }
 
-export function translateResourceName(type: ResourceType, t: TFunction) {
+export function translateResourceName(
+  type: ResourceType,
+  t: TFunction,
+  applicationProfile?: boolean
+) {
   switch (type) {
     case ResourceType.ASSOCIATION:
-      return t('association-name', { ns: 'admin' });
+      return applicationProfile
+        ? t('association-restriction-name', { ns: 'admin' })
+        : t('association-name', { ns: 'admin' });
     case ResourceType.ATTRIBUTE:
-      return t('attribute-name', { ns: 'admin' });
+      return applicationProfile
+        ? t('attribute-restriction-name', { ns: 'admin' })
+        : t('attribute-name', { ns: 'admin' });
     default:
       return '';
   }

@@ -15,6 +15,7 @@ import MultiColumnSearch from '@app/common/components/multi-column-search';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import {
   InternalResourcesSearchParams,
+  initialSearchData,
   useGetInternalResourcesInfoMutation,
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
@@ -53,18 +54,9 @@ export default function ClassModal({
   const [searchInternalResources, result] =
     useGetInternalResourcesInfoMutation();
   const [searchParams, setSearchParams] =
-    useState<InternalResourcesSearchParams>({
-      query: '',
-      status: ['VALID', 'DRAFT'],
-      groups: [],
-      sortLang: i18n.language,
-      pageSize: 50,
-      pageFrom: 0,
-      limitToDataModel: modelId,
-      limitToModelType: 'LIBRARY',
-      fromAddedNamespaces: true,
-      resourceTypes: [ResourceType.CLASS],
-    });
+    useState<InternalResourcesSearchParams>(
+      initialSearchData(i18n.language, modelId, ResourceType.CLASS)
+    );
 
   const handleOpen = () => {
     setVisible(true);
@@ -73,17 +65,9 @@ export default function ClassModal({
 
   const handleClose = () => {
     setSelectedId('');
-    setSearchParams({
-      query: '',
-      status: ['VALID', 'DRAFT'],
-      groups: [],
-      sortLang: i18n.language,
-      pageSize: 50,
-      pageFrom: 0,
-      limitToDataModel: modelId,
-      limitToModelType: 'LIBRARY',
-      resourceTypes: [ResourceType.CLASS],
-    });
+    setSearchParams(
+      initialSearchData(i18n.language, modelId, ResourceType.CLASS)
+    );
     setContentLanguage(undefined);
     setVisible(false);
   };

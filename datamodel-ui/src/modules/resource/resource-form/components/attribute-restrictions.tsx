@@ -14,12 +14,10 @@ import Separator from 'yti-common-ui/separator';
 
 export default function AttributeRestrictions({
   data,
-  type,
   applicationProfile,
   handleUpdate,
 }: {
   data: ResourceFormType;
-  type: ResourceType;
   applicationProfile?: boolean;
   handleUpdate: (
     key: keyof ResourceFormType,
@@ -28,7 +26,7 @@ export default function AttributeRestrictions({
 }) {
   const { t } = useTranslation('admin');
 
-  if (type !== ResourceType.ATTRIBUTE || !applicationProfile) {
+  if (data.type !== ResourceType.ATTRIBUTE || !applicationProfile) {
     return <></>;
   }
 

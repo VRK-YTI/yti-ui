@@ -51,18 +51,17 @@ import ResourceModal from '../resource-modal';
 import useSetView from '@app/common/utils/hooks/use-set-view';
 
 interface ResourceFormProps {
-  type: ResourceType;
   modelId: string;
   languages: string[];
   terminologies: string[];
-  isEdit: boolean;
+  isEdit?: boolean;
   applicationProfile?: boolean;
-  refetch: () => void;
+  refetch?: () => void;
   handleReturn: () => void;
+  handleFollowUp?: (identifier: string, type: ResourceType) => void;
 }
 
 export default function ResourceForm({
-  type,
   modelId,
   languages,
   terminologies,
@@ -70,6 +69,7 @@ export default function ResourceForm({
   applicationProfile,
   refetch,
   handleReturn,
+  handleFollowUp,
 }: ResourceFormProps) {
   const { t } = useTranslation('admin');
   const { enableConfirmation, disableConfirmation } =
@@ -120,7 +120,7 @@ export default function ResourceForm({
 
     const payload = {
       modelId: modelId,
-      data: { ...data, type: type, label: usedLabels },
+      data: { ...data, label: usedLabels },
       applicationProfile,
     };
 
@@ -211,7 +211,7 @@ export default function ResourceForm({
   ) => {
     if (key === 'subResourceOf' && data.subResourceOf?.length === 1) {
       const value =
-        type === ResourceType.ASSOCIATION
+        data.type === ResourceType.ASSOCIATION
           ? 'owl:TopObjectProperty'
           : 'owl:topDataProperty';
       handleUpdate({
@@ -238,25 +238,30 @@ export default function ResourceForm({
     }
 
     if (updateResult.isSuccess || createResult.isSuccess) {
+      if (handleFollowUp) {
+        handleFollowUp(data.identifier, data.type);
+        return;
+      }
+
       dispatch(
         setSelected(
           data.identifier,
-          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
+          data.type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
         )
       );
       setView(
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        data.type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
         'info',
         data.identifier
       );
 
-      if (isEdit) {
+      if (isEdit && refetch) {
         refetch();
       }
 
       router.replace(
         `${modelId}/${
-          type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
+          data.type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
         }/${data.identifier}`
       );
     }
@@ -276,8 +281,8 @@ export default function ResourceForm({
     userPosted,
     updateResult,
     createResult,
+    handleFollowUp,
     dispatch,
-    type,
     router,
     modelId,
     data,
@@ -307,7 +312,7 @@ export default function ResourceForm({
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Text variant="bold">
             {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
-              translateCommonForm('name', type, t)}
+              translateCommonForm('name', data.type, t)}
           </Text>
 
           <div>
@@ -359,7 +364,7 @@ export default function ResourceForm({
         <FormWrapper>
           <ApplicationProfileTop
             defaultChecked={true}
-            type={type}
+            type={data.type}
             applicationProfile={applicationProfile}
           />
 
@@ -374,7 +379,11 @@ export default function ResourceForm({
               <TextInput
                 key={`label-${lang}`}
                 className="wide-text"
-                labelText={`${translateCommonForm('name', type, t)}, ${lang}`}
+                labelText={`${translateCommonForm(
+                  'name',
+                  data.type,
+                  t
+                )}, ${lang}`}
                 value={data.label[lang] ?? ''}
                 onChange={(e) =>
                   handleUpdate({
@@ -389,7 +398,7 @@ export default function ResourceForm({
           </LanguageVersionedWrapper>
 
           <TextInput
-            labelText={translateCommonForm('identifier', type, t)}
+            labelText={translateCommonForm('identifier', data.type, t)}
             defaultValue={data.identifier}
             onChange={(e) =>
               handleUpdate({
@@ -417,7 +426,6 @@ export default function ResourceForm({
           <RangeAndDomain
             applicationProfile={applicationProfile}
             modelId={modelId}
-            type={type}
             data={data}
             handleUpdate={handleUpdate}
           />
@@ -425,7 +433,7 @@ export default function ResourceForm({
           {!applicationProfile && (
             <>
               <InlineListBlock
-                label={translateCommonForm('upper', type, t)}
+                label={translateCommonForm('upper', data.type, t)}
                 items={
                   data.subResourceOf?.map((resource) => ({
                     id: resource.uri,
@@ -435,14 +443,22 @@ export default function ResourceForm({
                 addNewComponent={
                   <ResourceModal
                     buttonTranslations={{
-                      useSelected: translateCommonForm('add-upper', type, t),
-                      openButton: translateCommonForm('add-upper', type, t),
+                      useSelected: translateCommonForm(
+                        'add-upper',
+                        data.type,
+                        t
+                      ),
+                      openButton: translateCommonForm(
+                        'add-upper',
+                        data.type,
+                        t
+                      ),
                     }}
                     handleFollowUp={(e) =>
                       handleResourceUpdate(e, 'subResourceOf')
                     }
                     modelId={modelId}
-                    type={type}
+                    type={data.type}
                     applicationProfile={applicationProfile}
                     buttonIcon
                   />
@@ -458,7 +474,7 @@ export default function ResourceForm({
               />
 
               <InlineListBlock
-                label={translateCommonForm('equivalent', type, t)}
+                label={translateCommonForm('equivalent', data.type, t)}
                 items={
                   data.equivalentResource?.map((r) => ({
                     id: r.uri,
@@ -470,12 +486,12 @@ export default function ResourceForm({
                     buttonTranslations={{
                       useSelected: translateCommonForm(
                         'add-equivalent',
-                        type,
+                        data.type,
                         t
                       ),
                       openButton: translateCommonForm(
                         'add-equivalent',
-                        type,
+                        data.type,
                         t
                       ),
                     }}
@@ -483,7 +499,7 @@ export default function ResourceForm({
                       handleResourceUpdate(e, 'equivalentResource')
                     }
                     modelId={modelId}
-                    type={type}
+                    type={data.type}
                     applicationProfile={applicationProfile}
                     buttonIcon
                   />
@@ -498,7 +514,6 @@ export default function ResourceForm({
 
           <AssociationRestrictions
             data={data}
-            type={type}
             applicationProfile={applicationProfile}
             handleUpdate={handleUpdateByKey}
           />
@@ -520,7 +535,6 @@ export default function ResourceForm({
 
           <AttributeRestrictions
             data={data}
-            type={type}
             applicationProfile={applicationProfile}
             handleUpdate={handleUpdateByKey}
           />
@@ -529,7 +543,11 @@ export default function ResourceForm({
             {languages.map((lang) => (
               <Textarea
                 key={`label-${lang}`}
-                labelText={`${translateCommonForm('note', type, t)}, ${lang}`}
+                labelText={`${translateCommonForm(
+                  'note',
+                  data.type,
+                  t
+                )}, ${lang}`}
                 defaultValue={data.note?.[lang] ?? ''}
                 onChange={(e) =>
                   handleUpdate({
@@ -545,7 +563,7 @@ export default function ResourceForm({
           </LanguageVersionedWrapper>
 
           <Textarea
-            labelText={translateCommonForm('work-group-comment', type, t)}
+            labelText={translateCommonForm('work-group-comment', data.type, t)}
             optionalText={t('optional')}
             defaultValue={data.editorialNote}
             onChange={(e) =>
@@ -566,7 +584,7 @@ export default function ResourceForm({
       .map((e) =>
         translateCommonFormErrors(
           e[0],
-          type === ResourceType.ASSOCIATION
+          data.type === ResourceType.ASSOCIATION
             ? ResourceType.ASSOCIATION
             : ResourceType.ATTRIBUTE,
           t
