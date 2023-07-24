@@ -2,10 +2,11 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
   selectHovered,
+  selectModelTools,
   selectSelected,
   setSelected,
 } from '@app/common/components/model/model.slice';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Handle, Position } from 'reactflow';
 import { IconChevronDown, IconChevronUp } from 'suomifi-ui-components';
@@ -28,6 +29,7 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
   const dispatch = useStoreDispatch();
   const globalSelected = useSelector(selectSelected());
   const globalHover = useSelector(selectHovered());
+  const globalShowAttributes = useSelector(selectModelTools()).showAttributes;
   const [showAttributes, setShowAttributes] = useState(true);
   const [hover, setHover] = useState(false);
 
@@ -36,6 +38,14 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
       dispatch(setSelected(id, 'classes'));
     }
   };
+
+  const handleShowAttributesClick = () => {
+    setShowAttributes(!showAttributes);
+  };
+
+  useEffect(() => {
+    setShowAttributes(globalShowAttributes);
+  }, [globalShowAttributes]);
 
   return (
     <ClassNodeDiv
@@ -53,7 +63,7 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
 
       <div className="node-title">
         <div onClick={() => handleTitleClick()}>{data.label}</div>
-        <button onClick={() => setShowAttributes(!showAttributes)}>
+        <button onClick={() => handleShowAttributesClick()}>
           {showAttributes ? <IconChevronUp /> : <IconChevronDown />}
         </button>
       </div>
