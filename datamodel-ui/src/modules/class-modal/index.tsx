@@ -113,16 +113,6 @@ export default function ClassModal({
     );
   };
 
-  const getLinkLabel = (ns: string, id: string) => {
-    const namespace =
-      ns
-        .split('/')
-        .filter((val) => val !== '')
-        .pop()
-        ?.replace('#', '') ?? ns;
-    return `${namespace}:${id}`;
-  };
-
   useEffect(() => {
     if (result.isSuccess) {
       setResultsFormatted(
@@ -134,7 +124,7 @@ export default function ClassModal({
               lang: contentLanguage ?? i18n.language,
               appendLocale: true,
             }),
-            linkLabel: getLinkLabel(r.namespace, r.identifier),
+            linkLabel: r.curie,
             link: r.id,
             status: translateStatus(r.status, t),
             isValid: r.status === 'VALID',

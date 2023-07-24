@@ -1,6 +1,7 @@
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { ClassType } from '@app/common/interfaces/class.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { getCurie } from '@app/common/utils/get-value';
 
 export function internalClassToClassForm(
   data: InternalClass,
@@ -38,9 +39,7 @@ export function internalClassToClassForm(
 
   if (applicationProfile) {
     obj['targetClass'] = {
-      label: `${data.namespace.split('/').filter(Boolean).pop()}:${
-        data.identifier
-      }`,
+      label: `${getCurie(data.namespace, data.identifier)}`,
       id: data.id,
     };
     obj['association'] = associations ?? [];
@@ -48,22 +47,15 @@ export function internalClassToClassForm(
   } else {
     obj['subClassOf'] = [
       {
-        label: `${data.namespace.split('/').filter(Boolean).pop()}:${
-          data.identifier
-        }`,
+        label: `${getCurie(data.namespace, data.identifier)}`,
         identifier: data.id,
-        attributes: ['Attribuutti #1', 'Attribuutti #2'],
       },
     ];
   }
 
   if (targetClass) {
     obj['node'] = {
-      label: `${targetClass.namespace
-        .replace(/\/$/, '')
-        .split('/')
-        .pop()
-        ?.replace('#', ':')}:${targetClass.identifier}`,
+      label: `${getCurie(targetClass.namespace, targetClass.identifier)}`,
       id: targetClass.id,
     };
   }
@@ -77,8 +69,8 @@ export function classTypeToClassForm(data: ClassType): ClassFormType {
     editorialNote: data.editorialNote ?? '',
     equivalentClass:
       data.equivalentClass?.map((ec) => ({
-        identifier: ec,
-        label: ec,
+        identifier: ec.uri,
+        label: ec.curie,
       })) ?? [],
     identifier: data.identifier,
     label: data.label,
@@ -87,26 +79,25 @@ export function classTypeToClassForm(data: ClassType): ClassFormType {
     subClassOf:
       data.subClassOf &&
       data.subClassOf.filter(
-        (soc) => soc !== 'http://www.w3.org/2002/07/owl#Thing'
+        (soc) => soc.uri !== 'http://www.w3.org/2002/07/owl#Thing'
       ).length > 0
         ? data.subClassOf?.map((sco) => ({
-            identifier: sco,
-            label: sco,
+            identifier: sco.uri,
+            label: sco.curie,
             attributes: [],
           }))
         : [
             {
               identifier: 'owl:Thing',
               label: 'owl:Thing',
-              attributes: [],
             },
           ],
     association: data.association,
     attribute: data.attribute,
     targetClass: data.targetClass
       ? {
-          id: data.targetClass,
-          label: data.targetClass,
+          id: data.targetClass.uri,
+          label: data.targetClass.curie,
         }
       : undefined,
   };

@@ -3,21 +3,6 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Resource } from '@app/common/interfaces/resource.interface';
 
 export function resourceToResourceFormType(data: Resource): ResourceFormType {
-  const pathLabel = data.path
-    ? data.path
-        .split('/')
-        .map((p, idx) => {
-          const length = data.path ? data.path.split('/').length : 0;
-          if (idx === length - 1 || idx === length - 2) {
-            return p;
-          }
-
-          return undefined;
-        })
-        .filter(Boolean)
-        .join(':')
-    : undefined;
-
   return {
     ...data,
     dataType: data.dataType
@@ -25,50 +10,49 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
       : undefined,
     domain: data.domain
       ? {
-          id: data.domain,
-          label: data.domain.split('/').pop()?.replace('#', ':') ?? data.domain,
+          id: data.domain.uri,
+          label: data.domain.curie,
         }
       : undefined,
     equivalentResource: data.equivalentResource
       ? data.equivalentResource.map((er) => ({
-          label: er,
-          uri: er,
+          label: er.curie,
+          uri: er.uri,
         }))
       : [],
     path: data.path
       ? {
-          id: pathLabel ?? data.path,
-          label: pathLabel ?? data.path,
-          uri: data.path,
+          id: data.path.uri,
+          label: data.path.curie,
+          uri: data.path.uri,
         }
       : undefined,
     range: data.range
       ? {
-          id: data.range,
+          id: data.range.uri,
           label:
             data.type == ResourceType.ASSOCIATION
-              ? data.range.split('/').pop()?.replace('#', ':') ?? data.range
-              : data.range,
+              ? data.range.curie
+              : data.range.uri,
         }
       : undefined,
     subResourceOf:
       data.subResourceOf && data.subResourceOf.length > 0
         ? data.subResourceOf.map((sro) => {
             if (
-              sro.endsWith('/owl#topDataProperty') ||
-              sro.endsWith('/owl#topObjectProperty') ||
-              sro.endsWith('/owl#TopObjectProperty')
+              sro.uri.endsWith('/owl#topDataProperty') ||
+              sro.uri.endsWith('/owl#topObjectProperty') ||
+              sro.uri.endsWith('/owl#TopObjectProperty')
             ) {
-              const value = sro.split('/').pop()?.replace('#', ':') ?? sro;
               return {
-                label: value,
-                uri: value,
+                label: sro.curie,
+                uri: sro.curie,
               };
             }
 
             return {
-              label: sro,
-              uri: sro,
+              label: sro.curie,
+              uri: sro.uri,
             };
           })
         : [],

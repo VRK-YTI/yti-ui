@@ -9,6 +9,7 @@ import { LinkedItemWrapper } from './linked-data-form.styles';
 import { useTranslation } from 'next-i18next';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { BasicBlock } from 'yti-common-ui/block';
+import { getPrefixFromURI } from '@app/common/utils/get-value';
 
 interface LinkedItemProps {
   itemData:
@@ -106,7 +107,7 @@ export default function LinkedItem({
           </BasicBlock>
 
           <BasicBlock title={t('prefix-in-this-service')}>
-            {itemData.uri.split('/').pop()?.replace('#', '') ?? itemData.uri}
+            {getPrefixFromURI(itemData.uri) ?? itemData.uri}
           </BasicBlock>
 
           <div className="datamodel-link">
