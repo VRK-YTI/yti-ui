@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { MouseEvent } from 'react';
-import { EdgeProps, getStraightPath } from 'reactflow';
+import { MouseEvent, useCallback } from 'react';
+import { EdgeProps, getStraightPath, useStore } from 'reactflow';
 import styled from 'styled-components';
+import { getEdgeParams } from './utils';
 
 const EdgeContent = styled.div`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
@@ -31,20 +32,23 @@ export default function SplittableEdge({
   id,
   data,
   source,
-  sourceX,
-  sourceY,
   target,
-  targetX,
-  targetY,
-  label,
-  markerEnd,
   selected,
 }: EdgeProps) {
+  const sourceNode = useStore(
+    useCallback((store) => store.nodeInternals.get(source), [source])
+  );
+  const targetNode = useStore(
+    useCallback((store) => store.nodeInternals.get(target), [target])
+  );
+
+  const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode);
+
   const [edgePath, labelX, labelY] = getStraightPath({
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
+    sourceX: sx,
+    sourceY: sy,
+    targetX: tx,
+    targetY: ty,
   });
 
   const onDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {

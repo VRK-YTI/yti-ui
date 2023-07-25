@@ -10,13 +10,11 @@ import { InternalClassInfo } from '@app/common/interfaces/internal-class.interfa
 export default function AssociationRestrictions({
   modelId,
   data,
-  type,
   applicationProfile,
   handleUpdate,
 }: {
   modelId: string;
   data: ResourceFormType;
-  type: ResourceType;
   applicationProfile?: boolean;
   handleUpdate: (
     key: keyof ResourceFormType,
@@ -32,7 +30,7 @@ export default function AssociationRestrictions({
     handleUpdate('classType', value ? value.id : undefined);
   };
 
-  if (type !== ResourceType.ASSOCIATION) {
+  if (data.type !== ResourceType.ASSOCIATION) {
     return <></>;
   }
 
@@ -43,7 +41,7 @@ export default function AssociationRestrictions({
           addNewComponent={
             <ResourceModal
               modelId={modelId}
-              type={type}
+              type={data.type}
               buttonTranslations={{
                 useSelected: t('select-association'),
               }}

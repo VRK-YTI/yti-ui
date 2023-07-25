@@ -3,6 +3,7 @@ import {
   createNewAssociationEdge,
   createNewCornerEdge,
   generateInitialEdges,
+  generatePositionsPayload,
   getConnectedCornerIds,
   handleEdgeDelete,
 } from './utils';
@@ -11,16 +12,29 @@ import {
   connectedEdgesRemovedMultiple,
   convertedExpected,
   convertedLangVersionedExpected,
+  convertedWithHiddenExpected,
+  convertedWithHiddenLangVersionedExpected,
   initialEdges,
+  initialEdgesWithHidden,
+  multipleFromOneCornerEdges,
+  multipleFromOneCornerNodes,
+  noCornerEdges,
+  noCornerNodes,
+  oneCornerEdges,
+  oneCornerNodes,
   threeEdgesOneMultipleSplit,
+  twoCornerEdges,
+  twoCornerNodes,
   twoEdgesOneSplit,
+  visualizationHiddenTypeArray,
   visualizationTypeArray,
+  visualizationTypeArrayWithHidden,
 } from './util.test.data';
 import { MarkerType } from 'reactflow';
 
 describe('graph-util', () => {
   it('should return an empty array if given an empty array', () => {
-    const returned = convertToNodes([]);
+    const returned = convertToNodes([], []);
 
     expect(returned).toStrictEqual([]);
   });
@@ -31,10 +45,24 @@ describe('graph-util', () => {
     const expected = convertedExpected;
     const expectedLangVersioned = convertedLangVersionedExpected;
 
-    const returned = convertToNodes(input);
+    const returned = convertToNodes(input, []);
     expect(returned).toStrictEqual(expected);
 
-    const returnedLangVersioned = convertToNodes(input, 'en');
+    const returnedLangVersioned = convertToNodes(input, [], 'en');
+    expect(returnedLangVersioned).toStrictEqual(expectedLangVersioned);
+  });
+
+  it('should convert VisualizationType[] and VisualizationHiddenNode[] to a Node[]', () => {
+    const input = visualizationTypeArray;
+    const inputHidden = visualizationHiddenTypeArray;
+
+    const expected = convertedWithHiddenExpected;
+    const expectedLangVersioned = convertedWithHiddenLangVersionedExpected;
+
+    const returned = convertToNodes(input, inputHidden);
+    expect(returned).toStrictEqual(expected);
+
+    const returnedLangVersioned = convertToNodes(input, inputHidden, 'en');
     expect(returnedLangVersioned).toStrictEqual(expectedLangVersioned);
   });
 
@@ -64,7 +92,7 @@ describe('graph-util', () => {
     expect(input2).toStrictEqual(connectedEdgesRemovedMultiple);
   });
 
-  it('should create a association edge', () => {
+  it('should create an association edge', () => {
     const deleteMock = jest.fn();
     const splitMock = jest.fn();
 
@@ -72,6 +100,7 @@ describe('graph-util', () => {
       'association',
       deleteMock,
       splitMock,
+      'id-1',
       {}
     );
 
@@ -79,20 +108,22 @@ describe('graph-util', () => {
       type: 'associationEdge',
       markerEnd: {
         type: 'arrowclosed',
-        height: 30,
-        width: 30,
+        height: 20,
+        width: 20,
+        color: '#222',
       },
       label: 'association',
       data: {
         handleDelete: deleteMock,
         splitEdge: splitMock,
+        identifier: 'id-1',
       },
     };
 
     expect(input).toStrictEqual(expected);
   });
 
-  it('should create a association edge with params', () => {
+  it('should create an association edge with params', () => {
     const deleteMock = jest.fn();
     const splitMock = jest.fn();
 
@@ -100,6 +131,7 @@ describe('graph-util', () => {
       'association',
       deleteMock,
       splitMock,
+      'id-1',
       {
         param1: 'basic string',
         param2: {
@@ -114,13 +146,15 @@ describe('graph-util', () => {
       type: 'associationEdge',
       markerEnd: {
         type: 'arrowclosed',
-        height: 30,
-        width: 30,
+        height: 20,
+        width: 20,
+        color: '#222',
       },
       label: 'association',
       data: {
         handleDelete: deleteMock,
         splitEdge: splitMock,
+        identifier: 'id-1',
       },
       param1: 'basic string',
       param2: {
@@ -224,6 +258,7 @@ describe('graph-util', () => {
 
     const input = generateInitialEdges(
       visualizationTypeArray,
+      [],
       mockDelete,
       mockSplit,
       'fi'
@@ -232,5 +267,137 @@ describe('graph-util', () => {
     const expected = initialEdges(mockDelete, mockSplit);
 
     expect(input).toStrictEqual(expected);
+  });
+
+  it('should generate edges between classes and corners', () => {
+    const mockDelete = jest.fn();
+    const mockSplit = jest.fn();
+
+    const input = generateInitialEdges(
+      visualizationTypeArrayWithHidden,
+      visualizationHiddenTypeArray,
+      mockDelete,
+      mockSplit,
+      'fi'
+    );
+
+    const expected = initialEdgesWithHidden(mockDelete, mockSplit);
+
+    expect(input).toStrictEqual(expected);
+  });
+
+  it('should generate payload that has no corner nodes', () => {
+    const input = generatePositionsPayload(noCornerNodes, noCornerEdges);
+
+    expect(input).toStrictEqual([
+      {
+        identifier: 'class-1',
+        x: 0,
+        y: 0,
+        referenceTargets: [],
+      },
+      {
+        identifier: 'class-2',
+        x: 0,
+        y: 100,
+        referenceTargets: [],
+      },
+    ]);
+  });
+
+  it('should generate payload that has corner node', () => {
+    const input = generatePositionsPayload(oneCornerNodes, oneCornerEdges);
+
+    expect(input).toStrictEqual([
+      {
+        identifier: 'class-1',
+        x: 0,
+        y: 0,
+        referenceTargets: ['corner-12345678'],
+      },
+      {
+        identifier: 'class-2',
+        x: 0,
+        y: 100,
+        referenceTargets: [],
+      },
+      {
+        identifier: 'corner-12345678',
+        x: 5,
+        y: 50,
+        referenceTargets: ['class-2'],
+      },
+    ]);
+  });
+
+  it('should generate payload that has corner nodes', () => {
+    const input = generatePositionsPayload(twoCornerNodes, twoCornerEdges);
+
+    expect(input).toStrictEqual([
+      {
+        identifier: 'class-1',
+        x: 0,
+        y: 0,
+        referenceTargets: ['corner-12345678'],
+      },
+      {
+        identifier: 'class-2',
+        x: 0,
+        y: 100,
+        referenceTargets: [],
+      },
+      {
+        identifier: 'corner-12345678',
+        x: 5,
+        y: 50,
+        referenceTargets: ['corner-87654321'],
+      },
+      {
+        identifier: 'corner-87654321',
+        x: 15,
+        y: 50,
+        referenceTargets: ['class-2'],
+      },
+    ]);
+  });
+
+  it('should generate payload where one class that has multiple corner nodes connected', () => {
+    const input = generatePositionsPayload(
+      multipleFromOneCornerNodes,
+      multipleFromOneCornerEdges
+    );
+
+    expect(input).toStrictEqual([
+      {
+        identifier: 'class-1',
+        x: 0,
+        y: 0,
+        referenceTargets: ['corner-12345678', 'corner-87654321'],
+      },
+      {
+        identifier: 'class-2',
+        x: 0,
+        y: 100,
+        referenceTargets: [],
+      },
+      {
+        identifier: 'class-3',
+        x: 100,
+        y: 100,
+        referenceTargets: [],
+      },
+      {
+        identifier: 'corner-12345678',
+        x: 5,
+        y: 50,
+        referenceTargets: ['class-2'],
+      },
+      {
+        identifier: 'corner-87654321',
+        x: 50,
+        y: 50,
+        referenceTargets: ['class-3'],
+      },
+    ]);
   });
 });

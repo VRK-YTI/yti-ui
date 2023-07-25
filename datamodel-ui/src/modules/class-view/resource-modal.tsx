@@ -30,13 +30,12 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 interface ResourceModalProps {
   modelId: string;
   type: ResourceType;
-  buttonTranslations: {
-    useSelected: string;
-    createNew?: string;
-    openButton?: string;
-  };
-  handleFollowUp: (value?: { label: string; uri: string }) => void;
-  defaultSelected?: string;
+  handleFollowUp: (value: {
+    label: string;
+    uri: string;
+    mode: 'create' | 'select';
+    type: ResourceType;
+  }) => void;
   buttonIcon?: boolean;
   applicationProfile?: boolean;
 }
@@ -44,18 +43,14 @@ interface ResourceModalProps {
 export default function ResourceModal({
   modelId,
   type,
-  buttonTranslations,
   handleFollowUp,
-  defaultSelected,
   buttonIcon,
   applicationProfile,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
-  const [selectedId, setSelectedId] = useState(
-    defaultSelected ? defaultSelected : ''
-  );
+  const [selectedId, setSelectedId] = useState('');
   const [contentLanguage, setContentLanguage] = useState<string>();
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [searchParams, setSearchParams] =
@@ -76,10 +71,6 @@ export default function ResourceModal({
   const handleOpen = () => {
     setVisible(true);
     handleSearch();
-
-    if (defaultSelected && defaultSelected !== selectedId) {
-      setSelectedId(defaultSelected);
-    }
   };
 
   const handleClose = () => {
@@ -89,10 +80,8 @@ export default function ResourceModal({
     setSelectedId('');
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (mode: 'create' | 'select') => {
     if (!selectedId || selectedId === '' || !result.data) {
-      handleFollowUp();
-      handleClose();
       return;
     }
 
@@ -104,6 +93,8 @@ export default function ResourceModal({
       handleFollowUp({
         label: getCurie(selectedObj.namespace, selectedObj.identifier),
         uri: selectedObj.id,
+        mode: mode,
+        type: type,
       });
     }
     handleClose();
@@ -167,8 +158,9 @@ export default function ResourceModal({
         onClick={() => handleOpen()}
         id="add-resource-button"
       >
-        {buttonTranslations.openButton ??
-          translateResourceAddition(type, t, applicationProfile)}
+        {type === ResourceType.ASSOCIATION
+          ? t('add-association-restriction')
+          : t('add-attribute-restriction')}
       </Button>
 
       <WideModal
@@ -178,7 +170,9 @@ export default function ResourceModal({
         onEscKeyDown={() => setVisible(false)}
       >
         <ModalContent>
-          <ModalTitle>{translateResourceAddition(type, t)}</ModalTitle>
+          <ModalTitle>
+            {translateResourceAddition(type, t, applicationProfile)}
+          </ModalTitle>
           <MultiColumnSearch
             primaryColumnName={translateResourceName(
               type,
@@ -204,23 +198,25 @@ export default function ResourceModal({
         <ModalFooter>
           <Button
             disabled={selectedId === ''}
-            onClick={() => handleSubmit()}
+            onClick={() => handleSubmit('select')}
             id="use-selected-button"
           >
-            {buttonTranslations.useSelected}
+            {type === ResourceType.ASSOCIATION
+              ? t('select-association-restriction')
+              : t('select-attribute-restriction')}
           </Button>
 
-          {buttonTranslations.createNew && (
-            <Button
-              variant="secondary"
-              icon={<IconPlus />}
-              disabled={selectedId !== ''}
-              onClick={() => handleSubmit()}
-              id="create-new-button"
-            >
-              {buttonTranslations.createNew}
-            </Button>
-          )}
+          <Button
+            variant="secondary"
+            icon={<IconPlus />}
+            disabled={selectedId === ''}
+            onClick={() => handleSubmit('create')}
+            id="create-new-button"
+          >
+            {type === ResourceType.ASSOCIATION
+              ? t('create-new-association-constraint')
+              : t('create-new-attribute-constraint')}
+          </Button>
 
           <Button
             variant="secondaryNoBorder"

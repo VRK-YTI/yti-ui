@@ -300,7 +300,6 @@ export default function ResourceView({
 
     return (
       <ResourceForm
-        type={type}
         modelId={modelId}
         languages={languages}
         terminologies={terminologies}

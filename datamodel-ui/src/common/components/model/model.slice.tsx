@@ -136,6 +136,20 @@ const initialState = {
   hasChanges: false,
   displayWarning: false,
   displayLang: 'fi',
+  tools: {
+    fullScreen: false,
+    resetPosition: false,
+    savePosition: false,
+    showAttributes: true,
+    showCardinality: false,
+    showStatus: false,
+    showNotes: false,
+    showOriginalClass: false,
+    showAssociationRestrictions: true,
+    showAttributeRestrictions: true,
+    showByName: true,
+    showById: false,
+  },
 };
 
 export const modelSlice = createSlice({
@@ -237,6 +251,29 @@ export const modelSlice = createSlice({
         displayLang: action.payload,
       };
     },
+    setTools(state, action) {
+      if (
+        action.payload.key === 'showByName' ||
+        action.payload.key === 'showById'
+      ) {
+        return {
+          ...state,
+          tools: {
+            ...state.tools,
+            showByName: action.payload.key === 'showByName' ? true : false,
+            showById: action.payload.key === 'showById' ? true : false,
+          },
+        };
+      }
+
+      return {
+        ...state,
+        tools: {
+          ...state.tools,
+          [action.payload.key]: action.payload.value,
+        },
+      };
+    },
   },
 });
 
@@ -324,4 +361,39 @@ export function setDisplayLang(value: string): AppThunk {
 
 export function selectDisplayLang() {
   return (state: AppState) => state.model.displayLang;
+}
+
+export function setModelTools(key: string, value: boolean): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setTools({ key, value }));
+}
+
+export function selectModelTools() {
+  return (state: AppState) => state.model.tools;
+}
+
+export function setFullScreen(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setTools({ key: 'fullScreen', value }));
+}
+
+export function selectFullScreen() {
+  return (state: AppState) => state.model.tools.fullScreen;
+}
+
+export function setSavePosition(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setTools({ key: 'savePosition', value }));
+}
+
+export function selectSavePosition() {
+  return (state: AppState) => state.model.tools.savePosition;
+}
+
+export function setResetPosition(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setTools({ key: 'resetPosition', value }));
+}
+
+export function selectResetPosition() {
+  return (state: AppState) => state.model.tools.resetPosition;
 }

@@ -28,9 +28,10 @@ import { translateDrawerButton } from '@app/common/utils/translation-helpers';
 
 interface ModelProps {
   modelId: string;
+  fullScreen?: boolean;
 }
 
-export default function Model({ modelId }: ModelProps) {
+export default function Model({ modelId, fullScreen }: ModelProps) {
   const { t } = useTranslation('common');
   const hasPermission = HasPermission({
     actions: 'ADMIN_DATA_MODEL',
@@ -150,7 +151,7 @@ export default function Model({ modelId }: ModelProps) {
   return (
     <div
       style={{
-        height: 0,
+        height: fullScreen ? '100vh' : 0,
         flex: '1 1 auto',
         display: 'flex',
         flexDirection: 'column',
@@ -159,7 +160,7 @@ export default function Model({ modelId }: ModelProps) {
       <ContentWrapper>
         <Graph modelId={modelId}>
           <Drawer views={views} />
-          <ModelTools />
+          <ModelTools applicationProfile={modelInfo?.type === 'PROFILE'} />
         </Graph>
       </ContentWrapper>
     </div>

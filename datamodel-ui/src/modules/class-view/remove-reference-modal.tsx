@@ -56,7 +56,7 @@ export default function RemoveReferenceModal({
     } else if (result.isError) {
       setError(true);
     }
-  }, [result]);
+  }, [result, handleReturn]);
 
   return (
     <>

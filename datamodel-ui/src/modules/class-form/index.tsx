@@ -704,15 +704,6 @@ export default function ClassForm({
                     }}
                     attribute
                   />
-                  {applicationProfile && (
-                    <Button
-                      variant="secondary"
-                      style={{ marginTop: '10px' }}
-                      id="add-attribute-button"
-                    >
-                      {t('add-attribute')}
-                    </Button>
-                  )}
                 </div>
               ))}
             </ExpanderGroup>
@@ -748,15 +739,6 @@ export default function ClassForm({
                       handleUpdate({ ...data, association: newAssociations });
                     }}
                   />
-                  {applicationProfile && (
-                    <Button
-                      variant="secondary"
-                      style={{ marginTop: '10px' }}
-                      id="add-association-button"
-                    >
-                      {t('add-association')}
-                    </Button>
-                  )}
                 </div>
               ))}
             </ExpanderGroup>

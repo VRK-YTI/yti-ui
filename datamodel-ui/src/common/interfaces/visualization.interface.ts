@@ -17,6 +17,13 @@ export interface VisualizationType {
   }[];
 }
 
+export interface VisualizationPutType {
+  identifier: string;
+  x: number;
+  y: number;
+  referenceTargets: string[];
+}
+
 export interface VisualizationHiddenNode {
   identifier: string;
   position: {
