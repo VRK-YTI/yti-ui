@@ -32,6 +32,7 @@ export interface ClassModalProps {
   initialSelected?: string;
   plusIcon?: boolean;
   resourceRestriction?: boolean;
+  limitToModelType?: 'LIBRARY' | 'PROFILE';
 }
 
 export default function ClassModal({
@@ -43,6 +44,7 @@ export default function ClassModal({
   initialSelected,
   plusIcon,
   resourceRestriction,
+  limitToModelType,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -61,7 +63,7 @@ export default function ClassModal({
       pageSize: 50,
       pageFrom: 0,
       limitToDataModel: modelId,
-      limitToModelType: 'LIBRARY',
+      limitToModelType: limitToModelType ? limitToModelType : 'LIBRARY',
       fromAddedNamespaces: true,
       resourceTypes: [ResourceType.CLASS],
     });
@@ -69,6 +71,10 @@ export default function ClassModal({
   const handleOpen = () => {
     setVisible(true);
     handleSearch();
+
+    if (initialSelected && initialSelected !== 'selectedId') {
+      setSelectedId(initialSelected);
+    }
   };
 
   const handleClose = () => {
@@ -81,7 +87,8 @@ export default function ClassModal({
       pageSize: 50,
       pageFrom: 0,
       limitToDataModel: modelId,
-      limitToModelType: 'LIBRARY',
+      limitToModelType: limitToModelType ? limitToModelType : 'LIBRARY',
+      fromAddedNamespaces: true,
       resourceTypes: [ResourceType.CLASS],
     });
     setContentLanguage(undefined);

@@ -4,7 +4,6 @@ import {
   DropdownItem,
   ExpanderGroup,
   IconArrowLeft,
-  IconPlus,
   Text,
   Textarea,
   TextInput,
@@ -196,6 +195,20 @@ export default function ClassForm({
       },
     });
     setShowResourcePicker(true);
+  };
+
+  const handleUtilizedNodeUpdate = (value?: InternalClass) => {
+    if (!value) {
+      return;
+    }
+
+    handleUpdate({
+      ...data,
+      utilizesNode: {
+        id: value.id,
+        label: `${getCurie(value.namespace, value.identifier)}`,
+      },
+    });
   };
 
   const handleResourceUpdate = (value?: {
@@ -590,16 +603,21 @@ export default function ClassForm({
           <InlineListBlock
             label={t('utilizes-class-restriction')}
             addNewComponent={
-              <Button
-                variant="secondary"
-                icon={<IconPlus />}
-                id="select-class-restriction-button"
-              >
-                {t('select-class-restriction')}
-              </Button>
+              <ClassModal
+                modelId={modelId}
+                mode={'select'}
+                modalButtonLabel={t('select-class-restriction')}
+                handleFollowUp={handleUtilizedNodeUpdate}
+                initialSelected={data.utilizesNode?.id}
+                applicationProfile
+                resourceRestriction
+                limitToModelType="PROFILE"
+              />
             }
-            items={data.node ? [data.node] : []}
-            handleRemoval={() => handleUpdate({ ...data, node: undefined })}
+            items={data.utilizesNode ? [data.utilizesNode] : []}
+            handleRemoval={() =>
+              handleUpdate({ ...data, utilizesNode: undefined })
+            }
           />
         ) : (
           <InlineListBlock

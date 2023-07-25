@@ -497,6 +497,7 @@ export default function ResourceForm({
           )}
 
           <AssociationRestrictions
+            modelId={modelId}
             data={data}
             type={type}
             applicationProfile={applicationProfile}
