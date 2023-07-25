@@ -30,11 +30,19 @@ import DeleteModal from '../delete-modal';
 import { useSelector } from 'react-redux';
 import { selectDisplayLang } from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import ResourceModal from './resource-modal';
+import { useAddNodeShapePropertyReferenceMutation } from '@app/common/components/class/class.slice';
+import ResourceForm from '../resource/resource-form';
+import { initializeResource } from '@app/common/components/resource/resource.slice';
+import { useStoreDispatch } from '@app/store';
 
 interface ClassInfoProps {
   data?: ClassType;
   modelId: string;
   applicationProfile?: boolean;
+  languages: string[];
+  terminologies: string[];
   handleReturn: () => void;
   handleEdit: () => void;
   handleRefecth: () => void;
@@ -44,6 +52,8 @@ export default function ClassInfo({
   data,
   modelId,
   applicationProfile,
+  languages,
+  terminologies,
   handleReturn,
   handleEdit,
   handleRefecth,
@@ -54,8 +64,52 @@ export default function ClassInfo({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const dispatch = useStoreDispatch();
+
+  const [renderResourceForm, setRenderResourceForm] = useState(false);
   const displayLang = useSelector(selectDisplayLang());
+  const [addReference, addReferenceResult] =
+    useAddNodeShapePropertyReferenceMutation();
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
+
+  const handleFollowUp = (value: {
+    label?: string;
+    uri: string;
+    type: ResourceType;
+    mode: 'select' | 'create';
+  }) => {
+    if (!data) {
+      return;
+    }
+
+    if (value.mode === 'select') {
+      addReference({
+        prefix: modelId,
+        nodeshapeId: data.identifier,
+        uri: value.uri,
+      });
+    } else {
+      dispatch(
+        initializeResource(
+          value.type,
+          languages,
+          {
+            id: value.label ?? '',
+            label: value.label ?? '',
+            uri: value.uri,
+          },
+          true
+        )
+      );
+      setRenderResourceForm(true);
+    }
+  };
+
+  useEffect(() => {
+    if (addReferenceResult.isSuccess) {
+      handleRefecth();
+    }
+  }, [addReferenceResult, handleRefecth]);
 
   useEffect(() => {
     if (ref.current) {
@@ -160,6 +214,26 @@ export default function ClassInfo({
           )}
         </BasicBlock>
       </>
+    );
+  }
+
+  if (renderResourceForm) {
+    return (
+      <ResourceForm
+        modelId={modelId}
+        languages={languages}
+        terminologies={terminologies}
+        handleReturn={() => setRenderResourceForm(false)}
+        handleFollowUp={(identifier, type) => {
+          setRenderResourceForm(false);
+          handleFollowUp({
+            uri: `http://uri.suomi.fi/datamodel/ns/${modelId}/${identifier}`,
+            type: type,
+            mode: 'select',
+          });
+        }}
+        applicationProfile
+      />
     );
   }
 
@@ -297,6 +371,22 @@ export default function ClassInfo({
             )}
           </BasicBlock>
 
+          {applicationProfile && hasPermission ? (
+            <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
+              <ResourceModal
+                applicationProfile
+                modelId={modelId}
+                type={ResourceType.ATTRIBUTE}
+                handleFollowUp={handleFollowUp}
+              />
+              <Button variant="secondary" id="order-attributes-button">
+                {t('order-list', { ns: 'admin' })}
+              </Button>
+            </div>
+          ) : (
+            <></>
+          )}
+
           <BasicBlock
             title={t('associations', {
               count: data.association?.length ?? 0,
@@ -324,7 +414,21 @@ export default function ClassInfo({
               t('no-assocations')
             )}
           </BasicBlock>
-
+          {applicationProfile && hasPermission ? (
+            <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
+              <ResourceModal
+                applicationProfile
+                modelId={modelId}
+                type={ResourceType.ASSOCIATION}
+                handleFollowUp={handleFollowUp}
+              />
+              <Button variant="secondary" id="order-associations-button">
+                {t('order-list', { ns: 'admin' })}
+              </Button>
+            </div>
+          ) : (
+            <></>
+          )}
           {!applicationProfile ? (
             <>
               <Separator />

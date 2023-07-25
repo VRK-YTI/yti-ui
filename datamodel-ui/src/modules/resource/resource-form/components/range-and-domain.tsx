@@ -13,19 +13,17 @@ export default function RangeAndDomain({
   applicationProfile,
   data,
   modelId,
-  type,
   handleUpdate,
 }: {
   applicationProfile?: boolean;
   data: ResourceFormType;
   modelId: string;
-  type: ResourceType;
   handleUpdate: (value: ResourceFormType) => void;
 }) {
   const { t, i18n } = useTranslation('admin');
   const { data: dataTypesResult, isSuccess: isDataTypesSuccess } =
     useGetDatatypesQuery(void null, {
-      skip: type !== ResourceType.ATTRIBUTE && applicationProfile,
+      skip: data.type !== ResourceType.ATTRIBUTE && applicationProfile,
     });
 
   const attributeRanges: SingleSelectData[] = useMemo(() => {
@@ -59,7 +57,7 @@ export default function RangeAndDomain({
   };
 
   const handleRangeFollowUp = (value?: InternalClass) => {
-    if (type === ResourceType.ATTRIBUTE) {
+    if (data.type === ResourceType.ATTRIBUTE) {
       return;
     }
 
@@ -88,11 +86,11 @@ export default function RangeAndDomain({
     });
   };
 
-  if (applicationProfile && type === ResourceType.ASSOCIATION) {
+  if (applicationProfile && data.type === ResourceType.ASSOCIATION) {
     return <></>;
   }
 
-  if (type === ResourceType.ATTRIBUTE) {
+  if (data.type === ResourceType.ATTRIBUTE) {
     return (
       <>
         {applicationProfile && (
