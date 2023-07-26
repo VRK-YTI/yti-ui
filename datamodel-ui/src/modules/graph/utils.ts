@@ -1,3 +1,4 @@
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import {
   VisualizationHiddenNode,
   VisualizationPutType,
@@ -9,41 +10,46 @@ import { Edge, MarkerType, Node, XYPosition } from 'reactflow';
 export function convertToNodes(
   nodes: VisualizationType[],
   hiddenNodes: VisualizationHiddenNode[],
-  lang?: string
+  applicationProfile?: boolean
 ): Node[] {
   if (!nodes || nodes.length < 1) {
     return [];
   }
 
-  const size = nodes.length;
-  const spread = Math.floor(Math.sqrt(size));
+  const retNodes = nodes.flatMap((node) => {
+    const wrapperId = `${node.identifier}-wrapper`;
 
-  const retNodes = nodes.map((node, idx) => ({
-    id: node.identifier,
-    position:
-      node.position.x !== 0 && node.position.y
-        ? { x: node.position.x, y: node.position.y }
-        : { x: 400 * (idx % spread), y: 200 * Math.floor(idx / spread) },
-    data: {
-      identifier: node.identifier,
-      label: getLanguageVersion({
-        data: node.label,
-        lang: lang ? lang : 'fi',
-        appendLocale: true,
-      }),
-      resources: node.attributes
-        ? node.attributes.map((attr) => ({
-            identifier: attr.identifier,
-            label: getLanguageVersion({
-              data: attr.label,
-              lang: lang ? lang : 'fi',
-              appendLocale: true,
-            }),
-          }))
-        : [],
-    },
-    type: 'classNode',
-  }));
+    return [
+      createClassWrapperNode(node, applicationProfile),
+      createClassNode(node, wrapperId, applicationProfile),
+      ...node.attributes.map((attr, idx) =>
+        createResourceNode(
+          attr,
+          ResourceType.ATTRIBUTE,
+          wrapperId,
+          {
+            x: 5,
+            y: (idx + 1) * 40,
+          },
+          applicationProfile
+        )
+      ),
+      ...(applicationProfile && node.associations.length > 0
+        ? node.associations.map((assoc, idx) =>
+            createResourceNode(
+              assoc,
+              ResourceType.ASSOCIATION,
+              wrapperId,
+              {
+                x: 5,
+                y: (idx + 1 + node.attributes.length) * 40,
+              },
+              applicationProfile
+            )
+          )
+        : []),
+    ];
+  });
 
   if (!hiddenNodes || hiddenNodes.length < 1) {
     return retNodes;
@@ -83,7 +89,7 @@ export function generateInitialEdges(
     )
     .flatMap((node) => [
       ...node.associations.flatMap((assoc) => {
-        if (assoc.referenceTarget.startsWith('corner')) {
+        if (assoc.referenceTarget?.startsWith('corner')) {
           return createNewCornerEdge(
             node.identifier,
             `#${assoc.referenceTarget}`,
@@ -204,6 +210,76 @@ export function createNewAssociationEdge(
     // style: {
     //   strokeDasharray: '0 4 0',
     // }
+  };
+}
+
+function createClassNode(
+  node: VisualizationType,
+  parentNode: string,
+  applicationProfile?: boolean
+) {
+  return {
+    id: node.identifier,
+    position: { x: 5, y: 5 },
+    data: {
+      identifier: node.identifier,
+      label: node.label,
+      applicationProfile: applicationProfile,
+    },
+    type: 'classNode',
+    parentNode: parentNode,
+    extent: 'parent' as const,
+    draggable: false,
+  };
+}
+
+function createClassWrapperNode(
+  node: VisualizationType,
+  applicationProfile?: boolean
+) {
+  const height = applicationProfile
+    ? 40 +
+      node.attributes.length * 40 +
+      node.associations.length * 40 -
+      (node.associations.length > 0 || node.attributes.length > 0 ? 5 : 0)
+    : 40 + (node.attributes.length > 0 ? node.attributes.length * 40 - 5 : 0);
+
+  return {
+    id: `${node.identifier}-wrapper`,
+    type: 'classWrapperNode',
+    data: {
+      classId: node.identifier,
+    },
+    position: { x: node.position.x, y: node.position.y },
+    style: {
+      width: 370,
+      height: height,
+    },
+  };
+}
+
+function createResourceNode(
+  resource:
+    | VisualizationType['associations'][0]
+    | VisualizationType['attributes'][0],
+  type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE,
+  parentNode: string,
+  position: XYPosition,
+  applicationProfile?: boolean
+) {
+  return {
+    id: resource.identifier,
+    position: position,
+    data: {
+      identifier: resource.identifier,
+      label: resource.label,
+      type: type,
+      applicationProfile: applicationProfile,
+    },
+    type: 'resourceNode',
+    parentNode: parentNode,
+    extent: 'parent' as const,
+    draggable: false,
   };
 }
 
@@ -365,34 +441,42 @@ function getPoints(
   let targetX = 0;
   let targetY = 0;
 
-  const sx = source.position.x + 5;
-  const sy = source.position.y + 5;
+  const sx = source.positionAbsolute
+    ? source.positionAbsolute.x
+    : source.position.x;
+  const sy = source.positionAbsolute
+    ? source.positionAbsolute.y
+    : source.position.y;
   const sw =
     source.type === 'cornerNode'
       ? source.width ?? 0
       : source.width
-      ? source.width - 10
+      ? source.width
       : 0;
   const sh =
     source.type === 'cornerNode'
       ? source.height ?? 0
       : source.height
-      ? source.height - 10
+      ? source.height
       : 0;
 
-  const tx = target.position.x + 5;
-  const ty = target.position.y + 5;
+  const tx = target.positionAbsolute
+    ? target.positionAbsolute.x
+    : target.position.x;
+  const ty = target.positionAbsolute
+    ? target.positionAbsolute.y
+    : target.position.y;
   const tw =
     target.type === 'cornerNode'
       ? target.width ?? 0
       : target.width
-      ? target.width - 10
+      ? target.width
       : 0;
   const th =
     target.type === 'cornerNode'
       ? target.height ?? 0
       : target.height
-      ? target.height - 10
+      ? target.height
       : 0;
 
   if (sx > tx + tw) {
@@ -404,16 +488,16 @@ function getPoints(
   } else {
     if (source.type === 'cornerNode' || target.type === 'cornerNode') {
       const sourceIsCorner = source.type === 'cornerNode';
-      const x = sourceIsCorner ? sx + 15 : tx + 15;
+      const x = sourceIsCorner ? sx + 20 : tx + 20;
       sourceX = sourceIsCorner ? x : getValueInsideRange(x, sx, sx + sw);
       targetX = sourceIsCorner ? getValueInsideRange(x, tx, tx + tw) : x;
     } else {
       if (sx >= tx) {
-        const x = sx + (tx + (tw - 5) - sx) / 2;
+        const x = sx + (tx + tw - sx) / 2;
         sourceX = x;
         targetX = x;
       } else {
-        const x = tx + (sx + (sw - 5) - tx) / 2;
+        const x = tx + (sx + sw - tx) / 2;
         sourceX = x;
         targetX = x;
       }
@@ -429,7 +513,7 @@ function getPoints(
   } else {
     if (source.type === 'cornerNode' || target.type === 'cornerNode') {
       const sourceIsCorner = source.type === 'cornerNode';
-      const y = sourceIsCorner ? sy - 5 : ty - 5;
+      const y = sourceIsCorner ? sy : ty;
       sourceY = sourceIsCorner ? y : getValueInsideRange(y, sy, sy + sh);
       targetY = sourceIsCorner ? getValueInsideRange(y, ty, ty + th) : y;
     } else {

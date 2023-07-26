@@ -41,13 +41,20 @@ import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
 import ExtNode from './ext-node';
 import { ClearArrow } from './marker-ends';
+import ClassWrapperNode from './class-wrapper-node';
+import ResourceNode from './resource-node';
 
 interface GraphProps {
   modelId: string;
+  applicationProfile?: boolean;
   children: JSX.Element[];
 }
 
-const GraphContent = ({ modelId, children }: GraphProps) => {
+const GraphContent = ({
+  modelId,
+  applicationProfile,
+  children,
+}: GraphProps) => {
   const { i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
@@ -62,8 +69,10 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
+      classWrapperNode: ClassWrapperNode,
       cornerNode: EdgeCorner,
       externalNode: ExtNode,
+      resourceNode: ResourceNode,
     }),
     []
   );
@@ -154,7 +163,9 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
 
   useEffect(() => {
     if (isSuccess || (isSuccess && resetPosition)) {
-      setNodes(convertToNodes(data.nodes, data.hiddenNodes, i18n.language));
+      setNodes(
+        convertToNodes(data.nodes, data.hiddenNodes, applicationProfile)
+      );
       setEdges(
         generateInitialEdges(
           data.nodes,
@@ -180,6 +191,7 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
     displayLang,
     resetPosition,
     dispatch,
+    applicationProfile,
   ]);
 
   useEffect(() => {
@@ -228,11 +240,17 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   );
 };
 
-export default function Graph({ modelId, children }: GraphProps) {
+export default function Graph({
+  modelId,
+  applicationProfile,
+  children,
+}: GraphProps) {
   return (
     <>
       <ReactFlowProvider>
-        <GraphContent modelId={modelId}>{children}</GraphContent>
+        <GraphContent modelId={modelId} applicationProfile={applicationProfile}>
+          {children}
+        </GraphContent>
       </ReactFlowProvider>
 
       <ClearArrow />
