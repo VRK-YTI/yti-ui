@@ -33,6 +33,7 @@ export interface ClassModalProps {
   initialSelected?: string;
   plusIcon?: boolean;
   resourceRestriction?: boolean;
+  limitToModelType?: 'LIBRARY' | 'PROFILE';
 }
 
 export default function ClassModal({
@@ -44,6 +45,7 @@ export default function ClassModal({
   initialSelected,
   plusIcon,
   resourceRestriction,
+  limitToModelType,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -55,18 +57,32 @@ export default function ClassModal({
     useGetInternalResourcesInfoMutation();
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>(
-      initialSearchData(i18n.language, modelId, ResourceType.CLASS)
+      initialSearchData(
+        i18n.language,
+        modelId,
+        ResourceType.CLASS,
+        limitToModelType
+      )
     );
 
   const handleOpen = () => {
     setVisible(true);
     handleSearch();
+
+    if (initialSelected && initialSelected !== 'selectedId') {
+      setSelectedId(initialSelected);
+    }
   };
 
   const handleClose = () => {
     setSelectedId('');
     setSearchParams(
-      initialSearchData(i18n.language, modelId, ResourceType.CLASS)
+      initialSearchData(
+        i18n.language,
+        modelId,
+        ResourceType.CLASS,
+        limitToModelType
+      )
     );
     setContentLanguage(undefined);
     setVisible(false);

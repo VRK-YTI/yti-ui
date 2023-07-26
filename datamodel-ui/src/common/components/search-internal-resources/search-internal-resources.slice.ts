@@ -26,7 +26,8 @@ export interface InternalResourcesSearchParams {
 export function initialSearchData(
   sortLang: string,
   modelId: string,
-  type: ResourceType
+  type: ResourceType,
+  limitToModelType?: 'LIBRARY' | 'PROFILE'
 ): InternalResourcesSearchParams {
   return {
     query: '',
@@ -36,7 +37,7 @@ export function initialSearchData(
     pageSize: 50,
     pageFrom: 0,
     limitToDataModel: modelId,
-    limitToModelType: 'LIBRARY',
+    limitToModelType: limitToModelType ?? 'LIBRARY',
     fromAddedNamespaces: true,
     resourceTypes: [type],
   };

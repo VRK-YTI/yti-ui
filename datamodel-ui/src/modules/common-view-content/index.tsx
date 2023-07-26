@@ -59,11 +59,19 @@ export default function CommonViewContent({
           {data.type === ResourceType.ASSOCIATION ? (
             <>
               <BasicBlock title={t('target-association', { ns: 'admin' })}>
-                {t('not-defined')}
+                {data.path ? (
+                  <Link href={data.path.uri}>{data.path.curie}</Link>
+                ) : (
+                  t('not-defined')
+                )}
               </BasicBlock>
 
               <BasicBlock title={t('association-targets-class')}>
-                {t('not-defined')}
+                {data.classType?.curie ? (
+                  <Link href={data.classType.uri}>{data.classType.curie}</Link>
+                ) : (
+                  t('not-defined')
+                )}
               </BasicBlock>
 
               <BasicBlock title={t('minimum-count')}>

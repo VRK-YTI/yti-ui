@@ -36,6 +36,7 @@ interface ResourceModalProps {
     openButton?: string;
   };
   handleFollowUp: (value?: { label: string; uri: string }) => void;
+  defaultSelected?: string;
   buttonIcon?: boolean;
   applicationProfile?: boolean;
 }
@@ -45,13 +46,16 @@ export default function ResourceModal({
   type,
   buttonTranslations,
   handleFollowUp,
+  defaultSelected,
   buttonIcon,
   applicationProfile,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
-  const [selectedId, setSelectedId] = useState('');
+  const [selectedId, setSelectedId] = useState(
+    defaultSelected ? defaultSelected : ''
+  );
   const [contentLanguage, setContentLanguage] = useState<string>();
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [searchParams, setSearchParams] =
@@ -72,6 +76,10 @@ export default function ResourceModal({
   const handleOpen = () => {
     setVisible(true);
     handleSearch();
+
+    if (defaultSelected && defaultSelected !== selectedId) {
+      setSelectedId(defaultSelected);
+    }
   };
 
   const handleClose = () => {

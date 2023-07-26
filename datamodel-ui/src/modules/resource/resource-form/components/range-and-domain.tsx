@@ -7,7 +7,8 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import ClassModal from '@app/modules/class-modal';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
-import { Button, SingleSelect, SingleSelectData } from 'suomifi-ui-components';
+import { SingleSelect, SingleSelectData } from 'suomifi-ui-components';
+import ResourceModal from '../../resource-modal';
 
 export default function RangeAndDomain({
   applicationProfile,
@@ -56,6 +57,22 @@ export default function RangeAndDomain({
     });
   };
 
+  const handlePathFollowUP = (value?: { label: string; uri: string }) => {
+    if (!value) {
+      handleUpdate({ ...data, path: value });
+      return;
+    }
+
+    handleUpdate({
+      ...data,
+      path: {
+        id: value.uri,
+        label: value.label,
+        uri: value.uri,
+      },
+    });
+  };
+
   const handleRangeFollowUp = (value?: InternalClass) => {
     if (data.type === ResourceType.ATTRIBUTE) {
       return;
@@ -96,7 +113,17 @@ export default function RangeAndDomain({
         {applicationProfile && (
           <InlineListBlock
             addNewComponent={
-              <Button variant="secondary">{t('select-attribute')}</Button>
+              <ResourceModal
+                modelId={modelId}
+                type={data.type}
+                buttonTranslations={{
+                  useSelected: t('select-attribute'),
+                  openButton: t('select-attribute'),
+                }}
+                handleFollowUp={handlePathFollowUP}
+                applicationProfile={applicationProfile}
+                defaultSelected={data.path?.uri}
+              />
             }
             handleRemoval={() => null}
             items={data.path ? [data.path] : []}

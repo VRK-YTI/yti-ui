@@ -5,6 +5,7 @@ import { Resource } from '@app/common/interfaces/resource.interface';
 export function resourceToResourceFormType(data: Resource): ResourceFormType {
   return {
     ...data,
+    classType: data.classType ? data.classType.uri : undefined,
     dataType: data.dataType
       ? { id: data.dataType, label: data.dataType }
       : undefined,
