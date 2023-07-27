@@ -294,207 +294,253 @@ export const threeEdgesOneMultipleSplit: Edge[] = [
 // Convert test expected results
 export const convertedExpected = [
   {
-    id: '1',
+    id: '1-wrapper',
+    type: 'classWrapperNode',
+    data: {
+      classId: '1',
+    },
     position: {
       x: 0,
       y: 0,
     },
+    style: {
+      width: 370,
+      height: 40,
+    },
+  },
+  {
+    id: '1',
+    position: {
+      x: 5,
+      y: 5,
+    },
     data: {
       identifier: '1',
-      label: 'label-1-fi',
-      resources: [],
+      label: {
+        fi: 'label-1-fi',
+        en: 'label-1-en',
+      },
+      applicationProfile: undefined,
     },
     type: 'classNode',
+    parentNode: '1-wrapper',
+    extent: 'parent',
+    draggable: false,
+  },
+  {
+    id: '2-wrapper',
+    type: 'classWrapperNode',
+    data: {
+      classId: '2',
+    },
+    position: {
+      x: 0,
+      y: 0,
+    },
+    style: {
+      width: 370,
+      height: 40,
+    },
   },
   {
     id: '2',
     position: {
-      x: 0,
-      y: 200,
+      x: 5,
+      y: 5,
     },
     data: {
       identifier: '2',
-      label: 'label-2-en (en)',
-      resources: [],
+      label: {
+        en: 'label-2-en',
+      },
+      applicationProfile: undefined,
     },
     type: 'classNode',
+    parentNode: '2-wrapper',
+    extent: 'parent',
+    draggable: false,
+  },
+  {
+    id: '3-wrapper',
+    type: 'classWrapperNode',
+    data: {
+      classId: '3',
+    },
+    position: {
+      x: 0,
+      y: 0,
+    },
+    style: {
+      width: 370,
+      height: 75,
+    },
   },
   {
     id: '3',
     position: {
-      x: 0,
-      y: 400,
+      x: 5,
+      y: 5,
     },
     data: {
       identifier: '3',
-      label: 'label-3-fi',
-      resources: [
-        {
-          identifier: '3-1',
-          label: 'attr-1-fi',
-        },
-      ],
+      label: {
+        fi: 'label-3-fi',
+        en: 'label-3-en',
+        sv: 'label-3-sv',
+      },
+      applicationProfile: undefined,
     },
     type: 'classNode',
+    parentNode: '3-wrapper',
+    extent: 'parent',
+    draggable: false,
+  },
+  {
+    id: '3-1',
+    position: {
+      x: 5,
+      y: 40,
+    },
+    data: {
+      identifier: '3-1',
+      label: {
+        fi: 'attr-1-fi',
+        en: 'attr-1-en',
+        sv: 'attr-1-sv',
+      },
+      type: 'ATTRIBUTE',
+      applicationProfile: undefined,
+    },
+    type: 'resourceNode',
+    parentNode: '3-wrapper',
+    extent: 'parent',
+    draggable: false,
   },
 ];
 
 export const convertedWithHiddenExpected = [
   {
-    id: '1',
+    id: '1-wrapper',
+    type: 'classWrapperNode',
+    data: {
+      classId: '1',
+    },
     position: {
       x: 0,
       y: 0,
     },
+    style: {
+      width: 370,
+      height: 40,
+    },
+  },
+  {
+    id: '1',
+    position: {
+      x: 5,
+      y: 5,
+    },
     data: {
       identifier: '1',
-      label: 'label-1-fi',
-      resources: [],
+      label: {
+        fi: 'label-1-fi',
+        en: 'label-1-en',
+      },
+      applicationProfile: undefined,
     },
     type: 'classNode',
+    parentNode: '1-wrapper',
+    extent: 'parent',
+    draggable: false,
+  },
+  {
+    id: '2-wrapper',
+    type: 'classWrapperNode',
+    data: {
+      classId: '2',
+    },
+    position: {
+      x: 0,
+      y: 0,
+    },
+    style: {
+      width: 370,
+      height: 40,
+    },
   },
   {
     id: '2',
     position: {
-      x: 0,
-      y: 200,
+      x: 5,
+      y: 5,
     },
     data: {
       identifier: '2',
-      label: 'label-2-en (en)',
-      resources: [],
+      label: {
+        en: 'label-2-en',
+      },
+      applicationProfile: undefined,
     },
     type: 'classNode',
+    parentNode: '2-wrapper',
+    extent: 'parent',
+    draggable: false,
+  },
+  {
+    id: '3-wrapper',
+    type: 'classWrapperNode',
+    data: {
+      classId: '3',
+    },
+    position: {
+      x: 0,
+      y: 0,
+    },
+    style: {
+      width: 370,
+      height: 75,
+    },
   },
   {
     id: '3',
     position: {
-      x: 0,
-      y: 400,
+      x: 5,
+      y: 5,
     },
     data: {
       identifier: '3',
-      label: 'label-3-fi',
-      resources: [
-        {
-          identifier: '3-1',
-          label: 'attr-1-fi',
-        },
-      ],
+      label: {
+        fi: 'label-3-fi',
+        en: 'label-3-en',
+        sv: 'label-3-sv',
+      },
+      applicationProfile: undefined,
     },
     type: 'classNode',
+    parentNode: '3-wrapper',
+    extent: 'parent',
+    draggable: false,
   },
   {
-    id: '#corner-1',
+    id: '3-1',
     position: {
-      x: 0,
-      y: 0,
-    },
-    data: {},
-    type: 'cornerNode',
-  },
-  {
-    id: '#corner-2',
-    position: {
-      x: 0,
-      y: 0,
-    },
-    data: {},
-    type: 'cornerNode',
-  },
-];
-
-export const convertedLangVersionedExpected = [
-  {
-    id: '1',
-    position: {
-      x: 0,
-      y: 0,
+      x: 5,
+      y: 40,
     },
     data: {
-      identifier: '1',
-      label: 'label-1-en',
-      resources: [],
+      identifier: '3-1',
+      label: {
+        fi: 'attr-1-fi',
+        en: 'attr-1-en',
+        sv: 'attr-1-sv',
+      },
+      type: 'ATTRIBUTE',
+      applicationProfile: undefined,
     },
-    type: 'classNode',
-  },
-  {
-    id: '2',
-    position: {
-      x: 0,
-      y: 200,
-    },
-    data: {
-      identifier: '2',
-      label: 'label-2-en',
-      resources: [],
-    },
-    type: 'classNode',
-  },
-  {
-    id: '3',
-    position: {
-      x: 0,
-      y: 400,
-    },
-    data: {
-      identifier: '3',
-      label: 'label-3-en',
-      resources: [
-        {
-          identifier: '3-1',
-          label: 'attr-1-en',
-        },
-      ],
-    },
-    type: 'classNode',
-  },
-];
-
-export const convertedWithHiddenLangVersionedExpected = [
-  {
-    id: '1',
-    position: {
-      x: 0,
-      y: 0,
-    },
-    data: {
-      identifier: '1',
-      label: 'label-1-en',
-      resources: [],
-    },
-    type: 'classNode',
-  },
-  {
-    id: '2',
-    position: {
-      x: 0,
-      y: 200,
-    },
-    data: {
-      identifier: '2',
-      label: 'label-2-en',
-      resources: [],
-    },
-    type: 'classNode',
-  },
-  {
-    id: '3',
-    position: {
-      x: 0,
-      y: 400,
-    },
-    data: {
-      identifier: '3',
-      label: 'label-3-en',
-      resources: [
-        {
-          identifier: '3-1',
-          label: 'attr-1-en',
-        },
-      ],
-    },
-    type: 'classNode',
+    type: 'resourceNode',
+    parentNode: '3-wrapper',
+    extent: 'parent',
+    draggable: false,
   },
   {
     id: '#corner-1',

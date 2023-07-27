@@ -67,4 +67,10 @@ export const ClassNodeDiv = styled.div<{
       }
     }
   }
+
+  .fi-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `;

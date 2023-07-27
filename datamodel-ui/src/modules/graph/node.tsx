@@ -12,7 +12,12 @@ import {
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Handle, Position } from 'reactflow';
-import { IconChevronDown, IconChevronUp } from 'suomifi-ui-components';
+import {
+  Button,
+  IconChevronDown,
+  IconChevronUp,
+  IconOptionsVertical,
+} from 'suomifi-ui-components';
 import { ClassNodeDiv } from './node.styles';
 import { useStoreDispatch } from '@app/store';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
@@ -85,9 +90,13 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
             appendLocale: true,
           })}
         </div>
-        <button onClick={() => handleShowAttributesClick()}>
-          {showAttributes ? <IconChevronUp /> : <IconChevronDown />}
-        </button>
+        {data.applicationProfile ? (
+          <Button icon={<IconOptionsVertical />} />
+        ) : (
+          <button onClick={() => handleShowAttributesClick()}>
+            {showAttributes ? <IconChevronUp /> : <IconChevronDown />}
+          </button>
+        )}
       </div>
     </ClassNodeDiv>
   );

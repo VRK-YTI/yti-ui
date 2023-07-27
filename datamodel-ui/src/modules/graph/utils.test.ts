@@ -11,9 +11,7 @@ import {
   connectedEdgesRemoved,
   connectedEdgesRemovedMultiple,
   convertedExpected,
-  convertedLangVersionedExpected,
   convertedWithHiddenExpected,
-  convertedWithHiddenLangVersionedExpected,
   initialEdges,
   initialEdgesWithHidden,
   multipleFromOneCornerEdges,
@@ -43,13 +41,9 @@ describe('graph-util', () => {
     const input = visualizationTypeArray;
 
     const expected = convertedExpected;
-    const expectedLangVersioned = convertedLangVersionedExpected;
 
     const returned = convertToNodes(input, []);
     expect(returned).toStrictEqual(expected);
-
-    const returnedLangVersioned = convertToNodes(input, [], 'en');
-    expect(returnedLangVersioned).toStrictEqual(expectedLangVersioned);
   });
 
   it('should convert VisualizationType[] and VisualizationHiddenNode[] to a Node[]', () => {
@@ -57,13 +51,9 @@ describe('graph-util', () => {
     const inputHidden = visualizationHiddenTypeArray;
 
     const expected = convertedWithHiddenExpected;
-    const expectedLangVersioned = convertedWithHiddenLangVersionedExpected;
 
     const returned = convertToNodes(input, inputHidden);
     expect(returned).toStrictEqual(expected);
-
-    const returnedLangVersioned = convertToNodes(input, inputHidden, 'en');
-    expect(returnedLangVersioned).toStrictEqual(expectedLangVersioned);
   });
 
   it('should return an empty array if input data is an empty array', () => {

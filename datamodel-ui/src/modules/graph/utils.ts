@@ -16,6 +16,8 @@ export function convertToNodes(
     return [];
   }
 
+  const xOffset = 5;
+
   const retNodes = nodes.flatMap((node) => {
     const wrapperId = `${node.identifier}-wrapper`;
 
@@ -28,7 +30,7 @@ export function convertToNodes(
           ResourceType.ATTRIBUTE,
           wrapperId,
           {
-            x: 5,
+            x: xOffset,
             y: (idx + 1) * 40,
           },
           applicationProfile
@@ -41,7 +43,7 @@ export function convertToNodes(
               ResourceType.ASSOCIATION,
               wrapperId,
               {
-                x: 5,
+                x: xOffset,
                 y: (idx + 1 + node.attributes.length) * 40,
               },
               applicationProfile
@@ -414,6 +416,25 @@ export function handleEdgeDelete(edgeId: string, edges: Edge[]) {
 
 function getValueInsideRange(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
+}
+
+function getPositionAndSize(node: Node) {
+  return {
+    x: node.positionAbsolute ? node.positionAbsolute.x : node.position.x,
+    y: node.positionAbsolute ? node.positionAbsolute.y : node.position.y,
+    w:
+      node.type === 'cornerNode'
+        ? node.width ?? 0
+        : node.width
+        ? node.width
+        : 0,
+    h:
+      node.type === 'cornerNode'
+        ? node.height ?? 0
+        : node.height
+        ? node.height
+        : 0,
+  };
 }
 
 function getPoints(
