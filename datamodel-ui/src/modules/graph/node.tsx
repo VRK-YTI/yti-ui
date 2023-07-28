@@ -13,12 +13,11 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Handle, Position } from 'reactflow';
 import {
-  Button,
   IconChevronDown,
   IconChevronUp,
   IconOptionsVertical,
 } from 'suomifi-ui-components';
-import { ClassNodeDiv } from './node.styles';
+import { ClassNodeDiv, CollapseButton, OptionsButton } from './node.styles';
 import { useStoreDispatch } from '@app/store';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
@@ -91,11 +90,13 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
           })}
         </div>
         {data.applicationProfile ? (
-          <Button icon={<IconOptionsVertical />} />
+          <OptionsButton>
+            <IconOptionsVertical fill="#2a6ebb" />
+          </OptionsButton>
         ) : (
-          <button onClick={() => handleShowAttributesClick()}>
+          <CollapseButton onClick={() => handleShowAttributesClick()}>
             {showAttributes ? <IconChevronUp /> : <IconChevronDown />}
-          </button>
+          </CollapseButton>
         )}
       </div>
     </ClassNodeDiv>

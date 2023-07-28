@@ -16,22 +16,28 @@ export function convertToNodes(
     return [];
   }
 
-  const xOffset = 5;
+  const offset = 5;
 
   const retNodes = nodes.flatMap((node) => {
     const wrapperId = `${node.identifier}-wrapper`;
+    const wrapperHeight =
+      (applicationProfile ? 40 : 30) +
+      (node.attributes.length > 0 ? node.attributes.length * 40 - offset : 0) +
+      (applicationProfile && node.associations.length > 0
+        ? node.associations.length * 40 - offset
+        : 0);
 
     return [
       createClassWrapperNode(node, applicationProfile),
-      createClassNode(node, wrapperId, applicationProfile),
+      createClassNode(node, wrapperId, wrapperHeight, applicationProfile),
       ...node.attributes.map((attr, idx) =>
         createResourceNode(
           attr,
           ResourceType.ATTRIBUTE,
           wrapperId,
           {
-            x: xOffset,
-            y: (idx + 1) * 40,
+            x: offset,
+            y: (applicationProfile ? 50 : 40) + idx * 37,
           },
           applicationProfile
         )
@@ -43,8 +49,10 @@ export function convertToNodes(
               ResourceType.ASSOCIATION,
               wrapperId,
               {
-                x: xOffset,
-                y: (idx + 1 + node.attributes.length) * 40,
+                x: offset,
+                y:
+                  (applicationProfile ? 50 : 40) +
+                  (idx + node.attributes.length) * 37,
               },
               applicationProfile
             )
@@ -218,6 +226,7 @@ export function createNewAssociationEdge(
 function createClassNode(
   node: VisualizationType,
   parentNode: string,
+  parentHeight: number,
   applicationProfile?: boolean
 ) {
   return {
@@ -227,6 +236,7 @@ function createClassNode(
       identifier: node.identifier,
       label: node.label,
       applicationProfile: applicationProfile,
+      parentHeight: parentHeight,
     },
     type: 'classNode',
     parentNode: parentNode,
@@ -240,7 +250,7 @@ function createClassWrapperNode(
   applicationProfile?: boolean
 ) {
   const height = applicationProfile
-    ? 40 +
+    ? 50 +
       node.attributes.length * 40 +
       node.associations.length * 40 -
       (node.associations.length > 0 || node.attributes.length > 0 ? 5 : 0)
@@ -257,6 +267,8 @@ function createClassWrapperNode(
       width: 370,
       height: height,
     },
+    selectable: false,
+    draggable: true,
   };
 }
 
@@ -422,18 +434,11 @@ function getPositionAndSize(node: Node) {
   return {
     x: node.positionAbsolute ? node.positionAbsolute.x : node.position.x,
     y: node.positionAbsolute ? node.positionAbsolute.y : node.position.y,
-    w:
-      node.type === 'cornerNode'
-        ? node.width ?? 0
-        : node.width
-        ? node.width
-        : 0,
+    w: node.type === 'cornerNode' ? node.width ?? 0 : node.width ?? 0,
     h:
       node.type === 'cornerNode'
         ? node.height ?? 0
-        : node.height
-        ? node.height
-        : 0,
+        : node.data.parentHeight ?? node.height ?? 0,
   };
 }
 
@@ -462,43 +467,8 @@ function getPoints(
   let targetX = 0;
   let targetY = 0;
 
-  const sx = source.positionAbsolute
-    ? source.positionAbsolute.x
-    : source.position.x;
-  const sy = source.positionAbsolute
-    ? source.positionAbsolute.y
-    : source.position.y;
-  const sw =
-    source.type === 'cornerNode'
-      ? source.width ?? 0
-      : source.width
-      ? source.width
-      : 0;
-  const sh =
-    source.type === 'cornerNode'
-      ? source.height ?? 0
-      : source.height
-      ? source.height
-      : 0;
-
-  const tx = target.positionAbsolute
-    ? target.positionAbsolute.x
-    : target.position.x;
-  const ty = target.positionAbsolute
-    ? target.positionAbsolute.y
-    : target.position.y;
-  const tw =
-    target.type === 'cornerNode'
-      ? target.width ?? 0
-      : target.width
-      ? target.width
-      : 0;
-  const th =
-    target.type === 'cornerNode'
-      ? target.height ?? 0
-      : target.height
-      ? target.height
-      : 0;
+  const { x: sx, y: sy, w: sw, h: sh } = getPositionAndSize(source);
+  const { x: tx, y: ty, w: tw, h: th } = getPositionAndSize(target);
 
   if (sx > tx + tw) {
     sourceX = sx;
@@ -642,27 +612,43 @@ export function generatePositionsPayload(
     return [];
   }
 
-  return nodes.map((node) => {
-    const referenceTargets = edges
-      .filter((edge) => edge.source === node.id)
-      .map((edge) => {
-        if (
-          edge.target.startsWith('#corner') ||
-          (edge.source.startsWith('#corner') &&
-            !edge.target.startsWith('#corner'))
-        ) {
-          return edge.target.replace('#corner', 'corner');
-        }
-      })
-      .filter((value) => typeof value === 'string' && value !== '') as string[];
+  return nodes
+    .filter(
+      (node) => node.type !== 'resourceNode' && node.type !== 'classWrapperNode'
+    )
+    .map((node) => {
+      const isCorner = node.id.startsWith('#corner');
+      let x = node.position.x;
+      let y = node.position.y;
 
-    return {
-      identifier: node.id.startsWith('#corner')
-        ? node.id.replace('#corner', 'corner')
-        : node.id,
-      x: node.position.x,
-      y: node.position.y,
-      referenceTargets: referenceTargets,
-    };
-  });
+      const referenceTargets = edges
+        .filter((edge) => edge.source === node.id)
+        .map((edge) => {
+          if (
+            edge.target.startsWith('#corner') ||
+            (edge.source.startsWith('#corner') &&
+              !edge.target.startsWith('#corner'))
+          ) {
+            return edge.target.replace('#corner', 'corner');
+          }
+        })
+        .filter(
+          (value) => typeof value === 'string' && value !== ''
+        ) as string[];
+
+      if (!isCorner) {
+        const parent = nodes.find((n) => n.id === `${node.id}-wrapper`);
+        x = parent?.position.x ?? x;
+        y = parent?.position.y ?? y;
+      }
+
+      return {
+        identifier: node.id.startsWith('#corner')
+          ? node.id.replace('#corner', 'corner')
+          : node.id,
+        x: x,
+        y: y,
+        referenceTargets: referenceTargets,
+      };
+    });
 }

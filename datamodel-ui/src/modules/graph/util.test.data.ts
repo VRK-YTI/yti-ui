@@ -307,6 +307,7 @@ export const convertedExpected = [
       width: 370,
       height: 40,
     },
+    selectable: false,
   },
   {
     id: '1',
@@ -341,6 +342,7 @@ export const convertedExpected = [
       width: 370,
       height: 40,
     },
+    selectable: false,
   },
   {
     id: '2',
@@ -374,6 +376,7 @@ export const convertedExpected = [
       width: 370,
       height: 75,
     },
+    selectable: false,
   },
   {
     id: '3',
@@ -433,6 +436,7 @@ export const convertedWithHiddenExpected = [
       width: 370,
       height: 40,
     },
+    selectable: false,
   },
   {
     id: '1',
@@ -467,6 +471,7 @@ export const convertedWithHiddenExpected = [
       width: 370,
       height: 40,
     },
+    selectable: false,
   },
   {
     id: '2',
@@ -500,6 +505,7 @@ export const convertedWithHiddenExpected = [
       width: 370,
       height: 75,
     },
+    selectable: false,
   },
   {
     id: '3',
