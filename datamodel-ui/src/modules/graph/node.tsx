@@ -9,7 +9,7 @@ import {
   setHovered,
   setSelected,
 } from '@app/common/components/model/model.slice';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Handle, Position } from 'reactflow';
 import {
@@ -29,6 +29,7 @@ interface ClassNodeProps {
     label: { [key: string]: string };
     resourceType?: 'association' | 'attribute';
     applicationProfile?: boolean;
+    toggleResourceVisibility: (value: boolean) => void;
   };
   selected: boolean;
 }
@@ -43,6 +44,13 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
   const [showAttributes, setShowAttributes] = useState(true);
   const [hover, setHover] = useState(false);
 
+  const handleToggleResourceVisibility = useCallback(
+    (value: boolean) => {
+      data.toggleResourceVisibility(value);
+    },
+    [data]
+  );
+
   const handleTitleClick = () => {
     if (globalSelected.id !== id) {
       dispatch(setSelected(id, 'classes'));
@@ -51,6 +59,7 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
 
   const handleShowAttributesClick = () => {
     setShowAttributes(!showAttributes);
+    data.toggleResourceVisibility(showAttributes);
   };
 
   const handleHover = (hover: boolean) => {
@@ -64,7 +73,8 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
 
   useEffect(() => {
     setShowAttributes(globalShowAttributes);
-  }, [globalShowAttributes]);
+    handleToggleResourceVisibility(!globalShowAttributes);
+  }, [globalShowAttributes, handleToggleResourceVisibility]);
 
   return (
     <ClassNodeDiv

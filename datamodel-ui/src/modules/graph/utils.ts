@@ -5,11 +5,24 @@ import {
   VisualizationType,
 } from '@app/common/interfaces/visualization.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { Edge, MarkerType, Node, XYPosition } from 'reactflow';
+import {
+  CoordinateExtent,
+  Edge,
+  MarkerType,
+  Node,
+  XYPosition,
+} from 'reactflow';
 
 export function convertToNodes(
   nodes: VisualizationType[],
   hiddenNodes: VisualizationHiddenNode[],
+  toggleResourceVisibility: (
+    wrapperId: string,
+    wrapperHeight: number,
+    ids: string[],
+    value: boolean,
+    applicationProfile?: boolean
+  ) => void,
   applicationProfile?: boolean
 ): Node[] {
   if (!nodes || nodes.length < 1) {
@@ -20,16 +33,15 @@ export function convertToNodes(
 
   const retNodes = nodes.flatMap((node) => {
     const wrapperId = `${node.identifier}-wrapper`;
-    const wrapperHeight =
-      (applicationProfile ? 40 : 30) +
-      (node.attributes.length > 0 ? node.attributes.length * 40 - offset : 0) +
-      (applicationProfile && node.associations.length > 0
-        ? node.associations.length * 40 - offset
-        : 0);
 
     return [
       createClassWrapperNode(node, applicationProfile),
-      createClassNode(node, wrapperId, wrapperHeight, applicationProfile),
+      createClassNode(
+        node,
+        wrapperId,
+        toggleResourceVisibility,
+        applicationProfile
+      ),
       ...node.attributes.map((attr, idx) =>
         createResourceNode(
           attr,
@@ -226,7 +238,13 @@ export function createNewAssociationEdge(
 function createClassNode(
   node: VisualizationType,
   parentNode: string,
-  parentHeight: number,
+  toggleResourceVisibility: (
+    wrapperId: string,
+    wrapperHeight: number,
+    ids: string[],
+    value: boolean,
+    applicationProfile?: boolean
+  ) => void,
   applicationProfile?: boolean
 ) {
   return {
@@ -236,11 +254,24 @@ function createClassNode(
       identifier: node.identifier,
       label: node.label,
       applicationProfile: applicationProfile,
-      parentHeight: parentHeight,
+      toggleResourceVisibility: (value: boolean) =>
+        toggleResourceVisibility(
+          parentNode,
+          getClassWrapperHeight(node, applicationProfile),
+          [
+            ...node.associations.map((a) => a.identifier),
+            ...node.attributes.map((a) => a.identifier),
+          ],
+          value,
+          applicationProfile
+        ),
     },
     type: 'classNode',
     parentNode: parentNode,
-    extent: 'parent' as const,
+    extent: [
+      [5, 5],
+      [5, 5],
+    ] as CoordinateExtent,
     draggable: false,
   };
 }
@@ -249,12 +280,7 @@ function createClassWrapperNode(
   node: VisualizationType,
   applicationProfile?: boolean
 ) {
-  const height = applicationProfile
-    ? 50 +
-      node.attributes.length * 40 +
-      node.associations.length * 40 -
-      (node.associations.length > 0 || node.attributes.length > 0 ? 5 : 0)
-    : 40 + (node.attributes.length > 0 ? node.attributes.length * 40 - 5 : 0);
+  const height = getClassWrapperHeight(node, applicationProfile);
 
   return {
     id: `${node.identifier}-wrapper`,
@@ -295,6 +321,18 @@ function createResourceNode(
     extent: 'parent' as const,
     draggable: false,
   };
+}
+
+export function getClassWrapperHeight(
+  node: VisualizationType,
+  applicationProfile?: boolean
+) {
+  return applicationProfile
+    ? 50 +
+        node.attributes.length * 40 +
+        node.associations.length * 40 -
+        (node.associations.length > 0 || node.attributes.length > 0 ? 5 : 0)
+    : 40 + (node.attributes.length > 0 ? node.attributes.length * 40 - 5 : 0);
 }
 
 export function createNewCornerNode(id: string, position: XYPosition) {
@@ -430,7 +468,7 @@ function getValueInsideRange(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-function getPositionAndSize(node: Node) {
+function getPositionAndSize(node: Node, parentHeight?: number | null) {
   return {
     x: node.positionAbsolute ? node.positionAbsolute.x : node.position.x,
     y: node.positionAbsolute ? node.positionAbsolute.y : node.position.y,
@@ -438,13 +476,17 @@ function getPositionAndSize(node: Node) {
     h:
       node.type === 'cornerNode'
         ? node.height ?? 0
-        : node.data.parentHeight ?? node.height ?? 0,
+        : parentHeight
+        ? parentHeight - 10
+        : node.height ?? 0,
   };
 }
 
 function getPoints(
   source: Node,
-  target: Node
+  target: Node,
+  sourceParentHeight?: number | null,
+  targetParentHeight?: number | null
 ): {
   source: XYPosition;
   target: XYPosition;
@@ -467,8 +509,18 @@ function getPoints(
   let targetX = 0;
   let targetY = 0;
 
-  const { x: sx, y: sy, w: sw, h: sh } = getPositionAndSize(source);
-  const { x: tx, y: ty, w: tw, h: th } = getPositionAndSize(target);
+  const {
+    x: sx,
+    y: sy,
+    w: sw,
+    h: sh,
+  } = getPositionAndSize(source, sourceParentHeight);
+  const {
+    x: tx,
+    y: ty,
+    w: tw,
+    h: th,
+  } = getPositionAndSize(target, targetParentHeight);
 
   if (sx > tx + tw) {
     sourceX = sx;
@@ -581,7 +633,12 @@ function getPoints(
   };
 }
 
-export function getEdgeParams(source?: Node, target?: Node) {
+export function getEdgeParams(
+  source?: Node,
+  target?: Node,
+  sourceParentHeight?: number | null,
+  targetParentHeight?: number | null
+) {
   if (!source || !target) {
     return {
       sx: 0,
@@ -591,7 +648,12 @@ export function getEdgeParams(source?: Node, target?: Node) {
     };
   }
 
-  const points = getPoints(source, target);
+  const points = getPoints(
+    source,
+    target,
+    sourceParentHeight,
+    targetParentHeight
+  );
 
   return {
     sx: points.source.x,

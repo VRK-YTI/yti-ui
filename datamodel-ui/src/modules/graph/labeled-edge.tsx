@@ -36,7 +36,27 @@ export default function LabeledEdge({
     useCallback((store) => store.nodeInternals.get(target), [target])
   );
 
-  const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode);
+  const sourceParentHeight = useStore(
+    useCallback(
+      (store) =>
+        store.getNodes().find((n) => n.id === `${source}-wrapper`)?.height,
+      [source]
+    )
+  );
+  const targetParentHeight = useStore(
+    useCallback(
+      (store) =>
+        store.getNodes().find((n) => n.id === `${target}-wrapper`)?.height,
+      [target]
+    )
+  );
+
+  const { sx, sy, tx, ty } = getEdgeParams(
+    sourceNode,
+    targetNode,
+    sourceParentHeight,
+    targetParentHeight
+  );
 
   const [edgePath, labelX, labelY] = getStraightPath({
     sourceX: sx,

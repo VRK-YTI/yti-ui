@@ -152,6 +152,45 @@ const GraphContent = ({
     [setEdges, setNodes, project, deleteEdgeById]
   );
 
+  const toggleResourceVisibility = useCallback(
+    (
+      wrapperId: string,
+      wrapperHeight: number,
+      ids: string[],
+      value: boolean,
+      applicationProfile?: boolean
+    ) => {
+      if (ids.length < 1) {
+        return;
+      }
+      const defaultHeight = applicationProfile ? 50 : 40;
+
+      setNodes((nodes) =>
+        nodes.map((node) => {
+          if (node.id === wrapperId) {
+            return {
+              ...node,
+              style: {
+                ...node.style,
+                height: !value ? wrapperHeight : defaultHeight,
+              },
+            };
+          }
+
+          if (!ids.includes(node.id)) {
+            return node;
+          }
+
+          return {
+            ...node,
+            hidden: value,
+          };
+        })
+      );
+    },
+    [setNodes]
+  );
+
   const onEdgeClick = useCallback(
     (e, edge) => {
       if (globalSelected.id !== edge.data.identifier) {
@@ -164,7 +203,12 @@ const GraphContent = ({
   useEffect(() => {
     if (isSuccess || (isSuccess && resetPosition)) {
       setNodes(
-        convertToNodes(data.nodes, data.hiddenNodes, applicationProfile)
+        convertToNodes(
+          data.nodes,
+          data.hiddenNodes,
+          toggleResourceVisibility,
+          applicationProfile
+        )
       );
       setEdges(
         generateInitialEdges(
@@ -192,6 +236,7 @@ const GraphContent = ({
     resetPosition,
     dispatch,
     applicationProfile,
+    toggleResourceVisibility,
   ]);
 
   useEffect(() => {
@@ -226,10 +271,8 @@ const GraphContent = ({
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        // onConnect={onConnect}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
-        // onNodeClick={onNodeClick}
         onEdgeClick={onEdgeClick}
         fitView
         maxZoom={100}

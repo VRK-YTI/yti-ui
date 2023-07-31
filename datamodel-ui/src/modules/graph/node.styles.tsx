@@ -85,6 +85,7 @@ export const OptionsButton = styled.button`
   svg {
     height: 16px;
     width: 16px;
+    padding: 3px;
   }
 
   &:hover {
