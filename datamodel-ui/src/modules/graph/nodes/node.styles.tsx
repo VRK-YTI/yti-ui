@@ -8,6 +8,8 @@ export const ClassNodeDiv = styled.div<{
   display: flex;
   flex-direction: column;
   gap: ${(props) => props.theme.suomifi.spacing.xxs};
+  padding: ${(props) => props.theme.suomifi.spacing.xxs};
+
   width: 360px;
 
   > div {
@@ -42,6 +44,18 @@ export const ClassNodeDiv = styled.div<{
   .react-flow__handle {
     display: none;
   }
+
+  ${(props) =>
+    props.$hover &&
+    `
+    background: ${props.theme.suomifi.colors.accentTertiaryDark1};
+  `}
+
+  ${(props) =>
+    props.$highlight &&
+    `
+    background: #FAAF00;
+  `}
 `;
 
 export const CollapseButton = styled.button`

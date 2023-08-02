@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ModelFlow } from './graph.styles';
-import ClassNode from './nodes/class-node';
 import 'reactflow/dist/style.css';
 import {
   useEdgesState,
@@ -10,7 +9,6 @@ import {
   ReactFlowProvider,
   useReactFlow,
 } from 'reactflow';
-import SolidEdge from './edges/labeled-edge';
 import {
   useGetVisualizationQuery,
   usePutPositionsMutation,
@@ -26,13 +24,11 @@ import {
   setSelected,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
-import CornerNode from './nodes/corner-node';
-import SplittableEdge from './edges/splittable-edge';
+import { ClassNode, CornerNode, ExternalNode } from './nodes';
+import { DottedEdge, SolidEdge, SplittableEdge } from './edges';
 import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
-import ExternalNode from './nodes/external-node';
 import { ClearArrow } from './marker-ends';
-import DottedEdge from './edges/dotted-edge';
 import { convertToNodes } from './utils/convert-to-nodes';
 import { createNewCornerNode } from './utils/create-corner-node';
 import { convertToEdges } from './utils/convert-to-edges';

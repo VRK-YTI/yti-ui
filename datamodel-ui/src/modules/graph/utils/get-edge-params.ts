@@ -161,10 +161,20 @@ function getValueInsideRange(value: number, min: number, max: number) {
 }
 
 function getPositionAndSize(node: Node) {
+  if (node.type === 'cornerNode') {
+    return {
+      x: node.position.x,
+      y: node.position.y,
+      w: node.width ?? 0,
+      h: node.height ?? 0,
+    };
+  }
+
+  // Padding must be discarded from classNode params
   return {
-    x: node.positionAbsolute ? node.positionAbsolute.x : node.position.x,
-    y: node.positionAbsolute ? node.positionAbsolute.y : node.position.y,
-    w: node.type === 'cornerNode' ? node.width ?? 0 : node.width ?? 0,
-    h: node.type === 'cornerNode' ? node.height ?? 0 : node.height ?? 0,
+    x: node.position.x + 5,
+    y: node.position.y + 5,
+    w: node.width ? node.width - 10 : 0,
+    h: node.height ? node.height - 10 : 0,
   };
 }
