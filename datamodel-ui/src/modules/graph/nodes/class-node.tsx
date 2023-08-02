@@ -15,8 +15,8 @@ import { Handle, Position } from 'reactflow';
 import {
   IconChevronDown,
   IconChevronUp,
-  IconMenu,
   IconOptionsVertical,
+  IconRows,
   IconSwapVertical,
 } from 'suomifi-ui-components';
 import {
@@ -130,7 +130,7 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
               (r.type === ResourceType.ASSOCIATION ? (
                 <IconSwapVertical />
               ) : (
-                <IconMenu />
+                <IconRows />
               ))}
 
             {getLanguageVersion({

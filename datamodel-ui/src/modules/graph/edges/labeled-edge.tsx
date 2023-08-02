@@ -18,9 +18,9 @@ import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '@app/store';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
-import { getEdgeParams } from './utils/get-edge-params';
+import { getEdgeParams } from '../utils/get-edge-params';
 
-export default function LabeledEdge({
+export default function SolidEdge({
   id,
   data,
   source,

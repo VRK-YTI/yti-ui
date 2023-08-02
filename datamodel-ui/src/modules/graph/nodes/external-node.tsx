@@ -14,7 +14,7 @@ interface ExtNodeProps {
   };
 }
 
-export default function ExtNode({ id, data }: ExtNodeProps) {
+export default function ExternalNode({ id, data }: ExtNodeProps) {
   const [hover, setHover] = useState(false);
 
   return (

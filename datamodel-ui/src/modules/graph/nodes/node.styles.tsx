@@ -98,9 +98,17 @@ export const Resource = styled.div<{ $highlight?: boolean }>`
   border: 1px solid #c8cdd0;
   border-radius: 2px;
   margin: 2px;
+  display: flex;
+  gap: ${(props) => props.theme.suomifi.spacing.xxs};
+  align-items: center;
 
   &:hover {
     background: ${(props) => props.theme.suomifi.colors.depthLight2};
+  }
+
+  .fi-icon {
+    height: 16px;
+    width: 16px;
   }
 
   ${(props) =>

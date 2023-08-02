@@ -26,7 +26,7 @@ export function createSolidEdge(
 ) {
   return {
     ...params,
-    type: 'associationEdge',
+    type: 'solidEdge',
     markerEnd: {
       type: MarkerType.ArrowClosed,
       height: 20,

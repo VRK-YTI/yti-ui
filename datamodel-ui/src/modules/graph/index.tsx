@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ModelFlow } from './graph.styles';
-import ClassNode from './node';
+import ClassNode from './nodes/class-node';
 import 'reactflow/dist/style.css';
 import {
   useEdgesState,
@@ -10,7 +10,7 @@ import {
   ReactFlowProvider,
   useReactFlow,
 } from 'reactflow';
-import LabeledEdge from './labeled-edge';
+import SolidEdge from './edges/labeled-edge';
 import {
   useGetVisualizationQuery,
   usePutPositionsMutation,
@@ -26,13 +26,13 @@ import {
   setSelected,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
-import EdgeCorner from './edge-corner';
-import SplittableEdge from './splittable-edge';
+import CornerNode from './nodes/corner-node';
+import SplittableEdge from './edges/splittable-edge';
 import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
-import ExtNode from './ext-node';
+import ExternalNode from './nodes/external-node';
 import { ClearArrow } from './marker-ends';
-import DottedEdge from './dotted-edge';
+import DottedEdge from './edges/dotted-edge';
 import { convertToNodes } from './utils/convert-to-nodes';
 import { createNewCornerNode } from './utils/create-corner-node';
 import { convertToEdges } from './utils/convert-to-edges';
@@ -66,16 +66,16 @@ const GraphContent = ({
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
-      cornerNode: EdgeCorner,
-      externalNode: ExtNode,
+      cornerNode: CornerNode,
+      externalNode: ExternalNode,
     }),
     []
   );
   const edgeTypes: EdgeTypes = useMemo(
     () => ({
-      associationEdge: LabeledEdge,
       defaultEdge: SplittableEdge,
       dottedEdge: DottedEdge,
+      solidEdge: SolidEdge,
     }),
     []
   );
