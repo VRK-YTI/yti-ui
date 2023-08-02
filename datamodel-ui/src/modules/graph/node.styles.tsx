@@ -92,3 +92,21 @@ export const OptionsButton = styled.button`
     cursor: pointer;
   }
 `;
+
+export const Resource = styled.div<{ $highlight?: boolean }>`
+  background: #f7f7f8;
+  border: 1px solid #c8cdd0;
+  border-radius: 2px;
+  margin: 2px;
+
+  &:hover {
+    background: ${(props) => props.theme.suomifi.colors.depthLight2};
+  }
+
+  ${(props) =>
+    props.$highlight &&
+    `
+    border: 3px solid #FAAF00;
+    margin: 0;
+    `}
+`;

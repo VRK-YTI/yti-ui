@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import {
+  selectDisplayLang,
   selectSelected,
   setSelected,
 } from '@app/common/components/model/model.slice';
@@ -15,20 +16,23 @@ import {
 import { DeleteEdgeButton, EdgeContent } from './edge.styles';
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '@app/store';
-import { getEdgeParams } from './utils';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { useTranslation } from 'next-i18next';
+import { getEdgeParams } from './utils/get-edge-params';
 
 export default function LabeledEdge({
   id,
   data,
   source,
   target,
-  label,
   markerEnd,
   selected,
   style,
 }: EdgeProps) {
+  const { i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const globalSelected = useSelector(selectSelected());
+  const displayLang = useSelector(selectDisplayLang());
   const sourceNode = useStore(
     useCallback((store) => store.nodeInternals.get(source), [source])
   );
@@ -36,27 +40,7 @@ export default function LabeledEdge({
     useCallback((store) => store.nodeInternals.get(target), [target])
   );
 
-  const sourceParentHeight = useStore(
-    useCallback(
-      (store) =>
-        store.getNodes().find((n) => n.id === `${source}-wrapper`)?.height,
-      [source]
-    )
-  );
-  const targetParentHeight = useStore(
-    useCallback(
-      (store) =>
-        store.getNodes().find((n) => n.id === `${target}-wrapper`)?.height,
-      [target]
-    )
-  );
-
-  const { sx, sy, tx, ty } = getEdgeParams(
-    sourceNode,
-    targetNode,
-    sourceParentHeight,
-    targetParentHeight
-  );
+  const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode);
 
   const [edgePath, labelX, labelY] = getStraightPath({
     sourceX: sx,
@@ -97,7 +81,13 @@ export default function LabeledEdge({
             globalSelected.id === data.identifier
           }
         >
-          <div>{label}</div>
+          <div>
+            {getLanguageVersion({
+              data: data.label,
+              lang: displayLang !== i18n.language ? displayLang : i18n.language,
+              appendLocale: true,
+            })}
+          </div>
           {selected && (
             <DeleteEdgeButton onClick={(e) => onDeleteClick(e)}>
               ×

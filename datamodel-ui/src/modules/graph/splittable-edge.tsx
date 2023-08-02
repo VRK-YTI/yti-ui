@@ -4,7 +4,7 @@
 import { MouseEvent, useCallback } from 'react';
 import { EdgeProps, getStraightPath, useStore } from 'reactflow';
 import styled from 'styled-components';
-import { getEdgeParams } from './utils';
+import { getEdgeParams } from './utils/get-edge-params';
 
 const EdgeContent = styled.div`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};

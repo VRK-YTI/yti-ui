@@ -10,15 +10,6 @@ import {
   ReactFlowProvider,
   useReactFlow,
 } from 'reactflow';
-import {
-  convertToNodes,
-  createNewCornerEdge,
-  createNewCornerNode,
-  generateInitialEdges,
-  generatePositionsPayload,
-  getUnusedCornerIds,
-  handleEdgeDelete,
-} from './utils';
 import LabeledEdge from './labeled-edge';
 import {
   useGetVisualizationQuery,
@@ -41,8 +32,14 @@ import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
 import ExtNode from './ext-node';
 import { ClearArrow } from './marker-ends';
-import ClassWrapperNode from './class-wrapper-node';
-import ResourceNode from './resource-node';
+import DottedEdge from './dotted-edge';
+import { convertToNodes } from './utils/convert-to-nodes';
+import { createNewCornerNode } from './utils/create-corner-node';
+import { convertToEdges } from './utils/convert-to-edges';
+import { createCornerEdge } from './utils/create-corner-edge';
+import { generatePositionsPayload } from './utils/generate-positions-payload';
+import { getUnusedCornerIds } from './utils/get-unused-corner-ids';
+import { handleEdgeDelete } from './utils/handle-edge-delete';
 
 interface GraphProps {
   modelId: string;
@@ -69,15 +66,17 @@ const GraphContent = ({
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
-      classWrapperNode: ClassWrapperNode,
       cornerNode: EdgeCorner,
       externalNode: ExtNode,
-      resourceNode: ResourceNode,
     }),
     []
   );
   const edgeTypes: EdgeTypes = useMemo(
-    () => ({ associationEdge: LabeledEdge, defaultEdge: SplittableEdge }),
+    () => ({
+      associationEdge: LabeledEdge,
+      defaultEdge: SplittableEdge,
+      dottedEdge: DottedEdge,
+    }),
     []
   );
   const { data, isSuccess } = useGetVisualizationQuery(modelId);
@@ -109,7 +108,7 @@ const GraphContent = ({
       ]);
 
       const newEdges = [
-        createNewCornerEdge(source, newCornerId, {
+        createCornerEdge(source, newCornerId, {
           handleDelete: deleteEdgeById,
           splitEdge: splitEdge,
         }),
@@ -117,7 +116,7 @@ const GraphContent = ({
 
       if (target.includes('corner')) {
         newEdges.push(
-          createNewCornerEdge(newCornerId, target, {
+          createCornerEdge(newCornerId, target, {
             handleDelete: deleteEdgeById,
             splitEdge: splitEdge,
           })
@@ -152,45 +151,6 @@ const GraphContent = ({
     [setEdges, setNodes, project, deleteEdgeById]
   );
 
-  const toggleResourceVisibility = useCallback(
-    (
-      wrapperId: string,
-      wrapperHeight: number,
-      ids: string[],
-      value: boolean,
-      applicationProfile?: boolean
-    ) => {
-      if (ids.length < 1) {
-        return;
-      }
-      const defaultHeight = applicationProfile ? 50 : 40;
-
-      setNodes((nodes) =>
-        nodes.map((node) => {
-          if (node.id === wrapperId) {
-            return {
-              ...node,
-              style: {
-                ...node.style,
-                height: !value ? wrapperHeight : defaultHeight,
-              },
-            };
-          }
-
-          if (!ids.includes(node.id)) {
-            return node;
-          }
-
-          return {
-            ...node,
-            hidden: value,
-          };
-        })
-      );
-    },
-    [setNodes]
-  );
-
   const onEdgeClick = useCallback(
     (e, edge) => {
       if (globalSelected.id !== edge.data.identifier) {
@@ -203,20 +163,15 @@ const GraphContent = ({
   useEffect(() => {
     if (isSuccess || (isSuccess && resetPosition)) {
       setNodes(
-        convertToNodes(
-          data.nodes,
-          data.hiddenNodes,
-          toggleResourceVisibility,
-          applicationProfile
-        )
+        convertToNodes(data.nodes, data.hiddenNodes, applicationProfile)
       );
       setEdges(
-        generateInitialEdges(
+        convertToEdges(
           data.nodes,
           data.hiddenNodes,
           deleteEdgeById,
           splitEdge,
-          i18n.language
+          applicationProfile
         )
       );
 
@@ -236,7 +191,6 @@ const GraphContent = ({
     resetPosition,
     dispatch,
     applicationProfile,
-    toggleResourceVisibility,
   ]);
 
   useEffect(() => {
