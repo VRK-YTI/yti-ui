@@ -160,7 +160,10 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
       <ContentWrapper>
         <Graph modelId={modelId}>
           <Drawer views={views} />
-          <ModelTools applicationProfile={modelInfo?.type === 'PROFILE'} />
+          <ModelTools
+            modelId={modelId}
+            applicationProfile={modelInfo?.type === 'PROFILE'}
+          />
         </Graph>
       </ContentWrapper>
     </div>
