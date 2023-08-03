@@ -29,13 +29,13 @@ import { DottedEdge, SolidEdge, SplittableEdge } from './edges';
 import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
 import { ClearArrow } from './marker-ends';
-import { convertToNodes } from './utils/convert-to-nodes';
+import convertToNodes from './utils/convert-to-nodes';
 import { createNewCornerNode } from './utils/create-corner-node';
-import { convertToEdges } from './utils/convert-to-edges';
-import { createCornerEdge } from './utils/create-corner-edge';
-import { generatePositionsPayload } from './utils/generate-positions-payload';
-import { getUnusedCornerIds } from './utils/get-unused-corner-ids';
-import { handleEdgeDelete } from './utils/handle-edge-delete';
+import convertToEdges from './utils/convert-to-edges';
+import createCornerEdge from './utils/create-corner-edge';
+import generatePositionsPayload from './utils/generate-positions-payload';
+import getUnusedCornerIds from './utils/get-unused-corner-ids';
+import handleEdgeDelete from './utils/handle-edge-delete';
 
 interface GraphProps {
   modelId: string;

@@ -3,10 +3,10 @@ import {
   VisualizationType,
 } from '@app/common/interfaces/visualization.interface';
 import { Edge } from 'reactflow';
-import { createAssociationEdge } from './create-association-edge';
-import { createCornerEdge } from './create-corner-edge';
+import createAssociationEdge from '../create-association-edge';
+import createCornerEdge from '../create-corner-edge';
 
-export function convertToEdges(
+export default function convertToEdges(
   nodes: VisualizationType[],
   hiddenNodes: VisualizationHiddenNode[],
   handleDelete: (id: string, source: string, target: string) => void,
@@ -28,7 +28,7 @@ export function convertToEdges(
     .flatMap((node) => [
       ...node.associations
         .filter((assoc) => assoc.referenceTarget)
-        .flatMap((assoc) => {
+        .flatMap((assoc, idx) => {
           if (assoc.referenceTarget?.startsWith('corner')) {
             return createCornerEdge(
               node.identifier,
@@ -52,7 +52,8 @@ export function convertToEdges(
               targetHandle: assoc.referenceTarget,
               id: `reactflow__edge-${node.identifier}-${assoc.referenceTarget}`,
             },
-            applicationProfile
+            applicationProfile,
+            applicationProfile ? node.attributes.length + idx + 1 : undefined
           );
         }),
       ...node.parentClasses

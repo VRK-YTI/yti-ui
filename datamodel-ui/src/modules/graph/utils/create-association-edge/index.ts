@@ -2,17 +2,25 @@ import { Edge, MarkerType } from 'reactflow';
 
 // params needs to be typed as "any" to correlate with specs of React Flow edge parameters
 
-export function createAssociationEdge(
+export default function createAssociationEdge(
   label: { [key: string]: string },
   handleDelete: (id: string, source: string, target: string) => void,
   splitEdge: (source: string, target: string, x: number, y: number) => void,
   identifier: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params: any,
-  applicationProfile?: boolean
+  applicationProfile?: boolean,
+  offsetSource?: number
 ): Edge {
   return applicationProfile
-    ? createDottedEdge(label, handleDelete, splitEdge, identifier, params)
+    ? createDottedEdge(
+        label,
+        handleDelete,
+        splitEdge,
+        identifier,
+        params,
+        offsetSource
+      )
     : createSolidEdge(label, handleDelete, splitEdge, identifier, params);
 }
 
@@ -49,7 +57,8 @@ export function createDottedEdge(
   splitEdge: (source: string, target: string, x: number, y: number) => void,
   identifier: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  params: any
+  params: any,
+  offsetSource?: number
 ) {
   return {
     ...params,
@@ -61,6 +70,7 @@ export function createDottedEdge(
       handleDelete: handleDelete,
       splitEdge: splitEdge,
       identifier: identifier,
+      ...(offsetSource && { offsetSource: offsetSource }),
     },
     style: {
       strokeDasharray: '4 2',

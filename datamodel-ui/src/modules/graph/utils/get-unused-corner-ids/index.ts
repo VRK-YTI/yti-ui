@@ -1,6 +1,9 @@
 import { Edge, Node } from 'reactflow';
 
-export function getUnusedCornerIds(nodes: Node[], edges: Edge[]): string[] {
+export default function getUnusedCornerIds(
+  nodes: Node[],
+  edges: Edge[]
+): string[] {
   if (nodes.length < 1) {
     return [];
   }

@@ -2,11 +2,11 @@ import {
   VisualizationHiddenNode,
   VisualizationType,
 } from '@app/common/interfaces/visualization.interface';
-import { createClassNode } from './create-class-node';
-import { createCornerNode } from './create-corner-node';
+import createClassNode from '../create-class-node';
+import createCornerNode from '../create-corner-node';
 import { Node } from 'reactflow';
 
-export function convertToNodes(
+export default function convertToNodes(
   nodes: VisualizationType[],
   hiddenNodes: VisualizationHiddenNode[],
   applicationProfile?: boolean

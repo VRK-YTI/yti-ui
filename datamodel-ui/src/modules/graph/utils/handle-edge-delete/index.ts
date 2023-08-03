@@ -1,6 +1,6 @@
 import { Edge } from 'reactflow';
 
-export function handleEdgeDelete(edgeId: string, edges: Edge[]) {
+export default function handleEdgeDelete(edgeId: string, edges: Edge[]) {
   const delEdge = edges.find((e) => e.id === edgeId);
 
   if (!delEdge) {

@@ -13,7 +13,7 @@ import { useCallback } from 'react';
 import { EdgeContent } from './edge.styles';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
-import { getEdgeParams } from '../utils/get-edge-params';
+import getEdgeParams from '../utils/get-edge-params';
 
 export default function DottedEdge({
   id,
@@ -33,7 +33,12 @@ export default function DottedEdge({
     useCallback((store) => store.nodeInternals.get(target), [target])
   );
 
-  const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode);
+  const { sx, sy, tx, ty } = getEdgeParams(
+    sourceNode,
+    targetNode,
+    data.offsetSource,
+    data.offsetTarget
+  );
 
   const [edgePath, labelX, labelY] = getStraightPath({
     sourceX: sx,

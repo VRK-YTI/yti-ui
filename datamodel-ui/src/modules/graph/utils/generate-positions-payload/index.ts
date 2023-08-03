@@ -1,7 +1,7 @@
 import { VisualizationPutType } from '@app/common/interfaces/visualization.interface';
 import { Edge, Node } from 'reactflow';
 
-export function generatePositionsPayload(
+export default function generatePositionsPayload(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   nodes: Node<any>[],
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,6 +1,11 @@
 import { Node, XYPosition } from 'reactflow';
 
-export function getEdgeParams(source?: Node, target?: Node) {
+export default function getEdgeParams(
+  source?: Node,
+  target?: Node,
+  offsetSource?: number,
+  offsetTarget?: number
+) {
   if (!source || !target) {
     return {
       sx: 0,
@@ -10,7 +15,7 @@ export function getEdgeParams(source?: Node, target?: Node) {
     };
   }
 
-  const points = getPoints(source, target);
+  const points = getPoints(source, target, offsetSource, offsetTarget);
 
   return {
     sx: points.source.x,
@@ -22,7 +27,9 @@ export function getEdgeParams(source?: Node, target?: Node) {
 
 function getPoints(
   source: Node,
-  target: Node
+  target: Node,
+  offsetSource?: number,
+  offsetTarget?: number
 ): {
   source: XYPosition;
   target: XYPosition;
@@ -42,8 +49,18 @@ function getPoints(
 
   let [sourceX, sourceY, targetX, targetY] = [0, 0, 0, 0];
 
-  const { x: sx, y: sy, w: sw, h: sh } = getPositionAndSize(source);
-  const { x: tx, y: ty, w: tw, h: th } = getPositionAndSize(target);
+  const {
+    x: sx,
+    y: sy,
+    w: sw,
+    h: sh,
+  } = getPositionAndSize(source, offsetSource);
+  const {
+    x: tx,
+    y: ty,
+    w: tw,
+    h: th,
+  } = getPositionAndSize(target, offsetTarget);
 
   if (sx > tx + tw) {
     sourceX = sx;
@@ -55,17 +72,27 @@ function getPoints(
     if (source.type === 'cornerNode' || target.type === 'cornerNode') {
       const sourceIsCorner = source.type === 'cornerNode';
       const x = sourceIsCorner ? sx + 20 : tx + 20;
-      sourceX = sourceIsCorner ? x : getValueInsideRange(x, sx, sx + sw);
-      targetX = sourceIsCorner ? getValueInsideRange(x, tx, tx + tw) : x;
+
+      if (!sourceIsCorner && offsetSource) {
+        sourceX = tx > sx + sw / 2 ? sx + sw : sx;
+      } else {
+        sourceX = sourceIsCorner ? x : getValueInsideRange(x, sx, sx + sw);
+      }
+
+      if (sourceIsCorner && offsetTarget) {
+        targetX = sx > tx + tw / 2 ? tx + tw : tx;
+      } else {
+        targetX = sourceIsCorner ? getValueInsideRange(x, tx, tx + tw) : x;
+      }
     } else {
       if (sx >= tx) {
         const x = sx + (tx + tw - sx) / 2;
-        sourceX = x;
-        targetX = x;
+        sourceX = offsetSource ? sx : x;
+        targetX = offsetTarget ? tx + tw : x;
       } else {
         const x = tx + (sx + sw - tx) / 2;
-        sourceX = x;
-        targetX = x;
+        sourceX = offsetSource ? sx + sw : x;
+        targetX = offsetTarget ? tx : x;
       }
     }
   }
@@ -160,13 +187,22 @@ function getValueInsideRange(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-function getPositionAndSize(node: Node) {
+function getPositionAndSize(node: Node, offset?: number) {
   if (node.type === 'cornerNode') {
     return {
       x: node.position.x,
       y: node.position.y,
       w: node.width ?? 0,
       h: node.height ?? 0,
+    };
+  }
+
+  if (offset && offset > 0) {
+    return {
+      x: node.position.x + 5,
+      y: node.position.y + 5 + 45 + (offset - 1) * 39,
+      w: node.width ? node.width - 10 : 0,
+      h: 30,
     };
   }
 

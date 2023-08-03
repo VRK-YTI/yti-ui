@@ -2,7 +2,7 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { VisualizationType } from '@app/common/interfaces/visualization.interface';
 import { Node } from 'reactflow';
 
-export function createClassNode(
+export default function createClassNode(
   node: VisualizationType,
   applicationProfile?: boolean
 ): Node {
@@ -12,7 +12,9 @@ export function createClassNode(
     data: {
       identifier: node.identifier,
       label: node.label,
-      applicationProfile: applicationProfile,
+      ...(applicationProfile !== undefined
+        ? { applicationProfile: applicationProfile }
+        : {}),
       resources: [
         ...node.attributes.map((a) => ({
           ...a,

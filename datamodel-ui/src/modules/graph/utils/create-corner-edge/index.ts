@@ -1,4 +1,8 @@
-export function createCornerEdge(source: string, target: string, data: object) {
+export default function createCornerEdge(
+  source: string,
+  target: string,
+  data: object
+) {
   return {
     id: `reactflow__edge-${source}-#corner-${target}`,
     source: source,
