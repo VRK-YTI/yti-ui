@@ -62,14 +62,13 @@ export default function ModelTools({
       return;
     }
 
-    setCenter(
-      node.position.x + (node.width ?? 1) / 2,
-      node.position.y + (node.height ?? 1) / 2,
-      {
-        duration: 500,
-        zoom: 3,
-      }
-    );
+    const x = node.positionAbsolute ? node.positionAbsolute.x : node.position.x;
+    const y = node.positionAbsolute ? node.positionAbsolute.y : node.position.y;
+
+    setCenter(x + (node.width ?? 1) / 2, y + (node.height ?? 1) / 2, {
+      duration: 500,
+      zoom: 3,
+    });
   };
 
   if (isSmall) {
