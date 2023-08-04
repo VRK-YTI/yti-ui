@@ -183,6 +183,8 @@ export function translateCommonFormErrors(
         : t('attribute-invalid-identifier-length', { ns: 'admin' });
     case 'unauthorized':
       return t('error-unauthenticated', { ns: 'admin' });
+    case 'nonNumeric':
+      return t('error-non-numeric-values', { ns: 'admin' });
     default:
       return type === ResourceType.ASSOCIATION
         ? t('association-missing-general', { ns: 'admin' })

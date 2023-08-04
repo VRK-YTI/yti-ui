@@ -83,7 +83,7 @@ export function generateInitialEdges(
     )
     .flatMap((node) => [
       ...node.associations.flatMap((assoc) => {
-        if (assoc.referenceTarget.startsWith('corner')) {
+        if (assoc.referenceTarget?.startsWith('corner')) {
           return createNewCornerEdge(
             node.identifier,
             `#${assoc.referenceTarget}`,

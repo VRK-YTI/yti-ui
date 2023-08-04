@@ -144,6 +144,7 @@
   "edit": "Muokkaa",
   "editor-comment-hint": "Kommentti näkyy vain tietomallin muokkaajille.",
   "email": "Sähköposti",
+  "error-non-numeric-values": "Rajoitteissa on ei-numeerisia arvoja numeerisia arvoja vaativissa kentissä",
   "error-prefix-invalid": "Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva",
   "error-prefix-taken": "Tunnus on käytössä",
   "error-unauthenticated": "Kirjautumistietojen varmistuksessa ilmeni ongelma. Kirjaudu palveluun uudestaan.",
