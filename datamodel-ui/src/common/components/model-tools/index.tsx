@@ -5,7 +5,6 @@ import {
   HintText,
   IconChevronLeft,
   IconChevronRight,
-  IconDownload,
   IconFullscreen,
   IconMapMyLocation,
   IconMinus,
@@ -31,10 +30,13 @@ import {
   setSavePosition,
 } from '../model/model.slice';
 import HasPermission from '@app/common/utils/has-permission';
+import DownloadPicture from './download-picture';
 
 export default function ModelTools({
+  modelId,
   applicationProfile,
 }: {
+  modelId: string;
   applicationProfile: boolean;
 }) {
   const { t } = useTranslation('common');
@@ -62,14 +64,13 @@ export default function ModelTools({
       return;
     }
 
-    setCenter(
-      node.position.x + (node.width ?? 1) / 2,
-      node.position.y + (node.height ?? 1) / 2,
-      {
-        duration: 500,
-        zoom: 3,
-      }
-    );
+    const x = node.positionAbsolute ? node.positionAbsolute.x : node.position.x;
+    const y = node.positionAbsolute ? node.positionAbsolute.y : node.position.y;
+
+    setCenter(x + (node.width ?? 1) / 2, y + (node.height ?? 1) / 2, {
+      duration: 500,
+      zoom: 3,
+    });
   };
 
   if (isSmall) {
@@ -118,7 +119,8 @@ export default function ModelTools({
             icon={<IconMapMyLocation />}
             onClick={() => handleCenterNode()}
           />
-          <Button icon={<IconDownload />} />
+
+          <DownloadPicture modelId={modelId} />
 
           {hasPermission && (
             <Button

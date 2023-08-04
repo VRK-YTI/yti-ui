@@ -18,7 +18,7 @@ export function ClearArrow() {
             transform="scale(-1,1) translate(-12,0)"
             d="M10.6426 0.837109L1.05439 6L10.6426 11.1629L10.6426 0.837109Z"
             fill="white"
-            stroke="#363535"
+            stroke="#235A9A"
           />
         </marker>
       </defs>

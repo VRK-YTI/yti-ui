@@ -6,7 +6,12 @@ export const EdgeContent = styled.div.attrs(
       transform: `translate(-50%, -50%) translate(${props.$labelX}px, ${props.$labelY}px)`,
     },
   })
-)<{ $labelX: number; $labelY: number; $highlight: boolean }>`
+)<{
+  $labelX: number;
+  $labelY: number;
+  $highlight: boolean;
+  $borderless?: boolean;
+}>`
   pointer-events: all;
   position: absolute;
   background: #ffffff;
@@ -15,7 +20,7 @@ export const EdgeContent = styled.div.attrs(
   border: 2px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   fontsize: 16px;
   fontweight: 400;
-  paddingright: 20px;
+  padding-right: 20px;
 
   ${(props) =>
     props.$highlight &&
@@ -23,6 +28,14 @@ export const EdgeContent = styled.div.attrs(
     border: 1px solid ${props.theme.suomifi.colors.warningBase};
     z-index: 2;
   `}
+
+  ${(props) =>
+    props.$borderless &&
+    `
+      border: 0;
+      padding: ${props.theme.suomifi.spacing.xxs};
+      color: ${props.theme.suomifi.colors.highlightDark1};
+    `}
 `;
 
 export const DeleteEdgeButton = styled.button`
