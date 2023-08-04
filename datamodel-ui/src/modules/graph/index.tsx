@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ModelFlow } from './graph.styles';
-import ClassNode from './node';
 import 'reactflow/dist/style.css';
 import {
   useEdgesState,
@@ -10,16 +9,6 @@ import {
   ReactFlowProvider,
   useReactFlow,
 } from 'reactflow';
-import {
-  convertToNodes,
-  createNewCornerEdge,
-  createNewCornerNode,
-  generateInitialEdges,
-  generatePositionsPayload,
-  getUnusedCornerIds,
-  handleEdgeDelete,
-} from './utils';
-import LabeledEdge from './labeled-edge';
 import {
   useGetVisualizationQuery,
   usePutPositionsMutation,
@@ -35,19 +24,30 @@ import {
   setSelected,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
-import EdgeCorner from './edge-corner';
-import SplittableEdge from './splittable-edge';
+import { ClassNode, CornerNode, ExternalNode } from './nodes';
+import { DottedEdge, SolidEdge, SplittableEdge } from './edges';
 import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
-import ExtNode from './ext-node';
 import { ClearArrow } from './marker-ends';
+import convertToNodes from './utils/convert-to-nodes';
+import { createNewCornerNode } from './utils/create-corner-node';
+import convertToEdges from './utils/convert-to-edges';
+import createCornerEdge from './utils/create-corner-edge';
+import generatePositionsPayload from './utils/generate-positions-payload';
+import getUnusedCornerIds from './utils/get-unused-corner-ids';
+import handleEdgeDelete from './utils/handle-edge-delete';
 
 interface GraphProps {
   modelId: string;
+  applicationProfile?: boolean;
   children: JSX.Element[];
 }
 
-const GraphContent = ({ modelId, children }: GraphProps) => {
+const GraphContent = ({
+  modelId,
+  applicationProfile,
+  children,
+}: GraphProps) => {
   const { i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
@@ -62,13 +62,17 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
-      cornerNode: EdgeCorner,
-      externalNode: ExtNode,
+      cornerNode: CornerNode,
+      externalNode: ExternalNode,
     }),
     []
   );
   const edgeTypes: EdgeTypes = useMemo(
-    () => ({ associationEdge: LabeledEdge, defaultEdge: SplittableEdge }),
+    () => ({
+      defaultEdge: SplittableEdge,
+      dottedEdge: DottedEdge,
+      solidEdge: SolidEdge,
+    }),
     []
   );
   const { data, isSuccess } = useGetVisualizationQuery(modelId);
@@ -100,7 +104,7 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
       ]);
 
       const newEdges = [
-        createNewCornerEdge(source, newCornerId, {
+        createCornerEdge(source, newCornerId, {
           handleDelete: deleteEdgeById,
           splitEdge: splitEdge,
         }),
@@ -108,7 +112,7 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
 
       if (target.includes('corner')) {
         newEdges.push(
-          createNewCornerEdge(newCornerId, target, {
+          createCornerEdge(newCornerId, target, {
             handleDelete: deleteEdgeById,
             splitEdge: splitEdge,
           })
@@ -154,14 +158,16 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
 
   useEffect(() => {
     if (isSuccess || (isSuccess && resetPosition)) {
-      setNodes(convertToNodes(data.nodes, data.hiddenNodes, i18n.language));
+      setNodes(
+        convertToNodes(data.nodes, data.hiddenNodes, applicationProfile)
+      );
       setEdges(
-        generateInitialEdges(
+        convertToEdges(
           data.nodes,
           data.hiddenNodes,
           deleteEdgeById,
           splitEdge,
-          i18n.language
+          applicationProfile
         )
       );
 
@@ -180,6 +186,7 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
     displayLang,
     resetPosition,
     dispatch,
+    applicationProfile,
   ]);
 
   useEffect(() => {
@@ -214,10 +221,8 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        // onConnect={onConnect}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
-        // onNodeClick={onNodeClick}
         onEdgeClick={onEdgeClick}
         fitView
         maxZoom={100}
@@ -228,11 +233,17 @@ const GraphContent = ({ modelId, children }: GraphProps) => {
   );
 };
 
-export default function Graph({ modelId, children }: GraphProps) {
+export default function Graph({
+  modelId,
+  applicationProfile,
+  children,
+}: GraphProps) {
   return (
     <>
       <ReactFlowProvider>
-        <GraphContent modelId={modelId}>{children}</GraphContent>
+        <GraphContent modelId={modelId} applicationProfile={applicationProfile}>
+          {children}
+        </GraphContent>
       </ReactFlowProvider>
 
       <ClearArrow />
