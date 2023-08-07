@@ -536,6 +536,7 @@ export default function ResourceForm({
 
           <AttributeRestrictions
             data={data}
+            errors={errors}
             applicationProfile={applicationProfile}
             handleUpdate={handleUpdateByKey}
           />
@@ -580,7 +581,32 @@ export default function ResourceForm({
   );
 
   function getErrors(): string[] {
-    const translatedErrors = Object.entries(errors)
+    const nanKeys = [
+      'maxCount',
+      'maxExclusive',
+      'maxInclusive',
+      'maxLength',
+      'minCount',
+      'minExclusive',
+      'minInclusive',
+      'minLength',
+    ];
+
+    const hasNanValues =
+      Object.entries(errors)
+        .filter((e) => nanKeys.includes(e[0]) && e[1])
+        .map((e) => e[1])
+        .filter(Boolean).length > 0;
+
+    const errorsWithNonNumeric = hasNanValues
+      ? Object.fromEntries(
+          Object.entries({ ...errors, ...{ nonNumeric: true } }).filter(
+            (e) => !nanKeys.includes(e[0])
+          )
+        )
+      : errors;
+
+    const translatedErrors = Object.entries(errorsWithNonNumeric)
       .filter((e) => e[1])
       .map((e) =>
         translateCommonFormErrors(

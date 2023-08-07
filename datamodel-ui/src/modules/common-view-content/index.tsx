@@ -150,29 +150,31 @@ export default function CommonViewContent({
               </BasicBlock>
 
               <BasicBlock title={t('larger-or-as-large-as', { ns: 'admin' })}>
-                {t('not-defined')}
+                {data.minInclusive ?? t('not-defined')}
               </BasicBlock>
 
               <BasicBlock title={t('smaller-or-as-small-as', { ns: 'admin' })}>
-                {t('not-defined')}
+                {data.maxInclusive ?? t('not-defined')}
               </BasicBlock>
 
               <BasicBlock title={t('larger-than', { ns: 'admin' })}>
-                {t('not-defined')}
+                {data.minExclusive ?? t('not-defined')}
               </BasicBlock>
 
               <BasicBlock title={t('smaller-than', { ns: 'admin' })}>
-                {t('not-defined')}
+                {data.maxExclusive ?? t('not-defined')}
               </BasicBlock>
 
               <BasicBlock title={t('string-attribute-format', { ns: 'admin' })}>
-                {t('not-defined')}
+                {data.pattern ?? t('not-defined')}
               </BasicBlock>
 
               <BasicBlock
                 title={t('string-attribute-languages', { ns: 'admin' })}
               >
-                {t('not-defined')}
+                {data.languageIn
+                  ? data.languageIn.join(', ')
+                  : t('not-defined')}
               </BasicBlock>
 
               <Separator />

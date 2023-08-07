@@ -28,9 +28,14 @@ export interface Resource {
   hasValue?: string;
   identifier: string;
   label: { [key: string]: string };
+  languageIn?: string[];
   maxCount?: number;
+  maxExclusive?: number;
+  maxInclusive?: number;
   maxLength?: number;
   minCount?: number;
+  minExclusive?: number;
+  minInclusive?: number;
   minLength?: number;
   modified: string;
   modifier: {
@@ -39,6 +44,7 @@ export interface Resource {
   };
   note: { [key: string]: string };
   path?: UriData;
+  pattern?: string;
   range?: UriData;
   status: Status;
   subject?: ConceptType;
