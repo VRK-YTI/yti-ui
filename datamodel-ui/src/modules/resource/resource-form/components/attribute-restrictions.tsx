@@ -1,10 +1,9 @@
 import InlineListBlock from '@app/common/components/inline-list-block';
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import CodeListModal from '@app/modules/code-list-modal';
 import { useTranslation } from 'next-i18next';
 import {
-  Button,
-  IconPlus,
   MultiSelect,
   SingleSelect,
   Text,
@@ -40,9 +39,7 @@ export default function AttributeRestrictions({
 
       <InlineListBlock
         addNewComponent={
-          <Button variant="secondary" icon={<IconPlus />}>
-            {t('add-reference-data')}
-          </Button>
+          <CodeListModal initialData={[]} extendedView setData={() => null} />
         }
         handleRemoval={() => null}
         items={[]}
