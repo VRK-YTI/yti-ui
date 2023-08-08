@@ -27,9 +27,14 @@ export interface ResourceFormType {
   hasValue?: string;
   identifier: string;
   label: { [key: string]: string };
+  languageIn?: string[];
   maxCount?: number;
+  maxExclusive?: number;
+  maxInclusive?: number;
   maxLength?: number;
   minCount?: number;
+  minExclusive?: number;
+  minInclusive?: number;
   minLength?: number;
   note?: { [key: string]: string };
   path?: {
@@ -37,6 +42,7 @@ export interface ResourceFormType {
     label: string;
     uri: string;
   };
+  pattern?: string;
   range?: {
     id: string;
     label: string;
