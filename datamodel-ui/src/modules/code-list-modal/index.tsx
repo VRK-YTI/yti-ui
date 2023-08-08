@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 import {
   Button,
+  Chip,
   IconPlus,
   Modal,
   ModalContent,
@@ -19,14 +20,17 @@ import { DetachedPagination } from 'yti-common-ui/pagination';
 import WideModal from '@app/common/components/wide-modal';
 import FilterBlock, { FilterType } from './filter-block';
 import ResultsAndInfoBlock from './results-and-info-block';
+import { SelectedChipsWrapper } from './code-list-modal.styles';
 
 export default function CodeListModal({
   initialData,
   extendedView,
+  modalTitle,
   setData,
 }: {
   initialData: ModelCodeList[];
   extendedView?: boolean;
+  modalTitle?: string;
   setData: (value: ModelCodeList[]) => void;
 }) {
   const { t } = useTranslation('admin');
@@ -54,6 +58,7 @@ export default function CodeListModal({
           <CodeListModalContent
             initialData={initialData}
             extendedView={true}
+            modalTitle={modalTitle}
             setVisible={setVisible}
             setData={setData}
           />
@@ -81,6 +86,7 @@ export default function CodeListModal({
       >
         <CodeListModalContent
           initialData={initialData}
+          modalTitle={modalTitle}
           setVisible={setVisible}
           setData={setData}
         />
@@ -92,11 +98,13 @@ export default function CodeListModal({
 function CodeListModalContent({
   initialData,
   extendedView,
+  modalTitle,
   setVisible,
   setData,
 }: {
   initialData: ModelCodeList[];
   extendedView?: boolean;
+  modalTitle?: string;
   setVisible: (value: boolean) => void;
   setData: (value: ModelCodeList[]) => void;
 }) {
@@ -184,7 +192,9 @@ function CodeListModalContent({
   return (
     <>
       <ModalContent>
-        <ModalTitle>{t('add-reference-to-reference-data')}</ModalTitle>
+        <ModalTitle>
+          {modalTitle ?? t('add-reference-to-reference-data')}
+        </ModalTitle>
 
         <FilterBlock
           filter={filter}
@@ -193,6 +203,26 @@ function CodeListModalContent({
           setFilter={setFilter}
           setCurrPage={setCurrPage}
         />
+
+        {extendedView && selected.length > 0 && (
+          <SelectedChipsWrapper>
+            {selected.map((select) => (
+              <Chip
+                key={`selected-code-${select}`}
+                removable
+                onClick={() =>
+                  setSelected(selected.filter((s) => s !== select))
+                }
+              >
+                {getLanguageVersion({
+                  data: codes?.results.find((code) => code.uri === select)
+                    ?.prefLabel,
+                  lang: i18n.language,
+                }) ?? select}
+              </Chip>
+            ))}
+          </SelectedChipsWrapper>
+        )}
 
         <ResultsAndInfoBlock
           codes={codes}

@@ -65,6 +65,7 @@
   "clear-keyword-filter": "",
   "clear-selection": "",
   "codelist": "",
+  "codelist-contents": "",
   "common-form": {
     "add-equivalent-association": "",
     "add-equivalent-attribute": "",
@@ -149,6 +150,7 @@
   "error-unauthenticated": "",
   "feedback": "",
   "file-added": "",
+  "identifier": "",
   "in-use": "",
   "in-use-in-this-model": "",
   "information-description-languages": "",

@@ -1,6 +1,7 @@
 import InlineListBlock from '@app/common/components/inline-list-block';
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import CodeListModal from '@app/modules/code-list-modal';
 import { useTranslation } from 'next-i18next';
 import {
@@ -23,7 +24,7 @@ export default function AttributeRestrictions({
     value: ResourceFormType[typeof key]
   ) => void;
 }) {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
 
   if (data.type !== ResourceType.ATTRIBUTE || !applicationProfile) {
     return <></>;
@@ -39,10 +40,37 @@ export default function AttributeRestrictions({
 
       <InlineListBlock
         addNewComponent={
-          <CodeListModal initialData={[]} extendedView setData={() => null} />
+          <CodeListModal
+            initialData={[]}
+            extendedView
+            modalTitle={t('add-reference-data')}
+            setData={(value) =>
+              handleUpdate(
+                'codeList',
+                value.map((v) => ({
+                  id: v.id,
+                  label: v.prefLabel,
+                }))
+              )
+            }
+          />
         }
-        handleRemoval={() => null}
-        items={[]}
+        handleRemoval={(id) =>
+          handleUpdate(
+            'codeList',
+            data.codeList?.filter((cl) => cl.id !== id) ?? []
+          )
+        }
+        items={
+          data.codeList?.map((cl) => ({
+            id: cl.id,
+            label: getLanguageVersion({
+              data: cl.label,
+              lang: i18n.language,
+              appendLocale: true,
+            }),
+          })) ?? []
+        }
         label={t('codelist')}
       />
 

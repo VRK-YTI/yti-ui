@@ -43,14 +43,13 @@ export default function ResultsAndInfoBlock({
   const [selectedPreview, setSelectedPreview] = useState<
     CodeType | undefined
   >();
-  const { data: codeRegistry, isSuccess: codeSuccess } =
-    useGetCodeRegistryQuery(
-      {
-        codeRegistryId: selectedPreview?.codeRegistry.codeValue ?? '',
-        codeValue: selectedPreview?.codeValue ?? '',
-      },
-      { skip: !selectedPreview }
-    );
+  const { data: codeRegistry, isUninitialized } = useGetCodeRegistryQuery(
+    {
+      codeRegistryId: selectedPreview?.codeRegistry.codeValue ?? '',
+      codeValue: selectedPreview?.codeValue ?? '',
+    },
+    { skip: !selectedPreview }
+  );
 
   return (
     <ResultsAndInfoBlockWrapper $extendedView={extendedView}>
@@ -146,40 +145,38 @@ export default function ResultsAndInfoBlock({
         )}
       </ResultBlock>
 
-      {extendedView && (
+      {extendedView && !isUninitialized && (
         <InfoBlock>
           <Paragraph className="code-list-info">
-            <Text variant="bold">Koodiston sisältö</Text>
+            <Text variant="bold">{t('codelist-contents')}</Text>
           </Paragraph>
 
-          {codeSuccess && (
-            <table>
-              <thead>
-                <tr>
-                  <td>Tunniste</td>
-                  <td>Nimi</td>
-                  <td>Tila</td>
+          <table>
+            <thead>
+              <tr>
+                <td>{t('identifier')}</td>
+                <td>{t('name', { ns: 'common' })}</td>
+                <td>{t('status')}</td>
+              </tr>
+            </thead>
+
+            <tbody>
+              {codeRegistry?.results.map((code) => (
+                <tr key={`code-${code.id}`}>
+                  <td>{code.codeValue}</td>
+                  <td>
+                    {getLanguageVersion({
+                      data: code.prefLabel,
+                      lang: i18n.language,
+                      appendLocale: true,
+                    })}
+                  </td>
+
+                  <td>{translateStatus(code.status, t)}</td>
                 </tr>
-              </thead>
-
-              <tbody>
-                {codeRegistry?.results.map((code) => (
-                  <tr key={`code-${code.id}`}>
-                    <td>{code.codeValue}</td>
-                    <td>
-                      {getLanguageVersion({
-                        data: code.prefLabel,
-                        lang: i18n.language,
-                        appendLocale: true,
-                      })}
-                    </td>
-
-                    <td>{translateStatus(code.status, t)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+              ))}
+            </tbody>
+          </table>
         </InfoBlock>
       )}
     </ResultsAndInfoBlockWrapper>

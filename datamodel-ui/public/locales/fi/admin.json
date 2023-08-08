@@ -65,6 +65,7 @@
   "clear-keyword-filter": "Poista hakusana",
   "clear-selection": "Tyhjennä valinta",
   "codelist": "Koodisto",
+  "codelist-contents": "Koodiston sisältö",
   "common-form": {
     "add-equivalent-association": "Lisää vastaava assosiaatio",
     "add-equivalent-attribute": "Lisää vastaava attribuutti",
@@ -149,6 +150,7 @@
   "error-unauthenticated": "Kirjautumistietojen varmistuksessa ilmeni ongelma. Kirjaudu palveluun uudestaan.",
   "feedback": "Palaute",
   "file-added": "",
+  "identifier": "Tunniste",
   "in-use": "Käytössä",
   "in-use-in-this-model": "Käytössä tässä tietomallissa",
   "information-description-languages": "Tietosisällön kielet",

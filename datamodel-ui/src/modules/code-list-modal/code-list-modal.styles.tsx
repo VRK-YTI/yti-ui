@@ -195,3 +195,10 @@ export const InfoBlock = styled.div`
     word-break: normal;
   }
 `;
+
+export const SelectedChipsWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${(props) => props.theme.suomifi.spacing.xxs};
+  margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
+`;

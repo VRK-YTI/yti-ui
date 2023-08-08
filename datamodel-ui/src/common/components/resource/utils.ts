@@ -41,6 +41,7 @@ export interface ApplicationProfileResourcePutType {
   minLength?: number;
   maxCount?: number;
   minCount?: number;
+  codeList?: string;
 }
 
 export function convertToPayload(
@@ -98,6 +99,10 @@ export function convertToPayload(
 
         if (e[0] === 'path' && typeof e[1] !== 'string') {
           return [e[0], e[1].uri];
+        }
+
+        if (e[0] === 'codeList' && e[1].length > 0) {
+          return [e[0], e[1][0].id];
         }
 
         return e;
