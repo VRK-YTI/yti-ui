@@ -119,12 +119,6 @@ export function convertToPayload(
   };
 }
 
-export function pathForResourceType(
-  type: ResourceType,
-  isApplicationProfile?: boolean
-) {
-  if (isApplicationProfile) {
-    return '';
-  }
+export function pathForResourceType(type: ResourceType) {
   return type === ResourceType.ATTRIBUTE ? '/attribute' : '/association';
 }
