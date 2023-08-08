@@ -5,8 +5,10 @@ import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 import {
+  Button,
   Dropdown,
   DropdownItem,
+  IconPlus,
   Label,
   RadioButton,
   RadioButtonGroup,
@@ -26,10 +28,10 @@ import Contact from 'yti-common-ui/form/contact';
 import { useGetModelExistsMutation } from '@app/common/components/prefix/prefix.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { FormErrors } from './validate-form';
-import AddBlock from './add-block';
 import { Status } from '@app/common/interfaces/status.interface';
 import { FormUpdateErrors } from '../model/validate-form-update';
 import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
+import { BasicBlock } from 'yti-common-ui/block';
 
 interface ModelFormProps {
   formData: ModelFormType;
@@ -403,17 +405,18 @@ export default function ModelForm({
     if (!editMode) {
       return <></>;
     }
+
     return (
-      <AddBlock
-        data={formData}
-        locale={i18n.language}
-        setTerminologies={(terminologies) =>
-          setFormData({
-            ...formData,
-            terminologies,
-          })
-        }
-      />
+      <div className="adjusted-width">
+        <BasicBlock
+          title="Linkit lisätietoihin"
+          extra={
+            <Button variant="secondary" icon={<IconPlus />} id="links">
+              {t('add-new-link')}
+            </Button>
+          }
+        />
+      </div>
     );
   }
 
