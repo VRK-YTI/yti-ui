@@ -2,7 +2,10 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { CodeType } from '@app/common/interfaces/code';
 import { getCodeListApiBaseQuery } from '@app/store/api-base-query';
-import { CodeRegistry } from '@app/common/interfaces/code-registry';
+import {
+  CodeRegistry,
+  CodeRegistryType,
+} from '@app/common/interfaces/code-registry';
 
 function generateUrl({
   lang,
@@ -79,6 +82,26 @@ export const codeApi = createApi({
         method: 'GET',
       }),
     }),
+    getCodeRegistry: builder.query<
+      {
+        meta: {
+          code: number;
+          from: number;
+          resultCount: number;
+          totalResults: number;
+        };
+        results: CodeRegistryType[];
+      },
+      {
+        codeRegistryId: string;
+        codeValue: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/coderegistries/${value.codeRegistryId}/codeschemes/${value.codeValue}/codes/`,
+        method: 'GET',
+      }),
+    }),
     getLanguages: builder.query<
       {
         meta: {
@@ -107,6 +130,7 @@ export const codeApi = createApi({
 export const {
   useGetCodesQuery,
   useGetCodeRegistriesQuery,
+  useGetCodeRegistryQuery,
   useGetLanguagesQuery,
   util: { getRunningQueriesThunk },
 } = codeApi;

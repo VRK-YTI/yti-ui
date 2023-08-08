@@ -65,6 +65,7 @@
   "clear-keyword-filter": "Clear keyword",
   "clear-selection": "Clear selection",
   "codelist": "Code list",
+  "codelist-contents": "Code list contents",
   "common-form": {
     "add-equivalent-association": "Add equivelant association",
     "add-equivalent-attribute": "Add equivalent attribute",
@@ -150,6 +151,7 @@
   "error-unauthenticated": "An error occured with login information verification. Please login to the service again.",
   "feedback": "Feedback",
   "file-added": "",
+  "identifier": "Identifier",
   "in-use": "In use",
   "in-use-in-this-model": "In use in this data model",
   "information-description-languages": "Information description languages",

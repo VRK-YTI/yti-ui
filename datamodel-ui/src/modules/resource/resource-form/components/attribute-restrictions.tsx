@@ -2,12 +2,11 @@ import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
 import InlineListBlock from '@app/common/components/inline-list-block';
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
-import { compareLocales } from '@app/common/utils/compare-locals';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import CodeListModal from '@app/modules/code-list-modal';
+import { compareLocales } from '@app/common/utils/compare-locals';
 import { useTranslation } from 'next-i18next';
 import {
-  Button,
-  IconPlus,
   MultiSelect,
   SingleSelect,
   Text,
@@ -47,12 +46,37 @@ export default function AttributeRestrictions({
 
       <InlineListBlock
         addNewComponent={
-          <Button variant="secondary" icon={<IconPlus />}>
-            {t('add-reference-data')}
-          </Button>
+          <CodeListModal
+            initialData={[]}
+            extendedView
+            modalTitle={t('add-reference-data')}
+            setData={(value) =>
+              handleUpdate(
+                'codeList',
+                value.map((v) => ({
+                  id: v.id,
+                  label: v.prefLabel,
+                }))
+              )
+            }
+          />
         }
-        handleRemoval={() => null}
-        items={[]}
+        handleRemoval={(id) =>
+          handleUpdate(
+            'codeList',
+            data.codeList?.filter((cl) => cl.id !== id) ?? []
+          )
+        }
+        items={
+          data.codeList?.map((cl) => ({
+            id: cl.id,
+            label: getLanguageVersion({
+              data: cl.label,
+              lang: i18n.language,
+              appendLocale: true,
+            }),
+          })) ?? []
+        }
         label={t('codelist')}
       />
 

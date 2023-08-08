@@ -1,11 +1,23 @@
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Resource } from '@app/common/interfaces/resource.interface';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 export function resourceToResourceFormType(data: Resource): ResourceFormType {
   return {
     ...data,
     classType: data.classType ? data.classType.uri : undefined,
+    codeList: data.codeList
+      ? [
+          {
+            id: data.codeList,
+            label: {
+              [Object.keys(data.label).sort((a, b) => compareLocales(a, b))[0]]:
+                data.codeList,
+            },
+          },
+        ]
+      : undefined,
     dataType: data.dataType
       ? { id: data.dataType, label: data.dataType }
       : undefined,

@@ -116,7 +116,11 @@ export default function CommonViewContent({
               </div>
 
               <BasicBlock title={t('codelist', { ns: 'admin' })}>
-                {t('not-defined')}
+                {data.codeList ? (
+                  <Link href={data.codeList}>{data.codeList}</Link>
+                ) : (
+                  t('not-defined')
+                )}
               </BasicBlock>
 
               <BasicBlock title={t('allowed-values')}>
