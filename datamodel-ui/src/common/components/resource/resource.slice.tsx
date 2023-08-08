@@ -37,9 +37,7 @@ export const resourceApi = createApi({
       query: (value) => ({
         url: `/resource/${pathForModelType(value.applicationProfile)}${
           value.modelId
-        }${pathForResourceType(value.data.type, value.applicationProfile)}/${
-          value.data.identifier
-        }`,
+        }${pathForResourceType(value.data.type)}/${value.data.identifier}`,
         method: 'PUT',
         data: convertToPayload(value.data, true, value.applicationProfile),
       }),
@@ -48,7 +46,7 @@ export const resourceApi = createApi({
       query: (value) => ({
         url: `/resource/${pathForModelType(value.applicationProfile)}${
           value.modelId
-        }${pathForResourceType(value.data.type, value.applicationProfile)}`,
+        }${pathForResourceType(value.data.type)}`,
         method: 'POST',
         data: convertToPayload(value.data, false, value.applicationProfile),
       }),
