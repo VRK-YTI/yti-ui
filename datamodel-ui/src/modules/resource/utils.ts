@@ -11,10 +11,11 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
       ? [
           {
             id: data.codeList,
-            label: {
+            prefLabel: {
               [Object.keys(data.label).sort((a, b) => compareLocales(a, b))[0]]:
                 data.codeList,
             },
+            status: 'DRAFT',
           },
         ]
       : undefined,

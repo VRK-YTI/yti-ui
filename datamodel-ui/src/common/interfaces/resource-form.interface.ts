@@ -7,7 +7,8 @@ export interface ResourceFormType {
   classType?: string;
   codeList?: {
     id: string;
-    label: { [key: string]: string };
+    prefLabel: { [key: string]: string };
+    status: Status;
   }[];
   concept?: ConceptType;
   dataType?: {

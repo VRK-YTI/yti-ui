@@ -231,16 +231,24 @@ export default function TerminologyModal({
 
         {selected.length > 0 && (
           <SelectedChipBlock id="selected-chips">
-            {selected.map((s) => (
-              <Chip
-                key={s.uri}
-                removable
-                onClick={() => handleChipClick(s.uri)}
-                id={`selected-terminology-${s.uri}`}
-              >
-                {s.label[i18n.language]}
-              </Chip>
-            ))}
+            {selected.map((s) => {
+              const label = getLanguageVersion({
+                data: s.label,
+                lang: i18n.language,
+                appendLocale: true,
+              });
+
+              return (
+                <Chip
+                  key={s.uri}
+                  removable
+                  onClick={() => handleChipClick(s.uri)}
+                  id={`selected-terminology-${s.uri}`}
+                >
+                  {label !== '' ? label : s.uri}
+                </Chip>
+              );
+            })}
           </SelectedChipBlock>
         )}
       </div>
