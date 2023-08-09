@@ -101,8 +101,14 @@ export function convertToPayload(
           return [e[0], e[1].uri];
         }
 
-        if (e[0] === 'codeList' && e[1].length > 0) {
-          return [e[0], e[1][0].id];
+        if (e[0] === 'codeLists' && e[1].length > 0) {
+          return [
+            e[0],
+            e[1].map(
+              (codeList: { label: { [key: string]: string }; id: string }) =>
+                codeList.id
+            ),
+          ];
         }
 
         return e;

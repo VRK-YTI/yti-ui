@@ -52,7 +52,7 @@ export default function AttributeRestrictions({
             modalTitle={t('add-reference-data')}
             setData={(value) =>
               handleUpdate(
-                'codeList',
+                'codeLists',
                 value.map((v) => ({
                   id: v.id,
                   label: v.prefLabel,
@@ -63,12 +63,12 @@ export default function AttributeRestrictions({
         }
         handleRemoval={(id) =>
           handleUpdate(
-            'codeList',
-            data.codeList?.filter((cl) => cl.id !== id) ?? []
+            'codeLists',
+            data.codeLists?.filter((cl) => cl.id !== id) ?? []
           )
         }
         items={
-          data.codeList?.map((cl) => ({
+          data.codeLists?.map((cl) => ({
             id: cl.id,
             label: getLanguageVersion({
               data: cl.label,
