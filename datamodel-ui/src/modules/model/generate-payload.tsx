@@ -22,6 +22,7 @@ export default function generatePayload(
       codeLists: data.codeLists.map((c) => c.id) ?? [],
       documentation: data.documentation ?? {},
       contact: data.contact !== '' ? data.contact : '',
+      links: data.links,
     };
   } else {
     return {
@@ -55,6 +56,20 @@ export default function generatePayload(
       codeLists: data.codeLists.map((c) => c.id),
       documentation: data.documentation ?? {},
       contact: data.contact !== '' ? data.contact : ADMIN_EMAIL,
+      links: data.links
+        ? data.links.map((l) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { id, uri, ...data } = l;
+            const validUri =
+              uri.startsWith('http://') || uri.startsWith('https://')
+                ? uri
+                : `https://${uri}`;
+            return {
+              ...data,
+              uri: validUri,
+            };
+          })
+        : [],
     };
   }
 }

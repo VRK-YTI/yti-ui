@@ -26,10 +26,10 @@ import Contact from 'yti-common-ui/form/contact';
 import { useGetModelExistsMutation } from '@app/common/components/prefix/prefix.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { FormErrors } from './validate-form';
-import AddBlock from './add-block';
 import { Status } from '@app/common/interfaces/status.interface';
 import { FormUpdateErrors } from '../model/validate-form-update';
 import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
+import LinkBlock from './link-block';
 
 interface ModelFormProps {
   formData: ModelFormType;
@@ -403,14 +403,24 @@ export default function ModelForm({
     if (!editMode) {
       return <></>;
     }
+
     return (
-      <AddBlock
-        data={formData}
-        locale={i18n.language}
-        setTerminologies={(terminologies) =>
+      <LinkBlock
+        data={formData.links}
+        errors={{
+          linksInvalidUri:
+            errors && 'linksInvalidUri' in errors
+              ? errors?.linksInvalidUri
+              : undefined,
+          linksMissingInfo:
+            errors && 'linksMissingInfo' in errors
+              ? errors?.linksMissingInfo
+              : undefined,
+        }}
+        setData={(value) =>
           setFormData({
             ...formData,
-            terminologies,
+            links: value,
           })
         }
       />
