@@ -42,6 +42,10 @@ export function translateModelFormErrors(error: string, t: TFunction) {
       return t('missing-organizations', { ns: 'admin' });
     case 'contact':
       return t('missing-contact', { ns: 'admin' });
+    case 'linksMissingInfo':
+      return t('missing-link-information', { ns: 'admin' });
+    case 'linksInvalidUri':
+      return t('link-uri-is-invalid', { ns: 'admin' });
     default:
       return t('missing-general', { ns: 'admin' });
   }
