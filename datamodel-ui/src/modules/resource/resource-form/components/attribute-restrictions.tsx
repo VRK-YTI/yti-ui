@@ -295,6 +295,27 @@ export default function AttributeRestrictions({
               : []
             : []
         }
+        selectedItems={
+          data.languageIn && data.languageIn.length > 0
+            ? languages
+              ? languages.results
+                  .filter((l) =>
+                    (data.languageIn as string[]).includes(l.codeValue)
+                  )
+                  .map((l) => {
+                    const label = getLanguageVersion({
+                      data: l.prefLabel,
+                      lang: i18n.language,
+                    });
+                    return {
+                      name: label,
+                      labelText: label,
+                      uniqueItemId: l.codeValue,
+                    };
+                  })
+              : []
+            : []
+        }
         onItemSelectionsChange={(value) =>
           handleUpdate(
             'languageIn',
