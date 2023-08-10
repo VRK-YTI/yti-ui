@@ -75,6 +75,7 @@ export function validateForm(data: ModelFormType) {
     errors.organizations = true;
   }
 
+  // If contact is set, it should be a valid email address
   if (data.contact && !isEmail(data.contact)) {
     errors.contact = true;
   }

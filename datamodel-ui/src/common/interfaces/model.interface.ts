@@ -19,6 +19,11 @@ export interface ModelType {
   }[];
   terminologies: ModelTerminology[];
   codeLists: ModelCodeList[];
+  links: {
+    description: string;
+    name: string;
+    uri: string;
+  }[];
   created: string;
   creator: {
     id: string;
@@ -103,4 +108,9 @@ export interface ModelUpdatePayload {
   codeLists: string[];
   documentation: { [key: string]: string };
   contact: string;
+  links: {
+    description: string;
+    name: string;
+    uri: string;
+  }[];
 }

@@ -52,7 +52,7 @@ export default function AttributeRestrictions({
             initialData={data.codeList ?? []}
             setData={(value) =>
               handleUpdate(
-                'codeList',
+                'codeLists',
                 value.map((v) => ({
                   id: v.id,
                   prefLabel: v.prefLabel,
@@ -64,12 +64,12 @@ export default function AttributeRestrictions({
         }
         handleRemoval={(id) =>
           handleUpdate(
-            'codeList',
-            data.codeList?.filter((cl) => cl.id !== id) ?? []
+            'codeLists',
+            data.codeLists?.filter((cl) => cl.id !== id) ?? []
           )
         }
         items={
-          data.codeList?.map((cl) => ({
+          data.codeLists?.map((cl) => ({
             id: cl.id,
             label: getLanguageVersion({
               data: cl.prefLabel,
@@ -276,6 +276,27 @@ export default function AttributeRestrictions({
             : []
         }
         defaultSelectedItems={
+          data.languageIn && data.languageIn.length > 0
+            ? languages
+              ? languages.results
+                  .filter((l) =>
+                    (data.languageIn as string[]).includes(l.codeValue)
+                  )
+                  .map((l) => {
+                    const label = getLanguageVersion({
+                      data: l.prefLabel,
+                      lang: i18n.language,
+                    });
+                    return {
+                      name: label,
+                      labelText: label,
+                      uniqueItemId: l.codeValue,
+                    };
+                  })
+              : []
+            : []
+        }
+        selectedItems={
           data.languageIn && data.languageIn.length > 0
             ? languages
               ? languages.results

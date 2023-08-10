@@ -5,7 +5,7 @@ import { Status } from './status.interface';
 export interface ResourceFormType {
   allowedValues?: string[];
   classType?: string;
-  codeList?: {
+  codeLists?: {
     id: string;
     prefLabel: { [key: string]: string };
     status: Status;

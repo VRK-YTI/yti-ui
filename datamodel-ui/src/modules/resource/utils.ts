@@ -7,18 +7,16 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
   return {
     ...data,
     classType: data.classType ? data.classType.uri : undefined,
-    codeList: data.codeList
-      ? [
-          {
-            id: data.codeList,
-            prefLabel: {
-              [Object.keys(data.label).sort((a, b) => compareLocales(a, b))[0]]:
-                data.codeList,
-            },
-            status: 'DRAFT',
+    codeLists: data.codeLists
+      ? data.codeLists.map((codeList) => ({
+          id: codeList,
+          prefLabel: {
+            [Object.keys(data.label).sort((a, b) => compareLocales(a, b))[0]]:
+              codeList,
           },
-        ]
-      : undefined,
+          status: 'DRAFT',
+        }))
+      : [],
     dataType: data.dataType
       ? { id: data.dataType, label: data.dataType }
       : undefined,
