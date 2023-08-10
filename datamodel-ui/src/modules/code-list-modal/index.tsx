@@ -205,23 +205,26 @@ function CodeListModalContent({
           setCurrPage={setCurrPage}
         />
 
-        {extendedView && selected.length > 0 && (
+        {selected.length > 0 && (
           <SelectedChipsWrapper>
-            {selected.map((select) => (
-              <Chip
-                key={`selected-code-${select}`}
-                removable
-                onClick={() =>
-                  setSelected(selected.filter((s) => s !== select))
-                }
-              >
-                {getLanguageVersion({
-                  data: codes?.results.find((code) => code.uri === select)
-                    ?.prefLabel,
-                  lang: i18n.language,
-                }) ?? select}
-              </Chip>
-            ))}
+            {selected.map((select) => {
+              const label = getLanguageVersion({
+                data: codes?.results.find((code) => code.uri === select)
+                  ?.prefLabel,
+                lang: i18n.language,
+              });
+              return (
+                <Chip
+                  key={`selected-code-${select}`}
+                  removable
+                  onClick={() =>
+                    setSelected(selected.filter((s) => s !== select))
+                  }
+                >
+                  {label !== '' ? label : select}
+                </Chip>
+              );
+            })}
           </SelectedChipsWrapper>
         )}
 

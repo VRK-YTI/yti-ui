@@ -10,10 +10,11 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
     codeLists: data.codeLists
       ? data.codeLists.map((codeList) => ({
           id: codeList,
-          label: {
+          prefLabel: {
             [Object.keys(data.label).sort((a, b) => compareLocales(a, b))[0]]:
               codeList,
           },
+          status: 'DRAFT',
         }))
       : [],
     dataType: data.dataType

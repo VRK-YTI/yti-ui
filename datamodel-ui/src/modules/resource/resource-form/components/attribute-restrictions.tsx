@@ -47,15 +47,16 @@ export default function AttributeRestrictions({
       <InlineListBlock
         addNewComponent={
           <CodeListModal
-            initialData={[]}
             extendedView
             modalTitle={t('add-reference-data')}
+            initialData={data.codeLists ?? []}
             setData={(value) =>
               handleUpdate(
                 'codeLists',
                 value.map((v) => ({
                   id: v.id,
-                  label: v.prefLabel,
+                  prefLabel: v.prefLabel,
+                  status: v.status,
                 }))
               )
             }
@@ -71,7 +72,7 @@ export default function AttributeRestrictions({
           data.codeLists?.map((cl) => ({
             id: cl.id,
             label: getLanguageVersion({
-              data: cl.label,
+              data: cl.prefLabel,
               lang: i18n.language,
               appendLocale: true,
             }),

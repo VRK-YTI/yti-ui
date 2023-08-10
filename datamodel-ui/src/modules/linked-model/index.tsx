@@ -247,7 +247,7 @@ export default function LinkedModel({
                   setSelected(selected.filter((s) => s !== select))
                 }
                 removable
-                id="selected-result-chip-button"
+                id={`selected-result-chip-button_${select.uri}`}
               >
                 {data
                   ? getLanguageVersion({
@@ -287,7 +287,7 @@ export default function LinkedModel({
                           uri: obj.id,
                         })
                       }
-                      id="data-model-checkbox"
+                      id={`data-model-checkbox_${obj.id}}`}
                     >
                       {getLanguageVersion({
                         data: obj.label,
