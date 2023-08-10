@@ -227,7 +227,6 @@ function CodeListModalContent({
 
         <ResultsAndInfoBlock
           codes={codes}
-          filter={filter}
           isSuccess={isSuccess}
           selected={selected}
           extendedView={extendedView}
