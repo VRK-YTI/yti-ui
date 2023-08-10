@@ -49,7 +49,7 @@ export default function AttributeRestrictions({
           <CodeListModal
             extendedView
             modalTitle={t('add-reference-data')}
-            initialData={data.codeList ?? []}
+            initialData={data.codeLists ?? []}
             setData={(value) =>
               handleUpdate(
                 'codeLists',
