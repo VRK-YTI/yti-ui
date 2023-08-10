@@ -6,6 +6,7 @@ import { UriData } from './uri.interface';
 export interface Resource {
   allowedValues?: string[];
   classType?: UriData;
+  codeLists?: string[];
   contact?: string;
   contributor?: [
     {

@@ -24,6 +24,7 @@ import generatePayload from './generate-payload';
 import { FormUpdateErrors, validateFormUpdate } from './validate-form-update';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
+import { v4 } from 'uuid';
 
 interface ModelEditViewProps {
   model: ModelType;
@@ -65,6 +66,9 @@ export default function ModelEditView({
     terminologies: model.terminologies ?? [],
     codeLists: model.codeLists ?? [],
     documentation: model.documentation ?? {},
+    links: model.links
+      ? model.links.map((l) => ({ ...l, id: v4().split('-')[0] }))
+      : [],
   });
 
   useEffect(() => {

@@ -12,6 +12,12 @@ export interface ModelFormType {
   }[];
   internalNamespaces: string[];
   languages: (LanguageBlockType & { selected: boolean })[];
+  links: {
+    description: string;
+    name: string;
+    uri: string;
+    id: string;
+  }[];
   organizations: MultiSelectData[];
   prefix: string;
   serviceCategories: MultiSelectData[];

@@ -31,7 +31,7 @@ import { FormErrors } from './validate-form';
 import { Status } from '@app/common/interfaces/status.interface';
 import { FormUpdateErrors } from '../model/validate-form-update';
 import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
-import { BasicBlock } from 'yti-common-ui/block';
+import LinkBlock from './link-block';
 
 interface ModelFormProps {
   formData: ModelFormType;
@@ -407,16 +407,25 @@ export default function ModelForm({
     }
 
     return (
-      <div className="adjusted-width">
-        <BasicBlock
-          title="Linkit lisätietoihin"
-          extra={
-            <Button variant="secondary" icon={<IconPlus />} id="links">
-              {t('add-new-link')}
-            </Button>
-          }
-        />
-      </div>
+      <LinkBlock
+        data={formData.links}
+        errors={{
+          linksInvalidUri:
+            errors && 'linksInvalidUri' in errors
+              ? errors?.linksInvalidUri
+              : undefined,
+          linksMissingInfo:
+            errors && 'linksMissingInfo' in errors
+              ? errors?.linksMissingInfo
+              : undefined,
+        }}
+        setData={(value) =>
+          setFormData({
+            ...formData,
+            links: value,
+          })
+        }
+      />
     );
   }
 

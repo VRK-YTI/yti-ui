@@ -41,6 +41,7 @@ export interface ApplicationProfileResourcePutType {
   minLength?: number;
   maxCount?: number;
   minCount?: number;
+  codeList?: string;
 }
 
 export function convertToPayload(
@@ -100,6 +101,16 @@ export function convertToPayload(
           return [e[0], e[1].uri];
         }
 
+        if (e[0] === 'codeLists' && e[1].length > 0) {
+          return [
+            e[0],
+            e[1].map(
+              (codeList: { label: { [key: string]: string }; id: string }) =>
+                codeList.id
+            ),
+          ];
+        }
+
         return e;
       })
   );
@@ -114,12 +125,6 @@ export function convertToPayload(
   };
 }
 
-export function pathForResourceType(
-  type: ResourceType,
-  isApplicationProfile?: boolean
-) {
-  if (isApplicationProfile) {
-    return '';
-  }
+export function pathForResourceType(type: ResourceType) {
   return type === ResourceType.ATTRIBUTE ? '/attribute' : '/association';
 }

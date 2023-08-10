@@ -126,3 +126,8 @@ export const LanguagePickerWrapper = styled.div`
     white-space: nowrap !important;
   }
 `;
+
+export const LinksWrapper = styled.ul`
+  margin: 0;
+  padding: 0 ${(props) => props.theme.suomifi.spacing.l};
+`;

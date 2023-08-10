@@ -5,6 +5,10 @@ import { Status } from './status.interface';
 export interface ResourceFormType {
   allowedValues?: string[];
   classType?: string;
+  codeLists?: {
+    id: string;
+    label: { [key: string]: string };
+  }[];
   concept?: ConceptType;
   dataType?: {
     id: string;
