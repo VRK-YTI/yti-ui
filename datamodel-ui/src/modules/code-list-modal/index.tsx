@@ -131,6 +131,7 @@ function CodeListModalContent({
       ? filter.group
       : undefined,
     pageFrom: currPage,
+    status: filter.status,
   });
   const { data: codeRegistries } = useGetCodeRegistriesQuery();
 
@@ -226,7 +227,6 @@ function CodeListModalContent({
 
         <ResultsAndInfoBlock
           codes={codes}
-          filter={filter}
           isSuccess={isSuccess}
           selected={selected}
           extendedView={extendedView}
