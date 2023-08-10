@@ -120,7 +120,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
         <ModalContent>
           <ModalTitle>{t('add-new-schema')}</ModalTitle>
           <Paragraph style={{ marginBottom: '30px' }}>
-            {t('add-new-schema-description')}
+            {'Provide a URI reference to the content in XSD, SKOS or RDF metadata schema format'}
           </Paragraph>
           <SchemaForm
             formData={formData}

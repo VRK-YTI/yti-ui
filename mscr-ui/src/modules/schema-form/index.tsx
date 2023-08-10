@@ -12,14 +12,14 @@ import {
   WideMultiSelect,
 } from './schema-form.styles';
 import LanguageSelector from 'yti-common-ui/form/language-selector';
-import Prefix from 'yti-common-ui/form/prefix';
-import { useGetFreePrefixMutation } from '@app/common/components/prefix';
 import { FormErrors } from './validate-form';
 import AddBlock from './add-block';
 import { Status } from '@app/common/interfaces/status.interface';
 import { FormUpdateErrors } from './validate-form-update';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import { TextInput } from 'suomifi-ui-components';
+import { Paragraph } from 'suomifi-ui-components';
+import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 
 interface SchemaProps {
   pid: string;
@@ -63,6 +63,16 @@ export default function SchemaForm({
   // Creating the actual schema Input form
   return (
     <ModelFormContainer>
+      {renderURI()}
+      <Paragraph style={{ marginBottom: '30px' }}>
+        {'or Upload a document'}
+      </Paragraph>
+      <UpdateWithFileModal
+        pid={''}
+        refetch={function (): void {
+          throw new Error('Function not implemented.');
+        }}
+      ></UpdateWithFileModal>
       {renderSchemaFormat()}
       {renderLanguages()}
 
@@ -81,6 +91,14 @@ export default function SchemaForm({
     return (
       <div>
         <TextInput labelText={'Format'} />
+      </div>
+    );
+  }
+
+  function renderURI() {
+    return (
+      <div>
+        <TextInput labelText={'Add URI'} />
       </div>
     );
   }
@@ -126,7 +144,7 @@ export default function SchemaForm({
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
-          labelText={'Tila'}
+          labelText={'Status'}
           defaultValue={formData.status ?? ''}
           onChange={(e) =>
             setFormData({
