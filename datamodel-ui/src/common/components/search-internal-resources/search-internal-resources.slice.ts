@@ -23,10 +23,30 @@ export interface InternalResourcesSearchParams {
   extend?: boolean;
 }
 
+export function initialSearchData(
+  sortLang: string,
+  modelId: string,
+  type: ResourceType,
+  limitToModelType?: 'LIBRARY' | 'PROFILE'
+): InternalResourcesSearchParams {
+  return {
+    query: '',
+    status: ['VALID', 'DRAFT'],
+    groups: [],
+    sortLang: sortLang,
+    pageSize: 50,
+    pageFrom: 0,
+    limitToDataModel: modelId,
+    limitToModelType: limitToModelType ?? 'LIBRARY',
+    fromAddedNamespaces: true,
+    resourceTypes: [type],
+  };
+}
+
 function createUrl(obj: InternalResourcesSearchParams): string {
   const basePath = obj.extend
-    ? '/frontend/searchInternalResourcesInfo'
-    : '/frontend/searchInternalResources';
+    ? '/frontend/search-internal-resources-info'
+    : '/frontend/search-internal-resources';
 
   let baseQuery = `${basePath}?query=${obj.query}&pageSize=${
     obj.pageSize ?? 50

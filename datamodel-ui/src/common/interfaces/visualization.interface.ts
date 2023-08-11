@@ -13,6 +13,27 @@ export interface VisualizationType {
   associations: {
     identifier: string;
     label: { [key: string]: string };
-    path: string[];
+    referenceTarget?: string;
   }[];
+}
+
+export interface VisualizationPutType {
+  identifier: string;
+  x: number;
+  y: number;
+  referenceTargets: string[];
+}
+
+export interface VisualizationHiddenNode {
+  identifier: string;
+  position: {
+    x: number;
+    y: number;
+  };
+  referenceTarget: string;
+}
+
+export interface VisualizationResult {
+  nodes: VisualizationType[];
+  hiddenNodes: VisualizationHiddenNode[];
 }

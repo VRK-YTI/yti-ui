@@ -21,7 +21,7 @@ import {
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import generatePayload from './generate-payload';
-import { usePutModelMutation } from '@app/common/components/model/model.slice';
+import { useCreateModelMutation } from '@app/common/components/model/model.slice';
 import getApiError from '@app/common/utils/get-api-errors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
@@ -41,7 +41,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
   const [userPosted, setUserPosted] = useState(false);
   const [getAuthenticatedUser, authenticatedUser] =
     useGetAuthenticatedUserMutMutation();
-  const [putModel, result] = usePutModelMutation();
+  const [createModel, result] = useCreateModelMutation();
 
   const handleOpen = () => {
     setVisible(true);
@@ -71,13 +71,13 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
     const errors = validateForm(formData);
     setErrors(errors);
 
-    if (Object.values(errors).includes(true)) {
+    if (Object.values(errors).includes(true) || errors.titleAmount.length > 0) {
       return;
     }
 
     const payload = generatePayload(formData);
 
-    putModel(payload);
+    createModel(payload);
   };
 
   useEffect(() => {

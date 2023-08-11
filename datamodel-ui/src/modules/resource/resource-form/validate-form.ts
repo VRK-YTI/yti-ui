@@ -1,22 +1,35 @@
-import { AssociationFormType } from '@app/common/interfaces/association-form.interface';
-import { AttributeFormType } from '@app/common/interfaces/attribute-form.interface';
+import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 
-interface CommonFormErrors {
+export interface CommonFormErrors {
   label: boolean;
   identifier: boolean;
   identifierInitChar: boolean;
   identifierLength: boolean;
+  maxCount: boolean;
+  maxExclusive: boolean;
+  maxInclusive: boolean;
+  maxLength: boolean;
+  minCount: boolean;
+  minExclusive: boolean;
+  minInclusive: boolean;
+  minLength: boolean;
   unauthorized?: boolean;
 }
 
-export default function validateForm(
-  data: AttributeFormType | AssociationFormType
-): CommonFormErrors {
+export default function validateForm(data: ResourceFormType): CommonFormErrors {
   const errors: CommonFormErrors = {
     label: true,
     identifier: true,
     identifierInitChar: true,
     identifierLength: true,
+    maxCount: true,
+    maxExclusive: true,
+    maxInclusive: true,
+    maxLength: true,
+    minCount: true,
+    minExclusive: true,
+    minInclusive: true,
+    minLength: true,
   };
 
   if (
@@ -43,5 +56,31 @@ export default function validateForm(
     errors.identifierLength = false;
   }
 
-  return errors;
+  return validateNumeric(data, errors);
+}
+
+function validateNumeric(
+  data: ResourceFormType,
+  errors: CommonFormErrors
+): CommonFormErrors {
+  const nanKeys = [
+    'maxCount',
+    'maxExclusive',
+    'maxInclusive',
+    'maxLength',
+    'minCount',
+    'minExclusive',
+    'minInclusive',
+    'minLength',
+  ];
+
+  return Object.fromEntries(
+    Object.entries(errors).map(([key, value]) => {
+      if (nanKeys.includes(key)) {
+        const value = data[key as keyof ResourceFormType] as number | undefined;
+        return [key, value && isNaN(value) ? true : false];
+      }
+      return [key, value];
+    })
+  ) as CommonFormErrors;
 }

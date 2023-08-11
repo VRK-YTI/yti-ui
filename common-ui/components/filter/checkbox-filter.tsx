@@ -35,6 +35,7 @@ export default function CheckboxFilter({
           checked={selectedItems.includes(value)}
           variant={checkboxVariant}
           className="filter-checkbox-item"
+          id={`filter-checkbox-${value}`}
         >
           {label}
         </Checkbox>

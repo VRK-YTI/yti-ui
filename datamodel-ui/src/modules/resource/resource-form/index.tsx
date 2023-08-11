@@ -2,8 +2,9 @@ import InlineListBlock from '@app/common/components/inline-list-block';
 import {
   selectResource,
   setResource,
-  useGetResourceIdentifierFreeQuery,
-  usePutResourceMutation,
+  useGetResourceExistsQuery,
+  useUpdateResourceMutation,
+  useCreateResourceMutation,
 } from '@app/common/components/resource/resource.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import {
@@ -13,15 +14,13 @@ import {
 import ConceptBlock from '@app/modules/concept-block';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { IconArrowLeft, IconPlus } from 'suomifi-icons';
+import { IconArrowLeft } from 'suomifi-icons';
 import {
   Button,
   Dropdown,
   DropdownItem,
-  SingleSelect,
-  SingleSelectData,
   Text,
   TextInput,
   Textarea,
@@ -31,37 +30,38 @@ import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { Status } from 'yti-common-ui/interfaces/status.interface';
 import { FormWrapper, LanguageVersionedWrapper } from './resource-form.styles';
 import validateForm from './validate-form';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { statusList } from 'yti-common-ui/utils/status-list';
-import ClassModal from '@app/modules/class-modal';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
   selectHasChanges,
   setHasChanges,
   setSelected,
-  setView,
 } from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
 import getApiError from '@app/common/utils/get-api-errors';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
-import { useGetDatatypesQuery } from '@app/common/components/datatypes/datatypes.slice';
+import RangeAndDomain from './components/range-and-domain';
+import AttributeRestrictions from './components/attribute-restrictions';
+import ApplicationProfileTop from './components/application-profile-top';
+import AssociationRestrictions from './components/association-restrictions';
+import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
+import ResourceModal from '../resource-modal';
+import useSetView from '@app/common/utils/hooks/use-set-view';
 
 interface ResourceFormProps {
-  type: ResourceType;
   modelId: string;
   languages: string[];
   terminologies: string[];
-  isEdit: boolean;
+  isEdit?: boolean;
   applicationProfile?: boolean;
-  refetch: () => void;
+  refetch?: () => void;
   handleReturn: () => void;
+  handleFollowUp?: (identifier: string, type: ResourceType) => void;
 }
 
 export default function ResourceForm({
-  type,
   modelId,
   languages,
   terminologies,
@@ -69,8 +69,9 @@ export default function ResourceForm({
   applicationProfile,
   refetch,
   handleReturn,
+  handleFollowUp,
 }: ResourceFormProps) {
-  const { t, i18n } = useTranslation('admin');
+  const { t } = useTranslation('admin');
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
   const statuses = statusList;
@@ -79,14 +80,14 @@ export default function ResourceForm({
   const dispatch = useStoreDispatch();
   const data = useSelector(selectResource());
   const hasChanges = useSelector(selectHasChanges());
+  const { setView } = useSetView();
   const [userPosted, setUserPosted] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [errors, setErrors] = useState(validateForm(data));
-  const [putResource, result] = usePutResourceMutation();
-  const { data: dataTypesResult, isSuccess: isDataTypesSuccess } =
-    useGetDatatypesQuery();
+  const [updateResource, updateResult] = useUpdateResourceMutation();
+  const [createResource, createResult] = useCreateResourceMutation();
 
-  const { data: identifierFree, isSuccess } = useGetResourceIdentifierFreeQuery(
+  const { data: resourceAlreadyExists, isSuccess } = useGetResourceExistsQuery(
     {
       prefix: modelId,
       identifier: data.identifier,
@@ -95,17 +96,6 @@ export default function ResourceForm({
       skip: isEdit || data.identifier === '',
     }
   );
-
-  const attributeRanges: SingleSelectData[] = useMemo(() => {
-    if (!isDataTypesSuccess) {
-      return [];
-    }
-
-    return dataTypesResult.map((result) => ({
-      labelText: result,
-      uniqueItemId: result,
-    }));
-  }, [dataTypesResult, isDataTypesSuccess]);
 
   const handleSubmit = () => {
     disableConfirmation();
@@ -119,7 +109,7 @@ export default function ResourceForm({
 
     if (
       Object.values(errors).filter((val) => val).length > 0 ||
-      (isSuccess && !identifierFree)
+      (isSuccess && resourceAlreadyExists)
     ) {
       return;
     }
@@ -128,18 +118,16 @@ export default function ResourceForm({
       Object.entries(data.label).filter((obj) => obj[1] !== '')
     );
 
-    // TODO: Remove subResourceOf clearing when other supported
-    // are implemented
-
-    putResource({
+    const payload = {
       modelId: modelId,
-      data: { ...data, type: type, subResourceOf: [], label: usedLabels },
-      resourceId: isEdit ? data.identifier : undefined,
+      data: { ...data, label: usedLabels },
       applicationProfile,
-    });
+    };
+
+    isEdit ? updateResource(payload) : createResource(payload);
   };
 
-  const handleUpdate = (value: typeof data) => {
+  const handleUpdate = (value: ResourceFormType) => {
     enableConfirmation();
     dispatch(setHasChanges(true));
     if (userPosted && Object.values(errors).filter((val) => val).length > 0) {
@@ -147,6 +135,13 @@ export default function ResourceForm({
     }
 
     dispatch(setResource(value));
+  };
+
+  const handleUpdateByKey = <T extends keyof ResourceFormType>(
+    key: T,
+    value: ResourceFormType[T]
+  ) => {
+    handleUpdate({ ...data, [key]: value });
   };
 
   const handleSetConcept = (value?: ConceptType) => {
@@ -174,52 +169,66 @@ export default function ResourceForm({
     });
   };
 
-  const handleDomainFollowUp = (value?: InternalClass) => {
-    if (!value) {
-      handleUpdate({ ...data, domain: value });
+  const handleResourceUpdate = (
+    value?: {
+      label: string;
+      uri: string;
+    },
+    key?: 'equivalentResource' | 'subResourceOf'
+  ) => {
+    if (!value || !key) {
       return;
     }
 
+    if (
+      key === 'subResourceOf' &&
+      data.subResourceOf &&
+      data.subResourceOf.length === 1 &&
+      [
+        'owl:topDataProperty',
+        'owl:TopObjectProperty',
+        'owl:topObjectProperty',
+      ].includes(data.subResourceOf[0].uri)
+    ) {
+      handleUpdate({
+        ...data,
+        subResourceOf: [value],
+      });
+      return;
+    }
+
+    const initData = Array.isArray(data[key]) ? data[key] : [];
+
     handleUpdate({
       ...data,
-      domain: {
-        id: value.id,
-        label: getLanguageVersion({
-          data: value.label,
-          lang: i18n.language,
-          appendLocale: true,
-        }),
-      },
+      [key]: [...(initData ?? []), value],
     });
   };
 
-  const handleRangeFollowUp = (value?: InternalClass) => {
-    if (type === ResourceType.ATTRIBUTE) {
-      return;
-    }
-
-    if (!value) {
-      handleUpdate({ ...data, range: value });
+  const handleResourceRemove = (
+    id: string,
+    key: 'equivalentResource' | 'subResourceOf'
+  ) => {
+    if (key === 'subResourceOf' && data.subResourceOf?.length === 1) {
+      const value =
+        data.type === ResourceType.ASSOCIATION
+          ? 'owl:TopObjectProperty'
+          : 'owl:topDataProperty';
+      handleUpdate({
+        ...data,
+        subResourceOf: [
+          {
+            label: value,
+            uri: value,
+          },
+        ],
+      });
       return;
     }
 
     handleUpdate({
       ...data,
-      range: {
-        id: value.id,
-        label: getLanguageVersion({
-          data: value.label,
-          lang: i18n.language,
-          appendLocale: true,
-        }),
-      },
-    });
-  };
-
-  const handleDomainOrRangeRemoval = (id: string, type: 'domain' | 'range') => {
-    handleUpdate({
-      ...data,
-      [type]: undefined,
+      [key]: data[key]?.filter((r) => r.uri !== id) ?? [],
     });
   };
 
@@ -228,23 +237,31 @@ export default function ResourceForm({
       setHeaderHeight(ref.current.clientHeight);
     }
 
-    if (result.isSuccess) {
+    if (updateResult.isSuccess || createResult.isSuccess) {
+      if (handleFollowUp) {
+        handleFollowUp(data.identifier, data.type);
+        return;
+      }
+
       dispatch(
         setSelected(
           data.identifier,
-          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
+          data.type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
         )
       );
-      dispatch(
-        setView(
-          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-          'info'
-        )
+      setView(
+        data.type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        'info',
+        data.identifier
       );
-      refetch();
+
+      if (isEdit && refetch) {
+        refetch();
+      }
+
       router.replace(
         `${modelId}/${
-          type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
+          data.type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
         }/${data.identifier}`
       );
     }
@@ -252,7 +269,9 @@ export default function ResourceForm({
     if (
       ref.current &&
       userPosted &&
-      (Object.values(errors).filter((val) => val).length > 0 || result.error)
+      (Object.values(errors).filter((val) => val).length > 0 ||
+        updateResult.error ||
+        createResult.error)
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
@@ -260,13 +279,16 @@ export default function ResourceForm({
     ref,
     errors,
     userPosted,
-    result,
+    updateResult,
+    createResult,
+    handleFollowUp,
     dispatch,
-    type,
     router,
     modelId,
     data,
     refetch,
+    isEdit,
+    setView,
   ]);
 
   return (
@@ -290,7 +312,7 @@ export default function ResourceForm({
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Text variant="bold">
             {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
-              translateCommonForm('name', type, t)}
+              translateCommonForm('name', data.type, t)}
           </Text>
 
           <div>
@@ -316,8 +338,9 @@ export default function ResourceForm({
 
         {userPosted &&
         (Object.values(errors).filter((val) => val).length > 0 ||
-          result.isError ||
-          (isSuccess && !identifierFree)) ? (
+          updateResult.isError ||
+          createResult.isError ||
+          (isSuccess && resourceAlreadyExists)) ? (
           <div>
             <FormFooterAlert
               labelText={
@@ -339,6 +362,12 @@ export default function ResourceForm({
 
       <DrawerContent height={headerHeight}>
         <FormWrapper>
+          <ApplicationProfileTop
+            defaultChecked={true}
+            type={data.type}
+            applicationProfile={applicationProfile}
+          />
+
           <ConceptBlock
             concept={data.concept}
             setConcept={handleSetConcept}
@@ -350,7 +379,11 @@ export default function ResourceForm({
               <TextInput
                 key={`label-${lang}`}
                 className="wide-text"
-                labelText={`${translateCommonForm('name', type, t)}, ${lang}`}
+                labelText={`${translateCommonForm(
+                  'name',
+                  data.type,
+                  t
+                )}, ${lang}`}
                 value={data.label[lang] ?? ''}
                 onChange={(e) =>
                   handleUpdate({
@@ -365,7 +398,7 @@ export default function ResourceForm({
           </LanguageVersionedWrapper>
 
           <TextInput
-            labelText={translateCommonForm('identifier', type, t)}
+            labelText={translateCommonForm('identifier', data.type, t)}
             defaultValue={data.identifier}
             onChange={(e) =>
               handleUpdate({
@@ -378,149 +411,118 @@ export default function ResourceForm({
                 (errors.identifier ||
                   errors.identifierInitChar ||
                   errors.identifierLength)) ||
-              (isSuccess && !identifierFree)
+              (isSuccess && resourceAlreadyExists)
                 ? 'error'
                 : 'default'
             }
             disabled={isEdit}
             debounce={300}
             statusText={
-              isSuccess && !identifierFree ? t('error-prefix-taken') : ''
+              isSuccess && resourceAlreadyExists ? t('error-prefix-taken') : ''
             }
             id="prefix-input"
           />
 
-          {type === ResourceType.ATTRIBUTE && (
-            <>
-              <SingleSelect
-                labelText={t('range')}
-                itemAdditionHelpText=""
-                ariaOptionsAvailableText={t('available-ranges') as string}
-                defaultSelectedItem={attributeRanges.find(
-                  (value) => value.uniqueItemId == '-1'
-                )}
-                selectedItem={attributeRanges.find((value) => {
-                  if (data.range != undefined) {
-                    return value.uniqueItemId == data.range.id;
-                  } else {
-                    return value.uniqueItemId == 'rdfs:Literal';
-                  }
-                })}
-                clearButtonLabel={t('clear-selection')}
-                onItemSelect={(e) =>
-                  e != undefined &&
-                  handleUpdate({ ...data, range: { id: e, label: e } })
-                }
-                items={attributeRanges}
-              />
-
-              <InlineListBlock
-                addNewComponent={
-                  <ClassModal
-                    handleFollowUp={handleDomainFollowUp}
-                    modelId={modelId}
-                    modalButtonLabel={t('select-class')}
-                    mode="select"
-                    initialSelected={data.domain?.id}
-                  />
-                }
-                handleRemoval={(id: string) =>
-                  handleDomainOrRangeRemoval(id, 'domain')
-                }
-                items={data.domain ? [data.domain] : []}
-                label={`${t('class')} (rdfs:domain)`}
-                optionalText={t('optional')}
-              />
-            </>
-          )}
-
-          {type === ResourceType.ASSOCIATION && (
-            <>
-              <InlineListBlock
-                addNewComponent={
-                  <ClassModal
-                    handleFollowUp={handleDomainFollowUp}
-                    modelId={modelId}
-                    modalButtonLabel={t('select-class')}
-                    mode="select"
-                    initialSelected={data.domain?.id}
-                  />
-                }
-                handleRemoval={(id: string) =>
-                  handleDomainOrRangeRemoval(id, 'domain')
-                }
-                items={data.domain ? [data.domain] : []}
-                label={t('source-class')}
-                optionalText={t('optional')}
-              />
-
-              <InlineListBlock
-                addNewComponent={
-                  <ClassModal
-                    handleFollowUp={handleRangeFollowUp}
-                    modelId={modelId}
-                    modalButtonLabel={t('select-class')}
-                    mode="select"
-                    initialSelected={data.range?.id}
-                  />
-                }
-                handleRemoval={(id: string) =>
-                  handleDomainOrRangeRemoval(id, 'range')
-                }
-                items={
-                  data.range && typeof data.range !== 'string'
-                    ? [data.range]
-                    : []
-                }
-                label={t('target-class')}
-                optionalText={t('optional')}
-              />
-            </>
-          )}
-
-          <InlineListBlock
-            label={translateCommonForm('upper', type, t)}
-            items={data.subResourceOf.map((resource) => ({
-              id: resource,
-              label: resource,
-            }))}
-            addNewComponent={
-              <Button
-                variant="secondary"
-                icon={<IconPlus />}
-                id="add-upper-button"
-              >
-                {translateCommonForm('add-upper', type, t)}
-              </Button>
-            }
-            deleteDisabled={[
-              'owl:topDataProperty',
-              'owl:TopObjectProperty',
-              'owl:topObjectProperty',
-            ]}
-            handleRemoval={() => null}
+          <RangeAndDomain
+            applicationProfile={applicationProfile}
+            modelId={modelId}
+            data={data}
+            handleUpdate={handleUpdate}
           />
 
-          <InlineListBlock
-            label={translateCommonForm('equivalent', type, t)}
-            items={[]}
-            addNewComponent={
-              <Button
-                variant="secondary"
-                icon={<IconPlus />}
-                id="add-equivalent-button"
-              >
-                {translateCommonForm('add-equivalent', type, t)}
-              </Button>
-            }
-            optionalText={t('optional')}
-            handleRemoval={() => null}
+          {!applicationProfile && (
+            <>
+              <InlineListBlock
+                label={translateCommonForm('upper', data.type, t)}
+                items={
+                  data.subResourceOf?.map((resource) => ({
+                    id: resource.uri,
+                    label: resource.label,
+                  })) ?? []
+                }
+                addNewComponent={
+                  <ResourceModal
+                    buttonTranslations={{
+                      useSelected: translateCommonForm(
+                        'add-upper',
+                        data.type,
+                        t
+                      ),
+                      openButton: translateCommonForm(
+                        'add-upper',
+                        data.type,
+                        t
+                      ),
+                    }}
+                    handleFollowUp={(e) =>
+                      handleResourceUpdate(e, 'subResourceOf')
+                    }
+                    modelId={modelId}
+                    type={data.type}
+                    applicationProfile={applicationProfile}
+                    buttonIcon
+                  />
+                }
+                deleteDisabled={[
+                  'owl:topDataProperty',
+                  'owl:TopObjectProperty',
+                  'owl:topObjectProperty',
+                ]}
+                handleRemoval={(id: string) =>
+                  handleResourceRemove(id, 'subResourceOf')
+                }
+              />
+
+              <InlineListBlock
+                label={translateCommonForm('equivalent', data.type, t)}
+                items={
+                  data.equivalentResource?.map((r) => ({
+                    id: r.uri,
+                    label: r.label,
+                  })) ?? []
+                }
+                addNewComponent={
+                  <ResourceModal
+                    buttonTranslations={{
+                      useSelected: translateCommonForm(
+                        'add-equivalent',
+                        data.type,
+                        t
+                      ),
+                      openButton: translateCommonForm(
+                        'add-equivalent',
+                        data.type,
+                        t
+                      ),
+                    }}
+                    handleFollowUp={(e) =>
+                      handleResourceUpdate(e, 'equivalentResource')
+                    }
+                    modelId={modelId}
+                    type={data.type}
+                    applicationProfile={applicationProfile}
+                    buttonIcon
+                  />
+                }
+                optionalText={t('optional')}
+                handleRemoval={(id: string) =>
+                  handleResourceRemove(id, 'equivalentResource')
+                }
+              />
+            </>
+          )}
+
+          <AssociationRestrictions
+            modelId={modelId}
+            data={data}
+            applicationProfile={applicationProfile}
+            handleUpdate={handleUpdateByKey}
           />
 
           <div>
             <Dropdown
               labelText={t('status')}
-              defaultValue="DRAFT"
+              defaultValue={data.status ?? 'DRAFT'}
               onChange={(e) => handleUpdate({ ...data, status: e as Status })}
               id="status-dropdown"
             >
@@ -532,12 +534,23 @@ export default function ResourceForm({
             </Dropdown>
           </div>
 
+          <AttributeRestrictions
+            data={data}
+            errors={errors}
+            applicationProfile={applicationProfile}
+            handleUpdate={handleUpdateByKey}
+          />
+
           <LanguageVersionedWrapper>
             {languages.map((lang) => (
               <Textarea
                 key={`label-${lang}`}
-                labelText={`${translateCommonForm('note', type, t)}, ${lang}`}
-                defaultValue={data.note[lang] ?? ''}
+                labelText={`${translateCommonForm(
+                  'note',
+                  data.type,
+                  t
+                )}, ${lang}`}
+                defaultValue={data.note?.[lang] ?? ''}
                 onChange={(e) =>
                   handleUpdate({
                     ...data,
@@ -552,7 +565,7 @@ export default function ResourceForm({
           </LanguageVersionedWrapper>
 
           <Textarea
-            labelText={translateCommonForm('work-group-comment', type, t)}
+            labelText={translateCommonForm('work-group-comment', data.type, t)}
             optionalText={t('optional')}
             defaultValue={data.editorialNote}
             onChange={(e) =>
@@ -568,27 +581,56 @@ export default function ResourceForm({
   );
 
   function getErrors(): string[] {
-    const translatedErrors = Object.entries(errors)
+    const nanKeys = [
+      'maxCount',
+      'maxExclusive',
+      'maxInclusive',
+      'maxLength',
+      'minCount',
+      'minExclusive',
+      'minInclusive',
+      'minLength',
+    ];
+
+    const hasNanValues =
+      Object.entries(errors)
+        .filter((e) => nanKeys.includes(e[0]) && e[1])
+        .map((e) => e[1])
+        .filter(Boolean).length > 0;
+
+    const errorsWithNonNumeric = hasNanValues
+      ? Object.fromEntries(
+          Object.entries({ ...errors, ...{ nonNumeric: true } }).filter(
+            (e) => !nanKeys.includes(e[0])
+          )
+        )
+      : errors;
+
+    const translatedErrors = Object.entries(errorsWithNonNumeric)
       .filter((e) => e[1])
       .map((e) =>
         translateCommonFormErrors(
           e[0],
-          type === ResourceType.ASSOCIATION
+          data.type === ResourceType.ASSOCIATION
             ? ResourceType.ASSOCIATION
             : ResourceType.ATTRIBUTE,
           t
         )
       );
 
-    if (isSuccess && !identifierFree) {
+    if (isSuccess && resourceAlreadyExists) {
       return [...translatedErrors, t('error-prefix-taken')];
     }
 
-    if (result.error) {
-      const catchedError = getApiError(result.error);
+    if (updateResult.error) {
+      const catchedError = getApiError(updateResult.error);
       return [...translatedErrors, ...catchedError];
     }
 
+    if (createResult.error) {
+      const catchedError = getApiError(createResult.error);
+      return [...translatedErrors, ...catchedError];
+    }
     return translatedErrors;
   }
 }

@@ -15,6 +15,7 @@ import MultiColumnSearch from '@app/common/components/multi-column-search';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import {
   InternalResourcesSearchParams,
+  initialSearchData,
   useGetInternalResourcesInfoMutation,
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
@@ -30,6 +31,9 @@ export interface ClassModalProps {
   ) => void;
   applicationProfile?: boolean;
   initialSelected?: string;
+  plusIcon?: boolean;
+  resourceRestriction?: boolean;
+  limitToModelType?: 'LIBRARY' | 'PROFILE';
 }
 
 export default function ClassModal({
@@ -39,6 +43,9 @@ export default function ClassModal({
   handleFollowUp,
   applicationProfile,
   initialSelected,
+  plusIcon,
+  resourceRestriction,
+  limitToModelType,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -49,37 +56,34 @@ export default function ClassModal({
   const [searchInternalResources, result] =
     useGetInternalResourcesInfoMutation();
   const [searchParams, setSearchParams] =
-    useState<InternalResourcesSearchParams>({
-      query: '',
-      status: ['VALID', 'DRAFT'],
-      groups: [],
-      sortLang: i18n.language,
-      pageSize: 50,
-      pageFrom: 0,
-      limitToDataModel: modelId,
-      limitToModelType: 'LIBRARY',
-      fromAddedNamespaces: true,
-      resourceTypes: [ResourceType.CLASS],
-    });
+    useState<InternalResourcesSearchParams>(
+      initialSearchData(
+        i18n.language,
+        modelId,
+        ResourceType.CLASS,
+        limitToModelType
+      )
+    );
 
   const handleOpen = () => {
     setVisible(true);
     handleSearch();
+
+    if (initialSelected && initialSelected !== 'selectedId') {
+      setSelectedId(initialSelected);
+    }
   };
 
   const handleClose = () => {
     setSelectedId('');
-    setSearchParams({
-      query: '',
-      status: ['VALID', 'DRAFT'],
-      groups: [],
-      sortLang: i18n.language,
-      pageSize: 50,
-      pageFrom: 0,
-      limitToDataModel: modelId,
-      limitToModelType: 'LIBRARY',
-      resourceTypes: [ResourceType.CLASS],
-    });
+    setSearchParams(
+      initialSearchData(
+        i18n.language,
+        modelId,
+        ResourceType.CLASS,
+        limitToModelType
+      )
+    );
     setContentLanguage(undefined);
     setVisible(false);
   };
@@ -109,16 +113,6 @@ export default function ClassModal({
     );
   };
 
-  const getLinkLabel = (ns: string, id: string) => {
-    const namespace =
-      ns
-        .split('/')
-        .filter((val) => val !== '')
-        .pop()
-        ?.replace('#', '') ?? ns;
-    return `${namespace}:${id}`;
-  };
-
   useEffect(() => {
     if (result.isSuccess) {
       setResultsFormatted(
@@ -130,7 +124,7 @@ export default function ClassModal({
               lang: contentLanguage ?? i18n.language,
               appendLocale: true,
             }),
-            linkLabel: getLinkLabel(r.namespace, r.identifier),
+            linkLabel: r.curie,
             link: r.id,
             status: translateStatus(r.status, t),
             isValid: r.status === 'VALID',
@@ -172,7 +166,7 @@ export default function ClassModal({
     <>
       <Button
         variant="secondary"
-        icon={modalButtonLabel ? undefined : <IconPlus />}
+        icon={modalButtonLabel && !plusIcon ? undefined : <IconPlus />}
         onClick={() => handleOpen()}
         id="add-class-button"
       >
@@ -201,6 +195,7 @@ export default function ClassModal({
             modelId={modelId}
             applicationProfile={applicationProfile}
             languageVersioned
+            resourceRestriction={resourceRestriction}
           />
         </ModalContent>
         <ModalFooter>

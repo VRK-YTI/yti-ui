@@ -26,6 +26,8 @@ function getLangObject(data: { [key: string]: string }) {
   });
 }
 
+export const ADMIN_EMAIL = 'yhteentoimivuus@dvv.fi';
+
 export function getTitle(data?: ModelType, lang?: string): string {
   if (!data) {
     return '';
@@ -95,7 +97,7 @@ export function getComments(data?: ModelType): LangObject[] {
 }
 
 export function getContact(data?: ModelType): string {
-  return data?.contact ?? 'yhteentoimivuus@dvv.fi';
+  return data?.contact ?? ADMIN_EMAIL;
 }
 
 export function getDocumentation(data?: ModelType): string {
@@ -182,6 +184,14 @@ export function getLanguages(data?: ModelType): string[] {
 
 export function getUri(data?: ModelType): string {
   return `http://uri.suomi.fi/datamodel/ns/${data?.prefix}`;
+}
+
+export function getCurie(namespace: string, identifier: string) {
+  return `${getPrefixFromURI(namespace)}:${identifier}`;
+}
+
+export function getPrefixFromURI(namespace: string) {
+  return namespace.split('/').filter(Boolean).pop()?.replace('#', '');
 }
 
 export function getTerminology(

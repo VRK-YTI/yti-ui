@@ -183,6 +183,8 @@ export function translateCommonFormErrors(
         : t('attribute-invalid-identifier-length', { ns: 'admin' });
     case 'unauthorized':
       return t('error-unauthenticated', { ns: 'admin' });
+    case 'nonNumeric':
+      return t('error-non-numeric-values', { ns: 'admin' });
     default:
       return type === ResourceType.ASSOCIATION
         ? t('association-missing-general', { ns: 'admin' })
@@ -307,23 +309,39 @@ export function translateResourceCountTitle(
   }
 }
 
-export function translateResourceAddition(type: ResourceType, t: TFunction) {
+export function translateResourceAddition(
+  type: ResourceType,
+  t: TFunction,
+  applicationProfile?: boolean
+) {
   switch (type) {
     case ResourceType.ASSOCIATION:
-      return t('add-association', { ns: 'admin' });
+      return applicationProfile
+        ? t('add-association-restriction', { ns: 'admin' })
+        : t('add-association', { ns: 'admin' });
     case ResourceType.ATTRIBUTE:
-      return t('add-attribute', { ns: 'admin' });
+      return applicationProfile
+        ? t('add-attribute-restriction', { ns: 'admin' })
+        : t('add-attribute', { ns: 'admin' });
     default:
       return '';
   }
 }
 
-export function translateResourceName(type: ResourceType, t: TFunction) {
+export function translateResourceName(
+  type: ResourceType,
+  t: TFunction,
+  applicationProfile?: boolean
+) {
   switch (type) {
     case ResourceType.ASSOCIATION:
-      return t('association-name', { ns: 'admin' });
+      return applicationProfile
+        ? t('association-restriction-name', { ns: 'admin' })
+        : t('association-name', { ns: 'admin' });
     case ResourceType.ATTRIBUTE:
-      return t('attribute-name', { ns: 'admin' });
+      return applicationProfile
+        ? t('attribute-restriction-name', { ns: 'admin' })
+        : t('attribute-name', { ns: 'admin' });
     default:
       return '';
   }
@@ -349,6 +367,46 @@ export function translateCreateNewResourceForSelected(
       return t('create-new-sub-association-for-selected', { ns: 'admin' });
     case ResourceType.ATTRIBUTE:
       return t('create-new-sub-attribute-for-selected', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateDrawerButton(
+  key: 'classes' | 'associations' | 'attributes',
+  applicationProfile: boolean,
+  t: TFunction
+) {
+  switch (key) {
+    case 'classes':
+      return applicationProfile ? t('class-restrictions') : t('classes');
+    case 'associations':
+      return applicationProfile
+        ? t('association-restrictions')
+        : t('associations');
+    case 'attributes':
+      return applicationProfile ? t('attribute-restrictions') : t('attributes');
+    default:
+      return '';
+  }
+}
+
+export function translateDeleteReferenceModalDescription(
+  type: ResourceType,
+  name: string,
+  t: TFunction
+) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return t('remove-reference-description-association', {
+        ns: 'admin',
+        name: name,
+      });
+    case ResourceType.ATTRIBUTE:
+      return t('remove-reference-description-attribute', {
+        ns: 'admin',
+        name: name,
+      });
     default:
       return '';
   }

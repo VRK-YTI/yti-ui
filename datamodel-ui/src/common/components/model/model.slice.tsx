@@ -20,10 +20,10 @@ export const modelApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putModel: builder.mutation<string, NewModel>({
+    createModel: builder.mutation<string, NewModel>({
       query: (value) => ({
         url: `/model/${value.type === 'LIBRARY' ? 'library' : 'profile'}`,
-        method: 'PUT',
+        method: 'POST',
         data: value,
       }),
     }),
@@ -33,7 +33,7 @@ export const modelApi = createApi({
         method: 'GET',
       }),
     }),
-    postModel: builder.mutation<
+    updateModel: builder.mutation<
       string,
       {
         payload: ModelUpdatePayload;
@@ -45,7 +45,7 @@ export const modelApi = createApi({
         url: `/model/${value.isApplicationProfile ? 'profile' : 'library'}/${
           value.prefix
         }`,
-        method: 'POST',
+        method: 'PUT',
         data: value.payload,
       }),
     }),
@@ -59,20 +59,21 @@ export const modelApi = createApi({
 });
 
 export const {
-  usePutModelMutation,
+  useCreateModelMutation,
   useGetModelQuery,
-  usePostModelMutation,
+  useUpdateModelMutation,
   useDeleteModelMutation,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
-export const { putModel, getModel, postModel, deleteModel } =
+export const { createModel, getModel, updateModel, deleteModel } =
   modelApi.endpoints;
 
 // Slice setup below
 
 export type ViewListItem = {
   edit: boolean;
+  create: boolean;
   info: boolean;
   list: boolean;
 };
@@ -104,16 +105,19 @@ const initialView: ViewList = {
     list: false,
     info: false,
     edit: false,
+    create: false,
   },
   attributes: {
     list: false,
     info: false,
     edit: false,
+    create: false,
   },
   associations: {
     list: false,
     info: false,
     edit: false,
+    create: false,
   },
 };
 
@@ -121,6 +125,7 @@ const initialState = {
   selected: {
     id: '',
     type: '',
+    modelId: null,
   },
   hovered: {
     id: '',
@@ -130,6 +135,21 @@ const initialState = {
   view: initialView,
   hasChanges: false,
   displayWarning: false,
+  displayLang: 'fi',
+  tools: {
+    fullScreen: false,
+    resetPosition: false,
+    savePosition: false,
+    showAttributes: true,
+    showCardinality: false,
+    showStatus: false,
+    showNotes: false,
+    showOriginalClass: false,
+    showAssociationRestrictions: true,
+    showAttributeRestrictions: true,
+    showByName: true,
+    showById: false,
+  },
 };
 
 export const modelSlice = createSlice({
@@ -159,6 +179,7 @@ export const modelSlice = createSlice({
         selected: {
           id: action.payload.id,
           type: action.payload.type,
+          modelId: action.payload.modelId,
         },
         view: {
           ...initialView,
@@ -224,6 +245,35 @@ export const modelSlice = createSlice({
         };
       }
     },
+    setDisplayLang(state, action) {
+      return {
+        ...state,
+        displayLang: action.payload,
+      };
+    },
+    setTools(state, action) {
+      if (
+        action.payload.key === 'showByName' ||
+        action.payload.key === 'showById'
+      ) {
+        return {
+          ...state,
+          tools: {
+            ...state.tools,
+            showByName: action.payload.key === 'showByName' ? true : false,
+            showById: action.payload.key === 'showById' ? true : false,
+          },
+        };
+      }
+
+      return {
+        ...state,
+        tools: {
+          ...state.tools,
+          [action.payload.key]: action.payload.value,
+        },
+      };
+    },
   },
 });
 
@@ -233,9 +283,11 @@ export function selectSelected() {
 
 export function setSelected(
   id: string,
-  type: keyof typeof initialView
+  type: keyof typeof initialView,
+  modelId?: string
 ): AppThunk {
-  return (dispatch) => dispatch(modelSlice.actions.setSelected({ id, type }));
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setSelected({ id, type, modelId }));
 }
 
 export function resetSelected(): AppThunk {
@@ -301,4 +353,47 @@ export function selectHasChanges() {
 
 export function selectDisplayWarning() {
   return (state: AppState) => state.model.displayWarning;
+}
+
+export function setDisplayLang(value: string): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setDisplayLang(value));
+}
+
+export function selectDisplayLang() {
+  return (state: AppState) => state.model.displayLang;
+}
+
+export function setModelTools(key: string, value: boolean): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setTools({ key, value }));
+}
+
+export function selectModelTools() {
+  return (state: AppState) => state.model.tools;
+}
+
+export function setFullScreen(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setTools({ key: 'fullScreen', value }));
+}
+
+export function selectFullScreen() {
+  return (state: AppState) => state.model.tools.fullScreen;
+}
+
+export function setSavePosition(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setTools({ key: 'savePosition', value }));
+}
+
+export function selectSavePosition() {
+  return (state: AppState) => state.model.tools.savePosition;
+}
+
+export function setResetPosition(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setTools({ key: 'resetPosition', value }));
+}
+
+export function selectResetPosition() {
+  return (state: AppState) => state.model.tools.resetPosition;
 }
