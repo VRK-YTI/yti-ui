@@ -96,6 +96,7 @@ export default function CrosswalkForm({
       <Separator isLarge />
       {editMode && renderContributors()}
       {renderStaus()}
+      <Separator />
     </ModelFormContainer>
   );
 

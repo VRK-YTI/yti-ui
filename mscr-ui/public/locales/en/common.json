@@ -54,7 +54,7 @@
   "datamodel-no-association": "Datamodel does not contain any associations.",
   "datamodel-no-attributes": "Datamodel does not contain any attributes.",
   "datamodel-no-classes": "Datamodel does not contain any classes",
-  "datamodel-title": "Data Vocabularies",
+  "datamodel-title": "Metadata and Crosswalk Regisrty",
   "datamodels-all": "All Data Vocabularies",
   "datamodels-in-use": "Data Vocabularies in use",
   "datamodels-unused": "Data Vocabularies not in use",
