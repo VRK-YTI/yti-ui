@@ -25,6 +25,7 @@ export default function Layout({
   matomo,
   alerts,
   fullScreenElements,
+  headerHidden,
 }: {
   children: React.ReactNode;
   feedbackSubject?: string;
@@ -33,10 +34,20 @@ export default function Layout({
   matomo?: React.ReactNode;
   alerts?: React.ReactNode;
   fullScreenElements?: React.ReactNode;
+  headerHidden?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
   const { publicRuntimeConfig } = getConfig();
+
+  if (headerHidden) {
+    return (
+      <ThemeProvider theme={lightTheme}>
+        {matomo && matomo}
+        <div style={{ minWidth: '100vw', minHeight: '100vh' }}>{children}</div>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider theme={lightTheme}>

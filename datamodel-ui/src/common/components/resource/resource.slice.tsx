@@ -1,55 +1,25 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
-import {
-  AssociationFormType,
-  initialAssociation,
-} from '@app/common/interfaces/association-form.interface';
-import {
-  AttributeFormType,
-  initialAttribute,
-} from '@app/common/interfaces/attribute-form.interface';
 import { Resource } from '@app/common/interfaces/resource.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import {
+  ResourceFormType,
+  initialAttribute,
+  initialAssociation,
+  initialAppAssociation,
+  initialAppAttribute,
+} from '@app/common/interfaces/resource-form.interface';
+import { convertToPayload, pathForResourceType } from './utils';
+import { pathForModelType } from '@app/common/utils/api-utils';
 
-function convertToPUT(
-  data: AssociationFormType | AttributeFormType,
-  isEdit: boolean
-): object {
-  const removeKeys: string[] = isEdit
-    ? ['identifier', 'type', 'concept']
-    : ['concept'];
-
-  const ret = Object.fromEntries(
-    Object.entries(data).filter((e) => !removeKeys.includes(e[0]))
-  );
-
-  if (!data.concept) {
-    return ret;
-  }
-
-  return {
-    ...ret,
-    subject: data.concept.conceptURI,
-  };
+interface ResourceData {
+  modelId: string;
+  data: ResourceFormType;
+  applicationProfile?: boolean;
 }
-
-function pathForModelType(isApplicationProfile?: boolean) {
-  return isApplicationProfile ? 'profile/' : 'library/';
-}
-
-function pathForResourceType(
-  type: ResourceType,
-  isApplicationProfile?: boolean
-) {
-  if (isApplicationProfile) {
-    return '';
-  }
-  return type === ResourceType.ATTRIBUTE ? '/attribute' : '/association';
-}
-
 export const resourceApi = createApi({
   reducerPath: 'resourceApi',
   baseQuery: getDatamodelApiBaseQuery((headers) => ({
@@ -63,32 +33,22 @@ export const resourceApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putResource: builder.mutation<
-      null,
-      {
-        modelId: string;
-        data: AssociationFormType | AttributeFormType;
-        resourceId?: string;
-        applicationProfile?: boolean;
-      }
-    >({
+    updateResource: builder.mutation<null, ResourceData>({
       query: (value) => ({
-        url: !value.resourceId
-          ? `/resource/${pathForModelType(value.applicationProfile)}${
-              value.modelId
-            }${pathForResourceType(value.data.type, value.applicationProfile)}`
-          : `/resource/${pathForModelType(value.applicationProfile)}${
-              value.modelId
-            }${pathForResourceType(
-              value.data.type,
-              value.applicationProfile
-            )}/${value.resourceId}`,
+        url: `/resource/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }${pathForResourceType(value.data.type)}/${value.data.identifier}`,
         method: 'PUT',
-        data: {
-          ...convertToPUT(value.data, value.resourceId ? true : false),
-          domain: value.data.domain ? value.data.domain.id : '',
-          range: value.data.range ? value.data.range.id : '',
-        },
+        data: convertToPayload(value.data, true, value.applicationProfile),
+      }),
+    }),
+    createResource: builder.mutation<null, ResourceData>({
+      query: (value) => ({
+        url: `/resource/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }${pathForResourceType(value.data.type)}`,
+        method: 'POST',
+        data: convertToPayload(value.data, false, value.applicationProfile),
       }),
     }),
     getResource: builder.query<
@@ -117,7 +77,7 @@ export const resourceApi = createApi({
         method: 'DELETE',
       }),
     }),
-    getResourceIdentifierFree: builder.query<
+    getResourceExists: builder.query<
       boolean,
       {
         prefix: string;
@@ -125,8 +85,22 @@ export const resourceApi = createApi({
       }
     >({
       query: (props) => ({
-        url: `/resource/${props.prefix}/free-identifier/${props.identifier}`,
+        url: `/resource/${props.prefix}/${props.identifier}/exists`,
         method: 'GET',
+      }),
+    }),
+    makeLocalCopyPropertyShape: builder.mutation<
+      null,
+      {
+        modelid: string;
+        resourceId: string;
+        targetPrefix: string;
+        newIdentifier: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/resource/profile/${value.modelid}/${value.resourceId}?targetPrefix=${value.targetPrefix}&newIdentifier=${value.newIdentifier}`,
+        method: 'POST',
       }),
     }),
   }),
@@ -135,20 +109,77 @@ export const resourceApi = createApi({
 function resourceInitialData(
   type: ResourceType,
   languages?: string[],
-  initialSubResourceOf?: string
-): AssociationFormType | AttributeFormType {
-  let retValue = {} as AssociationFormType | AttributeFormType;
+  initialSubResourceOf?:
+    | string
+    | {
+        id: string;
+        label: string;
+        uri: string;
+      },
+  applicationProfile?: boolean
+): ResourceFormType {
+  let retValue = {} as ResourceFormType;
 
-  if (!initialSubResourceOf) {
+  if (applicationProfile) {
+    const path =
+      initialSubResourceOf && typeof initialSubResourceOf !== 'string'
+        ? initialSubResourceOf
+        : undefined;
+
     retValue =
       type === ResourceType.ASSOCIATION
-        ? { ...initialAssociation, subResourceOf: ['owl:TopObjectProperty'] }
-        : { ...initialAttribute, subResourceOf: ['owl:topDataProperty'] };
+        ? {
+            ...initialAppAssociation,
+            path: path,
+          }
+        : {
+            ...initialAppAttribute,
+            path: path,
+          };
   } else {
-    retValue =
-      type === ResourceType.ASSOCIATION
-        ? { ...initialAssociation, subResourceOf: [initialSubResourceOf] }
-        : { ...initialAttribute, subResourceOf: [initialSubResourceOf] };
+    if (!initialSubResourceOf || typeof initialSubResourceOf !== 'string') {
+      retValue =
+        type === ResourceType.ASSOCIATION
+          ? {
+              ...initialAssociation,
+              subResourceOf: [
+                {
+                  label: 'owl:TopObjectProperty',
+                  uri: 'owl:TopObjectProperty',
+                },
+              ],
+            }
+          : {
+              ...initialAttribute,
+              subResourceOf: [
+                {
+                  label: 'owl:topDataProperty',
+                  uri: 'owl:topDataProperty',
+                },
+              ],
+            };
+    } else {
+      retValue =
+        type === ResourceType.ASSOCIATION
+          ? {
+              ...initialAssociation,
+              subResourceOf: [
+                {
+                  label: initialSubResourceOf,
+                  uri: initialSubResourceOf,
+                },
+              ],
+            }
+          : {
+              ...initialAttribute,
+              subResourceOf: [
+                {
+                  label: initialSubResourceOf,
+                  uri: initialSubResourceOf,
+                },
+              ],
+            };
+    }
   }
 
   if (languages) {
@@ -163,13 +194,16 @@ function resourceInitialData(
 
 export const resourceSlice = createSlice({
   name: 'resource',
-  initialState: resourceInitialData(ResourceType.ASSOCIATION),
+  initialState: {
+    label: {},
+    identifier: '',
+    note: {},
+    status: 'DRAFT',
+    type: ResourceType.ASSOCIATION,
+  } as ResourceFormType,
   reducers: {
-    setResource(state, action) {
-      return {
-        ...state,
-        ...action.payload,
-      };
+    setResource(_state, action) {
+      return action.payload;
     },
   },
 });
@@ -178,36 +212,57 @@ export function selectResource() {
   return (state: AppState) => state.resource;
 }
 
-export function setResource(
-  data: AssociationFormType | AttributeFormType
-): AppThunk {
+export function setResource(data: ResourceFormType): AppThunk {
   return (dispatch) => dispatch(resourceSlice.actions.setResource(data));
 }
 
 export function initializeResource(
   type: ResourceType,
   langs: string[],
-  initialSubResourceOf?: string
+  initialSubResourceOf?:
+    | string
+    | {
+        id: string;
+        label: string;
+        uri: string;
+      },
+  applicationProfile?: boolean
 ): AppThunk {
   return (dispatch) =>
     dispatch(
       resourceSlice.actions.setResource(
-        resourceInitialData(type, langs, initialSubResourceOf)
+        resourceInitialData(
+          type,
+          langs,
+          initialSubResourceOf,
+          applicationProfile
+        )
       )
     );
 }
 
 export function resetResource(): AppThunk {
   return (dispatch) =>
-    dispatch(resourceSlice.actions.setResource(initialAssociation));
+    dispatch(
+      resourceSlice.actions.setResource({
+        label: {},
+        identifier: '',
+        note: {},
+        status: 'DRAFT',
+        type: ResourceType.ASSOCIATION,
+      } as ResourceFormType)
+    );
 }
 
-export const { putResource, getResource } = resourceApi.endpoints;
+export const { updateResource, createResource, getResource } =
+  resourceApi.endpoints;
 
 export const {
-  usePutResourceMutation,
+  useUpdateResourceMutation,
+  useCreateResourceMutation,
   useGetResourceQuery,
   useDeleteResourceMutation,
-  useGetResourceIdentifierFreeQuery,
+  useGetResourceExistsQuery,
+  useMakeLocalCopyPropertyShapeMutation,
   util: { getRunningQueriesThunk, getRunningMutationsThunk },
 } = resourceApi;

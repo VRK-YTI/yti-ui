@@ -22,28 +22,41 @@ import DeleteModal from '@app/modules/delete-modal';
 import CommonViewContent from '@app/modules/common-view-content';
 import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
 import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
+import LocalCopyModal from '@app/modules/local-copy-modal';
+import { useSelector } from 'react-redux';
+import { selectDisplayLang } from '@app/common/components/model/model.slice';
 
 interface CommonViewProps {
   data?: Resource;
   modelId: string;
   handleReturn: () => void;
+  handleShowResource: (id: string, modelPrefix: string) => void;
   handleEdit: () => void;
+  isPartOfCurrentModel: boolean;
+  applicationProfile?: boolean;
+  currentModelId?: string;
 }
 
 export default function ResourceInfo({
   data,
   modelId,
   handleReturn,
+  handleShowResource,
   handleEdit,
+  isPartOfCurrentModel,
+  applicationProfile,
+  currentModelId,
 }: CommonViewProps) {
   const { t, i18n } = useTranslation('common');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const displayLang = useSelector(selectDisplayLang());
   const hasPermission = HasPermission({
     actions: ['ADMIN_ASSOCIATION', 'ADMIN_ATTRIBUTE'],
   });
   const [showTooltip, setShowTooltip] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [deleteVisible, setDeleteVisible] = useState(false);
+  const [localCopyVisible, setLocalCopyVisible] = useState(false);
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
 
   useEffect(() => {
@@ -84,23 +97,45 @@ export default function ResourceInfo({
                   open={showTooltip}
                   onCloseButtonClick={() => setShowTooltip(false)}
                 >
-                  <Button
-                    variant="secondaryNoBorder"
-                    onClick={() => handleEdit()}
-                    id="edit-button"
-                  >
-                    {t('edit', { ns: 'admin' })}
-                  </Button>
-                  <Separator />
-                  <Button
-                    variant="secondaryNoBorder"
-                    onClick={() => setVisible(true)}
-                    id="remove-button"
-                  >
-                    {t('remove', { ns: 'admin' })}
-                  </Button>
+                  {isPartOfCurrentModel ? (
+                    <>
+                      <Button
+                        variant="secondaryNoBorder"
+                        onClick={() => handleEdit()}
+                        id="edit-button"
+                      >
+                        {t('edit', { ns: 'admin' })}
+                      </Button>
+                      <Separator />
+                      <Button
+                        variant="secondaryNoBorder"
+                        onClick={() => setDeleteVisible(true)}
+                        id="remove-button"
+                      >
+                        {t('remove', { ns: 'admin' })}
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        variant="secondaryNoBorder"
+                        onClick={() => setLocalCopyVisible(true)}
+                        id="local-copy-button"
+                      >
+                        {t('create-local-copy', { ns: 'admin' })}
+                      </Button>
+                    </>
+                  )}
                 </Tooltip>
               </TooltipWrapper>
+              <LocalCopyModal
+                visible={localCopyVisible}
+                hide={() => setLocalCopyVisible(false)}
+                targetModelId={currentModelId ?? ''}
+                sourceModelId={modelId}
+                sourceIdentifier={data.identifier}
+                handleReturn={handleShowResource}
+              />
               <DeleteModal
                 modelId={modelId}
                 resourceId={data.identifier}
@@ -110,8 +145,8 @@ export default function ResourceInfo({
                   lang: i18n.language,
                 })}
                 onClose={handleReturn}
-                visible={visible}
-                hide={() => setVisible(false)}
+                visible={deleteVisible}
+                hide={() => setDeleteVisible(false)}
               />
             </div>
           )}
@@ -122,7 +157,7 @@ export default function ResourceInfo({
               {data &&
                 getLanguageVersion({
                   data: data.label,
-                  lang: i18n.language,
+                  lang: displayLang ?? i18n.language,
                 })}
             </Text>
             <StatusChip $isValid={data && data.status === 'VALID'}>
@@ -133,7 +168,13 @@ export default function ResourceInfo({
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
-        {data && <CommonViewContent modelId={modelId} data={data} />}
+        {data && (
+          <CommonViewContent
+            applicationProfile={applicationProfile}
+            modelId={modelId}
+            data={data}
+          />
+        )}
       </DrawerContent>
     </>
   );

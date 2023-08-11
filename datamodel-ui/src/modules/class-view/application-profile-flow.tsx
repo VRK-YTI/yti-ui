@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import ClassRestrictionModal from '../class-restriction-modal';
 import ResourcePicker from '../resource-picker-modal';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { getPrefixFromURI } from '@app/common/utils/get-value';
 
 export default function ApplicationProfileFlow({
   visible,
@@ -109,10 +110,7 @@ export default function ApplicationProfileFlow({
           visible={resourcePickerVisible}
           selectedNodeShape={{
             modelId:
-              selectedNodeShape.nodeShape.namespace
-                .replace(/\/$/, '')
-                .split('/')
-                .pop() ?? '',
+              getPrefixFromURI(selectedNodeShape.nodeShape.namespace) ?? '',
             classId: selectedNodeShape.nodeShape.identifier ?? '',
             isAppProfile: selectedNodeShape.isAppProfile ?? false,
           }}

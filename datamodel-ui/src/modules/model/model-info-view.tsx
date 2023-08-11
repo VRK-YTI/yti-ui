@@ -1,6 +1,5 @@
 import {
   setHasChanges,
-  setView,
   useGetModelQuery,
 } from '@app/common/components/model/model.slice';
 import { useTranslation } from 'next-i18next';
@@ -15,6 +14,7 @@ import {
 } from 'suomifi-ui-components';
 import { BasicBlock, MultilingualBlock } from 'yti-common-ui/block';
 import {
+  ADMIN_EMAIL,
   getIsPartOfWithId,
   getOrganizationsWithId,
   getUri,
@@ -36,6 +36,7 @@ import { useStoreDispatch } from '@app/store';
 import { getModelId } from '@app/common/utils/parse-slug';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
+import useSetView from '@app/common/utils/hooks/use-set-view';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -56,6 +57,7 @@ export default function ModelInfoView() {
   });
   const ref = useRef<HTMLDivElement>(null);
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
+  const { setView } = useSetView();
   const hasPermission = HasPermission({ actions: ['ADMIN_DATA_MODEL'] });
   const { data: modelInfo, refetch } = useGetModelQuery(modelId);
 
@@ -96,7 +98,7 @@ export default function ModelInfoView() {
 
   const handleEditViewItemClick = (setItem: (value: boolean) => void) => {
     setItem(true);
-    dispatch(setView('info', 'edit'));
+    setView('info', 'edit');
     setShowTooltip(false);
   };
 
@@ -294,14 +296,14 @@ export default function ModelInfoView() {
             href={`mailto:${
               modelInfo.contact && modelInfo.contact !== ''
                 ? modelInfo.contact
-                : 'yhteentoimivuus@dvv.fi'
+                : ADMIN_EMAIL
             }?subject=${getLanguageVersion({
               data: modelInfo.label,
               lang: i18n.language,
             })}`}
             labelNewWindow={t('link-opens-new-window-external')}
           >
-            {modelInfo.contact ?? 'yhteentoimivuus@dvv.fi'}
+            {modelInfo.contact ?? ADMIN_EMAIL}
           </ExternalLink>
         </BasicBlock>
       </DrawerContent>

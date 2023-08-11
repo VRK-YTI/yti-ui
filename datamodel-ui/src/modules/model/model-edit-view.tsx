@@ -1,6 +1,6 @@
 import {
   setHasChanges,
-  usePostModelMutation,
+  useUpdateModelMutation,
 } from '@app/common/components/model/model.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { ModelType } from '@app/common/interfaces/model.interface';
@@ -44,7 +44,7 @@ export default function ModelEditView({
   const [userPosted, setUserPosted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
-  const [postModel, result] = usePostModelMutation();
+  const [updateModel, result] = useUpdateModelMutation();
   const [formData, setFormData] = useState<ModelFormType>({
     contact: model.contact,
     externalNamespaces: model.externalNamespaces ?? [],
@@ -114,7 +114,7 @@ export default function ModelEditView({
 
     const payload = generatePayload(formData);
 
-    postModel({
+    updateModel({
       payload: payload,
       prefix: formData.prefix,
       isApplicationProfile: formData.type === 'PROFILE',

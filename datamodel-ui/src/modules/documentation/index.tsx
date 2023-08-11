@@ -22,9 +22,10 @@ import {
 } from './documentation.styles';
 import { useTranslation } from 'next-i18next';
 import {
+  selectDisplayLang,
   setHasChanges,
   useGetModelQuery,
-  usePostModelMutation,
+  useUpdateModelMutation,
 } from '@app/common/components/model/model.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import generatePayload from '../model/generate-payload';
@@ -44,6 +45,7 @@ import {
 } from './utils';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
+import { useSelector } from 'react-redux';
 
 export default function Documentation({
   modelId,
@@ -58,6 +60,7 @@ export default function Documentation({
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
   const textAreaRef = createRef<HTMLTextAreaElement>();
+  const displayLang = useSelector(selectDisplayLang());
   const [headerHeight, setHeaderHeight] = useState(0);
   const [value, setValue] = useState<{ [key: string]: string }>({});
   const [isEdit, setIsEdit] = useState(false);
@@ -74,7 +77,7 @@ export default function Documentation({
   });
 
   const { data: modelData, refetch } = useGetModelQuery(modelId);
-  const [postModel, result] = usePostModelMutation();
+  const [updateModel, result] = useUpdateModelMutation();
 
   const handleSubmit = () => {
     disableConfirmation();
@@ -86,11 +89,17 @@ export default function Documentation({
 
     const payload = generatePayload({ ...modelData, documentation: value });
 
-    postModel({
+    updateModel({
       payload: payload,
       prefix: modelData.prefix,
       isApplicationProfile: modelData.type === 'PROFILE',
     });
+  };
+
+  const handleCancel = () => {
+    setIsEdit(false);
+    dispatch(setHasChanges(false));
+    disableConfirmation();
   };
 
   const handleUpdate = (data: { [key: string]: string }) => {
@@ -226,10 +235,7 @@ export default function Documentation({
               </Button>
               <Button
                 variant="secondary"
-                onClick={() => {
-                  setIsEdit(false);
-                  disableConfirmation();
-                }}
+                onClick={() => handleCancel()}
                 id="cancel-button"
               >
                 {t('cancel-variant')}
@@ -267,7 +273,7 @@ export default function Documentation({
           <ReactMarkdown remarkPlugins={[remarkGfm]} unwrapDisallowed={false}>
             {getLanguageVersion({
               data: modelData?.documentation,
-              lang: i18n.language,
+              lang: displayLang ?? i18n.language,
               appendLocale: true,
             })}
           </ReactMarkdown>

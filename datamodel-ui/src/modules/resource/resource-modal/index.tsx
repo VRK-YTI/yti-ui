@@ -2,11 +2,13 @@ import MultiColumnSearch from '@app/common/components/multi-column-search';
 import { ResultType } from '@app/common/components/resource-list';
 import {
   InternalResourcesSearchParams,
+  initialSearchData,
   useGetInternalResourcesInfoMutation,
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import WideModal from '@app/common/components/wide-modal';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { getCurie } from '@app/common/utils/get-value';
 import {
   translateResourceAddition,
   translateResourceName,
@@ -31,8 +33,10 @@ interface ResourceModalProps {
   buttonTranslations: {
     useSelected: string;
     createNew?: string;
+    openButton?: string;
   };
   handleFollowUp: (value?: { label: string; uri: string }) => void;
+  defaultSelected?: string;
   buttonIcon?: boolean;
   applicationProfile?: boolean;
 }
@@ -42,28 +46,22 @@ export default function ResourceModal({
   type,
   buttonTranslations,
   handleFollowUp,
+  defaultSelected,
   buttonIcon,
   applicationProfile,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
-  const [selectedId, setSelectedId] = useState('');
+  const [selectedId, setSelectedId] = useState(
+    defaultSelected ? defaultSelected : ''
+  );
   const [contentLanguage, setContentLanguage] = useState<string>();
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [searchParams, setSearchParams] =
-    useState<InternalResourcesSearchParams>({
-      query: '',
-      status: ['VALID', 'DRAFT'],
-      groups: [],
-      sortLang: i18n.language,
-      pageSize: 50,
-      pageFrom: 0,
-      limitToDataModel: modelId,
-      limitToModelType: 'LIBRARY',
-      fromAddedNamespaces: true,
-      resourceTypes: [type],
-    });
+    useState<InternalResourcesSearchParams>(
+      initialSearchData(i18n.language, modelId, type)
+    );
   const [searchInternalResources, result] =
     useGetInternalResourcesInfoMutation();
 
@@ -78,56 +76,37 @@ export default function ResourceModal({
   const handleOpen = () => {
     setVisible(true);
     handleSearch();
+
+    if (defaultSelected && defaultSelected !== selectedId) {
+      setSelectedId(defaultSelected);
+    }
   };
 
   const handleClose = () => {
-    setSearchParams({
-      query: '',
-      status: ['VALID', 'DRAFT'],
-      groups: [],
-      sortLang: i18n.language,
-      pageSize: 50,
-      pageFrom: 0,
-      limitToDataModel: modelId,
-      limitToModelType: 'LIBRARY',
-      resourceTypes: [type],
-    });
+    setSearchParams(initialSearchData(i18n.language, modelId, type));
     setContentLanguage(undefined);
     setVisible(false);
+    setSelectedId('');
   };
 
   const handleSubmit = () => {
     if (!selectedId || selectedId === '' || !result.data) {
       handleFollowUp();
+      handleClose();
       return;
     }
 
     const selectedObj = result.data.responseObjects.find(
-      (obj) => obj.identifier === selectedId
+      (obj) => obj.id === selectedId
     );
 
     if (selectedObj) {
-      const domain =
-        selectedObj.namespace[selectedObj.namespace.length - 1] === '/'
-          ? selectedObj.namespace.slice(0, -1)?.split('/').pop()
-          : selectedObj.namespace.split('/').pop();
       handleFollowUp({
-        label: `${domain}:${selectedObj.identifier}`,
+        label: getCurie(selectedObj.namespace, selectedObj.identifier),
         uri: selectedObj.id,
       });
-    } else {
-      handleClose();
     }
-  };
-
-  const getLinkLabel = (ns: string, id: string) => {
-    const namespace =
-      ns
-        .split('/')
-        .filter((val) => val !== '')
-        .pop()
-        ?.replace('#', '') ?? ns;
-    return `${namespace}:${id}`;
+    handleClose();
   };
 
   useEffect(() => {
@@ -141,7 +120,7 @@ export default function ResourceModal({
               lang: contentLanguage ?? i18n.language,
               appendLocale: true,
             }),
-            linkLabel: getLinkLabel(r.namespace, r.identifier),
+            linkLabel: r.curie,
             link: r.id,
             status: translateStatus(r.status, t),
             isValid: r.status === 'VALID',
@@ -188,7 +167,8 @@ export default function ResourceModal({
         onClick={() => handleOpen()}
         id="add-resource-button"
       >
-        {translateResourceAddition(type, t)}
+        {buttonTranslations.openButton ??
+          translateResourceAddition(type, t, applicationProfile)}
       </Button>
 
       <WideModal
@@ -200,7 +180,11 @@ export default function ResourceModal({
         <ModalContent>
           <ModalTitle>{translateResourceAddition(type, t)}</ModalTitle>
           <MultiColumnSearch
-            primaryColumnName={translateResourceName(type, t)}
+            primaryColumnName={translateResourceName(
+              type,
+              t,
+              applicationProfile
+            )}
             result={{
               totalHitCount: result.data?.totalHitCount ?? 0,
               items: resultsFormatted,
@@ -211,6 +195,7 @@ export default function ResourceModal({
             setSearchParams={handleSearch}
             setContentLanguage={setContentLanguage}
             applicationProfile={applicationProfile}
+            resourceRestriction
             languageVersioned
             modelId={modelId}
           />

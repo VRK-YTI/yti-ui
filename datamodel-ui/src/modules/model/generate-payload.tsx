@@ -3,6 +3,7 @@ import {
   ModelType,
   ModelUpdatePayload,
 } from '@app/common/interfaces/model.interface';
+import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 
 export default function generatePayload(
   data: ModelFormType | ModelType
@@ -53,7 +54,7 @@ export default function generatePayload(
       terminologies: data.terminologies.map((t) => t.uri),
       codeLists: data.codeLists.map((c) => c.id),
       documentation: data.documentation ?? {},
-      contact: data.contact !== '' ? data.contact : 'yhteentoimivuus@dvv.fi',
+      contact: data.contact !== '' ? data.contact : ADMIN_EMAIL,
     };
   }
 }

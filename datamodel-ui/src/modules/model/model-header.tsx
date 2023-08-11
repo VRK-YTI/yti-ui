@@ -1,41 +1,58 @@
 import { MainTitle, BadgeBar, Badge } from 'yti-common-ui/title-block';
-import { TitleWrapper } from './model.styles';
+import { LanguagePickerWrapper, TitleWrapper } from './model.styles';
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import {
-  Button,
+  Dropdown,
+  DropdownItem,
   IconApplicationProfile,
-  IconDownload,
-  IconFullscreen,
   IconGrid,
-  IconMapMyLocation,
-  IconMenu,
-  IconMinus,
-  IconPlus,
-  IconSave,
-  IconSwapRounded,
 } from 'suomifi-ui-components';
 import { getStatus, getTitle, getType } from '@app/common/utils/get-value';
 import {
   translateModelType,
   translateStatus,
 } from '@app/common/utils/translation-helpers';
-import { ToolsButtonGroup } from 'yti-common-ui/drawer/drawer.styles';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
-import { useBreakpoints } from 'yti-common-ui/media-query';
 import { ModelType } from '@app/common/interfaces/model.interface';
+import { useBreakpoints } from 'yti-common-ui/media-query';
+import { useSelector } from 'react-redux';
+import {
+  selectDisplayLang,
+  setDisplayLang,
+} from '@app/common/components/model/model.slice';
+import { useStoreDispatch } from '@app/store';
+import { compareLocales } from '@app/common/utils/compare-locals';
+import { useRouter } from 'next/router';
 
 export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
-  const { isSmall, isLarge } = useBreakpoints();
   const { t, i18n } = useTranslation('common');
+  const { isSmall } = useBreakpoints();
+  const displayLang = useSelector(selectDisplayLang());
+  const dispatch = useStoreDispatch();
+  const router = useRouter();
 
   const model = useMemo(
     () => ({
-      title: getTitle(modelInfo, i18n.language),
+      title: getTitle(modelInfo, displayLang ?? i18n.language),
       status: getStatus(modelInfo),
+      languages: modelInfo
+        ? [...modelInfo.languages].sort((a, b) => compareLocales(a, b))
+        : [],
     }),
-    [modelInfo, i18n.language]
+    [modelInfo, i18n.language, displayLang]
   );
+
+  const handleDisplayLangChange = (lang: string) => {
+    dispatch(setDisplayLang(lang));
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { slug, ...query } = router.query;
+    router.replace({
+      pathname: router.asPath.split('?')[0],
+      query: { ...query, lang: lang },
+    });
+  };
 
   if (!model) {
     return <></>;
@@ -74,23 +91,20 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
         </BadgeBar>
       </div>
 
-      {isLarge && (
-        <div className="tools">
-          <>
-            <ToolsButtonGroup $isSmall={isSmall}>
-              <>
-                <Button icon={<IconPlus />} />
-                <Button icon={<IconMinus />} />
-                <Button icon={<IconFullscreen />} />
-                <Button icon={<IconSwapRounded />} />
-                <Button icon={<IconMapMyLocation />} />
-                <Button icon={<IconDownload />} />
-                <Button icon={<IconSave />} />
-                <Button icon={<IconMenu />} variant="secondary" />
-              </>
-            </ToolsButtonGroup>
-          </>
-        </div>
+      {!isSmall && (
+        <LanguagePickerWrapper>
+          <Dropdown
+            labelText=""
+            value={displayLang}
+            onChange={(e) => handleDisplayLangChange(e)}
+          >
+            {model.languages.map((lang) => (
+              <DropdownItem value={lang} key={lang}>
+                {t('content-in-language')} {lang}
+              </DropdownItem>
+            ))}
+          </Dropdown>
+        </LanguagePickerWrapper>
       )}
     </TitleWrapper>
   );

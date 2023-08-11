@@ -9,64 +9,14 @@ import {
   initialClassForm,
 } from '@app/common/interfaces/class-form.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { pathForModelType } from '@app/common/utils/api-utils';
+import { convertToPayload } from './utils';
 
-function convertToPUT(
-  data: ClassFormType,
-  isEdit: boolean,
-  applicationProfile?: boolean,
-  basedOnNodeShape?: boolean
-): object {
-  const { concept, ...retVal } = data;
-  const conceptURI = concept?.conceptURI;
-
-  const ret = {
-    ...retVal,
-    equivalentClass: data.equivalentClass.map((eq) => eq.identifier),
-    subClassOf: data.subClassOf
-      .filter((soc) => soc.identifier !== 'owl:Thing')
-      .map((sco) => sco.identifier),
-    subject: conceptURI,
-    ...(basedOnNodeShape
-      ? {
-          targetNode: data.targetClass?.id,
-        }
-      : {
-          targetClass: data.targetClass?.id,
-          ...(data.node && {
-            targetNode: data.node.id,
-          }),
-        }),
-    ...(applicationProfile &&
-      !basedOnNodeShape && {
-        properties: [
-          ...(data.association?.map((a) => a.uri) ?? []),
-          ...(data.attribute?.map((a) => a.uri) ?? []),
-        ],
-      }),
-  };
-
-  if (applicationProfile) {
-    delete ret.association;
-    delete ret.attribute;
-  }
-
-  if (basedOnNodeShape) {
-    delete ret.targetClass;
-  }
-
-  if (data.node) {
-    delete ret.node;
-  }
-
-  return isEdit
-    ? Object.fromEntries(
-        Object.entries(ret).filter((e) => e[0] !== 'identifier')
-      )
-    : ret;
-}
-
-function pathForModelType(isApplicationProfile?: boolean) {
-  return isApplicationProfile ? 'profile/' : 'library/';
+interface ClassData {
+  modelId: string;
+  data: ClassFormType;
+  applicationProfile?: boolean;
+  basedOnNodeShape?: boolean;
 }
 
 export const classApi = createApi({
@@ -79,28 +29,29 @@ export const classApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putClass: builder.mutation<
-      string,
-      {
-        modelId: string;
-        data: ClassFormType;
-        classId?: string;
-        applicationProfile?: boolean;
-        basedOnNodeShape?: boolean;
-      }
-    >({
+    updateClass: builder.mutation<string, ClassData>({
       query: (value) => ({
-        url: !value.classId
-          ? `/class/${pathForModelType(value.applicationProfile)}${
-              value.modelId
-            }`
-          : `/class/${pathForModelType(value.applicationProfile)}${
-              value.modelId
-            }/${value.classId}`,
+        url: `/class/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }/${value.data.identifier}`,
         method: 'PUT',
-        data: convertToPUT(
+        data: convertToPayload(
           value.data,
-          value.classId ? true : false,
+          true,
+          value.applicationProfile,
+          value.basedOnNodeShape
+        ),
+      }),
+    }),
+    createClass: builder.mutation<null, ClassData>({
+      query: (value) => ({
+        url: `/class/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }`,
+        method: 'POST',
+        data: convertToPayload(
+          value.data,
+          false,
           value.applicationProfile,
           value.basedOnNodeShape
         ),
@@ -145,7 +96,7 @@ export const classApi = createApi({
         method: 'DELETE',
       }),
     }),
-    getClassIdentifierFree: builder.query<
+    getClassExists: builder.query<
       boolean,
       {
         prefix: string;
@@ -153,8 +104,32 @@ export const classApi = createApi({
       }
     >({
       query: (props) => ({
-        url: `/class/${props.prefix}/free-identifier/${props.identifier}`,
+        url: `/class/${props.prefix}/${props.identifier}/exists`,
         method: 'GET',
+      }),
+    }),
+    addNodeShapePropertyReference: builder.mutation<
+      string,
+      { prefix: string; nodeshapeId: string; uri: string }
+    >({
+      query: (value) => ({
+        url: `/class/profile/${value.prefix}/${value.nodeshapeId}/properties`,
+        params: {
+          uri: value.uri,
+        },
+        method: 'PUT',
+      }),
+    }),
+    deleteNodeShapePropertyReference: builder.mutation<
+      string,
+      { prefix: string; nodeshapeId: string; uri: string }
+    >({
+      query: (value) => ({
+        url: `/class/profile/${value.prefix}/${value.nodeshapeId}/properties`,
+        params: {
+          uri: value.uri,
+        },
+        method: 'DELETE',
       }),
     }),
   }),
@@ -171,19 +146,6 @@ export const classSlice = createSlice({
       };
     },
   },
-  // extraReducers: (builder) => {
-  //   builder.addMatcher(
-  //     classApi.endpoints.getClass.matchFulfilled, (state, action) => {
-  //       if (isEqual(state, action.payload)) {
-  //         return state;
-  //       }
-  //       return action.payload;
-  //     }
-  //   );
-  //   builder.addMatcher(isHydrate, (_, action) => {
-  //     return action.payload.model;
-  //   });
-  // }
 });
 
 export function selectClass() {
@@ -199,13 +161,17 @@ export function resetClass(): AppThunk {
 }
 
 export const {
-  usePutClassMutation,
+  useUpdateClassMutation,
+  useCreateClassMutation,
   useGetClassQuery,
   useGetClassMutMutation,
   useGetNodeShapesQuery,
   useDeleteClassMutation,
-  useGetClassIdentifierFreeQuery,
+  useGetClassExistsQuery,
+  useAddNodeShapePropertyReferenceMutation,
+  useDeleteNodeShapePropertyReferenceMutation,
   util: { getRunningQueriesThunk },
 } = classApi;
 
-export const { putClass, getClass, getClassMut } = classApi.endpoints;
+export const { updateClass, createClass, getClass, getClassMut } =
+  classApi.endpoints;

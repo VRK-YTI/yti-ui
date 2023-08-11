@@ -472,7 +472,7 @@ export const extensiveDataReturned = generateFormData(
             wordClass: [
               {
                 lang: '',
-                value: 'adjektiivi',
+                value: 'adjective',
                 regex: '(?s)^.*$',
               },
             ],
@@ -662,7 +662,7 @@ export const extensiveDataReturned = generateFormData(
             wordClass: [
               {
                 lang: '',
-                value: 'adjektiivi',
+                value: 'adjective',
                 regex: '(?s)^.*$',
               },
             ],
@@ -2189,7 +2189,7 @@ export const extensiveDataReturned = generateFormData(
             wordClass: [
               {
                 lang: '',
-                value: 'adjektiivi',
+                value: 'adjective',
                 regex: '(?s)^.*$',
               },
             ],
@@ -2453,7 +2453,7 @@ export const extensiveDataExpected = {
       termInfo: 'termin lisätieto',
       termStyle: 'puhekieli',
       termType: 'synonym',
-      wordClass: '',
+      wordClass: 'adjective',
     },
     {
       changeNote: 'muutoshistoria',
@@ -2486,7 +2486,7 @@ export const extensiveDataExpected = {
       termInfo: 'termin lisätieto',
       termStyle: 'puhekieli',
       termType: 'search-term',
-      wordClass: '',
+      wordClass: 'adjective',
     },
     {
       changeNote: 'muutoshistoria',
@@ -2519,7 +2519,7 @@ export const extensiveDataExpected = {
       termInfo: 'termin lisätieto',
       termStyle: 'spoken-form',
       termType: 'recommended-term',
-      wordClass: '',
+      wordClass: 'adjective',
     },
     {
       changeNote: 'muutoshistoria',
@@ -2552,7 +2552,7 @@ export const extensiveDataExpected = {
       termInfo: 'termin lisätieto',
       termStyle: 'puhekieli',
       termType: 'not-recommended-synonym',
-      wordClass: '',
+      wordClass: 'adjective',
     },
   ],
   basicInformation: {

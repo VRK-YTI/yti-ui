@@ -15,7 +15,7 @@ export const fakeableUsersApi = createApi({
   endpoints: (builder) => ({
     getFakeableUsers: builder.query<FakeableUser[], void>({
       query: () => ({
-        url: '/fakeableUsers',
+        url: '/fakeable-users',
         method: 'GET',
       }),
     }),

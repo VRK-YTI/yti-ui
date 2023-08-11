@@ -4,7 +4,6 @@ import {
   DropdownItem,
   ExpanderGroup,
   IconArrowLeft,
-  IconPlus,
   Text,
   Textarea,
   TextInput,
@@ -30,8 +29,9 @@ import InlineListBlock from '@app/common/components/inline-list-block';
 import {
   selectClass,
   setClass,
-  useGetClassIdentifierFreeQuery,
-  usePutClassMutation,
+  useCreateClassMutation,
+  useGetClassExistsQuery,
+  useUpdateClassMutation,
 } from '@app/common/components/class/class.slice';
 import { AxiosQueryErrorFields } from 'yti-common-ui/interfaces/axios-base-query.interface';
 import { useSelector } from 'react-redux';
@@ -42,13 +42,15 @@ import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { BasicBlock } from 'yti-common-ui/block';
 import ResourceInfo from '../class-view/resource-info';
-import ResourceForm from '../resource-form';
 import getApiError from '@app/common/utils/get-api-errors';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import {
   selectHasChanges,
   setHasChanges,
 } from '@app/common/components/model/model.slice';
+import ResourcePicker from '../resource-picker-modal';
+import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
+import { getCurie, getPrefixFromURI } from '@app/common/utils/get-value';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -83,9 +85,26 @@ export default function ClassForm({
   const [errors, setErrors] = useState<ClassFormErrors>(
     validateClassForm(data)
   );
-  const [putClass, putClassResult] = usePutClassMutation();
+  const [showResourcePicker, setShowResourcePicker] = useState(false);
+  const [selectedTargetClass, setSelectedTargetClass] = useState<{
+    modelId: string;
+    classInfo: {
+      id: string;
+      identifier: string;
+      label: string;
+    };
+  }>({
+    modelId: '',
+    classInfo: {
+      id: '',
+      identifier: '',
+      label: '',
+    },
+  });
+  const [updateClass, updateResult] = useUpdateClassMutation();
+  const [createClass, createResult] = useCreateClassMutation();
 
-  const { data: identifierFree, isSuccess } = useGetClassIdentifierFreeQuery(
+  const { data: classAlreadyExists, isSuccess } = useGetClassExistsQuery(
     { prefix: modelId, identifier: data.identifier },
     { skip: isEdit || data.identifier === '' }
   );
@@ -115,7 +134,7 @@ export default function ClassForm({
 
     if (
       Object.values(errors).filter((val) => val === true).length > 0 ||
-      (isSuccess && !identifierFree)
+      (isSuccess && classAlreadyExists)
     ) {
       return;
     }
@@ -124,16 +143,17 @@ export default function ClassForm({
       Object.entries(data.label).filter((obj) => obj[1] !== '')
     );
 
-    putClass({
+    const payload = {
       modelId: modelId,
       data: {
         ...data,
         label: Object.keys(usedLabels).length > 0 ? usedLabels : {},
       },
-      classId: isEdit ? data.identifier : undefined,
       applicationProfile,
       basedOnNodeShape: basedOnNodeShape,
-    });
+    };
+
+    isEdit ? updateClass(payload) : createClass(payload);
   };
 
   const handleSetConcept = (value?: ConceptType) => {
@@ -161,42 +181,131 @@ export default function ClassForm({
     });
   };
 
-  const handleTargetClassUpdate = (value?: InternalClass | undefined) => {
+  const handleTargetClassUpdate = (value?: InternalClass) => {
     if (!value) {
       return;
     }
 
-    const classInfo = {
-      id: value.id,
-      label:
-        value.id.split('/').pop()?.replace('#', ':') ??
-        `${value.isDefinedBy.split('/').pop()}:${value.identifier}`,
-    };
-
-    handleUpdate({ ...data, targetClass: classInfo });
+    setSelectedTargetClass({
+      modelId: getPrefixFromURI(value.namespace) ?? '',
+      classInfo: {
+        identifier: value.identifier,
+        id: value.id,
+        label: `${getCurie(value.namespace, value.identifier)}`,
+      },
+    });
+    setShowResourcePicker(true);
   };
 
-  const handleSubClassOfRemoval = (id: string) => {
-    const newSubClasses = data.subClassOf.filter(
-      (subclass) => subclass.identifier !== id
-    );
+  const handleUtilizedNodeUpdate = (value?: InternalClass) => {
+    if (!value) {
+      return;
+    }
 
-    if (newSubClasses.length < 1) {
+    handleUpdate({
+      ...data,
+      utilizesNode: {
+        id: value.id,
+        label: `${getCurie(value.namespace, value.identifier)}`,
+      },
+    });
+  };
+
+  const handleResourceUpdate = (value?: {
+    associations: SimpleResource[];
+    attributes: SimpleResource[];
+  }) => {
+    setShowResourcePicker(false);
+    const targetClass = {
+      id: selectedTargetClass.classInfo.id,
+      label: selectedTargetClass.classInfo.label,
+      identifier: selectedTargetClass.classInfo.identifier,
+    };
+    handleUpdate({
+      ...data,
+      targetClass: targetClass,
+      association: value?.associations ?? [],
+      attribute: value?.attributes ?? [],
+    });
+  };
+
+  const handleClassOfRemoval = (
+    id: string,
+    key: 'subClassOf' | 'equivalentClass'
+  ) => {
+    if (key === 'subClassOf') {
+      const newSubClasses = data.subClassOf
+        ? data.subClassOf.filter((subclass) => subclass.identifier !== id)
+        : [];
+
+      if (newSubClasses.length < 1) {
+        handleUpdate({
+          ...data,
+          subClassOf: [
+            {
+              identifier: 'owl:Thing',
+              label: 'owl:Thing',
+            },
+          ],
+        });
+      } else {
+        handleUpdate({
+          ...data,
+          subClassOf: newSubClasses,
+        });
+      }
+      return;
+    }
+
+    handleUpdate({
+      ...data,
+      [key]: data.equivalentClass
+        ? data.equivalentClass.filter((item) => item.identifier !== id)
+        : [],
+    });
+  };
+
+  const handleClassUpdate = (
+    value?: InternalClass,
+    key?: keyof ClassFormType
+  ) => {
+    if (!value || !key) {
+      return;
+    }
+
+    if (key === 'subClassOf') {
+      const initData =
+        data.subClassOf &&
+        data.subClassOf.length === 1 &&
+        data.subClassOf[0].identifier === 'owl:Thing'
+          ? []
+          : data.subClassOf ?? [];
+
       handleUpdate({
         ...data,
         subClassOf: [
+          ...initData,
           {
-            attributes: [],
-            identifier: 'owl:Thing',
-            label: 'owl:Thing',
+            identifier: value.id,
+            label: `${getCurie(value.namespace, value.identifier)}`,
           },
         ],
       });
-    } else {
+      return;
+    }
+
+    if (key === 'equivalentClass') {
       handleUpdate({
         ...data,
-        subClassOf: newSubClasses,
+        equivalentClass: [
+          ...(data.equivalentClass ?? []),
+          {
+            label: `${getCurie(value.namespace, value.identifier)}`,
+            identifier: value.id,
+          },
+        ],
       });
+      return;
     }
   };
 
@@ -208,48 +317,64 @@ export default function ClassForm({
     if (
       ref.current &&
       (Object.values(errors).filter((val) => val).length > 0 ||
-        putClassResult.isError)
+        updateResult.isError ||
+        createResult.isError)
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors, putClassResult]);
+  }, [ref, errors, updateResult, createResult]);
 
   useEffect(() => {
-    if (putClassResult.isSuccess) {
+    if (updateResult.isSuccess || createResult.isSuccess) {
       handleFollowUp(data.identifier);
     }
 
+    let backendErrorFields: string[] = [];
     if (
-      putClassResult.isError &&
-      putClassResult.error &&
-      'data' in putClassResult.error
+      createResult.isError &&
+      createResult.error &&
+      'data' in createResult.error
     ) {
-      const backendErrorFields = Array.isArray(
-        (putClassResult.error as AxiosQueryErrorFields).data?.details
-      )
-        ? (putClassResult.error as AxiosQueryErrorFields).data.details.map(
-            (d) => d.field
-          )
-        : [];
-
-      if (backendErrorFields.length > 0) {
-        setErrors({
-          identifier: backendErrorFields.includes('identifier'),
-          identifierInitChar: false,
-          identifierLength: false,
-          label: backendErrorFields.includes('label'),
-        });
-        return;
-      }
-
-      if (putClassResult.error?.status === 401) {
+      if (createResult.error?.status === 401) {
         setErrors({
           ...validateClassForm(data),
           unauthorized: true,
         });
+        return;
       }
+      const asFields = (createResult.error as AxiosQueryErrorFields).data
+        ?.details;
+      backendErrorFields = Array.isArray(asFields)
+        ? asFields.map((d) => d.field)
+        : [];
+    } else if (
+      updateResult.isError &&
+      updateResult.error &&
+      'data' in updateResult.error
+    ) {
+      if (updateResult.error?.status === 401) {
+        setErrors({
+          ...validateClassForm(data),
+          unauthorized: true,
+        });
+        return;
+      }
+      const asFields = (updateResult.error as AxiosQueryErrorFields).data
+        ?.details;
+      backendErrorFields = Array.isArray(asFields)
+        ? asFields.map((d) => d.field)
+        : [];
     }
-  }, [putClassResult, data, handleFollowUp]);
+
+    if (backendErrorFields.length > 0) {
+      setErrors({
+        identifier: backendErrorFields.includes('identifier'),
+        identifierInitChar: false,
+        identifierLength: false,
+        label: backendErrorFields.includes('label'),
+      });
+    }
+  }, [updateResult, createResult, data, handleFollowUp]);
 
   return (
     <>
@@ -306,8 +431,9 @@ export default function ClassForm({
 
         {userPosted &&
         (Object.values(errors).filter((e) => e).length > 0 ||
-          putClassResult.isError ||
-          (isSuccess && !identifierFree)) ? (
+          updateResult.isError ||
+          createResult.isError ||
+          (isSuccess && classAlreadyExists)) ? (
           <div>
             <FormFooterAlert
               labelText={
@@ -362,7 +488,7 @@ export default function ClassForm({
               (errors.identifier ||
                 errors.identifierInitChar ||
                 errors.identifierLength)) ||
-            (isSuccess && !identifierFree)
+            (isSuccess && classAlreadyExists)
               ? 'error'
               : 'default'
           }
@@ -372,7 +498,7 @@ export default function ClassForm({
           }
           debounce={300}
           statusText={
-            isSuccess && !identifierFree ? t('error-prefix-taken') : ''
+            isSuccess && classAlreadyExists ? t('error-prefix-taken') : ''
           }
           tooltipComponent={
             <Tooltip
@@ -388,16 +514,17 @@ export default function ClassForm({
         {!applicationProfile ? (
           <InlineListBlock
             addNewComponent={
-              <Button
-                variant="secondary"
-                icon={<IconPlus />}
-                id="add-upper-class-button"
-              >
-                {t('add-upper-class')}
-              </Button>
+              <ClassModal
+                modelId={modelId}
+                handleFollowUp={(e) => handleClassUpdate(e, 'subClassOf')}
+                mode={'select'}
+                applicationProfile={applicationProfile}
+                modalButtonLabel={t('add-upper-class')}
+                plusIcon
+              />
             }
             items={
-              data.subClassOf.length > 0
+              data.subClassOf && data.subClassOf.length > 0
                 ? data.subClassOf.map((s) => ({
                     label: s.label,
                     id: s.identifier,
@@ -405,7 +532,9 @@ export default function ClassForm({
                 : []
             }
             label={t('upper-classes')}
-            handleRemoval={(id: string) => handleSubClassOfRemoval(id)}
+            handleRemoval={(id: string) =>
+              handleClassOfRemoval(id, 'subClassOf')
+            }
             deleteDisabled={['owl:Thing']}
           />
         ) : (
@@ -413,37 +542,60 @@ export default function ClassForm({
         )}
 
         {applicationProfile ? (
+          <>
+            <InlineListBlock
+              addNewComponent={
+                <ClassModal
+                  modelId={modelId}
+                  mode={'select'}
+                  modalButtonLabel={t('select-class')}
+                  handleFollowUp={handleTargetClassUpdate}
+                  initialSelected={data.targetClass?.id}
+                  applicationProfile
+                  resourceRestriction
+                />
+              }
+              items={data.targetClass ? [data.targetClass] : []}
+              label={t('target-class-profile')}
+              handleRemoval={() =>
+                handleUpdate({ ...data, targetClass: undefined })
+              }
+            />
+
+            <ResourcePicker
+              visible={showResourcePicker}
+              selectedNodeShape={{
+                modelId: selectedTargetClass.modelId,
+                classId: selectedTargetClass.classInfo.identifier,
+                isAppProfile: false,
+              }}
+              handleFollowUp={handleResourceUpdate}
+            />
+          </>
+        ) : (
           <InlineListBlock
             addNewComponent={
               <ClassModal
                 modelId={modelId}
+                handleFollowUp={(e) => handleClassUpdate(e, 'equivalentClass')}
                 mode={'select'}
-                modalButtonLabel={t('select-class')}
-                handleFollowUp={handleTargetClassUpdate}
-                applicationProfile
-                initialSelected={data.targetClass?.id}
+                applicationProfile={applicationProfile}
+                modalButtonLabel={t('add-corresponding-class')}
+                plusIcon
               />
             }
-            items={data.targetClass ? [data.targetClass] : []}
-            label={t('target-class-profile')}
-            handleRemoval={() =>
-              handleUpdate({ ...data, targetClass: undefined })
+            items={
+              data.equivalentClass
+                ? data.equivalentClass.map((ec) => ({
+                    label: ec.label,
+                    id: ec.identifier,
+                  }))
+                : []
             }
-          />
-        ) : (
-          <InlineListBlock
-            addNewComponent={
-              <Button
-                variant="secondary"
-                icon={<IconPlus />}
-                id="add-corresponding-class-button"
-              >
-                {t('add-corresponding-class')}
-              </Button>
-            }
-            items={[]}
             label={t('corresponding-classes')}
-            handleRemoval={() => null}
+            handleRemoval={(id: string) =>
+              handleClassOfRemoval(id, 'equivalentClass')
+            }
           />
         )}
 
@@ -451,28 +603,34 @@ export default function ClassForm({
           <InlineListBlock
             label={t('utilizes-class-restriction')}
             addNewComponent={
-              <Button
-                variant="secondary"
-                icon={<IconPlus />}
-                id="select-class-restriction-button"
-              >
-                {t('select-class-restriction')}
-              </Button>
+              <ClassModal
+                modelId={modelId}
+                mode={'select'}
+                modalButtonLabel={t('select-class-restriction')}
+                handleFollowUp={handleUtilizedNodeUpdate}
+                initialSelected={data.utilizesNode?.id}
+                applicationProfile
+                resourceRestriction
+                limitToModelType="PROFILE"
+              />
             }
-            items={data.node ? [data.node] : []}
-            handleRemoval={() => handleUpdate({ ...data, node: undefined })}
+            items={data.utilizesNode ? [data.utilizesNode] : []}
+            handleRemoval={() =>
+              handleUpdate({ ...data, utilizesNode: undefined })
+            }
           />
         ) : (
           <InlineListBlock
             label={t('disjoint-classes', { ns: 'common' })}
             addNewComponent={
-              <Button
-                variant="secondary"
-                icon={<IconPlus />}
-                id="add-disjoint-class-button"
-              >
-                {t('add-disjoint-class')}
-              </Button>
+              <ClassModal
+                modelId={modelId}
+                handleFollowUp={() => null}
+                mode={'select'}
+                applicationProfile={applicationProfile}
+                modalButtonLabel={t('add-disjoint-class')}
+                plusIcon
+              />
             }
             items={[]}
             handleRemoval={() => null}
@@ -526,30 +684,28 @@ export default function ClassForm({
               openAllText=""
               showToggleAllButton={false}
             >
-              {data.attribute.map((attr) =>
-                applicationProfile ? (
-                  <div key={`${data.identifier}-attr-${attr.identifier}`}>
-                    <ResourceForm
-                      data={attr}
-                      langs={languages}
-                      type="attribute"
-                    />
-                    <Button
-                      variant="secondary"
-                      style={{ marginTop: '10px' }}
-                      id="add-attribute-button"
-                    >
-                      {t('add-attribute')}
-                    </Button>
-                  </div>
-                ) : (
+              {data.attribute.map((attr) => (
+                <div key={`${data.identifier}-attr-${attr.identifier}`}>
                   <ResourceInfo
                     key={`${data.identifier}-attr-${attr.identifier}`}
                     data={attr}
-                    modelId={applicationProfile ? attr.modelId : modelId}
+                    modelId={modelId}
+                    classId={data.identifier}
+                    applicationProfile={applicationProfile}
+                    hasPermission
+                    handlePropertyDelete={() => {
+                      const newAttributes = data.attribute
+                        ? data.attribute.filter(
+                            (attribute) =>
+                              attribute.identifier !== attr.identifier
+                          )
+                        : [];
+                      handleUpdate({ ...data, attribute: newAttributes });
+                    }}
+                    attribute
                   />
-                )
-              )}
+                </div>
+              ))}
             </ExpanderGroup>
           )}
         </BasicBlock>
@@ -565,29 +721,26 @@ export default function ClassForm({
               openAllText=""
               showToggleAllButton={false}
             >
-              {data.association.map((assoc) =>
-                applicationProfile ? (
-                  <div key={`${data.identifier}-assoc-${assoc.identifier}`}>
-                    <ResourceInfo
-                      data={assoc}
-                      modelId={applicationProfile ? assoc.modelId : modelId}
-                    />
-                    <Button
-                      variant="secondary"
-                      style={{ marginTop: '10px' }}
-                      id="add-association-button"
-                    >
-                      {t('add-association')}
-                    </Button>
-                  </div>
-                ) : (
+              {data.association.map((assoc) => (
+                <div key={`${data.identifier}-assoc-${assoc.identifier}`}>
                   <ResourceInfo
-                    key={`${data.identifier}-assoc-${assoc.identifier}`}
                     data={assoc}
-                    modelId={applicationProfile ? assoc.modelId : modelId}
+                    modelId={modelId}
+                    classId={data.identifier}
+                    applicationProfile={applicationProfile}
+                    hasPermission
+                    handlePropertyDelete={() => {
+                      const newAssociations = data.association
+                        ? data.association.filter(
+                            (association) =>
+                              association.identifier !== assoc.identifier
+                          )
+                        : [];
+                      handleUpdate({ ...data, association: newAssociations });
+                    }}
                   />
-                )
-              )}
+                </div>
+              ))}
             </ExpanderGroup>
           )}
         </BasicBlock>
@@ -614,15 +767,17 @@ export default function ClassForm({
       .filter((e) => e[1])
       .map((e) => translateClassFormErrors(e[0], t));
 
-    if (isSuccess && !identifierFree) {
+    if (isSuccess && classAlreadyExists) {
       return [...translatedErrors, t('error-prefix-taken')];
     }
 
-    if (putClassResult.error) {
-      const catchedError = getApiError(putClassResult.error);
+    if (updateResult.error) {
+      const catchedError = getApiError(updateResult.error);
+      return [...translatedErrors, ...catchedError];
+    } else if (createResult.error) {
+      const catchedError = getApiError(createResult.error);
       return [...translatedErrors, ...catchedError];
     }
-
     return translatedErrors;
   }
 }

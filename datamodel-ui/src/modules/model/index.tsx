@@ -2,7 +2,7 @@ import Drawer, { ViewType } from '@app/common/components/model-drawer';
 import { ContentWrapper } from './model.styles';
 import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
-import ClassView from '../class-view/class-view';
+import ClassView from '../class-view';
 import { useTranslation } from 'next-i18next';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { useMemo } from 'react';
@@ -23,12 +23,15 @@ import {
 } from 'suomifi-ui-components';
 import ResourceView from '../resource';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import ModelTools from '@app/common/components/model-tools';
+import { translateDrawerButton } from '@app/common/utils/translation-helpers';
 
 interface ModelProps {
   modelId: string;
+  fullScreen?: boolean;
 }
 
-export default function Model({ modelId }: ModelProps) {
+export default function Model({ modelId, fullScreen }: ModelProps) {
   const { t } = useTranslation('common');
   const hasPermission = HasPermission({
     actions: 'ADMIN_DATA_MODEL',
@@ -76,7 +79,11 @@ export default function Model({ modelId }: ModelProps) {
       {
         id: 'classes',
         icon: <IconWindow />,
-        buttonLabel: t('classes'),
+        buttonLabel: translateDrawerButton(
+          'classes',
+          modelInfo?.type === 'PROFILE',
+          t
+        ),
         component: (
           <ClassView
             modelId={modelId}
@@ -89,7 +96,11 @@ export default function Model({ modelId }: ModelProps) {
       {
         id: 'attributes',
         icon: <IconRows />,
-        buttonLabel: t('attributes'),
+        buttonLabel: translateDrawerButton(
+          'attributes',
+          modelInfo?.type === 'PROFILE',
+          t
+        ),
         buttonLabelSm: t('attributes-abbreviation'),
         component: (
           <ResourceView
@@ -104,7 +115,11 @@ export default function Model({ modelId }: ModelProps) {
       {
         id: 'associations',
         icon: <IconSwapVertical />,
-        buttonLabel: t('associations'),
+        buttonLabel: translateDrawerButton(
+          'associations',
+          modelInfo?.type === 'PROFILE',
+          t
+        ),
         buttonLabelSm: t('associations-abbreviation'),
         component: (
           <ResourceView
@@ -136,15 +151,22 @@ export default function Model({ modelId }: ModelProps) {
   return (
     <div
       style={{
-        height: 0,
+        height: fullScreen ? '100vh' : 0,
         flex: '1 1 auto',
         display: 'flex',
         flexDirection: 'column',
       }}
     >
       <ContentWrapper>
-        <Graph modelId={modelId}>
+        <Graph
+          modelId={modelId}
+          applicationProfile={modelInfo?.type === 'PROFILE'}
+        >
           <Drawer views={views} />
+          <ModelTools
+            modelId={modelId}
+            applicationProfile={modelInfo?.type === 'PROFILE'}
+          />
         </Graph>
       </ContentWrapper>
     </div>
