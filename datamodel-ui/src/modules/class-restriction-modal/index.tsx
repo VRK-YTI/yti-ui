@@ -15,7 +15,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useGetNodeShapesQuery } from '@app/common/components/class/class.slice';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { getCurie } from '@app/common/utils/get-value';
 
 interface ClassRestrictionModalProps {
   visible: boolean;
@@ -61,7 +60,7 @@ export default function ClassRestrictionModal({
           lang: i18n.language,
         }),
         link: d.id,
-        linkLabel: getCurie(d.namespace, d.identifier),
+        linkLabel: d.curie,
         note: getLanguageVersion({
           data: d.note,
           lang: i18n.language,
@@ -137,10 +136,7 @@ export default function ClassRestrictionModal({
                       lang: i18n.language,
                     }),
                     link: selectedNodeShape.id,
-                    linkLabel: getCurie(
-                      selectedNodeShape.namespace,
-                      selectedNodeShape.identifier
-                    ),
+                    linkLabel: selectedNodeShape.curie,
                     note: getLanguageVersion({
                       data: selectedNodeShape.note,
                       lang: i18n.language,
