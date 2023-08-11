@@ -61,7 +61,8 @@ export default function CrosswalkFormModal({
     if (userPosted && result.isSuccess) {
       refetch();
       handleClose();
-      router.push(`/crosswalk/${result.data.pid}`);
+      //router.push(`/crosswalk/${result.data.pid}`);
+      alert('Crosswalk created Successfully');
     }
   }, [result, refetch, userPosted, handleClose, router]);
 
@@ -138,7 +139,7 @@ export default function CrosswalkFormModal({
             />
           )}
 
-          <Button onClick={() => handleSubmit()}>{t('create-model')}</Button>
+          <Button onClick={() => handleSubmit()}>{'Create Crosswalk'}</Button>
           <Button variant="secondary" onClick={() => handleClose()}>
             {t('cancel')}
           </Button>

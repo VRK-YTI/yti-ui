@@ -32,7 +32,12 @@ export function useInitialCrosswalkForm(): CrosswalkFormType {
         selected: false,
       },
     ],
-    organizations: [],
+    organizations: [
+      {
+        uniqueItemId: '7d3a3c00-5a6b-489b-a3ed-63bb58c26a63',
+        labelText: 'Interoperabilty Platform',
+      },
+    ],
     sourceSchema: '',
     targetSchema: '',
   };

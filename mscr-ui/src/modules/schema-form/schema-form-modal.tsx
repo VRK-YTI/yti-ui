@@ -66,7 +66,8 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       refetch();
       handleClose();
       // After post route to  saved schema get by PID
-      router.push(`/schema/${result.data.pid}`);
+      // Later we should show the created schema in the list
+      alert('Schema Creation is Successful');
     }
   }, [result, refetch, userPosted, handleClose, router, formData]);
 
@@ -84,7 +85,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
     }
 
     const payload = generatePayload(formData);
-
+    // Here formdata should also contain the file, need modification
     putSchema(payload);
   };
 
@@ -120,7 +121,9 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
         <ModalContent>
           <ModalTitle>{t('add-new-schema')}</ModalTitle>
           <Paragraph style={{ marginBottom: '30px' }}>
-            {'Provide a URI reference to the content in XSD, SKOS or RDF metadata schema format'}
+            {
+              'Provide a URI reference to the content in XSD, SKOS or RDF metadata schema format'
+            }
           </Paragraph>
           <SchemaForm
             formData={formData}

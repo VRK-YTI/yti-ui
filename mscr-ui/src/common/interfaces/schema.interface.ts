@@ -12,8 +12,8 @@ export interface Schema {
   description: {
     [key: string]: string;
   };
-  languages: [string];
-  organiztaions: [string];
+  languages: string[];
+  organizations: string[];
 }
 
 export interface SchemaFormType {

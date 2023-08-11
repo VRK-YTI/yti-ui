@@ -3,7 +3,7 @@ import { useGetServiceCategoriesQuery } from '@app/common/components/service-cat
 import getOrganizations from '@app/common/utils/get-organizations';
 import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Dropdown,
   DropdownItem,
@@ -25,6 +25,8 @@ import AddBlock from './add-block';
 import { Status } from '@app/common/interfaces/status.interface';
 import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import { FormUpdateErrors } from '../schema-form/validate-form-update';
+import { translateFileUploadError } from '@app/common/utils/translation-helpers copy';
+import FileDropArea from 'yti-common-ui/file-drop-area';
 
 interface CrosswalkFormProps {
   formData: CrosswalkFormType;
@@ -48,6 +50,9 @@ export default function CrosswalkForm({
     i18n.language
   );
   const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
+  const [fileData, setFileData] = useState<File | null>();
+  const [fileType, setFileType] = useState<'csv' | 'json' | null>();
+  const [isValid, setIsValid] = useState(false);
 
   const serviceCategories = useMemo(() => {
     if (!serviceCategoriesData) {
@@ -80,6 +85,12 @@ export default function CrosswalkForm({
       {renderCrosswalkFormat()}
       {renderSourceSchema()}
       {renderTargetSchema()}
+      <FileDropArea
+        setFileData={setFileData}
+        setIsValid={setIsValid}
+        validFileTypes={['csv', 'json']}
+        translateFileUploadError={translateFileUploadError}
+      />
       {renderLanguages()}
       <BlockContainer>{!editMode && renderContributors()}</BlockContainer>
       <Separator isLarge />
@@ -155,7 +166,7 @@ export default function CrosswalkForm({
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <Dropdown
-            labelText={'Tila'}
+            labelText={'Status'}
             defaultValue={formData.status ?? ''}
             onChange={(e) =>
               setFormData({
@@ -200,14 +211,13 @@ export default function CrosswalkForm({
             organizations: e,
           })
         }
-        items={organizations}
+        items={formData.organizations}
         status={userPosted && errors?.organizations ? 'error' : 'default'}
         ariaChipActionLabel={''}
         ariaSelectedAmountText={''}
         ariaOptionsAvailableText={''}
         ariaOptionChipRemovedText={''}
         noItemsText={''}
-        defaultSelectedItems={formData.organizations}
       />
     );
   }

@@ -3,7 +3,7 @@ import { useGetServiceCategoriesQuery } from '@app/common/components/service-cat
 import getOrganizations from '@app/common/utils/get-organizations';
 import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Dropdown, DropdownItem, Label, Text } from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
 import {
@@ -16,16 +16,21 @@ import { FormErrors } from './validate-form';
 import AddBlock from './add-block';
 import { Status } from '@app/common/interfaces/status.interface';
 import { FormUpdateErrors } from './validate-form-update';
-import { Schema } from '@app/common/interfaces/schema.interface';
+import {
+  Schema,
+  SchemaFormType,
+} from '@app/common/interfaces/schema.interface';
 import { TextInput } from 'suomifi-ui-components';
 import { Paragraph } from 'suomifi-ui-components';
 import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
+import { translateFileUploadError } from '@app/common/utils/translation-helpers copy';
+import FileDropArea from 'yti-common-ui/file-drop-area';
 
 interface SchemaProps {
   pid: string;
 }
 interface SchemaFormProps {
-  formData: Schema;
+  formData: SchemaFormType;
   setFormData: (value: Schema) => void;
   userPosted: boolean;
   disabled?: boolean;
@@ -46,12 +51,15 @@ export default function SchemaForm({
     i18n.language
   );
   const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
+  const [fileData, setFileData] = useState<File | null>();
+  const [fileType, setFileType] = useState<'csv' | 'json' | null>();
+  const [isValid, setIsValid] = useState(false);
 
   const organizations = useMemo(() => {
     if (!organizationsData) {
       return [];
     }
-
+    console.log(organizationsData[0].label);
     return getOrganizations(organizationsData, i18n.language)
       .map((o) => ({
         labelText: o.label,
@@ -67,19 +75,16 @@ export default function SchemaForm({
       <Paragraph style={{ marginBottom: '30px' }}>
         {'or Upload a document'}
       </Paragraph>
-      <UpdateWithFileModal
-        pid={''}
-        refetch={function (): void {
-          throw new Error('Function not implemented.');
-        }}
-      ></UpdateWithFileModal>
+      <FileDropArea
+        setFileData={setFileData}
+        setIsValid={setIsValid}
+        validFileTypes={['csv', 'json']}
+        translateFileUploadError={translateFileUploadError}
+      />
       {renderSchemaFormat()}
       {renderLanguages()}
 
-      <BlockContainer>
-        {renderUsedBlock()}
-        {!editMode && renderContributors()}
-      </BlockContainer>
+      <BlockContainer>{!editMode && renderContributors()}</BlockContainer>
 
       <Separator isLarge />
       {renderStaus()}
@@ -188,32 +193,13 @@ export default function SchemaForm({
             organizations: e,
           })
         }
-        items={organizations}
+        items={formData.organizations}
         status={userPosted && errors?.organizations ? 'error' : 'default'}
         ariaChipActionLabel={''}
         ariaSelectedAmountText={''}
         ariaOptionsAvailableText={''}
         ariaOptionChipRemovedText={''}
         noItemsText={''}
-        defaultSelectedItems={formData.organizations}
-      />
-    );
-  }
-
-  function renderUsedBlock() {
-    if (!editMode) {
-      return <></>;
-    }
-    return (
-      <AddBlock
-        data={formData}
-        locale={i18n.language}
-        setTerminologies={(terminologies) =>
-          setFormData({
-            ...formData,
-            terminologies,
-          })
-        }
       />
     );
   }

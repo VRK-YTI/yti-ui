@@ -54,7 +54,6 @@ export default function IndexPage(props: IndexPageProps) {
       return <GroupWorkspace />;
     } else {
       console.log(slug);
-      console.log('I AM HERE');
       return <PersonalWorkspace user={user} />;
     }
   }

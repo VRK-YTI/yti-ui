@@ -97,7 +97,7 @@ export default function UpdateWithFileModal({
   return (
     <>
       <Button variant="secondary" icon="upload" onClick={() => handleVisible()}>
-        {'Upload a file'}
+        {'Add a file'}
       </Button>
 
       <Modal
