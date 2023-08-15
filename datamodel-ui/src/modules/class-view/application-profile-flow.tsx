@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import ClassRestrictionModal from '../class-restriction-modal';
 import ResourcePicker from '../resource-picker-modal';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import {
+  InternalClass,
+  InternalClassInfo,
+} from '@app/common/interfaces/internal-class.interface';
 import { getPrefixFromURI } from '@app/common/utils/get-value';
 
 export default function ApplicationProfileFlow({
@@ -11,7 +14,7 @@ export default function ApplicationProfileFlow({
 }: {
   visible: boolean;
   selectedNodeShape: {
-    nodeShape: InternalClass;
+    nodeShape: InternalClassInfo;
     isAppProfile?: boolean;
   };
   handleFollowUp: (data?: {

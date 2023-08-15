@@ -378,6 +378,7 @@ export default function ClassInfo({
                 modelId={modelId}
                 type={ResourceType.ATTRIBUTE}
                 handleFollowUp={handleFollowUp}
+                limitSearchTo={'PROFILE'}
               />
               <Button variant="secondary" id="order-attributes-button">
                 {t('order-list', { ns: 'admin' })}

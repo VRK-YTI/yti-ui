@@ -144,7 +144,7 @@ export default function ClassModal({
             domains: r.dataModelInfo.groups,
             uri: r.dataModelInfo.uri,
           },
-          subClass: {
+          concept: {
             label: getLanguageVersion({
               data: r.conceptInfo?.conceptLabel,
               lang: contentLanguage ?? i18n.language,

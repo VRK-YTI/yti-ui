@@ -4,7 +4,10 @@ import {
   useGetClassQuery,
 } from '@app/common/components/class/class.slice';
 import { initialClassForm } from '@app/common/interfaces/class-form.interface';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import {
+  InternalClass,
+  InternalClassInfo,
+} from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
@@ -63,7 +66,7 @@ export default function ClassView({
   const [basedOnNodeShape, setBasedOnNodeShape] = useState(false);
   const [selectedNodeShape, setSelectedNodeShape] = useState<
     | {
-        nodeShape: InternalClass;
+        nodeShape: InternalClassInfo;
         isAppProfile?: boolean;
       }
     | undefined
@@ -93,7 +96,7 @@ export default function ClassView({
   };
 
   const handleFollowUpAction = (
-    value?: InternalClass,
+    value?: InternalClassInfo,
     targetIsAppProfile?: boolean
   ) => {
     if (isEdit) {
