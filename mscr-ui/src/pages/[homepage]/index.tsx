@@ -50,7 +50,6 @@ export default function IndexPage(props: IndexPageProps) {
     user?: User;
   }): React.ReactElement {
     if (slug === 'group-home') {
-      console.log('SOMETHING');
       return <GroupWorkspace />;
     } else {
       console.log(slug);

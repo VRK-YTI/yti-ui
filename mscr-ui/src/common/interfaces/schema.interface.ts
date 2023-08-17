@@ -14,6 +14,7 @@ export interface Schema {
   };
   languages: string[];
   organizations: string[];
+  filedata:File;
 }
 
 export interface SchemaFormType {
@@ -23,4 +24,5 @@ export interface SchemaFormType {
   languages: (LanguageBlockType & { selected: boolean })[];
   organizations: MultiSelectData[];
   status?: Status;
+  filedata: File;
 }

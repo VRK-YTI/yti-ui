@@ -12,7 +12,9 @@ import {
 
 export const schemaApi = createApi({
   reducerPath: 'schemaApi',
-  baseQuery: getDatamodelApiBaseQuery(),
+  baseQuery: getDatamodelApiBaseQuery((headers) => ({
+    ...headers,
+    'content-type': 'multipart/form-data'})),
   tagTypes: ['schemaApi'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
