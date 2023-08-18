@@ -1,6 +1,5 @@
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
 import styled from 'styled-components';
 import { InlineAlert, Text, ToggleButton } from 'suomifi-ui-components';
 
@@ -23,16 +22,17 @@ const ToggleWrapper = styled.div`
 `;
 
 export default function ApplicationProfileTop({
-  defaultChecked,
+  inUse,
+  setInUse,
   type,
   applicationProfile,
 }: {
-  defaultChecked: boolean;
+  inUse: boolean;
+  setInUse: (inUse: boolean) => void;
   type: ResourceType;
   applicationProfile?: boolean;
 }) {
   const { t } = useTranslation('admin');
-  const [toggle, setToggle] = useState(defaultChecked);
 
   if (!applicationProfile) {
     return <></>;
@@ -53,10 +53,11 @@ export default function ApplicationProfileTop({
           </Text>
         </div>
         <ToggleButton
-          defaultChecked={toggle}
-          onClick={() => setToggle(!toggle)}
+          checked={inUse}
+          defaultChecked={inUse}
+          onClick={() => setInUse(!inUse)}
         >
-          {toggle ? t('in-use') : t('not-in-use')}
+          {inUse ? t('in-use') : t('not-in-use')}
         </ToggleButton>
       </ToggleWrapper>
     </Wrapper>

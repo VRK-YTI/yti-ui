@@ -22,11 +22,13 @@ import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 
 export default function CommonViewContent({
   modelId,
+  inUse,
   data,
   displayLabel,
   applicationProfile,
 }: {
   modelId: string;
+  inUse?: boolean;
   data: Resource;
   displayLabel?: boolean;
   applicationProfile?: boolean;
@@ -285,6 +287,12 @@ export default function CommonViewContent({
 
   return (
     <>
+      <BasicBlock title={t('in-use-in-this-model', { ns: 'admin' })}>
+        {inUse
+          ? t('in-use', { ns: 'admin' })
+          : t('not-in-use', { ns: 'admin' })}
+      </BasicBlock>
+
       {displayLabel && (
         <BasicBlock title={getDisplayLabelTitle(data.type)}>
           {getLanguageVersion({

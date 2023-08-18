@@ -89,6 +89,21 @@ export const resourceApi = createApi({
         method: 'GET',
       }),
     }),
+    getResourceActive: builder.query<boolean, { prefix: string; uri: string }>({
+      query: (props) => ({
+        url: `/resource/profile/${props.prefix}/active?uri=${props.uri}`,
+        method: 'GET',
+      }),
+    }),
+    togglePropertyShape: builder.mutation<
+      string,
+      { modelId: string; uri: string }
+    >({
+      query: (props) => ({
+        url: `/class/toggle-deactivate/${props.modelId}?propertyUri=${props.uri}`,
+        method: 'PUT',
+      }),
+    }),
     makeLocalCopyPropertyShape: builder.mutation<
       null,
       {
@@ -263,6 +278,8 @@ export const {
   useGetResourceQuery,
   useDeleteResourceMutation,
   useGetResourceExistsQuery,
+  useGetResourceActiveQuery,
+  useTogglePropertyShapeMutation,
   useMakeLocalCopyPropertyShapeMutation,
   util: { getRunningQueriesThunk, getRunningMutationsThunk },
 } = resourceApi;
