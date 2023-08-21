@@ -37,6 +37,7 @@ import ApplicationProfileFlow from './application-profile-flow';
 import ClassInfo from './class-info';
 import useSetView from '@app/common/utils/hooks/use-set-view';
 import useSetPage from '@app/common/utils/hooks/use-set-page';
+import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 
 interface ClassViewProps {
   modelId: string;
@@ -142,18 +143,8 @@ export default function ClassView({
   const handleAppProfileFollowUpAction = (data?: {
     value?: InternalClass;
     targetClass?: InternalClass;
-    associations?: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
-    attributes?: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
+    associations?: SimpleResource[];
+    attributes?: SimpleResource[];
   }) => {
     setShowAppProfileModal(false);
 

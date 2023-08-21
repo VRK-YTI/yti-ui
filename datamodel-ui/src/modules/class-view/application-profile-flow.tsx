@@ -6,6 +6,7 @@ import {
   InternalClassInfo,
 } from '@app/common/interfaces/internal-class.interface';
 import { getPrefixFromURI } from '@app/common/utils/get-value';
+import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 
 export default function ApplicationProfileFlow({
   visible,
@@ -20,18 +21,8 @@ export default function ApplicationProfileFlow({
   handleFollowUp: (data?: {
     value?: InternalClass;
     targetClass?: InternalClass;
-    associations?: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
-    attributes?: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
+    associations?: SimpleResource[];
+    attributes?: SimpleResource[];
   }) => void;
 }) {
   const [restrictionVisible, setRestrictionVisible] = useState(false);
@@ -67,18 +58,8 @@ export default function ApplicationProfileFlow({
   };
 
   const handleResourcePickerFollowUp = (value?: {
-    associations: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
-    attributes: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
+    associations: SimpleResource[];
+    attributes: SimpleResource[];
   }) => {
     setResourcePickerVisible(false);
     setRestrictionVisible(false);
@@ -118,18 +99,8 @@ export default function ApplicationProfileFlow({
             isAppProfile: selectedNodeShape.isAppProfile ?? false,
           }}
           handleFollowUp={(value?: {
-            associations: {
-              identifier: string;
-              label: { [key: string]: string };
-              modelId: string;
-              uri: string;
-            }[];
-            attributes: {
-              identifier: string;
-              label: { [key: string]: string };
-              modelId: string;
-              uri: string;
-            }[];
+            associations: SimpleResource[];
+            attributes: SimpleResource[];
           }) => handleResourcePickerFollowUp(value)}
         />
       )}
