@@ -233,6 +233,7 @@ export default function ClassInfo({
           });
         }}
         applicationProfile
+        currentModelId={modelId}
       />
     );
   }
