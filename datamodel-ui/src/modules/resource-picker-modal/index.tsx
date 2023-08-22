@@ -66,12 +66,28 @@ export default function ResourcePicker({
                 data: assoc.label,
                 lang: i18n.language,
               }),
-              linkLabel: 'linkLabel',
-              link: 'link',
-              note: 'note',
+              linkLabel: assoc.curie,
+              link: assoc.uri,
+              note: getLanguageVersion({
+                data: assoc.note,
+                lang: i18n.language,
+              }),
               status: 'VALID',
               isValid: true,
             },
+            ...(assoc.concept && {
+              concept: {
+                label: getLanguageVersion({
+                  data: assoc.concept.label,
+                  lang: i18n.language,
+                }),
+                link: assoc.concept.conceptURI,
+                partOf: getLanguageVersion({
+                  data: assoc.concept.terminology.label,
+                  lang: i18n.language,
+                }),
+              },
+            }),
           })) ?? [],
         attributes:
           classData.attribute?.map((attr) => ({
@@ -81,12 +97,28 @@ export default function ResourcePicker({
                 data: attr.label,
                 lang: i18n.language,
               }),
-              linkLabel: 'linkLabel',
-              link: 'link',
-              note: 'note',
+              linkLabel: attr.curie,
+              link: attr.uri,
+              note: getLanguageVersion({
+                data: attr.note,
+                lang: i18n.language,
+              }),
               status: 'VALID',
               isValid: true,
             },
+            ...(attr.concept && {
+              concept: {
+                label: getLanguageVersion({
+                  data: attr.concept.label,
+                  lang: i18n.language,
+                }),
+                link: attr.concept.conceptURI,
+                partOf: getLanguageVersion({
+                  data: attr.concept.terminology.label,
+                  lang: i18n.language,
+                }),
+              },
+            }),
           })) ?? [],
       };
     }
@@ -178,7 +210,7 @@ export default function ResourcePicker({
           selected={selected.attributes}
           extraHeader={
             <tr>
-              <td colSpan={4}>
+              <td colSpan={3}>
                 {t('attribute-count-title', {
                   ns: 'common',
                   count: classData?.attribute?.length ?? 0,

@@ -13,13 +13,16 @@ import {
 import { ModalContentWrapper } from './class-restriction-modal.styles';
 import { useEffect, useMemo, useState } from 'react';
 import { useGetNodeShapesQuery } from '@app/common/components/class/class.slice';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import {
+  InternalClass,
+  InternalClassInfo,
+} from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { getCurie } from '@app/common/utils/get-value';
 
 interface ClassRestrictionModalProps {
   visible: boolean;
-  selectedNodeShape: InternalClass;
+  selectedNodeShape: InternalClassInfo;
   hide: () => void;
   handleFollowUp: (
     createNew?: boolean,
@@ -43,16 +46,29 @@ export default function ClassRestrictionModal({
     }
 
     return data.map((d) => ({
-      subClass: {
-        label: 'subClassLabel',
-        link: 'link',
-        partOf: 'partOf',
-      },
+      ...(d.conceptInfo && {
+        concept: {
+          label: getLanguageVersion({
+            data: d.conceptInfo.conceptLabel,
+            lang: i18n.language,
+          }),
+          link: d.conceptInfo.conceptURI,
+          partOf: getLanguageVersion({
+            data: d.conceptInfo?.terminologyLabel,
+            lang: i18n.language,
+            appendLocale: true,
+          }),
+        },
+      }),
       partOf: {
-        domains: ['domain-1'],
-        label: 'partOfLabel',
-        type: d.resourceType,
-        uri: '',
+        domains: d.dataModelInfo.groups,
+        label: getLanguageVersion({
+          data: d.dataModelInfo.label,
+          lang: i18n.language,
+          appendLocale: true,
+        }),
+        type: d.dataModelInfo.modelType,
+        uri: d.dataModelInfo.uri,
       },
       target: {
         identifier: d.id,
@@ -119,16 +135,28 @@ export default function ClassRestrictionModal({
               type="display"
               items={[
                 {
-                  subClass: {
-                    label: 'subClassLabel',
-                    link: 'link',
-                    partOf: 'partOf',
-                  },
+                  ...(selectedNodeShape.conceptInfo && {
+                    concept: {
+                      label: getLanguageVersion({
+                        data: selectedNodeShape.conceptInfo.conceptLabel,
+                        lang: i18n.language,
+                      }),
+                      link: selectedNodeShape.conceptInfo.conceptURI,
+                      partOf: getLanguageVersion({
+                        data: selectedNodeShape.conceptInfo?.terminologyLabel,
+                        lang: i18n.language,
+                        appendLocale: true,
+                      }),
+                    },
+                  }),
                   partOf: {
-                    domains: ['domain-1'],
-                    label: 'partOfLabel',
-                    type: selectedNodeShape.resourceType,
-                    uri: '',
+                    domains: selectedNodeShape.dataModelInfo.groups,
+                    label: getLanguageVersion({
+                      data: selectedNodeShape.dataModelInfo.label,
+                      lang: i18n.language,
+                    }),
+                    type: selectedNodeShape.dataModelInfo.modelType,
+                    uri: selectedNodeShape.namespace,
                   },
                   target: {
                     identifier: selectedNodeShape.identifier,
