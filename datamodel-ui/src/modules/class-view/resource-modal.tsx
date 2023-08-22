@@ -8,7 +8,6 @@ import {
 import WideModal from '@app/common/components/wide-modal';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { getCurie } from '@app/common/utils/get-value';
 import {
   translateResourceAddition,
   translateResourceName,
@@ -95,7 +94,7 @@ export default function ResourceModal({
 
     if (selectedObj) {
       handleFollowUp({
-        label: getCurie(selectedObj.namespace, selectedObj.identifier),
+        label: selectedObj.curie,
         uri: selectedObj.id,
         mode: mode,
         type: type,

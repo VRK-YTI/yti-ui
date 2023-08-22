@@ -50,7 +50,7 @@ import {
 } from '@app/common/components/model/model.slice';
 import ResourcePicker from '../resource-picker-modal';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
-import { getCurie, getPrefixFromURI } from '@app/common/utils/get-value';
+import { getPrefixFromURI } from '@app/common/utils/get-value';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -193,7 +193,7 @@ export default function ClassForm({
       classInfo: {
         identifier: value.identifier,
         id: value.id,
-        label: `${getCurie(value.namespace, value.identifier)}`,
+        label: value.curie,
       },
     });
     setShowResourcePicker(true);
@@ -208,7 +208,7 @@ export default function ClassForm({
       ...data,
       utilizesNode: {
         id: value.id,
-        label: `${getCurie(value.namespace, value.identifier)}`,
+        label: value.curie,
       },
     });
   };
@@ -233,7 +233,7 @@ export default function ClassForm({
 
   const handleClassOfRemoval = (
     id: string,
-    key: 'subClassOf' | 'equivalentClass'
+    key: 'subClassOf' | 'equivalentClass' | 'disjointWith'
   ) => {
     if (key === 'subClassOf') {
       const newSubClasses = data.subClassOf
@@ -258,13 +258,23 @@ export default function ClassForm({
       }
       return;
     }
-
-    handleUpdate({
-      ...data,
-      [key]: data.equivalentClass
-        ? data.equivalentClass.filter((item) => item.identifier !== id)
-        : [],
-    });
+    if (key === 'equivalentClass') {
+      handleUpdate({
+        ...data,
+        equivalentClass: data.equivalentClass
+          ? data.equivalentClass.filter((item) => item.identifier !== id)
+          : [],
+      });
+      return;
+    }
+    if (key === 'disjointWith') {
+      handleUpdate({
+        ...data,
+        disjointWith: data.disjointWith
+          ? data.disjointWith.filter((item) => item.id !== id)
+          : [],
+      });
+    }
   };
 
   const handleClassUpdate = (
@@ -289,7 +299,7 @@ export default function ClassForm({
           ...initData,
           {
             identifier: value.id,
-            label: `${getCurie(value.namespace, value.identifier)}`,
+            label: value.curie,
           },
         ],
       });
@@ -302,12 +312,25 @@ export default function ClassForm({
         equivalentClass: [
           ...(data.equivalentClass ?? []),
           {
-            label: `${getCurie(value.namespace, value.identifier)}`,
+            label: value.curie,
             identifier: value.id,
           },
         ],
       });
       return;
+    }
+
+    if (key === 'disjointWith') {
+      handleUpdate({
+        ...data,
+        disjointWith: [
+          ...(data.disjointWith ?? []),
+          {
+            label: value.curie,
+            id: value.id,
+          },
+        ],
+      });
     }
   };
 
@@ -627,15 +650,15 @@ export default function ClassForm({
             addNewComponent={
               <ClassModal
                 modelId={modelId}
-                handleFollowUp={() => null}
+                handleFollowUp={(e) => handleClassUpdate(e, 'disjointWith')}
                 mode={'select'}
                 applicationProfile={applicationProfile}
                 modalButtonLabel={t('add-disjoint-class')}
                 plusIcon
               />
             }
-            items={[]}
-            handleRemoval={() => null}
+            items={data.disjointWith ?? []}
+            handleRemoval={(id) => handleClassOfRemoval(id, 'disjointWith')}
           />
         )}
 

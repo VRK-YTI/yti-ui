@@ -193,7 +193,19 @@ export default function ClassInfo({
         </BasicBlock>
 
         <BasicBlock title={t('disjoint-classes')}>
-          {t('no-disjoint-classes')}
+          {!data.disjointWith || data.disjointWith.length === 0 ? (
+            <>{t('no-disjoint-classes')}</>
+          ) : (
+            <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
+              {data.disjointWith.map((c) => (
+                <li key={c.uri}>
+                  <Link key={c.uri} href={c.uri} style={{ fontSize: '16px' }}>
+                    {c.curie}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </BasicBlock>
 
         <BasicBlock title={t('technical-description')}>
