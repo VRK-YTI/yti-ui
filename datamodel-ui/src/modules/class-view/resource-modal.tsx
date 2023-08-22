@@ -37,6 +37,7 @@ interface ResourceModalProps {
   }) => void;
   buttonIcon?: boolean;
   applicationProfile?: boolean;
+  limitSearchTo?: 'LIBRARY' | 'PROFILE';
 }
 
 export default function ResourceModal({
@@ -45,6 +46,7 @@ export default function ResourceModal({
   handleFollowUp,
   buttonIcon,
   applicationProfile,
+  limitSearchTo,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -54,7 +56,7 @@ export default function ResourceModal({
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>(
-      initialSearchData(i18n.language, modelId, type)
+      initialSearchData(i18n.language, modelId, type, limitSearchTo)
     );
   const [searchInternalResources, result] =
     useGetInternalResourcesInfoMutation();
@@ -73,7 +75,9 @@ export default function ResourceModal({
   };
 
   const handleClose = () => {
-    setSearchParams(initialSearchData(i18n.language, modelId, type));
+    setSearchParams(
+      initialSearchData(i18n.language, modelId, type, limitSearchTo)
+    );
     setContentLanguage(undefined);
     setVisible(false);
     setSelectedId('');
@@ -131,7 +135,7 @@ export default function ResourceModal({
             domains: r.dataModelInfo.groups,
             uri: r.dataModelInfo.uri,
           },
-          subClass: {
+          concept: {
             label: getLanguageVersion({
               data: r.conceptInfo?.conceptLabel,
               lang: contentLanguage ?? i18n.language,

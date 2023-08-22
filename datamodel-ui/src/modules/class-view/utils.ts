@@ -1,24 +1,16 @@
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { ClassType } from '@app/common/interfaces/class.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
+import { getCurie } from '@app/common/utils/get-value';
 
 export function internalClassToClassForm(
   data: InternalClass,
   languages: string[],
   applicationProfile?: boolean,
   targetClass?: InternalClass,
-  associations?: {
-    identifier: string;
-    label: { [key: string]: string };
-    modelId: string;
-    uri: string;
-  }[],
-  attributes?: {
-    identifier: string;
-    label: { [key: string]: string };
-    modelId: string;
-    uri: string;
-  }[]
+  associations?: SimpleResource[],
+  attributes?: SimpleResource[]
 ): ClassFormType {
   const label = languages.reduce(
     (acc, lang) => ({ ...acc, [lang]: data.label[lang] }),

@@ -140,7 +140,9 @@ export default function ClassForm({
     }
 
     const usedLabels = Object.fromEntries(
-      Object.entries(data.label).filter((obj) => obj[1] !== '')
+      Object.entries(data.label).filter(
+        (obj) => languages.includes(obj[0]) && obj[1] !== ''
+      )
     );
 
     const payload = {
