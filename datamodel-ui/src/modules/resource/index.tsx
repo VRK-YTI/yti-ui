@@ -22,6 +22,7 @@ import {
   initializeResource,
   resetResource,
   setResource,
+  useGetResourceActiveQuery,
   useGetResourceQuery,
 } from '@app/common/components/resource/resource.slice';
 import ResourceInfo from './resource-info/index';
@@ -89,23 +90,33 @@ export default function ResourceView({
     }
   );
 
+  const { data: inUse, refetch: refetchInUse } = useGetResourceActiveQuery(
+    {
+      prefix: modelId,
+      uri: `http://uri.suomi.fi/datamodel/ns/${globalSelected.modelId}/${globalSelected.id}`,
+    },
+    {
+      skip: !globalSelected.id || !globalSelected.modelId,
+    }
+  );
+
   const handleQueryChange = (value: string) => {
     setQuery(value);
     setCurrentPage(1);
   };
 
   const handleShowResource = (id: string, modelPrefix: string) => {
-    setView(
-      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-      'info',
-      id
-    );
     dispatch(
       setSelected(
         id,
         type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
         modelPrefix
       )
+    );
+    setView(
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+      'info',
+      id
     );
   };
 
@@ -280,6 +291,7 @@ export default function ResourceView({
     return (
       <ResourceInfo
         data={resourceData}
+        inUse={inUse}
         modelId={globalSelected.modelId ?? modelId}
         handleEdit={handleEdit}
         handleReturn={handleReturn}
@@ -300,12 +312,16 @@ export default function ResourceView({
 
     return (
       <ResourceForm
-        modelId={modelId}
+        modelId={globalSelected.modelId ?? modelId}
         languages={languages}
         terminologies={terminologies}
         applicationProfile={applicationProfile}
+        currentModelId={modelId}
         isEdit={view.edit}
-        refetch={refetchResource}
+        refetch={() => {
+          refetchResource();
+          refetchInUse();
+        }}
         handleReturn={view.edit ? handleFormReturn : handleReturn}
       />
     );

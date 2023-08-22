@@ -5,6 +5,8 @@ import {
   useGetResourceExistsQuery,
   useUpdateResourceMutation,
   useCreateResourceMutation,
+  useTogglePropertyShapeMutation,
+  useGetResourceActiveQuery,
 } from '@app/common/components/resource/resource.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import {
@@ -55,6 +57,7 @@ interface ResourceFormProps {
   languages: string[];
   terminologies: string[];
   isEdit?: boolean;
+  currentModelId: string;
   applicationProfile?: boolean;
   refetch?: () => void;
   handleReturn: () => void;
@@ -66,6 +69,7 @@ export default function ResourceForm({
   languages,
   terminologies,
   isEdit,
+  currentModelId,
   applicationProfile,
   refetch,
   handleReturn,
@@ -79,6 +83,7 @@ export default function ResourceForm({
   const router = useRouter();
   const dispatch = useStoreDispatch();
   const data = useSelector(selectResource());
+  const [inUse, setInUse] = useState(true);
   const hasChanges = useSelector(selectHasChanges());
   const { setView } = useSetView();
   const [userPosted, setUserPosted] = useState(false);
@@ -86,6 +91,7 @@ export default function ResourceForm({
   const [errors, setErrors] = useState(validateForm(data));
   const [updateResource, updateResult] = useUpdateResourceMutation();
   const [createResource, createResult] = useCreateResourceMutation();
+  const [togglePropertyShape, toggleResult] = useTogglePropertyShapeMutation();
 
   const { data: resourceAlreadyExists, isSuccess } = useGetResourceExistsQuery(
     {
@@ -96,6 +102,18 @@ export default function ResourceForm({
       skip: isEdit || data.identifier === '',
     }
   );
+
+  const { data: inUseResult, isSuccess: isActiveSuccess } =
+    useGetResourceActiveQuery({
+      prefix: currentModelId,
+      uri: `http://uri.suomi.fi/datamodel/ns/${modelId}/${data.identifier}`,
+    });
+
+  useEffect(() => {
+    if (isActiveSuccess) {
+      setInUse(inUseResult);
+    }
+  }, [isActiveSuccess, inUseResult]);
 
   const handleSubmit = () => {
     disableConfirmation();
@@ -124,7 +142,18 @@ export default function ResourceForm({
       applicationProfile,
     };
 
-    isEdit ? updateResource(payload) : createResource(payload);
+    isEdit
+      ? updateResource(payload).then(handleToggle)
+      : createResource(payload).then(handleToggle);
+  };
+
+  const handleToggle = () => {
+    if (inUseResult !== inUse) {
+      togglePropertyShape({
+        modelId: currentModelId,
+        uri: `http://uri.suomi.fi/datamodel/ns/${modelId}/${data.identifier}`,
+      });
+    }
   };
 
   const handleUpdate = (value: ResourceFormType) => {
@@ -237,7 +266,11 @@ export default function ResourceForm({
       setHeaderHeight(ref.current.clientHeight);
     }
 
-    if (updateResult.isSuccess || createResult.isSuccess) {
+    if (
+      (updateResult.isSuccess || createResult.isSuccess) &&
+      (toggleResult.isSuccess ||
+        (toggleResult.isUninitialized && inUse === inUseResult))
+    ) {
       if (handleFollowUp) {
         handleFollowUp(data.identifier, data.type);
         return;
@@ -281,6 +314,9 @@ export default function ResourceForm({
     userPosted,
     updateResult,
     createResult,
+    inUse,
+    inUseResult,
+    toggleResult,
     handleFollowUp,
     dispatch,
     router,
@@ -363,7 +399,8 @@ export default function ResourceForm({
       <DrawerContent height={headerHeight}>
         <FormWrapper>
           <ApplicationProfileTop
-            defaultChecked={true}
+            inUse={inUse}
+            setInUse={setInUse}
             type={data.type}
             applicationProfile={applicationProfile}
           />

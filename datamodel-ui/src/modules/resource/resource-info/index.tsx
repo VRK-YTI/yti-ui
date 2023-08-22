@@ -28,6 +28,7 @@ import { selectDisplayLang } from '@app/common/components/model/model.slice';
 
 interface CommonViewProps {
   data?: Resource;
+  inUse?: boolean;
   modelId: string;
   handleReturn: () => void;
   handleShowResource: (id: string, modelPrefix: string) => void;
@@ -39,6 +40,7 @@ interface CommonViewProps {
 
 export default function ResourceInfo({
   data,
+  inUse,
   modelId,
   handleReturn,
   handleShowResource,
@@ -173,6 +175,7 @@ export default function ResourceInfo({
             applicationProfile={applicationProfile}
             modelId={modelId}
             data={data}
+            inUse={inUse}
           />
         )}
       </DrawerContent>
