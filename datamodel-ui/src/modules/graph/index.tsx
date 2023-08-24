@@ -75,7 +75,7 @@ const GraphContent = ({
     }),
     []
   );
-  const { data, isSuccess } = useGetVisualizationQuery(modelId);
+  const { data, isSuccess, refetch } = useGetVisualizationQuery(modelId);
   const [putPositions, result] = usePutPositionsMutation();
 
   const deleteEdgeById = useCallback(
@@ -159,7 +159,13 @@ const GraphContent = ({
   useEffect(() => {
     if (isSuccess || (isSuccess && resetPosition)) {
       setNodes(
-        convertToNodes(data.nodes, data.hiddenNodes, applicationProfile)
+        convertToNodes(
+          data.nodes,
+          data.hiddenNodes,
+          modelId,
+          applicationProfile,
+          applicationProfile ? refetch : undefined
+        )
       );
       setEdges(
         convertToEdges(
@@ -187,6 +193,8 @@ const GraphContent = ({
     resetPosition,
     dispatch,
     applicationProfile,
+    modelId,
+    refetch,
   ]);
 
   useEffect(() => {
