@@ -11,6 +11,7 @@ import {
   Button,
   IconArrowLeft,
   IconMenu,
+  InlineAlert,
   Text,
   Tooltip,
 } from 'suomifi-ui-components';
@@ -25,6 +26,9 @@ import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listene
 import LocalCopyModal from '@app/modules/local-copy-modal';
 import { useSelector } from 'react-redux';
 import { selectDisplayLang } from '@app/common/components/model/model.slice';
+import ApplicationProfileTop from '../resource-form/components/application-profile-top';
+import { useTogglePropertyShapeMutation } from '@app/common/components/resource/resource.slice';
+import getApiError from '@app/common/utils/get-api-errors';
 
 interface CommonViewProps {
   data?: Resource;
@@ -33,6 +37,7 @@ interface CommonViewProps {
   handleReturn: () => void;
   handleShowResource: (id: string, modelPrefix: string) => void;
   handleEdit: () => void;
+  handleRefetch: () => void;
   isPartOfCurrentModel: boolean;
   applicationProfile?: boolean;
   currentModelId?: string;
@@ -45,6 +50,7 @@ export default function ResourceInfo({
   handleReturn,
   handleShowResource,
   handleEdit,
+  handleRefetch,
   isPartOfCurrentModel,
   applicationProfile,
   currentModelId,
@@ -59,7 +65,26 @@ export default function ResourceInfo({
   const [showTooltip, setShowTooltip] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
   const [localCopyVisible, setLocalCopyVisible] = useState(false);
+  const [externalEdit, setExternalEdit] = useState(false);
+  const [externalActive, setExternalActive] = useState(inUse ?? true);
+  const [togglePropertyShape, toggleResult] = useTogglePropertyShapeMutation();
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
+
+  const handleExternalEditSave = () => {
+    if (externalActive !== inUse) {
+      togglePropertyShape({
+        modelId: currentModelId ?? '',
+        uri: data?.uri ?? '',
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (toggleResult.isSuccess) {
+      setExternalEdit(false);
+      handleRefetch();
+    }
+  }, [toggleResult, handleRefetch]);
 
   useEffect(() => {
     if (ref.current) {
@@ -81,7 +106,7 @@ export default function ResourceInfo({
           >
             {data ? translateCommonForm('return', data.type, t) : t('back')}
           </Button>
-          {hasPermission && data && (
+          {hasPermission && data && !externalEdit && (
             <div>
               <Button
                 variant="secondary"
@@ -121,6 +146,13 @@ export default function ResourceInfo({
                     <>
                       <Button
                         variant="secondaryNoBorder"
+                        onClick={() => setExternalEdit(true)}
+                        id="edit-button"
+                      >
+                        {t('edit', { ns: 'admin' })}
+                      </Button>
+                      <Button
+                        variant="secondaryNoBorder"
                         onClick={() => setLocalCopyVisible(true)}
                         id="local-copy-button"
                       >
@@ -154,29 +186,72 @@ export default function ResourceInfo({
           )}
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Text variant="bold">
-              {data &&
-                getLanguageVersion({
-                  data: data.label,
-                  lang: displayLang ?? i18n.language,
-                })}
-            </Text>
-            <StatusChip $isValid={data && data.status === 'VALID'}>
-              {data && translateStatus(data.status, t)}
-            </StatusChip>
-          </div>
+          {!externalEdit ? (
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <Text variant="bold">
+                {data &&
+                  getLanguageVersion({
+                    data: data.label,
+                    lang: displayLang ?? i18n.language,
+                  })}
+              </Text>
+              <StatusChip $isValid={data && data.status === 'VALID'}>
+                {data && translateStatus(data.status, t)}
+              </StatusChip>
+            </div>
+          ) : (
+            <>
+              <Text variant="bold">
+                {data &&
+                  getLanguageVersion({
+                    data: data.label,
+                    lang: displayLang ?? i18n.language,
+                  })}
+              </Text>
+              <div style={{ display: 'flex', gap: '15px' }}>
+                <Button onClick={handleExternalEditSave} id="submit-button">
+                  {t('save', { ns: 'admin' })}
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => setExternalEdit(false)}
+                  id="cancel-button"
+                >
+                  {t('cancel-variant', { ns: 'admin' })}
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
         {data && (
-          <CommonViewContent
-            applicationProfile={applicationProfile}
-            modelId={modelId}
-            data={data}
-            inUse={inUse}
-          />
+          <>
+            {externalEdit && (
+              <>
+                {toggleResult.error && (
+                  <InlineAlert status="error">
+                    {getApiError(toggleResult.error)[0]}
+                  </InlineAlert>
+                )}
+                <ApplicationProfileTop
+                  inUse={externalActive}
+                  setInUse={setExternalActive}
+                  type={data.type}
+                  applicationProfile={applicationProfile}
+                  external
+                />
+              </>
+            )}
+
+            <CommonViewContent
+              applicationProfile={applicationProfile}
+              modelId={modelId}
+              data={data}
+              inUse={inUse}
+            />
+          </>
         )}
       </DrawerContent>
     </>
