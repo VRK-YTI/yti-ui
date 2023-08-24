@@ -47,7 +47,9 @@ export default function ApplicationProfileTop({
         <Text>
           {translateApplicationProfileTopDescription(type, t, external)}
         </Text>
-        <Button variant="secondary">{t('create-local-copy')}</Button>
+        {external && (
+          <Button variant="secondary">{t('create-local-copy')}</Button>
+        )}
       </InlineAlert>
 
       <ToggleWrapper>
