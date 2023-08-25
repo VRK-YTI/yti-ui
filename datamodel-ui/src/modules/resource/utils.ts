@@ -7,6 +7,7 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
   return {
     ...data,
     classType: data.classType ? data.classType.uri : undefined,
+    concept: data.subject,
     codeLists: data.codeLists
       ? data.codeLists.map((codeList) => ({
           id: codeList,

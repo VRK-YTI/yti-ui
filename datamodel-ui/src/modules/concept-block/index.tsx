@@ -5,8 +5,6 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
   Button,
-  Expander,
-  ExpanderTitleButton,
   ExternalLink,
   InlineAlert,
   Modal,
@@ -21,15 +19,12 @@ import {
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import {
-  SearchBlock,
-  SearchResultWrapper,
-  SelectedConceptsGroup,
-} from './concept-block.styles';
+import { SearchBlock, SearchResultWrapper } from './concept-block.styles';
 import { useGetConceptsQuery } from '@app/common/components/concept-search/concept-search.slice';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
 import { DetachedPagination } from 'yti-common-ui/pagination';
+import ConceptView from '../concept-view';
 
 interface ConceptBlockProps {
   concept?: ConceptType;
@@ -118,20 +113,7 @@ export default function ConceptBlock({
             {t('concept-undefined')}
           </InlineAlert>
         ) : (
-          <SelectedConceptsGroup
-            closeAllText=""
-            openAllText=""
-            showToggleAllButton={false}
-          >
-            <Expander>
-              <ExpanderTitleButton>
-                {getLanguageVersion({
-                  data: concept.label,
-                  lang: i18n.language,
-                })}
-              </ExpanderTitleButton>
-            </Expander>
-          </SelectedConceptsGroup>
+          <ConceptView data={concept} />
         )}
         <Button
           variant="secondary"
