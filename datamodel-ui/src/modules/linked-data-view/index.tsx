@@ -186,7 +186,11 @@ export default function LinkedDataView({
                           appendLocale: true,
                         })}
                       </ExternalLink>
-                      <div>Tunnus: {namespace.prefix}</div>
+                      <div>
+                        {t('linked-datamodel-prefix', {
+                          prefix: namespace.prefix,
+                        })}
+                      </div>
                       <div>{namespace.namespace}</div>
                     </LinkExtraInfo>
                   </LinkedItem>
@@ -202,7 +206,11 @@ export default function LinkedDataView({
                       >
                         {namespace.name}
                       </ExternalLink>
-                      <div>Tunnus: {namespace.prefix}</div>
+                      <div>
+                        {t('linked-datamodel-prefix', {
+                          prefix: namespace.prefix,
+                        })}
+                      </div>
                       <div>{namespace.namespace}</div>
                     </LinkExtraInfo>
                   </LinkedItem>

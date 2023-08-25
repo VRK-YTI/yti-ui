@@ -11,16 +11,8 @@ export interface ModelType {
   organizations: Organization[];
   groups: Group[];
   contact: string;
-  internalNamespaces: {
-    name: { [key: string]: string };
-    namespace: string;
-    prefix: string;
-  }[];
-  externalNamespaces: {
-    name: string;
-    namespace: string;
-    prefix: string;
-  }[];
+  internalNamespaces: InternalNamespace[];
+  externalNamespaces: ExternalNamespace[];
   terminologies: ModelTerminology[];
   codeLists: ModelCodeList[];
   links: {
@@ -38,6 +30,18 @@ export interface ModelType {
     id: string;
     name: string;
   };
+}
+
+export interface InternalNamespace {
+  name: { [key: string]: string };
+  namespace: string;
+  prefix: string;
+}
+
+export interface ExternalNamespace {
+  name: string;
+  namespace: string;
+  prefix: string;
 }
 
 export interface Group {

@@ -116,6 +116,7 @@
   "library-with-count_other": "Core Data Model ({{count}}) items",
   "link-opens-new-window-external": "Link opens a new window to",
   "linked-codelists": "Linked code lists",
+  "linked-datamodel-prefix": "Identifier: {{prefix}}",
   "linked-datamodels": "Linked data models",
   "linked-terminologies": "Linked terminologies",
   "links": "Links",
