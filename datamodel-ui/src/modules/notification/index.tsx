@@ -11,7 +11,11 @@ import { translateNotification } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { NotificationKeys } from '@app/common/interfaces/notifications.interface';
 
-export default function Notification() {
+export default function Notification({
+  applicationProfile,
+}: {
+  applicationProfile: boolean;
+}) {
   const { t } = useTranslation('admin');
   const dispatch = useStoreDispatch();
   const [showToast, setShowToast] = useState(false);
@@ -44,6 +48,7 @@ export default function Notification() {
         <Toast>
           {translateNotification(
             Object.keys(activeNotification)?.[0] as NotificationKeys,
+            applicationProfile,
             t
           )}
         </Toast>

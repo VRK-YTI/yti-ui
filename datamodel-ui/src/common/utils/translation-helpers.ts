@@ -417,28 +417,46 @@ export function translateDeleteReferenceModalDescription(
   }
 }
 
-export function translateNotification(key: NotificationKeys, t: TFunction) {
+export function translateNotification(
+  key: NotificationKeys,
+  applicationProfile: boolean,
+  t: TFunction
+) {
   switch (key) {
     case 'MODEL_EDIT':
-      return 'Model edited';
+      return applicationProfile
+        ? t('profile-edited', { ns: 'admin' })
+        : t('library-edited', { ns: 'admin' });
     case 'ASSOCIATION_ADD':
-      return 'Association added';
+      return applicationProfile
+        ? t('association-restriction-added', { ns: 'admin' })
+        : t('association-added', { ns: 'admin' });
     case 'ASSOCIATION_EDIT':
-      return 'Association edited';
+      return applicationProfile
+        ? t('association-restriction-edited', { ns: 'admin' })
+        : t('association-edited', { ns: 'admin' });
     case 'ATTRIBUTE_ADD':
-      return 'Attribute added';
+      return applicationProfile
+        ? t('attribute-restriction-added', { ns: 'admin' })
+        : t('attribute-added', { ns: 'admin' });
     case 'ATTRIBUTE_EDIT':
-      return 'Attribute edited';
+      return applicationProfile
+        ? t('attribute-restriction-edited', { ns: 'admin' })
+        : t('attribute-edited', { ns: 'admin' });
     case 'CLASS_ADD':
-      return 'Class added';
+      return applicationProfile
+        ? t('class-restriction-added', { ns: 'admin' })
+        : t('class-added', { ns: 'admin' });
     case 'CLASS_EDIT':
-      return 'Class edited';
+      return applicationProfile
+        ? t('class-restriction-edited', { ns: 'admin' })
+        : t('class-edited', { ns: 'admin' });
     case 'DOCUMENTATION_EDIT':
-      return 'Documentation edited';
+      return t('documentation-edited', { ns: 'admin' });
     case 'LINK_EDIT':
-      return 'Link edited';
+      return t('link-edited', { ns: 'admin' });
     case 'POSITION_SAVE':
-      return 'Position saved';
+      return t('position-saved', { ns: 'admin' });
     default:
       return '';
   }

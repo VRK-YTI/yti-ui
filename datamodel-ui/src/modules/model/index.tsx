@@ -158,7 +158,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         flexDirection: 'column',
       }}
     >
-      <Notification />
+      <Notification applicationProfile={modelInfo?.type === 'PROFILE'} />
 
       <ContentWrapper>
         <Graph
