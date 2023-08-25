@@ -417,6 +417,27 @@ export function translateDeleteReferenceModalDescription(
   }
 }
 
+export function translateApplicationProfileTopDescription(
+  type: ResourceType,
+  t: TFunction,
+  external?: boolean
+) {
+  switch (type) {
+    case ResourceType.ASSOCIATION:
+      return external
+        ? t('association-constraint-toggle-description-external', {
+            ns: 'admin',
+          })
+        : t('association-constraint-toggle-description', { ns: 'admin' });
+    case ResourceType.ATTRIBUTE:
+      return external
+        ? t('attribute-constraint-toggle-description-external', {
+            ns: 'admin',
+          })
+        : t('attribute-constraint-toggle-description', { ns: 'admin' });
+  }
+}
+
 export function translateNotification(
   key: NotificationKeys,
   applicationProfile: boolean,

@@ -132,3 +132,44 @@ export const Resource = styled.div<{ $highlight?: boolean }>`
     margin: 0;
     `}
 `;
+
+export const TooltipWrapper = styled.div`
+  div {
+    width: 100%;
+  }
+
+  .fi-tooltip_toggle-button {
+    display: none;
+    visiblity: hidden;
+  }
+
+  .fi-tooltip_content {
+    position: absolute;
+    padding: 1px;
+    margin: 0;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    align-items: flex-start;
+
+    .fi-tooltip_close-button {
+      display: none;
+      visibility: hidden;
+    }
+  }
+
+  .fi-button {
+    color: ${(props) => props.theme.suomifi.colors.blackBase};
+    font-weight: 400;
+    background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
+    border: 0;
+
+    white-space: nowrap;
+    width: 100%;
+    padding: 0 15px;
+
+    display: flex;
+    align-items: center;
+  }
+`;

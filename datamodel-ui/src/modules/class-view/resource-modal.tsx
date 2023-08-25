@@ -38,6 +38,7 @@ interface ResourceModalProps {
   buttonIcon?: boolean;
   applicationProfile?: boolean;
   limitSearchTo?: 'LIBRARY' | 'PROFILE';
+  limitToSelect?: boolean;
 }
 
 export default function ResourceModal({
@@ -47,6 +48,7 @@ export default function ResourceModal({
   buttonIcon,
   applicationProfile,
   limitSearchTo,
+  limitToSelect,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -209,17 +211,19 @@ export default function ResourceModal({
               : t('select-attribute-restriction')}
           </Button>
 
-          <Button
-            variant="secondary"
-            icon={<IconPlus />}
-            disabled={selectedId === ''}
-            onClick={() => handleSubmit('create')}
-            id="create-new-button"
-          >
-            {type === ResourceType.ASSOCIATION
-              ? t('create-new-association-constraint')
-              : t('create-new-attribute-constraint')}
-          </Button>
+          {!limitToSelect && (
+            <Button
+              variant="secondary"
+              icon={<IconPlus />}
+              disabled={selectedId !== ''}
+              onClick={() => handleSubmit('create')}
+              id="create-new-button"
+            >
+              {type === ResourceType.ASSOCIATION
+                ? t('create-new-association-constraint')
+                : t('create-new-attribute-constraint')}
+            </Button>
+          )}
 
           <Button
             variant="secondaryNoBorder"

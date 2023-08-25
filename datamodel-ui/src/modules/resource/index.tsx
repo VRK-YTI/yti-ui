@@ -116,7 +116,7 @@ export default function ResourceView({
     setView(
       type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
       'info',
-      id
+      modelPrefix !== modelId ? `${modelPrefix}:${id}` : id
     );
   };
 
@@ -296,6 +296,7 @@ export default function ResourceView({
         handleEdit={handleEdit}
         handleReturn={handleReturn}
         handleShowResource={handleShowResource}
+        handleRefetch={refetchInUse}
         isPartOfCurrentModel={globalSelected.modelId === modelId}
         applicationProfile={applicationProfile}
         currentModelId={

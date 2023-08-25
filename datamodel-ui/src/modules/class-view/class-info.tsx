@@ -366,9 +366,9 @@ export default function ClassInfo({
                 openAllText=""
                 showToggleAllButton={false}
               >
-                {data.attribute.map((attr) => (
+                {data.attribute.map((attr, idx) => (
                   <ResourceInfo
-                    key={`${data.identifier}-attr-${attr.identifier}`}
+                    key={`${data.identifier}-attr-${attr.identifier}-${idx}`}
                     data={attr}
                     modelId={modelId}
                     classId={data.identifier}

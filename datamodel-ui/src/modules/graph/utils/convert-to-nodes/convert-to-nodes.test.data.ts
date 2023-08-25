@@ -87,6 +87,7 @@ export const convertedExpected = [
         fi: 'label-1-fi',
         en: 'label-1-en',
       },
+      modelId: 'modelId',
       resources: [],
     },
     type: 'classNode',
@@ -102,6 +103,7 @@ export const convertedExpected = [
       label: {
         en: 'label-2-en',
       },
+      modelId: 'modelId',
       resources: [],
     },
     type: 'classNode',
@@ -119,6 +121,7 @@ export const convertedExpected = [
         en: 'label-3-en',
         sv: 'label-3-sv',
       },
+      modelId: 'modelId',
       resources: [
         {
           identifier: '3-1',
@@ -148,6 +151,7 @@ export const convertedWithHiddenExpected = [
         fi: 'label-1-fi',
         en: 'label-1-en',
       },
+      modelId: 'modelId',
       resources: [],
     },
     type: 'classNode',
@@ -163,6 +167,7 @@ export const convertedWithHiddenExpected = [
       label: {
         en: 'label-2-en',
       },
+      modelId: 'modelId',
       resources: [],
     },
     type: 'classNode',
@@ -180,6 +185,7 @@ export const convertedWithHiddenExpected = [
         en: 'label-3-en',
         sv: 'label-3-sv',
       },
+      modelId: 'modelId',
       resources: [
         {
           identifier: '3-1',
