@@ -51,6 +51,7 @@ import AssociationRestrictions from './components/association-restrictions';
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import ResourceModal from '../resource-modal';
 import useSetView from '@app/common/utils/hooks/use-set-view';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 
 interface ResourceFormProps {
   modelId: string;
@@ -273,6 +274,22 @@ export default function ResourceForm({
       (toggleResult.isSuccess ||
         (toggleResult.isUninitialized && inUse === inUseResult))
     ) {
+      switch (data.type) {
+        case ResourceType.ATTRIBUTE:
+          dispatch(
+            setNotification(
+              updateResult.isSuccess ? 'ATTRIBUTE_EDIT' : 'ATTRIBUTE_ADD'
+            )
+          );
+          break;
+        case ResourceType.ASSOCIATION:
+          dispatch(
+            setNotification(
+              updateResult.isSuccess ? 'ASSOCIATION_EDIT' : 'ASSOCIATION_ADD'
+            )
+          );
+      }
+
       if (handleFollowUp) {
         handleFollowUp(data.identifier, data.type);
         return;

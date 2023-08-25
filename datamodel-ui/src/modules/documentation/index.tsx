@@ -46,6 +46,7 @@ import {
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 
 export default function Documentation({
   modelId,
@@ -197,8 +198,9 @@ export default function Documentation({
       setIsEdit(false);
       disableConfirmation();
       refetch();
+      dispatch(setNotification('DOCUMENTATION_EDIT'));
     }
-  }, [result, refetch, disableConfirmation]);
+  }, [result, refetch, disableConfirmation, dispatch]);
 
   useEffect(() => {
     if (!textAreaRef.current) {

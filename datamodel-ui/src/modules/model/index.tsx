@@ -25,6 +25,7 @@ import ResourceView from '../resource';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import ModelTools from '@app/common/components/model-tools';
 import { translateDrawerButton } from '@app/common/utils/translation-helpers';
+import Notification from '../notification';
 
 interface ModelProps {
   modelId: string;
@@ -157,6 +158,8 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         flexDirection: 'column',
       }}
     >
+      <Notification />
+
       <ContentWrapper>
         <Graph
           modelId={modelId}

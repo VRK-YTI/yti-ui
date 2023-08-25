@@ -1,6 +1,7 @@
 import { TFunction } from 'next-i18next';
 import { ResourceType } from '../interfaces/resource-type.interface';
 import { Type } from '../interfaces/type.interface';
+import { NotificationKeys } from '../interfaces/notifications.interface';
 
 export function translateModelType(type: Type, t: TFunction) {
   switch (type) {
@@ -411,6 +412,33 @@ export function translateDeleteReferenceModalDescription(
         ns: 'admin',
         name: name,
       });
+    default:
+      return '';
+  }
+}
+
+export function translateNotification(key: NotificationKeys, t: TFunction) {
+  switch (key) {
+    case 'MODEL_EDIT':
+      return 'Model edited';
+    case 'ASSOCIATION_ADD':
+      return 'Association added';
+    case 'ASSOCIATION_EDIT':
+      return 'Association edited';
+    case 'ATTRIBUTE_ADD':
+      return 'Attribute added';
+    case 'ATTRIBUTE_EDIT':
+      return 'Attribute edited';
+    case 'CLASS_ADD':
+      return 'Class added';
+    case 'CLASS_EDIT':
+      return 'Class edited';
+    case 'DOCUMENTATION_EDIT':
+      return 'Documentation edited';
+    case 'LINK_EDIT':
+      return 'Link edited';
+    case 'POSITION_SAVE':
+      return 'Position saved';
     default:
       return '';
   }

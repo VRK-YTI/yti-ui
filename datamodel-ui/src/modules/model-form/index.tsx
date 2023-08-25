@@ -5,10 +5,8 @@ import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 import {
-  Button,
   Dropdown,
   DropdownItem,
-  IconPlus,
   Label,
   RadioButton,
   RadioButtonGroup,
