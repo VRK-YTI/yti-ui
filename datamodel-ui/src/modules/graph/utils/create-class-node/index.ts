@@ -4,13 +4,16 @@ import { Node } from 'reactflow';
 
 export default function createClassNode(
   node: VisualizationType,
-  applicationProfile?: boolean
+  modelId: string,
+  applicationProfile?: boolean,
+  refetch?: () => void
 ): Node {
   return {
     id: node.identifier,
     position: { x: node.position.x, y: node.position.y },
     data: {
       identifier: node.identifier,
+      modelId: modelId,
       label: node.label,
       ...(applicationProfile !== undefined
         ? { applicationProfile: applicationProfile }
@@ -28,6 +31,7 @@ export default function createClassNode(
             }))
           : []),
       ],
+      ...(refetch ? { refetch: refetch } : {}),
     },
     type: 'classNode',
   };

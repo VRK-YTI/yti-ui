@@ -8,7 +8,7 @@ import {
 
 describe('convert-to-nodes', () => {
   it('should return an empty array if given an empty array', () => {
-    const returned = convertToNodes([], []);
+    const returned = convertToNodes([], [], 'modelId');
 
     expect(returned).toStrictEqual([]);
   });
@@ -18,7 +18,7 @@ describe('convert-to-nodes', () => {
 
     const expected = convertedExpected;
 
-    const returned = convertToNodes(input, []);
+    const returned = convertToNodes(input, [], 'modelId');
     expect(returned).toStrictEqual(expected);
   });
 
@@ -28,7 +28,7 @@ describe('convert-to-nodes', () => {
 
     const expected = convertedWithHiddenExpected;
 
-    const returned = convertToNodes(input, inputHidden);
+    const returned = convertToNodes(input, inputHidden, 'modelId');
     expect(returned).toStrictEqual(expected);
   });
 });
