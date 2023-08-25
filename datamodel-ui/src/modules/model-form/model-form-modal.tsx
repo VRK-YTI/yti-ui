@@ -58,7 +58,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
     if (userPosted && result.isSuccess) {
       refetch();
       handleClose();
-      router.push(`/model/${formData.prefix}`);
+      router.push(`/model/${formData.prefix}?new=true`);
     }
   }, [result, refetch, userPosted, handleClose, router, formData.prefix]);
 

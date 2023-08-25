@@ -5,7 +5,7 @@ import SearchView from './search-view';
 import ClassView from '../class-view';
 import { useTranslation } from 'next-i18next';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import Graph from '../graph';
 import LinkedDataView from '../linked-data-view';
 import { compareLocales } from '@app/common/utils/compare-locals';
@@ -26,6 +26,7 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import ModelTools from '@app/common/components/model-tools';
 import { translateDrawerButton } from '@app/common/utils/translation-helpers';
 import Notification from '../notification';
+import { useRouter } from 'next/router';
 
 interface ModelProps {
   modelId: string;
@@ -34,6 +35,7 @@ interface ModelProps {
 
 export default function Model({ modelId, fullScreen }: ModelProps) {
   const { t } = useTranslation('common');
+  const router = useRouter();
   const hasPermission = HasPermission({
     actions: 'ADMIN_DATA_MODEL',
   });
@@ -148,6 +150,12 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
 
     return v as ViewType[];
   }, [hasPermission, languages, modelId, modelInfo, t]);
+
+  useEffect(() => {
+    if (router.query.new) {
+      router.replace(`/model/${modelId}`, undefined, { shallow: true });
+    }
+  }, [router, modelId]);
 
   return (
     <div

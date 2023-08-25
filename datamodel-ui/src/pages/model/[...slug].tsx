@@ -48,6 +48,7 @@ import {
 import { ModelType } from '@app/common/interfaces/model.interface';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import { useSelector } from 'react-redux';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -75,7 +76,7 @@ export default function ModelPage(props: IndexPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ store, query, locale }) => {
+  async ({ store, query, locale, res }) => {
     if (!query.slug) {
       throw new Error('Missing query for page');
     }
@@ -214,6 +215,10 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     if (query.lang) {
       store.dispatch(setDisplayLang(query.lang as string));
+    }
+
+    if (query.new) {
+      store.dispatch(setNotification('MODEL_ADD'));
     }
 
     return {

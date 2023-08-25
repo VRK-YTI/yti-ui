@@ -444,6 +444,10 @@ export function translateNotification(
   t: TFunction
 ) {
   switch (key) {
+    case 'MODEL_ADD':
+      return applicationProfile
+        ? t('profile-added', { ns: 'admin' })
+        : t('library-added', { ns: 'admin' });
     case 'MODEL_EDIT':
       return applicationProfile
         ? t('profile-edited', { ns: 'admin' })

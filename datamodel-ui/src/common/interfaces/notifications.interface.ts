@@ -5,6 +5,7 @@ export type NotificationType = {
 };
 
 export type NotificationKeys =
+  | 'MODEL_ADD'
   | 'MODEL_EDIT'
   | 'LINK_EDIT'
   | 'CLASS_ADD'
