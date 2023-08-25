@@ -1,7 +1,8 @@
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { translateApplicationProfileTopDescription } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
-import { InlineAlert, Text, ToggleButton } from 'suomifi-ui-components';
+import { InlineAlert, Text, ToggleButton, Button } from 'suomifi-ui-components';
 
 const Wrapper = styled.div`
   display: flex;
@@ -26,11 +27,13 @@ export default function ApplicationProfileTop({
   setInUse,
   type,
   applicationProfile,
+  external,
 }: {
   inUse: boolean;
   setInUse: (inUse: boolean) => void;
   type: ResourceType;
   applicationProfile?: boolean;
+  external?: boolean;
 }) {
   const { t } = useTranslation('admin');
 
@@ -41,9 +44,12 @@ export default function ApplicationProfileTop({
   return (
     <Wrapper>
       <InlineAlert status="neutral">
-        {type === ResourceType.ASSOCIATION
-          ? t('association-constraint-toggle-description')
-          : t('attribute-constraint-toggle-description')}
+        <Text>
+          {translateApplicationProfileTopDescription(type, t, external)}
+        </Text>
+        {external && (
+          <Button variant="secondary">{t('create-local-copy')}</Button>
+        )}
       </InlineAlert>
 
       <ToggleWrapper>
