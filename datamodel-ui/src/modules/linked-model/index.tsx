@@ -21,6 +21,10 @@ import isURL from 'validator/lib/isURL';
 import { useGetNamespacesQuery } from '@app/common/components/namespaces/namespaces.slice';
 import { WideSingleSelect } from '../model-form/model-form.styles';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
+import {
+  ExternalNamespace,
+  InternalNamespace,
+} from '@app/common/interfaces/model.interface';
 
 export default function LinkedModel({
   initialData,
@@ -28,22 +32,10 @@ export default function LinkedModel({
   setExternalData,
 }: {
   initialData: {
-    internalNamespaces: {
-      name: string;
-      uri: string;
-    }[];
+    internalNamespaces: InternalNamespace[];
   };
-  setInternalData: (
-    value: {
-      name: string;
-      uri: string;
-    }[]
-  ) => void;
-  setExternalData: (value: {
-    name: string;
-    namespace: string;
-    prefix: string;
-  }) => void;
+  setInternalData: (value: InternalNamespace[]) => void;
+  setExternalData: (value: ExternalNamespace) => void;
 }) {
   const { t, i18n } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
@@ -60,12 +52,9 @@ export default function LinkedModel({
     namespace: '',
     prefix: '',
   });
-  const [selected, setSelected] = useState<
-    {
-      name: string;
-      uri: string;
-    }[]
-  >(initialData.internalNamespaces);
+  const [selected, setSelected] = useState<InternalNamespace[]>(
+    initialData.internalNamespaces
+  );
   const { data: models, isUninitialized } = useGetSearchModelsQuery(
     {
       lang: i18n.language,
@@ -152,17 +141,11 @@ export default function LinkedModel({
     handleClose();
   };
 
-  const handleCheckboxClick = ({
-    name,
-    uri,
-  }: {
-    name: string;
-    uri: string;
-  }) => {
+  const handleCheckboxClick = (value: InternalNamespace) => {
     setSelected((selected) =>
-      selected.map((s) => s.uri).includes(uri)
-        ? selected.filter((s) => s.uri !== uri)
-        : [...selected, { name: name, uri: uri }]
+      selected.map((s) => s.namespace).includes(value.namespace)
+        ? selected.filter((s) => s.namespace !== value.namespace)
+        : [...selected, value]
     );
   };
 
@@ -242,18 +225,16 @@ export default function LinkedModel({
           <div style={{ display: 'flex', gap: '5px' }}>
             {selected.map((select) => (
               <Chip
-                key={`selected-result-${select.uri}`}
+                key={`selected-result-${select.namespace}`}
                 onClick={() =>
                   setSelected(selected.filter((s) => s !== select))
                 }
                 removable
-                id={`selected-result-chip-button_${select.uri}`}
+                id={`selected-result-chip-button_${select.namespace}`}
               >
                 {data
                   ? getLanguageVersion({
-                      data: models?.responseObjects.find(
-                        (obj) => obj.id === select.uri
-                      )?.label,
+                      data: select.name,
                       lang: i18n.language,
                       appendLocale: true,
                     })
@@ -276,15 +257,14 @@ export default function LinkedModel({
                 {models.responseObjects.map((obj) => (
                   <SearchResult key={`data-model-result-${obj.id}`}>
                     <Checkbox
-                      checked={selected.map((s) => s.uri).includes(obj.id)}
+                      checked={selected
+                        .map((s) => s.namespace)
+                        .includes(obj.id)}
                       onClick={() =>
                         handleCheckboxClick({
-                          name: getLanguageVersion({
-                            data: obj.label,
-                            lang: i18n.language,
-                            appendLocale: true,
-                          }),
-                          uri: obj.id,
+                          name: obj.label,
+                          namespace: obj.id,
+                          prefix: obj.prefix,
                         })
                       }
                       id={`data-model-checkbox_${obj.id}}`}

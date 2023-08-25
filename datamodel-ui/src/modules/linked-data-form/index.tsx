@@ -6,6 +6,8 @@ import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import TerminologyModal from '../terminology-modal';
 import {
+  ExternalNamespace,
+  InternalNamespace,
   ModelCodeList,
   ModelTerminology,
   ModelType,
@@ -39,24 +41,13 @@ export default function LinkedDataForm({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [data, setData] = useState<{
     codeLists: ModelCodeList[];
-    externalNamespaces: {
-      name: string;
-      namespace: string;
-      prefix: string;
-    }[];
-    internalNamespaces: {
-      name: string;
-      uri: string;
-    }[];
+    externalNamespaces: ExternalNamespace[];
+    internalNamespaces: InternalNamespace[];
     terminologies: ModelTerminology[];
   }>({
     codeLists: model.codeLists ?? [],
     externalNamespaces: model.externalNamespaces ?? [],
-    internalNamespaces:
-      model.internalNamespaces.map((n) => ({
-        name: '',
-        uri: n,
-      })) ?? [],
+    internalNamespaces: model.internalNamespaces ?? [],
     terminologies: model.terminologies ?? [],
   });
 
@@ -74,7 +65,7 @@ export default function LinkedDataForm({
       ...model,
       codeLists: data.codeLists,
       externalNamespaces: data.externalNamespaces,
-      internalNamespaces: data.internalNamespaces.map((n) => n.uri),
+      internalNamespaces: data.internalNamespaces,
       terminologies: data.terminologies,
     });
 
@@ -183,7 +174,6 @@ export default function LinkedDataForm({
               <>
                 {t('linked-codelists', { ns: 'common' })}
                 <Text smallScreen style={{ color: '#5F686D' }}>
-                  {' '}
                   ({t('optional')})
                 </Text>
               </>
@@ -263,17 +253,18 @@ export default function LinkedDataForm({
           <div>
             {data.internalNamespaces.map((n) => (
               <LinkedItem
-                key={`internal-namespace-item-${n.uri}`}
+                key={`internal-namespace-item-${n.prefix}`}
                 itemData={{
-                  uri: n.uri,
+                  prefix: n.prefix,
                   name: n.name,
+                  namespace: n.namespace,
                   type: 'datamodel-internal',
                 }}
                 handleRemove={(id) =>
                   handleUpdate({
                     ...data,
                     internalNamespaces: data.internalNamespaces.filter(
-                      (n) => n.uri !== id
+                      (n) => n.namespace !== id
                     ),
                   })
                 }

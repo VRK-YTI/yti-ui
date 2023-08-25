@@ -116,6 +116,7 @@
   "library-with-count_other": "Ydintietomalli ({{count}}) kpl",
   "link-opens-new-window-external": "Avaa uuden ikkunan sivulle",
   "linked-codelists": "Linkitetyt koodistot",
+  "linked-datamodel-prefix": "Tunnus: {{prefix}}",
   "linked-datamodels": "Linkitetyt tietomallit",
   "linked-terminologies": "Linkitetyt sanastot",
   "links": "Linkit",

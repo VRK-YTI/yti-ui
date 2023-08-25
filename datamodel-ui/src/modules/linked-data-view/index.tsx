@@ -178,12 +178,20 @@ export default function LinkedDataView({
                     <LinkExtraInfo>
                       <ExternalLink
                         labelNewWindow={t('link-opens-new-window-external')}
-                        href={namespace}
+                        href={namespace.namespace}
                       >
-                        {namespace}
+                        {getLanguageVersion({
+                          data: namespace.name,
+                          lang: i18n.language,
+                          appendLocale: true,
+                        })}
                       </ExternalLink>
-                      <div>Tunnus: {namespace.split('/').pop()}</div>
-                      <div>{namespace}</div>
+                      <div>
+                        {t('linked-datamodel-prefix', {
+                          prefix: namespace.prefix,
+                        })}
+                      </div>
+                      <div>{namespace.namespace}</div>
                     </LinkExtraInfo>
                   </LinkedItem>
                 );
@@ -198,7 +206,11 @@ export default function LinkedDataView({
                       >
                         {namespace.name}
                       </ExternalLink>
-                      <div>Tunnus: {namespace.prefix}</div>
+                      <div>
+                        {t('linked-datamodel-prefix', {
+                          prefix: namespace.prefix,
+                        })}
+                      </div>
                       <div>{namespace.namespace}</div>
                     </LinkExtraInfo>
                   </LinkedItem>
