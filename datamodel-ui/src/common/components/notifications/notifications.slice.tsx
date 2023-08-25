@@ -3,7 +3,6 @@ import {
   NotificationType,
 } from '@app/common/interfaces/notifications.interface';
 import { AppState, AppThunk } from '@app/store';
-import isHydrate from '@app/store/isHydrate';
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialNotifications: NotificationType = {
@@ -28,14 +27,6 @@ export const notificationsSlice = createSlice({
         success: {},
       };
     },
-  },
-  extraReducers: (builder) => {
-    builder.addMatcher(isHydrate, (state, action) => {
-      return {
-        ...state,
-        ...action.payload.notifications,
-      };
-    });
   },
 });
 
