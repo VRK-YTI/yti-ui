@@ -489,7 +489,7 @@ export default function ClassForm({
           {languages.map((lang) => (
             <TextInput
               key={`label-${lang}`}
-              labelText={`${t('class-name')}, ${lang}`}
+              labelText={`${t('class-name')}, ${lang} (rdfs:label)`}
               value={data.label[lang] ?? ''}
               onChange={(e) =>
                 handleUpdate({
@@ -505,7 +505,7 @@ export default function ClassForm({
         </LanguageVersionedWrapper>
 
         <TextInput
-          labelText={t('class-identifier')}
+          labelText={`${t('class-identifier')} (dcterms:identifier)`}
           visualPlaceholder={t('input-class-identifier')}
           defaultValue={data.identifier}
           status={
@@ -556,7 +556,7 @@ export default function ClassForm({
                   }))
                 : []
             }
-            label={t('upper-classes')}
+            label={`${t('upper-classes')} (rdfs:subClassOf)`}
             handleRemoval={(id: string) =>
               handleClassOfRemoval(id, 'subClassOf')
             }
@@ -581,7 +581,7 @@ export default function ClassForm({
                 />
               }
               items={data.targetClass ? [data.targetClass] : []}
-              label={t('target-class-profile')}
+              label={`${t('target-class-profile')} (sh:targetClass)`}
               handleRemoval={() =>
                 handleUpdate({ ...data, targetClass: undefined })
               }
@@ -617,7 +617,7 @@ export default function ClassForm({
                   }))
                 : []
             }
-            label={t('corresponding-classes')}
+            label={`${t('corresponding-classes')} (owl:equivalentClass)`}
             handleRemoval={(id: string) =>
               handleClassOfRemoval(id, 'equivalentClass')
             }
@@ -626,7 +626,7 @@ export default function ClassForm({
 
         {applicationProfile ? (
           <InlineListBlock
-            label={t('utilizes-class-restriction')}
+            label={`${t('utilizes-class-restriction')} (sh:node)`}
             addNewComponent={
               <ClassModal
                 modelId={modelId}
@@ -646,7 +646,9 @@ export default function ClassForm({
           />
         ) : (
           <InlineListBlock
-            label={t('disjoint-classes', { ns: 'common' })}
+            label={`${t('disjoint-classes', {
+              ns: 'common',
+            })} (owl:disjointWith)`}
             addNewComponent={
               <ClassModal
                 modelId={modelId}
@@ -681,7 +683,9 @@ export default function ClassForm({
           {languages.map((lang) => (
             <Textarea
               key={`comment-${lang}`}
-              labelText={`${t('technical-description')}, ${lang}`}
+              labelText={`${t('technical-description')}, ${lang} ${
+                applicationProfile ? '(sh:description)' : '(rdfs:comment)'
+              }`}
               optionalText={t('optional')}
               defaultValue={data.note[lang as keyof typeof data.note]}
               onChange={(e) =>
@@ -698,7 +702,13 @@ export default function ClassForm({
 
         <Separator />
 
-        <BasicBlock title={t('attributes')}>
+        <BasicBlock
+          title={
+            applicationProfile
+              ? `${t('attributes')} (sh:PropertyShape)`
+              : t('attributes')
+          }
+        >
           {(!applicationProfile && !isEdit) ||
           !data.attribute ||
           data.attribute.length < 1 ? (
@@ -735,7 +745,13 @@ export default function ClassForm({
           )}
         </BasicBlock>
 
-        <BasicBlock title={t('associations')}>
+        <BasicBlock
+          title={
+            applicationProfile
+              ? `${t('associations')} (sh:PropertyShape)`
+              : t('associations')
+          }
+        >
           {(!applicationProfile && !isEdit) ||
           !data.association ||
           data.association.length < 1 ? (
@@ -773,7 +789,7 @@ export default function ClassForm({
         <Separator />
 
         <Textarea
-          labelText={t('work-group-comment')}
+          labelText={`${t('work-group-comment')} (dcterms:description)`}
           optionalText={t('optional')}
           hintText={t('editor-comment-hint')}
           defaultValue={data.editorialNote}
