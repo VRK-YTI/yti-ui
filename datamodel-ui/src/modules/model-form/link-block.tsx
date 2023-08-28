@@ -11,6 +11,7 @@ import {
 import { v4 } from 'uuid';
 import isURL from 'validator/lib/isURL';
 import { BasicBlock } from 'yti-common-ui/block';
+import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 
 export default function LinkBlock({
   data,
@@ -67,7 +68,7 @@ export default function LinkBlock({
               <div key={`link-wrapper-${link.id}`} className="link-wrapper">
                 <div className="text-fields">
                   <TextInput
-                    labelText="Linkin nimi"
+                    labelText={t('link-name')}
                     defaultValue={link.name}
                     onBlur={(e) =>
                       handleUpdate(link.id, 'name', e.target.value ?? '')
@@ -78,10 +79,11 @@ export default function LinkBlock({
                         ? 'error'
                         : 'default'
                     }
+                    maxLength={TEXT_INPUT_MAX}
                   />
 
                   <TextInput
-                    labelText="Linkin verkko-osoite"
+                    labelText={t('link-url')}
                     defaultValue={link.uri}
                     onBlur={(e) =>
                       handleUpdate(link.id, 'uri', e.target.value ?? '')
@@ -92,15 +94,17 @@ export default function LinkBlock({
                         ? 'error'
                         : 'default'
                     }
+                    maxLength={TEXT_AREA_MAX}
                   />
 
                   <Textarea
-                    labelText="Kuvaus"
+                    labelText={t('description')}
                     optionalText={t('optional')}
                     defaultValue={link.description}
                     onBlur={(e) =>
                       handleUpdate(link.id, 'description', e.target.value ?? '')
                     }
+                    maxLength={TEXT_AREA_MAX}
                   />
                 </div>
                 <div>

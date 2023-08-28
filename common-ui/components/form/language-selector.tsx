@@ -11,6 +11,7 @@ import {
   MultiSelect,
   DescriptionInput,
 } from './language-selector.styles';
+import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '../../utils/constants';
 
 export interface LanguageBlockType {
   labelText: string;
@@ -140,6 +141,7 @@ export default function LanguageSelector(
             }
             defaultValue={item.title}
             id={`name-input-${item.uniqueItemId}`}
+            maxLength={TEXT_INPUT_MAX}
           />
           <DescriptionInput
             labelText={props.translations.textDescription}
@@ -150,6 +152,7 @@ export default function LanguageSelector(
             }
             defaultValue={item.description}
             id={`description-input-${item.uniqueItemId}`}
+            maxLength={TEXT_AREA_MAX}
           />
         </LanguageBlock>
       ))}

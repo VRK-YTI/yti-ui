@@ -52,6 +52,7 @@ import { ResourceFormType } from '@app/common/interfaces/resource-form.interface
 import ResourceModal from '../resource-modal';
 import useSetView from '@app/common/utils/hooks/use-set-view';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 
 interface ResourceFormProps {
   modelId: string;
@@ -449,6 +450,7 @@ export default function ResourceForm({
                 }
                 status={userPosted && errors.label ? 'error' : 'default'}
                 id="label-input"
+                maxLength={TEXT_INPUT_MAX}
               />
             ))}
           </LanguageVersionedWrapper>
@@ -477,6 +479,7 @@ export default function ResourceForm({
               isSuccess && resourceAlreadyExists ? t('error-prefix-taken') : ''
             }
             id="prefix-input"
+            maxLength={32}
           />
 
           <RangeAndDomain
@@ -615,7 +618,8 @@ export default function ResourceForm({
                 }
                 optionalText={t('optional')}
                 className="wide-text"
-                id="note-input"
+                id={`note-input-${lang}`}
+                maxLength={TEXT_AREA_MAX}
               />
             ))}
           </LanguageVersionedWrapper>
@@ -630,6 +634,7 @@ export default function ResourceForm({
             hintText={t('editor-comment-hint')}
             className="wide-text"
             id="editorial-note-input"
+            maxLength={TEXT_AREA_MAX}
           />
         </FormWrapper>
       </DrawerContent>

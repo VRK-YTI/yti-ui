@@ -336,6 +336,8 @@ export default function ModelForm({
           disabled={disabled}
           noAuto
           fullWidth
+          minLength={2}
+          maxLength={32}
         />
         <Separator />
       </>

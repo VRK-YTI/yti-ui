@@ -32,6 +32,8 @@ interface PrefixProps {
   disabled?: boolean;
   fullWidth?: boolean;
   noAuto?: boolean;
+  maxLength?: number;
+  minLength?: number;
 }
 
 export default function Prefix({
@@ -44,6 +46,8 @@ export default function Prefix({
   disabled,
   fullWidth,
   noAuto,
+  maxLength,
+  minLength,
 }: PrefixProps) {
   const URI = 'http://uri.suomi.fi';
   const [initalPrefix] = useState(prefix);
@@ -114,7 +118,8 @@ export default function Prefix({
             visualPlaceholder={translations.textInputHint}
             onChange={(e) => handleTextInput(e?.toString().trim() ?? '')}
             debounce={500}
-            maxLength={TEXT_INPUT_MAX}
+            maxLength={maxLength ?? TEXT_INPUT_MAX}
+            minLength={minLength ?? 0}
             id="prefix-text-input"
             status={
               (prefix !== '' && (!prefixValid || inUse.data)) || error
