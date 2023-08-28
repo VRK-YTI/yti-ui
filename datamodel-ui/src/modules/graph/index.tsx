@@ -36,6 +36,7 @@ import createCornerEdge from './utils/create-corner-edge';
 import generatePositionsPayload from './utils/generate-positions-payload';
 import getUnusedCornerIds from './utils/get-unused-corner-ids';
 import handleEdgeDelete from './utils/handle-edge-delete';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 
 interface GraphProps {
   modelId: string;
@@ -206,6 +207,12 @@ const GraphContent = ({
       dispatch(setSavePosition(false));
     }
   }, [savePosition, edges, modelId, nodes, putPositions, result, dispatch]);
+
+  useEffect(() => {
+    if (result.isSuccess) {
+      dispatch(setNotification('POSITION_SAVE'));
+    }
+  }, [result, dispatch]);
 
   useEffect(() => {
     const cleanCorners = () => {

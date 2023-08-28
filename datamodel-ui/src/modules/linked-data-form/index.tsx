@@ -22,6 +22,7 @@ import LinkedModel from '../linked-model';
 import LinkedItem from './linked-item';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 
 export default function LinkedDataForm({
   hasCodelist,
@@ -85,8 +86,9 @@ export default function LinkedDataForm({
   useEffect(() => {
     if (result.isSuccess) {
       handleReturn();
+      dispatch(setNotification('LINK_EDIT'));
     }
-  }, [result, handleReturn]);
+  }, [result, dispatch, handleReturn]);
 
   return (
     <>

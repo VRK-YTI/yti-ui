@@ -1,6 +1,7 @@
 import { TFunction } from 'next-i18next';
 import { ResourceType } from '../interfaces/resource-type.interface';
 import { Type } from '../interfaces/type.interface';
+import { NotificationKeys } from '../interfaces/notifications.interface';
 
 export function translateModelType(type: Type, t: TFunction) {
   switch (type) {
@@ -434,5 +435,54 @@ export function translateApplicationProfileTopDescription(
             ns: 'admin',
           })
         : t('attribute-constraint-toggle-description', { ns: 'admin' });
+  }
+}
+
+export function translateNotification(
+  key: NotificationKeys,
+  applicationProfile: boolean,
+  t: TFunction
+) {
+  switch (key) {
+    case 'MODEL_ADD':
+      return applicationProfile
+        ? t('profile-added', { ns: 'admin' })
+        : t('library-added', { ns: 'admin' });
+    case 'MODEL_EDIT':
+      return applicationProfile
+        ? t('profile-edited', { ns: 'admin' })
+        : t('library-edited', { ns: 'admin' });
+    case 'ASSOCIATION_ADD':
+      return applicationProfile
+        ? t('association-restriction-added', { ns: 'admin' })
+        : t('association-added', { ns: 'admin' });
+    case 'ASSOCIATION_EDIT':
+      return applicationProfile
+        ? t('association-restriction-edited', { ns: 'admin' })
+        : t('association-edited', { ns: 'admin' });
+    case 'ATTRIBUTE_ADD':
+      return applicationProfile
+        ? t('attribute-restriction-added', { ns: 'admin' })
+        : t('attribute-added', { ns: 'admin' });
+    case 'ATTRIBUTE_EDIT':
+      return applicationProfile
+        ? t('attribute-restriction-edited', { ns: 'admin' })
+        : t('attribute-edited', { ns: 'admin' });
+    case 'CLASS_ADD':
+      return applicationProfile
+        ? t('class-restriction-added', { ns: 'admin' })
+        : t('class-added', { ns: 'admin' });
+    case 'CLASS_EDIT':
+      return applicationProfile
+        ? t('class-restriction-edited', { ns: 'admin' })
+        : t('class-edited', { ns: 'admin' });
+    case 'DOCUMENTATION_EDIT':
+      return t('documentation-edited', { ns: 'admin' });
+    case 'LINK_EDIT':
+      return t('link-edited', { ns: 'admin' });
+    case 'POSITION_SAVE':
+      return t('position-saved', { ns: 'admin' });
+    default:
+      return '';
   }
 }

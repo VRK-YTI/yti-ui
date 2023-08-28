@@ -51,6 +51,7 @@ import {
 import ResourcePicker from '../resource-picker-modal';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 import { getPrefixFromURI } from '@app/common/utils/get-value';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -352,6 +353,9 @@ export default function ClassForm({
   useEffect(() => {
     if (updateResult.isSuccess || createResult.isSuccess) {
       handleFollowUp(data.identifier);
+      dispatch(
+        setNotification(updateResult.isSuccess ? 'CLASS_EDIT' : 'CLASS_ADD')
+      );
     }
 
     let backendErrorFields: string[] = [];
@@ -399,7 +403,7 @@ export default function ClassForm({
         label: backendErrorFields.includes('label'),
       });
     }
-  }, [updateResult, createResult, data, handleFollowUp]);
+  }, [updateResult, createResult, data, dispatch, handleFollowUp]);
 
   return (
     <>

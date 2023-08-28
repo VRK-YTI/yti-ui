@@ -25,6 +25,7 @@ import { FormUpdateErrors, validateFormUpdate } from './validate-form-update';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
 import { v4 } from 'uuid';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 
 interface ModelEditViewProps {
   model: ModelType;
@@ -74,8 +75,9 @@ export default function ModelEditView({
   useEffect(() => {
     if (result.isSuccess) {
       handleSuccess();
+      dispatch(setNotification('MODEL_EDIT'));
     }
-  }, [result, handleSuccess]);
+  }, [result, dispatch, handleSuccess]);
 
   useEffect(() => {
     if (!userPosted) {
