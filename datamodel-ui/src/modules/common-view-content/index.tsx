@@ -287,11 +287,13 @@ export default function CommonViewContent({
 
   return (
     <>
-      <BasicBlock title={t('in-use-in-this-model', { ns: 'admin' })}>
-        {inUse
-          ? t('in-use', { ns: 'admin' })
-          : t('not-in-use', { ns: 'admin' })}
-      </BasicBlock>
+      {applicationProfile && (
+        <BasicBlock title={t('in-use-in-this-model', { ns: 'admin' })}>
+          {inUse
+            ? t('in-use', { ns: 'admin' })
+            : t('not-in-use', { ns: 'admin' })}
+        </BasicBlock>
+      )}
 
       {displayLabel && (
         <BasicBlock title={getDisplayLabelTitle(data.type)}>

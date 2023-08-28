@@ -37,7 +37,7 @@ export default function ConceptView({
           })}
         </ExpanderTitleButton>
         <ExpanderContent>
-          {Object.keys(data.definition).length !== 0 && (
+          {data.definition && Object.keys(data.definition).length !== 0 && (
             <Paragraph marginBottomSpacing="m">
               <SanitizedTextContent
                 text={getLanguageVersion({
