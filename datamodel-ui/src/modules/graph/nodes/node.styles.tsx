@@ -113,7 +113,7 @@ export const Resource = styled.div<{ $highlight?: boolean }>`
   border-radius: 2px;
   margin: 2px;
   display: flex;
-  gap: ${(props) => props.theme.suomifi.spacing.xxs};
+  gap: ${(props) => props.theme.suomifi.spacing.xs};
   align-items: center;
 
   &:hover {
@@ -172,4 +172,8 @@ export const TooltipWrapper = styled.div`
     display: flex;
     align-items: center;
   }
+`;
+
+export const ResourceTechnicalName = styled.span`
+  color: ${(props) => props.theme.suomifi.colors.accentTertiaryDark1};
 `;

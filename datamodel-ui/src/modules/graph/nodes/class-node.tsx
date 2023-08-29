@@ -25,6 +25,7 @@ import {
   CollapseButton,
   OptionsButton,
   Resource,
+  ResourceTechnicalName,
   TooltipWrapper,
 } from './node.styles';
 import { useStoreDispatch } from '@app/store';
@@ -40,12 +41,16 @@ interface ClassNodeProps {
   data: {
     identifier: string;
     label: { [key: string]: string };
-    modelId?: string;
-    resources?: {
+    resources: {
       label: { [key: string]: string };
       identifier: string;
       type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
+      codeLists?: string[];
+      dataType?: string | null;
+      maxCount?: number | null;
+      minCount?: number | null;
     }[];
+    modelId?: string;
     resourceType?: 'association' | 'attribute';
     applicationProfile?: boolean;
     refetch?: () => void;
@@ -135,13 +140,8 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
       <Handle type="source" position={Position.Bottom} id={id} />
 
       <div className="node-title">
-        <div onClick={() => handleTitleClick()}>
-          {getLanguageVersion({
-            data: data.label,
-            lang: displayLang !== i18n.language ? displayLang : i18n.language,
-            appendLocale: true,
-          })}
-        </div>
+        <div onClick={() => handleTitleClick()}>{renderClassLabel()}</div>
+
         {data.applicationProfile ? (
           hasPermission ? (
             <TooltipWrapper>
@@ -208,13 +208,68 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
                 <IconRows />
               ))}
 
-            {getLanguageVersion({
-              data: r.label,
-              lang: displayLang !== i18n.language ? displayLang : i18n.language,
-              appendLocale: true,
-            })}
+            {renderResourceLabel(r)}
           </Resource>
         ))}
     </ClassNodeDiv>
   );
+
+  function renderClassLabel() {
+    if (!data.applicationProfile) {
+      return getLanguageVersion({
+        data: data.label,
+        lang: displayLang !== i18n.language ? displayLang : i18n.language,
+        appendLocale: true,
+      });
+    }
+
+    return data.identifier.includes(':')
+      ? data.identifier
+      : `${getLanguageVersion({
+          data: data.label,
+          lang: displayLang !== i18n.language ? displayLang : i18n.language,
+          appendLocale: true,
+        })}
+            ${' '}
+        (${data.modelId}:${data.identifier})`;
+  }
+
+  function renderResourceLabel(
+    resource: ClassNodeProps['data']['resources'][0]
+  ) {
+    if (!data.applicationProfile) {
+      return getLanguageVersion({
+        data: resource.label,
+        lang: displayLang !== i18n.language ? displayLang : i18n.language,
+        appendLocale: true,
+      });
+    }
+
+    return (
+      <div>
+        {getLanguageVersion({
+          data: resource.label,
+          lang: displayLang !== i18n.language ? displayLang : i18n.language,
+          appendLocale: true,
+        })}
+        : [{getMinMax(resource)}] {getIdentifier(resource)}
+      </div>
+    );
+  }
+
+  function getMinMax(resource: ClassNodeProps['data']['resources'][0]) {
+    if (!resource.minCount && !resource.maxCount) {
+      return '*';
+    }
+
+    return `${resource.minCount ?? '0'}..${resource.maxCount ?? '*'}`;
+  }
+
+  function getIdentifier(resource: ClassNodeProps['data']['resources'][0]) {
+    return (
+      <ResourceTechnicalName>
+        ({data.identifier}:{resource.identifier})
+      </ResourceTechnicalName>
+    );
+  }
 }
