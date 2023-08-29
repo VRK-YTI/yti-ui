@@ -48,7 +48,9 @@ export default function ApplicationProfileTop({
           {translateApplicationProfileTopDescription(type, t, external)}
         </Text>
         {external && (
-          <Button variant="secondary">{t('create-local-copy')}</Button>
+          <div style={{ marginTop: '15px' }}>
+            <Button variant="secondary">{t('create-local-copy')}</Button>
+          </div>
         )}
       </InlineAlert>
 

@@ -7,6 +7,18 @@ import ResourceModal from '../../resource-modal';
 import ClassModal from '@app/modules/class-modal';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
+import styled from 'styled-components';
+
+const TextInputWrapper = styled.div`
+  > * {
+    margin-bottom: 20px;
+    width: 100%;
+
+    .fi-text-input_input-element-container {
+      width: 290px;
+    }
+  }
+`;
 
 export default function AssociationRestrictions({
   modelId,
@@ -65,7 +77,7 @@ export default function AssociationRestrictions({
           }
           handleRemoval={() => handleUpdate('path', undefined)}
           items={data.path ? [data.path] : []}
-          label={t('target-association')}
+          label={`${t('target-association')} (sh:path)`}
         />
 
         <InlineListBlock
@@ -86,24 +98,29 @@ export default function AssociationRestrictions({
               ? [{ id: data.classType, label: data.classType }]
               : []
           }
-          label={t('association-targets-class', { ns: 'common' })}
+          label={`${t('association-targets-class', {
+            ns: 'common',
+          })} (sh:class)`}
+          optionalText={t('optional')}
         />
 
-        <TextInput
-          labelText={t('minimum-amount')}
-          optionalText={t('optional')}
-          defaultValue={data.minCount?.toString() ?? ''}
-          onChange={(e) => handleUpdate('minCount', e?.toString() ?? '')}
-          maxLength={TEXT_INPUT_MAX}
-        />
+        <TextInputWrapper>
+          <TextInput
+            labelText={`${t('minimum-amount')} (sh:minCount)`}
+            optionalText={t('optional')}
+            defaultValue={data.minCount?.toString() ?? ''}
+            onChange={(e) => handleUpdate('minCount', e?.toString() ?? '')}
+            maxLength={TEXT_INPUT_MAX}
+          />
 
-        <TextInput
-          labelText={t('maximum-amount')}
-          optionalText={t('optional')}
-          defaultValue={data.maxCount?.toString() ?? ''}
-          onChange={(e) => handleUpdate('maxCount', e?.toString() ?? '')}
-          maxLength={TEXT_INPUT_MAX}
-        />
+          <TextInput
+            labelText={`${t('maximum-amount')} (sh:maxCount)`}
+            optionalText={t('optional')}
+            defaultValue={data.maxCount?.toString() ?? ''}
+            onChange={(e) => handleUpdate('maxCount', e?.toString() ?? '')}
+            maxLength={TEXT_INPUT_MAX}
+          />
+        </TextInputWrapper>
       </>
     );
   }
