@@ -8,6 +8,10 @@ export const FormWrapper = styled.div`
   .wide-text {
     width: 100%;
   }
+
+  .fi-label_label-span {
+    white-space: nowrap;
+  }
 `;
 
 export const LanguageVersionedWrapper = styled.div`

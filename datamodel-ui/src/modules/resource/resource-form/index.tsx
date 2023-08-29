@@ -439,7 +439,7 @@ export default function ResourceForm({
                   'name',
                   data.type,
                   t
-                )}, ${lang}`}
+                )}, ${lang} (rdfs:label)`}
                 value={data.label[lang] ?? ''}
                 onChange={(e) =>
                   handleUpdate({
@@ -454,7 +454,11 @@ export default function ResourceForm({
           </LanguageVersionedWrapper>
 
           <TextInput
-            labelText={translateCommonForm('identifier', data.type, t)}
+            labelText={`${translateCommonForm(
+              'identifier',
+              data.type,
+              t
+            )} (dcterms:identifier)`}
             defaultValue={data.identifier}
             onChange={(e) =>
               handleUpdate({
@@ -489,7 +493,11 @@ export default function ResourceForm({
           {!applicationProfile && (
             <>
               <InlineListBlock
-                label={translateCommonForm('upper', data.type, t)}
+                label={`${translateCommonForm(
+                  'upper',
+                  data.type,
+                  t
+                )} (rdfs:subPropertyOf)`}
                 items={
                   data.subResourceOf?.map((resource) => ({
                     id: resource.uri,
@@ -530,7 +538,11 @@ export default function ResourceForm({
               />
 
               <InlineListBlock
-                label={translateCommonForm('equivalent', data.type, t)}
+                label={`${translateCommonForm(
+                  'equivalent',
+                  data.type,
+                  t
+                )} (owl:equivalentProperty)`}
                 items={
                   data.equivalentResource?.map((r) => ({
                     id: r.uri,
@@ -605,7 +617,7 @@ export default function ResourceForm({
                   'note',
                   data.type,
                   t
-                )}, ${lang}`}
+                )}, ${lang} (rdfs:comment)`}
                 defaultValue={data.note?.[lang] ?? ''}
                 onChange={(e) =>
                   handleUpdate({
@@ -621,7 +633,11 @@ export default function ResourceForm({
           </LanguageVersionedWrapper>
 
           <Textarea
-            labelText={translateCommonForm('work-group-comment', data.type, t)}
+            labelText={`${translateCommonForm(
+              'work-group-comment',
+              data.type,
+              t
+            )} (dcterms:description)`}
             optionalText={t('optional')}
             defaultValue={data.editorialNote}
             onChange={(e) =>
