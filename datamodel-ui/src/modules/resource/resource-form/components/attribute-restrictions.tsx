@@ -14,6 +14,7 @@ import {
 } from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
 import { CommonFormErrors } from '../validate-form';
+import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import styled from 'styled-components';
 
 const RestrictionWrapper = styled.div`
@@ -193,6 +194,7 @@ export default function AttributeRestrictions({
           defaultValue={data.minLength}
           onChange={(e) => handleUpdate('minLength', e?.toString() ?? '')}
           status={errors['minLength'] ? 'error' : 'default'}
+          maxLength={TEXT_INPUT_MAX}
         />
 
         <TextInput
@@ -202,6 +204,7 @@ export default function AttributeRestrictions({
           defaultValue={data.maxLength}
           onChange={(e) => handleUpdate('maxLength', e?.toString() ?? '')}
           status={errors['maxLength'] ? 'error' : 'default'}
+          maxLength={TEXT_INPUT_MAX}
         />
 
         <TextInput
@@ -211,6 +214,7 @@ export default function AttributeRestrictions({
           defaultValue={data.minCount}
           onChange={(e) => handleUpdate('minCount', e?.toString() ?? '')}
           status={errors['minCount'] ? 'error' : 'default'}
+          maxLength={TEXT_INPUT_MAX}
         />
 
         <TextInput
@@ -220,6 +224,7 @@ export default function AttributeRestrictions({
           defaultValue={data.maxCount}
           onChange={(e) => handleUpdate('maxCount', e?.toString() ?? '')}
           status={errors['maxCount'] ? 'error' : 'default'}
+          maxLength={TEXT_INPUT_MAX}
         />
 
         <TextInput
@@ -229,6 +234,7 @@ export default function AttributeRestrictions({
           defaultValue={data.minInclusive}
           onChange={(e) => handleUpdate('minInclusive', e?.toString() ?? '')}
           status={errors['minInclusive'] ? 'error' : 'default'}
+          maxLength={TEXT_INPUT_MAX}
         />
 
         <TextInput
@@ -238,6 +244,7 @@ export default function AttributeRestrictions({
           defaultValue={data.maxInclusive}
           onChange={(e) => handleUpdate('maxInclusive', e?.toString() ?? '')}
           status={errors['maxInclusive'] ? 'error' : 'default'}
+          maxLength={TEXT_INPUT_MAX}
         />
 
         <TextInput
@@ -247,6 +254,7 @@ export default function AttributeRestrictions({
           defaultValue={data.minExclusive}
           onChange={(e) => handleUpdate('minExclusive', e?.toString() ?? '')}
           status={errors['minExclusive'] ? 'error' : 'default'}
+          maxLength={TEXT_INPUT_MAX}
         />
 
         <TextInput
@@ -256,6 +264,7 @@ export default function AttributeRestrictions({
           defaultValue={data.maxExclusive}
           onChange={(e) => handleUpdate('maxExclusive', e?.toString() ?? '')}
           status={errors['maxExclusive'] ? 'error' : 'default'}
+          maxLength={TEXT_INPUT_MAX}
         />
 
         <TextInput
@@ -264,6 +273,7 @@ export default function AttributeRestrictions({
           visualPlaceholder={t('input-value')}
           defaultValue={data.pattern}
           onChange={(e) => handleUpdate('pattern', e?.toString() ?? '')}
+          maxLength={TEXT_INPUT_MAX}
         />
 
         <MultiSelect

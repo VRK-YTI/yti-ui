@@ -47,6 +47,7 @@ import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-b
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 
 export default function Documentation({
   modelId,
@@ -386,6 +387,7 @@ export default function Documentation({
               }
               onKeyDown={(e) => e.key === 'Enter' && handleEnterClick(e)}
               id="documentation-textarea"
+              maxLength={TEXT_AREA_MAX}
             />
           </div>
 

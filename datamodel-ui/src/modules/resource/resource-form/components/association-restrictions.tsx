@@ -6,6 +6,7 @@ import { TextInput } from 'suomifi-ui-components';
 import ResourceModal from '../../resource-modal';
 import ClassModal from '@app/modules/class-modal';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
+import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import styled from 'styled-components';
 
 const TextInputWrapper = styled.div`
@@ -109,6 +110,7 @@ export default function AssociationRestrictions({
             optionalText={t('optional')}
             defaultValue={data.minCount?.toString() ?? ''}
             onChange={(e) => handleUpdate('minCount', e?.toString() ?? '')}
+            maxLength={TEXT_INPUT_MAX}
           />
 
           <TextInput
@@ -116,6 +118,7 @@ export default function AssociationRestrictions({
             optionalText={t('optional')}
             defaultValue={data.maxCount?.toString() ?? ''}
             onChange={(e) => handleUpdate('maxCount', e?.toString() ?? '')}
+            maxLength={TEXT_INPUT_MAX}
           />
         </TextInputWrapper>
       </>

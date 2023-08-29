@@ -3,6 +3,7 @@ import { FilterBlockWrapper } from './code-list-modal.styles';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import { useTranslation } from 'next-i18next';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
+import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 
 export interface FilterType {
   keyword: string;
@@ -64,6 +65,7 @@ export default function FilterBlock({
           defaultValue={filter.keyword}
           debounce={300}
           id="search-text-input"
+          maxLength={TEXT_INPUT_MAX}
         />
 
         <Dropdown

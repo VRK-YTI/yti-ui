@@ -52,6 +52,7 @@ import ResourcePicker from '../resource-picker-modal';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 import { getPrefixFromURI } from '@app/common/utils/get-value';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -504,6 +505,7 @@ export default function ClassForm({
               status={userPosted && errors.label ? 'error' : 'default'}
               fullWidth
               id="label-input"
+              maxLength={TEXT_INPUT_MAX}
             />
           ))}
         </LanguageVersionedWrapper>
@@ -538,6 +540,7 @@ export default function ClassForm({
             </Tooltip>
           }
           id="prefix-input"
+          maxLength={TEXT_INPUT_MAX}
         />
 
         {!applicationProfile ? (
@@ -700,6 +703,7 @@ export default function ClassForm({
               }
               fullWidth
               id="comment-input"
+              maxLength={TEXT_AREA_MAX}
             />
           ))}
         </LanguageVersionedWrapper>
@@ -802,6 +806,7 @@ export default function ClassForm({
           }
           fullWidth
           id="editor-comment-input"
+          maxLength={TEXT_AREA_MAX}
         />
       </DrawerContent>
     </>

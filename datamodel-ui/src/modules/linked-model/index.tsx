@@ -25,6 +25,7 @@ import {
   ExternalNamespace,
   InternalNamespace,
 } from '@app/common/interfaces/model.interface';
+import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 
 export default function LinkedModel({
   initialData,
@@ -211,6 +212,7 @@ export default function LinkedModel({
               onChange={(e) => setKeyword(e?.toString() ?? '')}
               debounce={300}
               id="search-input"
+              maxLength={TEXT_INPUT_MAX}
             />
 
             <Button
@@ -340,6 +342,7 @@ export default function LinkedModel({
             onChange={(e) => setDataValue('name', e?.toString() ?? '')}
             status={userPosted && errors.name ? 'error' : 'default'}
             id="data-model-name-input"
+            maxLength={TEXT_INPUT_MAX}
           />
 
           <TextInput
@@ -349,6 +352,7 @@ export default function LinkedModel({
             onChange={(e) => setDataValue('prefix', e?.toString() ?? '')}
             status={userPosted && errors.prefix ? 'error' : 'default'}
             id="prefix-input"
+            maxLength={32}
           />
         </ContentWrapper>
       </ModalContent>

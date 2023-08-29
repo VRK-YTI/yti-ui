@@ -37,6 +37,7 @@ import {
   SearchResultSubTitle,
   StatusChip,
 } from './terminology-modal.styles';
+import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 
 export default function TerminologyModal({
   addedTerminologies,
@@ -205,6 +206,7 @@ export default function TerminologyModal({
             onSearch={(e) => handleSearchChange('query', e ?? '')}
             debounce={500}
             id="search-input"
+            maxLength={TEXT_INPUT_MAX}
           />
 
           <SingleSelect
