@@ -33,7 +33,7 @@ ARG VERSION
 
 WORKDIR /app
 COPY mscr-ui ./mscr-ui
-COPY --from=deps /app/datamodel-ui/node_modules ./mscr-ui/node_modules
+COPY --from=deps /app/mscr-ui/node_modules ./mscr-ui/node_modules
 COPY --from=deps /app/common-ui ./common-ui
 COPY --from=deps /app/node_modules ./node_modules
 WORKDIR /app/mscr-ui
