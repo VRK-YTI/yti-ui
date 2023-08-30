@@ -10,7 +10,8 @@ export const ClassNodeDiv = styled.div<{
   gap: ${(props) => props.theme.suomifi.spacing.xxs};
   padding: ${(props) => props.theme.suomifi.spacing.xxs};
 
-  width: 360px;
+  min-width: 360px;
+  width: min-content;
 
   > div {
     max-width: 100%;
@@ -115,6 +116,7 @@ export const Resource = styled.div<{ $highlight?: boolean }>`
   display: flex;
   gap: ${(props) => props.theme.suomifi.spacing.xs};
   align-items: center;
+  white-space: nowrap;
 
   &:hover {
     background: ${(props) => props.theme.suomifi.colors.depthLight2};
