@@ -1,29 +1,24 @@
-/* eslint-disable jsx-a11y/mouse-events-have-key-events */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import {
   resetHovered,
   selectDisplayLang,
-  selectHovered,
   selectSelected,
   setHovered,
-  setSelected,
 } from '@app/common/components/model/model.slice';
-import { MouseEvent, useCallback } from 'react';
+import { useStoreDispatch } from '@app/store';
+import { useTranslation } from 'next-i18next';
+import { useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import {
   EdgeLabelRenderer,
   EdgeProps,
   getStraightPath,
   useStore,
 } from 'reactflow';
-import { EdgeContent, HoveredPath } from './edge.styles';
-import { useSelector } from 'react-redux';
-import { useStoreDispatch } from '@app/store';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { useTranslation } from 'next-i18next';
 import getEdgeParams from '../utils/get-edge-params';
+import { EdgeContent, HoveredPath } from './edge.styles';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
-export default function SolidEdge({
+export default function GeneralEdge({
   id,
   data,
   source,
@@ -77,25 +72,34 @@ export default function SolidEdge({
         onMouseOver={() => handleHover(true)}
       />
 
-      <EdgeLabelRenderer>
-        <EdgeContent
-          className="nopan"
-          $labelX={labelX}
-          $labelY={labelY}
-          $highlight={
-            globalSelected.type === 'associations' &&
-            globalSelected.id === data.identifier
-          }
-        >
-          <div>
-            {getLanguageVersion({
-              data: data.label,
-              lang: displayLang !== i18n.language ? displayLang : i18n.language,
-              appendLocale: true,
-            })}
-          </div>
-        </EdgeContent>
-      </EdgeLabelRenderer>
+      {getLabel(data.label) && (
+        <EdgeLabelRenderer key={`edge-label-${source}-${target}`}>
+          <EdgeContent
+            className="nopan"
+            $applicationProfile={data.applicationProfile}
+            $labelX={labelX}
+            $labelY={labelY}
+            $highlight={
+              globalSelected.type === 'associations' &&
+              globalSelected.id === data.identifier
+            }
+          >
+            <div>{getLabel(data.label)}</div>
+          </EdgeContent>
+        </EdgeLabelRenderer>
+      )}
     </>
   );
+
+  function getLabel(label: { [key: string]: string }) {
+    if (!label || Object.keys(label).length < 1) {
+      return undefined;
+    }
+
+    return getLanguageVersion({
+      data: label,
+      lang: displayLang !== i18n.language ? displayLang : i18n.language,
+      appendLocale: true,
+    });
+  }
 }

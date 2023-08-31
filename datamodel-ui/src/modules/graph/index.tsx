@@ -32,11 +32,12 @@ import { ClearArrow } from './marker-ends';
 import convertToNodes from './utils/convert-to-nodes';
 import { createNewCornerNode } from './utils/create-corner-node';
 import convertToEdges from './utils/convert-to-edges';
-import createCornerEdge from './utils/create-corner-edge';
 import generatePositionsPayload from './utils/generate-positions-payload';
 import getUnusedCornerIds from './utils/get-unused-corner-ids';
 import handleEdgeDelete from './utils/handle-edge-delete';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import GeneralEdge from './edges/general-edge';
+import createEdge from './utils/create-edge';
 
 interface GraphProps {
   modelId: string;
@@ -73,6 +74,7 @@ const GraphContent = ({
       defaultEdge: SplittableEdge,
       dottedEdge: DottedEdge,
       solidEdge: SolidEdge,
+      generalEdge: GeneralEdge,
     }),
     []
   );
@@ -105,17 +107,33 @@ const GraphContent = ({
       ]);
 
       const newEdges = [
-        createCornerEdge(source, newCornerId, {
+        createEdge({
+          params: {
+            source: source,
+            sourceHandle: source,
+            target: newCornerId,
+            targetHandle: newCornerId,
+            id: `reactflow__edge-${source}-${newCornerId}`,
+          },
+          isCorner: true,
           handleDelete: deleteEdgeById,
-          splitEdge: splitEdge,
+          splitEdge,
         }),
       ];
 
       if (target.includes('corner')) {
         newEdges.push(
-          createCornerEdge(newCornerId, target, {
+          createEdge({
+            params: {
+              source: newCornerId,
+              sourceHandle: newCornerId,
+              target: target,
+              targetHandle: target,
+              id: `reactflow__edge-${newCornerId}-${newCornerId}`,
+            },
+            isCorner: true,
             handleDelete: deleteEdgeById,
-            splitEdge: splitEdge,
+            splitEdge,
           })
         );
       }
