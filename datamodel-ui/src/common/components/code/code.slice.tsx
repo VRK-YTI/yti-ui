@@ -72,6 +72,12 @@ export const codeApi = createApi({
         method: 'GET',
       }),
     }),
+    getAllCodes: builder.query<CodeType[], string[]>({
+      query: (uris) => ({
+        url: `/coderegistries/codes?uri=${uris.join('&uri=')}`,
+        method: 'GET',
+      }),
+    }),
     getCodeRegistries: builder.query<
       {
         meta: {
@@ -136,6 +142,7 @@ export const codeApi = createApi({
 
 export const {
   useGetCodesQuery,
+  useGetAllCodesQuery,
   useGetCodeRegistriesQuery,
   useGetCodeRegistryQuery,
   useGetLanguagesQuery,

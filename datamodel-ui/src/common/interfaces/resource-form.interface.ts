@@ -3,7 +3,10 @@ import { ResourceType } from './resource-type.interface';
 import { Status } from './status.interface';
 
 export interface ResourceFormType {
-  allowedValues?: string[];
+  allowedValues?: {
+    id: string;
+    label: string;
+  }[];
   classType?: string;
   codeLists?: {
     id: string;

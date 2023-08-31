@@ -2,12 +2,19 @@ import { ResourceFormType } from '@app/common/interfaces/resource-form.interface
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Resource } from '@app/common/interfaces/resource.interface';
 import { compareLocales } from '@app/common/utils/compare-locals';
+import { v4 } from 'uuid';
 
 export function resourceToResourceFormType(data: Resource): ResourceFormType {
   return {
     ...data,
     classType: data.classType ? data.classType.uri : undefined,
     concept: data.subject,
+    allowedValues: data.allowedValues?.map((value) => {
+      return {
+        id: v4().split('-')[0],
+        label: value,
+      };
+    }),
     codeLists: data.codeLists
       ? data.codeLists.map((codeList) => ({
           id: codeList,
