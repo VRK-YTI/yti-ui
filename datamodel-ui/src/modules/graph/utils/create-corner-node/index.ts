@@ -11,7 +11,7 @@ export default function createCornerNode(
       ? node.identifier
       : `#${node.identifier}`,
     data: {
-      applicationProfile: applicationProfile,
+      ...(applicationProfile ? { applicationProfile: true } : {}),
       ...(handleNodeDelete ? { handleNodeDelete: handleNodeDelete } : {}),
     },
     position: node.position,

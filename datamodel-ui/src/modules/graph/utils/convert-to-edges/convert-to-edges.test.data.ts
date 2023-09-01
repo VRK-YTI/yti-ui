@@ -97,152 +97,127 @@ export const visualizationHiddenTypeArray: VisualizationHiddenNode[] = [
   },
 ];
 
-export function solidEdgeExpected(
-  handleDelete: jest.Mock,
-  splitEdge: jest.Mock
-) {
-  return [
-    {
-      id: 'reactflow__edge-1-2',
-      type: 'solidEdge',
-      markerEnd: {
-        type: 'arrowclosed',
-        height: 20,
-        width: 20,
-        color: '#222',
-      },
-      source: '1',
-      sourceHandle: '1',
-      target: '2',
-      targetHandle: '2',
-      data: {
-        handleDelete: handleDelete,
-        splitEdge: splitEdge,
-        identifier: 'association-1',
-        label: {
-          fi: 'assoc-1-2-fi',
-          en: 'assoc-1-2-en',
-        },
+export const solidEdgeExpected = [
+  {
+    id: 'reactflow__edge-1-2',
+    type: 'generalEdge',
+    markerEnd: {
+      type: 'arrowclosed',
+      height: 20,
+      width: 20,
+      color: '#212121',
+    },
+    source: '1',
+    sourceHandle: '1',
+    target: '2',
+    targetHandle: '2',
+    data: {
+      identifier: 'association-1',
+      label: {
+        fi: 'assoc-1-2-fi',
+        en: 'assoc-1-2-en',
       },
     },
-    {
-      id: 'reactflow__edge-4-3',
-      type: 'solidEdge',
-      markerEnd: {
-        type: 'arrowclosed',
-        height: 20,
-        width: 20,
-        color: '#222',
-      },
-      source: '4',
-      sourceHandle: '4',
-      target: '3',
-      targetHandle: '3',
-      data: {
-        handleDelete: handleDelete,
-        splitEdge: splitEdge,
-        identifier: 'association-4',
-        label: {
-          fi: 'assoc-4-3-fi',
-        },
+  },
+  {
+    id: 'reactflow__edge-4-3',
+    type: 'generalEdge',
+    markerEnd: {
+      type: 'arrowclosed',
+      height: 20,
+      width: 20,
+      color: '#212121',
+    },
+    source: '4',
+    sourceHandle: '4',
+    target: '3',
+    targetHandle: '3',
+    data: {
+      identifier: 'association-4',
+      label: {
+        fi: 'assoc-4-3-fi',
       },
     },
-  ];
-}
+  },
+];
 
-export function dottedEdgeExpected(
-  handleDelete: jest.Mock,
-  splitEdge: jest.Mock
-) {
-  return [
-    {
-      id: 'reactflow__edge-1-2',
-      type: 'dottedEdge',
-      markerEnd: 'clearArrow',
-      source: '1',
-      sourceHandle: '1',
-      target: '2',
-      targetHandle: '2',
-      data: {
-        handleDelete: handleDelete,
-        splitEdge: splitEdge,
-        identifier: 'association-1',
-        label: {
-          fi: 'assoc-1-2-fi',
-          en: 'assoc-1-2-en',
-        },
-        offsetSource: 1,
+export const dottedEdgeExpected = [
+  {
+    id: 'reactflow__edge-1-2',
+    type: 'generalEdge',
+    markerEnd: 'clearArrow',
+    source: '1',
+    sourceHandle: '1',
+    target: '2',
+    targetHandle: '2',
+    data: {
+      applicationProfile: true,
+      identifier: 'association-1',
+      label: {
+        fi: 'assoc-1-2-fi',
+        en: 'assoc-1-2-en',
       },
-      style: {
-        stroke: '#235A9A',
-        strokeDasharray: '4 2',
-      },
+      offsetSource: 1,
     },
-    {
-      id: 'reactflow__edge-4-3',
-      type: 'dottedEdge',
-      markerEnd: 'clearArrow',
-      source: '4',
-      sourceHandle: '4',
-      target: '3',
-      targetHandle: '3',
-      data: {
-        handleDelete: handleDelete,
-        splitEdge: splitEdge,
-        identifier: 'association-4',
-        label: {
-          fi: 'assoc-4-3-fi',
-        },
-        offsetSource: 1,
-      },
-      style: {
-        stroke: '#235A9A',
-        strokeDasharray: '4 2',
-      },
+    style: {
+      stroke: '#235A9A',
+      strokeDasharray: '4 2',
     },
-  ];
-}
+  },
+  {
+    id: 'reactflow__edge-4-3',
+    type: 'generalEdge',
+    markerEnd: 'clearArrow',
+    source: '4',
+    sourceHandle: '4',
+    target: '3',
+    targetHandle: '3',
+    data: {
+      applicationProfile: true,
+      identifier: 'association-4',
+      label: {
+        fi: 'assoc-4-3-fi',
+      },
+      offsetSource: 1,
+    },
+    style: {
+      stroke: '#235A9A',
+      strokeDasharray: '4 2',
+    },
+  },
+];
 
-export function hiddenEdgeExpected(
-  handleDelete: jest.Mock,
-  splitEdge: jest.Mock
-) {
-  return [
-    {
-      id: 'reactflow__edge-#corner-1-#corner-#corner-2',
-      type: 'defaultEdge',
-      source: '#corner-1',
-      sourceHandle: '#corner-1',
-      target: '#corner-2',
-      targetHandle: '#corner-2',
-      data: {
-        handleDelete: handleDelete,
-        splitEdge: splitEdge,
+export const hiddenEdgeExpected = [
+  {
+    id: 'reactflow__edge-#corner-1-#corner-2',
+    type: 'generalEdge',
+    source: '#corner-1',
+    sourceHandle: '#corner-1',
+    target: '#corner-2',
+    targetHandle: '#corner-2',
+    markerEnd: undefined,
+    data: {},
+  },
+  {
+    id: 'reactflow__edge-#corner-2-3',
+    type: 'generalEdge',
+    markerEnd: {
+      type: 'arrowclosed',
+      height: 20,
+      width: 20,
+      color: '#212121',
+    },
+    source: '#corner-2',
+    sourceHandle: '#corner-2',
+    target: '3',
+    targetHandle: '3',
+    data: {
+      identifier: '3',
+      label: {
+        fi: 'label-3-fi',
+        en: 'label-3-en',
+        sv: 'label-3-sv',
       },
     },
-    {
-      id: 'reactflow__edge-#corner-2-3',
-      type: 'solidEdge',
-      markerEnd: {
-        type: 'arrowclosed',
-        height: 20,
-        width: 20,
-        color: '#222',
-      },
-      source: '#corner-2',
-      sourceHandle: '#corner-2',
-      target: '3',
-      targetHandle: '3',
-      data: {
-        handleDelete: handleDelete,
-        splitEdge: splitEdge,
-        identifier: '3',
-        label: {
-          fi: 'label-3-fi',
-          en: 'label-3-en',
-          sv: 'label-3-sv',
-        },
-      },
-    },
-  ];
-}
+  },
+];

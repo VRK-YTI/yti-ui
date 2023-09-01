@@ -9,64 +9,32 @@ import {
 
 describe('convert-to-edges', () => {
   it('should return an empty array if no associations defined', () => {
-    const handleDeleteMock = jest.fn();
-    const splitEdgeMock = jest.fn();
-
-    const returned = convertToEdges([], [], handleDeleteMock, splitEdgeMock);
+    const returned = convertToEdges([], []);
 
     expect(returned).toStrictEqual([]);
   });
 
   it('should return solid edges', () => {
-    const handleDeleteMock = jest.fn();
-    const splitEdgeMock = jest.fn();
-
-    const returned = convertToEdges(
-      visualizationTypeArray,
-      [],
-      handleDeleteMock,
-      splitEdgeMock
-    );
+    const returned = convertToEdges(visualizationTypeArray, []);
 
     expect(returned).toHaveLength(2);
-    expect(returned).toStrictEqual(
-      solidEdgeExpected(handleDeleteMock, splitEdgeMock)
-    );
+    expect(returned).toStrictEqual(solidEdgeExpected);
   });
 
   it('should return dotted edges', () => {
-    const handleDeleteMock = jest.fn();
-    const splitEdgeMock = jest.fn();
-
-    const returned = convertToEdges(
-      visualizationTypeArray,
-      [],
-      handleDeleteMock,
-      splitEdgeMock,
-      true
-    );
+    const returned = convertToEdges(visualizationTypeArray, [], true);
 
     expect(returned).toHaveLength(2);
-    expect(returned).toStrictEqual(
-      dottedEdgeExpected(handleDeleteMock, splitEdgeMock)
-    );
+    expect(returned).toStrictEqual(dottedEdgeExpected);
   });
 
   it('should return edges with corners', () => {
-    const handleDeleteMock = jest.fn();
-    const splitEdgeMock = jest.fn();
-
     const returned = convertToEdges(
       visualizationTypeArray,
-      visualizationHiddenTypeArray,
-      handleDeleteMock,
-      splitEdgeMock
+      visualizationHiddenTypeArray
     );
 
-    const expected = [
-      ...solidEdgeExpected(handleDeleteMock, splitEdgeMock),
-      ...hiddenEdgeExpected(handleDeleteMock, splitEdgeMock),
-    ];
+    const expected = [...solidEdgeExpected, ...hiddenEdgeExpected];
 
     expect(returned).toStrictEqual(expected);
   });
