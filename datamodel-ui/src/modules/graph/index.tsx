@@ -15,17 +15,18 @@ import {
 } from '@app/common/components/visualization/visualization.slice';
 import { useStoreDispatch } from '@app/store';
 import {
+  resetHighlighted,
   selectDisplayLang,
   selectResetPosition,
   selectSavePosition,
   selectSelected,
+  setHighlighted,
   setResetPosition,
   setSavePosition,
   setSelected,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
 import { ClassNode, CornerNode, ExternalNode } from './nodes';
-import { DottedEdge, SolidEdge, SplittableEdge } from './edges';
 import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
 import { ClearArrow } from './marker-ends';
@@ -36,8 +37,9 @@ import generatePositionsPayload from './utils/generate-positions-payload';
 import getUnusedCornerIds from './utils/get-unused-corner-ids';
 import handleEdgeDelete from './utils/handle-edge-delete';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
-import GeneralEdge from './edges/general-edge';
+import DefaultEdge from './edges/edge';
 import createEdge from './utils/create-edge';
+import getConnectedElements from './utils/get-connected-elements';
 
 interface GraphProps {
   modelId: string;
@@ -71,10 +73,7 @@ const GraphContent = ({
   );
   const edgeTypes: EdgeTypes = useMemo(
     () => ({
-      defaultEdge: SplittableEdge,
-      dottedEdge: DottedEdge,
-      solidEdge: SolidEdge,
-      generalEdge: GeneralEdge,
+      generalEdge: DefaultEdge,
     }),
     []
   );
@@ -175,6 +174,32 @@ const GraphContent = ({
     [dispatch, globalSelected.id]
   );
 
+  const onNodeMouseEnter = useCallback(
+    (e, node) => {
+      if (node.type !== 'cornerNode') {
+        return;
+      }
+
+      dispatch(setHighlighted(getConnectedElements(node, nodes, edges)));
+    },
+    [dispatch, edges, nodes]
+  );
+
+  const onNodeMouseLeave = useCallback(() => {
+    dispatch(resetHighlighted());
+  }, [dispatch]);
+
+  const onEdgeMouseEnter = useCallback(
+    (e, edge) => {
+      dispatch(setHighlighted(getConnectedElements(edge, nodes, edges)));
+    },
+    [dispatch, edges, nodes]
+  );
+
+  const onEdgeMouseLeave = useCallback(() => {
+    dispatch(resetHighlighted());
+  }, [dispatch]);
+
   useEffect(() => {
     if (isSuccess || (isSuccess && resetPosition)) {
       setNodes(
@@ -257,6 +282,10 @@ const GraphContent = ({
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         onEdgeClick={onEdgeClick}
+        onNodeMouseEnter={onNodeMouseEnter}
+        onNodeMouseLeave={onNodeMouseLeave}
+        onEdgeMouseEnter={onEdgeMouseEnter}
+        onEdgeMouseLeave={onEdgeMouseLeave}
         fitView
         maxZoom={100}
       >

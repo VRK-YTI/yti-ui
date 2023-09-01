@@ -58,6 +58,42 @@ export const ClassNodeDiv = styled.div<{
   `}
 `;
 
+export const CornerNodeWrapper = styled.div<{ $highlight?: boolean }>`
+  padding: 0;
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  z-index: 1 !important;
+  border: 1px solid transparent;
+
+  box-shadow: none !important;
+  background: none;
+
+  .react-flow__handle {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    width: 0;
+    height: 0;
+    border: 0;
+    top: 0;
+    bottom 0;
+  }
+
+  ${(props) =>
+    props.$highlight &&
+    `
+  background-color: ${props.theme.suomifi.colors.whiteBase};
+  border-radius: 50%;
+  border: 1px solid ${props.theme.suomifi.colors.depthLight1};
+  `}
+
+  &:hover {
+    background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
+    border-radius: 50%;
+    border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+  }
+`;
+
 export const CollapseButton = styled.button`
   display: flex;
   align-items: center;

@@ -131,7 +131,7 @@ const initialState = {
     id: '',
     type: '',
   },
-  highlighted: [],
+  highlighted: [] as string[],
   view: initialView,
   hasChanges: false,
   displayWarning: false,
@@ -203,6 +203,12 @@ export const modelSlice = createSlice({
           id: action.payload.id,
           type: action.payload.type,
         },
+      };
+    },
+    setHighlighted(state, action) {
+      return {
+        ...state,
+        highlighted: action.payload,
       };
     },
     setView(state, action) {
@@ -306,6 +312,18 @@ export function setHovered(id: string, type: keyof ViewList): AppThunk {
 export function resetHovered(): AppThunk {
   return (dispatch) =>
     dispatch(modelSlice.actions.setHovered({ id: '', type: '' }));
+}
+
+export function selectHighlighted() {
+  return (state: AppState) => state.model.highlighted;
+}
+
+export function setHighlighted(ids: string[]): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setHighlighted(ids));
+}
+
+export function resetHighlighted(): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setHighlighted([]));
 }
 
 export function selectViews() {

@@ -64,10 +64,12 @@ export const DeleteEdgeButton = styled.button`
   }
 `;
 
-export const HoveredPath = styled.path`
+export const HoveredPath = styled.path<{ $highlight?: boolean }>`
   stroke-width: 10;
 
-  &:hover {
-    stroke: ${(props) => props.theme.suomifi.colors.depthLight1};
-  }
+  ${(props) =>
+    props.$highlight &&
+    `
+    stroke: ${props.theme.suomifi.colors.depthLight1};
+    `}
 `;
