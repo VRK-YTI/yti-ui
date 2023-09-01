@@ -31,15 +31,15 @@ import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
 import { ClearArrow } from './marker-ends';
 import convertToNodes from './utils/convert-to-nodes';
-import { createNewCornerNode } from './utils/create-corner-node';
+import createCornerNode from './utils/create-corner-node';
 import convertToEdges from './utils/convert-to-edges';
 import generatePositionsPayload from './utils/generate-positions-payload';
 import getUnusedCornerIds from './utils/get-unused-corner-ids';
-import handleEdgeDelete from './utils/handle-edge-delete';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import DefaultEdge from './edges/edge';
 import createEdge from './utils/create-edge';
 import getConnectedElements from './utils/get-connected-elements';
+import handleCornerNodeDelete from './utils/handle-corner-node-delete';
 
 interface GraphProps {
   modelId: string;
@@ -80,13 +80,11 @@ const GraphContent = ({
   const { data, isSuccess, refetch } = useGetVisualizationQuery(modelId);
   const [putPositions, result] = usePutPositionsMutation();
 
-  const deleteEdgeById = useCallback(
+  const deleteNodeById = useCallback(
     (id: string) => {
-      setEdges((edges) => handleEdgeDelete(id, edges));
-
-      setCleanUnusedCorners(true);
+      handleCornerNodeDelete(id, setNodes, setEdges, applicationProfile);
     },
-    [setEdges]
+    [setNodes, setEdges, applicationProfile]
   );
 
   const splitEdge = useCallback(
@@ -99,9 +97,13 @@ const GraphContent = ({
 
       setNodes((nodes) => [
         ...nodes,
-        createNewCornerNode(
-          newCornerId,
-          project({ x: x - left - 26, y: y - top })
+        createCornerNode(
+          {
+            identifier: newCornerId,
+            position: project({ x: x - left - 26, y: y - top }),
+            referenceTarget: target,
+          },
+          deleteNodeById
         ),
       ]);
 
@@ -115,8 +117,7 @@ const GraphContent = ({
             id: `reactflow__edge-${source}-${newCornerId}`,
           },
           isCorner: true,
-          handleDelete: deleteEdgeById,
-          splitEdge,
+          applicationProfile,
         }),
       ];
 
@@ -131,8 +132,7 @@ const GraphContent = ({
               id: `reactflow__edge-${newCornerId}-${newCornerId}`,
             },
             isCorner: true,
-            handleDelete: deleteEdgeById,
-            splitEdge,
+            applicationProfile,
           })
         );
       }
@@ -162,16 +162,19 @@ const GraphContent = ({
         ...newEdges,
       ]);
     },
-    [setEdges, setNodes, project, deleteEdgeById]
+    [setEdges, setNodes, project, deleteNodeById, applicationProfile]
   );
 
   const onEdgeClick = useCallback(
     (e, edge) => {
-      if (globalSelected.id !== edge.data.identifier) {
+      if (edge.data.identifier && globalSelected.id !== edge.data.identifier) {
         dispatch(setSelected(edge.data.identifier, 'associations'));
+        return;
       }
+
+      splitEdge(edge.source, edge.target, e.clientX, e.clientY);
     },
-    [dispatch, globalSelected.id]
+    [dispatch, globalSelected.id, splitEdge]
   );
 
   const onNodeMouseEnter = useCallback(
@@ -208,17 +211,12 @@ const GraphContent = ({
           data.hiddenNodes,
           modelId,
           applicationProfile,
-          applicationProfile ? refetch : undefined
+          applicationProfile ? refetch : undefined,
+          deleteNodeById
         )
       );
       setEdges(
-        convertToEdges(
-          data.nodes,
-          data.hiddenNodes,
-          deleteEdgeById,
-          splitEdge,
-          applicationProfile
-        )
+        convertToEdges(data.nodes, data.hiddenNodes, applicationProfile)
       );
 
       if (resetPosition) {
@@ -230,8 +228,6 @@ const GraphContent = ({
     isSuccess,
     setNodes,
     setEdges,
-    deleteEdgeById,
-    splitEdge,
     i18n.language,
     displayLang,
     resetPosition,
@@ -239,6 +235,7 @@ const GraphContent = ({
     applicationProfile,
     modelId,
     refetch,
+    deleteNodeById,
   ]);
 
   useEffect(() => {

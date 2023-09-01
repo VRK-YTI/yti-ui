@@ -8,8 +8,6 @@ interface CreateEdgeProps {
   isCorner?: boolean;
   label?: { [key: string]: string };
   offsetSource?: number;
-  handleDelete: (id: string, source: string, target: string) => void;
-  splitEdge: (source: string, target: string, x: number, y: number) => void;
 }
 
 export default function createEdge({
@@ -19,8 +17,6 @@ export default function createEdge({
   isCorner,
   label,
   offsetSource,
-  handleDelete,
-  splitEdge,
 }: CreateEdgeProps): Edge {
   return {
     ...params,
@@ -28,8 +24,6 @@ export default function createEdge({
     markerEnd: getMarkerEnd(applicationProfile, isCorner),
     data: {
       ...params?.data,
-      handleDelete: handleDelete,
-      splitEdge: splitEdge,
       ...(label ? { label: label } : {}),
       ...(identifier ? { identifier: identifier } : {}),
       ...(offsetSource ? { offsetSource: offsetSource } : {}),

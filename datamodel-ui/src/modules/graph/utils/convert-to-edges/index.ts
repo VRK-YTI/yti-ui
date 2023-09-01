@@ -8,8 +8,6 @@ import createEdge from '../create-edge';
 export default function convertToEdges(
   nodes: VisualizationType[],
   hiddenNodes: VisualizationHiddenNode[],
-  handleDelete: (id: string, source: string, target: string) => void,
-  splitEdge: (source: string, target: string, x: number, y: number) => void,
   applicationProfile?: boolean
 ): Edge[] {
   if (
@@ -38,15 +36,11 @@ export default function convertToEdges(
                 id: `reactflow__edge-${node.identifier}-#${assoc.referenceTarget}`,
               },
               isCorner: true,
-              handleDelete,
-              splitEdge,
             });
           }
 
           return createEdge({
             label: assoc.label,
-            handleDelete,
-            splitEdge,
             identifier: assoc.identifier,
             params: {
               source: node.identifier,
@@ -71,8 +65,6 @@ export default function convertToEdges(
 
           return createEdge({
             label: parentNode?.label,
-            handleDelete,
-            splitEdge,
             identifier: parent,
             params: {
               source: parent,
@@ -103,8 +95,6 @@ export default function convertToEdges(
           id: `reactflow__edge-${nodeIdentifier}-#${node.referenceTarget}`,
         },
         isCorner: true,
-        handleDelete,
-        splitEdge,
       });
     }
 
@@ -118,8 +108,6 @@ export default function convertToEdges(
 
     return createEdge({
       label: targetClass.label,
-      handleDelete,
-      splitEdge,
       identifier: node.referenceTarget,
       params: {
         source: nodeIdentifier,

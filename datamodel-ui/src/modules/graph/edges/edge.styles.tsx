@@ -41,29 +41,6 @@ export const EdgeContent = styled.div.attrs(
     `}
 `;
 
-export const DeleteEdgeButton = styled.button`
-  border: 0;
-  background: none;
-  position: fixed;
-  top: 0;
-  right: 0;
-  fontsize: 16px;
-  padding: 0 4px;
-
-  &:hover {
-    border-left: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-    border-bottom: 1px solid
-      ${(props) => props.theme.suomifi.colors.depthLight1};
-    border-radius: 2px;
-    cursor: pointer;
-  }
-
-  &:active {
-    background: ${(props) => props.theme.suomifi.colors.depthLight2};
-    cursor: pointer;
-  }
-`;
-
 export const HoveredPath = styled.path<{ $highlight?: boolean }>`
   stroke-width: 10;
 

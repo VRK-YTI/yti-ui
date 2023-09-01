@@ -79,6 +79,35 @@ export const CornerNodeWrapper = styled.div<{ $highlight?: boolean }>`
     bottom 0;
   }
 
+  .delete-wrapper {
+    position: absolute;
+    top: -14px;
+    right: -12px;
+    height: 16px;
+    width: 16px;
+
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background-color: ${(props) =>
+      props.$highlight ? props.theme.suomifi.colors.accentTertiary : 'none'};
+
+    svg {
+      width: 10px;
+      height: 10px;
+      color: ${(props) => props.theme.suomifi.colors.whiteBase};
+    }
+
+    &:active {
+      background-color: ${(props) =>
+        props.theme.suomifi.colors.accentTertiaryDark1};
+    }
+  }
+
   ${(props) =>
     props.$highlight &&
     `

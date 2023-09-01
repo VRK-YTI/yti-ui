@@ -11,7 +11,8 @@ export default function convertToNodes(
   hiddenNodes: VisualizationHiddenNode[],
   modelId: string,
   applicationProfile?: boolean,
-  refetch?: () => void
+  refetch?: () => void,
+  handleNodeDelete?: (id: string) => void
 ): Node[] {
   if (!nodes || nodes.length < 1) {
     return [];
@@ -27,6 +28,6 @@ export default function convertToNodes(
     ...nodes.map((node) =>
       createClassNode(node, modelId, applicationProfile, refetch)
     ),
-    ...hiddenNodes.map((node) => createCornerNode(node)),
+    ...hiddenNodes.map((node) => createCornerNode(node, handleNodeDelete)),
   ];
 }
