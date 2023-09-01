@@ -18,6 +18,7 @@ import {
   useMakeLocalCopyPropertyShapeMutation,
 } from '@app/common/components/resource/resource.slice';
 import getApiError from '@app/common/utils/get-api-errors';
+import SaveSpinner from 'yti-common-ui/save-spinner';
 
 interface LocalCopyModalProps {
   visible: boolean;
@@ -40,6 +41,7 @@ export default function LocalCopyModal({
   const { isSmall } = useBreakpoints();
   const [error, setError] = useState(false);
   const [newIdentifier, setNewIdentifier] = useState('');
+  const [userPosted, setUserPosted] = useState(false);
 
   const [makeLocalCopy, makeLocalCopyResult] =
     useMakeLocalCopyPropertyShapeMutation();
@@ -56,6 +58,7 @@ export default function LocalCopyModal({
 
   const handleClose = () => {
     setError(false);
+    setUserPosted(false);
     setNewIdentifier('');
     hide();
   };
@@ -65,6 +68,7 @@ export default function LocalCopyModal({
       return;
     }
 
+    setUserPosted(true);
     makeLocalCopy({
       modelid: sourceModelId,
       resourceId: sourceIdentifier,
@@ -79,6 +83,7 @@ export default function LocalCopyModal({
       handleReturn(newIdentifier, targetModelId);
     } else if (makeLocalCopyResult.isError) {
       setError(true);
+      setUserPosted(false);
     }
   }, [makeLocalCopyResult]);
 
@@ -109,12 +114,17 @@ export default function LocalCopyModal({
           </InlineAlert>
         )}
         <ButtonFooter>
-          <Button onClick={handleCreate} id="create-copy-button">
+          <Button
+            disabled={userPosted}
+            onClick={handleCreate}
+            id="create-copy-button"
+          >
             {t('create-copy')}
           </Button>
           <Button variant="secondary" onClick={handleClose} id="cancel-button">
             {t('cancel-variant')}
           </Button>
+          {userPosted && <SaveSpinner text={t('copying-attribute-shape')} />}
         </ButtonFooter>
       </SimpleModalContent>
     </NarrowModal>

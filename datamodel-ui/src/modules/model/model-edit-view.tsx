@@ -26,6 +26,8 @@ import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-b
 import { useStoreDispatch } from '@app/store';
 import { v4 } from 'uuid';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import SaveSpinner from 'yti-common-ui/save-spinner';
+import { FooterBlock } from '../model-form/model-form.styles';
 
 interface ModelEditViewProps {
   model: ModelType;
@@ -151,6 +153,7 @@ export default function ModelEditView({
         </div>
 
         <div>
+          {true && <SaveSpinner text={'Tallennetaan tietomallia'} />}
           <FormFooterAlert
             labelText={t('missing-information-title', { ns: 'admin' })}
             alerts={getErrors(errors)}
