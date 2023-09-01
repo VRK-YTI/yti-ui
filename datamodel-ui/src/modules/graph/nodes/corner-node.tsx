@@ -15,12 +15,16 @@ export default function CornerNode({
   selected: boolean;
   data: {
     handleNodeDelete: (id: string) => void;
+    applicationProfile?: boolean;
   };
 }) {
   const highlighted = useSelector(selectHighlighted());
 
   return (
-    <CornerNodeWrapper $highlight={highlighted.includes(id) || selected}>
+    <CornerNodeWrapper
+      $highlight={highlighted.includes(id) || selected}
+      $applicationProfile={data.applicationProfile}
+    >
       <Handle type="target" position={Position.Top} id={id} />
       <Handle type="source" position={Position.Top} id={id} />
 

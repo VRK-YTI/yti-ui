@@ -43,6 +43,7 @@ export const EdgeContent = styled.div.attrs(
 
 export const HoveredPath = styled.path<{ $highlight?: boolean }>`
   stroke-width: 10;
+  stroke-linecap: round;
 
   ${(props) =>
     props.$highlight &&

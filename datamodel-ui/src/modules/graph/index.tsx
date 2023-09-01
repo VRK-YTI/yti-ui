@@ -55,7 +55,7 @@ const GraphContent = ({
   const { i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
-  const { project } = useReactFlow();
+  const { project, getZoom } = useReactFlow();
   const globalSelected = useSelector(selectSelected());
   const displayLang = useSelector(selectDisplayLang());
   const savePosition = useSelector(selectSavePosition());
@@ -100,9 +100,10 @@ const GraphContent = ({
         createCornerNode(
           {
             identifier: newCornerId,
-            position: project({ x: x - left - 26, y: y - top }),
+            position: project({ x: x - left - 20 * getZoom(), y: y - top }),
             referenceTarget: target,
           },
+          applicationProfile,
           deleteNodeById
         ),
       ]);
@@ -162,7 +163,7 @@ const GraphContent = ({
         ...newEdges,
       ]);
     },
-    [setEdges, setNodes, project, deleteNodeById, applicationProfile]
+    [setEdges, setNodes, project, deleteNodeById, getZoom, applicationProfile]
   );
 
   const onEdgeClick = useCallback(

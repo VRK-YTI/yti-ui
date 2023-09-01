@@ -58,7 +58,10 @@ export const ClassNodeDiv = styled.div<{
   `}
 `;
 
-export const CornerNodeWrapper = styled.div<{ $highlight?: boolean }>`
+export const CornerNodeWrapper = styled.div<{
+  $highlight?: boolean;
+  $applicationProfile?: boolean;
+}>`
   padding: 0;
   margin: 0;
   width: 16px;
@@ -94,7 +97,11 @@ export const CornerNodeWrapper = styled.div<{ $highlight?: boolean }>`
     border-radius: 50%;
 
     background-color: ${(props) =>
-      props.$highlight ? props.theme.suomifi.colors.accentTertiary : 'none'};
+      props.$highlight
+        ? props.$applicationProfile
+          ? props.theme.suomifi.colors.highlightBase
+          : props.theme.suomifi.colors.accentTertiary
+        : 'none'};
 
     svg {
       width: 10px;
@@ -104,7 +111,9 @@ export const CornerNodeWrapper = styled.div<{ $highlight?: boolean }>`
 
     &:active {
       background-color: ${(props) =>
-        props.theme.suomifi.colors.accentTertiaryDark1};
+        props.$applicationProfile
+          ? props.theme.suomifi.colors.highlightDark1
+          : props.theme.suomifi.colors.accentTertiaryDark1};
     }
   }
 

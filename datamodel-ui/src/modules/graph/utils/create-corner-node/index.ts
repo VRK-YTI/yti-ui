@@ -3,17 +3,17 @@ import { Node, XYPosition } from 'reactflow';
 
 export default function createCornerNode(
   node: VisualizationHiddenNode,
+  applicationProfile?: boolean,
   handleNodeDelete?: (id: string) => void
 ): Node {
   return {
     id: node.identifier.startsWith('#corner')
       ? node.identifier
       : `#${node.identifier}`,
-    data: handleNodeDelete
-      ? {
-          handleNodeDelete: handleNodeDelete,
-        }
-      : {},
+    data: {
+      applicationProfile: applicationProfile,
+      ...(handleNodeDelete ? { handleNodeDelete: handleNodeDelete } : {}),
+    },
     position: node.position,
     type: 'cornerNode',
   };

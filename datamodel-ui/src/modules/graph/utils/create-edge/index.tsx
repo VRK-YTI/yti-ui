@@ -46,7 +46,7 @@ function getMarkerEnd(applicationProfile?: boolean, isCorner?: boolean) {
     type: MarkerType.ArrowClosed,
     height: 20,
     width: 20,
-    fill: '#222',
+    color: '#212121',
   };
 }
 

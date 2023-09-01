@@ -28,6 +28,8 @@ export default function convertToNodes(
     ...nodes.map((node) =>
       createClassNode(node, modelId, applicationProfile, refetch)
     ),
-    ...hiddenNodes.map((node) => createCornerNode(node, handleNodeDelete)),
+    ...hiddenNodes.map((node) =>
+      createCornerNode(node, applicationProfile, handleNodeDelete)
+    ),
   ];
 }
