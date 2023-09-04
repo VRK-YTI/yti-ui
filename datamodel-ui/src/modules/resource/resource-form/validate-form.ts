@@ -5,6 +5,7 @@ export interface CommonFormErrors {
   identifier: boolean;
   identifierInitChar: boolean;
   identifierLength: boolean;
+  identifierCharacters: boolean;
   maxCount: boolean;
   maxExclusive: boolean;
   maxInclusive: boolean;
@@ -22,6 +23,7 @@ export default function validateForm(data: ResourceFormType): CommonFormErrors {
     identifier: true,
     identifierInitChar: true,
     identifierLength: true,
+    identifierCharacters: true,
     maxCount: true,
     maxExclusive: true,
     maxInclusive: true,
@@ -54,6 +56,10 @@ export default function validateForm(data: ResourceFormType): CommonFormErrors {
     data.identifier.length < 33
   ) {
     errors.identifierLength = false;
+  }
+
+  if (data.identifier && data.identifier.match(/^[a-z0-9\-_]+$/)) {
+    errors.identifierCharacters = false;
   }
 
   return validateNumeric(data, errors);
