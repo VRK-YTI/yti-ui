@@ -3,14 +3,11 @@ import {
   VisualizationType,
 } from '@app/common/interfaces/visualization.interface';
 import { Edge } from 'reactflow';
-import createAssociationEdge from '../create-association-edge';
-import createCornerEdge from '../create-corner-edge';
+import createEdge from '../create-edge';
 
 export default function convertToEdges(
   nodes: VisualizationType[],
   hiddenNodes: VisualizationHiddenNode[],
-  handleDelete: (id: string, source: string, target: string) => void,
-  splitEdge: (source: string, target: string, x: number, y: number) => void,
   applicationProfile?: boolean
 ): Edge[] {
   if (
@@ -30,32 +27,35 @@ export default function convertToEdges(
         .filter((assoc) => assoc.referenceTarget)
         .flatMap((assoc, idx) => {
           if (assoc.referenceTarget?.startsWith('corner')) {
-            return createCornerEdge(
-              node.identifier,
-              `#${assoc.referenceTarget}`,
-              {
-                handleDelete,
-                splitEdge,
-              }
-            );
+            return createEdge({
+              params: {
+                source: node.identifier,
+                sourceHandle: node.identifier,
+                target: `#${assoc.referenceTarget}`,
+                targetHandle: `#${assoc.referenceTarget}`,
+                id: `reactflow__edge-${node.identifier}-#${assoc.referenceTarget}`,
+              },
+              isCorner: true,
+            });
           }
 
-          return createAssociationEdge(
-            assoc.label,
-            handleDelete,
-            splitEdge,
-            assoc.identifier,
-            {
+          return createEdge({
+            label: assoc.label,
+            identifier: assoc.identifier,
+            params: {
               source: node.identifier,
               sourceHandle: node.identifier,
               target: assoc.referenceTarget,
               targetHandle: assoc.referenceTarget,
               id: `reactflow__edge-${node.identifier}-${assoc.referenceTarget}`,
             },
-            applicationProfile,
-            applicationProfile ? node.attributes.length + idx + 1 : undefined
-          );
+            applicationProfile: applicationProfile,
+            offsetSource: applicationProfile
+              ? node.attributes.length + idx + 1
+              : undefined,
+          });
         }),
+
       ...node.parentClasses
         .filter((parent) => nodes.find((n) => n.identifier === parent))
         .flatMap((parent) => {
@@ -63,20 +63,18 @@ export default function convertToEdges(
             (n) => n.identifier === parent
           ) as VisualizationType;
 
-          return createAssociationEdge(
-            parentNode?.label,
-            handleDelete,
-            splitEdge,
-            parent,
-            {
+          return createEdge({
+            label: parentNode?.label,
+            identifier: parent,
+            params: {
               source: parent,
               sourceHandle: parent,
               target: node.identifier,
               targetHandle: node.identifier,
               id: `reactflow__edge-${parent}-${node.identifier}`,
             },
-            applicationProfile
-          );
+            applicationProfile,
+          });
         }),
     ]);
 
@@ -88,9 +86,15 @@ export default function convertToEdges(
     const nodeIdentifier = `#${node.identifier}`;
 
     if (node.referenceTarget.startsWith('corner')) {
-      return createCornerEdge(nodeIdentifier, `#${node.referenceTarget}`, {
-        handleDelete,
-        splitEdge,
+      return createEdge({
+        params: {
+          source: nodeIdentifier,
+          sourceHandle: nodeIdentifier,
+          target: `#${node.referenceTarget}`,
+          targetHandle: `#${node.referenceTarget}`,
+          id: `reactflow__edge-${nodeIdentifier}-#${node.referenceTarget}`,
+        },
+        isCorner: true,
       });
     }
 
@@ -102,19 +106,17 @@ export default function convertToEdges(
       return null;
     }
 
-    return createAssociationEdge(
-      targetClass.label,
-      handleDelete,
-      splitEdge,
-      node.referenceTarget,
-      {
+    return createEdge({
+      label: targetClass.label,
+      identifier: node.referenceTarget,
+      params: {
         source: nodeIdentifier,
         sourceHandle: nodeIdentifier,
         target: node.referenceTarget,
         targetHandle: node.referenceTarget,
         id: `reactflow__edge-${nodeIdentifier}-${node.referenceTarget}`,
-      }
-    );
+      },
+    });
   });
 
   return [...edges, ...(splitEdges.filter((edge) => edge !== null) as Edge[])];
