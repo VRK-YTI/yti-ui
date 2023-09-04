@@ -26,8 +26,7 @@ import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-b
 import { useStoreDispatch } from '@app/store';
 import { v4 } from 'uuid';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
-import SaveSpinner from 'yti-common-ui/save-spinner';
-import { FooterBlock } from '../model-form/model-form.styles';
+import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 
 interface ModelEditViewProps {
   model: ModelType;
@@ -138,10 +137,20 @@ export default function ModelEditView({
   return (
     <>
       <StaticHeader ref={ref}>
-        <div>
+        <HeaderRow>
           <Text variant="bold">{t('details', { ns: 'common' })}</Text>
-          <div>
-            <Button onClick={() => handleSubmit()}>{t('save')}</Button>
+          <HeaderRow>
+            <Button onClick={() => handleSubmit()}>
+              {userPosted ? (
+                <StyledSpinner
+                  variant="small"
+                  text={t('saving')}
+                  textAlign="right"
+                />
+              ) : (
+                <>{t('save')}</>
+              )}
+            </Button>
             <Button
               variant="secondary"
               style={{ marginLeft: '10px' }}
@@ -149,11 +158,10 @@ export default function ModelEditView({
             >
               {t('cancel-variant')}
             </Button>
-          </div>
-        </div>
+          </HeaderRow>
+        </HeaderRow>
 
         <div>
-          {true && <SaveSpinner text={'Tallennetaan tietomallia'} />}
           <FormFooterAlert
             labelText={t('missing-information-title', { ns: 'admin' })}
             alerts={getErrors(errors)}
