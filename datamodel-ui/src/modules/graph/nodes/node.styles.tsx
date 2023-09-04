@@ -10,7 +10,8 @@ export const ClassNodeDiv = styled.div<{
   gap: ${(props) => props.theme.suomifi.spacing.xxs};
   padding: ${(props) => props.theme.suomifi.spacing.xxs};
 
-  width: 360px;
+  min-width: 360px;
+  width: min-content;
 
   > div {
     max-width: 100%;
@@ -113,8 +114,9 @@ export const Resource = styled.div<{ $highlight?: boolean }>`
   border-radius: 2px;
   margin: 2px;
   display: flex;
-  gap: ${(props) => props.theme.suomifi.spacing.xxs};
+  gap: ${(props) => props.theme.suomifi.spacing.xs};
   align-items: center;
+  white-space: nowrap;
 
   &:hover {
     background: ${(props) => props.theme.suomifi.colors.depthLight2};
@@ -172,4 +174,8 @@ export const TooltipWrapper = styled.div`
     display: flex;
     align-items: center;
   }
+`;
+
+export const ResourceTechnicalName = styled.span`
+  color: ${(props) => props.theme.suomifi.colors.accentTertiaryDark1};
 `;

@@ -87,12 +87,12 @@ function getPoints(
     } else {
       if (sx >= tx) {
         const x = sx + (tx + tw - sx) / 2;
-        sourceX = offsetSource ? sx : x;
-        targetX = offsetTarget ? tx + tw : x;
+        sourceX = offsetSource ? sx : getValueInsideRange(x, sx, sx + sw);
+        targetX = offsetTarget ? tx + tw : getValueInsideRange(x, tx, tx + tw);
       } else {
         const x = tx + (sx + sw - tx) / 2;
-        sourceX = offsetSource ? sx + sw : x;
-        targetX = offsetTarget ? tx : x;
+        sourceX = offsetSource ? sx + sw : getValueInsideRange(x, sx, sx + sw);
+        targetX = offsetTarget ? tx : getValueInsideRange(x, tx, tx + tw);
       }
     }
   }
@@ -121,39 +121,18 @@ function getPoints(
         const lh = sourceSmaller ? th : sh;
 
         const sMid = smy + smh / 2;
-        const sourceInside = smy > ly && smy + smh < ly + lh + 1;
-        const sourceUpper = smy < ly + lh / 2;
 
-        if (sourceUpper) {
-          const yNew = smy + smh - (smy + smh - ly) / 2;
-
-          switch (sourceSmaller) {
-            case true:
-              sourceY = yNew < sMid ? sMid : yNew;
-              break;
-            default:
-              targetY = yNew < sMid ? sMid : yNew;
-          }
+        if (smy >= ly && smy + smh <= ly + lh) {
+          sourceY = sMid;
+          targetY = sMid;
+        } else if (smy < ly && smy + smh < ly + lh) {
+          const newY = ly + (smy + smh - ly) / 2;
+          sourceY = newY;
+          targetY = newY;
         } else {
-          const yNew = ly + lh - (ly + lh - smy) / 2;
-
-          switch (sourceSmaller) {
-            case true:
-              sourceY = yNew > sMid ? sMid : yNew;
-              break;
-            default:
-              targetY = yNew < sMid ? sMid : yNew;
-          }
-        }
-
-        switch (sourceSmaller) {
-          case true:
-            targetY = sourceUpper ? ly : ly + lh;
-            targetY = sourceInside ? sourceY : targetY;
-            break;
-          default:
-            sourceY = sourceUpper ? ly : ly + lh;
-            sourceY = sourceInside ? targetY : sourceY;
+          const newY = smy + (ly + lh - smy) / 2;
+          sourceY = newY;
+          targetY = newY;
         }
       }
     }
@@ -188,7 +167,7 @@ function getValueInsideRange(value: number, min: number, max: number) {
 }
 
 function getPositionAndSize(node: Node, offset?: number) {
-  if (node.type === 'cornerNode') {
+  if (node.type === 'cornerNode' || node.type === 'externalNode') {
     return {
       x: node.position.x,
       y: node.position.y,
