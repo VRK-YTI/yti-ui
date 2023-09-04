@@ -25,6 +25,8 @@ import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import styled from 'styled-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import { v4 } from 'uuid';
+import { ModelCodeList } from '@app/common/interfaces/model.interface';
+import { ConfirmationModal } from './confirmation-modal';
 const RestrictionWrapper = styled.div`
   > * {
     margin-bottom: 20px;
@@ -45,6 +47,7 @@ export default function AttributeRestrictions({
   errors,
   applicationProfile,
   handleUpdate,
+  handleUpdateData,
 }: {
   data: ResourceFormType;
   errors: CommonFormErrors;
@@ -53,6 +56,7 @@ export default function AttributeRestrictions({
     key: keyof ResourceFormType,
     value: ResourceFormType[typeof key]
   ) => void;
+  handleUpdateData: (value: ResourceFormType) => void;
 }) {
   const { t, i18n } = useTranslation('admin');
   const { data: languages } = useGetLanguagesQuery();
@@ -64,6 +68,7 @@ export default function AttributeRestrictions({
     }
   );
   const [codes, setCodes] = useState<MultiSelectData[]>([]);
+  const [codelistToRemove, setCodelistToRemove] = useState('');
 
   useEffect(() => {
     if (isSuccess) {
@@ -82,6 +87,44 @@ export default function AttributeRestrictions({
     }
   }, [codesResult, i18n.language, isSuccess]);
 
+  const handleCodeListUpdate = (value: ModelCodeList[]) => {
+    const mappedValues = value.map((v) => ({
+      id: v.id,
+      prefLabel: v.prefLabel,
+      status: v.status,
+    }));
+
+    if (!data.codeLists || data.codeLists.length === 0) {
+      handleUpdateData({
+        ...data,
+        allowedValues: [],
+        defaultValue: '',
+        hasValue: '',
+        codeLists: mappedValues,
+      });
+    } else {
+      handleUpdate('codeLists', mappedValues);
+    }
+  };
+
+  const handleRemoveCodelist = (id: string) => {
+    const hasValue = data.hasValue?.startsWith(id) ? '' : data.hasValue;
+    const defaultValue = data.defaultValue?.startsWith(id)
+      ? ''
+      : data.defaultValue;
+    const allowedValues =
+      data.allowedValues?.filter((value) => !value.id.startsWith(id)) ?? [];
+    const codelists = data.codeLists?.filter((cl) => cl.id !== id) ?? [];
+    handleUpdateData({
+      ...data,
+      hasValue: hasValue,
+      defaultValue: defaultValue,
+      allowedValues: allowedValues,
+      codeLists: codelists,
+    });
+    setCodelistToRemove('');
+  };
+
   if (data.type !== ResourceType.ATTRIBUTE || !applicationProfile) {
     return <></>;
   }
@@ -98,27 +141,23 @@ export default function AttributeRestrictions({
         <InlineListBlock
           addNewComponent={
             <CodeListModal
+              showConfirmModal={
+                (!data.codeLists || data.codeLists.length === 0) &&
+                ((data.allowedValues && data.allowedValues.length > 0) ||
+                  data.defaultValue ||
+                  data.hasValue)
+                  ? true
+                  : false
+              }
               extendedView
               modalTitle={t('add-reference-data')}
               initialData={data.codeLists ?? []}
-              setData={(value) =>
-                handleUpdate(
-                  'codeLists',
-                  value.map((v) => ({
-                    id: v.id,
-                    prefLabel: v.prefLabel,
-                    status: v.status,
-                  }))
-                )
-              }
+              setData={(value) => handleCodeListUpdate(value)}
             />
           }
-          handleRemoval={(id) =>
-            handleUpdate(
-              'codeLists',
-              data.codeLists?.filter((cl) => cl.id !== id) ?? []
-            )
-          }
+          handleRemoval={(id) => {
+            setCodelistToRemove(id);
+          }}
           items={
             data.codeLists?.map((cl) => ({
               id: cl.id,
@@ -132,7 +171,19 @@ export default function AttributeRestrictions({
           label={t('codelist')}
         />
 
-        {codes.length !== 0 ? (
+        <ConfirmationModal
+          label={
+            data.codeLists?.find((cl) => cl.id === codelistToRemove)?.prefLabel
+          }
+          visible={codelistToRemove ? true : false}
+          handleClick={(confirmed) =>
+            confirmed
+              ? handleRemoveCodelist(codelistToRemove)
+              : setCodelistToRemove('')
+          }
+        />
+
+        {data.codeLists && data.codeLists.length > 0 && codes.length !== 0 ? (
           <>
             <MultiSelect
               labelText={`${t('allowed-values')} (sh:in)`}
@@ -241,21 +292,23 @@ export default function AttributeRestrictions({
                   })}
                 </>
               )}
-              <Button
-                variant="secondary"
-                onClick={() =>
-                  handleUpdate('allowedValues', [
-                    ...(data.allowedValues ?? []),
-                    { label: '', id: v4().split('-')[0] },
-                  ])
-                }
-                disabled={
-                  data.allowedValues &&
-                  data.allowedValues.some((val) => val.label === '')
-                }
-              >
-                Lisää arvo
-              </Button>
+              <div>
+                <Button
+                  variant="secondary"
+                  onClick={() =>
+                    handleUpdate('allowedValues', [
+                      ...(data.allowedValues ?? []),
+                      { label: '', id: v4().split('-')[0] },
+                    ])
+                  }
+                  disabled={
+                    data.allowedValues &&
+                    data.allowedValues.some((val) => val.label === '')
+                  }
+                >
+                  {t('add-value')}
+                </Button>
+              </div>
             </BasicBlock>
             <TextInput
               labelText={`${t('default-value')} (sh:defaultValue)`}
