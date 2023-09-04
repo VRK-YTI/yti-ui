@@ -23,17 +23,16 @@ export default function getConnectedElements(
       return [begin.id, begin[direction]];
     }
 
-    return [
-      begin.id,
-      begin[direction],
-      ...getConnected(
-        edges.find(
-          (e) =>
-            e[direction === 'target' ? 'source' : 'target'] === begin[direction]
-        ) as Edge,
-        direction
-      ),
-    ];
+    const newNode = edges.find(
+      (e) =>
+        e[direction === 'target' ? 'source' : 'target'] === begin[direction]
+    );
+
+    if (!newNode) {
+      return [begin.id, begin[direction]];
+    }
+
+    return [begin.id, begin[direction], ...getConnected(newNode, direction)];
   }
 
   if (start.type === 'cornerNode') {

@@ -12,10 +12,10 @@ export interface Subscriptions {
 }
 
 export interface Resource {
-  application: 'string';
-  prefLabel: {
+  application: string;
+  prefLabel?: {
     [value: string]: string;
   };
-  type: 'string';
-  uri: 'string';
+  type: string;
+  uri: string;
 }
