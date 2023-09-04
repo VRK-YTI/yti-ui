@@ -60,7 +60,7 @@ export default function ResourceInfo({
   const ref = useRef<HTMLDivElement>(null);
   const displayLang = useSelector(selectDisplayLang());
   const hasPermission = HasPermission({
-    actions: ['ADMIN_ASSOCIATION', 'ADMIN_ATTRIBUTE'],
+    actions: ['EDIT_ASSOCIATION', 'EDIT_ATTRIBUTE'],
   });
   const [showTooltip, setShowTooltip] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);

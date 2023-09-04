@@ -59,7 +59,7 @@ export default function ModelInfoView() {
   const ref = useRef<HTMLDivElement>(null);
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
   const { setView } = useSetView();
-  const hasPermission = HasPermission({ actions: ['ADMIN_DATA_MODEL'] });
+  const hasPermission = HasPermission({ actions: ['EDIT_DATA_MODEL'] });
   const { data: modelInfo, refetch } = useGetModelQuery(modelId);
 
   useEffect(() => {

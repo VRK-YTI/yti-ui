@@ -55,7 +55,7 @@ export default function ClassView({
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
-  const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
+  const hasPermission = HasPermission({ actions: ['CREATE_CLASS'] });
   const { setView } = useSetView();
   const { setPage, getPage } = useSetPage();
   const displayLang = useSelector(selectDisplayLang());
