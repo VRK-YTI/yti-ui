@@ -18,14 +18,13 @@ import { initialUrlState } from 'yti-common-ui/utils/hooks/use-url-state';
 import PageHead from 'yti-common-ui/page-head';
 import {
   getCount,
-  getRunningQueriesThunk as getCountRunningQueriesThunk,
+  getRunningQueriesThunk as getCountRunningQueriesThunk
 } from '@app/common/components/counts/counts.slice';
 
 import { useRouter } from 'next/router';
 import { User } from 'yti-common-ui/interfaces/user.interface';
-import GroupWorkspace from '../../modules/group-home-component';
+import GroupWorkspace from '../../modules/group-home';
 import PersonalWorkspace from '../../modules/personal-home';
-import { useEffect } from 'react';
 import BasicTable from '@app/common/components/table';
 import MSCRSideBar from '@app/common/components/sidebar/MSCRSideBar';
 import { TableAndSidebarWrapper } from './homepage.styles';
@@ -50,6 +49,7 @@ export default function IndexPage(props: IndexPageProps) {
     user?: User;
   }): React.ReactElement {
     if (slug === 'group-home') {
+      console.log("Now showing Group Page");
       return <GroupWorkspace />;
     } else {
       console.log(slug);
