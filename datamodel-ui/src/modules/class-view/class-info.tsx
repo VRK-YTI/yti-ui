@@ -59,7 +59,7 @@ export default function ClassInfo({
   handleRefecth,
 }: ClassInfoProps) {
   const { t, i18n } = useTranslation('common');
-  const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
+  const hasPermission = HasPermission({ actions: ['EDIT_CLASS'] });
   const ref = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);

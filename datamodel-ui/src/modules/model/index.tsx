@@ -40,7 +40,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const hasPermission = HasPermission({
-    actions: 'ADMIN_DATA_MODEL',
+    actions: 'EDIT_DATA_MODEL',
   });
   const { data: modelInfo } = useGetModelQuery(modelId);
 
