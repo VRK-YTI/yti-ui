@@ -60,6 +60,8 @@ export function translateClassFormErrors(error: string, t: TFunction) {
       return t('class-invalid-identifier-first-character', { ns: 'admin' });
     case 'identifierLength':
       return t('class-invalid-identifier-length', { ns: 'admin' });
+    case 'identifierCharacters':
+      return t('class-invalid-identifier-characters', { ns: 'admin' });
     case 'label':
       return t('class-missing-language-title', { ns: 'admin' });
     case 'unauthorized':
@@ -186,6 +188,10 @@ export function translateCommonFormErrors(
       return type === ResourceType.ASSOCIATION
         ? t('association-invalid-identifier-length', { ns: 'admin' })
         : t('attribute-invalid-identifier-length', { ns: 'admin' });
+    case 'identifierCharacters':
+      return type === ResourceType.ASSOCIATION
+        ? t('association-invalid-identifier-characters', { ns: 'admin' })
+        : t('attribute-invalid-identifier-characters', { ns: 'admin' });
     case 'unauthorized':
       return t('error-unauthenticated', { ns: 'admin' });
     case 'nonNumeric':

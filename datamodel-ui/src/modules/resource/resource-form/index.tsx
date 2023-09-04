@@ -472,7 +472,8 @@ export default function ResourceForm({
               (userPosted &&
                 (errors.identifier ||
                   errors.identifierInitChar ||
-                  errors.identifierLength)) ||
+                  errors.identifierLength ||
+                  errors.identifierCharacters)) ||
               (isSuccess && resourceAlreadyExists)
                 ? 'error'
                 : 'default'
