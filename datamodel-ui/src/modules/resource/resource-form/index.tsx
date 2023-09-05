@@ -611,6 +611,7 @@ export default function ResourceForm({
             errors={errors}
             applicationProfile={applicationProfile}
             handleUpdate={handleUpdateByKey}
+            handleUpdateData={handleUpdate}
           />
 
           <LanguageVersionedWrapper>

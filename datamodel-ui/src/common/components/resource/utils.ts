@@ -111,6 +111,13 @@ export function convertToPayload(
           ];
         }
 
+        if (e[0] === 'allowedValues' && e[1].length > 0) {
+          return [
+            e[0],
+            e[1].map((value: { label: string; id: string }) => value.label),
+          ];
+        }
+
         return e;
       })
   );

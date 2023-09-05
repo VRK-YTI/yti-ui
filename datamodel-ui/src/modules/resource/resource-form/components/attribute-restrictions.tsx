@@ -1,4 +1,7 @@
-import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
+import {
+  useGetAllCodesQuery,
+  useGetLanguagesQuery,
+} from '@app/common/components/code/code.slice';
 import InlineListBlock from '@app/common/components/inline-list-block';
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
@@ -7,16 +10,23 @@ import CodeListModal from '@app/modules/code-list-modal';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import { useTranslation } from 'next-i18next';
 import {
+  Button,
+  IconClose,
   MultiSelect,
+  MultiSelectData,
   SingleSelect,
   Text,
   TextInput,
 } from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
 import { CommonFormErrors } from '../validate-form';
+import { useEffect, useState } from 'react';
 import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import styled from 'styled-components';
-
+import { BasicBlock } from 'yti-common-ui/block';
+import { v4 } from 'uuid';
+import { ModelCodeList } from '@app/common/interfaces/model.interface';
+import { ConfirmationModal } from './confirmation-modal';
 const RestrictionWrapper = styled.div`
   > * {
     margin-bottom: 20px;
@@ -37,6 +47,7 @@ export default function AttributeRestrictions({
   errors,
   applicationProfile,
   handleUpdate,
+  handleUpdateData,
 }: {
   data: ResourceFormType;
   errors: CommonFormErrors;
@@ -45,9 +56,74 @@ export default function AttributeRestrictions({
     key: keyof ResourceFormType,
     value: ResourceFormType[typeof key]
   ) => void;
+  handleUpdateData: (value: ResourceFormType) => void;
 }) {
   const { t, i18n } = useTranslation('admin');
   const { data: languages } = useGetLanguagesQuery();
+  const { data: codesResult, isSuccess } = useGetAllCodesQuery(
+    data.codeLists?.map((codelist) => codelist.id) ?? [],
+    {
+      skip:
+        !applicationProfile || !data.codeLists || data.codeLists.length === 0,
+    }
+  );
+  const [codes, setCodes] = useState<MultiSelectData[]>([]);
+  const [codelistToRemove, setCodelistToRemove] = useState('');
+
+  useEffect(() => {
+    if (isSuccess) {
+      setCodes(
+        codesResult.map((code) => {
+          return {
+            labelText: getLanguageVersion({
+              data: code.prefLabel,
+              lang: i18n.language,
+              appendLocale: true,
+            }),
+            uniqueItemId: code.uri,
+          };
+        })
+      );
+    }
+  }, [codesResult, i18n.language, isSuccess]);
+
+  const handleCodeListUpdate = (value: ModelCodeList[]) => {
+    const mappedValues = value.map((v) => ({
+      id: v.id,
+      prefLabel: v.prefLabel,
+      status: v.status,
+    }));
+
+    if (!data.codeLists || data.codeLists.length === 0) {
+      handleUpdateData({
+        ...data,
+        allowedValues: [],
+        defaultValue: '',
+        hasValue: '',
+        codeLists: mappedValues,
+      });
+    } else {
+      handleUpdate('codeLists', mappedValues);
+    }
+  };
+
+  const handleRemoveCodelist = (id: string) => {
+    const hasValue = data.hasValue?.startsWith(id) ? '' : data.hasValue;
+    const defaultValue = data.defaultValue?.startsWith(id)
+      ? ''
+      : data.defaultValue;
+    const allowedValues =
+      data.allowedValues?.filter((value) => !value.id.startsWith(id)) ?? [];
+    const codelists = data.codeLists?.filter((cl) => cl.id !== id) ?? [];
+    handleUpdateData({
+      ...data,
+      hasValue: hasValue,
+      defaultValue: defaultValue,
+      allowedValues: allowedValues,
+      codeLists: codelists,
+    });
+    setCodelistToRemove('');
+  };
 
   if (data.type !== ResourceType.ATTRIBUTE || !applicationProfile) {
     return <></>;
@@ -65,27 +141,23 @@ export default function AttributeRestrictions({
         <InlineListBlock
           addNewComponent={
             <CodeListModal
+              showConfirmModal={
+                (!data.codeLists || data.codeLists.length === 0) &&
+                ((data.allowedValues && data.allowedValues.length > 0) ||
+                  data.defaultValue ||
+                  data.hasValue)
+                  ? true
+                  : false
+              }
               extendedView
               modalTitle={t('add-reference-data')}
               initialData={data.codeLists ?? []}
-              setData={(value) =>
-                handleUpdate(
-                  'codeLists',
-                  value.map((v) => ({
-                    id: v.id,
-                    prefLabel: v.prefLabel,
-                    status: v.status,
-                  }))
-                )
-              }
+              setData={(value) => handleCodeListUpdate(value)}
             />
           }
-          handleRemoval={(id) =>
-            handleUpdate(
-              'codeLists',
-              data.codeLists?.filter((cl) => cl.id !== id) ?? []
-            )
-          }
+          handleRemoval={(id) => {
+            setCodelistToRemove(id);
+          }}
           items={
             data.codeLists?.map((cl) => ({
               id: cl.id,
@@ -99,93 +171,163 @@ export default function AttributeRestrictions({
           label={t('codelist')}
         />
 
-        <MultiSelect
-          labelText={`${t('allowed-values')} (sh:in)`}
-          itemAdditionHelpText=""
-          ariaOptionsAvailableText=""
-          ariaOptionChipRemovedTextFunction={() => ''}
-          ariaSelectedAmountTextFunction={() => ''}
-          optionalText={t('optional')}
-          visualPlaceholder={t('select-values')}
-          items={
-            data.allowedValues
-              ? data.allowedValues.map((av) => ({
-                  labelText: av,
-                  uniqueItemId: av,
-                }))
-              : []
+        <ConfirmationModal
+          label={
+            data.codeLists?.find((cl) => cl.id === codelistToRemove)?.prefLabel
           }
-          defaultSelectedItems={
-            data.allowedValues
-              ? data.allowedValues.map((av) => ({
-                  labelText: av,
-                  uniqueItemId: av,
-                }))
-              : []
-          }
-          allowItemAddition
-          chipListVisible
-          onItemSelectionsChange={(e) =>
-            handleUpdate(
-              'allowedValues',
-              e.map((val) => val.uniqueItemId) ?? ''
-            )
+          visible={codelistToRemove ? true : false}
+          handleClick={(confirmed) =>
+            confirmed
+              ? handleRemoveCodelist(codelistToRemove)
+              : setCodelistToRemove('')
           }
         />
 
-        <SingleSelect
-          labelText={`${t('default-value')} (sh:defaultValue)`}
-          clearButtonLabel=""
-          itemAdditionHelpText=""
-          ariaOptionsAvailableText=""
-          items={
-            data.allowedValues
-              ? data.allowedValues.map((av) => ({
-                  labelText: av,
-                  uniqueItemId: av,
-                }))
-              : []
-          }
-          defaultSelectedItem={
-            data.defaultValue
-              ? {
-                  labelText: data.defaultValue,
-                  uniqueItemId: data.defaultValue,
-                }
-              : undefined
-          }
-          optionalText={t('optional')}
-          visualPlaceholder={t('select-value')}
-          allowItemAddition
-          onItemSelect={(e) => handleUpdate('defaultValue', e ?? '')}
-        />
+        {data.codeLists && data.codeLists.length > 0 && codes.length !== 0 ? (
+          <>
+            <MultiSelect
+              labelText={`${t('allowed-values')} (sh:in)`}
+              ariaOptionsAvailableText=""
+              ariaOptionChipRemovedTextFunction={() => ''}
+              ariaSelectedAmountTextFunction={() => ''}
+              optionalText={t('optional')}
+              visualPlaceholder={t('select-values')}
+              items={codes}
+              selectedItems={
+                data.allowedValues
+                  ? codes.filter((code) =>
+                      data.allowedValues?.some(
+                        (val) => val.label === code.uniqueItemId
+                      )
+                    )
+                  : []
+              }
+              allowItemAddition
+              itemAdditionHelpText=""
+              chipListVisible
+              onItemSelectionsChange={(e) => {
+                console.log(e);
+                return handleUpdate(
+                  'allowedValues',
+                  e.map((val) => {
+                    return { label: val.uniqueItemId, id: val.uniqueItemId };
+                  }) ?? []
+                );
+              }}
+            />
 
-        <SingleSelect
-          labelText={`${t('required-value')} (sh:hasValue)`}
-          clearButtonLabel=""
-          itemAdditionHelpText=""
-          ariaOptionsAvailableText=""
-          items={
-            data.allowedValues
-              ? data.allowedValues.map((av) => ({
-                  labelText: av,
-                  uniqueItemId: av,
-                }))
-              : []
-          }
-          defaultSelectedItem={
-            data.hasValue
-              ? {
-                  labelText: data.hasValue,
-                  uniqueItemId: data.hasValue,
-                }
-              : undefined
-          }
-          optionalText={t('optional')}
-          visualPlaceholder={t('select-value')}
-          allowItemAddition
-          onItemSelect={(e) => handleUpdate('hasValue', e ?? '')}
-        />
+            <SingleSelect
+              labelText={`${t('default-value')} (sh:defaultValue)`}
+              clearButtonLabel=""
+              ariaOptionsAvailableText=""
+              items={codes}
+              selectedItem={
+                data.defaultValue
+                  ? codes.find(
+                      (code) => code.uniqueItemId === data.defaultValue
+                    )
+                  : undefined
+              }
+              optionalText={t('optional')}
+              visualPlaceholder={t('select-value')}
+              allowItemAddition
+              itemAdditionHelpText=""
+              onItemSelect={(e) => handleUpdate('defaultValue', e ?? '')}
+            />
+
+            <SingleSelect
+              labelText={`${t('required-value')} (sh:hasValue)`}
+              clearButtonLabel=""
+              ariaOptionsAvailableText=""
+              items={codes}
+              selectedItem={
+                data.defaultValue
+                  ? codes.find((code) => code.uniqueItemId === data.hasValue)
+                  : undefined
+              }
+              optionalText={t('optional')}
+              visualPlaceholder={t('select-value')}
+              allowItemAddition
+              itemAdditionHelpText=""
+              onItemSelect={(e) => handleUpdate('hasValue', e ?? '')}
+            />
+          </>
+        ) : (
+          <>
+            <BasicBlock title={`${t('allowed-values')} (sh:in)`}>
+              {data.allowedValues && (
+                <>
+                  {data.allowedValues.map((value) => {
+                    console.log(value);
+                    return (
+                      <TextInput
+                        key={`allowed-value-${value.id}`}
+                        labelMode="hidden"
+                        labelText=""
+                        defaultValue={value.label}
+                        onChange={(e) => {
+                          const newVals =
+                            data.allowedValues?.map((val) =>
+                              val.id === value.id
+                                ? { label: (e as string) ?? '', id: val.id }
+                                : val
+                            ) ?? [];
+                          return handleUpdate('allowedValues', newVals);
+                        }}
+                        icon={
+                          <IconClose
+                            fill={'hsl(212, 63%, 45%)'}
+                            onClick={() => {
+                              return handleUpdate(
+                                'allowedValues',
+                                data.allowedValues?.filter(
+                                  (id) => id !== value
+                                ) || []
+                              );
+                            }}
+                          />
+                        }
+                      />
+                    );
+                  })}
+                </>
+              )}
+              <div>
+                <Button
+                  variant="secondary"
+                  onClick={() =>
+                    handleUpdate('allowedValues', [
+                      ...(data.allowedValues ?? []),
+                      { label: '', id: v4().split('-')[0] },
+                    ])
+                  }
+                  disabled={
+                    data.allowedValues &&
+                    data.allowedValues.some((val) => val.label === '')
+                  }
+                >
+                  {t('add-value')}
+                </Button>
+              </div>
+            </BasicBlock>
+            <TextInput
+              labelText={`${t('default-value')} (sh:defaultValue)`}
+              optionalText={t('optional')}
+              visualPlaceholder={t('input-value')}
+              defaultValue={data.defaultValue}
+              onChange={(e) => handleUpdate('defaultValue', e ?? '')}
+              maxLength={TEXT_INPUT_MAX}
+            />
+            <TextInput
+              labelText={`${t('required-value')} (sh:hasValue)`}
+              optionalText={t('optional')}
+              visualPlaceholder={t('input-value')}
+              defaultValue={data.hasValue}
+              onChange={(e) => handleUpdate('hasValue', e ?? '')}
+              maxLength={TEXT_INPUT_MAX}
+            />
+          </>
+        )}
 
         <TextInput
           labelText={`${t('minimum-length')} (sh:minLength)`}

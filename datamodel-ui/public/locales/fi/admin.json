@@ -22,6 +22,7 @@
   "add-selected": "Lisää valitut",
   "add-terminology": "Lisää sanasto",
   "add-upper-class": "Lisää yläluokka",
+  "add-value": "Lisää arvo",
   "all-groups": "Kaikki ryhmät",
   "all-terminologies": "Kaikki sanastot",
   "allowed-file-formats": "",
@@ -82,6 +83,7 @@
   "clear-selection": "Tyhjennä valinta",
   "codelist": "Koodisto",
   "codelist-contents": "Koodiston sisältö",
+  "codelist-delete-warning": "Haluatko poistaa koodiston {{name}}. Koodistosta valitut arvot poistetaan myös muista kentistä.",
   "common-form": {
     "add-equivalent-association": "Lisää vastaava assosiaatio",
     "add-equivalent-attribute": "Lisää vastaava attribuutti",
@@ -111,6 +113,7 @@
   "contact-input-type-label": "Palautteen vastaanottotapa",
   "content-language": "Sisällön kieli",
   "continue": "Jatka",
+  "continue-selecting-codelists": "Jatka koodiston valintaan",
   "contributors": "Sisällöntuottajat",
   "contributors-hint-text": "Voit lisätä vain organisaation, joka on antanut sinulle muokkausoikeudet",
   "corresponding-classes": "Vastaavat luokat",
@@ -136,6 +139,7 @@
   "data-models-count_other": "{{count}} tietomallia",
   "datamodel-type": "Tietomallin tyyppi",
   "default-value": "Oletusarvo",
+  "delete-codelist": "Poista koodisto",
   "delete-modal": {
     "association-description": "Haluatko poistaa assosiaation {{targetName}}?",
     "association-error": "Assosiaation {{targetName}} poistamisessa ilmeni ongelma",
@@ -197,6 +201,7 @@
   "link-opens-new-window-external": "",
   "link-uri-is-invalid": "Linkin URI ei ole oikeassa muodossa",
   "link-url": "Linkin verkko-osoite",
+  "manual-input-delete-warning": "Käsinkirjoitetut rajoitteiden arvot positetaan, kun käytetään koodistoa. Haluatko jatkaa koodiston valintaan?",
   "maximum-amount": "Enimmäismäärä",
   "maximum-length": "Enimmäispituus",
   "minimum-amount": "Vähimmäismäärä",
@@ -293,6 +298,7 @@
   "updated": "Päivitetty",
   "upper-classes": "Yläluokat",
   "uri-preview": "URI:n esikatselu",
+  "use-codelist-values": "Käytä koodiston arvoja",
   "utilizes-class-restriction": "Hyödyntää luokkarajoitetta",
   "work-group-comment": "Työryhmän sisäinen kommentti",
   "you-have-unsaved-changes": "Sinulla on tallentamattomia muutoksia."

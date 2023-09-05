@@ -22,6 +22,7 @@
   "add-selected": "Add selected",
   "add-terminology": "Add terminology",
   "add-upper-class": "Add upper class",
+  "add-value": "Add value",
   "all-groups": "All groups",
   "all-terminologies": "All terminologies",
   "allowed-file-formats": "",
@@ -82,6 +83,7 @@
   "clear-selection": "Clear selection",
   "codelist": "Code list",
   "codelist-contents": "Code list contents",
+  "codelist-delete-warning": "Are you sure you want to delete codelist {{name}}. Codes in codelist will also be removed from other fields.",
   "common-form": {
     "add-equivalent-association": "Add equivelant association",
     "add-equivalent-attribute": "Add equivalent attribute",
@@ -111,6 +113,7 @@
   "contact-input-type-label": "Feedback method",
   "content-language": "Content language",
   "continue": "Continue",
+  "continue-selecting-codelists": "Continue to codelist selection",
   "contributors": "Contributors",
   "contributors-hint-text": "You can only add organizations to which  you have editing permissions",
   "corresponding-classes": "Corresponding classes",
@@ -136,6 +139,7 @@
   "data-models-count_other": "{{count}} data models",
   "datamodel-type": "Data Model type",
   "default-value": "Default value",
+  "delete-codelist": "Remove codelist",
   "delete-modal": {
     "association-description": "Remove association {{targetName}}?",
     "association-error": "An error occurred while removing association {{targetName}}",
@@ -197,6 +201,7 @@
   "link-opens-new-window-external": "",
   "link-uri-is-invalid": "Link URI is invalid",
   "link-url": "Link URL",
+  "manual-input-delete-warning": "Manually inputted restrictions will be deleted if you select a codelist. Are you sure you want to continue selecting a codelist?",
   "maximum-amount": "Maximum amount",
   "maximum-length": "Maximum length",
   "minimum-amount": "Minimum amount",
@@ -293,6 +298,7 @@
   "updated": "Updated",
   "upper-classes": "Upper classes",
   "uri-preview": "URI preview",
+  "use-codelist-values": "Use codelist values",
   "utilizes-class-restriction": "Utilizes class restriction",
   "work-group-comment": "Work group comment",
   "you-have-unsaved-changes": "You have unsaved changes."

@@ -22,6 +22,7 @@
   "add-selected": "",
   "add-terminology": "",
   "add-upper-class": "",
+  "add-value": "",
   "all-groups": "",
   "all-terminologies": "",
   "allowed-file-formats": "",
@@ -82,6 +83,7 @@
   "clear-selection": "",
   "codelist": "",
   "codelist-contents": "",
+  "codelist-delete-warning": "",
   "common-form": {
     "add-equivalent-association": "",
     "add-equivalent-attribute": "",
@@ -111,6 +113,7 @@
   "contact-input-type-label": "",
   "content-language": "",
   "continue": "",
+  "continue-selecting-codelists": "",
   "contributors": "",
   "contributors-hint-text": "",
   "corresponding-classes": "",
@@ -136,6 +139,7 @@
   "data-models-count_other": "",
   "datamodel-type": "",
   "default-value": "",
+  "delete-codelist": "",
   "delete-modal": {
     "association-description": "",
     "association-error": "",
@@ -197,6 +201,7 @@
   "link-opens-new-window-external": "",
   "link-uri-is-invalid": "",
   "link-url": "",
+  "manual-input-delete-warning": "",
   "maximum-amount": "",
   "maximum-length": "",
   "minimum-amount": "",
@@ -293,6 +298,7 @@
   "updated": "",
   "upper-classes": "",
   "uri-preview": "",
+  "use-codelist-values": "",
   "utilizes-class-restriction": "",
   "work-group-comment": "",
   "you-have-unsaved-changes": ""
