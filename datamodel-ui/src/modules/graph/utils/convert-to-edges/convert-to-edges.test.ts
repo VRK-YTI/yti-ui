@@ -1,10 +1,10 @@
 import convertToEdges from '.';
 import {
   dottedEdgeExpected,
-  hiddenEdgeExpected,
   solidEdgeExpected,
   visualizationHiddenTypeArray,
   visualizationTypeArray,
+  withHiddenEdgeExpected,
 } from './convert-to-edges.test.data';
 
 describe('convert-to-edges', () => {
@@ -15,14 +15,14 @@ describe('convert-to-edges', () => {
   });
 
   it('should return solid edges', () => {
-    const returned = convertToEdges(visualizationTypeArray, []);
+    const returned = convertToEdges(visualizationTypeArray(), []);
 
     expect(returned).toHaveLength(2);
     expect(returned).toStrictEqual(solidEdgeExpected);
   });
 
   it('should return dotted edges', () => {
-    const returned = convertToEdges(visualizationTypeArray, [], true);
+    const returned = convertToEdges(visualizationTypeArray(), [], true);
 
     expect(returned).toHaveLength(2);
     expect(returned).toStrictEqual(dottedEdgeExpected);
@@ -30,12 +30,10 @@ describe('convert-to-edges', () => {
 
   it('should return edges with corners', () => {
     const returned = convertToEdges(
-      visualizationTypeArray,
+      visualizationTypeArray(true),
       visualizationHiddenTypeArray
     );
 
-    const expected = [...solidEdgeExpected, ...hiddenEdgeExpected];
-
-    expect(returned).toStrictEqual(expected);
+    expect(returned).toStrictEqual(withHiddenEdgeExpected);
   });
 });

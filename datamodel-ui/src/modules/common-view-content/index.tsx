@@ -225,11 +225,11 @@ export default function CommonViewContent({
         {data.type === ResourceType.ASSOCIATION && (
           <>
             <BasicBlock title={t('source-class', { ns: 'admin' })}>
-              {data.range ? data.range?.curie : t('no-source-class')}
+              {data.domain ? data.domain.curie : t('no-source-class')}
             </BasicBlock>
 
             <BasicBlock title={t('target-class', { ns: 'admin' })}>
-              {data.domain ? data.domain?.curie : t('no-target-class')}
+              {data.range ? data.range.curie : t('no-target-class')}
             </BasicBlock>
           </>
         )}
