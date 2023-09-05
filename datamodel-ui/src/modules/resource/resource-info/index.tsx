@@ -66,7 +66,7 @@ export default function ResourceInfo({
   const [deleteVisible, setDeleteVisible] = useState(false);
   const [localCopyVisible, setLocalCopyVisible] = useState(false);
   const [externalEdit, setExternalEdit] = useState(false);
-  const [externalActive, setExternalActive] = useState(inUse ?? true);
+  const [externalActive, setExternalActive] = useState(inUse);
   const [togglePropertyShape, toggleResult] = useTogglePropertyShapeMutation();
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
 
@@ -78,6 +78,10 @@ export default function ResourceInfo({
       });
     }
   };
+
+  useEffect(() => {
+    setExternalActive(inUse);
+  }, [inUse]);
 
   useEffect(() => {
     if (toggleResult.isSuccess) {
@@ -146,7 +150,10 @@ export default function ResourceInfo({
                     <>
                       <Button
                         variant="secondaryNoBorder"
-                        onClick={() => setExternalEdit(true)}
+                        onClick={() => {
+                          setExternalActive(inUse);
+                          setExternalEdit(true);
+                        }}
                         id="edit-button"
                       >
                         {t('edit', { ns: 'admin' })}
@@ -236,7 +243,7 @@ export default function ResourceInfo({
                   </InlineAlert>
                 )}
                 <ApplicationProfileTop
-                  inUse={externalActive}
+                  inUse={externalActive === undefined ? true : externalActive}
                   setInUse={setExternalActive}
                   type={data.type}
                   applicationProfile={applicationProfile}
