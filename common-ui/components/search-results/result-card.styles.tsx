@@ -40,6 +40,12 @@ export const TitleLink = styled(Link)`
   .fi-icon {
     min-width: max-content;
   }
+
+  &:visited {
+    h2 {
+      color: ${(props) => props.theme.suomifi.colors.accentTertiaryDark1};
+    }
+  }
 `;
 
 export const Subtitle = styled.p`

@@ -6,7 +6,8 @@ import {
   ExpanderTitleButton,
   IconMenu,
   Tooltip,
-  Text,
+  IconCheckCircle,
+  IconDisabled,
 } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import {
@@ -102,11 +103,11 @@ export default function ResourceInfo({
             {`${data.modelId}:${data.identifier}`}
           </SecondaryTextWrapper>
         </div>
-        <Text>
-          {data.deactivated
-            ? t('not-in-use', { ns: 'admin' })
-            : t('in-use', { ns: 'admin' })}
-        </Text>
+        {data.deactivated ? (
+          <IconDisabled fill="depthDark2" />
+        ) : (
+          <IconCheckCircle fill="#09a580" />
+        )}
       </div>
     );
   }

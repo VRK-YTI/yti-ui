@@ -259,8 +259,10 @@ export default function ClassView({
         </StaticHeader>
 
         <DrawerContent height={headerHeight} spaced>
-          {!data || data?.totalHitCount < 1 ? (
+          {!data || (query === '' && data?.totalHitCount < 1) ? (
             <Text>{t('datamodel-no-classes')}</Text>
+          ) : query !== '' && data?.totalHitCount < 1 ? (
+            <Text>{t('no-results')}</Text>
           ) : (
             <DrawerItemList
               items={data.responseObjects.map((item) => ({

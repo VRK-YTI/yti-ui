@@ -248,8 +248,14 @@ export default function ResourceView({
         </StaticHeader>
 
         <DrawerContent height={headerHeight} spaced>
-          {!data || data?.totalHitCount < 1 ? (
-            <Text>{t('datamodel-no-attributes')}</Text>
+          {!data || (query === '' && data?.totalHitCount < 1) ? (
+            <Text>
+              {type === 'ASSOCIATION'
+                ? t('datamodel-no-associations')
+                : t('datamodel-no-attributes')}
+            </Text>
+          ) : query !== '' && data?.totalHitCount < 1 ? (
+            <Text>{t('no-results')}</Text>
           ) : (
             <DrawerItemList
               items={data.responseObjects.map((item) => {
