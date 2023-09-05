@@ -142,11 +142,13 @@ export default function ModelEditView({
           <HeaderRow>
             <Button onClick={() => handleSubmit()}>
               {userPosted ? (
-                <StyledSpinner
-                  variant="small"
-                  text={t('saving')}
-                  textAlign="right"
-                />
+                <div role="alert">
+                  <StyledSpinner
+                    variant="small"
+                    text={t('saving')}
+                    textAlign="right"
+                  />
+                </div>
               ) : (
                 <>{t('save')}</>
               )}

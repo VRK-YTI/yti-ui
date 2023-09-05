@@ -446,11 +446,13 @@ export default function ClassForm({
           <div style={{ display: 'flex', gap: '10px' }}>
             <Button onClick={() => handleSubmit()} id="submit-button">
               {userPosted ? (
-                <StyledSpinner
-                  variant="small"
-                  text={t('saving')}
-                  textAlign="right"
-                />
+                <div role="alert">
+                  <StyledSpinner
+                    variant="small"
+                    text={t('saving')}
+                    textAlign="right"
+                  />
+                </div>
               ) : (
                 <>{t('save')}</>
               )}

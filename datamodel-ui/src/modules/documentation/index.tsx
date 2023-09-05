@@ -239,13 +239,15 @@ export default function Documentation({
                 gap: '15px',
               }}
             >
-              <Button
-                onClick={() => handleSubmit()}
-                id="submit-button"
-                aria-live="assertive"
-              >
+              <Button onClick={() => handleSubmit()} id="submit-button">
                 {userPosted ? (
-                  <StyledSpinner text={t('saving')} />
+                  <div role="alert">
+                    <StyledSpinner
+                      variant="small"
+                      text={t('saving')}
+                      textAlign="right"
+                    />
+                  </div>
                 ) : (
                   <>{t('save')}</>
                 )}
