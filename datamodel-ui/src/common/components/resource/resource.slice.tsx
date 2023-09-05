@@ -114,7 +114,7 @@ export const resourceApi = createApi({
       }
     >({
       query: (value) => ({
-        url: `/resource/profile/${value.modelid}/${value.resourceId}?targetPrefix=${value.targetPrefix}&newIdentifier=${value.newIdentifier}`,
+        url: `/resource/profile/${value.modelid}/${value.resourceId}/copy?targetPrefix=${value.targetPrefix}&newIdentifier=${value.newIdentifier}`,
         method: 'POST',
       }),
     }),

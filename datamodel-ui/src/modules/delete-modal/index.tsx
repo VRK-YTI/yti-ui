@@ -4,6 +4,7 @@ import { useDeleteResourceMutation } from '@app/common/components/resource/resou
 import {
   translateDeleteModalDescription,
   translateDeleteModalError,
+  translateDeleteModalSpinner,
   translateDeleteModalSuccess,
   translateDeleteModalTitle,
 } from '@app/common/utils/translation-helpers';
@@ -17,6 +18,7 @@ import {
   NarrowModal,
   SimpleModalContent,
 } from './../as-file-modal/as-file-modal.styles';
+import SaveSpinner from 'yti-common-ui/save-spinner';
 
 interface DeleteModalProps {
   modelId: string;
@@ -47,8 +49,10 @@ export default function DeleteModal({
   const [deleteResource, deleteResourceResult] = useDeleteResourceMutation();
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  const [userPosted, setUserPosted] = useState(false);
 
   const handleClose = () => {
+    setUserPosted(false);
     hide();
   };
 
@@ -64,6 +68,7 @@ export default function DeleteModal({
   };
 
   const handleDelete = () => {
+    setUserPosted(true);
     if (type === 'model') {
       deleteModel(modelId);
     } else if (type === 'class') {
@@ -89,6 +94,7 @@ export default function DeleteModal({
     ) {
       setSuccess(true);
       setError(false);
+      setUserPosted(false);
     } else if (
       deleteClassResult.isError ||
       deleteModelResult.isError ||
@@ -96,6 +102,7 @@ export default function DeleteModal({
     ) {
       setSuccess(false);
       setError(true);
+      setUserPosted(false);
     }
   }, [deleteClassResult, deleteModelResult, deleteResourceResult]);
 
@@ -123,7 +130,11 @@ export default function DeleteModal({
         <Text>{translateDeleteModalDescription(type, t, label)}</Text>
 
         <ButtonFooter>
-          <Button onClick={() => handleDelete()} id="delete-button">
+          <Button
+            disabled={userPosted}
+            onClick={() => handleDelete()}
+            id="delete-button"
+          >
             {t('remove')}
           </Button>
           <Button
@@ -133,6 +144,9 @@ export default function DeleteModal({
           >
             {t('cancel-variant')}
           </Button>
+          {userPosted && (
+            <SaveSpinner text={translateDeleteModalSpinner(type, t)} />
+          )}
         </ButtonFooter>
       </>
     );

@@ -48,6 +48,7 @@ import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
+import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 
 export default function Documentation({
   modelId,
@@ -66,6 +67,7 @@ export default function Documentation({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [value, setValue] = useState<{ [key: string]: string }>({});
   const [isEdit, setIsEdit] = useState(false);
+  const [userPosted, setUserPosted] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(
     languages.sort((a, b) => compareLocales(a, b))[0]
   );
@@ -89,6 +91,8 @@ export default function Documentation({
       return;
     }
 
+    setUserPosted(true);
+
     const payload = generatePayload({ ...modelData, documentation: value });
 
     updateModel({
@@ -99,6 +103,7 @@ export default function Documentation({
   };
 
   const handleCancel = () => {
+    setUserPosted(false);
     setIsEdit(false);
     dispatch(setHasChanges(false));
     disableConfirmation();
@@ -197,6 +202,7 @@ export default function Documentation({
   useEffect(() => {
     if (result.isSuccess) {
       setIsEdit(false);
+      setUserPosted(false);
       disableConfirmation();
       refetch();
       dispatch(setNotification('DOCUMENTATION_EDIT'));
@@ -223,7 +229,7 @@ export default function Documentation({
   return (
     <>
       <StaticHeader ref={ref}>
-        <div>
+        <HeaderRow>
           <Text variant="bold">{t('documentation')}</Text>
 
           {isEdit ? (
@@ -234,7 +240,17 @@ export default function Documentation({
               }}
             >
               <Button onClick={() => handleSubmit()} id="submit-button">
-                {t('save')}
+                {userPosted ? (
+                  <div role="alert">
+                    <StyledSpinner
+                      variant="small"
+                      text={t('saving')}
+                      textAlign="right"
+                    />
+                  </div>
+                ) : (
+                  <>{t('save')}</>
+                )}
               </Button>
               <Button
                 variant="secondary"
@@ -253,7 +269,7 @@ export default function Documentation({
               {t('edit')}
             </Button>
           )}
-        </div>
+        </HeaderRow>
       </StaticHeader>
 
       {renderView()}

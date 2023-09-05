@@ -3,6 +3,7 @@ import { Modal, ModalContent, RadioButtonGroup } from 'suomifi-ui-components';
 
 export const ButtonFooter = styled.div`
   display: flex;
+  align-items: center;
   margin-top: ${(props) => props.theme.suomifi.spacing.l};
   gap: ${(props) => props.theme.suomifi.spacing.m};
 `;

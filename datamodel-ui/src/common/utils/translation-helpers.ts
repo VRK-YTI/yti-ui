@@ -305,6 +305,22 @@ export function translateDeleteModalError(
   }
 }
 
+export function translateDeleteModalSpinner(
+  type: 'model' | 'class' | 'association' | 'attribute',
+  t: TFunction
+) {
+  switch (type) {
+    case 'model':
+      return t('delete-modal.deleting-model', { ns: 'admin' });
+    case 'class':
+      return t('delete-modal.deleting-class', { ns: 'admin' });
+    case 'association':
+      return t('delete-modal.deleting-association', { ns: 'admin' });
+    case 'attribute':
+      return t('delete-modal.deleting-attribute', { ns: 'admin' });
+  }
+}
+
 export function translateResourceCountTitle(
   type: ResourceType,
   t: TFunction,

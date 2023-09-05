@@ -57,6 +57,7 @@ import {
   TEXT_AREA_MAX,
   TEXT_INPUT_MAX,
 } from 'yti-common-ui/utils/constants';
+import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -430,7 +431,7 @@ export default function ClassForm({
           </Button>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <HeaderRow>
           <Text variant="bold">
             {Object.values(data.label).filter(
               (l) => l !== '' && typeof l !== 'undefined'
@@ -449,7 +450,17 @@ export default function ClassForm({
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <Button onClick={() => handleSubmit()} id="submit-button">
-              {t('save')}
+              {userPosted ? (
+                <div role="alert">
+                  <StyledSpinner
+                    variant="small"
+                    text={t('saving')}
+                    textAlign="right"
+                  />
+                </div>
+              ) : (
+                <>{t('save')}</>
+              )}
             </Button>
             <Button
               variant="secondary"
@@ -462,7 +473,7 @@ export default function ClassForm({
               {t('cancel-variant')}
             </Button>
           </div>
-        </div>
+        </HeaderRow>
 
         {userPosted &&
         (Object.values(errors).filter((e) => e).length > 0 ||

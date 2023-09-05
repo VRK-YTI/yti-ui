@@ -21,6 +21,7 @@ import HasPermission from '@app/common/utils/has-permission';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
+import { HeaderRow } from '@app/common/components/header';
 
 export default function LinkedDataView({
   modelId,
@@ -69,12 +70,7 @@ export default function LinkedDataView({
   return (
     <>
       <StaticHeader ref={ref}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'space-between',
-          }}
-        >
+        <HeaderRow>
           <Text variant="bold">{t('links')}</Text>
 
           {hasPermission && (
@@ -105,7 +101,7 @@ export default function LinkedDataView({
               </TooltipWrapper>
             </div>
           )}
-        </div>
+        </HeaderRow>
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>

@@ -53,6 +53,7 @@ import ResourceModal from '../resource-modal';
 import useSetView from '@app/common/utils/hooks/use-set-view';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
+import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 
 interface ResourceFormProps {
   modelId: string;
@@ -365,19 +366,25 @@ export default function ResourceForm({
             {t('back', { ns: 'common' })}
           </Button>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <HeaderRow>
           <Text variant="bold">
             {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
               translateCommonForm('name', data.type, t)}
           </Text>
 
-          <div>
-            <Button
-              onClick={() => handleSubmit()}
-              style={{ marginRight: '15px' }}
-              id="submit-button"
-            >
-              {t('save')}
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <Button onClick={() => handleSubmit()} id="submit-button">
+              {userPosted ? (
+                <div role="alert">
+                  <StyledSpinner
+                    variant="small"
+                    text={t('saving')}
+                    textAlign="right"
+                  />
+                </div>
+              ) : (
+                <>{t('save')}</>
+              )}
             </Button>
             <Button
               variant="secondary"
@@ -390,7 +397,7 @@ export default function ResourceForm({
               {t('cancel-variant')}
             </Button>
           </div>
-        </div>
+        </HeaderRow>
 
         {userPosted &&
         (Object.values(errors).filter((val) => val).length > 0 ||

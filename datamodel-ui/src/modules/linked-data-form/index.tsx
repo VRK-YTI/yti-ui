@@ -23,6 +23,7 @@ import LinkedItem from './linked-item';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 
 export default function LinkedDataForm({
   hasCodelist,
@@ -40,6 +41,7 @@ export default function LinkedDataForm({
   const ref = useRef<HTMLDivElement>(null);
   const [updateModel, result] = useUpdateModelMutation();
   const [headerHeight, setHeaderHeight] = useState(0);
+  const [userPosted, setUserPosted] = useState(false);
   const [data, setData] = useState<{
     codeLists: ModelCodeList[];
     externalNamespaces: ExternalNamespace[];
@@ -59,6 +61,7 @@ export default function LinkedDataForm({
   };
 
   const handleSubmit = () => {
+    setUserPosted(true);
     disableConfirmation();
     dispatch(setHasChanges(false));
 
@@ -85,6 +88,7 @@ export default function LinkedDataForm({
 
   useEffect(() => {
     if (result.isSuccess) {
+      setUserPosted(false);
       handleReturn();
       dispatch(setNotification('LINK_EDIT'));
     }
@@ -93,12 +97,7 @@ export default function LinkedDataForm({
   return (
     <>
       <StaticHeader ref={ref}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'space-between',
-          }}
-        >
+        <HeaderRow>
           <Text variant="bold">{t('links', { ns: 'common' })}</Text>
 
           <div
@@ -108,7 +107,17 @@ export default function LinkedDataForm({
             }}
           >
             <Button onClick={() => handleSubmit()} id="submit-button">
-              {t('save')}
+              {userPosted ? (
+                <div role="alert">
+                  <StyledSpinner
+                    variant="small"
+                    text={t('saving')}
+                    textAlign="right"
+                  />
+                </div>
+              ) : (
+                <>{t('save')}</>
+              )}
             </Button>
             <Button
               variant="secondary"
@@ -121,7 +130,7 @@ export default function LinkedDataForm({
               {t('cancel-variant')}
             </Button>
           </div>
-        </div>
+        </HeaderRow>
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
