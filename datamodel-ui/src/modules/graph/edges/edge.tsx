@@ -39,7 +39,11 @@ export default function DefaultEdge({
     useCallback((store) => store.nodeInternals.get(target), [target])
   );
 
-  const { sx, sy, tx, ty } = getEdgeParams(sourceNode, targetNode);
+  const { sx, sy, tx, ty } = getEdgeParams(
+    sourceNode,
+    targetNode,
+    data.offsetSource
+  );
 
   const [edgePath, labelX, labelY] = getStraightPath({
     sourceX: sx,

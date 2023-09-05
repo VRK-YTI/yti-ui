@@ -20,6 +20,7 @@ export default function convertToEdges(
 
   const associationLabels: {
     targetId: string;
+    offsetSource?: number;
     identifier: string;
     label: { [key: string]: string };
   }[] = [];
@@ -37,6 +38,9 @@ export default function convertToEdges(
               targetId: getEndEdge(assoc.referenceTarget),
               identifier: assoc.identifier,
               label: assoc.label,
+              offsetSource: applicationProfile
+                ? node.attributes.length + idx + 1
+                : undefined,
             });
 
             return createEdge({
@@ -128,6 +132,7 @@ export default function convertToEdges(
         targetHandle: node.referenceTarget,
         id: `reactflow__edge-${nodeIdentifier}-${node.referenceTarget}`,
       },
+      offsetSource: associationInfo.offsetSource,
     });
   });
 
