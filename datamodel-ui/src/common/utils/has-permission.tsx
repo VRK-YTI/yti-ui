@@ -111,5 +111,20 @@ export function checkPermission({
     return true;
   }
 
+  if (
+    !targetOrganizations &&
+    rolesInOrganizations.includes('DATA_MODEL_EDITOR') &&
+    !actions.some((action) => action.includes('ADMIN'))
+  ) {
+    return true;
+  }
+
+  if (
+    rolesInTargetOrganizations?.includes('DATA_MODEL_EDITOR') &&
+    !actions.some((action) => action.includes('ADMIN'))
+  ) {
+    return true;
+  }
+
   return false;
 }

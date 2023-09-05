@@ -7,6 +7,7 @@ export const EdgeContent = styled.div.attrs(
     },
   })
 )<{
+  $applicationProfile?: boolean;
   $labelX: number;
   $labelY: number;
   $highlight: boolean;
@@ -15,12 +16,14 @@ export const EdgeContent = styled.div.attrs(
   pointer-events: all;
   position: absolute;
   background: #ffffff;
-  padding: 5px 20px 5px 10px;
+  padding: 5px 10px;
   border-radius: 2px;
-  border: 2px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-  fontsize: 16px;
-  fontweight: 400;
-  padding-right: 20px;
+  border: ${(props) =>
+    !props.$applicationProfile
+      ? `2px solid ${props.theme.suomifi.colors.accentTertiary}`
+      : 'none'};
+  font-size: 16px;
+  font-weight: 400;
 
   ${(props) =>
     props.$highlight &&
@@ -38,25 +41,13 @@ export const EdgeContent = styled.div.attrs(
     `}
 `;
 
-export const DeleteEdgeButton = styled.button`
-  border: 0;
-  background: none;
-  position: fixed;
-  top: 0;
-  right: 0;
-  fontsize: 16px;
-  padding: 0 4px;
+export const HoveredPath = styled.path<{ $highlight?: boolean }>`
+  stroke-width: 10;
+  stroke-linecap: round;
 
-  &:hover {
-    border-left: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-    border-bottom: 1px solid
-      ${(props) => props.theme.suomifi.colors.depthLight1};
-    border-radius: 2px;
-    cursor: pointer;
-  }
-
-  &:active {
-    background: ${(props) => props.theme.suomifi.colors.depthLight2};
-    cursor: pointer;
-  }
+  ${(props) =>
+    props.$highlight &&
+    `
+    stroke: ${props.theme.suomifi.colors.depthLight1};
+    `}
 `;

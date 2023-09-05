@@ -10,7 +10,8 @@ export const ClassNodeDiv = styled.div<{
   gap: ${(props) => props.theme.suomifi.spacing.xxs};
   padding: ${(props) => props.theme.suomifi.spacing.xxs};
 
-  width: 360px;
+  min-width: 360px;
+  width: min-content;
 
   > div {
     max-width: 100%;
@@ -56,6 +57,80 @@ export const ClassNodeDiv = styled.div<{
     `
     background: #FAAF00;
   `}
+`;
+
+export const CornerNodeWrapper = styled.div<{
+  $highlight?: boolean;
+  $applicationProfile?: boolean;
+}>`
+  padding: 0;
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  z-index: 1 !important;
+  border: 1px solid transparent;
+
+  box-shadow: none !important;
+  background: none;
+
+  .react-flow__handle {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    width: 0;
+    height: 0;
+    border: 0;
+    top: 0;
+    bottom 0;
+  }
+
+  .delete-wrapper {
+    position: absolute;
+    top: -14px;
+    right: -12px;
+    height: 16px;
+    width: 16px;
+
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background-color: ${(props) =>
+      props.$highlight
+        ? props.$applicationProfile
+          ? props.theme.suomifi.colors.highlightBase
+          : props.theme.suomifi.colors.accentTertiary
+        : 'none'};
+
+    svg {
+      width: 10px;
+      height: 10px;
+      color: ${(props) => props.theme.suomifi.colors.whiteBase};
+    }
+
+    &:active {
+      background-color: ${(props) =>
+        props.$applicationProfile
+          ? props.theme.suomifi.colors.highlightDark1
+          : props.theme.suomifi.colors.accentTertiaryDark1};
+    }
+  }
+
+  ${(props) =>
+    props.$highlight &&
+    `
+  background-color: ${props.theme.suomifi.colors.whiteBase};
+  border-radius: 50%;
+  border: 1px solid ${props.theme.suomifi.colors.depthLight1};
+  `}
+
+  &:hover {
+    background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
+    border-radius: 50%;
+    border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+  }
 `;
 
 export const CollapseButton = styled.button`
@@ -113,8 +188,9 @@ export const Resource = styled.div<{ $highlight?: boolean }>`
   border-radius: 2px;
   margin: 2px;
   display: flex;
-  gap: ${(props) => props.theme.suomifi.spacing.xxs};
+  gap: ${(props) => props.theme.suomifi.spacing.xs};
   align-items: center;
+  white-space: nowrap;
 
   &:hover {
     background: ${(props) => props.theme.suomifi.colors.depthLight2};
@@ -172,4 +248,8 @@ export const TooltipWrapper = styled.div`
     display: flex;
     align-items: center;
   }
+`;
+
+export const ResourceTechnicalName = styled.span`
+  color: ${(props) => props.theme.suomifi.colors.accentTertiaryDark1};
 `;

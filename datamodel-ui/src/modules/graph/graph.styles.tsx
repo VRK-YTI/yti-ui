@@ -24,7 +24,7 @@ export const ModelFlow = styled(ReactFlow)`
     z-index: 4;
   }
 
-  [data-id^="#corner-"] {
+  [data-id^='#corner-'] {
     padding: 0;
     margin: 0;
     width: 20px;
@@ -33,28 +33,9 @@ export const ModelFlow = styled(ReactFlow)`
     margin-left: 10px;
     margin-top: -10px;
     border: 1px solid transparent;
-
-    box-shadow: none !important;
-    background: none;
-
-    .react-flow__handle {
-      min-width: 0 !important;
-      min-height: 0 !important;
-      width: 0;
-      height: 0;
-      border: 0;
-      top: 0;
-      bottom 0;
-    }
-
-    &:hover {
-      background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-      border-radius: 50%;
-      border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-    }
   }
 
   .react-flow__edge-path {
-    stroke: ${(props) => props.theme.suomifi.colors.blackBase};;
+    stroke: ${(props) => props.theme.suomifi.colors.blackBase};
   }
 `;

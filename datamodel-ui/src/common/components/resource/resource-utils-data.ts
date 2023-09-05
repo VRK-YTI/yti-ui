@@ -146,7 +146,10 @@ export const applicationProfileAttribute: ResourceFormType = {
   classType: 'class-type',
   type: ResourceType.ATTRIBUTE,
   dataType: { id: 'data-type', label: 'data-type' },
-  allowedValues: ['allowed-1', 'allowed-2'],
+  allowedValues: [
+    { id: 'allowed-1', label: 'allowed-1' },
+    { id: 'allowed-2', label: 'allowed-2' },
+  ],
   defaultValue: 'default-value',
   hasValue: 'has-value',
   maxLength: 10,
@@ -175,7 +178,10 @@ export const applicationProfileAssociation: ResourceFormType = {
   classType: 'class-type',
   type: ResourceType.ASSOCIATION,
   dataType: { id: 'data-type', label: 'data-type' },
-  allowedValues: ['allowed-1', 'allowed-2'],
+  allowedValues: [
+    { id: 'allowed-1', label: 'allowed-1' },
+    { id: 'allowed-2', label: 'allowed-2' },
+  ],
   defaultValue: 'default-value',
   hasValue: 'has-value',
   maxLength: 10,

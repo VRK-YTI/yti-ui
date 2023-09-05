@@ -33,7 +33,7 @@ export default function LinkedDataView({
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
   const hasPermission = HasPermission({
-    actions: ['ADMIN_DATA_MODEL'],
+    actions: ['EDIT_DATA_MODEL'],
   });
   const [headerHeight, setHeaderHeight] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);

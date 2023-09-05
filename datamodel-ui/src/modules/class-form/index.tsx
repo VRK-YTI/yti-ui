@@ -52,7 +52,11 @@ import ResourcePicker from '../resource-picker-modal';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 import { getPrefixFromURI } from '@app/common/utils/get-value';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
-import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
+import {
+  IDENTIFIER_MAX,
+  TEXT_AREA_MAX,
+  TEXT_INPUT_MAX,
+} from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 
 export interface ClassFormProps {
@@ -402,6 +406,7 @@ export default function ClassForm({
         identifier: backendErrorFields.includes('identifier'),
         identifierInitChar: false,
         identifierLength: false,
+        identifierCharacters: false,
         label: backendErrorFields.includes('label'),
       });
     }
@@ -529,7 +534,8 @@ export default function ClassForm({
             (userPosted &&
               (errors.identifier ||
                 errors.identifierInitChar ||
-                errors.identifierLength)) ||
+                errors.identifierLength ||
+                errors.identifierCharacters)) ||
             (isSuccess && classAlreadyExists)
               ? 'error'
               : 'default'
@@ -551,7 +557,7 @@ export default function ClassForm({
             </Tooltip>
           }
           id="prefix-input"
-          maxLength={TEXT_INPUT_MAX}
+          maxLength={IDENTIFIER_MAX}
         />
 
         {!applicationProfile ? (

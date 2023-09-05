@@ -15,28 +15,31 @@ import {
 } from '@app/common/components/visualization/visualization.slice';
 import { useStoreDispatch } from '@app/store';
 import {
+  resetHighlighted,
   selectDisplayLang,
   selectResetPosition,
   selectSavePosition,
   selectSelected,
+  setHighlighted,
   setResetPosition,
   setSavePosition,
   setSelected,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
 import { ClassNode, CornerNode, ExternalNode } from './nodes';
-import { DottedEdge, SolidEdge, SplittableEdge } from './edges';
 import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
 import { ClearArrow } from './marker-ends';
 import convertToNodes from './utils/convert-to-nodes';
-import { createNewCornerNode } from './utils/create-corner-node';
+import createCornerNode from './utils/create-corner-node';
 import convertToEdges from './utils/convert-to-edges';
-import createCornerEdge from './utils/create-corner-edge';
 import generatePositionsPayload from './utils/generate-positions-payload';
 import getUnusedCornerIds from './utils/get-unused-corner-ids';
-import handleEdgeDelete from './utils/handle-edge-delete';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import DefaultEdge from './edges/edge';
+import createEdge from './utils/create-edge';
+import getConnectedElements from './utils/get-connected-elements';
+import handleCornerNodeDelete from './utils/handle-corner-node-delete';
 
 interface GraphProps {
   modelId: string;
@@ -52,7 +55,7 @@ const GraphContent = ({
   const { i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
-  const { project } = useReactFlow();
+  const { project, getZoom } = useReactFlow();
   const globalSelected = useSelector(selectSelected());
   const displayLang = useSelector(selectDisplayLang());
   const savePosition = useSelector(selectSavePosition());
@@ -70,22 +73,18 @@ const GraphContent = ({
   );
   const edgeTypes: EdgeTypes = useMemo(
     () => ({
-      defaultEdge: SplittableEdge,
-      dottedEdge: DottedEdge,
-      solidEdge: SolidEdge,
+      generalEdge: DefaultEdge,
     }),
     []
   );
   const { data, isSuccess, refetch } = useGetVisualizationQuery(modelId);
   const [putPositions, result] = usePutPositionsMutation();
 
-  const deleteEdgeById = useCallback(
+  const deleteNodeById = useCallback(
     (id: string) => {
-      setEdges((edges) => handleEdgeDelete(id, edges));
-
-      setCleanUnusedCorners(true);
+      handleCornerNodeDelete(id, setNodes, setEdges, applicationProfile);
     },
-    [setEdges]
+    [setNodes, setEdges, applicationProfile]
   );
 
   const splitEdge = useCallback(
@@ -98,24 +97,43 @@ const GraphContent = ({
 
       setNodes((nodes) => [
         ...nodes,
-        createNewCornerNode(
-          newCornerId,
-          project({ x: x - left - 26, y: y - top })
+        createCornerNode(
+          {
+            identifier: newCornerId,
+            position: project({ x: x - left - 20 * getZoom(), y: y - top }),
+            referenceTarget: target,
+          },
+          applicationProfile,
+          deleteNodeById
         ),
       ]);
 
       const newEdges = [
-        createCornerEdge(source, newCornerId, {
-          handleDelete: deleteEdgeById,
-          splitEdge: splitEdge,
+        createEdge({
+          params: {
+            source: source,
+            sourceHandle: source,
+            target: newCornerId,
+            targetHandle: newCornerId,
+            id: `reactflow__edge-${source}-${newCornerId}`,
+          },
+          isCorner: true,
+          applicationProfile,
         }),
       ];
 
       if (target.includes('corner')) {
         newEdges.push(
-          createCornerEdge(newCornerId, target, {
-            handleDelete: deleteEdgeById,
-            splitEdge: splitEdge,
+          createEdge({
+            params: {
+              source: newCornerId,
+              sourceHandle: newCornerId,
+              target: target,
+              targetHandle: target,
+              id: `reactflow__edge-${newCornerId}-${newCornerId}`,
+            },
+            isCorner: true,
+            applicationProfile,
           })
         );
       }
@@ -145,17 +163,46 @@ const GraphContent = ({
         ...newEdges,
       ]);
     },
-    [setEdges, setNodes, project, deleteEdgeById]
+    [setEdges, setNodes, project, deleteNodeById, getZoom, applicationProfile]
   );
 
   const onEdgeClick = useCallback(
     (e, edge) => {
-      if (globalSelected.id !== edge.data.identifier) {
+      if (edge.data.identifier && globalSelected.id !== edge.data.identifier) {
         dispatch(setSelected(edge.data.identifier, 'associations'));
+        return;
       }
+
+      splitEdge(edge.source, edge.target, e.clientX, e.clientY);
     },
-    [dispatch, globalSelected.id]
+    [dispatch, globalSelected.id, splitEdge]
   );
+
+  const onNodeMouseEnter = useCallback(
+    (e, node) => {
+      if (node.type !== 'cornerNode') {
+        return;
+      }
+
+      dispatch(setHighlighted(getConnectedElements(node, nodes, edges)));
+    },
+    [dispatch, edges, nodes]
+  );
+
+  const onNodeMouseLeave = useCallback(() => {
+    dispatch(resetHighlighted());
+  }, [dispatch]);
+
+  const onEdgeMouseEnter = useCallback(
+    (e, edge) => {
+      dispatch(setHighlighted(getConnectedElements(edge, nodes, edges)));
+    },
+    [dispatch, edges, nodes]
+  );
+
+  const onEdgeMouseLeave = useCallback(() => {
+    dispatch(resetHighlighted());
+  }, [dispatch]);
 
   useEffect(() => {
     if (isSuccess || (isSuccess && resetPosition)) {
@@ -165,17 +212,12 @@ const GraphContent = ({
           data.hiddenNodes,
           modelId,
           applicationProfile,
-          applicationProfile ? refetch : undefined
+          applicationProfile ? refetch : undefined,
+          deleteNodeById
         )
       );
       setEdges(
-        convertToEdges(
-          data.nodes,
-          data.hiddenNodes,
-          deleteEdgeById,
-          splitEdge,
-          applicationProfile
-        )
+        convertToEdges(data.nodes, data.hiddenNodes, applicationProfile)
       );
 
       if (resetPosition) {
@@ -187,8 +229,6 @@ const GraphContent = ({
     isSuccess,
     setNodes,
     setEdges,
-    deleteEdgeById,
-    splitEdge,
     i18n.language,
     displayLang,
     resetPosition,
@@ -196,6 +236,7 @@ const GraphContent = ({
     applicationProfile,
     modelId,
     refetch,
+    deleteNodeById,
   ]);
 
   useEffect(() => {
@@ -239,6 +280,10 @@ const GraphContent = ({
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         onEdgeClick={onEdgeClick}
+        onNodeMouseEnter={onNodeMouseEnter}
+        onNodeMouseLeave={onNodeMouseLeave}
+        onEdgeMouseEnter={onEdgeMouseEnter}
+        onEdgeMouseLeave={onEdgeMouseLeave}
         fitView
         maxZoom={100}
       >
