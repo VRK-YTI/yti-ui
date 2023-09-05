@@ -90,11 +90,6 @@ export default function ResourceView({
     }
   );
 
-  useEffect(() => {
-    console.log(modelId);
-    console.log(!globalSelected.id || !globalSelected.modelId);
-  }, [globalSelected, modelId]);
-
   const { data: inUse, refetch: refetchInUse } = useGetResourceActiveQuery(
     {
       prefix: modelId,
