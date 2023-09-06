@@ -31,7 +31,7 @@ export default function OwnInformation() {
   const { t, i18n } = useTranslation('own-information');
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
   const { data: subscriptions, refetch: refetchSubscriptions } =
-    useGetSubscriptionsQuery(null);
+    useGetSubscriptionsQuery();
   const { data: requests } = useGetRequestsQuery();
 
   if (user.anonymous) {

@@ -45,7 +45,7 @@ export default function OwnInformationPage(props: OwnInformationPageProps) {
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, locale }) => {
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
-    store.dispatch(getSubscriptions.initiate(null));
+    store.dispatch(getSubscriptions.initiate());
     store.dispatch(getRequests.initiate());
 
     await Promise.all(store.dispatch(getOrganizationsRunningQueriesThunk()));

@@ -1,13 +1,4 @@
 import styled from 'styled-components';
-import { ExpanderGroup } from 'suomifi-ui-components';
-
-export const SelectedConceptsGroup = styled(ExpanderGroup)`
-  margin-bottom: ${(props) => props.theme.suomifi.spacing.xxs};
-
-  .fi-hint-text {
-    color: ${(props) => props.theme.suomifi.colors.depthDark1};
-  }
-`;
 
 export const SearchBlock = styled.div`
   display: flex;

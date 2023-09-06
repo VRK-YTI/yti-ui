@@ -1,25 +1,15 @@
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { ClassType } from '@app/common/interfaces/class.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
-import { getCurie } from '@app/common/utils/get-value';
+import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 
 export function internalClassToClassForm(
   data: InternalClass,
   languages: string[],
   applicationProfile?: boolean,
   targetClass?: InternalClass,
-  associations?: {
-    identifier: string;
-    label: { [key: string]: string };
-    modelId: string;
-    uri: string;
-  }[],
-  attributes?: {
-    identifier: string;
-    label: { [key: string]: string };
-    modelId: string;
-    uri: string;
-  }[]
+  associations?: SimpleResource[],
+  attributes?: SimpleResource[]
 ): ClassFormType {
   const label = languages.reduce(
     (acc, lang) => ({ ...acc, [lang]: data.label[lang] }),
@@ -39,7 +29,7 @@ export function internalClassToClassForm(
 
   if (applicationProfile) {
     obj['targetClass'] = {
-      label: `${getCurie(data.namespace, data.identifier)}`,
+      label: data.curie,
       id: data.id,
     };
     obj['association'] = associations ?? [];
@@ -47,7 +37,7 @@ export function internalClassToClassForm(
   } else {
     obj['subClassOf'] = [
       {
-        label: `${getCurie(data.namespace, data.identifier)}`,
+        label: data.curie,
         identifier: data.id,
       },
     ];
@@ -55,7 +45,7 @@ export function internalClassToClassForm(
 
   if (targetClass) {
     obj['node'] = {
-      label: `${getCurie(targetClass.namespace, targetClass.identifier)}`,
+      label: data.curie,
       id: targetClass.id,
     };
   }

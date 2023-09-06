@@ -29,7 +29,7 @@ export const subscriptionApi = createApi({
         },
       }),
     }),
-    getSubscriptions: builder.query<Subscriptions, null>({
+    getSubscriptions: builder.query<Subscriptions, void>({
       query: () => ({
         url:
           process.env.ENV_TYPE !== 'production'

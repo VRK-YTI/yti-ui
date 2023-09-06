@@ -11,7 +11,6 @@ import { Checkbox, ExternalLink, Paragraph, Text } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
-import { FilterType } from './filter-block';
 import { useState } from 'react';
 import { useGetCodeRegistryQuery } from '@app/common/components/code/code.slice';
 
@@ -25,7 +24,6 @@ interface ResultsAndInfoBlockProps {
     results: CodeType[];
   };
   extendedView?: boolean;
-  filter: FilterType;
   selected: string[];
   isSuccess?: boolean;
   setSelected: (value: string[]) => void;
@@ -34,7 +32,6 @@ interface ResultsAndInfoBlockProps {
 export default function ResultsAndInfoBlock({
   codes,
   extendedView,
-  filter,
   selected,
   isSuccess,
   setSelected,
@@ -63,84 +60,77 @@ export default function ResultsAndInfoBlock({
         </Paragraph>
         {isSuccess && codes && codes.meta.totalResults > 0 && (
           <div className="results">
-            {codes.results
-              .filter((code) => {
-                if (filter.status === 'all-statuses' || filter.status === '') {
-                  return true;
+            {codes.results.map((code) => (
+              <div
+                className={
+                  selectedPreview?.uri === code.uri
+                    ? 'result-highlighted'
+                    : 'result'
                 }
-                return code.status === filter.status;
-              })
-              .map((code) => (
-                <div
-                  className={
-                    selectedPreview?.uri === code.uri
-                      ? 'result-highlighted'
-                      : 'result'
+                key={`code-list-result-${code.id}`}
+                onClick={() => setSelectedPreview(code)}
+              >
+                <Checkbox
+                  onClick={() =>
+                    setSelected(
+                      selected.includes(code.uri)
+                        ? selected.filter((s) => s !== code.uri)
+                        : [...selected, code.uri]
+                    )
                   }
-                  key={`code-list-result-${code.id}`}
-                  onClick={() => setSelectedPreview(code)}
+                  checked={selected.includes(code.uri)}
+                  id={`code-list-checkbox_${code.uri}`}
                 >
-                  <Checkbox
-                    onClick={() =>
-                      setSelected(
-                        selected.includes(code.uri)
-                          ? selected.filter((s) => s !== code.uri)
-                          : [...selected, code.uri]
+                  {getLanguageVersion({
+                    data: code.prefLabel,
+                    lang: i18n.language,
+                    appendLocale: true,
+                  })}
+                </Checkbox>
+
+                <div className="subtitle">
+                  <div>
+                    {code.languageCodes
+                      .map((lcode) => lcode.codeValue)
+                      .join(', ')}
+                  </div>
+                  &middot;
+                  <div>
+                    {code.infoDomains
+                      .map((domain) =>
+                        getLanguageVersion({
+                          data: domain.prefLabel,
+                          lang: i18n.language,
+                          appendLocale: true,
+                        })
                       )
-                    }
-                    checked={selected.includes(code.uri)}
-                    id={`code-list-checkbox_${code.uri}`}
-                  >
-                    {getLanguageVersion({
-                      data: code.prefLabel,
+                      .join(', ')}
+                  </div>
+                  &middot;
+                  <StatusChip $isValid={code.status === 'VALID'}>
+                    {translateStatus(code.status, t)}
+                  </StatusChip>
+                </div>
+
+                <div className="description">
+                  {code.description ? (
+                    getLanguageVersion({
+                      data: code.description,
                       lang: i18n.language,
                       appendLocale: true,
-                    })}
-                  </Checkbox>
-
-                  <div className="subtitle">
-                    <div>
-                      {code.languageCodes
-                        .map((lcode) => lcode.codeValue)
-                        .join(', ')}
-                    </div>
-                    &middot;
-                    <div>
-                      {code.infoDomains
-                        .map((domain) =>
-                          getLanguageVersion({
-                            data: domain.prefLabel,
-                            lang: i18n.language,
-                            appendLocale: true,
-                          })
-                        )
-                        .join(', ')}
-                    </div>
-                    &middot;
-                    <StatusChip $isValid={code.status === 'VALID'}>
-                      {translateStatus(code.status, t)}
-                    </StatusChip>
-                  </div>
-
-                  <div className="description">
-                    {code.description ? (
-                      getLanguageVersion({
-                        data: code.description,
-                        lang: i18n.language,
-                        appendLocale: true,
-                      })
-                    ) : (
-                      <>{t('no-description', { ns: 'common' })}</>
-                    )}
-                  </div>
-
-                  <div className="link">
-                    <ExternalLink href={code.uri} labelNewWindow="">
-                      {code.uri}
-                    </ExternalLink>
-                  </div>
+                    })
+                  ) : (
+                    <>{t('no-description', { ns: 'common' })}</>
+                  )}
                 </div>
-              ))}
+
+                <div className="link">
+                  <ExternalLink href={code.uri} labelNewWindow="">
+                    {code.uri}
+                  </ExternalLink>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </ResultBlock>

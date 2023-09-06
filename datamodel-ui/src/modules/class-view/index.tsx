@@ -4,7 +4,10 @@ import {
   useGetClassQuery,
 } from '@app/common/components/class/class.slice';
 import { initialClassForm } from '@app/common/interfaces/class-form.interface';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import {
+  InternalClass,
+  InternalClassInfo,
+} from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
@@ -34,6 +37,7 @@ import ApplicationProfileFlow from './application-profile-flow';
 import ClassInfo from './class-info';
 import useSetView from '@app/common/utils/hooks/use-set-view';
 import useSetPage from '@app/common/utils/hooks/use-set-page';
+import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 
 interface ClassViewProps {
   modelId: string;
@@ -51,7 +55,7 @@ export default function ClassView({
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
-  const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
+  const hasPermission = HasPermission({ actions: ['CREATE_CLASS'] });
   const { setView } = useSetView();
   const { setPage, getPage } = useSetPage();
   const displayLang = useSelector(selectDisplayLang());
@@ -63,7 +67,7 @@ export default function ClassView({
   const [basedOnNodeShape, setBasedOnNodeShape] = useState(false);
   const [selectedNodeShape, setSelectedNodeShape] = useState<
     | {
-        nodeShape: InternalClass;
+        nodeShape: InternalClassInfo;
         isAppProfile?: boolean;
       }
     | undefined
@@ -93,7 +97,7 @@ export default function ClassView({
   };
 
   const handleFollowUpAction = (
-    value?: InternalClass,
+    value?: InternalClassInfo,
     targetIsAppProfile?: boolean
   ) => {
     if (isEdit) {
@@ -139,18 +143,8 @@ export default function ClassView({
   const handleAppProfileFollowUpAction = (data?: {
     value?: InternalClass;
     targetClass?: InternalClass;
-    associations?: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
-    attributes?: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
+    associations?: SimpleResource[];
+    attributes?: SimpleResource[];
   }) => {
     setShowAppProfileModal(false);
 
@@ -265,8 +259,10 @@ export default function ClassView({
         </StaticHeader>
 
         <DrawerContent height={headerHeight} spaced>
-          {!data || data?.totalHitCount < 1 ? (
+          {!data || (query === '' && data?.totalHitCount < 1) ? (
             <Text>{t('datamodel-no-classes')}</Text>
+          ) : query !== '' && data?.totalHitCount < 1 ? (
+            <Text>{t('no-results')}</Text>
           ) : (
             <DrawerItemList
               items={data.responseObjects.map((item) => ({

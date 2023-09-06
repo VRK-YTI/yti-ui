@@ -8,7 +8,6 @@ import {
 import WideModal from '@app/common/components/wide-modal';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { getCurie } from '@app/common/utils/get-value';
 import {
   translateResourceAddition,
   translateResourceName,
@@ -38,6 +37,8 @@ interface ResourceModalProps {
   }) => void;
   buttonIcon?: boolean;
   applicationProfile?: boolean;
+  limitSearchTo?: 'LIBRARY' | 'PROFILE';
+  limitToSelect?: boolean;
 }
 
 export default function ResourceModal({
@@ -46,6 +47,8 @@ export default function ResourceModal({
   handleFollowUp,
   buttonIcon,
   applicationProfile,
+  limitSearchTo,
+  limitToSelect,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -55,7 +58,7 @@ export default function ResourceModal({
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>(
-      initialSearchData(i18n.language, modelId, type)
+      initialSearchData(i18n.language, modelId, type, limitSearchTo)
     );
   const [searchInternalResources, result] =
     useGetInternalResourcesInfoMutation();
@@ -74,7 +77,9 @@ export default function ResourceModal({
   };
 
   const handleClose = () => {
-    setSearchParams(initialSearchData(i18n.language, modelId, type));
+    setSearchParams(
+      initialSearchData(i18n.language, modelId, type, limitSearchTo)
+    );
     setContentLanguage(undefined);
     setVisible(false);
     setSelectedId('');
@@ -91,7 +96,7 @@ export default function ResourceModal({
 
     if (selectedObj) {
       handleFollowUp({
-        label: getCurie(selectedObj.namespace, selectedObj.identifier),
+        label: selectedObj.curie,
         uri: selectedObj.id,
         mode: mode,
         type: type,
@@ -132,7 +137,7 @@ export default function ResourceModal({
             domains: r.dataModelInfo.groups,
             uri: r.dataModelInfo.uri,
           },
-          subClass: {
+          concept: {
             label: getLanguageVersion({
               data: r.conceptInfo?.conceptLabel,
               lang: contentLanguage ?? i18n.language,
@@ -206,17 +211,19 @@ export default function ResourceModal({
               : t('select-attribute-restriction')}
           </Button>
 
-          <Button
-            variant="secondary"
-            icon={<IconPlus />}
-            disabled={selectedId === ''}
-            onClick={() => handleSubmit('create')}
-            id="create-new-button"
-          >
-            {type === ResourceType.ASSOCIATION
-              ? t('create-new-association-constraint')
-              : t('create-new-attribute-constraint')}
-          </Button>
+          {!limitToSelect && (
+            <Button
+              variant="secondary"
+              icon={<IconPlus />}
+              disabled={selectedId !== ''}
+              onClick={() => handleSubmit('create')}
+              id="create-new-button"
+            >
+              {type === ResourceType.ASSOCIATION
+                ? t('create-new-association-constraint')
+                : t('create-new-attribute-constraint')}
+            </Button>
+          )}
 
           <Button
             variant="secondaryNoBorder"

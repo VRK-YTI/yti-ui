@@ -11,10 +11,20 @@ export const ModelFormContainer = styled(Block)`
   }
 `;
 
+export const FooterBlock = styled(Block)`
+  display: flex;
+  align-items: center;
+  gap: ${(props) => props.theme.suomifi.spacing.s};
+`;
+
 export const BlockContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${(props) => props.theme.suomifi.spacing.m};
+
+  .adjusted-width {
+    width: max-content;
+  }
 `;
 
 export const WideMultiSelect = styled(MultiSelect)`

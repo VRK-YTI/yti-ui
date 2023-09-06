@@ -59,7 +59,7 @@ export default function ClassInfo({
   handleRefecth,
 }: ClassInfoProps) {
   const { t, i18n } = useTranslation('common');
-  const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
+  const hasPermission = HasPermission({ actions: ['EDIT_CLASS'] });
   const ref = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -193,7 +193,19 @@ export default function ClassInfo({
         </BasicBlock>
 
         <BasicBlock title={t('disjoint-classes')}>
-          {t('no-disjoint-classes')}
+          {!data.disjointWith || data.disjointWith.length === 0 ? (
+            <>{t('no-disjoint-classes')}</>
+          ) : (
+            <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
+              {data.disjointWith.map((c) => (
+                <li key={c.uri}>
+                  <Link key={c.uri} href={c.uri} style={{ fontSize: '16px' }}>
+                    {c.curie}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </BasicBlock>
 
         <BasicBlock title={t('technical-description')}>
@@ -233,6 +245,7 @@ export default function ClassInfo({
           });
         }}
         applicationProfile
+        currentModelId={modelId}
       />
     );
   }
@@ -353,9 +366,9 @@ export default function ClassInfo({
                 openAllText=""
                 showToggleAllButton={false}
               >
-                {data.attribute.map((attr) => (
+                {data.attribute.map((attr, idx) => (
                   <ResourceInfo
-                    key={`${data.identifier}-attr-${attr.identifier}`}
+                    key={`${data.identifier}-attr-${attr.identifier}-${idx}`}
                     data={attr}
                     modelId={modelId}
                     classId={data.identifier}
@@ -378,6 +391,7 @@ export default function ClassInfo({
                 modelId={modelId}
                 type={ResourceType.ATTRIBUTE}
                 handleFollowUp={handleFollowUp}
+                limitSearchTo={'PROFILE'}
               />
               <Button variant="secondary" id="order-attributes-button">
                 {t('order-list', { ns: 'admin' })}

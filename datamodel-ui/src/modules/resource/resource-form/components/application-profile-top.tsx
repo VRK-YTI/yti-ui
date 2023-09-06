@@ -1,8 +1,8 @@
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { translateApplicationProfileTopDescription } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
 import styled from 'styled-components';
-import { InlineAlert, Text, ToggleButton } from 'suomifi-ui-components';
+import { InlineAlert, Text, ToggleButton, Button } from 'suomifi-ui-components';
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,16 +23,19 @@ const ToggleWrapper = styled.div`
 `;
 
 export default function ApplicationProfileTop({
-  defaultChecked,
+  inUse,
+  setInUse,
   type,
   applicationProfile,
+  external,
 }: {
-  defaultChecked: boolean;
+  inUse: boolean;
+  setInUse: (inUse: boolean) => void;
   type: ResourceType;
   applicationProfile?: boolean;
+  external?: boolean;
 }) {
   const { t } = useTranslation('admin');
-  const [toggle, setToggle] = useState(defaultChecked);
 
   if (!applicationProfile) {
     return <></>;
@@ -41,9 +44,14 @@ export default function ApplicationProfileTop({
   return (
     <Wrapper>
       <InlineAlert status="neutral">
-        {type === ResourceType.ASSOCIATION
-          ? t('association-constraint-toggle-description')
-          : t('attribute-constraint-toggle-description')}
+        <Text>
+          {translateApplicationProfileTopDescription(type, t, external)}
+        </Text>
+        {external && (
+          <div style={{ marginTop: '15px' }}>
+            <Button variant="secondary">{t('create-local-copy')}</Button>
+          </div>
+        )}
       </InlineAlert>
 
       <ToggleWrapper>
@@ -53,10 +61,11 @@ export default function ApplicationProfileTop({
           </Text>
         </div>
         <ToggleButton
-          defaultChecked={toggle}
-          onClick={() => setToggle(!toggle)}
+          checked={inUse}
+          defaultChecked={inUse}
+          onClick={() => setInUse(!inUse)}
         >
-          {toggle ? t('in-use') : t('not-in-use')}
+          {inUse ? t('in-use') : t('not-in-use')}
         </ToggleButton>
       </ToggleWrapper>
     </Wrapper>

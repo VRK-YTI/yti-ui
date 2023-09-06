@@ -3,11 +3,15 @@ import { ResourceType } from './resource-type.interface';
 import { Status } from './status.interface';
 
 export interface ResourceFormType {
-  allowedValues?: string[];
-  classType?: string;
-  codeList?: {
+  allowedValues?: {
     id: string;
-    label: { [key: string]: string };
+    label: string;
+  }[];
+  classType?: string;
+  codeLists?: {
+    id: string;
+    prefLabel: { [key: string]: string };
+    status: Status;
   }[];
   concept?: ConceptType;
   dataType?: {

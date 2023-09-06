@@ -12,17 +12,23 @@ function generateUrl({
   searchTerm,
   codeRegistryCodeValue,
   pageFrom,
+  status,
 }: {
   lang: string;
   searchTerm?: string;
   codeRegistryCodeValue?: string;
   pageFrom?: number;
+  status?: string;
 }): string {
   const pageSize = '&pageSize=20';
   const pageStart = `&from=${pageFrom ? (pageFrom - 1) * 20 : 0}`;
+  const statusValue =
+    status && status !== 'all-statuses'
+      ? `&status=${status.toUpperCase()}`
+      : '';
 
   if (!searchTerm && !codeRegistryCodeValue) {
-    return `/codeschemes?expand=codeRegistry,externalReference,propertyType,code,organization,extension,valueType,searchHit&searchCodes=false&searchExtensions=false&language=${lang}${pageSize}${pageStart}`;
+    return `/codeschemes?expand=codeRegistry,externalReference,propertyType,code,organization,extension,valueType,searchHit&searchCodes=false&searchExtensions=false&language=${lang}${pageSize}${pageStart}${statusValue}`;
   }
 
   const base = `/codeschemes?expand=codeRegistry,externalReference,propertyType,code,organization,extension,valueType,searchHit&searchCodes=false&searchExtensions=false&language=${lang}`;
@@ -31,7 +37,7 @@ function generateUrl({
     ? `&codeRegistryCodeValue=${codeRegistryCodeValue}`
     : '';
 
-  return `${base}${term}${codeRegistry}${pageSize}${pageStart}`;
+  return `${base}${term}${codeRegistry}${pageSize}${pageStart}${statusValue}`;
 }
 
 export const codeApi = createApi({
@@ -58,10 +64,17 @@ export const codeApi = createApi({
         searchTerm?: string;
         codeRegistryCodeValue?: string;
         pageFrom?: number;
+        status?: string;
       }
     >({
       query: (props) => ({
         url: generateUrl(props),
+        method: 'GET',
+      }),
+    }),
+    getAllCodes: builder.query<CodeType[], string[]>({
+      query: (uris) => ({
+        url: `/coderegistries/codes?uri=${uris.join('&uri=')}`,
         method: 'GET',
       }),
     }),
@@ -129,6 +142,7 @@ export const codeApi = createApi({
 
 export const {
   useGetCodesQuery,
+  useGetAllCodesQuery,
   useGetCodeRegistriesQuery,
   useGetCodeRegistryQuery,
   useGetLanguagesQuery,

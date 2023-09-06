@@ -35,7 +35,7 @@ export interface ResultType {
     domains: string[];
     uri: string;
   };
-  subClass?: {
+  concept?: {
     label: string;
     link: string;
     partOf: string;
@@ -175,63 +175,65 @@ export default function ResourceList({
                 </ExternalLink>
               </div>
             </td>
-            <td>
-              {item.partOf?.type ? (
-                <div>
-                  <Text>{item.partOf.label}</Text>
-                  <div>
-                    <Text>
-                      <IconCalendar />{' '}
-                      {['LIBRARY', 'PROFILE'].includes(item.partOf.type)
-                        ? translateModelType(item.partOf.type as Type, t)
-                        : translateResourceType(
-                            item.partOf.type as ResourceType,
-                            t
-                          )}
-                    </Text>{' '}
-                    <StatusChip $isValid={item.target.isValid}>
-                      {translateStatus(item.target.status, t)}
-                    </StatusChip>
-                  </div>
-                  <Text>
-                    {item.partOf.domains
-                      ?.map((domain) =>
-                        getLanguageVersion({
-                          data: serviceCategories?.find(
-                            (cat) => cat.identifier === domain
-                          )?.label,
-                          lang: i18n?.language ?? 'fi',
-                        })
-                      )
-                      .join(', ')}
-                  </Text>
-                </div>
-              ) : (
-                <div>
-                  <Text>{item.partOf?.uri}</Text>
-                </div>
-              )}
-            </td>
-            {item.subClass && (
+            {item.partOf && (
               <td>
+                {item.partOf?.type ? (
+                  <div>
+                    <Text>{item.partOf.label}</Text>
+                    <div>
+                      <Text>
+                        <IconCalendar />{' '}
+                        {['LIBRARY', 'PROFILE'].includes(item.partOf.type)
+                          ? translateModelType(item.partOf.type as Type, t)
+                          : translateResourceType(
+                              item.partOf.type as ResourceType,
+                              t
+                            )}
+                      </Text>{' '}
+                      <StatusChip $isValid={item.target.isValid}>
+                        {translateStatus(item.target.status, t)}
+                      </StatusChip>
+                    </div>
+                    <Text>
+                      {item.partOf.domains
+                        ?.map((domain) =>
+                          getLanguageVersion({
+                            data: serviceCategories?.find(
+                              (cat) => cat.identifier === domain
+                            )?.label,
+                            lang: i18n?.language ?? 'fi',
+                          })
+                        )
+                        .join(', ')}
+                    </Text>
+                  </div>
+                ) : (
+                  <div>
+                    <Text>{item.partOf?.uri}</Text>
+                  </div>
+                )}
+              </td>
+            )}
+            <td>
+              {item.concept && (
                 <div>
-                  {item.subClass.link && (
+                  {item.concept.link && (
                     <>
                       <ExternalLink
-                        href={item.subClass.link}
+                        href={item.concept.link}
                         labelNewWindow={t('link-opens-new-window-external', {
                           ns: 'common',
                         })}
                         id="subClass-link"
                       >
-                        {item.subClass.label}
+                        {item.concept.label}
                       </ExternalLink>
-                      <Text>{item.subClass.partOf}</Text>
+                      <Text>{item.concept.partOf}</Text>
                     </>
                   )}
                 </div>
-              </td>
-            )}
+              )}
+            </td>
             <td>
               <div>
                 <SanitizedTextContent text={item.target.note} />

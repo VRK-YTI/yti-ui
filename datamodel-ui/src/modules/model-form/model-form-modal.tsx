@@ -11,6 +11,7 @@ import {
   Paragraph,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
+import SaveSpinner from 'yti-common-ui/save-spinner';
 import ModelForm from '.';
 import { FormErrors, validateForm } from './validate-form';
 import { useInitialModelForm } from '@app/common/utils/hooks/use-initial-model-form';
@@ -25,6 +26,7 @@ import { useCreateModelMutation } from '@app/common/components/model/model.slice
 import getApiError from '@app/common/utils/get-api-errors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
+import { FooterBlock } from './model-form.styles';
 
 interface ModelFormModalProps {
   refetch: () => void;
@@ -58,7 +60,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
     if (userPosted && result.isSuccess) {
       refetch();
       handleClose();
-      router.push(`/model/${formData.prefix}`);
+      router.push(`/model/${formData.prefix}?new=true`);
     }
   }, [result, refetch, userPosted, handleClose, router, formData.prefix]);
 
@@ -137,17 +139,25 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
               alerts={getErrors(errors)}
             />
           )}
-
-          <Button onClick={() => handleSubmit()} id="submit-button">
-            {t('create-model')}
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => handleClose()}
-            id="cancel-button"
-          >
-            {t('cancel')}
-          </Button>
+          <FooterBlock>
+            <Button
+              disabled={userPosted && !errors}
+              onClick={() => handleSubmit()}
+              id="submit-button"
+            >
+              {t('create-model')}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => handleClose()}
+              id="cancel-button"
+            >
+              {t('cancel')}
+            </Button>
+            {userPosted && !errors && (
+              <SaveSpinner text={t('creating-model')} />
+            )}
+          </FooterBlock>
         </ModalFooter>
       </Modal>
     </>

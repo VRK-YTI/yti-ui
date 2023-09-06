@@ -11,6 +11,7 @@ export interface ClassType {
   status: Status;
   equivalentClass?: UriData[];
   subClassOf?: UriData[];
+  disjointWith?: UriData[];
   subject?: ConceptType;
   identifier: string;
   created: string;

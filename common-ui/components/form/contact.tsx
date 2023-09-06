@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { HintText, Label, TextInput } from 'suomifi-ui-components';
 import { ContactWrapper } from './contact.styles';
+import { TEXT_INPUT_MAX } from '../../utils/constants';
 
 interface ContactProps {
   contact: string;
@@ -46,6 +47,7 @@ export default function Contact({
         onBlur={(e) => setContact(e.target.value ?? '')}
         disabled={disabled}
         status={!error ? 'default' : 'error'}
+        maxLength={TEXT_INPUT_MAX}
       />
     </ContactWrapper>
   );
