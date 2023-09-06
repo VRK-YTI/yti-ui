@@ -49,6 +49,7 @@ import { useSelector } from 'react-redux';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
+import Image from 'next/image';
 
 export default function Documentation({
   modelId,
@@ -82,6 +83,41 @@ export default function Documentation({
 
   const { data: modelData, refetch } = useGetModelQuery(modelId);
   const [updateModel, result] = useUpdateModelMutation();
+
+  const validImgUrl = (url: string): boolean => {
+    const regex = /^http(s)?:\/\/.*\.(jpg|jpeg|png|gif)$/g;
+    return regex.test(url);
+  };
+
+  const imgProps = (props: { src?: string; alt?: string }) => {
+    if (!props.src || !validImgUrl(props.src)) {
+      return <></>;
+    }
+
+    const height = props.alt
+      ?.match(/height:[0-9]+px/g)?.[0]
+      ?.split(':')?.[1]
+      ?.replace('px', '');
+    const width = props.alt
+      ?.match(/width:[0-9]+px/g)?.[0]
+      ?.split(':')?.[1]
+      ?.replace('px', '');
+
+    return (
+      <Image
+        src={
+          props.src.startsWith('https://')
+            ? props.src
+            : props.src.startsWith('http://')
+            ? props.src.replace('http', 'https')
+            : ''
+        }
+        alt={'Markdown image'}
+        width={width ?? 350}
+        height={height ?? 190}
+      />
+    );
+  };
 
   const handleSubmit = () => {
     disableConfirmation();
@@ -305,7 +341,13 @@ export default function Documentation({
           {modelData?.modifier.name ? `, ${modelData.modifier.name}` : ''}
         </div>
         <div>
-          <ReactMarkdown remarkPlugins={[remarkGfm]} unwrapDisallowed={false}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            unwrapDisallowed={false}
+            components={{
+              img: (props) => imgProps(props),
+            }}
+          >
             {getLanguageVersion({
               data: modelData?.documentation,
               lang: displayLang ?? i18n.language,
@@ -434,7 +476,13 @@ export default function Documentation({
                 {t('preview')}
               </Text>
             </div>
-            <ReactMarkdown remarkPlugins={[remarkGfm]} unwrapDisallowed={false}>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              unwrapDisallowed={false}
+              components={{
+                img: (props) => imgProps(props),
+              }}
+            >
               {value[currentLanguage]}
             </ReactMarkdown>
           </div>
