@@ -40,6 +40,7 @@ export interface ClassFormErrors {
   identifier: boolean;
   identifierInitChar: boolean;
   identifierLength: boolean;
+  identifierCharacters: boolean;
   label: boolean;
   unauthorized?: boolean;
 }
@@ -49,6 +50,7 @@ export function validateClassForm(data: ClassFormType): ClassFormErrors {
     identifier: true,
     identifierInitChar: true,
     identifierLength: true,
+    identifierCharacters: true,
     label: true,
   };
 
@@ -73,6 +75,10 @@ export function validateClassForm(data: ClassFormType): ClassFormErrors {
 
   if (data.identifier && /^[^0-9]/.test(data.identifier)) {
     returnErrors.identifierInitChar = false;
+  }
+
+  if (data.identifier && data.identifier.match(/^[a-z0-9\-_]+$/)) {
+    returnErrors.identifierCharacters = false;
   }
 
   return returnErrors;

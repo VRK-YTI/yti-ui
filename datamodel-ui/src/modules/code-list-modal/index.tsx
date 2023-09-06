@@ -7,6 +7,7 @@ import {
   Modal,
   ModalContent,
   ModalFooter,
+  Text,
   ModalTitle,
 } from 'suomifi-ui-components';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
@@ -21,51 +22,93 @@ import WideModal from '@app/common/components/wide-modal';
 import FilterBlock, { FilterType } from './filter-block';
 import ResultsAndInfoBlock from './results-and-info-block';
 import { SelectedChipsWrapper } from './code-list-modal.styles';
+import {
+  ButtonFooter,
+  NarrowModal,
+  SimpleModalContent,
+} from '../as-file-modal/as-file-modal.styles';
 
 export default function CodeListModal({
   initialData,
   extendedView,
   modalTitle,
+  showConfirmModal,
   setData,
 }: {
   initialData: ModelCodeList[];
   extendedView?: boolean;
+  showConfirmModal?: boolean;
   modalTitle?: string;
   setData: (value: ModelCodeList[]) => void;
 }) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
-  if (extendedView) {
+  const handleClose = () => {
+    setVisible(false);
+    setConfirmed(false);
+  };
+
+  const renderConfirmModal = () => (
+    <NarrowModal
+      appElementId="__next"
+      visible={visible}
+      onEscKeyDown={handleClose}
+      variant={isSmall ? 'smallScreen' : 'default'}
+    >
+      <SimpleModalContent>
+        <ModalTitle>{t('use-codelist-values')}</ModalTitle>
+        <Text>{t('manual-input-delete-warning')}</Text>
+        <ButtonFooter>
+          <Button onClick={() => setConfirmed(true)}>
+            {t('continue-selecting-codelists')}
+          </Button>
+          <Button variant="secondary" onClick={handleClose}>
+            {t('cancel')}
+          </Button>
+        </ButtonFooter>
+      </SimpleModalContent>
+    </NarrowModal>
+  );
+
+  const renderWideModal = () => {
     return (
-      <>
-        <Button
-          variant="secondary"
-          icon={<IconPlus />}
-          onClick={() => setVisible(true)}
-          id="add-reference-data-button"
-        >
-          {t('add-reference-data')}
-        </Button>
-
-        <WideModal
-          appElementId="__next"
-          visible={visible}
-          onEscKeyDown={() => setVisible(false)}
-          variant={isSmall ? 'smallScreen' : 'default'}
-        >
-          <CodeListModalContent
-            initialData={initialData}
-            extendedView={true}
-            modalTitle={modalTitle}
-            setVisible={setVisible}
-            setData={setData}
-          />
-        </WideModal>
-      </>
+      <WideModal
+        appElementId="__next"
+        visible={visible}
+        onEscKeyDown={handleClose}
+        variant={isSmall ? 'smallScreen' : 'default'}
+      >
+        <CodeListModalContent
+          initialData={initialData}
+          extendedView={true}
+          modalTitle={modalTitle}
+          close={handleClose}
+          setData={setData}
+        />
+      </WideModal>
     );
-  }
+  };
+
+  const renderModal = () => {
+    return (
+      <Modal
+        appElementId="__next"
+        visible={visible}
+        onEscKeyDown={handleClose}
+        variant={isSmall ? 'smallScreen' : 'default'}
+      >
+        <CodeListModalContent
+          initialData={initialData}
+          modalTitle={modalTitle}
+          close={handleClose}
+          setData={setData}
+        />
+      </Modal>
+    );
+  };
 
   return (
     <>
@@ -78,19 +121,9 @@ export default function CodeListModal({
         {t('add-reference-data')}
       </Button>
 
-      <Modal
-        appElementId="__next"
-        visible={visible}
-        onEscKeyDown={() => setVisible(false)}
-        variant={isSmall ? 'smallScreen' : 'default'}
-      >
-        <CodeListModalContent
-          initialData={initialData}
-          modalTitle={modalTitle}
-          setVisible={setVisible}
-          setData={setData}
-        />
-      </Modal>
+      {showConfirmModal && !confirmed && renderConfirmModal()}
+      {(confirmed || !showConfirmModal) && extendedView && renderWideModal()}
+      {(confirmed || !showConfirmModal) && !extendedView && renderModal()}
     </>
   );
 }
@@ -99,13 +132,13 @@ function CodeListModalContent({
   initialData,
   extendedView,
   modalTitle,
-  setVisible,
+  close,
   setData,
 }: {
   initialData: ModelCodeList[];
   extendedView?: boolean;
   modalTitle?: string;
-  setVisible: (value: boolean) => void;
+  close: () => void;
   setData: (value: ModelCodeList[]) => void;
 }) {
   const { t, i18n } = useTranslation('admin');
@@ -131,6 +164,7 @@ function CodeListModalContent({
       ? filter.group
       : undefined,
     pageFrom: currPage,
+    status: filter.status,
   });
   const { data: codeRegistries } = useGetCodeRegistriesQuery();
 
@@ -164,7 +198,7 @@ function CodeListModalContent({
       status: '',
     });
     setSelected(initialData.map((d) => d.id));
-    setVisible(false);
+    close();
     setCurrPage(1);
   };
 
@@ -204,29 +238,31 @@ function CodeListModalContent({
           setCurrPage={setCurrPage}
         />
 
-        {extendedView && selected.length > 0 && (
+        {selected.length > 0 && (
           <SelectedChipsWrapper>
-            {selected.map((select) => (
-              <Chip
-                key={`selected-code-${select}`}
-                removable
-                onClick={() =>
-                  setSelected(selected.filter((s) => s !== select))
-                }
-              >
-                {getLanguageVersion({
-                  data: codes?.results.find((code) => code.uri === select)
-                    ?.prefLabel,
-                  lang: i18n.language,
-                }) ?? select}
-              </Chip>
-            ))}
+            {selected.map((select) => {
+              const label = getLanguageVersion({
+                data: codes?.results.find((code) => code.uri === select)
+                  ?.prefLabel,
+                lang: i18n.language,
+              });
+              return (
+                <Chip
+                  key={`selected-code-${select}`}
+                  removable
+                  onClick={() =>
+                    setSelected(selected.filter((s) => s !== select))
+                  }
+                >
+                  {label !== '' ? label : select}
+                </Chip>
+              );
+            })}
           </SelectedChipsWrapper>
         )}
 
         <ResultsAndInfoBlock
           codes={codes}
-          filter={filter}
           isSuccess={isSuccess}
           selected={selected}
           extendedView={extendedView}

@@ -2,20 +2,23 @@ import createClassNode from '.';
 
 describe('create-class-node', () => {
   it('should create a simple class node', () => {
-    const returned = createClassNode({
-      identifier: 'id-1',
-      label: {
-        fi: 'label-1-fi',
-        en: 'label-1-en',
+    const returned = createClassNode(
+      {
+        identifier: 'id-1',
+        label: {
+          fi: 'label-1-fi',
+          en: 'label-1-en',
+        },
+        parentClasses: [],
+        position: {
+          x: 0,
+          y: 0,
+        },
+        attributes: [],
+        associations: [],
       },
-      parentClasses: [],
-      position: {
-        x: 0,
-        y: 0,
-      },
-      attributes: [],
-      associations: [],
-    });
+      'modelId'
+    );
 
     expect(returned).toStrictEqual({
       id: 'id-1',
@@ -29,6 +32,7 @@ describe('create-class-node', () => {
           fi: 'label-1-fi',
           en: 'label-1-en',
         },
+        modelId: 'modelId',
         resources: [],
       },
       type: 'classNode',
@@ -88,6 +92,7 @@ describe('create-class-node', () => {
           },
         ],
       },
+      'modelId',
       true
     );
 
@@ -102,6 +107,7 @@ describe('create-class-node', () => {
         label: {
           fi: 'label-1-fi',
         },
+        modelId: 'modelId',
         applicationProfile: true,
         resources: [
           {

@@ -11,14 +11,15 @@ export interface ModelType {
   organizations: Organization[];
   groups: Group[];
   contact: string;
-  internalNamespaces: string[];
-  externalNamespaces: {
-    name: string;
-    namespace: string;
-    prefix: string;
-  }[];
+  internalNamespaces: InternalNamespace[];
+  externalNamespaces: ExternalNamespace[];
   terminologies: ModelTerminology[];
   codeLists: ModelCodeList[];
+  links: {
+    description: string;
+    name: string;
+    uri: string;
+  }[];
   created: string;
   creator: {
     id: string;
@@ -29,6 +30,18 @@ export interface ModelType {
     id: string;
     name: string;
   };
+}
+
+export interface InternalNamespace {
+  name: { [key: string]: string };
+  namespace: string;
+  prefix: string;
+}
+
+export interface ExternalNamespace {
+  name: string;
+  namespace: string;
+  prefix: string;
 }
 
 export interface Group {
@@ -103,4 +116,9 @@ export interface ModelUpdatePayload {
   codeLists: string[];
   documentation: { [key: string]: string };
   contact: string;
+  links: {
+    description: string;
+    name: string;
+    uri: string;
+  }[];
 }

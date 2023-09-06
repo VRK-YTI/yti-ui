@@ -1,5 +1,6 @@
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import isEmail from 'validator/lib/isEmail';
+import isURL from 'validator/lib/isURL';
 
 export interface FormUpdateErrors {
   languageAmount: boolean;
@@ -7,6 +8,8 @@ export interface FormUpdateErrors {
   serviceCategories: boolean;
   organizations: boolean;
   contact: boolean;
+  linksMissingInfo: boolean;
+  linksInvalidUri: boolean;
 }
 
 export function validateFormUpdate(data: ModelFormType) {
@@ -16,6 +19,8 @@ export function validateFormUpdate(data: ModelFormType) {
     serviceCategories: false,
     organizations: false,
     contact: false,
+    linksMissingInfo: false,
+    linksInvalidUri: false,
   };
 
   const selectedLanguages = data.languages.filter((lang) => lang.selected);
@@ -50,8 +55,24 @@ export function validateFormUpdate(data: ModelFormType) {
     errors.organizations = true;
   }
 
+  // If contact is set, it should be a valid email address
   if (data.contact && !isEmail(data.contact)) {
     errors.contact = true;
+  }
+
+  // Links should have name and uri defined
+  if (
+    data.links.length > 0 &&
+    data.links.some(
+      (link) => !link.name || link.name === '' || !link.uri || link.uri === ''
+    )
+  ) {
+    errors.linksMissingInfo = true;
+  }
+
+  // Links uri should be a valid URL
+  if (data.links.length > 0 && data.links.some((link) => !isURL(link.uri))) {
+    errors.linksInvalidUri = true;
   }
 
   return errors;

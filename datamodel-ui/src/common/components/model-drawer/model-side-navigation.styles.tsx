@@ -20,6 +20,7 @@ export const ModelDrawerContainer = styled.div<{ $isSmall: boolean }>`
   position: sticky;
   display: flex;
   flex-direction: column;
+  padding-top: 2px;
 `;
 
 export const DrawerViewContainer = styled.div`

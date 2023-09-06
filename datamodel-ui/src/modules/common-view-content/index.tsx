@@ -19,14 +19,17 @@ import HasPermission from '@app/common/utils/has-permission';
 import { useSelector } from 'react-redux';
 import { selectDisplayLang } from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
+import { useGetAllCodesQuery } from '@app/common/components/code/code.slice';
 
 export default function CommonViewContent({
   modelId,
+  inUse,
   data,
   displayLabel,
   applicationProfile,
 }: {
   modelId: string;
+  inUse?: boolean;
   data: Resource;
   displayLabel?: boolean;
   applicationProfile?: boolean;
@@ -36,6 +39,25 @@ export default function CommonViewContent({
     actions: ['ADMIN_ASSOCIATION', 'ADMIN_ATTRIBUTE'],
   });
   const displayLang = useSelector(selectDisplayLang());
+  const { data: codesResult } = useGetAllCodesQuery(
+    data.codeLists?.map((codelist) => codelist) ?? [],
+    {
+      skip:
+        !applicationProfile || !data.codeLists || data.codeLists.length === 0,
+    }
+  );
+
+  function getCodeListLabel(uri: string) {
+    if (!codesResult) {
+      return uri;
+    }
+
+    const prefLabel = codesResult.find((code) => code.uri === uri)?.prefLabel;
+
+    return prefLabel
+      ? getLanguageVersion({ data: prefLabel, lang: i18n.language })
+      : uri;
+  }
 
   function getDisplayLabelTitle(type: ResourceType) {
     switch (type) {
@@ -116,25 +138,35 @@ export default function CommonViewContent({
               </div>
 
               <BasicBlock title={t('codelist', { ns: 'admin' })}>
-                {data.codeList ? (
-                  <Link href={data.codeList}>{data.codeList}</Link>
-                ) : (
-                  t('not-defined')
-                )}
-              </BasicBlock>
-
-              <BasicBlock title={t('allowed-values')}>
-                {data.allowedValues && data.allowedValues.length > 0
-                  ? data.allowedValues.join(', ')
+                {data.codeLists && data.codeLists?.length > 0
+                  ? data.codeLists.map((codeList) => (
+                      <Link key={codeList} href={codeList}>
+                        {codeList.split('/').slice(-2).join(':')}
+                      </Link>
+                    ))
                   : t('not-defined')}
               </BasicBlock>
 
+              <BasicBlock title={t('allowed-values')}>
+                <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
+                  {data.allowedValues && data.allowedValues.length > 0
+                    ? data.allowedValues.map((value) => (
+                        <li key={value}>{getCodeListLabel(value)}</li>
+                      ))
+                    : t('not-defined')}
+                </ul>
+              </BasicBlock>
+
               <BasicBlock title={t('default-value', { ns: 'admin' })}>
-                {data.defaultValue ?? t('not-defined')}
+                {data.defaultValue
+                  ? getCodeListLabel(data.defaultValue)
+                  : t('not-defined')}
               </BasicBlock>
 
               <BasicBlock title={t('required-value', { ns: 'admin' })}>
-                {data.hasValue ?? t('not-defined')}
+                {data.hasValue
+                  ? getCodeListLabel(data.hasValue)
+                  : t('not-defined')}
               </BasicBlock>
 
               <BasicBlock title={t('minimum-length', { ns: 'admin' })}>
@@ -283,6 +315,14 @@ export default function CommonViewContent({
 
   return (
     <>
+      {applicationProfile && (
+        <BasicBlock title={t('in-use-in-this-model', { ns: 'admin' })}>
+          {inUse
+            ? t('in-use', { ns: 'admin' })
+            : t('not-in-use', { ns: 'admin' })}
+        </BasicBlock>
+      )}
+
       {displayLabel && (
         <BasicBlock title={getDisplayLabelTitle(data.type)}>
           {getLanguageVersion({

@@ -18,43 +18,59 @@ import {
   IconOptionsVertical,
   IconRows,
   IconSwapVertical,
+  Tooltip,
 } from 'suomifi-ui-components';
 import {
   ClassNodeDiv,
   CollapseButton,
   OptionsButton,
   Resource,
+  ResourceTechnicalName,
+  TooltipWrapper,
 } from './node.styles';
 import { useStoreDispatch } from '@app/store';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import HasPermission from '@app/common/utils/has-permission';
+import { useAddNodeShapePropertyReferenceMutation } from '@app/common/components/class/class.slice';
+import ResourceModal from '@app/modules/class-view/resource-modal';
 
 interface ClassNodeProps {
   id: string;
   data: {
     identifier: string;
     label: { [key: string]: string };
-    resources?: {
+    resources: {
       label: { [key: string]: string };
       identifier: string;
       type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
+      codeLists?: string[];
+      dataType?: string | null;
+      maxCount?: number | null;
+      minCount?: number | null;
     }[];
+    modelId?: string;
     resourceType?: 'association' | 'attribute';
     applicationProfile?: boolean;
+    refetch?: () => void;
   };
   selected: boolean;
 }
 
-export default function ClassNode({ id, data }: ClassNodeProps) {
+export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const { i18n } = useTranslation('common');
+  const hasPermission = HasPermission({ actions: 'EDIT_CLASS' });
   const dispatch = useStoreDispatch();
   const globalSelected = useSelector(selectSelected());
   const globalHover = useSelector(selectHovered());
   const globalShowAttributes = useSelector(selectModelTools()).showAttributes;
   const displayLang = useSelector(selectDisplayLang());
   const [showAttributes, setShowAttributes] = useState(true);
+  const [showTooltip, setShowTooltip] = useState(false);
   const [hover, setHover] = useState(false);
+  const [addReference, addReferenceResult] =
+    useAddNodeShapePropertyReferenceMutation();
 
   const handleTitleClick = () => {
     if (globalSelected.id !== id) {
@@ -75,9 +91,38 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
     }
   };
 
+  const handleMenuFollowUp = (value: {
+    label?: string;
+    uri: string;
+    type: ResourceType;
+    mode: 'select' | 'create';
+  }) => {
+    if (!data.modelId) {
+      return;
+    }
+
+    addReference({
+      prefix: data.modelId,
+      nodeshapeId: data.identifier,
+      uri: value.uri,
+    });
+  };
+
   useEffect(() => {
     setShowAttributes(globalShowAttributes);
   }, [globalShowAttributes]);
+
+  useEffect(() => {
+    if (showTooltip && !selected) {
+      setShowTooltip(false);
+    }
+  }, [selected, showTooltip]);
+
+  useEffect(() => {
+    if (addReferenceResult.isSuccess && data.refetch) {
+      data.refetch();
+    }
+  }, [addReferenceResult, data]);
 
   return (
     <ClassNodeDiv
@@ -95,17 +140,47 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
       <Handle type="source" position={Position.Bottom} id={id} />
 
       <div className="node-title">
-        <div onClick={() => handleTitleClick()}>
-          {getLanguageVersion({
-            data: data.label,
-            lang: displayLang !== i18n.language ? displayLang : i18n.language,
-            appendLocale: true,
-          })}
-        </div>
+        <div onClick={() => handleTitleClick()}>{renderClassLabel()}</div>
+
         {data.applicationProfile ? (
-          <OptionsButton>
-            <IconOptionsVertical fill="#2a6ebb" />
-          </OptionsButton>
+          hasPermission ? (
+            <TooltipWrapper>
+              <OptionsButton
+                onClick={() => setShowTooltip(!showTooltip)}
+                id={`${data.identifier}-options`}
+              >
+                <IconOptionsVertical fill="#2a6ebb" />
+              </OptionsButton>
+
+              <Tooltip
+                ariaCloseButtonLabelText=""
+                ariaToggleButtonLabelText=""
+                open={showTooltip}
+              >
+                <ResourceModal
+                  applicationProfile
+                  modelId={'profile1'}
+                  type={ResourceType.ATTRIBUTE}
+                  handleFollowUp={handleMenuFollowUp}
+                  limitSearchTo={'PROFILE'}
+                  buttonIcon
+                  limitToSelect
+                />
+
+                <ResourceModal
+                  applicationProfile
+                  modelId={'profile1'}
+                  type={ResourceType.ASSOCIATION}
+                  handleFollowUp={handleMenuFollowUp}
+                  limitSearchTo={'PROFILE'}
+                  buttonIcon
+                  limitToSelect
+                />
+              </Tooltip>
+            </TooltipWrapper>
+          ) : (
+            <></>
+          )
         ) : (
           <CollapseButton onClick={() => handleShowAttributesClick()}>
             {showAttributes ? <IconChevronUp /> : <IconChevronDown />}
@@ -133,13 +208,68 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
                 <IconRows />
               ))}
 
-            {getLanguageVersion({
-              data: r.label,
-              lang: displayLang !== i18n.language ? displayLang : i18n.language,
-              appendLocale: true,
-            })}
+            {renderResourceLabel(r)}
           </Resource>
         ))}
     </ClassNodeDiv>
   );
+
+  function renderClassLabel() {
+    if (!data.applicationProfile) {
+      return getLanguageVersion({
+        data: data.label,
+        lang: displayLang !== i18n.language ? displayLang : i18n.language,
+        appendLocale: true,
+      });
+    }
+
+    return data.identifier.includes(':')
+      ? data.identifier
+      : `${getLanguageVersion({
+          data: data.label,
+          lang: displayLang !== i18n.language ? displayLang : i18n.language,
+          appendLocale: true,
+        })}
+            ${' '}
+        (${data.modelId}:${data.identifier})`;
+  }
+
+  function renderResourceLabel(
+    resource: ClassNodeProps['data']['resources'][0]
+  ) {
+    if (!data.applicationProfile) {
+      return getLanguageVersion({
+        data: resource.label,
+        lang: displayLang !== i18n.language ? displayLang : i18n.language,
+        appendLocale: true,
+      });
+    }
+
+    return (
+      <div>
+        {getLanguageVersion({
+          data: resource.label,
+          lang: displayLang !== i18n.language ? displayLang : i18n.language,
+          appendLocale: true,
+        })}
+        : [{getMinMax(resource)}] {getIdentifier(resource)}
+      </div>
+    );
+  }
+
+  function getMinMax(resource: ClassNodeProps['data']['resources'][0]) {
+    if (!resource.minCount && !resource.maxCount) {
+      return '*';
+    }
+
+    return `${resource.minCount ?? '0'}..${resource.maxCount ?? '*'}`;
+  }
+
+  function getIdentifier(resource: ClassNodeProps['data']['resources'][0]) {
+    return (
+      <ResourceTechnicalName>
+        ({data.identifier}:{resource.identifier})
+      </ResourceTechnicalName>
+    );
+  }
 }

@@ -16,12 +16,13 @@ export default function generatePayload(
       languages: data.languages,
       organizations: data.organizations.map((o) => o.id) ?? [],
       groups: data.groups.map((g) => g.identifier) ?? [],
-      internalNamespaces: data.internalNamespaces,
+      internalNamespaces: data.internalNamespaces.map((ns) => ns.namespace),
       externalNamespaces: data.externalNamespaces,
       terminologies: data.terminologies.map((t) => t.uri) ?? [],
       codeLists: data.codeLists.map((c) => c.id) ?? [],
       documentation: data.documentation ?? {},
       contact: data.contact !== '' ? data.contact : '',
+      links: data.links,
     };
   } else {
     return {
@@ -49,12 +50,26 @@ export default function generatePayload(
         .map((l) => l.uniqueItemId),
       organizations: data.organizations.map((o) => o.uniqueItemId),
       groups: data.serviceCategories.map((s) => s.uniqueItemId),
-      internalNamespaces: data.internalNamespaces,
+      internalNamespaces: data.internalNamespaces.map((ns) => ns.namespace),
       externalNamespaces: data.externalNamespaces,
       terminologies: data.terminologies.map((t) => t.uri),
       codeLists: data.codeLists.map((c) => c.id),
       documentation: data.documentation ?? {},
       contact: data.contact !== '' ? data.contact : ADMIN_EMAIL,
+      links: data.links
+        ? data.links.map((l) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { id, uri, ...data } = l;
+            const validUri =
+              uri.startsWith('http://') || uri.startsWith('https://')
+                ? uri
+                : `https://${uri}`;
+            return {
+              ...data,
+              uri: validUri,
+            };
+          })
+        : [],
     };
   }
 }

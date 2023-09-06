@@ -127,12 +127,12 @@ export default function RangeAndDomain({
             }
             handleRemoval={() => null}
             items={data.path ? [data.path] : []}
-            label={t('target-attribute')}
+            label={`${t('target-attribute')} (owl:DatatypeProperty)`}
           />
         )}
 
         <SingleSelect
-          labelText={t('range')}
+          labelText={`${t('range')} (rdfs:datatype)`}
           itemAdditionHelpText=""
           ariaOptionsAvailableText={t('available-ranges') as string}
           defaultSelectedItem={attributeRanges.find(
@@ -173,7 +173,7 @@ export default function RangeAndDomain({
             }
             handleRemoval={() => handleDomainOrRangeRemoval('domain')}
             items={data.domain ? [data.domain] : []}
-            label={t('class')}
+            label={`${t('class')} (rdfs:domain)`}
             optionalText={t('optional')}
           />
         )}
@@ -195,7 +195,7 @@ export default function RangeAndDomain({
         }
         handleRemoval={() => handleDomainOrRangeRemoval('domain')}
         items={data.domain ? [data.domain] : []}
-        label={t('source-class')}
+        label={`${t('source-class')} (rdfs:domain)`}
         optionalText={t('optional')}
       />
 
@@ -211,7 +211,7 @@ export default function RangeAndDomain({
         }
         handleRemoval={() => handleDomainOrRangeRemoval('range')}
         items={data.range && typeof data.range !== 'string' ? [data.range] : []}
-        label={t('target-class')}
+        label={`${t('target-class')} (rdfs:range)`}
         optionalText={t('optional')}
       />
     </>

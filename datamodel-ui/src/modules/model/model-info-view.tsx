@@ -19,7 +19,7 @@ import {
   getOrganizationsWithId,
   getUri,
 } from '@app/common/utils/get-value';
-import { TooltipWrapper } from './model.styles';
+import { LinksWrapper, TooltipWrapper } from './model.styles';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import Separator from 'yti-common-ui/separator';
@@ -37,6 +37,7 @@ import { getModelId } from '@app/common/utils/parse-slug';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 import useSetView from '@app/common/utils/hooks/use-set-view';
+import { v4 } from 'uuid';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -58,7 +59,7 @@ export default function ModelInfoView() {
   const ref = useRef<HTMLDivElement>(null);
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
   const { setView } = useSetView();
-  const hasPermission = HasPermission({ actions: ['ADMIN_DATA_MODEL'] });
+  const hasPermission = HasPermission({ actions: ['EDIT_DATA_MODEL'] });
   const { data: modelInfo, refetch } = useGetModelQuery(modelId);
 
   useEffect(() => {
@@ -87,6 +88,9 @@ export default function ModelInfoView() {
         externalNamespaces: modelInfo.externalNamespaces ?? [],
         internalNamespaces: modelInfo.internalNamespaces ?? [],
         codeLists: modelInfo.codeLists ?? [],
+        links: modelInfo.links
+          ? modelInfo.links.map((l) => ({ ...l, id: v4().split('-')[0] }))
+          : [],
       });
     }
   }, [modelInfo, t, i18n.language]);
@@ -265,7 +269,28 @@ export default function ModelInfoView() {
         </BasicBlock>
 
         <BasicBlock title={t('links-to-additional-information')}>
-          {t('not-added')}
+          {modelInfo.links && modelInfo.links.length > 0 ? (
+            <LinksWrapper>
+              {modelInfo.links.map((l, idx) => (
+                <li key={`${l.uri}-${idx}`}>
+                  <ExternalLink
+                    labelNewWindow={t('link-opens-new-window-external')}
+                    href={l.uri}
+                  >
+                    {l.name}
+                  </ExternalLink>
+                  {l.description && (
+                    <>
+                      <br />
+                      {l.description}
+                    </>
+                  )}
+                </li>
+              ))}
+            </LinksWrapper>
+          ) : (
+            t('not-added')
+          )}
         </BasicBlock>
 
         <BasicBlock title={t('references-from-other-components')}>

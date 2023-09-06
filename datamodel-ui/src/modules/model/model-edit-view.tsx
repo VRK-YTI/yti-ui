@@ -24,6 +24,9 @@ import generatePayload from './generate-payload';
 import { FormUpdateErrors, validateFormUpdate } from './validate-form-update';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
+import { v4 } from 'uuid';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 
 interface ModelEditViewProps {
   model: ModelType;
@@ -65,13 +68,17 @@ export default function ModelEditView({
     terminologies: model.terminologies ?? [],
     codeLists: model.codeLists ?? [],
     documentation: model.documentation ?? {},
+    links: model.links
+      ? model.links.map((l) => ({ ...l, id: v4().split('-')[0] }))
+      : [],
   });
 
   useEffect(() => {
     if (result.isSuccess) {
       handleSuccess();
+      dispatch(setNotification('MODEL_EDIT'));
     }
-  }, [result, handleSuccess]);
+  }, [result, dispatch, handleSuccess]);
 
   useEffect(() => {
     if (!userPosted) {
@@ -130,10 +137,22 @@ export default function ModelEditView({
   return (
     <>
       <StaticHeader ref={ref}>
-        <div>
+        <HeaderRow>
           <Text variant="bold">{t('details', { ns: 'common' })}</Text>
-          <div>
-            <Button onClick={() => handleSubmit()}>{t('save')}</Button>
+          <HeaderRow>
+            <Button onClick={() => handleSubmit()}>
+              {userPosted ? (
+                <div role="alert">
+                  <StyledSpinner
+                    variant="small"
+                    text={t('saving')}
+                    textAlign="right"
+                  />
+                </div>
+              ) : (
+                <>{t('save')}</>
+              )}
+            </Button>
             <Button
               variant="secondary"
               style={{ marginLeft: '10px' }}
@@ -141,8 +160,8 @@ export default function ModelEditView({
             >
               {t('cancel-variant')}
             </Button>
-          </div>
-        </div>
+          </HeaderRow>
+        </HeaderRow>
 
         <div>
           <FormFooterAlert

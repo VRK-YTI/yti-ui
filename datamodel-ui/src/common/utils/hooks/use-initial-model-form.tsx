@@ -12,5 +12,6 @@ export function useInitialModelForm(): ModelFormType {
     externalNamespaces: [],
     internalNamespaces: [],
     codeLists: [],
+    links: [],
   };
 }

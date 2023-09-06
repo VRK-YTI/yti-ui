@@ -1,10 +1,19 @@
 import { VisualizationHiddenNode } from '@app/common/interfaces/visualization.interface';
 import { Node, XYPosition } from 'reactflow';
 
-export default function createCornerNode(node: VisualizationHiddenNode): Node {
+export default function createCornerNode(
+  node: VisualizationHiddenNode,
+  applicationProfile?: boolean,
+  handleNodeDelete?: (id: string) => void
+): Node {
   return {
-    id: `#${node.identifier}`,
-    data: {},
+    id: node.identifier.startsWith('#corner')
+      ? node.identifier
+      : `#${node.identifier}`,
+    data: {
+      ...(applicationProfile ? { applicationProfile: true } : {}),
+      ...(handleNodeDelete ? { handleNodeDelete: handleNodeDelete } : {}),
+    },
     position: node.position,
     type: 'cornerNode',
   };

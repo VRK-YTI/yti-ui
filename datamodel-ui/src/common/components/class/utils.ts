@@ -17,6 +17,7 @@ export function convertToPayload(
           .filter((soc) => soc.identifier !== 'owl:Thing')
           .map((sco) => sco.identifier)
       : [],
+    disjointWith: data.disjointWith?.map((disjoint) => disjoint.id) ?? [],
     subject: conceptURI,
     ...(basedOnNodeShape
       ? {

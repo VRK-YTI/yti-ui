@@ -16,6 +16,10 @@ export interface ClassFormType {
     label: string;
     identifier: string;
   }[];
+  disjointWith?: {
+    label: string;
+    id: string;
+  }[];
   status: Status;
   targetClass?: { label: string; id: string };
   utilizesNode?: { label: string; id: string };

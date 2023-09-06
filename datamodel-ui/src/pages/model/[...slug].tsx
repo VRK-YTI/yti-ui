@@ -75,7 +75,7 @@ export default function ModelPage(props: IndexPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ store, query, locale }) => {
+  async ({ store, query, locale, res }) => {
     if (!query.slug) {
       throw new Error('Missing query for page');
     }

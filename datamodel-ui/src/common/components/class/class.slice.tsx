@@ -8,7 +8,7 @@ import {
   ClassFormType,
   initialClassForm,
 } from '@app/common/interfaces/class-form.interface';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import { pathForModelType } from '@app/common/utils/api-utils';
 import { convertToPayload } from './utils';
 
@@ -79,7 +79,7 @@ export const classApi = createApi({
         method: 'GET',
       }),
     }),
-    getNodeShapes: builder.query<InternalClass[], string>({
+    getNodeShapes: builder.query<InternalClassInfo[], string>({
       query: (targetClass) => ({
         url: `/class/nodeshapes?targetClass=${targetClass}`,
         method: 'GET',

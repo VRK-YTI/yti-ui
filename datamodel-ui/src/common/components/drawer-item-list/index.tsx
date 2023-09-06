@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const ListWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${(props) => props.theme.suomifi.spacing.m};
+  gap: ${(props) => props.theme.suomifi.spacing.xs};
 `;
 
 const ListItem = styled.div`
@@ -14,6 +14,10 @@ const ListItem = styled.div`
     color: ${(props) => props.theme.suomifi.colors.whiteBase};
     border-radius: 2px;
     cursor: pointer;
+
+    .fi-text {
+      color: ${(props) => props.theme.suomifi.colors.whiteBase};
+    }
   }
 
   padding: 5px;

@@ -50,7 +50,14 @@ import {
 } from '@app/common/components/model/model.slice';
 import ResourcePicker from '../resource-picker-modal';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
-import { getCurie, getPrefixFromURI } from '@app/common/utils/get-value';
+import { getPrefixFromURI } from '@app/common/utils/get-value';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import {
+  IDENTIFIER_MAX,
+  TEXT_AREA_MAX,
+  TEXT_INPUT_MAX,
+} from 'yti-common-ui/utils/constants';
+import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -140,7 +147,9 @@ export default function ClassForm({
     }
 
     const usedLabels = Object.fromEntries(
-      Object.entries(data.label).filter((obj) => obj[1] !== '')
+      Object.entries(data.label).filter(
+        (obj) => languages.includes(obj[0]) && obj[1] !== ''
+      )
     );
 
     const payload = {
@@ -191,7 +200,7 @@ export default function ClassForm({
       classInfo: {
         identifier: value.identifier,
         id: value.id,
-        label: `${getCurie(value.namespace, value.identifier)}`,
+        label: value.curie,
       },
     });
     setShowResourcePicker(true);
@@ -206,7 +215,7 @@ export default function ClassForm({
       ...data,
       utilizesNode: {
         id: value.id,
-        label: `${getCurie(value.namespace, value.identifier)}`,
+        label: value.curie,
       },
     });
   };
@@ -231,7 +240,7 @@ export default function ClassForm({
 
   const handleClassOfRemoval = (
     id: string,
-    key: 'subClassOf' | 'equivalentClass'
+    key: 'subClassOf' | 'equivalentClass' | 'disjointWith'
   ) => {
     if (key === 'subClassOf') {
       const newSubClasses = data.subClassOf
@@ -256,13 +265,23 @@ export default function ClassForm({
       }
       return;
     }
-
-    handleUpdate({
-      ...data,
-      [key]: data.equivalentClass
-        ? data.equivalentClass.filter((item) => item.identifier !== id)
-        : [],
-    });
+    if (key === 'equivalentClass') {
+      handleUpdate({
+        ...data,
+        equivalentClass: data.equivalentClass
+          ? data.equivalentClass.filter((item) => item.identifier !== id)
+          : [],
+      });
+      return;
+    }
+    if (key === 'disjointWith') {
+      handleUpdate({
+        ...data,
+        disjointWith: data.disjointWith
+          ? data.disjointWith.filter((item) => item.id !== id)
+          : [],
+      });
+    }
   };
 
   const handleClassUpdate = (
@@ -287,7 +306,7 @@ export default function ClassForm({
           ...initData,
           {
             identifier: value.id,
-            label: `${getCurie(value.namespace, value.identifier)}`,
+            label: value.curie,
           },
         ],
       });
@@ -300,12 +319,25 @@ export default function ClassForm({
         equivalentClass: [
           ...(data.equivalentClass ?? []),
           {
-            label: `${getCurie(value.namespace, value.identifier)}`,
+            label: value.curie,
             identifier: value.id,
           },
         ],
       });
       return;
+    }
+
+    if (key === 'disjointWith') {
+      handleUpdate({
+        ...data,
+        disjointWith: [
+          ...(data.disjointWith ?? []),
+          {
+            label: value.curie,
+            id: value.id,
+          },
+        ],
+      });
     }
   };
 
@@ -327,6 +359,9 @@ export default function ClassForm({
   useEffect(() => {
     if (updateResult.isSuccess || createResult.isSuccess) {
       handleFollowUp(data.identifier);
+      dispatch(
+        setNotification(updateResult.isSuccess ? 'CLASS_EDIT' : 'CLASS_ADD')
+      );
     }
 
     let backendErrorFields: string[] = [];
@@ -371,10 +406,11 @@ export default function ClassForm({
         identifier: backendErrorFields.includes('identifier'),
         identifierInitChar: false,
         identifierLength: false,
+        identifierCharacters: false,
         label: backendErrorFields.includes('label'),
       });
     }
-  }, [updateResult, createResult, data, handleFollowUp]);
+  }, [updateResult, createResult, data, dispatch, handleFollowUp]);
 
   return (
     <>
@@ -395,7 +431,7 @@ export default function ClassForm({
           </Button>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <HeaderRow>
           <Text variant="bold">
             {Object.values(data.label).filter(
               (l) => l !== '' && typeof l !== 'undefined'
@@ -414,7 +450,17 @@ export default function ClassForm({
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <Button onClick={() => handleSubmit()} id="submit-button">
-              {t('save')}
+              {userPosted ? (
+                <div role="alert">
+                  <StyledSpinner
+                    variant="small"
+                    text={t('saving')}
+                    textAlign="right"
+                  />
+                </div>
+              ) : (
+                <>{t('save')}</>
+              )}
             </Button>
             <Button
               variant="secondary"
@@ -427,7 +473,7 @@ export default function ClassForm({
               {t('cancel-variant')}
             </Button>
           </div>
-        </div>
+        </HeaderRow>
 
         {userPosted &&
         (Object.values(errors).filter((e) => e).length > 0 ||
@@ -464,7 +510,7 @@ export default function ClassForm({
           {languages.map((lang) => (
             <TextInput
               key={`label-${lang}`}
-              labelText={`${t('class-name')}, ${lang}`}
+              labelText={`${t('class-name')}, ${lang} (rdfs:label)`}
               value={data.label[lang] ?? ''}
               onChange={(e) =>
                 handleUpdate({
@@ -475,19 +521,21 @@ export default function ClassForm({
               status={userPosted && errors.label ? 'error' : 'default'}
               fullWidth
               id="label-input"
+              maxLength={TEXT_INPUT_MAX}
             />
           ))}
         </LanguageVersionedWrapper>
 
         <TextInput
-          labelText={t('class-identifier')}
+          labelText={`${t('class-identifier')} (dcterms:identifier)`}
           visualPlaceholder={t('input-class-identifier')}
           defaultValue={data.identifier}
           status={
             (userPosted &&
               (errors.identifier ||
                 errors.identifierInitChar ||
-                errors.identifierLength)) ||
+                errors.identifierLength ||
+                errors.identifierCharacters)) ||
             (isSuccess && classAlreadyExists)
               ? 'error'
               : 'default'
@@ -509,6 +557,7 @@ export default function ClassForm({
             </Tooltip>
           }
           id="prefix-input"
+          maxLength={IDENTIFIER_MAX}
         />
 
         {!applicationProfile ? (
@@ -531,7 +580,7 @@ export default function ClassForm({
                   }))
                 : []
             }
-            label={t('upper-classes')}
+            label={`${t('upper-classes')} (rdfs:subClassOf)`}
             handleRemoval={(id: string) =>
               handleClassOfRemoval(id, 'subClassOf')
             }
@@ -556,7 +605,7 @@ export default function ClassForm({
                 />
               }
               items={data.targetClass ? [data.targetClass] : []}
-              label={t('target-class-profile')}
+              label={`${t('target-class-profile')} (sh:targetClass)`}
               handleRemoval={() =>
                 handleUpdate({ ...data, targetClass: undefined })
               }
@@ -592,7 +641,7 @@ export default function ClassForm({
                   }))
                 : []
             }
-            label={t('corresponding-classes')}
+            label={`${t('corresponding-classes')} (owl:equivalentClass)`}
             handleRemoval={(id: string) =>
               handleClassOfRemoval(id, 'equivalentClass')
             }
@@ -601,7 +650,7 @@ export default function ClassForm({
 
         {applicationProfile ? (
           <InlineListBlock
-            label={t('utilizes-class-restriction')}
+            label={`${t('utilizes-class-restriction')} (sh:node)`}
             addNewComponent={
               <ClassModal
                 modelId={modelId}
@@ -621,19 +670,21 @@ export default function ClassForm({
           />
         ) : (
           <InlineListBlock
-            label={t('disjoint-classes', { ns: 'common' })}
+            label={`${t('disjoint-classes', {
+              ns: 'common',
+            })} (owl:disjointWith)`}
             addNewComponent={
               <ClassModal
                 modelId={modelId}
-                handleFollowUp={() => null}
+                handleFollowUp={(e) => handleClassUpdate(e, 'disjointWith')}
                 mode={'select'}
                 applicationProfile={applicationProfile}
                 modalButtonLabel={t('add-disjoint-class')}
                 plusIcon
               />
             }
-            items={[]}
-            handleRemoval={() => null}
+            items={data.disjointWith ?? []}
+            handleRemoval={(id) => handleClassOfRemoval(id, 'disjointWith')}
           />
         )}
 
@@ -656,7 +707,9 @@ export default function ClassForm({
           {languages.map((lang) => (
             <Textarea
               key={`comment-${lang}`}
-              labelText={`${t('technical-description')}, ${lang}`}
+              labelText={`${t('technical-description')}, ${lang} ${
+                applicationProfile ? '(sh:description)' : '(rdfs:comment)'
+              }`}
               optionalText={t('optional')}
               defaultValue={data.note[lang as keyof typeof data.note]}
               onChange={(e) =>
@@ -667,13 +720,20 @@ export default function ClassForm({
               }
               fullWidth
               id="comment-input"
+              maxLength={TEXT_AREA_MAX}
             />
           ))}
         </LanguageVersionedWrapper>
 
         <Separator />
 
-        <BasicBlock title={t('attributes')}>
+        <BasicBlock
+          title={
+            applicationProfile
+              ? `${t('attributes')} (sh:PropertyShape)`
+              : t('attributes')
+          }
+        >
           {(!applicationProfile && !isEdit) ||
           !data.attribute ||
           data.attribute.length < 1 ? (
@@ -710,7 +770,13 @@ export default function ClassForm({
           )}
         </BasicBlock>
 
-        <BasicBlock title={t('associations')}>
+        <BasicBlock
+          title={
+            applicationProfile
+              ? `${t('associations')} (sh:PropertyShape)`
+              : t('associations')
+          }
+        >
           {(!applicationProfile && !isEdit) ||
           !data.association ||
           data.association.length < 1 ? (
@@ -748,7 +814,7 @@ export default function ClassForm({
         <Separator />
 
         <Textarea
-          labelText={t('work-group-comment')}
+          labelText={`${t('work-group-comment')} (dcterms:description)`}
           optionalText={t('optional')}
           hintText={t('editor-comment-hint')}
           defaultValue={data.editorialNote}
@@ -757,6 +823,7 @@ export default function ClassForm({
           }
           fullWidth
           id="editor-comment-input"
+          maxLength={TEXT_AREA_MAX}
         />
       </DrawerContent>
     </>

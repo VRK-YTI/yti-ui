@@ -21,6 +21,7 @@ import HasPermission from '@app/common/utils/has-permission';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
+import { HeaderRow } from '@app/common/components/header';
 
 export default function LinkedDataView({
   modelId,
@@ -32,7 +33,7 @@ export default function LinkedDataView({
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
   const hasPermission = HasPermission({
-    actions: ['ADMIN_DATA_MODEL'],
+    actions: ['EDIT_DATA_MODEL'],
   });
   const [headerHeight, setHeaderHeight] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -69,12 +70,7 @@ export default function LinkedDataView({
   return (
     <>
       <StaticHeader ref={ref}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'space-between',
-          }}
-        >
+        <HeaderRow>
           <Text variant="bold">{t('links')}</Text>
 
           {hasPermission && (
@@ -105,7 +101,7 @@ export default function LinkedDataView({
               </TooltipWrapper>
             </div>
           )}
-        </div>
+        </HeaderRow>
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
@@ -178,12 +174,20 @@ export default function LinkedDataView({
                     <LinkExtraInfo>
                       <ExternalLink
                         labelNewWindow={t('link-opens-new-window-external')}
-                        href={namespace}
+                        href={namespace.namespace}
                       >
-                        {namespace}
+                        {getLanguageVersion({
+                          data: namespace.name,
+                          lang: i18n.language,
+                          appendLocale: true,
+                        })}
                       </ExternalLink>
-                      <div>Tunnus: {namespace.split('/').pop()}</div>
-                      <div>{namespace}</div>
+                      <div>
+                        {t('linked-datamodel-prefix', {
+                          prefix: namespace.prefix,
+                        })}
+                      </div>
+                      <div>{namespace.namespace}</div>
                     </LinkExtraInfo>
                   </LinkedItem>
                 );
@@ -198,7 +202,11 @@ export default function LinkedDataView({
                       >
                         {namespace.name}
                       </ExternalLink>
-                      <div>Tunnus: {namespace.prefix}</div>
+                      <div>
+                        {t('linked-datamodel-prefix', {
+                          prefix: namespace.prefix,
+                        })}
+                      </div>
                       <div>{namespace.namespace}</div>
                     </LinkExtraInfo>
                   </LinkedItem>
