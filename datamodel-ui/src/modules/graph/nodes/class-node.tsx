@@ -125,10 +125,11 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   };
 
   const handleResourceHover = (
-    id?: string,
-    type?: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE
+    id: string,
+    type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE,
+    hide?: boolean
   ) => {
-    if (!id) {
+    if (hide && type === ResourceType.ASSOCIATION) {
       dispatch(resetHighlighted());
     }
 
@@ -236,7 +237,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
               globalSelected.id === r.identifier
             }
             onMouseEnter={() => handleResourceHover(r.identifier, r.type)}
-            onMouseLeave={() => handleResourceHover()}
+            onMouseLeave={() => handleResourceHover(r.identifier, r.type, true)}
           >
             {data.applicationProfile &&
               (r.type === ResourceType.ASSOCIATION ? (

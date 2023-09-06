@@ -54,3 +54,21 @@ export default function getConnectedElements(
     ...getConnected(start as Edge, 'source'),
   ].filter((value, index, arr) => arr.indexOf(value) === index);
 }
+
+export function getClassConnectedElements(
+  start: Node,
+  nodes: Node[],
+  edges: Edge[]
+): string[] {
+  const relatedEdges = edges.filter(
+    (e) => e.target === start.id || e.source === start.id
+  );
+
+  if (relatedEdges.length < 1) {
+    return [];
+  }
+
+  return relatedEdges
+    .flatMap((e) => getConnectedElements(e, nodes, edges))
+    .filter((value, index, arr) => arr.indexOf(value) === index);
+}
