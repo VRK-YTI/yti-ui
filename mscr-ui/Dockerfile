@@ -9,7 +9,7 @@ WORKDIR /app
 COPY mscr-ui/package.json ./mscr-ui/
 COPY common-ui ./common-ui
 COPY package.json package-lock.json ./
-COPY datamodel-ui ./datamodel-ui
+COPY mscr-ui ./mscr-ui
 
 USER root
 RUN chmod -R 775 /app
