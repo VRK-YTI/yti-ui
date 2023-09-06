@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
 import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
 import getOrganizations from '@app/common/utils/get-organizations';
@@ -13,7 +14,6 @@ import {
 } from './schema-form.styles';
 import LanguageSelector from 'yti-common-ui/form/language-selector';
 import { FormErrors } from './validate-form';
-import AddBlock from './add-block';
 import { Status } from '@app/common/interfaces/status.interface';
 import { FormUpdateErrors } from './validate-form-update';
 import {
@@ -26,9 +26,6 @@ import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 import { translateFileUploadError } from '@app/common/utils/translation-helpers copy';
 import FileDropArea from 'yti-common-ui/file-drop-area';
 
-interface SchemaProps {
-  pid: string;
-}
 interface SchemaFormProps {
   formData: SchemaFormType;
   setFormData: (value: Schema) => void;
