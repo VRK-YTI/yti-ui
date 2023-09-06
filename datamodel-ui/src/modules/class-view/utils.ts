@@ -53,42 +53,63 @@ export function internalClassToClassForm(
   return obj;
 }
 
-export function classTypeToClassForm(data: ClassType): ClassFormType {
+export function classTypeToClassForm(
+  data: ClassType,
+  applicationProfile: boolean
+): ClassFormType {
   return {
     concept: data.subject,
     editorialNote: data.editorialNote ?? '',
-    equivalentClass:
-      data.equivalentClass?.map((ec) => ({
-        identifier: ec.uri,
-        label: ec.curie,
-      })) ?? [],
     identifier: data.identifier,
     label: data.label,
     note: data.note,
     status: data.status,
-    subClassOf:
-      data.subClassOf &&
-      data.subClassOf.filter(
-        (soc) => soc.uri !== 'http://www.w3.org/2002/07/owl#Thing'
-      ).length > 0
-        ? data.subClassOf?.map((sco) => ({
-            identifier: sco.uri,
-            label: sco.curie,
-            attributes: [],
-          }))
-        : [
-            {
-              identifier: 'owl:Thing',
-              label: 'owl:Thing',
-            },
-          ],
     association: data.association,
     attribute: data.attribute,
-    targetClass: data.targetClass
+    ...(applicationProfile
       ? {
-          id: data.targetClass.uri,
-          label: data.targetClass.curie,
+          //Application profile specific properties
+          targetClass: data.targetClass
+            ? {
+                id: data.targetClass.uri,
+                label: data.targetClass.curie,
+              }
+            : undefined,
+          node: data.targetNode
+            ? {
+                id: data.targetNode.uri,
+                label: data.targetNode.curie,
+              }
+            : undefined,
         }
-      : undefined,
+      : {
+          //Library specific properties
+          equivalentClass:
+            data.equivalentClass?.map((ec) => ({
+              identifier: ec.uri,
+              label: ec.curie,
+            })) ?? undefined,
+          disjointWith:
+            data.disjointWith?.map((dw) => ({
+              id: dw.uri,
+              label: dw.curie,
+            })) ?? undefined,
+          subClassOf:
+            data.subClassOf &&
+            data.subClassOf.filter(
+              (soc) => soc.uri !== 'http://www.w3.org/2002/07/owl#Thing'
+            ).length > 0
+              ? data.subClassOf?.map((sco) => ({
+                  identifier: sco.uri,
+                  label: sco.curie,
+                  attributes: [],
+                }))
+              : [
+                  {
+                    identifier: 'owl:Thing',
+                    label: 'owl:Thing',
+                  },
+                ],
+        }),
   };
 }

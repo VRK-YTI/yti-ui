@@ -195,7 +195,9 @@ export default function ClassView({
   const handleEdit = () => {
     if (isSuccess) {
       setView('classes', 'edit');
-      dispatch(setClass(classTypeToClassForm(classData)));
+      dispatch(
+        setClass(classTypeToClassForm(classData, applicationProfile ?? false))
+      );
       setIsEdit(true);
     }
   };

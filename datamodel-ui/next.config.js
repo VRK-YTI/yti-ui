@@ -88,7 +88,7 @@ module.exports = () => {
           {
             source: '/terminology-api/:path*',
             destination:
-              'https://yhteentoimiva.test.yti.cloud.dvv.fi/terminology-api/:path*',
+              'https://sanastot.dev.yti.cloud.dvv.fi/terminology-api/:path*',
           },
           {
             source: '/codelist-api/:path*',
