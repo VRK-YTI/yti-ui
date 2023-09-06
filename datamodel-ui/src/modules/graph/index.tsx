@@ -190,8 +190,19 @@ const GraphContent = ({
   );
 
   const onNodeMouseLeave = useCallback(() => {
+    if (globalSelected.id && globalSelected.type === 'associations') {
+      const selectedEdge = edges.find(
+        (e) => e.data.identifier === globalSelected.id
+      );
+      selectedEdge &&
+        dispatch(
+          setHighlighted(getConnectedElements(selectedEdge, nodes, edges))
+        );
+      return;
+    }
+
     dispatch(resetHighlighted());
-  }, [dispatch]);
+  }, [dispatch, globalSelected, edges, nodes]);
 
   const onEdgeMouseEnter = useCallback(
     (e, edge) => {
@@ -201,8 +212,19 @@ const GraphContent = ({
   );
 
   const onEdgeMouseLeave = useCallback(() => {
+    if (globalSelected.id && globalSelected.type === 'associations') {
+      const selectedEdge = edges.find(
+        (e) => e.data.identifier === globalSelected.id
+      );
+      selectedEdge &&
+        dispatch(
+          setHighlighted(getConnectedElements(selectedEdge, nodes, edges))
+        );
+      return;
+    }
+
     dispatch(resetHighlighted());
-  }, [dispatch]);
+  }, [dispatch, globalSelected, edges, nodes]);
 
   useEffect(() => {
     if (isSuccess || (isSuccess && resetPosition)) {
