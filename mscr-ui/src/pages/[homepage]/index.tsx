@@ -74,6 +74,7 @@ export default function IndexPage(props: IndexPageProps) {
           slug={(router.query.homepage as string) ?? undefined}
           user={props.user ?? undefined}
         />
+        <BasicTable />
       </Layout>
     </CommonContextProvider>
   );
