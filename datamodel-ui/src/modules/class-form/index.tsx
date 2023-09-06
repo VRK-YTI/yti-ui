@@ -213,7 +213,7 @@ export default function ClassForm({
 
     handleUpdate({
       ...data,
-      utilizesNode: {
+      node: {
         id: value.id,
         label: value.curie,
       },
@@ -657,16 +657,14 @@ export default function ClassForm({
                 mode={'select'}
                 modalButtonLabel={t('select-class-restriction')}
                 handleFollowUp={handleUtilizedNodeUpdate}
-                initialSelected={data.utilizesNode?.id}
+                initialSelected={data.node?.id}
                 applicationProfile
                 resourceRestriction
                 limitToModelType="PROFILE"
               />
             }
-            items={data.utilizesNode ? [data.utilizesNode] : []}
-            handleRemoval={() =>
-              handleUpdate({ ...data, utilizesNode: undefined })
-            }
+            items={data.node ? [data.node] : []}
+            handleRemoval={() => handleUpdate({ ...data, node: undefined })}
           />
         ) : (
           <InlineListBlock

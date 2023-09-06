@@ -22,7 +22,6 @@ export interface ClassFormType {
   }[];
   status: Status;
   targetClass?: { label: string; id: string };
-  utilizesNode?: { label: string; id: string };
   node?: { label: string; id: string };
   attribute?: SimpleResource[];
   association?: SimpleResource[];
