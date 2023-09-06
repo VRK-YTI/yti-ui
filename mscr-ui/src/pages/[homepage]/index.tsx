@@ -18,7 +18,7 @@ import { initialUrlState } from 'yti-common-ui/utils/hooks/use-url-state';
 import PageHead from 'yti-common-ui/page-head';
 import {
   getCount,
-  getRunningQueriesThunk as getCountRunningQueriesThunk
+  getRunningQueriesThunk as getCountRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
 
 import { useRouter } from 'next/router';
@@ -27,7 +27,6 @@ import GroupWorkspace from '../../modules/group-home';
 import PersonalWorkspace from '../../modules/personal-home';
 import BasicTable from '@app/common/components/table';
 import MSCRSideBar from '@app/common/components/sidebar/MSCRSideBar';
-import { TableAndSidebarWrapper } from './homepage.styles';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 
 interface IndexPageProps extends CommonContextState {
@@ -49,8 +48,8 @@ export default function IndexPage(props: IndexPageProps) {
     user?: User;
   }): React.ReactElement {
     if (slug === 'group-home') {
-      console.log("Now showing Group Page");
-      return <GroupWorkspace />;
+      console.log('Now showing Group Page');
+      return <GroupWorkspace pid={''} />;
     } else {
       console.log(slug);
       return <PersonalWorkspace user={user} />;
@@ -75,11 +74,6 @@ export default function IndexPage(props: IndexPageProps) {
           slug={(router.query.homepage as string) ?? undefined}
           user={props.user ?? undefined}
         />
-
-        <TableAndSidebarWrapper $breakpoint={breakpoint} id="table-and-sidebar">
-          <MSCRSideBar />
-          <BasicTable />
-        </TableAndSidebarWrapper>
       </Layout>
     </CommonContextProvider>
   );

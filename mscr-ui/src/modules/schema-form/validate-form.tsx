@@ -18,7 +18,9 @@ export function validateForm(data: SchemaFormType) {
     organizations: false,
   };
 
-  const selectedLanguages = data.languages.filter((lang) => lang.selected);
+  const selectedLanguages = data.languages.filter(
+    (lang: { selected: any }) => lang.selected
+  );
 
   // At least one language should be selected
   if (selectedLanguages.length < 1) {
@@ -28,14 +30,16 @@ export function validateForm(data: SchemaFormType) {
   // All selected languages should have a title
   if (
     selectedLanguages.filter(
-      (lang) => !lang.title || lang.title === '' || lang.title.length < 1
+      (lang: { title: string | any[] }) =>
+        !lang.title || lang.title === '' || lang.title.length < 1
     ).length > 0
   ) {
     const langsWithError = selectedLanguages
       .filter(
-        (lang) => !lang.title || lang.title === '' || lang.title.length < 1
+        (lang: { title: string | any[] }) =>
+          !lang.title || lang.title === '' || lang.title.length < 1
       )
-      .map((lang) => lang.uniqueItemId);
+      .map((lang: { uniqueItemId: any }) => lang.uniqueItemId);
 
     errors.titleAmount = langsWithError ?? [];
   }

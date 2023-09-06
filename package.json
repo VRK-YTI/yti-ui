@@ -8,7 +8,6 @@
     "common-ui",
     "datamodel-ui",
     "terminology-ui",
-    "mscr-playground-app",
     "mscr-ui"
   ],
   "devDependencies": {

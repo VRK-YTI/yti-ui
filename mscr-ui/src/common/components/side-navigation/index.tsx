@@ -28,7 +28,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
             expanded
             content={
               <MUILink href="/personal-home">
-                {user?.firstName}'s workspace
+                {user?.firstName} workspace
               </MUILink>
             }
           >

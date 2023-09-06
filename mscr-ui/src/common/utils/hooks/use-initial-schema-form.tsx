@@ -8,7 +8,10 @@ export function useInitialSchemaForm(): SchemaFormType {
   return {
     pid: '',
     format: '',
-    label: '',
+    label: {
+      key: '',
+    },
+    description: '',
     languages: [
       {
         labelText: t('language-finnish-with-suffix'),
@@ -38,5 +41,9 @@ export function useInitialSchemaForm(): SchemaFormType {
         labelText: 'Interoperabilty Platform',
       },
     ],
+    filedata: '',
+    serviceCategories: '',
+    contact: true,
+    status: 'DRAFT',
   };
 }

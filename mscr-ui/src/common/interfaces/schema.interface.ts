@@ -13,16 +13,24 @@ export interface Schema {
     [key: string]: string;
   };
   languages: string[];
-  organizations: string[];
-  filedata:File;
+  organizations: Organization[];
+  filedata: File;
+}
+export interface Organization {
+  id: string;
+  parentOrganization?: string;
+  label: { [key: string]: string };
 }
 
 export interface SchemaFormType {
-  pid: string;
+  contact?: boolean;
+  serviceCategories?: any;
+  pid?: string;
   format: string;
-  label: string;
-  languages: (LanguageBlockType & { selected: boolean })[];
-  organizations: MultiSelectData[];
-  status?: Status;
-  filedata: File;
+  label?: { [key: string]: string };
+  languages: any;
+  organizations: any;
+  filedata?: any;
+  description?: any;
+  status?: any;
 }

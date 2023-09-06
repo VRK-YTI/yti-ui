@@ -28,7 +28,7 @@ import FileDropArea from 'yti-common-ui/file-drop-area';
 
 interface SchemaFormProps {
   formData: SchemaFormType;
-  setFormData: (value: Schema) => void;
+  setFormData: (value: SchemaFormType) => void;
   userPosted: boolean;
   disabled?: boolean;
   errors?: FormErrors | FormUpdateErrors;
@@ -135,7 +135,7 @@ export default function SchemaForm({
           status={errors?.languageAmount ? 'error' : 'default'}
           disabled={disabled}
           defaultSelectedItems={formData.languages.filter(
-            (lang) => lang.selected
+            (lang: { selected: any }) => lang.selected
           )}
         />
       </div>

@@ -16,13 +16,11 @@ import {
 import { getRunningQueriesThunk as getInternalResourcesRunningQueriesThunk } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { getRunningQueriesThunk as getVisualizationRunningQueriesThunk } from '@app/common/components/visualization/visualization.slice';
 import { useRouter } from 'next/router';
-import { useGetSchemaQuery } from '@app/common/components/schema/schema.slice';
 import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 import Separator from 'yti-common-ui/components/separator';
 import { Crosswalk } from '@app/common/interfaces/crosswalk.interface';
 import { useGetCrosswalkQuery } from '@app/common/components/crosswalk/crosswalk.slice';
 import { Paragraph } from 'suomifi-ui-components';
-import EditCollection from '@app/modules/edit-collection';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;

@@ -14,7 +14,8 @@ export const schemaApi = createApi({
   reducerPath: 'schemaApi',
   baseQuery: getDatamodelApiBaseQuery((headers) => ({
     ...headers,
-    'content-type': 'multipart/form-data'})),
+    'content-type': 'multipart/form-data',
+  })),
   tagTypes: ['schemaApi'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
@@ -22,7 +23,7 @@ export const schemaApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putSchema: builder.mutation<Schema, string>({
+    putSchema: builder.mutation<SchemaFormType, SchemaFormType>({
       query: (value) => ({
         url: '/schema',
         method: 'PUT',

@@ -39,30 +39,10 @@ export default function Layout({
 }) {
   const { t, i18n } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
-  const { publicRuntimeConfig } = getConfig();
-
-  // const widthProportion = '20%';
-
-  const styles = {
-    navigationMainRow: {
-      display: 'flex',
-      flex: 1,
-      flexDirection: 'row' as 'row',
-    },
-    mainFooterColumn: {
-      display: 'flex',
-      flex: 1,
-      flexDirection: 'column' as 'column',
-    },
-    sideBarStyle: {
-      // width: widthProportion,
-    },
-  };
 
   return (
     <ThemeProvider theme={lightTheme}>
       {matomo && matomo}
-
       <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
       {fullScreenElements ? (
         <SiteContainer>
@@ -85,7 +65,7 @@ export default function Layout({
             fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
           />
 
-          <Block style={styles.navigationMainRow}>
+          <Block>
             <SideNavigationPanel user={user ?? undefined} />
             <ContentContainer>
               {alerts && alerts}

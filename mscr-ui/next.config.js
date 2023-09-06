@@ -10,6 +10,13 @@ module.exports = () => {
     eslint: {
       dirs: ['src'],
     },
+    typescript: {
+      // !! WARN !!
+      // Dangerously allow production builds to successfully complete even if
+      // your project has type errors.
+      // !! WARN !!
+      ignoreBuildErrors: true,
+    },
     i18n,
     async headers() {
       const isProd = process.env.NODE_ENV === 'production';

@@ -1,4 +1,4 @@
-import { ModelFormType } from '@app/common/interfaces/model-form.interface';
+import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 import isEmail from 'validator/lib/isEmail';
 
 export interface FormUpdateErrors {
@@ -9,7 +9,7 @@ export interface FormUpdateErrors {
   contact: boolean;
 }
 
-export function validateFormUpdate(data: ModelFormType) {
+export function validateFormUpdate(data: SchemaFormType) {
   const errors: FormUpdateErrors = {
     languageAmount: false,
     titleAmount: [],
@@ -18,7 +18,9 @@ export function validateFormUpdate(data: ModelFormType) {
     contact: false,
   };
 
-  const selectedLanguages = data.languages.filter((lang) => lang.selected);
+  const selectedLanguages = data.languages.filter(
+    (lang: { selected: any }) => lang.selected
+  );
 
   // At least one language should be selected
   if (selectedLanguages.length < 1) {
@@ -28,14 +30,16 @@ export function validateFormUpdate(data: ModelFormType) {
   // All selected languages should have a title
   if (
     selectedLanguages.filter(
-      (lang) => !lang.title || lang.title === '' || lang.title.length < 1
+      (lang: { title: string | any[] }) =>
+        !lang.title || lang.title === '' || lang.title.length < 1
     ).length > 0
   ) {
     const langsWithError = selectedLanguages
       .filter(
-        (lang) => !lang.title || lang.title === '' || lang.title.length < 1
+        (lang: { title: string | any[] }) =>
+          !lang.title || lang.title === '' || lang.title.length < 1
       )
-      .map((lang) => lang.uniqueItemId);
+      .map((lang: { uniqueItemId: any }) => lang.uniqueItemId);
 
     errors.titleAmount = langsWithError ?? [];
   }
@@ -48,10 +52,6 @@ export function validateFormUpdate(data: ModelFormType) {
   // Should have at least one organization set
   if (data.organizations.length < 1) {
     errors.organizations = true;
-  }
-
-  if (data.contact && !isEmail(data.contact)) {
-    errors.contact = true;
   }
 
   return errors;

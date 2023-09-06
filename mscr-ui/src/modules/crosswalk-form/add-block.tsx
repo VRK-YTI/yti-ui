@@ -20,7 +20,14 @@ export default function AddBlock({
         label={t('terminologies-in-use')}
         optionalText={t('optional')}
         labelRow={true}
-        addNewComponent={<UpdateWithFileModal pid={''} />}
+        addNewComponent={
+          <UpdateWithFileModal
+            pid={''}
+            refetch={function (): void {
+              throw new Error('Function not implemented.');
+            }}
+          />
+        }
         items={data.languages.map((t) => ({
           id: t.labelText,
           label: t.description,

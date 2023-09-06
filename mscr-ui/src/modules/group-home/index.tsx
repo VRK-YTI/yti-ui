@@ -1,5 +1,12 @@
-import Title from 'yti-common-ui/title';
-
-export default function GroupWorkspace({}) {
-  return <Title title={'Group workspace PLACEHOLDER'} />;
+interface GroupHomeProps {
+  pid: string;
+}
+export default function GroupWorkspace({ pid }: GroupHomeProps) {
+  {
+    return (
+      <div>
+        <p>This is Group Home {pid}</p>
+      </div>
+    );
+  }
 }
