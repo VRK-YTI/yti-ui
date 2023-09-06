@@ -105,6 +105,16 @@ export default function Documentation({
   const handleCancel = () => {
     setUserPosted(false);
     setIsEdit(false);
+    setValue(
+      modelData?.documentation
+        ? Object.keys(modelData.documentation).length > 0
+          ? modelData.documentation
+          : modelData.languages.reduce(
+              (acc, lang) => ({ ...acc, [lang]: '' }),
+              {}
+            )
+        : {}
+    );
     dispatch(setHasChanges(false));
     disableConfirmation();
   };
@@ -184,12 +194,18 @@ export default function Documentation({
   }, [ref]);
 
   useEffect(() => {
-    if (modelData && !isEdit) {
-      setValue(modelData.documentation ?? '');
-    }
+    if (modelData) {
+      if (Object.keys(modelData.documentation).length < 1) {
+        setValue(
+          modelData.languages.reduce(
+            (acc, lang) => ({ ...acc, [lang]: '' }),
+            {}
+          )
+        );
+      } else {
+        setValue(modelData.documentation);
+      }
 
-    if (modelData && Object.keys(value).length === 0) {
-      setValue(modelData.documentation);
       setCurrentLanguage(
         modelData.languages.includes(i18n.language)
           ? i18n.language
@@ -197,7 +213,7 @@ export default function Documentation({
               'fi'
       );
     }
-  }, [modelData, isEdit, i18n.language, value]);
+  }, [modelData, i18n.language]);
 
   useEffect(() => {
     if (result.isSuccess) {
@@ -293,8 +309,13 @@ export default function Documentation({
             {getLanguageVersion({
               data: modelData?.documentation,
               lang: displayLang ?? i18n.language,
-              appendLocale: true,
-            })}
+            }) !== ''
+              ? getLanguageVersion({
+                  data: modelData?.documentation,
+                  lang: displayLang ?? i18n.language,
+                  appendLocale: true,
+                })
+              : ''}
           </ReactMarkdown>
         </div>
       </DrawerContent>
