@@ -1,17 +1,19 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import {
+  resetHighlighted,
   resetHovered,
   selectDisplayLang,
   selectHovered,
   selectModelTools,
   selectSelected,
+  setHighlighted,
   setHovered,
   setSelected,
 } from '@app/common/components/model/model.slice';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Handle, Position } from 'reactflow';
+import { Handle, Position, useReactFlow } from 'reactflow';
 import {
   IconChevronDown,
   IconChevronUp,
@@ -35,6 +37,7 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import HasPermission from '@app/common/utils/has-permission';
 import { useAddNodeShapePropertyReferenceMutation } from '@app/common/components/class/class.slice';
 import ResourceModal from '@app/modules/class-view/resource-modal';
+import getConnectedElements from '../utils/get-connected-elements';
 
 interface ClassNodeProps {
   id: string;
@@ -62,6 +65,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const { i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: 'EDIT_CLASS' });
   const dispatch = useStoreDispatch();
+  const { getNodes, getEdges } = useReactFlow();
   const globalSelected = useSelector(selectSelected());
   const globalHover = useSelector(selectHovered());
   const globalShowAttributes = useSelector(selectModelTools()).showAttributes;
@@ -106,6 +110,36 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
       nodeshapeId: data.identifier,
       uri: value.uri,
     });
+  };
+
+  const handleResourceClick = (
+    id: string,
+    type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE
+  ) => {
+    dispatch(
+      setSelected(
+        id,
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
+      )
+    );
+  };
+
+  const handleResourceHover = (
+    id: string,
+    type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE,
+    hide?: boolean
+  ) => {
+    if (hide && type === ResourceType.ASSOCIATION) {
+      dispatch(resetHighlighted());
+    }
+
+    const targetEdge = getEdges().find((edge) => edge.data.identifier === id);
+
+    if (type === ResourceType.ASSOCIATION && targetEdge) {
+      dispatch(
+        setHighlighted(getConnectedElements(targetEdge, getNodes(), getEdges()))
+      );
+    }
   };
 
   useEffect(() => {
@@ -194,12 +228,16 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
           <Resource
             key={`${id}-child-${r.identifier}`}
             className="node-resource"
-            onClick={() => dispatch(setSelected(r.identifier, 'attributes'))}
+            onClick={() => handleResourceClick(r.identifier, r.type)}
             $highlight={
-              globalSelected.type === 'attributes' &&
+              (globalSelected.type === 'associations'
+                ? ResourceType.ASSOCIATION
+                : ResourceType.ATTRIBUTE) === r.type &&
               globalSelected.id !== '' &&
               globalSelected.id === r.identifier
             }
+            onMouseEnter={() => handleResourceHover(r.identifier, r.type)}
+            onMouseLeave={() => handleResourceHover(r.identifier, r.type, true)}
           >
             {data.applicationProfile &&
               (r.type === ResourceType.ASSOCIATION ? (

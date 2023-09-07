@@ -209,6 +209,19 @@ export default function ModelTools({
               >
                 {t('show-original-class')}
               </ToggleButton>
+              <ToggleButton
+                checked={tools.showClassHighlights}
+                onClick={() =>
+                  dispatch(
+                    setModelTools(
+                      'showClassHighlights',
+                      !tools.showClassHighlights
+                    )
+                  )
+                }
+              >
+                {t('highlight-class-associations')}
+              </ToggleButton>
             </ToggleButtonGroup>
 
             <div>
@@ -279,6 +292,19 @@ export default function ModelTools({
                 }
               >
                 {t('attribute-restr')}
+              </ToggleButton>
+              <ToggleButton
+                checked={tools.showClassHighlights}
+                onClick={() =>
+                  dispatch(
+                    setModelTools(
+                      'showClassHighlights',
+                      !tools.showClassHighlights
+                    )
+                  )
+                }
+              >
+                {t('highlight-class-association-restrictions')}
               </ToggleButton>
             </ToggleButtonGroup>
 

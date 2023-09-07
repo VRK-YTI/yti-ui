@@ -102,6 +102,8 @@
   "go-to": "Siirry",
   "graph": "Kaavio",
   "graph-settings": "Kaavion asetukset",
+  "highlight-class-association-restrictions": "Korosta luokkien assosiaatiorajoitteet",
+  "highlight-class-associations": "Korosta luokkien assosiaatiot",
   "impersonate-user": "Esiinny käyttäjänä",
   "information-domains": "Tietoalueet",
   "interoperability-logo-title": "",

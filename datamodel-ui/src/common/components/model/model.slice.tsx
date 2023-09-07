@@ -149,6 +149,7 @@ const initialState = {
     showAttributeRestrictions: true,
     showByName: true,
     showById: false,
+    showClassHighlights: false,
   },
 };
 
