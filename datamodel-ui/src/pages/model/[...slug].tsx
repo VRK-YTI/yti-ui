@@ -65,6 +65,7 @@ export default function ModelPage(props: IndexPageProps) {
         fakeableUsers={props.fakeableUsers}
         fullScreenElements={<ModelHeader modelInfo={data} />}
         headerHidden={fullScreen}
+        langPickerHidden={true}
       >
         <PageHead baseUrl="https://tietomallit.suomi.fi" />
 

@@ -28,10 +28,12 @@ export default function SmartHeader({
   user,
   fakeableUsers,
   fullScreenElements,
+  langPickerHidden,
 }: {
   user?: User;
   fakeableUsers?: FakeableUser[];
   fullScreenElements?: React.ReactNode;
+  langPickerHidden?: boolean;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -120,7 +122,7 @@ export default function SmartHeader({
             <HeaderWrapper $breakpoint={breakpoint}>
               {renderLogo()}
               {renderHeaderSearch()}
-              {renderDesktopLocaleChooser()}
+              {!langPickerHidden && renderDesktopLocaleChooser()}
               {renderMobileNavigationToggleButton()}
               {renderDesktopAuthenticationPanel()}
             </HeaderWrapper>
@@ -143,7 +145,7 @@ export default function SmartHeader({
             <div
               style={{ display: 'flex', padding: '20px 20px 0 0', gap: '10px' }}
             >
-              {renderDesktopLocaleChooser()}
+              {!langPickerHidden && renderDesktopLocaleChooser()}
               {renderMobileNavigationToggleButton()}
               {renderDesktopAuthenticationPanel()}
             </div>
