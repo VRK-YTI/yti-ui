@@ -4,10 +4,10 @@ import {
   Expander,
   ExpanderContent,
   ExpanderTitleButton,
-  IconMenu,
   Tooltip,
   IconCheckCircle,
   IconDisabled,
+  IconOptionsVertical,
 } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import {
@@ -133,7 +133,7 @@ export default function ResourceInfo({
           <div>
             <Button
               variant="secondary"
-              iconRight={<IconMenu />}
+              iconRight={<IconOptionsVertical />}
               onClick={() => setShowTooltip(!showTooltip)}
             >
               {t('actions')}

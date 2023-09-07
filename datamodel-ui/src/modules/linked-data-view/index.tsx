@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   Button,
   ExternalLink,
-  IconMenu,
+  IconOptionsVertical,
   Text,
   Tooltip,
 } from 'suomifi-ui-components';
@@ -77,7 +77,7 @@ export default function LinkedDataView({
             <div>
               <Button
                 variant="secondary"
-                iconRight={<IconMenu />}
+                iconRight={<IconOptionsVertical />}
                 onClick={() => setShowTooltip(!showTooltip)}
                 ref={toolTipRef}
               >

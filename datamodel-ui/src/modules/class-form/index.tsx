@@ -429,24 +429,6 @@ export default function ClassForm({
           >
             {t('back', { ns: 'common' })}
           </Button>
-        </div>
-
-        <HeaderRow>
-          <Text variant="bold">
-            {Object.values(data.label).filter(
-              (l) => l !== '' && typeof l !== 'undefined'
-            ).length > 0
-              ? getLanguageVersion({
-                  data: Object.fromEntries(
-                    Object.entries(data.label).filter(
-                      (l) => l[1] !== '' && typeof l[1] !== 'undefined'
-                    )
-                  ),
-                  lang: i18n.language,
-                  appendLocale: true,
-                })
-              : t('class-name')}
-          </Text>
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <Button onClick={() => handleSubmit()} id="submit-button">
@@ -473,6 +455,24 @@ export default function ClassForm({
               {t('cancel-variant')}
             </Button>
           </div>
+        </div>
+
+        <HeaderRow>
+          <Text variant="bold">
+            {Object.values(data.label).filter(
+              (l) => l !== '' && typeof l !== 'undefined'
+            ).length > 0
+              ? getLanguageVersion({
+                  data: Object.fromEntries(
+                    Object.entries(data.label).filter(
+                      (l) => l[1] !== '' && typeof l[1] !== 'undefined'
+                    )
+                  ),
+                  lang: i18n.language,
+                  appendLocale: true,
+                })
+              : t('class-name')}
+          </Text>
         </HeaderRow>
 
         {userPosted &&

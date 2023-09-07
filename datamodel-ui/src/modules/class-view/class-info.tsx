@@ -9,7 +9,7 @@ import {
   ExternalLink,
   IconArrowLeft,
   IconCopy,
-  IconMenu,
+  IconOptionsVertical,
   Link,
   Text,
   Tooltip,
@@ -266,7 +266,7 @@ export default function ClassInfo({
             <div>
               <Button
                 variant="secondary"
-                iconRight={<IconMenu />}
+                iconRight={<IconOptionsVertical />}
                 onClick={() => setShowTooltip(!showTooltip)}
                 ref={toolTipRef}
               >
