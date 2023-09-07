@@ -50,6 +50,7 @@ import { setNotification } from '@app/common/components/notifications/notificati
 import { TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import Image from 'next/image';
+import { IconBold, IconItalics, IconQuotes } from 'suomifi-icons';
 
 export default function Documentation({
   modelId,
@@ -331,10 +332,15 @@ export default function Documentation({
 
     return (
       <DrawerContent height={headerHeight} spaced>
-        <div>
-          {t('updated')}: <FormattedDate date={modelData?.modified} />
-          {modelData?.modifier.name ? `, ${modelData.modifier.name}` : ''}
-        </div>
+        {modelData?.modified !== modelData?.created ? (
+          <div>
+            {t('updated')}: <FormattedDate date={modelData?.modified} />
+            {modelData?.modifier.name ? `, ${modelData.modifier.name}` : ''}
+          </div>
+        ) : (
+          <></>
+        )}
+
         <div>
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
@@ -385,51 +391,50 @@ export default function Documentation({
 
         <ContentWrapper>
           <div>
-            {/* First 3 buttons use chars instead of Icons because they aren't available yet */}
             <ControlsRow>
               <div>
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('bold')}
                   id="bold-button"
-                >
-                  B
-                </ControlButton>
+                  icon={<IconBold />}
+                />
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('italic')}
                   id="italic-button"
-                >
-                  I
-                </ControlButton>
+                  icon={<IconItalics />}
+                />
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('quote')}
                   id="quote-button"
-                >
-                  ``
-                </ControlButton>
+                  icon={<IconQuotes />}
+                />
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('listBulleted')}
                   id="list-bulleted-button"
-                >
-                  <IconListBulleted />
-                </ControlButton>
+                  icon={<IconListBulleted />}
+                />
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('listNumbered')}
                   id="list-numbered-button"
-                >
-                  <IconListNumbered />
-                </ControlButton>
+                  icon={<IconListNumbered />}
+                />
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('link')}
                   id="link-button"
-                >
-                  <IconAttachment />
-                </ControlButton>
+                  icon={<IconAttachment />}
+                />
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('image')}
                   id="image-button"
-                >
-                  <IconImage />
-                </ControlButton>
+                  icon={<IconImage />}
+                />
               </div>
               <HintText>
                 {value[currentLanguage]?.length ?? 0} / 5000 {t('characters')}
