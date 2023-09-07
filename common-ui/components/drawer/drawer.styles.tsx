@@ -85,6 +85,8 @@ export const DrawerButtonGroup = styled.div<{ $isSmall: boolean }>`
   flex-direction: ${(props) => (props.$isSmall ? 'row' : 'column')};
   height: 100%;
   background: ${(props) => props.theme.suomifi.colors.highlightLight3};
+  overflow-y: auto;
+  overflow-x: hidden;
 
   ${(props) =>
     props.$isSmall

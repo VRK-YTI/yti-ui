@@ -365,12 +365,6 @@ export default function ResourceForm({
           >
             {t('back', { ns: 'common' })}
           </Button>
-        </div>
-        <HeaderRow>
-          <Text variant="bold">
-            {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
-              translateCommonForm('name', data.type, t)}
-          </Text>
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <Button onClick={() => handleSubmit()} id="submit-button">
@@ -397,6 +391,13 @@ export default function ResourceForm({
               {t('cancel-variant')}
             </Button>
           </div>
+        </div>
+
+        <HeaderRow>
+          <Text variant="bold">
+            {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
+              translateCommonForm('name', data.type, t)}
+          </Text>
         </HeaderRow>
 
         {userPosted &&
