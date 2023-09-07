@@ -10,6 +10,15 @@ module.exports = () => {
     eslint: {
       dirs: ['src'],
     },
+    images: {
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: '**',
+          pathname: '**',
+        },
+      ],
+    },
     i18n,
     async headers() {
       const isProd = process.env.NODE_ENV === 'production';

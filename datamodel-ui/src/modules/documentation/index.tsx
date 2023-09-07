@@ -49,6 +49,7 @@ import { useSelector } from 'react-redux';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
+import Image from 'next/image';
 
 export default function Documentation({
   modelId,
@@ -83,6 +84,36 @@ export default function Documentation({
   const { data: modelData, refetch } = useGetModelQuery(modelId);
   const [updateModel, result] = useUpdateModelMutation();
 
+  const validImgUrl = (url: string): boolean => {
+    const regex = /^http(s)?:\/\/.*\.(jpg|jpeg|png|gif)$/g;
+    return regex.test(url);
+  };
+
+  const imgProps = (props: { src?: string; alt?: string }) => {
+    if (!props.src || !validImgUrl(props.src)) {
+      return <></>;
+    }
+
+    const src = props.src.replace('http://', 'https://');
+    const height = props.alt
+      ?.match(/height:[0-9]+px/g)?.[0]
+      ?.split(':')?.[1]
+      ?.replace('px', '');
+    const width = props.alt
+      ?.match(/width:[0-9]+px/g)?.[0]
+      ?.split(':')?.[1]
+      ?.replace('px', '');
+
+    return (
+      <Image
+        src={src.startsWith('https://') ? src : ''}
+        alt={'Markdown image'}
+        width={width ?? 350}
+        height={height ?? 190}
+      />
+    );
+  };
+
   const handleSubmit = () => {
     disableConfirmation();
     dispatch(setHasChanges(false));
@@ -105,6 +136,16 @@ export default function Documentation({
   const handleCancel = () => {
     setUserPosted(false);
     setIsEdit(false);
+    setValue(
+      modelData?.documentation
+        ? Object.keys(modelData.documentation).length > 0
+          ? modelData.documentation
+          : modelData.languages.reduce(
+              (acc, lang) => ({ ...acc, [lang]: '' }),
+              {}
+            )
+        : {}
+    );
     dispatch(setHasChanges(false));
     disableConfirmation();
   };
@@ -184,12 +225,18 @@ export default function Documentation({
   }, [ref]);
 
   useEffect(() => {
-    if (modelData && !isEdit) {
-      setValue(modelData.documentation ?? '');
-    }
+    if (modelData) {
+      if (Object.keys(modelData.documentation).length < 1) {
+        setValue(
+          modelData.languages.reduce(
+            (acc, lang) => ({ ...acc, [lang]: '' }),
+            {}
+          )
+        );
+      } else {
+        setValue(modelData.documentation);
+      }
 
-    if (modelData && Object.keys(value).length === 0) {
-      setValue(modelData.documentation);
       setCurrentLanguage(
         modelData.languages.includes(i18n.language)
           ? i18n.language
@@ -197,7 +244,7 @@ export default function Documentation({
               'fi'
       );
     }
-  }, [modelData, isEdit, i18n.language, value]);
+  }, [modelData, i18n.language]);
 
   useEffect(() => {
     if (result.isSuccess) {
@@ -289,12 +336,23 @@ export default function Documentation({
           {modelData?.modifier.name ? `, ${modelData.modifier.name}` : ''}
         </div>
         <div>
-          <ReactMarkdown remarkPlugins={[remarkGfm]} unwrapDisallowed={false}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            unwrapDisallowed={false}
+            components={{
+              img: (props) => imgProps(props),
+            }}
+          >
             {getLanguageVersion({
               data: modelData?.documentation,
               lang: displayLang ?? i18n.language,
-              appendLocale: true,
-            })}
+            }) !== ''
+              ? getLanguageVersion({
+                  data: modelData?.documentation,
+                  lang: displayLang ?? i18n.language,
+                  appendLocale: true,
+                })
+              : ''}
           </ReactMarkdown>
         </div>
       </DrawerContent>
@@ -413,7 +471,13 @@ export default function Documentation({
                 {t('preview')}
               </Text>
             </div>
-            <ReactMarkdown remarkPlugins={[remarkGfm]} unwrapDisallowed={false}>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              unwrapDisallowed={false}
+              components={{
+                img: (props) => imgProps(props),
+              }}
+            >
               {value[currentLanguage]}
             </ReactMarkdown>
           </div>
