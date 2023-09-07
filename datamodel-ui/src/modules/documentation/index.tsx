@@ -94,6 +94,7 @@ export default function Documentation({
       return <></>;
     }
 
+    const src = props.src.replace('http://', 'https://');
     const height = props.alt
       ?.match(/height:[0-9]+px/g)?.[0]
       ?.split(':')?.[1]
@@ -105,13 +106,7 @@ export default function Documentation({
 
     return (
       <Image
-        src={
-          props.src.startsWith('https://')
-            ? props.src
-            : props.src.startsWith('http://')
-            ? props.src.replace('http', 'https')
-            : ''
-        }
+        src={src.startsWith('https://') ? src : ''}
         alt={'Markdown image'}
         width={width ?? 350}
         height={height ?? 190}
