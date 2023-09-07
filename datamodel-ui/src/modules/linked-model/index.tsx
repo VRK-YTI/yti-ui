@@ -178,7 +178,14 @@ export default function LinkedModel({
             disabled={
               showExternalForm
                 ? Object.values(data).filter((val) => val !== '').length < 3
-                : selected.length < 1
+                : (initialData.internalNamespaces.length === 0 &&
+                    selected.length === 0) ||
+                  (selected.length === initialData.internalNamespaces.length &&
+                    selected.every((s) =>
+                      initialData.internalNamespaces
+                        .map((i) => i.namespace)
+                        .includes(s.namespace)
+                    ))
             }
             id="submit-button"
           >
