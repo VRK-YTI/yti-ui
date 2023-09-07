@@ -85,8 +85,6 @@ export const DrawerButtonGroup = styled.div<{ $isSmall: boolean }>`
   flex-direction: ${(props) => (props.$isSmall ? 'row' : 'column')};
   height: 100%;
   background: ${(props) => props.theme.suomifi.colors.highlightLight3};
-  overflow-y: auto;
-  overflow-x: hidden;
 
   ${(props) =>
     props.$isSmall
@@ -101,13 +99,16 @@ export const DrawerButtonGroup = styled.div<{ $isSmall: boolean }>`
       }
       `
       : `
-  > button {
-    border-top: 1px solid ${props.theme.suomifi.colors.whiteBase} !important;
-    border-bottom: 1px solid ${props.theme.suomifi.colors.whiteBase} !important;
-    font-size: 12px;
-    padding: 20px 10px;
-    height: min-content;
-  }
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      > button {
+        border-top: 1px solid ${props.theme.suomifi.colors.whiteBase} !important;
+        border-bottom: 1px solid ${props.theme.suomifi.colors.whiteBase} !important;
+        font-size: 12px;
+        padding: 20px 10px;
+        height: min-content;
+      }
   `}
 `;
 
