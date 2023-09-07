@@ -189,6 +189,7 @@ export default function ResourceInfo({
               data={resourceData}
               modelId={data.modelId}
               displayLabel
+              hideInUse
               applicationProfile={applicationProfile}
             />
           </>
