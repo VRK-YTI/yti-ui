@@ -206,7 +206,6 @@ export default function AttributeRestrictions({
               itemAdditionHelpText=""
               chipListVisible
               onItemSelectionsChange={(e) => {
-                console.log(e);
                 return handleUpdate(
                   'allowedValues',
                   e.map((val) => {
@@ -258,7 +257,6 @@ export default function AttributeRestrictions({
               {data.allowedValues && (
                 <>
                   {data.allowedValues.map((value) => {
-                    console.log(value);
                     return (
                       <TextInput
                         key={`allowed-value-${value.id}`}

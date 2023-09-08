@@ -185,6 +185,7 @@ export default function LinkedDataForm({
               <>
                 {t('linked-codelists', { ns: 'common' })}
                 <Text smallScreen style={{ color: '#5F686D' }}>
+                  {' '}
                   ({t('optional')})
                 </Text>
               </>
