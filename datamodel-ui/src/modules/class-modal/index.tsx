@@ -98,7 +98,7 @@ export default function ClassModal({
 
   const handleSubmit = () => {
     if (selectedId === '') {
-      setVisible(false);
+      handleClose();
       handleFollowUp();
       return;
     }
@@ -106,7 +106,7 @@ export default function ClassModal({
     const target = result.data?.responseObjects.find(
       (r) => r.id === selectedId
     );
-    setVisible(false);
+    handleClose();
     handleFollowUp(
       target,
       searchParams.limitToModelType === 'PROFILE' ?? undefined
