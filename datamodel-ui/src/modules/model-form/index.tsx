@@ -30,6 +30,7 @@ import { Status } from '@app/common/interfaces/status.interface';
 import { FormUpdateErrors } from '../model/validate-form-update';
 import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
 import LinkBlock from './link-block';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 interface ModelFormProps {
   formData: ModelFormType;
@@ -247,9 +248,9 @@ export default function ModelForm({
           noItemsText={''}
           status={errors?.languageAmount ? 'error' : 'default'}
           disabled={disabled}
-          defaultSelectedItems={formData.languages.filter(
-            (lang) => lang.selected
-          )}
+          defaultSelectedItems={formData.languages
+            .filter((lang) => lang.selected)
+            .sort((a, b) => compareLocales(a.uniqueItemId, b.uniqueItemId))}
         />
       </div>
     );

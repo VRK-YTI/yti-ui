@@ -368,7 +368,7 @@ export default function ResourceForm({
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <Button onClick={() => handleSubmit()} id="submit-button">
-              {userPosted ? (
+              {updateResult.isLoading || createResult.isLoading ? (
                 <div role="alert">
                   <StyledSpinner
                     variant="small"

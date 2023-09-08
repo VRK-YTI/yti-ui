@@ -129,7 +129,7 @@ export default function ClassView({
           ],
         })
       );
-      setView('classes', 'edit');
+      setView('classes', 'create');
       return;
     }
 
@@ -137,7 +137,7 @@ export default function ClassView({
       setClass(internalClassToClassForm(value, languages, applicationProfile))
     );
 
-    setView('classes', 'edit');
+    setView('classes', 'create');
   };
 
   const handleAppProfileFollowUpAction = (data?: {
@@ -302,7 +302,7 @@ export default function ClassView({
   }
 
   function renderForm() {
-    if (!view.edit) {
+    if (!view.edit && !view.create) {
       return <></>;
     }
 

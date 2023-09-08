@@ -69,7 +69,6 @@ export default function Documentation({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [value, setValue] = useState<{ [key: string]: string }>({});
   const [isEdit, setIsEdit] = useState(false);
-  const [userPosted, setUserPosted] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(
     languages.sort((a, b) => compareLocales(a, b))[0]
   );
@@ -123,8 +122,6 @@ export default function Documentation({
       return;
     }
 
-    setUserPosted(true);
-
     const payload = generatePayload({ ...modelData, documentation: value });
 
     updateModel({
@@ -135,7 +132,6 @@ export default function Documentation({
   };
 
   const handleCancel = () => {
-    setUserPosted(false);
     setIsEdit(false);
     setValue(
       modelData?.documentation
@@ -250,7 +246,6 @@ export default function Documentation({
   useEffect(() => {
     if (result.isSuccess) {
       setIsEdit(false);
-      setUserPosted(false);
       disableConfirmation();
       refetch();
       dispatch(setNotification('DOCUMENTATION_EDIT'));
@@ -288,7 +283,7 @@ export default function Documentation({
               }}
             >
               <Button onClick={() => handleSubmit()} id="submit-button">
-                {userPosted ? (
+                {result.isLoading ? (
                   <div role="alert">
                     <StyledSpinner
                       variant="small"
