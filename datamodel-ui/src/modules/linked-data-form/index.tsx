@@ -258,6 +258,7 @@ export default function LinkedDataForm({
                     externalNamespaces: [...data.externalNamespaces, external],
                   })
                 }
+                currentModel={model.prefix}
               />
             </div>
           }

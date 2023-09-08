@@ -23,12 +23,14 @@ import { useGetAllCodesQuery } from '@app/common/components/code/code.slice';
 
 export default function CommonViewContent({
   modelId,
+  hideInUse,
   inUse,
   data,
   displayLabel,
   applicationProfile,
 }: {
   modelId: string;
+  hideInUse?: boolean;
   inUse?: boolean;
   data: Resource;
   displayLabel?: boolean;
@@ -315,7 +317,7 @@ export default function CommonViewContent({
 
   return (
     <>
-      {applicationProfile && (
+      {!hideInUse && applicationProfile && (
         <BasicBlock title={t('in-use-in-this-model', { ns: 'admin' })}>
           {inUse
             ? t('in-use', { ns: 'admin' })
