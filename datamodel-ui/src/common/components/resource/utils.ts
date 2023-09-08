@@ -1,6 +1,7 @@
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Status } from '@app/common/interfaces/status.interface';
+import { UriData } from '@app/common/interfaces/uri.interface';
 
 export interface LibraryResourcePutType {
   label: {
@@ -77,7 +78,11 @@ export function convertToPayload(
         return true;
       })
       .map((e) => {
-        if (e[0] === 'range' || e[0] === 'domain' || e[0] === 'dataType') {
+        if (e[0] === 'range' || e[0] === 'domain') {
+          return [e[0], e[1].uri];
+        }
+
+        if (e[0] === 'dataType') {
           return [e[0], e[1].id];
         }
 
@@ -85,7 +90,7 @@ export function convertToPayload(
           return [
             e[0],
             e[1]
-              .map((r: { label: string; uri: string }) => r.uri)
+              .map((r: UriData) => r.uri)
               .filter(
                 (r: string) =>
                   [

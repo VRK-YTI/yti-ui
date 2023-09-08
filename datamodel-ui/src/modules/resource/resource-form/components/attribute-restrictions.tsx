@@ -160,12 +160,8 @@ export default function AttributeRestrictions({
           }}
           items={
             data.codeLists?.map((cl) => ({
-              id: cl.id,
-              label: getLanguageVersion({
-                data: cl.prefLabel,
-                lang: i18n.language,
-                appendLocale: true,
-              }),
+              uri: cl.id,
+              label: cl.prefLabel,
             })) ?? []
           }
           label={t('codelist')}

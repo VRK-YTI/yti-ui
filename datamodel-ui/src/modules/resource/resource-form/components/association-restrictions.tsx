@@ -95,7 +95,7 @@ export default function AssociationRestrictions({
           handleRemoval={() => handleUpdate('classType', undefined)}
           items={
             data.classType
-              ? [{ id: data.classType, label: data.classType }]
+              ? [{ uri: data.classType, label: { en: data.classType } }]
               : []
           }
           label={`${t('association-targets-class', {
