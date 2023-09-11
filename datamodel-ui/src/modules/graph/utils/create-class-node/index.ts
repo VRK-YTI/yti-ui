@@ -25,8 +25,7 @@ export default function createClassNode(
         })),
         ...(applicationProfile
           ? node.associations.map((a) => ({
-              identifier: a.identifier,
-              label: a.label,
+              ...a,
               type: ResourceType.ASSOCIATION,
             }))
           : []),

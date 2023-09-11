@@ -229,13 +229,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
             key={`${id}-child-${r.identifier}`}
             className="node-resource"
             onClick={() => handleResourceClick(r.identifier, r.type)}
-            $highlight={
-              (globalSelected.type === 'associations'
-                ? ResourceType.ASSOCIATION
-                : ResourceType.ATTRIBUTE) === r.type &&
-              globalSelected.id !== '' &&
-              globalSelected.id === r.identifier
-            }
+            $highlight={getAttributeHighlighted(r.identifier, r.type)}
             onMouseEnter={() => handleResourceHover(r.identifier, r.type)}
             onMouseLeave={() => handleResourceHover(r.identifier, r.type, true)}
           >
@@ -251,6 +245,31 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
         ))}
     </ClassNodeDiv>
   );
+
+  function getAttributeHighlighted(
+    id: string,
+    type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE
+  ) {
+    if (
+      (globalHover.id === id || globalSelected.id === id) &&
+      type === ResourceType.ASSOCIATION &&
+      (globalHover.type === 'associations' ||
+        globalSelected.type === 'associations')
+    ) {
+      return true;
+    }
+
+    if (
+      (globalHover.id === id || globalSelected.id === id) &&
+      type === ResourceType.ATTRIBUTE &&
+      (globalHover.type === 'attributes' ||
+        globalSelected.type === 'attributes')
+    ) {
+      return true;
+    }
+
+    return false;
+  }
 
   function renderClassLabel() {
     if (!data.applicationProfile) {
