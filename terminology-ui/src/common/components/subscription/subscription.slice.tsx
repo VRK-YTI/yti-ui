@@ -19,7 +19,7 @@ export const subscriptionApi = createApi({
     getSubscription: builder.query<Subscription | '', string>({
       query: (url) => ({
         url:
-          process.env.ENV_TYPE !== 'production'
+          process.env.ENV_TYPE === 'development'
             ? '/subscriptions?fake.login.mail=admin@localhost'
             : '/subscriptions',
         method: 'POST',
@@ -32,7 +32,7 @@ export const subscriptionApi = createApi({
     getSubscriptions: builder.query<Subscriptions, void>({
       query: () => ({
         url:
-          process.env.ENV_TYPE !== 'production'
+          process.env.ENV_TYPE === 'development'
             ? '/user?fake.login.mail=admin@localhost'
             : '/user',
         method: 'GET',
@@ -44,7 +44,7 @@ export const subscriptionApi = createApi({
     >({
       query: (params) => ({
         url:
-          process.env.ENV_TYPE !== 'production'
+          process.env.ENV_TYPE === 'development'
             ? '/subscriptions?fake.login.mail=admin@localhost'
             : '/subscriptions',
         method: 'POST',
@@ -59,7 +59,7 @@ export const subscriptionApi = createApi({
     toggleSubscriptions: builder.mutation<Subscriptions, 'DAILY' | 'DISABLED'>({
       query: (subscriptionType) => ({
         url:
-          process.env.NODE_ENV === 'development'
+          process.env.ENV_TYPE === 'development'
             ? '/user/subscriptiontype?fake.login.mail=admin@localhost'
             : '/user/subscriptiontype',
         method: 'POST',
