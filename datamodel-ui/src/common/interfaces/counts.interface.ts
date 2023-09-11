@@ -5,9 +5,7 @@ export interface CountsType {
     [key: string]: number;
   };
   languages: {
-    fi: number;
-    sv: number;
-    en: number;
+    [key: string]: number;
   };
   statuses: {
     [key in Status]: number;
