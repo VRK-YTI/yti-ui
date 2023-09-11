@@ -102,7 +102,7 @@ export default function ClassModal({
       handleFollowUp();
       return;
     }
-    console.info('submit', result.data);
+
     const target = result.data?.responseObjects.find(
       (r) => r.id === selectedId
     );
