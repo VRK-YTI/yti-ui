@@ -229,7 +229,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
             key={`${id}-child-${r.identifier}`}
             className="node-resource"
             onClick={() => handleResourceClick(r.identifier, r.type)}
-            $highlight={getAttributeHighlighted(r.identifier, r.type)}
+            $highlight={getResourceHighlighted(r.identifier, r.type)}
             onMouseEnter={() => handleResourceHover(r.identifier, r.type)}
             onMouseLeave={() => handleResourceHover(r.identifier, r.type, true)}
           >
@@ -246,7 +246,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
     </ClassNodeDiv>
   );
 
-  function getAttributeHighlighted(
+  function getResourceHighlighted(
     id: string,
     type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE
   ) {
