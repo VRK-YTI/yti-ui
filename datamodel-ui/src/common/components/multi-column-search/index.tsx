@@ -4,8 +4,8 @@ import { useMemo, useState } from 'react';
 import {
   Dropdown,
   DropdownItem,
+  MultiSelect,
   SearchInput,
-  SingleSelect,
   SingleSelectData,
 } from 'suomifi-ui-components';
 import { SearchToolsBlock } from './multi-column-search.styles';
@@ -16,6 +16,7 @@ import { InternalResourcesSearchParams } from '../search-internal-resources/sear
 import { Status } from 'yti-common-ui/interfaces/status.interface';
 import ResourceList, { ResultType } from '../resource-list';
 import { DetachedPagination } from 'yti-common-ui/pagination';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 interface MultiColumnSearchProps {
   primaryColumnName: string;
@@ -236,28 +237,60 @@ export default function MultiColumnSearch({
           ))}
         </Dropdown>
 
-        <SingleSelect
+        <MultiSelect
           labelText={t('information-domain')}
-          itemAdditionHelpText=""
+          items={serviceCategories.sort((a, b) => {
+            if (a.uniqueItemId === '-1' || b.uniqueItemId === '-1') {
+              return a.uniqueItemId === '-1' ? -1 : 1;
+            }
+
+            if (
+              !searchParams.groups ||
+              searchParams.groups.length === 0 ||
+              (searchParams.groups?.includes(a.uniqueItemId) &&
+                searchParams.groups?.includes(b.uniqueItemId))
+            ) {
+              return compareLocales(a.labelText, b.labelText);
+            }
+
+            return searchParams.groups?.includes(a.uniqueItemId) ? -1 : 1;
+          })}
+          defaultSelectedItems={serviceCategories.filter(
+            (category) => category.uniqueItemId === '-1'
+          )}
+          selectedItems={
+            searchParams.groups && searchParams.groups.length > 0
+              ? serviceCategories.filter((category) =>
+                  searchParams.groups?.includes(category.uniqueItemId)
+                )
+              : [
+                  serviceCategories.find(
+                    (category) => category.uniqueItemId === '-1'
+                  ) as SingleSelectData,
+                ]
+          }
+          noItemsText=""
           ariaOptionsAvailableText={
             t('information-domains-available') as string
           }
-          clearButtonLabel={t('clear-selection')}
-          defaultSelectedItem={serviceCategories.find(
-            (category) => category.uniqueItemId === '-1'
-          )}
-          onItemSelect={(e) =>
+          ariaOptionChipRemovedText=""
+          ariaSelectedAmountTextFunction={() => ''}
+          onItemSelectionsChange={(values) => {
+            if (
+              values.length < 1 ||
+              values[values.length - 1]?.uniqueItemId === '-1'
+            ) {
+              handleSearchChange('groups', ['-1']);
+              return;
+            }
+
             handleSearchChange(
               'groups',
-              e !== null && e !== '-1' ? [e] : ['-1']
-            )
-          }
-          selectedItem={serviceCategories.find((category) =>
-            searchParams.groups && searchParams.groups.length > 0
-              ? category.uniqueItemId === searchParams.groups[0]
-              : category.uniqueItemId === '-1'
-          )}
-          items={serviceCategories}
+              values
+                .map((val) => val.uniqueItemId)
+                .filter((val) => val !== '-1')
+            );
+          }}
           id="information-domain-picker"
         />
 
