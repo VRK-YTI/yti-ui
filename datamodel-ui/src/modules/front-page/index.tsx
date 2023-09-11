@@ -108,10 +108,6 @@ export default function FrontPage() {
     return [...promoted, ...otherLanguages];
   }, [languagesData, counts]);
 
-  useEffect(() => {
-    console.log(i18n.language);
-  }, [i18n]);
-
   const data: SearchResultData[] = useMemo(() => {
     if (!searchModels || !organizationsData || !serviceCategoriesData) {
       return [];
