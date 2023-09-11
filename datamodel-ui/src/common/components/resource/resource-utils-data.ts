@@ -155,7 +155,11 @@ export const applicationProfileAttribute: ResourceFormType = {
   status: 'VALID',
   note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
   path: { uri: 'path-uri', label: { en: 'path' }, curie: 'path-uri' },
-  classType: 'class-type',
+  classType: {
+    uri: 'class-type',
+    label: { en: 'class-type' },
+    curie: 'class-type',
+  },
   type: ResourceType.ATTRIBUTE,
   dataType: { id: 'data-type', label: 'data-type' },
   allowedValues: [
@@ -187,7 +191,11 @@ export const applicationProfileAssociation: ResourceFormType = {
   status: 'VALID',
   note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
   path: { uri: 'path-uri', label: { en: 'path' }, curie: 'path-uri' },
-  classType: 'class-type',
+  classType: {
+    uri: 'class-type',
+    label: { en: 'class-type' },
+    curie: 'class-type',
+  },
   type: ResourceType.ASSOCIATION,
   dataType: { id: 'data-type', label: 'data-type' },
   allowedValues: [

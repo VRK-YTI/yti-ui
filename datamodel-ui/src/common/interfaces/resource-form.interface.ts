@@ -8,7 +8,7 @@ export interface ResourceFormType {
     id: string;
     label: string;
   }[];
-  classType?: string;
+  classType?: UriData;
   codeLists?: {
     id: string;
     prefLabel: { [key: string]: string };

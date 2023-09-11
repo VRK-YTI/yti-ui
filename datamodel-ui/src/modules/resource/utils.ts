@@ -7,7 +7,7 @@ import { v4 } from 'uuid';
 export function resourceToResourceFormType(data: Resource): ResourceFormType {
   return {
     ...data,
-    classType: data.classType ? data.classType.uri : undefined,
+    classType: data.classType,
     concept: data.subject,
     allowedValues: data.allowedValues?.map((value) => {
       return {

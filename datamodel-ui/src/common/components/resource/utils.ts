@@ -78,7 +78,12 @@ export function convertToPayload(
         return true;
       })
       .map((e) => {
-        if (e[0] === 'range' || e[0] === 'domain') {
+        if (
+          e[0] === 'range' ||
+          e[0] === 'domain' ||
+          e[0] === 'classType' ||
+          e[0] === 'path'
+        ) {
           return [e[0], e[1].uri];
         }
 
@@ -100,10 +105,6 @@ export function convertToPayload(
                   ].includes(r) === false
               ),
           ];
-        }
-
-        if (e[0] === 'path' && typeof e[1] !== 'string') {
-          return [e[0], e[1].uri];
         }
 
         if (e[0] === 'codeLists' && e[1].length > 0) {
