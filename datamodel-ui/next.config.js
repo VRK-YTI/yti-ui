@@ -103,6 +103,10 @@ module.exports = () => {
             source: '/codelist-api/:path*',
             destination: 'https://koodistot.suomi.fi/codelist-api/:path*',
           },
+          {
+            source: '/messaging-api/:path*',
+            destination: 'http://localhost:9801/messaging-api/:path*',
+          },
         ];
       },
     };
@@ -128,6 +132,10 @@ module.exports = () => {
             source: '/codelist-api/:path*',
             destination:
               'http://yti-codelist-public-api-service:9601/codelist-api/:path*',
+          },
+          {
+            source: '/messaging-api/:path*',
+            destination: 'http://yti-messaging-api:9801/messaging-api/:path*',
           },
         ];
       },

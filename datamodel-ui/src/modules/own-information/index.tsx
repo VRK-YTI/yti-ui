@@ -5,10 +5,19 @@ import {
   OrgsAndRolesWrapper,
   PageContent,
 } from './own-information.styles';
-import { Heading } from 'suomifi-ui-components';
+import {
+  Alert,
+  Button,
+  Heading,
+  IconAlert,
+  IconAlertOff,
+  IconMessage,
+  InlineAlert,
+  ToggleButton,
+} from 'suomifi-ui-components';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
-import { BasicBlock } from 'yti-common-ui/block';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import Separator from 'yti-common-ui/separator';
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
@@ -70,6 +79,47 @@ export default function OwnInformation() {
               </div>
             ))}
           </OrgsAndRolesWrapper>
+        </BasicBlock>
+
+        <BasicBlock
+          title="Käyttöoikeuspyyntö"
+          extra={
+            <BasicBlockExtraWrapper>
+              <Button variant="secondary" icon={<IconMessage />}>
+                Tee käyttöoikeuspyyntö
+              </Button>
+            </BasicBlockExtraWrapper>
+          }
+        >
+          Jos haluat muokkausoikeudet sisältöihin, tee käyttöoikeuspyyntö.
+          Pyynnön käsittelee organisaation pääkäyttäjä.
+        </BasicBlock>
+
+        <Separator isLarge />
+
+        <BasicBlock
+          title="Sähköposti-ilmoitukset"
+          extra={
+            <BasicBlockExtraWrapper>
+              <ToggleButton>Sähköposti-ilmoitukset</ToggleButton>
+              <InlineAlert>Sähköposti-ilmoitukset päällä</InlineAlert>
+            </BasicBlockExtraWrapper>
+          }
+        >
+          Kun ilmoitustoiminto on päällä, saat ilmoitukset muutoksista kerran
+          päivässä. Voit halutessasi laittaa ilmoitustoiminnon pois päältä,
+          jolloin et saa ilmoituksia sähköpostiisi.
+        </BasicBlock>
+
+        <BasicBlock title="Sanastoaineistot, joista on tilattu ilmoitukset">
+          <div>
+            <div>
+              link <IconAlert />
+            </div>
+            <div>
+              link <IconAlertOff />
+            </div>
+          </div>
         </BasicBlock>
       </PageContent>
     </>
