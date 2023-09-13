@@ -1,28 +1,20 @@
 import { ConceptType } from './concept-interface';
 import { SimpleResource } from './simple-resource.interface';
 import { Status } from './status.interface';
+import { UriData } from './uri.interface';
 
 export interface ClassFormType {
   editorialNote: string;
   concept?: ConceptType;
-  equivalentClass?: {
-    label: string;
-    identifier: string;
-  }[];
+  equivalentClass?: UriData[];
   identifier: string;
   label: { [key: string]: string };
   note: { [key: string]: string };
-  subClassOf?: {
-    label: string;
-    identifier: string;
-  }[];
-  disjointWith?: {
-    label: string;
-    id: string;
-  }[];
+  subClassOf?: UriData[];
+  disjointWith?: UriData[];
   status: Status;
-  targetClass?: { label: string; id: string };
-  node?: { label: string; id: string };
+  targetClass?: UriData;
+  node?: UriData;
   attribute?: SimpleResource[];
   association?: SimpleResource[];
 }

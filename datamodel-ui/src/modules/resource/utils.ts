@@ -7,7 +7,7 @@ import { v4 } from 'uuid';
 export function resourceToResourceFormType(data: Resource): ResourceFormType {
   return {
     ...data,
-    classType: data.classType ? data.classType.uri : undefined,
+    classType: data.classType,
     concept: data.subject,
     allowedValues: data.allowedValues?.map((value) => {
       return {
@@ -28,32 +28,19 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
     dataType: data.dataType
       ? { id: data.dataType, label: data.dataType }
       : undefined,
-    domain: data.domain
-      ? {
-          id: data.domain.uri,
-          label: data.domain.curie,
-        }
-      : undefined,
-    equivalentResource: data.equivalentResource
-      ? data.equivalentResource.map((er) => ({
-          label: er.curie,
-          uri: er.uri,
-        }))
-      : [],
-    path: data.path
-      ? {
-          id: data.path.uri,
-          label: data.path.curie,
-          uri: data.path.uri,
-        }
-      : undefined,
+    domain: data.domain,
+    equivalentResource: data.equivalentResource,
+    path: data.path,
     range: data.range
       ? {
-          id: data.range.uri,
-          label:
-            data.type == ResourceType.ASSOCIATION
-              ? data.range.curie
-              : data.range.uri,
+          uri: data.range.uri,
+          curie: data.range.curie,
+          label: {
+            en:
+              data.type == ResourceType.ASSOCIATION
+                ? data.range.curie ?? ''
+                : data.range.uri,
+          },
         }
       : undefined,
     subResourceOf:
@@ -65,15 +52,12 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
               sro.uri.endsWith('/owl#TopObjectProperty')
             ) {
               return {
-                label: sro.curie,
-                uri: sro.curie,
+                uri: sro.uri,
+                curie: sro.curie,
+                label: { en: sro.curie ? sro.curie?.replace('/owl#', '') : '' },
               };
             }
-
-            return {
-              label: sro.curie,
-              uri: sro.uri,
-            };
+            return sro;
           })
         : [],
   };

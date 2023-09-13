@@ -58,6 +58,8 @@ import {
   TEXT_INPUT_MAX,
 } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
+import { DEFAULT_SUBCLASS_OF } from '../class-view/utils';
+import { UriData } from '@app/common/interfaces/uri.interface';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -95,17 +97,13 @@ export default function ClassForm({
   const [showResourcePicker, setShowResourcePicker] = useState(false);
   const [selectedTargetClass, setSelectedTargetClass] = useState<{
     modelId: string;
-    classInfo: {
-      id: string;
-      identifier: string;
-      label: string;
-    };
+    classInfo: UriData;
   }>({
     modelId: '',
     classInfo: {
-      id: '',
-      identifier: '',
-      label: '',
+      uri: '',
+      curie: '',
+      label: {},
     },
   });
   const [updateClass, updateResult] = useUpdateClassMutation();
@@ -197,11 +195,7 @@ export default function ClassForm({
 
     setSelectedTargetClass({
       modelId: getPrefixFromURI(value.namespace) ?? '',
-      classInfo: {
-        identifier: value.identifier,
-        id: value.id,
-        label: value.curie,
-      },
+      classInfo: convertToUriData(value),
     });
     setShowResourcePicker(true);
   };
@@ -213,10 +207,7 @@ export default function ClassForm({
 
     handleUpdate({
       ...data,
-      node: {
-        id: value.id,
-        label: value.curie,
-      },
+      node: convertToUriData(value),
     });
   };
 
@@ -225,14 +216,9 @@ export default function ClassForm({
     attributes: SimpleResource[];
   }) => {
     setShowResourcePicker(false);
-    const targetClass = {
-      id: selectedTargetClass.classInfo.id,
-      label: selectedTargetClass.classInfo.label,
-      identifier: selectedTargetClass.classInfo.identifier,
-    };
     handleUpdate({
       ...data,
-      targetClass: targetClass,
+      targetClass: selectedTargetClass.classInfo,
       association: value?.associations ?? [],
       attribute: value?.attributes ?? [],
     });
@@ -244,18 +230,13 @@ export default function ClassForm({
   ) => {
     if (key === 'subClassOf') {
       const newSubClasses = data.subClassOf
-        ? data.subClassOf.filter((subclass) => subclass.identifier !== id)
+        ? data.subClassOf.filter((subclass) => subclass.uri !== id)
         : [];
 
       if (newSubClasses.length < 1) {
         handleUpdate({
           ...data,
-          subClassOf: [
-            {
-              identifier: 'owl:Thing',
-              label: 'owl:Thing',
-            },
-          ],
+          subClassOf: [DEFAULT_SUBCLASS_OF],
         });
       } else {
         handleUpdate({
@@ -269,7 +250,7 @@ export default function ClassForm({
       handleUpdate({
         ...data,
         equivalentClass: data.equivalentClass
-          ? data.equivalentClass.filter((item) => item.identifier !== id)
+          ? data.equivalentClass.filter((item) => item.uri !== id)
           : [],
       });
       return;
@@ -278,7 +259,7 @@ export default function ClassForm({
       handleUpdate({
         ...data,
         disjointWith: data.disjointWith
-          ? data.disjointWith.filter((item) => item.id !== id)
+          ? data.disjointWith.filter((item) => item.uri !== id)
           : [],
       });
     }
@@ -296,19 +277,13 @@ export default function ClassForm({
       const initData =
         data.subClassOf &&
         data.subClassOf.length === 1 &&
-        data.subClassOf[0].identifier === 'owl:Thing'
+        data.subClassOf[0].uri === 'owl:Thing'
           ? []
           : data.subClassOf ?? [];
 
       handleUpdate({
         ...data,
-        subClassOf: [
-          ...initData,
-          {
-            identifier: value.id,
-            label: value.curie,
-          },
-        ],
+        subClassOf: [...initData, convertToUriData(value)],
       });
       return;
     }
@@ -318,10 +293,7 @@ export default function ClassForm({
         ...data,
         equivalentClass: [
           ...(data.equivalentClass ?? []),
-          {
-            label: value.curie,
-            identifier: value.id,
-          },
+          convertToUriData(value),
         ],
       });
       return;
@@ -330,13 +302,7 @@ export default function ClassForm({
     if (key === 'disjointWith') {
       handleUpdate({
         ...data,
-        disjointWith: [
-          ...(data.disjointWith ?? []),
-          {
-            label: value.curie,
-            id: value.id,
-          },
-        ],
+        disjointWith: [...(data.disjointWith ?? []), convertToUriData(value)],
       });
     }
   };
@@ -411,6 +377,14 @@ export default function ClassForm({
       });
     }
   }, [updateResult, createResult, data, dispatch, handleFollowUp]);
+
+  const convertToUriData = (data: InternalClass) => {
+    return {
+      uri: data.id,
+      curie: data.curie,
+      label: data.label,
+    };
+  };
 
   return (
     <>
@@ -572,14 +546,7 @@ export default function ClassForm({
                 plusIcon
               />
             }
-            items={
-              data.subClassOf && data.subClassOf.length > 0
-                ? data.subClassOf.map((s) => ({
-                    label: s.label,
-                    id: s.identifier,
-                  }))
-                : []
-            }
+            items={data.subClassOf}
             label={`${t('upper-classes')} (rdfs:subClassOf)`}
             handleRemoval={(id: string) =>
               handleClassOfRemoval(id, 'subClassOf')
@@ -599,7 +566,7 @@ export default function ClassForm({
                   mode={'select'}
                   modalButtonLabel={t('select-class')}
                   handleFollowUp={handleTargetClassUpdate}
-                  initialSelected={data.targetClass?.id}
+                  initialSelected={data.targetClass?.uri}
                   applicationProfile
                   resourceRestriction
                 />
@@ -615,7 +582,7 @@ export default function ClassForm({
               visible={showResourcePicker}
               selectedNodeShape={{
                 modelId: selectedTargetClass.modelId,
-                classId: selectedTargetClass.classInfo.identifier,
+                classId: selectedTargetClass.classInfo.uri,
                 isAppProfile: false,
               }}
               handleFollowUp={handleResourceUpdate}
@@ -633,14 +600,7 @@ export default function ClassForm({
                 plusIcon
               />
             }
-            items={
-              data.equivalentClass
-                ? data.equivalentClass.map((ec) => ({
-                    label: ec.label,
-                    id: ec.identifier,
-                  }))
-                : []
-            }
+            items={data.equivalentClass}
             label={`${t('corresponding-classes')} (owl:equivalentClass)`}
             handleRemoval={(id: string) =>
               handleClassOfRemoval(id, 'equivalentClass')
@@ -657,7 +617,7 @@ export default function ClassForm({
                 mode={'select'}
                 modalButtonLabel={t('select-class-restriction')}
                 handleFollowUp={handleUtilizedNodeUpdate}
-                initialSelected={data.node?.id}
+                initialSelected={data.node?.uri}
                 applicationProfile
                 resourceRestriction
                 limitToModelType="PROFILE"
@@ -681,7 +641,7 @@ export default function ClassForm({
                 plusIcon
               />
             }
-            items={data.disjointWith ?? []}
+            items={data.disjointWith}
             handleRemoval={(id) => handleClassOfRemoval(id, 'disjointWith')}
           />
         )}

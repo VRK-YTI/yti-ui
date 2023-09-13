@@ -1,13 +1,14 @@
 import { ConceptType } from './concept-interface';
 import { ResourceType } from './resource-type.interface';
 import { Status } from './status.interface';
+import { UriData } from './uri.interface';
 
 export interface ResourceFormType {
   allowedValues?: {
     id: string;
     label: string;
   }[];
-  classType?: string;
+  classType?: UriData;
   codeLists?: {
     id: string;
     prefLabel: { [key: string]: string };
@@ -19,15 +20,9 @@ export interface ResourceFormType {
     label: string;
   };
   defaultValue?: string;
-  domain?: {
-    id: string;
-    label: string;
-  };
+  domain?: UriData;
   editorialNote?: string;
-  equivalentResource?: {
-    label: string;
-    uri: string;
-  }[];
+  equivalentResource?: UriData[];
   hasValue?: string;
   identifier: string;
   label: { [key: string]: string };
@@ -41,21 +36,11 @@ export interface ResourceFormType {
   minInclusive?: number;
   minLength?: number;
   note?: { [key: string]: string };
-  path?: {
-    id: string;
-    label: string;
-    uri: string;
-  };
+  path?: UriData;
   pattern?: string;
-  range?: {
-    id: string;
-    label: string;
-  };
+  range?: UriData;
   status: Status;
-  subResourceOf?: {
-    label: string;
-    uri: string;
-  }[];
+  subResourceOf?: UriData[];
   type: ResourceType;
 }
 
@@ -92,7 +77,11 @@ export const initialAttribute: ResourceFormType = {
   note: {},
   type: ResourceType.ATTRIBUTE,
   domain: undefined,
-  range: { id: 'rdfs:Literal', label: 'rdfs:Literal' },
+  range: {
+    uri: 'rdfs:Literal',
+    curie: 'rdfs:Literal',
+    label: { en: 'rdfs:Literal' },
+  },
 };
 
 export const initialAppAttribute: ResourceFormType = {
