@@ -13,7 +13,7 @@ export function internalClassToClassForm(
   data: InternalClass,
   languages: string[],
   applicationProfile?: boolean,
-  targetClass?: InternalClass,
+  targetIsAppProfile?: boolean,
   associations?: SimpleResource[],
   attributes?: SimpleResource[]
 ): ClassFormType {
@@ -34,11 +34,20 @@ export function internalClassToClassForm(
   } as ClassFormType;
 
   if (applicationProfile) {
-    obj['targetClass'] = {
-      uri: data.id,
-      curie: data.curie,
-      label: data.label,
-    };
+    if (targetIsAppProfile) {
+      obj['node'] = {
+        uri: data.id,
+        curie: data.curie,
+        label: data.label,
+      };
+    } else {
+      obj['targetClass'] = {
+        uri: data.id,
+        curie: data.curie,
+        label: data.label,
+      };
+    }
+
     obj['association'] = associations ?? [];
     obj['attribute'] = attributes ?? [];
   } else {
@@ -49,14 +58,6 @@ export function internalClassToClassForm(
         curie: data.curie,
       },
     ];
-  }
-
-  if (targetClass) {
-    obj['node'] = {
-      uri: targetClass.id,
-      curie: targetClass.curie,
-      label: data.label,
-    };
   }
 
   return obj;

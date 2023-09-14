@@ -341,11 +341,10 @@ export default function ClassInfo({
           {applicationProfile && hasPermission ? (
             <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
               <ResourceModal
-                applicationProfile
                 modelId={modelId}
                 type={ResourceType.ATTRIBUTE}
                 handleFollowUp={handleFollowUp}
-                limitSearchTo={'PROFILE'}
+                limitSearchTo={'LIBRARY'}
               />
               <Button variant="secondary" id="order-attributes-button">
                 {t('order-list', { ns: 'admin' })}
@@ -385,9 +384,9 @@ export default function ClassInfo({
           {applicationProfile && hasPermission ? (
             <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
               <ResourceModal
-                applicationProfile
                 modelId={modelId}
                 type={ResourceType.ASSOCIATION}
+                limitSearchTo="LIBRARY"
                 handleFollowUp={handleFollowUp}
               />
               <Button variant="secondary" id="order-associations-button">

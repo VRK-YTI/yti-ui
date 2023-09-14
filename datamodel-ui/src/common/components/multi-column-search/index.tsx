@@ -30,8 +30,7 @@ interface MultiColumnSearchProps {
   setSearchParams: (value: InternalResourcesSearchParams) => void;
   setContentLanguage: (value: string) => void;
   languageVersioned?: boolean;
-  applicationProfile?: boolean;
-  resourceRestriction?: boolean;
+  multiTypeSelection?: boolean;
   modelId: string;
 }
 
@@ -45,8 +44,7 @@ export default function MultiColumnSearch({
   setContentLanguage,
   languageVersioned,
   modelId,
-  applicationProfile,
-  resourceRestriction,
+  multiTypeSelection,
 }: MultiColumnSearchProps) {
   const { t, i18n } = useTranslation('admin');
   const {
@@ -170,7 +168,7 @@ export default function MultiColumnSearch({
 
   return (
     <div>
-      {applicationProfile && !resourceRestriction && (
+      {multiTypeSelection && (
         <div style={{ marginBottom: '20px' }}>
           <SearchInput
             className="wider"
@@ -187,8 +185,7 @@ export default function MultiColumnSearch({
         </div>
       )}
       <SearchToolsBlock>
-        {(!applicationProfile ||
-          (applicationProfile && resourceRestriction)) && (
+        {!multiTypeSelection && (
           <SearchInput
             className="wider"
             clearButtonLabel={t('clear-keyword-filter')}
@@ -202,12 +199,13 @@ export default function MultiColumnSearch({
           />
         )}
 
-        {applicationProfile && !resourceRestriction && (
+        {multiTypeSelection && (
           <Dropdown
             className="data-model-type-picker"
             labelText={t('datamodel-type')}
             defaultValue={'LIBRARY'}
             onChange={(e) => {
+              setSelectedId('');
               handleSearchChange('limitToModelType', e);
             }}
             id="data-model-type-picker"

@@ -133,7 +133,14 @@ export default function ClassView({
     }
 
     dispatch(
-      setClass(internalClassToClassForm(value, languages, applicationProfile))
+      setClass(
+        internalClassToClassForm(
+          value,
+          languages,
+          applicationProfile,
+          targetIsAppProfile
+        )
+      )
     );
 
     setView('classes', 'create');
@@ -142,10 +149,12 @@ export default function ClassView({
   const handleAppProfileFollowUpAction = (data?: {
     value?: InternalClass;
     targetClass?: InternalClass;
+    targetIsAppProfile?: boolean;
     associations?: SimpleResource[];
     attributes?: SimpleResource[];
   }) => {
     setShowAppProfileModal(false);
+    setSelectedNodeShape(undefined);
 
     if (!data || !data.value) {
       return;
@@ -157,7 +166,7 @@ export default function ClassView({
           data.value,
           languages,
           applicationProfile,
-          data.targetClass,
+          data.targetIsAppProfile,
           data.associations,
           data.attributes
         )
