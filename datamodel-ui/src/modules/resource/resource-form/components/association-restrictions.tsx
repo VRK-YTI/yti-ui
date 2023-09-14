@@ -5,7 +5,6 @@ import { useTranslation } from 'next-i18next';
 import { TextInput } from 'suomifi-ui-components';
 import ResourceModal from '../../resource-modal';
 import ClassModal from '@app/modules/class-modal';
-import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import styled from 'styled-components';
 
@@ -93,7 +92,6 @@ export default function AssociationRestrictions({
               }
               initialSelected={data.classType?.uri}
               applicationProfile
-              resourceRestriction
             />
           }
           handleRemoval={() => handleUpdate('classType', undefined)}
