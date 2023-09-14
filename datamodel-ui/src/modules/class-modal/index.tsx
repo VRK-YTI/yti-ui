@@ -32,7 +32,6 @@ export interface ClassModalProps {
   applicationProfile?: boolean;
   initialSelected?: string;
   plusIcon?: boolean;
-  resourceRestriction?: boolean;
   limitToModelType?: 'LIBRARY' | 'PROFILE';
 }
 
@@ -44,7 +43,6 @@ export default function ClassModal({
   applicationProfile,
   initialSelected,
   plusIcon,
-  resourceRestriction,
   limitToModelType,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
@@ -193,9 +191,8 @@ export default function ClassModal({
             setSearchParams={handleSearch}
             setContentLanguage={setContentLanguage}
             modelId={modelId}
-            applicationProfile={applicationProfile}
             languageVersioned
-            resourceRestriction={resourceRestriction}
+            multiTypeSelection={applicationProfile}
           />
         </ModalContent>
         <ModalFooter>

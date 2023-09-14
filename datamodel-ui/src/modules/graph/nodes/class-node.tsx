@@ -192,7 +192,6 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
                 open={showTooltip}
               >
                 <ResourceModal
-                  applicationProfile
                   modelId={'profile1'}
                   type={ResourceType.ATTRIBUTE}
                   handleFollowUp={handleMenuFollowUp}
@@ -202,7 +201,6 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
                 />
 
                 <ResourceModal
-                  applicationProfile
                   modelId={'profile1'}
                   type={ResourceType.ASSOCIATION}
                   handleFollowUp={handleMenuFollowUp}

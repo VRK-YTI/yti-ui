@@ -27,5 +27,10 @@ export const initialClassForm: ClassFormType = {
   label: {},
   note: {},
   subClassOf: [],
+  disjointWith: [],
   status: 'DRAFT',
+  targetClass: undefined,
+  node: undefined,
+  attribute: [],
+  association: [],
 };

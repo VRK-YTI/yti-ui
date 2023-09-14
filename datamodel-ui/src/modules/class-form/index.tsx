@@ -568,7 +568,6 @@ export default function ClassForm({
                   handleFollowUp={handleTargetClassUpdate}
                   initialSelected={data.targetClass?.uri}
                   applicationProfile
-                  resourceRestriction
                 />
               }
               items={data.targetClass ? [data.targetClass] : []}
@@ -609,23 +608,25 @@ export default function ClassForm({
         )}
 
         {applicationProfile ? (
-          <InlineListBlock
-            label={`${t('utilizes-class-restriction')} (sh:node)`}
-            addNewComponent={
-              <ClassModal
-                modelId={modelId}
-                mode={'select'}
-                modalButtonLabel={t('select-class-restriction')}
-                handleFollowUp={handleUtilizedNodeUpdate}
-                initialSelected={data.node?.uri}
-                applicationProfile
-                resourceRestriction
-                limitToModelType="PROFILE"
-              />
-            }
-            items={data.node ? [data.node] : []}
-            handleRemoval={() => handleUpdate({ ...data, node: undefined })}
-          />
+          <>
+            {data.node?.curie}
+            <InlineListBlock
+              label={`${t('utilizes-class-restriction')} (sh:node)`}
+              addNewComponent={
+                <ClassModal
+                  modelId={modelId}
+                  mode={'select'}
+                  modalButtonLabel={t('select-class-restriction')}
+                  handleFollowUp={handleUtilizedNodeUpdate}
+                  initialSelected={data.node?.uri}
+                  applicationProfile
+                  limitToModelType="PROFILE"
+                />
+              }
+              items={data.node ? [data.node] : []}
+              handleRemoval={() => handleUpdate({ ...data, node: undefined })}
+            />
+          </>
         ) : (
           <InlineListBlock
             label={`${t('disjoint-classes', {

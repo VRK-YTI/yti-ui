@@ -195,8 +195,6 @@ export default function ResourceModal({
             searchParams={searchParams}
             setSearchParams={handleSearch}
             setContentLanguage={setContentLanguage}
-            applicationProfile={applicationProfile}
-            resourceRestriction
             languageVersioned
             modelId={modelId}
           />
