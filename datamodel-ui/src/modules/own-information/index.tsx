@@ -1,127 +1,49 @@
-import { useTranslation } from 'next-i18next';
-import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
-import {
-  OrgsAndRolesUl,
-  OrgsAndRolesWrapper,
-  PageContent,
-} from './own-information.styles';
-import {
-  Alert,
-  Button,
-  Heading,
-  IconAlert,
-  IconAlertOff,
-  IconMessage,
-  InlineAlert,
-  ToggleButton,
-} from 'suomifi-ui-components';
-import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
-import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
-import Separator from 'yti-common-ui/separator';
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
+import { useGetRequestsQuery } from '@app/common/components/requests/requests.slice';
+import {
+  useGetSubscriptionsQuery,
+  useToggleSubscriptionMutation,
+  useToggleSubscriptionsMutation,
+} from '@app/common/components/subscription/subscription.slice';
+import { useTranslation } from 'next-i18next';
+import { useSelector } from 'react-redux';
+import { default as CommonOwnInformation } from 'yti-common-ui/modules/own-information';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import SubscriptionModal from 'yti-common-ui/modules/own-information/subscription-modal';
 
 export default function OwnInformation() {
   const user = useSelector(selectLogin());
-  const { t, i18n } = useTranslation('common');
+  const { i18n } = useTranslation('common');
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
-  // const { data: requests } = useGetRequestsQuery();
-
-  if (user.anonymous) {
-    return null;
-  }
+  const { data: subscriptions, refetch: refetchSubscriptions } =
+    useGetSubscriptionsQuery();
+  const { data: requests } = useGetRequestsQuery();
+  const [toggleSubscriptions, toggleResult] = useToggleSubscriptionsMutation();
+  const [toggleSubscription, result] = useToggleSubscriptionMutation();
 
   return (
-    <>
-      <Breadcrumb baseUrl={t('datamodel-title')}>
-        <BreadcrumbLink url="/own-information" current>
-          {t('own-information')}
-        </BreadcrumbLink>
-      </Breadcrumb>
-
-      <PageContent>
-        <Heading variant="h1">{t('own-information')}</Heading>
-
-        <BasicBlock title={t('name')}>
-          {`${user.firstName} ${user.lastName}`}
-        </BasicBlock>
-        <BasicBlock title={t('email-address')}>{user.email}</BasicBlock>
-
-        <Separator isLarge />
-
-        <BasicBlock
-          title="Organisaatiot ja roolit"
-          largeGap
-          id="organizations-and-roles"
-        >
-          <OrgsAndRolesWrapper>
-            {Object.entries(user.rolesInOrganizations).map((data) => (
-              <div key={data[0]}>
-                <BasicBlock title="Organisaatio">
-                  {organizations
-                    ? getLanguageVersion({
-                        data: organizations.find((org) => org.id === data[0])
-                          ?.label,
-                        lang: i18n.language,
-                        appendLocale: true,
-                      })
-                    : null}
-                </BasicBlock>
-
-                <BasicBlock title="Roolit">
-                  <OrgsAndRolesUl>
-                    {data[1].map((role) => (
-                      <li key={`${data[0]}-role-${role}`}>{role}</li>
-                    ))}
-                  </OrgsAndRolesUl>
-                </BasicBlock>
-              </div>
-            ))}
-          </OrgsAndRolesWrapper>
-        </BasicBlock>
-
-        <BasicBlock
-          title="Käyttöoikeuspyyntö"
-          extra={
-            <BasicBlockExtraWrapper>
-              <Button variant="secondary" icon={<IconMessage />}>
-                Tee käyttöoikeuspyyntö
-              </Button>
-            </BasicBlockExtraWrapper>
-          }
-        >
-          Jos haluat muokkausoikeudet sisältöihin, tee käyttöoikeuspyyntö.
-          Pyynnön käsittelee organisaation pääkäyttäjä.
-        </BasicBlock>
-
-        <Separator isLarge />
-
-        <BasicBlock
-          title="Sähköposti-ilmoitukset"
-          extra={
-            <BasicBlockExtraWrapper>
-              <ToggleButton>Sähköposti-ilmoitukset</ToggleButton>
-              <InlineAlert>Sähköposti-ilmoitukset päällä</InlineAlert>
-            </BasicBlockExtraWrapper>
-          }
-        >
-          Kun ilmoitustoiminto on päällä, saat ilmoitukset muutoksista kerran
-          päivässä. Voit halutessasi laittaa ilmoitustoiminnon pois päältä,
-          jolloin et saa ilmoituksia sähköpostiisi.
-        </BasicBlock>
-
-        <BasicBlock title="Sanastoaineistot, joista on tilattu ilmoitukset">
-          <div>
-            <div>
-              link <IconAlert />
-            </div>
-            <div>
-              link <IconAlertOff />
-            </div>
-          </div>
-        </BasicBlock>
-      </PageContent>
-    </>
+    <CommonOwnInformation
+      user={user}
+      organizations={organizations}
+      requests={requests}
+      subscriptions={subscriptions}
+      refetchSubscriptions={refetchSubscriptions}
+      toggleSubscriptions={toggleSubscriptions}
+      toggleSubscriptionsResult={toggleResult}
+      getLanguageVersion={getLanguageVersion}
+      renderSubscriptionModal={(props: {
+        resourceIds: string[];
+        singular?: boolean;
+      }) => (
+        <SubscriptionModal
+          toggleSubscription={toggleSubscription}
+          toggleSubscriptionResult={result}
+          refetchSubscriptions={refetchSubscriptions}
+          resourceIds={props.resourceIds}
+          singular={props.singular}
+        />
+      )}
+    />
   );
 }

@@ -23,6 +23,11 @@
       "@app/*": ["src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "../common-ui/modules/own-information/index.tsx"
+  ],
   "exclude": ["node_modules"]
 }

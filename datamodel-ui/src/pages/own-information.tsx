@@ -1,5 +1,4 @@
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
-import OwnInformation from '@app/modules/own-information';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import {
   CommonContextProvider,
@@ -7,6 +6,10 @@ import {
 } from 'yti-common-ui/common-context-provider';
 import Layout from 'yti-common-ui/layout/layout';
 import PageHead from 'yti-common-ui/page-head';
+import { getOrganizations } from '@app/common/components/organizations/organizations.slice';
+import { getSubscriptions } from '@app/common/components/subscription/subscription.slice';
+import { getRequests } from '@app/common/components/requests/requests.slice';
+import OwnInformation from '@app/modules/own-information';
 
 interface OwnInformationPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -33,10 +36,16 @@ export default function OwnInformationPage(props: OwnInformationPageProps) {
   );
 }
 
-export const getServerSideProps = createCommonGetServerSideProps(async () => {
-  return {
-    props: {
-      requireAuthenticated: true,
-    },
-  };
-});
+export const getServerSideProps = createCommonGetServerSideProps(
+  async ({ store, locale }) => {
+    store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
+    store.dispatch(getSubscriptions.initiate());
+    store.dispatch(getRequests.initiate());
+
+    return {
+      props: {
+        requireAuthenticated: true,
+      },
+    };
+  }
+);
