@@ -10,7 +10,7 @@ import {
 } from 'suomifi-ui-components';
 import { BasicBlock } from '../../components/block';
 import { NarrowModal } from './own-information.styles';
-import { Subscription } from 'interfaces/subscription.interface';
+import { Subscription } from '../../interfaces/subscription.interface';
 import { useTranslation } from 'next-i18next';
 
 interface SubscriptionModalProps {
