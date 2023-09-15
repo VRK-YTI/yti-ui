@@ -14,12 +14,12 @@ import {
 } from 'suomifi-ui-components';
 import { BasicBlock, BasicBlockExtraWrapper } from '../../components/block';
 import Separator from '../../components/separator';
-import PermissionModal from './permission-modal';
 import { User } from '../../interfaces/user.interface';
 import { Organization } from '../../interfaces/organization.interface';
 import { Request } from '../../interfaces/request.interface';
 import { Subscriptions } from '../../interfaces/subscription.interface';
 import { useEffect } from 'react';
+import { translateRole } from '../../utils/translation-helpers';
 
 interface OwnInformationProps {
   user: User;
@@ -32,6 +32,9 @@ interface OwnInformationProps {
     isLoading: boolean;
     data?: Subscriptions;
   };
+  renderPermissionModal: (props: {
+    organizations?: Organization[];
+  }) => JSX.Element;
   renderSubscriptionModal: (props: {
     resourceIds: string[];
     singular?: boolean;
@@ -51,6 +54,7 @@ export default function OwnInformation({
   requests,
   subscriptions,
   toggleSubscriptionsResult,
+  renderPermissionModal,
   renderSubscriptionModal,
   refetchSubscriptions,
   toggleSubscriptions,
@@ -65,6 +69,16 @@ export default function OwnInformation({
 
     toggleSubscriptions(
       subscriptions.subscriptionType === 'DAILY' ? 'DISABLED' : 'DAILY'
+    );
+  };
+
+  const hasRequestPending = (organizationId: string) => {
+    if (!requests) {
+      return false;
+    }
+
+    return requests.some(
+      (request) => request.organizationId === organizationId
     );
   };
 
@@ -102,14 +116,14 @@ export default function OwnInformation({
         <Separator isLarge />
 
         <BasicBlock
-          title="Organisaatiot ja roolit"
+          title={t('organizations-and-roles')}
           largeGap
           id="organizations-and-roles"
         >
           <OrgsAndRolesWrapper>
             {Object.entries(user.rolesInOrganizations).map((data) => (
               <div key={data[0]}>
-                <BasicBlock title="Organisaatio">
+                <BasicBlock title={t('organization')}>
                   {organizations
                     ? getLanguageVersion({
                         data: organizations.find((org) => org.id === data[0])
@@ -120,27 +134,30 @@ export default function OwnInformation({
                     : null}
                 </BasicBlock>
 
-                <BasicBlock title="Roolit">
+                <BasicBlock title={t('roles.roles')}>
                   <OrgsAndRolesUl>
                     {data[1].map((role) => (
-                      <li key={`${data[0]}-role-${role}`}>{role}</li>
+                      <li key={`${data[0]}-role-${role}`}>
+                        {translateRole(role, t)}
+                      </li>
                     ))}
                   </OrgsAndRolesUl>
                 </BasicBlock>
+
+                {hasRequestPending(data[0]) && (
+                  <InlineAlert>{t('access-request-sent')}</InlineAlert>
+                )}
               </div>
             ))}
           </OrgsAndRolesWrapper>
         </BasicBlock>
 
-        <PermissionModal
-          organizations={organizations}
-          getLanguageVersion={getLanguageVersion}
-        />
+        {renderPermissionModal({ organizations: organizations })}
 
         <Separator isLarge />
 
         <BasicBlock
-          title="Sähköposti-ilmoitukset"
+          title={t('email-subscriptions')}
           id="email-notifications"
           extra={
             <BasicBlockExtraWrapper>
@@ -148,7 +165,7 @@ export default function OwnInformation({
                 checked={subscriptions?.subscriptionType === 'DAILY' ?? false}
                 onClick={() => handleToggleClick()}
               >
-                Sähköposti-ilmoitukset
+                {t('email-subscriptions')}
               </ToggleButton>
               <InlineAlert
                 status={
@@ -158,20 +175,18 @@ export default function OwnInformation({
                 }
               >
                 {subscriptions?.subscriptionType === 'DAILY'
-                  ? 'Sähköposti-ilmoitukset päällä'
-                  : 'Sähköposti-ilmoitukset pois päältä'}
+                  ? t('email-subscriptions-on')
+                  : t('email-subscriptions-off')}
               </InlineAlert>
             </BasicBlockExtraWrapper>
           }
         >
-          Kun ilmoitustoiminto on päällä, saat ilmoitukset muutoksista kerran
-          päivässä. Voit halutessasi laittaa ilmoitustoiminnon pois päältä,
-          jolloin et saa ilmoituksia sähköpostiisi.
+          {t('subscription-description')}
         </BasicBlock>
 
-        <BasicBlock title="Sanastoaineistot, joista on tilattu ilmoitukset">
+        <BasicBlock title={t('subscribed-items')}>
           {!subscriptions || subscriptions.resources?.length < 1 ? (
-            <div>Ei tilattuja aineistoja</div>
+            <div>{t('no-subscribed-items')}</div>
           ) : (
             <>
               <SubscriptionsWrapper>

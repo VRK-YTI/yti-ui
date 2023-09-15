@@ -11,6 +11,7 @@ import {
 import { BasicBlock } from '../../components/block';
 import { NarrowModal } from './own-information.styles';
 import { Subscription } from 'interfaces/subscription.interface';
+import { useTranslation } from 'next-i18next';
 
 interface SubscriptionModalProps {
   resourceIds: string[];
@@ -35,6 +36,7 @@ export default function SubscriptionModal({
   refetchSubscriptions,
   toggleSubscription,
 }: SubscriptionModalProps) {
+  const { t } = useTranslation('common');
   const [visible, setVisible] = useState(false);
 
   const handleClick = () => {
@@ -59,7 +61,7 @@ export default function SubscriptionModal({
         onClick={() => setVisible(true)}
         id="remove-all-subscriptions-button"
       >
-        {!singular ? 'Poista kaikki ilmoitukset' : ''}
+        {!singular ? t('remove-all-subscriptions') : ''}
       </Button>
 
       <NarrowModal
@@ -68,17 +70,17 @@ export default function SubscriptionModal({
         onEscKeyDown={() => setVisible(false)}
       >
         <ModalContent>
-          <ModalTitle>Poista sähköposti-ilmoitukset</ModalTitle>
+          <ModalTitle>{t('remove-email-subscriptions')}</ModalTitle>
 
           <Paragraph>
-            <Text>
-              Kun poistat sähköposti-ilmoitukset, aineistoa ei enää näytetä
-              listalla. Voit lisätä aineistoon ilmoitukset aineiston omalta
-              sivulta.
-            </Text>
+            <Text>{t('remove-email-subscriptions-description')}</Text>
           </Paragraph>
 
-          <BasicBlock title="Aineisto, josta poistetaan ilmoitukset">
+          <BasicBlock
+            title={t('items-to-be-unscribed-from', {
+              count: resourceIds.length,
+            })}
+          >
             {resourceIds.map((id) => (
               <div key={id}>{id}</div>
             ))}
@@ -86,9 +88,14 @@ export default function SubscriptionModal({
         </ModalContent>
 
         <ModalFooter>
-          <Button onClick={() => handleClick()}>Poista</Button>
+          <Button
+            onClick={() => handleClick()}
+            disabled={toggleSubscriptionResult.isLoading}
+          >
+            {t('remove')}
+          </Button>
           <Button variant="secondary" onClick={() => setVisible(false)}>
-            Peruuta
+            {t('cancel')}
           </Button>
         </ModalFooter>
       </NarrowModal>
