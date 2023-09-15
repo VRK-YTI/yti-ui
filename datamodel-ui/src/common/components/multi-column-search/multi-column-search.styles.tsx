@@ -38,4 +38,9 @@ export const SearchToolsBlock = styled.div`
       white-space: nowrap !important;
     }
   }
+
+  .fi-filter-input_input::placeholder {
+    color: ${(props) => props.theme.suomifi.colors.blackBase};
+    font-style: normal;
+  }
 `;

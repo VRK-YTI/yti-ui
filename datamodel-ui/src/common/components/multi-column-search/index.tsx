@@ -256,6 +256,15 @@ export default function MultiColumnSearch({
           defaultSelectedItems={serviceCategories.filter(
             (category) => category.uniqueItemId === '-1'
           )}
+          visualPlaceholder={
+            !searchParams.groups || searchParams.groups.length < 1
+              ? t('information-domains-all')
+              : searchParams.groups.length > 1
+              ? t('selected-n-items', { count: searchParams.groups.length })
+              : serviceCategories.find(
+                  (c) => c.uniqueItemId === (searchParams.groups as string[])[0]
+                )?.labelText
+          }
           selectedItems={
             searchParams.groups && searchParams.groups.length > 0
               ? serviceCategories.filter((category) =>
