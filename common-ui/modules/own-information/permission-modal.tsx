@@ -192,7 +192,7 @@ export default function PermissionModal({
               disabled={getIsAlreadyRequested('TERMINOLOGY_EDITOR')}
               statusText={
                 getIsAlreadyRequested('TERMINOLOGY_EDITOR')
-                  ? 'Käyttöoikeus pyydetty jo' + t('access-already-requested')
+                  ? t('access-already-requested')
                   : ''
               }
               onClick={({ checkboxState }) =>
@@ -212,7 +212,7 @@ export default function PermissionModal({
               disabled={getIsAlreadyRequested('CODE_LIST_EDITOR')}
               statusText={
                 getIsAlreadyRequested('CODE_LIST_EDITOR')
-                  ? 'Käyttöoikeus pyydetty jo'
+                  ? t('access-already-requested')
                   : ''
               }
               onClick={({ checkboxState }) =>
@@ -230,7 +230,7 @@ export default function PermissionModal({
               disabled={getIsAlreadyRequested('DATA_MODEL_EDITOR')}
               statusText={
                 getIsAlreadyRequested('DATA_MODEL_EDITOR')
-                  ? 'Käyttöoikeus pyydetty jo'
+                  ? t('access-already-requested')
                   : ''
               }
               onClick={({ checkboxState }) =>

@@ -88,11 +88,6 @@ export default function OwnInformation({
     }
   }, [toggleSubscriptionsResult, refetchSubscriptions]);
 
-  console.log('user', user);
-  console.log('organizations', organizations);
-  console.log('requests', requests);
-  console.log('subscriptions', subscriptions);
-
   if (user.anonymous) {
     return null;
   }
