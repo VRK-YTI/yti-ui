@@ -42,6 +42,7 @@ import useSetView from '@app/common/utils/hooks/use-set-view';
 import useSetPage from '@app/common/utils/hooks/use-set-page';
 import { useReactFlow } from 'reactflow';
 import getConnectedElements from '../graph/utils/get-connected-elements';
+import { UriData } from '@app/common/interfaces/uri.interface';
 
 interface ResourceViewProps {
   modelId: string;
@@ -176,25 +177,17 @@ export default function ResourceView({
     dispatch(resetResource());
   };
 
-  const handleFollowUp = (value?: { label: string; uri: string }) => {
+  const handleFollowUp = (value?: UriData) => {
     if (applicationProfile) {
+      dispatch(initializeResource(type, languages, value, applicationProfile));
+    } else {
       dispatch(
         initializeResource(
           type,
           languages,
-          value
-            ? {
-                id: value.label,
-                label: value.label,
-                uri: value.uri,
-              }
-            : undefined,
+          value?.label['en'],
           applicationProfile
         )
-      );
-    } else {
-      dispatch(
-        initializeResource(type, languages, value?.label, applicationProfile)
       );
     }
 

@@ -20,6 +20,8 @@ import { useSelector } from 'react-redux';
 import { selectDisplayLang } from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 import { useGetAllCodesQuery } from '@app/common/components/code/code.slice';
+import UriList from '@app/common/components/uri-list';
+import UriInfo from '@app/common/components/uri-info';
 
 export default function CommonViewContent({
   modelId,
@@ -83,19 +85,11 @@ export default function CommonViewContent({
           {data.type === ResourceType.ASSOCIATION ? (
             <>
               <BasicBlock title={t('target-association', { ns: 'admin' })}>
-                {data.path ? (
-                  <Link href={data.path.uri}>{data.path.curie}</Link>
-                ) : (
-                  t('not-defined')
-                )}
+                <UriInfo uri={data.path} lang={displayLang} />
               </BasicBlock>
 
               <BasicBlock title={t('association-targets-class')}>
-                {data.classType?.curie ? (
-                  <Link href={data.classType.uri}>{data.classType.curie}</Link>
-                ) : (
-                  t('not-defined')
-                )}
+                <UriInfo uri={data.classType} lang={displayLang} />
               </BasicBlock>
 
               <BasicBlock title={t('minimum-count')}>
@@ -125,11 +119,7 @@ export default function CommonViewContent({
           ) : (
             <>
               <BasicBlock title={t('target-attribute', { ns: 'admin' })}>
-                {data.path ? (
-                  <Link href={data.path.uri}>{data.path.curie}</Link>
-                ) : (
-                  t('not-defined')
-                )}
+                <UriInfo uri={data.path} lang={displayLang} />
               </BasicBlock>
               <BasicBlock title={t('data-type')}>
                 {data.dataType ?? t('not-defined')}
@@ -150,13 +140,17 @@ export default function CommonViewContent({
               </BasicBlock>
 
               <BasicBlock title={t('allowed-values')}>
-                <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
-                  {data.allowedValues && data.allowedValues.length > 0
-                    ? data.allowedValues.map((value) => (
-                        <li key={value}>{getCodeListLabel(value)}</li>
-                      ))
-                    : t('not-defined')}
-                </ul>
+                {data.allowedValues && data.allowedValues.length > 0 ? (
+                  <ul
+                    style={{ padding: '0', margin: '0', paddingLeft: '20px' }}
+                  >
+                    {data.allowedValues.map((value) => (
+                      <li key={value}>{getCodeListLabel(value)}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  t('not-defined')
+                )}
               </BasicBlock>
 
               <BasicBlock title={t('default-value', { ns: 'admin' })}>
@@ -243,11 +237,20 @@ export default function CommonViewContent({
         {data.type === ResourceType.ATTRIBUTE && (
           <>
             <BasicBlock title={t('range', { ns: 'admin' })}>
-              {data.range?.curie}
+              <UriInfo
+                uri={data.range}
+                lang={displayLang}
+                notDefinedText={t('no-datatype')}
+                showPlainText={true}
+              />
             </BasicBlock>
 
             <BasicBlock title={`${t('class', { ns: 'admin' })} (rdfs:domain)`}>
-              {data.domain ? data.domain?.curie : t('no-upper-attributes')}
+              <UriInfo
+                uri={data.domain}
+                lang={displayLang}
+                notDefinedText={t('no-domain')}
+              />
             </BasicBlock>
           </>
         )}
@@ -255,11 +258,19 @@ export default function CommonViewContent({
         {data.type === ResourceType.ASSOCIATION && (
           <>
             <BasicBlock title={t('source-class', { ns: 'admin' })}>
-              {data.domain ? data.domain.curie : t('no-source-class')}
+              <UriInfo
+                uri={data.domain}
+                lang={displayLang}
+                notDefinedText={t('no-source-class')}
+              />
             </BasicBlock>
 
             <BasicBlock title={t('target-class', { ns: 'admin' })}>
-              {data.range ? data.range.curie : t('no-target-class')}
+              <UriInfo
+                uri={data.range}
+                lang={displayLang}
+                notDefinedText={t('no-target-class')}
+              />
             </BasicBlock>
           </>
         )}
@@ -268,15 +279,7 @@ export default function CommonViewContent({
           {!data.subResourceOf || data.subResourceOf.length === 0 ? (
             <>{translateCommonForm('no-upper', data.type, t)}</>
           ) : (
-            <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
-              {data.subResourceOf.map((c) => (
-                <li key={c.uri}>
-                  <Link key={c.uri} href={c.uri} style={{ fontSize: '16px' }}>
-                    {c.curie}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <UriList items={data.subResourceOf} lang={displayLang} />
           )}
         </BasicBlock>
 
@@ -284,15 +287,7 @@ export default function CommonViewContent({
           {!data.equivalentResource || data.equivalentResource.length === 0 ? (
             <>{translateCommonForm('no-equivalent', data.type, t)}</>
           ) : (
-            <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
-              {data.equivalentResource.map((c) => (
-                <li key={c.uri}>
-                  <Link key={c.uri} href={c.uri} style={{ fontSize: '16px' }}>
-                    {c.curie}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <UriList items={data.equivalentResource} lang={displayLang} />
           )}
         </BasicBlock>
 

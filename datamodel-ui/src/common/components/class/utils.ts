@@ -13,24 +13,24 @@ export function convertToPayload(
     ...retVal,
     //Library only properties
     ...(!applicationProfile && {
-      equivalentClass: data.equivalentClass?.map((eq) => eq.identifier) ?? [],
+      equivalentClass: data.equivalentClass?.map((eq) => eq.uri) ?? [],
       subClassOf: data.subClassOf
         ? data.subClassOf
-            .filter((soc) => soc.identifier !== 'owl:Thing')
-            .map((sco) => sco.identifier)
+            .filter((soc) => soc.uri !== 'owl:Thing')
+            .map((sco) => sco.uri)
         : [],
-      disjointWith: data.disjointWith?.map((disjoint) => disjoint.id) ?? [],
+      disjointWith: data.disjointWith?.map((disjoint) => disjoint.uri) ?? [],
     }),
 
     subject: conceptURI,
     ...(basedOnNodeShape
       ? {
-          targetNode: data.targetClass?.id,
+          targetNode: data.targetClass?.uri,
         }
       : {
-          targetClass: data.targetClass?.id,
+          targetClass: data.targetClass?.uri,
           ...(data.node && {
-            targetNode: data.node.id,
+            targetNode: data.node.uri,
           }),
         }),
     ...(applicationProfile &&

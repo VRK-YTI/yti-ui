@@ -141,7 +141,7 @@ export default function ModelEditView({
           <Text variant="bold">{t('details', { ns: 'common' })}</Text>
           <HeaderRow>
             <Button onClick={() => handleSubmit()}>
-              {userPosted ? (
+              {result.isLoading ? (
                 <div role="alert">
                   <StyledSpinner
                     variant="small"
@@ -188,14 +188,14 @@ export default function ModelEditView({
       return [];
     }
 
-    const langsWithError = Object.entries(errors)
-      .filter(([_, value]) => Array.isArray(value))
-      ?.flatMap(([key, value]) =>
-        (value as string[]).map(
-          (lang) =>
-            `${translateModelFormErrors(key, t)} ${translateLanguage(lang, t)}`
-        )
-      );
+    const langsWithError =
+      errors.titleAmount.length > 0
+        ? [
+            `${translateModelFormErrors('titleAmount', t)} ${errors.titleAmount
+              .map((lang) => translateLanguage(lang, t))
+              .join(', ')}`,
+          ]
+        : [];
 
     const otherErrors = Object.entries(errors)
       .filter(([_, value]) => value && !Array.isArray(value))

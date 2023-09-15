@@ -10,7 +10,6 @@ import {
   IconArrowLeft,
   IconCopy,
   IconOptionsVertical,
-  Link,
   Text,
   Tooltip,
 } from 'suomifi-ui-components';
@@ -36,6 +35,8 @@ import { useAddNodeShapePropertyReferenceMutation } from '@app/common/components
 import ResourceForm from '../resource/resource-form';
 import { initializeResource } from '@app/common/components/resource/resource.slice';
 import { useStoreDispatch } from '@app/store';
+import UriList from '@app/common/components/uri-list';
+import UriInfo from '@app/common/components/uri-info';
 
 interface ClassInfoProps {
   data?: ClassType;
@@ -94,9 +95,8 @@ export default function ClassInfo({
           value.type,
           languages,
           {
-            id: value.label ?? '',
-            label: value.label ?? '',
-            uri: value.uri,
+            uri: value.label ?? '',
+            label: value.label ? { en: value.label } : {},
           },
           true
         )
@@ -126,33 +126,11 @@ export default function ClassInfo({
       return (
         <>
           <BasicBlock title={t('targets-library-class')}>
-            {data.targetClass ? (
-              <ExternalLink
-                key={data.targetClass.uri}
-                href={data.targetClass.uri}
-                style={{ fontSize: '16px' }}
-                labelNewWindow={t('link-opens-new-window-external')}
-              >
-                {data.targetClass.curie}
-              </ExternalLink>
-            ) : (
-              <Text smallScreen>{t('not-defined')}</Text>
-            )}
+            <UriInfo uri={data.targetClass} lang={displayLang} />
           </BasicBlock>
 
           <BasicBlock title={t('utilizes-class-restriction')}>
-            {data.targetNode ? (
-              <ExternalLink
-                key={data.targetNode.uri}
-                href={data.targetNode.uri}
-                style={{ fontSize: '16px' }}
-                labelNewWindow={t('link-opens-new-window-external')}
-              >
-                {data.targetNode.curie}
-              </ExternalLink>
-            ) : (
-              <Text smallScreen>{t('not-defined')}</Text>
-            )}
+            <UriInfo uri={data.targetNode} lang={displayLang} />
           </BasicBlock>
         </>
       );
@@ -164,15 +142,7 @@ export default function ClassInfo({
           {!data.subClassOf || data.subClassOf.length === 0 ? (
             <> {t('no-upper-classes')}</>
           ) : (
-            <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
-              {data.subClassOf.map((c) => (
-                <li key={c.uri}>
-                  <Link key={c.uri} href={c.uri} style={{ fontSize: '16px' }}>
-                    {c.curie}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <UriList items={data.subClassOf} lang={displayLang} />
           )}
         </BasicBlock>
 
@@ -180,15 +150,7 @@ export default function ClassInfo({
           {!data.equivalentClass || data.equivalentClass.length === 0 ? (
             <> {t('no-equivalent-classes')}</>
           ) : (
-            <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
-              {data.equivalentClass.map((c) => (
-                <li key={c.uri}>
-                  <Link key={c.uri} href={c.uri} style={{ fontSize: '16px' }}>
-                    {c.curie}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <UriList items={data.equivalentClass} lang={displayLang} />
           )}
         </BasicBlock>
 
@@ -196,15 +158,7 @@ export default function ClassInfo({
           {!data.disjointWith || data.disjointWith.length === 0 ? (
             <>{t('no-disjoint-classes')}</>
           ) : (
-            <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
-              {data.disjointWith.map((c) => (
-                <li key={c.uri}>
-                  <Link key={c.uri} href={c.uri} style={{ fontSize: '16px' }}>
-                    {c.curie}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <UriList items={data.disjointWith} lang={displayLang} />
           )}
         </BasicBlock>
 
@@ -387,11 +341,10 @@ export default function ClassInfo({
           {applicationProfile && hasPermission ? (
             <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
               <ResourceModal
-                applicationProfile
                 modelId={modelId}
                 type={ResourceType.ATTRIBUTE}
                 handleFollowUp={handleFollowUp}
-                limitSearchTo={'PROFILE'}
+                limitSearchTo={'LIBRARY'}
               />
               <Button variant="secondary" id="order-attributes-button">
                 {t('order-list', { ns: 'admin' })}
@@ -431,9 +384,9 @@ export default function ClassInfo({
           {applicationProfile && hasPermission ? (
             <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
               <ResourceModal
-                applicationProfile
                 modelId={modelId}
                 type={ResourceType.ASSOCIATION}
+                limitSearchTo="LIBRARY"
                 handleFollowUp={handleFollowUp}
               />
               <Button variant="secondary" id="order-associations-button">

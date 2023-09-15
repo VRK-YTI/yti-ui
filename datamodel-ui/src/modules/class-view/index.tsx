@@ -14,7 +14,11 @@ import { useEffect, useRef, useState } from 'react';
 import { SearchInput, Text } from 'suomifi-ui-components';
 import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
-import { classTypeToClassForm, internalClassToClassForm } from './utils';
+import {
+  DEFAULT_SUBCLASS_OF,
+  classTypeToClassForm,
+  internalClassToClassForm,
+} from './utils';
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
@@ -121,32 +125,36 @@ export default function ClassView({
         setClass({
           ...initialData,
           label: label,
-          subClassOf: [
-            {
-              identifier: 'owl:Thing',
-              label: 'owl:Thing',
-            },
-          ],
+          subClassOf: [DEFAULT_SUBCLASS_OF],
         })
       );
-      setView('classes', 'edit');
+      setView('classes', 'create');
       return;
     }
 
     dispatch(
-      setClass(internalClassToClassForm(value, languages, applicationProfile))
+      setClass(
+        internalClassToClassForm(
+          value,
+          languages,
+          applicationProfile,
+          targetIsAppProfile
+        )
+      )
     );
 
-    setView('classes', 'edit');
+    setView('classes', 'create');
   };
 
   const handleAppProfileFollowUpAction = (data?: {
     value?: InternalClass;
     targetClass?: InternalClass;
+    targetIsAppProfile?: boolean;
     associations?: SimpleResource[];
     attributes?: SimpleResource[];
   }) => {
     setShowAppProfileModal(false);
+    setSelectedNodeShape(undefined);
 
     if (!data || !data.value) {
       return;
@@ -158,7 +166,7 @@ export default function ClassView({
           data.value,
           languages,
           applicationProfile,
-          data.targetClass,
+          data.targetIsAppProfile,
           data.associations,
           data.attributes
         )
@@ -302,7 +310,7 @@ export default function ClassView({
   }
 
   function renderForm() {
-    if (!view.edit) {
+    if (!view.edit && !view.create) {
       return <></>;
     }
 

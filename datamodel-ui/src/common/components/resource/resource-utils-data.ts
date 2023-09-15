@@ -34,33 +34,39 @@ export const libraryAttribute: ResourceFormType = {
   status: 'VALID',
   equivalentResource: [
     {
-      label: 'eq-1',
+      label: { en: 'eq-1' },
       uri: 'eq-1',
+      curie: 'eq-1',
     },
     {
-      label: 'eq-2',
+      label: { en: 'eq-2' },
       uri: 'eq-2',
+      curie: 'eq-2',
     },
   ],
   subResourceOf: [
     {
-      label: 'sub-1',
+      label: { en: 'sub-1' },
       uri: 'sub-1',
+      curie: 'sub-1',
     },
     {
-      label: 'sub-2',
+      label: { en: 'sub-2' },
       uri: 'sub-2',
+      curie: 'sub-2',
     },
   ],
   note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
   type: ResourceType.ATTRIBUTE,
   range: {
-    id: 'range-id',
-    label: 'range-label',
+    uri: 'range-id',
+    label: { en: 'range-label' },
+    curie: 'range-label',
   },
   domain: {
-    id: 'domain-id',
-    label: 'domain-label',
+    uri: 'domain-id',
+    label: { en: 'domain-label' },
+    curie: 'domain-label',
   },
 };
 
@@ -81,33 +87,39 @@ export const libraryAssociation: ResourceFormType = {
   status: 'VALID',
   equivalentResource: [
     {
-      label: 'eq-1',
+      label: { en: 'eq-1' },
       uri: 'eq-1',
+      curie: '',
     },
     {
-      label: 'eq-2',
+      label: { en: 'eq-2' },
       uri: 'eq-2',
+      curie: '',
     },
   ],
   subResourceOf: [
     {
-      label: 'sub-1',
+      label: { en: 'sub-1' },
       uri: 'sub-1',
+      curie: '',
     },
     {
-      label: 'sub-2',
+      label: { en: 'sub-2' },
       uri: 'sub-2',
+      curie: '',
     },
   ],
   note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
   type: ResourceType.ASSOCIATION,
   range: {
-    id: 'range-id',
-    label: 'range-label',
+    uri: 'range-id',
+    label: { en: 'range-label' },
+    curie: '',
   },
   domain: {
-    id: 'domain-id',
-    label: 'domain-label',
+    uri: 'domain-id',
+    label: { en: 'domain-label' },
+    curie: '',
   },
 };
 
@@ -142,8 +154,12 @@ export const applicationProfileAttribute: ResourceFormType = {
   identifier: 'attr-identifier',
   status: 'VALID',
   note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
-  path: { id: 'path', label: 'path', uri: 'path-uri' },
-  classType: 'class-type',
+  path: { uri: 'path-uri', label: { en: 'path' }, curie: 'path-uri' },
+  classType: {
+    uri: 'class-type',
+    label: { en: 'class-type' },
+    curie: 'class-type',
+  },
   type: ResourceType.ATTRIBUTE,
   dataType: { id: 'data-type', label: 'data-type' },
   allowedValues: [
@@ -174,8 +190,12 @@ export const applicationProfileAssociation: ResourceFormType = {
   identifier: 'attr-identifier',
   status: 'VALID',
   note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
-  path: { id: 'path', label: 'path', uri: 'path-uri' },
-  classType: 'class-type',
+  path: { uri: 'path-uri', label: { en: 'path' }, curie: 'path-uri' },
+  classType: {
+    uri: 'class-type',
+    label: { en: 'class-type' },
+    curie: 'class-type',
+  },
   type: ResourceType.ASSOCIATION,
   dataType: { id: 'data-type', label: 'data-type' },
   allowedValues: [
