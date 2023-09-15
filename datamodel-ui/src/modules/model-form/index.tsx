@@ -39,6 +39,7 @@ interface ModelFormProps {
   disabled?: boolean;
   errors?: FormErrors | FormUpdateErrors;
   editMode?: boolean;
+  oldVersion?: boolean;
 }
 
 export default function ModelForm({
@@ -48,6 +49,7 @@ export default function ModelForm({
   disabled,
   errors,
   editMode,
+  oldVersion = true,
 }: ModelFormProps) {
   const { t, i18n } = useTranslation('admin');
   const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
@@ -56,6 +58,8 @@ export default function ModelForm({
   const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
   const { data: languages, isSuccess } = useGetLanguagesQuery();
   const [languageList, setLanguageList] = useState<LanguageBlockType[]>([]);
+
+  const [initialStatus, setInitialStatus] = useState(formData.status);
 
   const serviceCategories = useMemo(() => {
     if (!serviceCategoriesData) {
@@ -270,34 +274,38 @@ export default function ModelForm({
               smallScreen
             >{`http://uri.suomi.fi/datamodel/ns/${formData.prefix}`}</Text>
           </div>
-
-          <Dropdown
-            labelText={t('status')}
-            defaultValue={formData.status ?? ''}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                status: e as Status | undefined,
-              })
-            }
-            id="status-dropdown"
-          >
-            <DropdownItem value={'DRAFT'}>
-              {t('statuses.draft', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'VALID'}>
-              {t('statuses.valid', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'SUPERSEDED'}>
-              {t('statuses.superseded', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'RETIRED'}>
-              {t('statuses.retired', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'INVALID'}>
-              {t('statuses.invalid', { ns: 'common' })}
-            </DropdownItem>
-          </Dropdown>
+          {oldVersion &&
+            (formData.status === 'SUGGESTED' ||
+              formData.status === 'VALID') && (
+              <Dropdown
+                labelText={t('status')}
+                defaultValue={formData.status ?? ''}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    status: e as Status | undefined,
+                  })
+                }
+                id="status-dropdown"
+              >
+                {initialStatus === 'SUGGESTED' ? (
+                  <DropdownItem value={'SUGGESTED'}>
+                    {t('statuses.suggested', { ns: 'common' })}
+                  </DropdownItem>
+                ) : (
+                  <></>
+                )}
+                <DropdownItem value={'VALID'}>
+                  {t('statuses.valid', { ns: 'common' })}
+                </DropdownItem>
+                <DropdownItem value={'SUPERSEDED'}>
+                  {t('statuses.superseded', { ns: 'common' })}
+                </DropdownItem>
+                <DropdownItem value={'RETIRED'}>
+                  {t('statuses.retired', { ns: 'common' })}
+                </DropdownItem>
+              </Dropdown>
+            )}
         </div>
       );
     }

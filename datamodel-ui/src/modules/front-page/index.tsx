@@ -10,7 +10,7 @@ import {
 import SearchResults, {
   SearchResultData,
 } from 'yti-common-ui/search-results/search-results';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useGetSearchModelsQuery } from '@app/common/components/search-models/search-models.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
