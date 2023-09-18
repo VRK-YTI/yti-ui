@@ -15,7 +15,7 @@ export const Description = styled(Text)`
 export const StatusChip = styled(StaticChip)<TitleProps>`
   background-color: ${(props) =>
     props.valid
-      ? 'hsl(166, 90%, 30%)'
+      ? props.theme.suomifi.colors.successBase
       : props.theme.suomifi.colors.depthDark1} !important;
   font-size: 12px;
   line-height: 0;

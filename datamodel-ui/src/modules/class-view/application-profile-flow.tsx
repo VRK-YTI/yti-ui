@@ -21,6 +21,7 @@ export default function ApplicationProfileFlow({
   handleFollowUp: (data?: {
     value?: InternalClass;
     targetClass?: InternalClass;
+    targetIsAppProfile?: boolean;
     associations?: SimpleResource[];
     attributes?: SimpleResource[];
   }) => void;
@@ -53,6 +54,7 @@ export default function ApplicationProfileFlow({
     setResourcePickerVisible(false);
     handleFollowUp({
       value: selectedNodeShape.nodeShape,
+      targetIsAppProfile: true,
       targetClass: classRestriction,
     });
   };

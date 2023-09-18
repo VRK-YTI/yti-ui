@@ -16,12 +16,15 @@ export const MainTitleWrapper = styled(Heading)`
   white-space: nowrap;
 `;
 
-export const BadgeBarWrapper = styled.div<{ $larger?: boolean }>`
+export const BadgeBarWrapper = styled.div<{
+  $larger?: boolean;
+  $smBottom?: boolean;
+}>`
   font-size: ${(props) => (props.$larger ? '14px' : '12px')};
   text-transform: uppercase;
   font-weight: 600;
   line-height: 15px;
-  margin-bottom: 20px;
+  margin-bottom: ${(props) => (props.$smBottom ? '0' : '20px')};
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
 
   > span:last-child {

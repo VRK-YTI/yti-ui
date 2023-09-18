@@ -93,10 +93,10 @@ export default function FrontPageFilter({
         title={t('show')}
         items={[
           {
-            value: 'VALID,DRAFT',
+            value: 'VALID,SUGGESTED',
             label: t('datamodels-in-use'),
             hintText: `${translateStatus('VALID', t)}, ${translateStatus(
-              'DRAFT',
+              'SUGGESTED',
               t
             )}`,
           },
@@ -109,7 +109,7 @@ export default function FrontPageFilter({
             )}, ${translateStatus('INVALID', t)}`,
           },
           {
-            value: 'VALID,DRAFT,RETIRED,SUPERSEDED,INVALID',
+            value: 'VALID,SUGGESTED,RETIRED,SUPERSEDED,DRAFT',
             label: t('datamodels-all'),
           },
         ]}

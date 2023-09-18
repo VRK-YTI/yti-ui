@@ -45,6 +45,13 @@ export const ControlButton = styled(Button)`
   width: 40px;
   height: 40px;
   padding: 0;
+
+  min-width: min-content !important;
+  min-height: min-content !important;
+
+  svg {
+    margin: 0 !important;
+  }
 `;
 
 export const LanguageSelectorWrapper = styled.div`

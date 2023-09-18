@@ -22,7 +22,9 @@ import {
   ModalContent,
   SingleSelectData,
 } from 'suomifi-ui-components';
-import useUrlState from 'yti-common-ui/utils/hooks/use-url-state';
+import useUrlState, {
+  initialUrlState,
+} from 'yti-common-ui/utils/hooks/use-url-state';
 import {
   Description,
   TitleDescriptionWrapper,
@@ -30,6 +32,8 @@ import {
 import Pagination from 'yti-common-ui/pagination';
 import { translateModelType } from '@app/common/utils/translation-helpers';
 import ModelFormModal from '../model-form/model-form-modal';
+import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
+import { useGetCountQuery } from '@app/common/components/counts/counts.slice';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -39,6 +43,10 @@ export default function FrontPage() {
     useGetServiceCategoriesQuery(i18n.language);
   const { data: organizationsData, refetch: refetchOrganizationsData } =
     useGetOrganizationsQuery(i18n.language);
+  const { data: languagesData, refetch: refetchLanguageData } =
+    useGetLanguagesQuery();
+  const { data: counts, refetch: refetchCountsData } =
+    useGetCountQuery(initialUrlState);
   const { data: searchModels, refetch: refetchSearchModels } =
     useGetSearchModelsQuery({
       urlState,
@@ -52,9 +60,8 @@ export default function FrontPage() {
     }
 
     return organizationsData.map((org) => {
-      const id = org.id.replaceAll('urn:uuid:', '');
       return {
-        id: id,
+        id: org.id,
         label: org.label[i18n.language] ?? org.label['fi'],
       };
     });
@@ -72,29 +79,34 @@ export default function FrontPage() {
   }, [serviceCategoriesData, i18n.language]);
 
   const languages: SingleSelectData[] = useMemo(() => {
-    if (!searchModels || searchModels.totalHitCount < 1) {
+    if (!languagesData || languagesData.results.length < 1) {
       return [];
     }
 
-    let languages: SingleSelectData[] = [];
+    const languages = languagesData.results
+      .filter((lang) => counts && counts.counts.languages[lang.codeValue])
+      .map((lang) => {
+        return {
+          labelText: lang.codeValue,
+          uniqueItemId: lang.codeValue,
+        };
+      });
+    const promotedOrder = ['fi', 'sv', 'en'];
+    const promoted: SingleSelectData[] = [];
+    const otherLanguages = languages.reduce((langList, lang) => {
+      promotedOrder.includes(lang.uniqueItemId)
+        ? promoted.push(lang)
+        : langList.push(lang);
+      return langList;
+    }, [] as SingleSelectData[]);
 
-    searchModels.responseObjects.forEach((object) => {
-      if (languages.length === 0) {
-        languages = object.language.map((l) => ({
-          labelText: l,
-          uniqueItemId: l,
-        }));
-      } else {
-        object.language.forEach((l) => {
-          if (!languages.map((lang) => lang.uniqueItemId).includes(l)) {
-            languages = [...languages, { labelText: l, uniqueItemId: l }];
-          }
-        });
-      }
-    });
-
-    return languages;
-  }, [searchModels]);
+    promoted.sort(
+      (a, b) =>
+        promotedOrder.indexOf(a.uniqueItemId) -
+        promotedOrder.indexOf(b.uniqueItemId)
+    );
+    return [...promoted, ...otherLanguages];
+  }, [languagesData, counts]);
 
   const data: SearchResultData[] = useMemo(() => {
     if (!searchModels || !organizationsData || !serviceCategoriesData) {
@@ -105,9 +117,7 @@ export default function FrontPage() {
       const contributors: string[] = object.contributor
         .map((c) =>
           getLanguageVersion({
-            data: organizationsData.find(
-              (o) => o.id.replace('urn:uuid:', '') === c
-            )?.label,
+            data: organizationsData.find((o) => o.id === c)?.label,
             lang: i18n.language,
             appendLocale: true,
           })
@@ -154,6 +164,8 @@ export default function FrontPage() {
   const refetchInfo = () => {
     refetchOrganizationsData();
     refetchServiceCategoriesData();
+    refetchLanguageData();
+    refetchCountsData();
     refetchSearchModels();
   };
 

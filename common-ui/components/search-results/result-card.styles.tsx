@@ -74,9 +74,10 @@ export const PartOf = styled.p`
 
 export const Status = styled(StaticChip)<CardChipProps>`
   background-color: ${(props) =>
-    props.valid
-      ? 'hsl(166, 90%, 30%)'
-      : props.theme.suomifi.colors.depthDark1} !important;
+    (props.status === 'VALID' && props.theme.suomifi.colors.successBase) ||
+    ((props.status === 'DRAFT' || props.status === 'SUGGESTED') &&
+      props.theme.suomifi.colors.warningBase) ||
+    props.theme.suomifi.colors.depthDark1} !important;
   font-size: 12px;
   line-height: 0;
   padding: 0px 5px !important;

@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   Button,
   IconArrowLeft,
-  IconMenu,
+  IconOptionsVertical,
   InlineAlert,
   Text,
   Tooltip,
@@ -114,7 +114,7 @@ export default function ResourceInfo({
             <div>
               <Button
                 variant="secondary"
-                iconRight={<IconMenu />}
+                iconRight={<IconOptionsVertical />}
                 style={{ height: 'min-content' }}
                 onClick={() => setShowTooltip(!showTooltip)}
                 id="actions-button"

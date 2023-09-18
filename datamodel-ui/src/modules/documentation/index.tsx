@@ -49,6 +49,8 @@ import { useSelector } from 'react-redux';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
+import Image from 'next/image';
+import { IconBold, IconItalics, IconQuotes } from 'suomifi-icons';
 
 export default function Documentation({
   modelId,
@@ -67,7 +69,6 @@ export default function Documentation({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [value, setValue] = useState<{ [key: string]: string }>({});
   const [isEdit, setIsEdit] = useState(false);
-  const [userPosted, setUserPosted] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(
     languages.sort((a, b) => compareLocales(a, b))[0]
   );
@@ -83,6 +84,36 @@ export default function Documentation({
   const { data: modelData, refetch } = useGetModelQuery(modelId);
   const [updateModel, result] = useUpdateModelMutation();
 
+  const validImgUrl = (url: string): boolean => {
+    const regex = /^http(s)?:\/\/.*\.(jpg|jpeg|png|gif)$/g;
+    return regex.test(url);
+  };
+
+  const imgProps = (props: { src?: string; alt?: string }) => {
+    if (!props.src || !validImgUrl(props.src)) {
+      return <></>;
+    }
+
+    const src = props.src.replace('http://', 'https://');
+    const height = props.alt
+      ?.match(/height:[0-9]+px/g)?.[0]
+      ?.split(':')?.[1]
+      ?.replace('px', '');
+    const width = props.alt
+      ?.match(/width:[0-9]+px/g)?.[0]
+      ?.split(':')?.[1]
+      ?.replace('px', '');
+
+    return (
+      <Image
+        src={src.startsWith('https://') ? src : ''}
+        alt={'Markdown image'}
+        width={width ?? 350}
+        height={height ?? 190}
+      />
+    );
+  };
+
   const handleSubmit = () => {
     disableConfirmation();
     dispatch(setHasChanges(false));
@@ -90,8 +121,6 @@ export default function Documentation({
     if (!modelData) {
       return;
     }
-
-    setUserPosted(true);
 
     const payload = generatePayload({ ...modelData, documentation: value });
 
@@ -103,8 +132,17 @@ export default function Documentation({
   };
 
   const handleCancel = () => {
-    setUserPosted(false);
     setIsEdit(false);
+    setValue(
+      modelData?.documentation
+        ? Object.keys(modelData.documentation).length > 0
+          ? modelData.documentation
+          : modelData.languages.reduce(
+              (acc, lang) => ({ ...acc, [lang]: '' }),
+              {}
+            )
+        : {}
+    );
     dispatch(setHasChanges(false));
     disableConfirmation();
   };
@@ -184,12 +222,18 @@ export default function Documentation({
   }, [ref]);
 
   useEffect(() => {
-    if (modelData && !isEdit) {
-      setValue(modelData.documentation ?? '');
-    }
+    if (modelData) {
+      if (Object.keys(modelData.documentation).length < 1) {
+        setValue(
+          modelData.languages.reduce(
+            (acc, lang) => ({ ...acc, [lang]: '' }),
+            {}
+          )
+        );
+      } else {
+        setValue(modelData.documentation);
+      }
 
-    if (modelData && Object.keys(value).length === 0) {
-      setValue(modelData.documentation);
       setCurrentLanguage(
         modelData.languages.includes(i18n.language)
           ? i18n.language
@@ -197,12 +241,11 @@ export default function Documentation({
               'fi'
       );
     }
-  }, [modelData, isEdit, i18n.language, value]);
+  }, [modelData, i18n.language]);
 
   useEffect(() => {
     if (result.isSuccess) {
       setIsEdit(false);
-      setUserPosted(false);
       disableConfirmation();
       refetch();
       dispatch(setNotification('DOCUMENTATION_EDIT'));
@@ -240,7 +283,7 @@ export default function Documentation({
               }}
             >
               <Button onClick={() => handleSubmit()} id="submit-button">
-                {userPosted ? (
+                {result.isLoading ? (
                   <div role="alert">
                     <StyledSpinner
                       variant="small"
@@ -284,17 +327,33 @@ export default function Documentation({
 
     return (
       <DrawerContent height={headerHeight} spaced>
+        {modelData?.modified !== modelData?.created ? (
+          <div>
+            {t('updated')}: <FormattedDate date={modelData?.modified} />
+            {modelData?.modifier.name ? `, ${modelData.modifier.name}` : ''}
+          </div>
+        ) : (
+          <></>
+        )}
+
         <div>
-          {t('updated')}: <FormattedDate date={modelData?.modified} />
-          {modelData?.modifier.name ? `, ${modelData.modifier.name}` : ''}
-        </div>
-        <div>
-          <ReactMarkdown remarkPlugins={[remarkGfm]} unwrapDisallowed={false}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            unwrapDisallowed={false}
+            components={{
+              img: (props) => imgProps(props),
+            }}
+          >
             {getLanguageVersion({
               data: modelData?.documentation,
               lang: displayLang ?? i18n.language,
-              appendLocale: true,
-            })}
+            }) !== ''
+              ? getLanguageVersion({
+                  data: modelData?.documentation,
+                  lang: displayLang ?? i18n.language,
+                  appendLocale: true,
+                })
+              : ''}
           </ReactMarkdown>
         </div>
       </DrawerContent>
@@ -327,51 +386,50 @@ export default function Documentation({
 
         <ContentWrapper>
           <div>
-            {/* First 3 buttons use chars instead of Icons because they aren't available yet */}
             <ControlsRow>
               <div>
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('bold')}
                   id="bold-button"
-                >
-                  B
-                </ControlButton>
+                  icon={<IconBold />}
+                />
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('italic')}
                   id="italic-button"
-                >
-                  I
-                </ControlButton>
+                  icon={<IconItalics />}
+                />
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('quote')}
                   id="quote-button"
-                >
-                  ``
-                </ControlButton>
+                  icon={<IconQuotes />}
+                />
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('listBulleted')}
                   id="list-bulleted-button"
-                >
-                  <IconListBulleted />
-                </ControlButton>
+                  icon={<IconListBulleted />}
+                />
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('listNumbered')}
                   id="list-numbered-button"
-                >
-                  <IconListNumbered />
-                </ControlButton>
+                  icon={<IconListNumbered />}
+                />
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('link')}
                   id="link-button"
-                >
-                  <IconAttachment />
-                </ControlButton>
+                  icon={<IconAttachment />}
+                />
                 <ControlButton
+                  variant="secondary"
                   onClick={() => handleButtonClick('image')}
                   id="image-button"
-                >
-                  <IconImage />
-                </ControlButton>
+                  icon={<IconImage />}
+                />
               </div>
               <HintText>
                 {value[currentLanguage]?.length ?? 0} / 5000 {t('characters')}
@@ -413,7 +471,13 @@ export default function Documentation({
                 {t('preview')}
               </Text>
             </div>
-            <ReactMarkdown remarkPlugins={[remarkGfm]} unwrapDisallowed={false}>
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              unwrapDisallowed={false}
+              components={{
+                img: (props) => imgProps(props),
+              }}
+            >
               {value[currentLanguage]}
             </ReactMarkdown>
           </div>

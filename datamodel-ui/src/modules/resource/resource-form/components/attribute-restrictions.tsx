@@ -160,12 +160,8 @@ export default function AttributeRestrictions({
           }}
           items={
             data.codeLists?.map((cl) => ({
-              id: cl.id,
-              label: getLanguageVersion({
-                data: cl.prefLabel,
-                lang: i18n.language,
-                appendLocale: true,
-              }),
+              uri: cl.id,
+              label: cl.prefLabel,
             })) ?? []
           }
           label={t('codelist')}
@@ -206,7 +202,6 @@ export default function AttributeRestrictions({
               itemAdditionHelpText=""
               chipListVisible
               onItemSelectionsChange={(e) => {
-                console.log(e);
                 return handleUpdate(
                   'allowedValues',
                   e.map((val) => {
@@ -258,7 +253,6 @@ export default function AttributeRestrictions({
               {data.allowedValues && (
                 <>
                   {data.allowedValues.map((value) => {
-                    console.log(value);
                     return (
                       <TextInput
                         key={`allowed-value-${value.id}`}

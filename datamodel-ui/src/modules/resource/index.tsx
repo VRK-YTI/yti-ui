@@ -1,9 +1,13 @@
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import {
+  resetHighlighted,
+  resetHovered,
   resetSelected,
   selectDisplayLang,
   selectResourceView,
   selectSelected,
+  setHighlighted,
+  setHovered,
   setSelected,
 } from '@app/common/components/model/model.slice';
 import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
@@ -36,6 +40,9 @@ import ResourceForm from './resource-form';
 import { resourceToResourceFormType } from './utils';
 import useSetView from '@app/common/utils/hooks/use-set-view';
 import useSetPage from '@app/common/utils/hooks/use-set-page';
+import { useReactFlow } from 'reactflow';
+import getConnectedElements from '../graph/utils/get-connected-elements';
+import { UriData } from '@app/common/interfaces/uri.interface';
 
 interface ResourceViewProps {
   modelId: string;
@@ -64,6 +71,7 @@ export default function ResourceView({
   const ref = useRef<HTMLDivElement>(null);
   const { setView } = useSetView();
   const { setPage, getPage } = useSetPage();
+  const { getNodes, getEdges } = useReactFlow();
   const displayLang = useSelector(selectDisplayLang());
   const [headerHeight, setHeaderHeight] = useState(0);
   const [currentPage, setCurrentPage] = useState(getPage());
@@ -120,6 +128,36 @@ export default function ResourceView({
     );
   };
 
+  const handleResourceHover = (id?: string, modelPrefix?: string) => {
+    if (!id || !modelPrefix) {
+      dispatch(resetHovered());
+
+      if (type === ResourceType.ASSOCIATION) {
+        dispatch(resetHighlighted());
+      }
+      return;
+    }
+
+    dispatch(
+      setHovered(
+        id,
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
+      )
+    );
+
+    if (type === ResourceType.ASSOCIATION) {
+      const targetEdge = getEdges().find((edge) => edge.data.identifier === id);
+
+      if (!targetEdge) {
+        return;
+      }
+
+      dispatch(
+        setHighlighted(getConnectedElements(targetEdge, getNodes(), getEdges()))
+      );
+    }
+  };
+
   const handleReturn = () => {
     dispatch(resetSelected());
     setView(
@@ -139,25 +177,17 @@ export default function ResourceView({
     dispatch(resetResource());
   };
 
-  const handleFollowUp = (value?: { label: string; uri: string }) => {
+  const handleFollowUp = (value?: UriData) => {
     if (applicationProfile) {
+      dispatch(initializeResource(type, languages, value, applicationProfile));
+    } else {
       dispatch(
         initializeResource(
           type,
           languages,
-          value
-            ? {
-                id: value.label,
-                label: value.label,
-                uri: value.uri,
-              }
-            : undefined,
+          value?.label['en'],
           applicationProfile
         )
-      );
-    } else {
-      dispatch(
-        initializeResource(type, languages, value?.label, applicationProfile)
       );
     }
 
@@ -271,6 +301,12 @@ export default function ResourceView({
                       item.identifier,
                       item.curie.split(':')[0]
                     ),
+                  onMouseEnter: () =>
+                    handleResourceHover(
+                      item.identifier,
+                      item.curie.split(':')[0]
+                    ),
+                  onMouseLeave: () => handleResourceHover(),
                 };
               })}
             />

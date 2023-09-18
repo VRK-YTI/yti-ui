@@ -29,7 +29,6 @@ import {
 } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
-import { Status } from 'yti-common-ui/interfaces/status.interface';
 import { FormWrapper, LanguageVersionedWrapper } from './resource-form.styles';
 import validateForm from './validate-form';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
@@ -54,6 +53,8 @@ import useSetView from '@app/common/utils/hooks/use-set-view';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
+import { UriData } from '@app/common/interfaces/uri.interface';
+import { Status } from '@app/common/interfaces/status.interface';
 
 interface ResourceFormProps {
   modelId: string;
@@ -204,10 +205,7 @@ export default function ResourceForm({
   };
 
   const handleResourceUpdate = (
-    value?: {
-      label: string;
-      uri: string;
-    },
+    value?: UriData,
     key?: 'equivalentResource' | 'subResourceOf'
   ) => {
     if (!value || !key) {
@@ -252,8 +250,9 @@ export default function ResourceForm({
         ...data,
         subResourceOf: [
           {
-            label: value,
             uri: value,
+            curie: value,
+            label: { en: value.replace('owl:', '') },
           },
         ],
       });
@@ -365,16 +364,10 @@ export default function ResourceForm({
           >
             {t('back', { ns: 'common' })}
           </Button>
-        </div>
-        <HeaderRow>
-          <Text variant="bold">
-            {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
-              translateCommonForm('name', data.type, t)}
-          </Text>
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <Button onClick={() => handleSubmit()} id="submit-button">
-              {userPosted ? (
+              {updateResult.isLoading || createResult.isLoading ? (
                 <div role="alert">
                   <StyledSpinner
                     variant="small"
@@ -397,6 +390,13 @@ export default function ResourceForm({
               {t('cancel-variant')}
             </Button>
           </div>
+        </div>
+
+        <HeaderRow>
+          <Text variant="bold">
+            {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
+              translateCommonForm('name', data.type, t)}
+          </Text>
         </HeaderRow>
 
         {userPosted &&
@@ -509,12 +509,7 @@ export default function ResourceForm({
                   data.type,
                   t
                 )} (rdfs:subPropertyOf)`}
-                items={
-                  data.subResourceOf?.map((resource) => ({
-                    id: resource.uri,
-                    label: resource.label,
-                  })) ?? []
-                }
+                items={data.subResourceOf}
                 addNewComponent={
                   <ResourceModal
                     buttonTranslations={{
@@ -554,12 +549,7 @@ export default function ResourceForm({
                   data.type,
                   t
                 )} (owl:equivalentProperty)`}
-                items={
-                  data.equivalentResource?.map((r) => ({
-                    id: r.uri,
-                    label: r.label,
-                  })) ?? []
-                }
+                items={data.equivalentResource}
                 addNewComponent={
                   <ResourceModal
                     buttonTranslations={{

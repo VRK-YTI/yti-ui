@@ -1,7 +1,7 @@
 export type Status =
   | 'DRAFT'
   | 'INCOMPLETE'
-  | 'INVALID'
+  | 'SUGGESTED'
   | 'RETIRED'
   | 'SUPERSEDED'
   | 'VALID';

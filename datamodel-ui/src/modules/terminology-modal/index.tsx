@@ -20,10 +20,10 @@ import {
   ModalContent,
   ModalFooter,
   ModalTitle,
-  SearchInput,
   SingleSelect,
   SingleSelectData,
   Text,
+  TextInput,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { DetachedPagination } from 'yti-common-ui/pagination';
@@ -117,7 +117,7 @@ export default function TerminologyModal({
 
   useEffect(() => {
     setSelected(addedTerminologies);
-  }, [visible]);
+  }, [visible, addedTerminologies]);
 
   const handleSearchChange = (
     key: keyof TerminologySearchParams,
@@ -197,14 +197,11 @@ export default function TerminologyModal({
     return (
       <div>
         <SearchBlock $isSmall={isSmall}>
-          <SearchInput
-            labelText={t('search-for-terminology')}
-            clearButtonLabel={t('clear-all-selections')}
-            searchButtonLabel={t('search')}
+          <TextInput
             defaultValue={searchParams.query}
-            onBlur={(e) => handleSearchChange('query', e?.target.value ?? '')}
-            onSearch={(e) => handleSearchChange('query', e ?? '')}
-            debounce={500}
+            labelText={t('search-for-terminology')}
+            onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
+            debounce={300}
             id="search-input"
             maxLength={TEXT_INPUT_MAX}
           />
@@ -260,7 +257,6 @@ export default function TerminologyModal({
   function renderResults() {
     return (
       <div>
-        <Text>{t('add-refrence-to-terminologies-description')}</Text>
         <SearchResultCount>
           <Text variant="bold">
             {t('terminology-counts', {

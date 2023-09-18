@@ -1,4 +1,4 @@
-import { Status } from 'yti-common-ui/interfaces/status.interface';
+import { Status } from './status.interface';
 
 export interface CodeType {
   id: string;

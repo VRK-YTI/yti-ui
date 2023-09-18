@@ -3,80 +3,84 @@ import {
   VisualizationType,
 } from '@app/common/interfaces/visualization.interface';
 
-export const visualizationTypeArray: VisualizationType[] = [
-  {
-    identifier: '1',
-    label: {
-      fi: 'label-1-fi',
-      en: 'label-1-en',
-    },
-    parentClasses: [],
-    position: {
-      x: 0,
-      y: 0,
-    },
-    attributes: [],
-    associations: [
-      {
-        identifier: 'association-1',
-        label: {
-          fi: 'assoc-1-2-fi',
-          en: 'assoc-1-2-en',
-        },
-        referenceTarget: '2',
+export function visualizationTypeArray(corner?: boolean): VisualizationType[] {
+  return [
+    {
+      identifier: '1',
+      label: {
+        fi: 'label-1-fi',
+        en: 'label-1-en',
       },
-    ],
-  },
-  {
-    identifier: '2',
-    label: {
-      en: 'label-2-en',
-    },
-    parentClasses: [],
-    position: {
-      x: 0,
-      y: 0,
-    },
-    attributes: [],
-    associations: [],
-  },
-  {
-    identifier: '3',
-    label: {
-      fi: 'label-3-fi',
-      en: 'label-3-en',
-      sv: 'label-3-sv',
-    },
-    parentClasses: [],
-    position: {
-      x: 0,
-      y: 0,
-    },
-    attributes: [],
-    associations: [],
-  },
-  {
-    identifier: '4',
-    label: {
-      fi: 'label-4-fi',
-    },
-    parentClasses: [],
-    position: {
-      x: 0,
-      y: 0,
-    },
-    attributes: [],
-    associations: [
-      {
-        identifier: 'association-4',
-        label: {
-          fi: 'assoc-4-3-fi',
-        },
-        referenceTarget: '3',
+      parentClasses: [],
+      position: {
+        x: 0,
+        y: 0,
       },
-    ],
-  },
-];
+      attributes: [],
+      associations: [
+        {
+          identifier: 'association-1',
+          label: {
+            fi: 'assoc-1-2-fi',
+            en: 'assoc-1-2-en',
+          },
+          referenceTarget: corner ? 'corner-1' : '2',
+        },
+      ],
+    },
+    {
+      identifier: '2',
+      label: {
+        en: 'label-2-en',
+      },
+      parentClasses: [],
+      position: {
+        x: 0,
+        y: 0,
+      },
+      attributes: [],
+      associations: [],
+    },
+    {
+      identifier: '3',
+      label: {
+        fi: 'label-3-fi',
+        en: 'label-3-en',
+        sv: 'label-3-sv',
+      },
+      parentClasses: [],
+      position: {
+        x: 0,
+        y: 0,
+      },
+      attributes: [],
+      associations: [],
+    },
+    {
+      identifier: '4',
+      label: {
+        fi: 'label-4-fi',
+      },
+      parentClasses: [],
+      position: {
+        x: 0,
+        y: 0,
+      },
+      attributes: [],
+      associations: corner
+        ? []
+        : [
+            {
+              identifier: 'association-4',
+              label: {
+                fi: 'assoc-4-3-fi',
+              },
+              referenceTarget: '3',
+            },
+          ],
+    },
+  ];
+}
 
 export const visualizationHiddenTypeArray: VisualizationHiddenNode[] = [
   {
@@ -187,7 +191,17 @@ export const dottedEdgeExpected = [
   },
 ];
 
-export const hiddenEdgeExpected = [
+export const withHiddenEdgeExpected = [
+  {
+    id: 'reactflow__edge-1-#corner-1',
+    type: 'generalEdge',
+    source: '1',
+    sourceHandle: '1',
+    target: '#corner-1',
+    targetHandle: '#corner-1',
+    markerEnd: undefined,
+    data: {},
+  },
   {
     id: 'reactflow__edge-#corner-1-#corner-2',
     type: 'generalEdge',
@@ -212,11 +226,10 @@ export const hiddenEdgeExpected = [
     target: '3',
     targetHandle: '3',
     data: {
-      identifier: '3',
+      identifier: 'association-1',
       label: {
-        fi: 'label-3-fi',
-        en: 'label-3-en',
-        sv: 'label-3-sv',
+        fi: 'assoc-1-2-fi',
+        en: 'assoc-1-2-en',
       },
     },
   },

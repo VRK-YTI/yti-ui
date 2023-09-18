@@ -1,8 +1,10 @@
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import {
   ViewList,
+  resetHighlighted,
   resetHovered,
   selectDisplayLang,
+  setHighlighted,
   setHovered,
   setSelected,
 } from '@app/common/components/model/model.slice';
@@ -19,16 +21,19 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useReactFlow } from 'reactflow';
 import { SearchInput, Text } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { DetachedPagination } from 'yti-common-ui/pagination';
+import getConnectedElements from '../graph/utils/get-connected-elements';
 
 export default function SearchView({ modelId }: { modelId: string }) {
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
   const { setView } = useSetView();
   const { setPage, getPage } = useSetPage();
+  const { getNodes, getEdges } = useReactFlow();
   const dispatch = useStoreDispatch();
   const displayLang = useSelector(selectDisplayLang());
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -76,6 +81,33 @@ export default function SearchView({ modelId }: { modelId: string }) {
           : router.query.lang,
       },
     });
+  };
+
+  const handleItemHover = (id?: string, type?: string) => {
+    if (!id || !type) {
+      dispatch(resetHovered());
+      dispatch(resetHighlighted());
+      return;
+    }
+
+    dispatch(
+      setHovered(
+        id,
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
+      )
+    );
+
+    if (type === ResourceType.ASSOCIATION) {
+      const targetEdge = getEdges().find((edge) => edge.data.identifier === id);
+
+      if (!targetEdge) {
+        return;
+      }
+
+      dispatch(
+        setHighlighted(getConnectedElements(targetEdge, getNodes(), getEdges()))
+      );
+    }
   };
 
   const handleQueryChange = (e: string) => {
@@ -130,17 +162,9 @@ export default function SearchView({ modelId }: { modelId: string }) {
                 ),
                 subtitle: item.curie,
                 onClick: () => handleItemClick(item),
-                onMouseEnter: () => {
-                  dispatch(
-                    setHovered(
-                      item.identifier,
-                      getResourceType(item.resourceType)
-                    )
-                  );
-                },
-                onMouseLeave: () => {
-                  dispatch(resetHovered());
-                },
+                onMouseEnter: () =>
+                  handleItemHover(item.identifier, item.resourceType),
+                onMouseLeave: () => handleItemHover(),
               }))}
             />
 

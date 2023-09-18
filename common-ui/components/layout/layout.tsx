@@ -26,6 +26,7 @@ export default function Layout({
   alerts,
   fullScreenElements,
   headerHidden,
+  langPickerHidden,
 }: {
   children: React.ReactNode;
   feedbackSubject?: string;
@@ -35,6 +36,7 @@ export default function Layout({
   alerts?: React.ReactNode;
   fullScreenElements?: React.ReactNode;
   headerHidden?: boolean;
+  langPickerHidden?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
@@ -60,6 +62,7 @@ export default function Layout({
             user={user}
             fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
             fullScreenElements={fullScreenElements}
+            langPickerHidden={langPickerHidden}
           />
 
           <ContentContainer

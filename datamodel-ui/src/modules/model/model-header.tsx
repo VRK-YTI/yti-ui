@@ -75,7 +75,7 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
           </BreadcrumbLink>
         </Breadcrumb>
         <MainTitle>{model.title}</MainTitle>
-        <BadgeBar larger={true}>
+        <BadgeBar larger={true} smBottom={true}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             {modelInfo?.type === 'PROFILE' ? (
               <IconApplicationProfile color="hsl(212, 63%, 49%)" />

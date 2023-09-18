@@ -25,6 +25,8 @@ import { codeApi } from '@app/common/components/code/code.slice';
 import { datatypesApi } from '@app/common/components/datatypes/datatypes.slice';
 import { namespacesApi } from '@app/common/components/namespaces/namespaces.slice';
 import { notificationsSlice } from '@app/common/components/notifications/notifications.slice';
+import { requestApi } from '@app/common/components/requests/requests.slice';
+import { subscriptionApi } from '@app/common/components/subscription/subscription.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -57,6 +59,8 @@ export function makeStore(ctx: NextIronContext) {
       [datatypesApi.reducerPath]: datatypesApi.reducer,
       [namespacesApi.reducerPath]: namespacesApi.reducer,
       [notificationsSlice.name]: notificationsSlice.reducer,
+      [requestApi.reducerPath]: requestApi.reducer,
+      [subscriptionApi.reducerPath]: subscriptionApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -77,7 +81,9 @@ export function makeStore(ctx: NextIronContext) {
         visualizationApi.middleware,
         codeApi.middleware,
         datatypesApi.middleware,
-        namespacesApi.middleware
+        namespacesApi.middleware,
+        requestApi.middleware,
+        subscriptionApi.middleware
       ),
 
     // Development tools should be available only in development environments

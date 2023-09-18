@@ -18,6 +18,13 @@ export default function convertToEdges(
     return [];
   }
 
+  const associationLabels: {
+    targetId: string;
+    offsetSource?: number;
+    identifier: string;
+    label: { [key: string]: string };
+  }[] = [];
+
   const edges = nodes
     .filter(
       (node) => node.associations.length > 0 || node.parentClasses.length > 0
@@ -27,6 +34,15 @@ export default function convertToEdges(
         .filter((assoc) => assoc.referenceTarget)
         .flatMap((assoc, idx) => {
           if (assoc.referenceTarget?.startsWith('corner')) {
+            associationLabels.push({
+              targetId: getEndEdge(assoc.referenceTarget),
+              identifier: assoc.identifier,
+              label: assoc.label,
+              offsetSource: applicationProfile
+                ? node.attributes.length + idx + 1
+                : undefined,
+            });
+
             return createEdge({
               params: {
                 source: node.identifier,
@@ -98,17 +114,17 @@ export default function convertToEdges(
       });
     }
 
-    const targetClass = nodes.find(
-      (n) => n.identifier === node.referenceTarget
+    const associationInfo = associationLabels.find(
+      (a) => a.targetId === node.referenceTarget
     );
 
-    if (!targetClass) {
+    if (!associationInfo) {
       return null;
     }
 
     return createEdge({
-      label: targetClass.label,
-      identifier: node.referenceTarget,
+      label: associationInfo.label,
+      identifier: associationInfo.identifier,
       params: {
         source: nodeIdentifier,
         sourceHandle: nodeIdentifier,
@@ -116,8 +132,23 @@ export default function convertToEdges(
         targetHandle: node.referenceTarget,
         id: `reactflow__edge-${nodeIdentifier}-${node.referenceTarget}`,
       },
+      offsetSource: associationInfo.offsetSource,
     });
   });
 
   return [...edges, ...(splitEdges.filter((edge) => edge !== null) as Edge[])];
+
+  function getEndEdge(id: string): string {
+    const targetNode = hiddenNodes.find((n) => n.identifier === id);
+
+    if (!targetNode) {
+      return '';
+    }
+
+    if (targetNode.referenceTarget.startsWith('corner-')) {
+      return getEndEdge(targetNode.referenceTarget);
+    }
+
+    return targetNode.referenceTarget;
+  }
 }

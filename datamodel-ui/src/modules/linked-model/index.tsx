@@ -31,18 +31,21 @@ export default function LinkedModel({
   initialData,
   setInternalData,
   setExternalData,
+  currentModel,
 }: {
   initialData: {
     internalNamespaces: InternalNamespace[];
   };
   setInternalData: (value: InternalNamespace[]) => void;
   setExternalData: (value: ExternalNamespace) => void;
+  currentModel: string;
 }) {
   const { t, i18n } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
   const [keyword, setKeyword] = useState('');
   const [showExternalForm, setShowExternalForm] = useState(false);
   const [userPosted, setUserPosted] = useState(false);
+  const [hitCount, setHitCount] = useState(0);
   const [errors, setErrors] = useState({
     name: true,
     namespace: true,
@@ -72,6 +75,12 @@ export default function LinkedModel({
     },
     { skip: keyword === '' }
   );
+
+  useEffect(() => {
+    models?.responseObjects.some((model) => model.prefix === currentModel)
+      ? setHitCount(models.totalHitCount - 1 ?? 0)
+      : setHitCount(models?.totalHitCount ?? 0);
+  }, [currentModel, models]);
 
   const { data: namespaces } = useGetNamespacesQuery(void null, {
     skip: !showExternalForm,
@@ -178,7 +187,14 @@ export default function LinkedModel({
             disabled={
               showExternalForm
                 ? Object.values(data).filter((val) => val !== '').length < 3
-                : selected.length < 1
+                : (initialData.internalNamespaces.length === 0 &&
+                    selected.length === 0) ||
+                  (selected.length === initialData.internalNamespaces.length &&
+                    selected.every((s) =>
+                      initialData.internalNamespaces
+                        .map((i) => i.namespace)
+                        .includes(s.namespace)
+                    ))
             }
             id="submit-button"
           >
@@ -248,48 +264,48 @@ export default function LinkedModel({
           {!isUninitialized && (
             <div>
               <Text variant="bold">
-                {t('data-models-count', { count: models?.totalHitCount ?? 0 })}
+                {t('data-models-count', { count: hitCount })}
               </Text>
             </div>
           )}
 
           <div>
-            {keyword !== '' && models ? (
+            {keyword !== '' && models && (
               <>
-                {models.responseObjects.map((obj) => (
-                  <SearchResult key={`data-model-result-${obj.id}`}>
-                    <Checkbox
-                      checked={selected
-                        .map((s) => s.namespace)
-                        .includes(obj.id)}
-                      onClick={() =>
-                        handleCheckboxClick({
-                          name: obj.label,
-                          namespace: obj.id,
-                          prefix: obj.prefix,
-                        })
-                      }
-                      id={`data-model-checkbox_${obj.id}}`}
-                    >
-                      {getLanguageVersion({
-                        data: obj.label,
-                        lang: i18n.language,
-                        appendLocale: true,
-                      })}
-                    </Checkbox>
-                    <ExternalLink
-                      href={obj.id}
-                      labelNewWindow={t('link-opens-new-window-external', {
-                        ns: 'common',
-                      })}
-                    >
-                      {obj.id}
-                    </ExternalLink>
-                  </SearchResult>
-                ))}
+                {models.responseObjects
+                  .filter((obj) => obj.prefix !== currentModel)
+                  .map((obj) => (
+                    <SearchResult key={`data-model-result-${obj.id}`}>
+                      <Checkbox
+                        checked={selected
+                          .map((s) => s.namespace)
+                          .includes(obj.id)}
+                        onClick={() =>
+                          handleCheckboxClick({
+                            name: obj.label,
+                            namespace: obj.id,
+                            prefix: obj.prefix,
+                          })
+                        }
+                        id={`data-model-checkbox_${obj.id}}`}
+                      >
+                        {getLanguageVersion({
+                          data: obj.label,
+                          lang: i18n.language,
+                          appendLocale: true,
+                        })}
+                      </Checkbox>
+                      <ExternalLink
+                        href={obj.id}
+                        labelNewWindow={t('link-opens-new-window-external', {
+                          ns: 'common',
+                        })}
+                      >
+                        {obj.id}
+                      </ExternalLink>
+                    </SearchResult>
+                  ))}
               </>
-            ) : (
-              <Text smallScreen>{t('search-data-model-by-keyword')}</Text>
             )}
           </div>
         </ContentWrapper>

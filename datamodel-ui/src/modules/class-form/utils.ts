@@ -61,23 +61,26 @@ export function validateClassForm(data: ClassFormType): ClassFormErrors {
     returnErrors.label = false;
   }
 
-  if (data.identifier && data.identifier !== '') {
+  if (data.identifier !== '') {
     returnErrors.identifier = false;
+  } else {
+    return {
+      ...returnErrors,
+      identifierInitChar: false,
+      identifierLength: false,
+      identifierCharacters: false,
+    };
   }
 
-  if (
-    data.identifier &&
-    data.identifier.length > 1 &&
-    data.identifier.length < 33
-  ) {
+  if (data.identifier.length > 1 && data.identifier.length < 33) {
     returnErrors.identifierLength = false;
   }
 
-  if (data.identifier && /^[^0-9]/.test(data.identifier)) {
+  if (/^[^0-9]/.test(data.identifier) || data.identifier === '') {
     returnErrors.identifierInitChar = false;
   }
 
-  if (data.identifier && data.identifier.match(/^[a-z0-9\-_]+$/)) {
+  if (data.identifier.match(/^[a-z0-9\-_]+$/)) {
     returnErrors.identifierCharacters = false;
   }
 

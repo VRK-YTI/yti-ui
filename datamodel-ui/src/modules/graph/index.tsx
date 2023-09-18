@@ -17,6 +17,7 @@ import { useStoreDispatch } from '@app/store';
 import {
   resetHighlighted,
   selectDisplayLang,
+  selectModelTools,
   selectResetPosition,
   selectSavePosition,
   selectSelected,
@@ -38,7 +39,9 @@ import getUnusedCornerIds from './utils/get-unused-corner-ids';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import DefaultEdge from './edges/edge';
 import createEdge from './utils/create-edge';
-import getConnectedElements from './utils/get-connected-elements';
+import getConnectedElements, {
+  getClassConnectedElements,
+} from './utils/get-connected-elements';
 import handleCornerNodeDelete from './utils/handle-corner-node-delete';
 
 interface GraphProps {
@@ -60,6 +63,7 @@ const GraphContent = ({
   const displayLang = useSelector(selectDisplayLang());
   const savePosition = useSelector(selectSavePosition());
   const resetPosition = useSelector(selectResetPosition());
+  const tools = useSelector(selectModelTools());
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
@@ -180,18 +184,36 @@ const GraphContent = ({
 
   const onNodeMouseEnter = useCallback(
     (e, node) => {
-      if (node.type !== 'cornerNode') {
+      if (node.type !== 'cornerNode' && !tools.showClassHighlights) {
+        return;
+      }
+
+      if (tools.showClassHighlights && node.type === 'classNode') {
+        dispatch(setHighlighted(getClassConnectedElements(node, nodes, edges)));
         return;
       }
 
       dispatch(setHighlighted(getConnectedElements(node, nodes, edges)));
     },
-    [dispatch, edges, nodes]
+    [dispatch, edges, nodes, tools.showClassHighlights]
   );
 
   const onNodeMouseLeave = useCallback(() => {
+    if (globalSelected.id && globalSelected.type === 'associations') {
+      const selectedEdge = edges.find(
+        (e) => e.data.identifier === globalSelected.id
+      );
+
+      selectedEdge &&
+        dispatch(
+          setHighlighted(getConnectedElements(selectedEdge, nodes, edges))
+        );
+
+      return;
+    }
+
     dispatch(resetHighlighted());
-  }, [dispatch]);
+  }, [dispatch, globalSelected, edges, nodes]);
 
   const onEdgeMouseEnter = useCallback(
     (e, edge) => {
@@ -201,8 +223,19 @@ const GraphContent = ({
   );
 
   const onEdgeMouseLeave = useCallback(() => {
+    if (globalSelected.id && globalSelected.type === 'associations') {
+      const selectedEdge = edges.find(
+        (e) => e.data.identifier === globalSelected.id
+      );
+      selectedEdge &&
+        dispatch(
+          setHighlighted(getConnectedElements(selectedEdge, nodes, edges))
+        );
+      return;
+    }
+
     dispatch(resetHighlighted());
-  }, [dispatch]);
+  }, [dispatch, globalSelected, edges, nodes]);
 
   useEffect(() => {
     if (isSuccess || (isSuccess && resetPosition)) {
