@@ -10,7 +10,7 @@ import {
 
 export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
   flex-grow: 1;
-  width: 25%;
+  width: 100%;
   background-color: white;
   // background-color: ${(props) => props.theme.suomifi.colors.depthSecondary};
   max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
@@ -28,22 +28,24 @@ export const NavigationHeading = styled(Heading)`
 
 export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
   & {
-    background-color: #EAF2FA;
-  },
+    background-color: #eaf2fa;
+  }
+  ,
   .fi-icon {
     display: none;
-  },
+  }
+  ,
   .span {
     color: yellow;
   }
 `;
 
 export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
-&&&& a {
-  color: black;
-}
+  &&&& a {
+    color: black;
+  }
   &.fi-side-navigation-item--selected {
-    border-left: solid .2rem #2a6ebb;
+    border-left: solid 0.2rem #2a6ebb;
     && .fi-link--router {
       color: #2a6ebb;
     }
@@ -54,6 +56,6 @@ export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
 `;
 
 export const PersonalNavigationWrapper = styled.div`
-  background-color: #EAF2FA;
+  background-color: #eaf2fa;
   padding: 1em;
 `;

@@ -8,25 +8,32 @@ import {
 } from 'suomifi-ui-components';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import { NavigationHeading, SideNavigationWrapper, MscrSideNavigationLevel2, MscrSideNavigationLevel3, PersonalNavigationWrapper } from './side-navigation.styles';
-import {useTranslation} from 'next-i18next';
-import {useState} from 'react';
+import {
+  NavigationHeading,
+  SideNavigationWrapper,
+  MscrSideNavigationLevel2,
+  MscrSideNavigationLevel3,
+  PersonalNavigationWrapper,
+} from './side-navigation.styles';
+import { useTranslation } from 'next-i18next';
+import { useState } from 'react';
 
 export default function SideNavigationPanel({ user }: { user?: User }) {
   const { breakpoint } = useBreakpoints();
   const { t } = useTranslation('common');
   // Here should be a collection of selectedness states for each workspace that gets rendered
-  const [ selected, setSelected ] = useState(false);
+  const [selected, setSelected] = useState(false);
   return (
     <SideNavigationWrapper $breakpoint={breakpoint} id="sidebar">
-      <SideNavigation
-        heading=""
-        aria-label={t('workspace-navigation')}
-      >
+      <SideNavigation heading="" aria-label={t('workspace-navigation')}>
         <SideNavigationItem
           subLevel={1}
           expanded
-          content={<NavigationHeading variant="h2">Personal workspace</NavigationHeading>}
+          content={
+            <NavigationHeading variant="h2">
+              Personal workspace
+            </NavigationHeading>
+          }
         >
           <PersonalNavigationWrapper>
             <MscrSideNavigationLevel3
@@ -34,7 +41,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
               selected
               content={
                 <RouterLink href="/personal-home">
-                    {t('workspace-navigation-content')}
+                  {t('workspace-navigation-content')}
                 </RouterLink>
               }
             />
@@ -42,7 +49,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
               subLevel={3}
               content={
                 <RouterLink href="/personal-home">
-                    {t('workspace-navigation-settings')}
+                  {t('workspace-navigation-settings')}
                 </RouterLink>
               }
             />
@@ -51,7 +58,9 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
         <SideNavigationItem
           subLevel={1}
           expanded
-          content={<NavigationHeading variant="h2">Group workspace</NavigationHeading>}
+          content={
+            <NavigationHeading variant="h2">Group workspace</NavigationHeading>
+          }
         >
           <MscrSideNavigationLevel2
             subLevel={2}
@@ -70,7 +79,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
               subLevel={3}
               content={
                 <RouterLink href="/personal-home">
-                    {t('workspace-navigation-content')}
+                  {t('workspace-navigation-content')}
                 </RouterLink>
               }
             />
@@ -78,7 +87,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
               subLevel={3}
               content={
                 <RouterLink href="/personal-home">
-                    {t('workspace-navigation-settings')}
+                  {t('workspace-navigation-settings')}
                 </RouterLink>
               }
             />

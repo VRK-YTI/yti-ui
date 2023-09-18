@@ -29,6 +29,8 @@ import BasicTable from '@app/common/components/table';
 import MSCRSideBar from '@app/common/components/sidebar/MSCRSideBar';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { TableAndSidebarWrapper } from './homepage.styles';
+import { Grid } from '@mui/material';
+import SideNavigationPanel from '@app/common/components/side-navigation';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -68,15 +70,19 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('datamodel-title')}
           description={t('service-description')}
         />
-        <FrontPage></FrontPage>
+
         <DisplayedComponent
           slug={(router.query.homepage as string) ?? undefined}
           user={props.user ?? undefined}
         />
-        <TableAndSidebarWrapper $breakpoint={breakpoint} id="table-and-sidebar">
-          <MSCRSideBar />
-          <BasicTable />
-        </TableAndSidebarWrapper>
+        <Grid container spacing={10}>
+          <Grid item xs={4}>
+            <SideNavigationPanel user={props.user ?? undefined} />
+          </Grid>
+          <Grid item xs={8}>
+            <FrontPage></FrontPage>
+          </Grid>
+        </Grid>
       </Layout>
     </CommonContextProvider>
   );

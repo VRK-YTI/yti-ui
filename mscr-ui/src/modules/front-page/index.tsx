@@ -20,6 +20,7 @@ import CrosswalkFormModal from '../crosswalk-form/crosswalk-form-modal';
 import { ButtonBlock } from './front-page.styles';
 import PersonalWorkspace from '../personal-home';
 import CreateCrosswalk from '../create-crosswalk';
+import BasicTable from '@app/common/components/table';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -81,6 +82,11 @@ export default function FrontPage() {
         <CreateCrosswalk></CreateCrosswalk>
       </ButtonBlock>
       <Separator isLarge />
+      <BasicTable></BasicTable>
+      <Separator isLarge />
+      <BasicTable></BasicTable>
+      <Separator></Separator>
+      <BasicTable></BasicTable>
     </main>
   );
 }
