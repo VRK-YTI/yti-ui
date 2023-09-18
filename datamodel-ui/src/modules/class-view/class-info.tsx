@@ -82,7 +82,6 @@ export default function ClassInfo({
     if (!data) {
       return;
     }
-    console.info(value);
 
     if (value.mode === 'select') {
       addReference({
@@ -182,7 +181,6 @@ export default function ClassInfo({
         terminologies={terminologies}
         handleReturn={() => setRenderResourceForm(false)}
         handleFollowUp={(identifier, type) => {
-          console.info('render resource form?');
           setRenderResourceForm(false);
           handleFollowUp({
             uriData: {
