@@ -21,7 +21,7 @@ export default function RangeAndDomain({
   modelId: string;
   handleUpdate: (value: ResourceFormType) => void;
 }) {
-  const { t, i18n } = useTranslation('admin');
+  const { t } = useTranslation('admin');
   const { data: dataTypesResult, isSuccess: isDataTypesSuccess } =
     useGetDatatypesQuery(void null, {
       skip: data.type !== ResourceType.ATTRIBUTE && applicationProfile,

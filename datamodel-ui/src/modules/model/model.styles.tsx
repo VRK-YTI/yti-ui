@@ -2,8 +2,9 @@ import styled from 'styled-components';
 import { Block, SearchInput } from 'suomifi-ui-components';
 
 export const TitleWrapper = styled.div<{ $fullScreen?: boolean }>`
-  padding: 0 0 ${(props) => props.theme.suomifi.spacing.s}
-    ${(props) => props.theme.suomifi.spacing.m};
+  padding: 0 0
+    ${(props) =>
+      `${props.theme.suomifi.spacing.s} ${props.theme.suomifi.spacing.m}`};
 
   ${(props) =>
     props.$fullScreen &&
@@ -26,6 +27,7 @@ export const TitleWrapper = styled.div<{ $fullScreen?: boolean }>`
 `;
 
 export const ContentWrapper = styled.div`
+  flex: 1 1 auto;
   height: 100%;
   width: 100%;
 `;
