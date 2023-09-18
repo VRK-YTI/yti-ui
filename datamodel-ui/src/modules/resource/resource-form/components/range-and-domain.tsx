@@ -3,12 +3,12 @@ import InlineListBlock from '@app/common/components/inline-list-block';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import ClassModal from '@app/modules/class-modal';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 import { SingleSelect, SingleSelectData } from 'suomifi-ui-components';
 import ResourceModal from '../../resource-modal';
+import { UriData } from '@app/common/interfaces/uri.interface';
 
 export default function RangeAndDomain({
   applicationProfile,
@@ -47,17 +47,14 @@ export default function RangeAndDomain({
     handleUpdate({
       ...data,
       domain: {
-        id: value.id,
-        label: getLanguageVersion({
-          data: value.label,
-          lang: i18n.language,
-          appendLocale: true,
-        }),
+        uri: value.id,
+        curie: value.curie,
+        label: value.label,
       },
     });
   };
 
-  const handlePathFollowUP = (value?: { label: string; uri: string }) => {
+  const handlePathFollowUP = (value?: UriData) => {
     if (!value) {
       handleUpdate({ ...data, path: value });
       return;
@@ -65,11 +62,7 @@ export default function RangeAndDomain({
 
     handleUpdate({
       ...data,
-      path: {
-        id: value.uri,
-        label: value.label,
-        uri: value.uri,
-      },
+      path: value,
     });
   };
 
@@ -86,12 +79,9 @@ export default function RangeAndDomain({
     handleUpdate({
       ...data,
       range: {
-        id: value.id,
-        label: getLanguageVersion({
-          data: value.label,
-          lang: i18n.language,
-          appendLocale: true,
-        }),
+        uri: value.id,
+        curie: value.curie,
+        label: value.label,
       },
     });
   };
@@ -140,7 +130,7 @@ export default function RangeAndDomain({
           )}
           selectedItem={attributeRanges.find((value) => {
             if (!applicationProfile && data.range != undefined) {
-              return value.uniqueItemId == data.range.id;
+              return value.uniqueItemId == data.range.uri;
             } else if (applicationProfile && data.dataType) {
               return value.uniqueItemId == data.dataType.id;
             } else {
@@ -154,7 +144,7 @@ export default function RangeAndDomain({
               ...data,
               ...(applicationProfile
                 ? { dataType: { id: e, label: e } }
-                : { range: { id: e, label: e } }),
+                : { range: { uri: e, curie: e, label: { en: e } } }),
             })
           }
           items={attributeRanges}
@@ -168,7 +158,7 @@ export default function RangeAndDomain({
                 modelId={modelId}
                 modalButtonLabel={t('select-class')}
                 mode="select"
-                initialSelected={data.domain?.id}
+                initialSelected={data.domain?.uri}
               />
             }
             handleRemoval={() => handleDomainOrRangeRemoval('domain')}
@@ -190,7 +180,7 @@ export default function RangeAndDomain({
             modelId={modelId}
             modalButtonLabel={t('select-class')}
             mode="select"
-            initialSelected={data.domain?.id}
+            initialSelected={data.domain?.uri}
           />
         }
         handleRemoval={() => handleDomainOrRangeRemoval('domain')}
@@ -206,7 +196,7 @@ export default function RangeAndDomain({
             modelId={modelId}
             modalButtonLabel={t('select-class')}
             mode="select"
-            initialSelected={data.range?.id}
+            initialSelected={data.range?.uri}
           />
         }
         handleRemoval={() => handleDomainOrRangeRemoval('range')}

@@ -14,6 +14,7 @@ import {
 } from '@app/common/interfaces/resource-form.interface';
 import { convertToPayload, pathForResourceType } from './utils';
 import { pathForModelType } from '@app/common/utils/api-utils';
+import { UriData } from '@app/common/interfaces/uri.interface';
 
 interface ResourceData {
   modelId: string;
@@ -124,13 +125,7 @@ export const resourceApi = createApi({
 function resourceInitialData(
   type: ResourceType,
   languages?: string[],
-  initialSubResourceOf?:
-    | string
-    | {
-        id: string;
-        label: string;
-        uri: string;
-      },
+  initialSubResourceOf?: string | UriData,
   applicationProfile?: boolean
 ): ResourceFormType {
   let retValue = {} as ResourceFormType;
@@ -159,8 +154,9 @@ function resourceInitialData(
               ...initialAssociation,
               subResourceOf: [
                 {
-                  label: 'owl:TopObjectProperty',
+                  label: { en: 'owl:TopObjectProperty' },
                   uri: 'owl:TopObjectProperty',
+                  curie: 'owl:TopObjectProperty',
                 },
               ],
             }
@@ -168,8 +164,9 @@ function resourceInitialData(
               ...initialAttribute,
               subResourceOf: [
                 {
-                  label: 'owl:topDataProperty',
+                  label: { en: 'owl:topDataProperty' },
                   uri: 'owl:topDataProperty',
+                  curie: 'owl:topDataProperty',
                 },
               ],
             };
@@ -180,8 +177,9 @@ function resourceInitialData(
               ...initialAssociation,
               subResourceOf: [
                 {
-                  label: initialSubResourceOf,
+                  label: { en: initialSubResourceOf },
                   uri: initialSubResourceOf,
+                  curie: initialSubResourceOf,
                 },
               ],
             }
@@ -189,8 +187,9 @@ function resourceInitialData(
               ...initialAttribute,
               subResourceOf: [
                 {
-                  label: initialSubResourceOf,
+                  label: { en: initialSubResourceOf },
                   uri: initialSubResourceOf,
+                  curie: initialSubResourceOf,
                 },
               ],
             };
@@ -234,13 +233,7 @@ export function setResource(data: ResourceFormType): AppThunk {
 export function initializeResource(
   type: ResourceType,
   langs: string[],
-  initialSubResourceOf?:
-    | string
-    | {
-        id: string;
-        label: string;
-        uri: string;
-      },
+  initialSubResourceOf?: string | UriData,
   applicationProfile?: boolean
 ): AppThunk {
   return (dispatch) =>

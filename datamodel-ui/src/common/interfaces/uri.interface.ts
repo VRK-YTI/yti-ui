@@ -1,4 +1,5 @@
 export interface UriData {
   uri: string;
-  curie: string;
+  curie?: string;
+  label: { [key: string]: string };
 }

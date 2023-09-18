@@ -20,3 +20,20 @@ export function translateStatus(status: string, t: TFunction) {
       return status;
   }
 }
+
+export function translateRole(role: string, t: TFunction) {
+  switch (role) {
+    case 'ADMIN':
+      return t('roles.admin', { ns: 'common' });
+    case 'CODE_LIST_EDITOR':
+      return t('roles.code-list-editor', { ns: 'common' });
+    case 'DATA_MODEL_EDITOR':
+      return t('roles.data-model-editor', { ns: 'common' });
+    case 'MEMBER':
+      return t('roles.member', { ns: 'common' });
+    case 'TERMINOLOGY_EDITOR':
+      return t('roles.terminology-editor', { ns: 'common' });
+    default:
+      return role;
+  }
+}

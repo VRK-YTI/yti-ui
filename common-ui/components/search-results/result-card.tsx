@@ -97,10 +97,7 @@ export default function ResultCard({
         {noChip ? (
           translateStatus(status ?? 'DRAFT', t)
         ) : (
-          <Status
-            valid={status === 'VALID' ? 'true' : undefined}
-            id="card-status"
-          >
+          <Status status={status ?? 'DRAFT'} id="card-status">
             {translateStatus(status ?? 'DRAFT', t)}
           </Status>
         )}

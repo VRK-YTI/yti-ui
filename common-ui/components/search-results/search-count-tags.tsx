@@ -99,7 +99,7 @@ export default function SearchCountTags({
   }
 
   function renderStatusTags() {
-    return ['valid', 'draft', 'retired', 'superseded', 'invalid']
+    return ['valid', 'draft', 'retired', 'superseded', 'invalid', 'suggested']
       .map((status) => {
         if (
           urlState.status.includes(status) ||

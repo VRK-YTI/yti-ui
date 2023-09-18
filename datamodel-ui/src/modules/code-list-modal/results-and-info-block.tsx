@@ -13,6 +13,7 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { useState } from 'react';
 import { useGetCodeRegistryQuery } from '@app/common/components/code/code.slice';
+import { ModelCodeList } from '@app/common/interfaces/model.interface';
 
 interface ResultsAndInfoBlockProps {
   codes?: {
@@ -24,9 +25,9 @@ interface ResultsAndInfoBlockProps {
     results: CodeType[];
   };
   extendedView?: boolean;
-  selected: string[];
+  selected: ModelCodeList[];
   isSuccess?: boolean;
-  setSelected: (value: string[]) => void;
+  setSelected: (value: ModelCodeList[]) => void;
 }
 
 export default function ResultsAndInfoBlock({
@@ -73,12 +74,19 @@ export default function ResultsAndInfoBlock({
                 <Checkbox
                   onClick={() =>
                     setSelected(
-                      selected.includes(code.uri)
-                        ? selected.filter((s) => s !== code.uri)
-                        : [...selected, code.uri]
+                      selected.map((s) => s.id).includes(code.uri)
+                        ? selected.filter((s) => s.id !== code.uri)
+                        : [
+                            ...selected,
+                            {
+                              id: code.uri,
+                              prefLabel: code.prefLabel,
+                              status: code.status,
+                            },
+                          ]
                     )
                   }
-                  checked={selected.includes(code.uri)}
+                  checked={selected.map((s) => s.id).includes(code.uri)}
                   id={`code-list-checkbox_${code.uri}`}
                 >
                   {getLanguageVersion({

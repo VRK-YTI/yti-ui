@@ -5,7 +5,6 @@ import { useTranslation } from 'next-i18next';
 import { TextInput } from 'suomifi-ui-components';
 import ResourceModal from '../../resource-modal';
 import ClassModal from '@app/modules/class-modal';
-import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import styled from 'styled-components';
 
@@ -36,13 +35,6 @@ export default function AssociationRestrictions({
 }) {
   const { t } = useTranslation('admin');
 
-  const handleClassUpdate = (
-    value?: InternalClassInfo,
-    targetIsAppProfile?: boolean
-  ) => {
-    handleUpdate('classType', value ? value.id : undefined);
-  };
-
   if (data.type !== ResourceType.ASSOCIATION) {
     return <></>;
   }
@@ -64,7 +56,7 @@ export default function AssociationRestrictions({
                   'path',
                   value
                     ? {
-                        id: value.uri,
+                        curie: value.curie,
                         label: value.label,
                         uri: value.uri,
                       }
@@ -86,18 +78,24 @@ export default function AssociationRestrictions({
               modelId={modelId}
               mode={'select'}
               modalButtonLabel={t('select-class')}
-              handleFollowUp={handleClassUpdate}
-              initialSelected={data.classType ?? ''}
+              handleFollowUp={(value) =>
+                handleUpdate(
+                  'classType',
+                  value
+                    ? {
+                        curie: value.curie,
+                        label: value.label,
+                        uri: value.id,
+                      }
+                    : undefined
+                )
+              }
+              initialSelected={data.classType?.uri}
               applicationProfile
-              resourceRestriction
             />
           }
           handleRemoval={() => handleUpdate('classType', undefined)}
-          items={
-            data.classType
-              ? [{ id: data.classType, label: data.classType }]
-              : []
-          }
+          items={data.classType ? [data.classType] : []}
           label={`${t('association-targets-class', {
             ns: 'common',
           })} (sh:class)`}

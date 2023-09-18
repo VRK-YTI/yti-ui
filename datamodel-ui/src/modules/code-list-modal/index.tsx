@@ -153,9 +153,7 @@ function CodeListModalContent({
     group: '',
     status: '',
   });
-  const [selected, setSelected] = useState<string[]>(
-    initialData.map((d) => d.id) ?? []
-  );
+  const [selected, setSelected] = useState<ModelCodeList[]>(initialData ?? []);
   const [currPage, setCurrPage] = useState(1);
   const { data: codes, isSuccess } = useGetCodesQuery({
     lang: i18n.language ?? 'fi',
@@ -197,7 +195,7 @@ function CodeListModalContent({
       group: '',
       status: '',
     });
-    setSelected(initialData.map((d) => d.id));
+    setSelected(initialData);
     close();
     setCurrPage(1);
   };
@@ -207,20 +205,12 @@ function CodeListModalContent({
       return;
     }
 
-    setData(
-      codes.results
-        .filter((code) => selected.includes(code.uri))
-        .map((code) => ({
-          prefLabel: code.prefLabel,
-          status: code.status,
-          id: code.uri,
-        }))
-    );
+    setData(selected);
     handleClose();
   };
 
   useEffect(() => {
-    setSelected(initialData.map((d) => d.id));
+    setSelected(initialData);
   }, [initialData]);
 
   return (
@@ -242,19 +232,18 @@ function CodeListModalContent({
           <SelectedChipsWrapper>
             {selected.map((select) => {
               const label = getLanguageVersion({
-                data: codes?.results.find((code) => code.uri === select)
-                  ?.prefLabel,
+                data: select.prefLabel,
                 lang: i18n.language,
               });
               return (
                 <Chip
-                  key={`selected-code-${select}`}
+                  key={`selected-code-${select.id}`}
                   removable
                   onClick={() =>
-                    setSelected(selected.filter((s) => s !== select))
+                    setSelected(selected.filter((s) => s.id !== select.id))
                   }
                 >
-                  {label !== '' ? label : select}
+                  {label !== '' ? label : select.id}
                 </Chip>
               );
             })}
@@ -281,7 +270,14 @@ function CodeListModalContent({
 
       <ModalFooter>
         <Button
-          disabled={selected.length < 1}
+          disabled={
+            initialData.length === 0
+              ? selected.length < 1
+              : selected.length === initialData.length &&
+                selected.every((s) =>
+                  initialData.map((d) => d.id).includes(s.id)
+                )
+          }
           onClick={() => handleSubmit()}
           id="submit-button"
         >

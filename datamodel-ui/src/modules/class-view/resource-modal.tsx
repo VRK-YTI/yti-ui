@@ -36,7 +36,6 @@ interface ResourceModalProps {
     type: ResourceType;
   }) => void;
   buttonIcon?: boolean;
-  applicationProfile?: boolean;
   limitSearchTo?: 'LIBRARY' | 'PROFILE';
   limitToSelect?: boolean;
 }
@@ -46,7 +45,6 @@ export default function ResourceModal({
   type,
   handleFollowUp,
   buttonIcon,
-  applicationProfile,
   limitSearchTo,
   limitToSelect,
 }: ResourceModalProps) {
@@ -175,15 +173,9 @@ export default function ResourceModal({
         onEscKeyDown={() => setVisible(false)}
       >
         <ModalContent>
-          <ModalTitle>
-            {translateResourceAddition(type, t, applicationProfile)}
-          </ModalTitle>
+          <ModalTitle>{translateResourceAddition(type, t, true)}</ModalTitle>
           <MultiColumnSearch
-            primaryColumnName={translateResourceName(
-              type,
-              t,
-              applicationProfile
-            )}
+            primaryColumnName={translateResourceName(type, t, true)}
             result={{
               totalHitCount: result.data?.totalHitCount ?? 0,
               items: resultsFormatted,
@@ -193,8 +185,7 @@ export default function ResourceModal({
             searchParams={searchParams}
             setSearchParams={handleSearch}
             setContentLanguage={setContentLanguage}
-            applicationProfile={applicationProfile}
-            resourceRestriction
+            multiTypeSelection
             languageVersioned
             modelId={modelId}
           />
@@ -202,7 +193,9 @@ export default function ResourceModal({
 
         <ModalFooter>
           <Button
-            disabled={selectedId === ''}
+            disabled={
+              searchParams.limitToModelType === 'LIBRARY' || selectedId === ''
+            }
             onClick={() => handleSubmit('select')}
             id="use-selected-button"
           >
@@ -215,7 +208,9 @@ export default function ResourceModal({
             <Button
               variant="secondary"
               icon={<IconPlus />}
-              disabled={selectedId !== ''}
+              disabled={
+                searchParams.limitToModelType !== 'LIBRARY' || selectedId === ''
+              }
               onClick={() => handleSubmit('create')}
               id="create-new-button"
             >

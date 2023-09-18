@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   Button,
   ExternalLink,
-  IconMenu,
+  IconOptionsVertical,
   Text,
   Tooltip,
 } from 'suomifi-ui-components';
@@ -149,7 +149,7 @@ export default function ModelInfoView() {
             <Button
               variant="secondary"
               onClick={() => setShowTooltip(!showTooltip)}
-              iconRight={<IconMenu />}
+              iconRight={<IconOptionsVertical />}
               ref={toolTipRef}
               id="actions-button"
             >

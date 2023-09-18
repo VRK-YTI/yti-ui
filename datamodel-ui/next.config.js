@@ -10,6 +10,15 @@ module.exports = () => {
     eslint: {
       dirs: ['src'],
     },
+    images: {
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: '**',
+          pathname: '**',
+        },
+      ],
+    },
     i18n,
     async headers() {
       const isProd = process.env.NODE_ENV === 'production';
@@ -94,6 +103,10 @@ module.exports = () => {
             source: '/codelist-api/:path*',
             destination: 'https://koodistot.suomi.fi/codelist-api/:path*',
           },
+          {
+            source: '/messaging-api/:path*',
+            destination: 'http://localhost:9801/messaging-api/:path*',
+          },
         ];
       },
     };
@@ -119,6 +132,10 @@ module.exports = () => {
             source: '/codelist-api/:path*',
             destination:
               'http://yti-codelist-public-api-service:9601/codelist-api/:path*',
+          },
+          {
+            source: '/messaging-api/:path*',
+            destination: 'http://yti-messaging-api:9801/messaging-api/:path*',
           },
         ];
       },

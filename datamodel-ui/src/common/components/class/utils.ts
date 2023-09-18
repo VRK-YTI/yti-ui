@@ -11,22 +11,26 @@ export function convertToPayload(
 
   const ret = {
     ...retVal,
-    equivalentClass: data.equivalentClass?.map((eq) => eq.identifier) ?? [],
-    subClassOf: data.subClassOf
-      ? data.subClassOf
-          .filter((soc) => soc.identifier !== 'owl:Thing')
-          .map((sco) => sco.identifier)
-      : [],
-    disjointWith: data.disjointWith?.map((disjoint) => disjoint.id) ?? [],
+    //Library only properties
+    ...(!applicationProfile && {
+      equivalentClass: data.equivalentClass?.map((eq) => eq.uri) ?? [],
+      subClassOf: data.subClassOf
+        ? data.subClassOf
+            .filter((soc) => soc.uri !== 'owl:Thing')
+            .map((sco) => sco.uri)
+        : [],
+      disjointWith: data.disjointWith?.map((disjoint) => disjoint.uri) ?? [],
+    }),
+
     subject: conceptURI,
     ...(basedOnNodeShape
       ? {
-          targetNode: data.targetClass?.id,
+          targetNode: data.targetClass?.uri,
         }
       : {
-          targetClass: data.targetClass?.id,
+          targetClass: data.targetClass?.uri,
           ...(data.node && {
-            targetNode: data.node.id,
+            targetNode: data.node.uri,
           }),
         }),
     ...(applicationProfile &&
