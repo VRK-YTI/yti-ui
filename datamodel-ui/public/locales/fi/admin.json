@@ -274,6 +274,8 @@
   "select-value": "Valitse arvo",
   "select-values": "Valitse arvot",
   "selected-data-model-class": "Valittu ydintietomallin luokka",
+  "selected-n-items_one": "Valittu {{count}} kpl",
+  "selected-n-items_other": "Valittu {{count}} kpl",
   "show-groups-register": "Näytä ryhmät (rekisteri)",
   "show-statuses": "Näytä tilat",
   "smaller-or-as-small-as": "Pienempi tai yhtä pieni kuin",
