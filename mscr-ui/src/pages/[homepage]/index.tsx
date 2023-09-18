@@ -28,6 +28,7 @@ import PersonalWorkspace from '../../modules/personal-home';
 import BasicTable from '@app/common/components/table';
 import MSCRSideBar from '@app/common/components/sidebar/MSCRSideBar';
 import { useBreakpoints } from 'yti-common-ui/media-query';
+import { TableAndSidebarWrapper } from './homepage.styles';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -67,14 +68,15 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('datamodel-title')}
           description={t('service-description')}
         />
-
         <FrontPage></FrontPage>
-
         <DisplayedComponent
           slug={(router.query.homepage as string) ?? undefined}
           user={props.user ?? undefined}
         />
-        <BasicTable />
+        <TableAndSidebarWrapper $breakpoint={breakpoint} id="table-and-sidebar">
+          <MSCRSideBar />
+          <BasicTable />
+        </TableAndSidebarWrapper>
       </Layout>
     </CommonContextProvider>
   );

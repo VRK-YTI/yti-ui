@@ -118,7 +118,6 @@ export default function SmartHeader({
         <HeaderContainer>
           <MarginContainer $breakpoint={breakpoint}>
             <HeaderWrapper $breakpoint={breakpoint}>
-              {renderLogo()}
               {renderHeaderSearch()}
               {renderDesktopLocaleChooser()}
               {renderMobileNavigationToggleButton()}
