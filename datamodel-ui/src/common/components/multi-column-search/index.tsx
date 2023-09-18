@@ -13,10 +13,10 @@ import { useGetServiceCategoriesQuery } from '../service-categories/service-cate
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { isEqual } from 'lodash';
 import { InternalResourcesSearchParams } from '../search-internal-resources/search-internal-resources.slice';
-import { Status } from 'yti-common-ui/interfaces/status.interface';
 import ResourceList, { ResultType } from '../resource-list';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import { compareLocales } from '@app/common/utils/compare-locals';
+import { Status } from '@app/common/interfaces/status.interface';
 
 interface MultiColumnSearchProps {
   primaryColumnName: string;
@@ -144,8 +144,8 @@ export default function MultiColumnSearch({
       const setStatuses =
         value !== '-1'
           ? value === 'in-use'
-            ? (['VALID', 'DRAFT'] as Status[])
-            : (['INCOMPLETE', 'INVALID', 'RETIRED', 'SUPERSEDED'] as Status[])
+            ? (['VALID', 'SUGGESTED'] as Status[])
+            : (['INCOMPLETE', 'DRAFT', 'RETIRED', 'SUPERSEDED'] as Status[])
           : [];
 
       setSearchParams({

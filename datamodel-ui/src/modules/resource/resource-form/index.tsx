@@ -29,7 +29,6 @@ import {
 } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
-import { Status } from 'yti-common-ui/interfaces/status.interface';
 import { FormWrapper, LanguageVersionedWrapper } from './resource-form.styles';
 import validateForm from './validate-form';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
@@ -55,6 +54,7 @@ import { setNotification } from '@app/common/components/notifications/notificati
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import { UriData } from '@app/common/interfaces/uri.interface';
+import { Status } from '@app/common/interfaces/status.interface';
 
 interface ResourceFormProps {
   modelId: string;

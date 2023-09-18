@@ -31,7 +31,7 @@ export function initialSearchData(
 ): InternalResourcesSearchParams {
   return {
     query: '',
-    status: ['VALID', 'DRAFT'],
+    status: ['VALID', 'SUGGESTED'],
     groups: [],
     sortLang: sortLang,
     pageSize: 50,
