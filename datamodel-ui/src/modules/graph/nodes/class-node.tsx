@@ -38,6 +38,7 @@ import HasPermission from '@app/common/utils/has-permission';
 import { useAddNodeShapePropertyReferenceMutation } from '@app/common/components/class/class.slice';
 import ResourceModal from '@app/modules/class-view/resource-modal';
 import getConnectedElements from '../utils/get-connected-elements';
+import { UriData } from '@app/common/interfaces/uri.interface';
 
 interface ClassNodeProps {
   id: string;
@@ -96,8 +97,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   };
 
   const handleMenuFollowUp = (value: {
-    label?: string;
-    uri: string;
+    uriData: UriData;
     type: ResourceType;
     mode: 'select' | 'create';
   }) => {
@@ -108,7 +108,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
     addReference({
       prefix: data.modelId,
       nodeshapeId: data.identifier,
-      uri: value.uri,
+      uri: value.uriData.uri,
     });
   };
 
