@@ -7,6 +7,7 @@ import {
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import WideModal from '@app/common/components/wide-modal';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { UriData } from '@app/common/interfaces/uri.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import {
   translateResourceAddition,
@@ -30,8 +31,7 @@ interface ResourceModalProps {
   modelId: string;
   type: ResourceType;
   handleFollowUp: (value: {
-    label: string;
-    uri: string;
+    uriData: UriData;
     mode: 'create' | 'select';
     type: ResourceType;
   }) => void;
@@ -94,8 +94,11 @@ export default function ResourceModal({
 
     if (selectedObj) {
       handleFollowUp({
-        label: selectedObj.curie,
-        uri: selectedObj.id,
+        uriData: {
+          uri: selectedObj.id,
+          curie: selectedObj.curie,
+          label: selectedObj.label,
+        },
         mode: mode,
         type: type,
       });
