@@ -163,9 +163,7 @@ export default function ResourceModal({
         onClick={() => handleOpen()}
         id="add-resource-button"
       >
-        {type === ResourceType.ASSOCIATION
-          ? t('add-association-restriction')
-          : t('add-attribute-restriction')}
+        {translateResourceAddition(type, t, applicationProfile)}
       </Button>
 
       <WideModal
@@ -175,9 +173,15 @@ export default function ResourceModal({
         onEscKeyDown={() => setVisible(false)}
       >
         <ModalContent>
-          <ModalTitle>{translateResourceAddition(type, t, true)}</ModalTitle>
+          <ModalTitle>
+            {translateResourceAddition(type, t, applicationProfile)}
+          </ModalTitle>
           <MultiColumnSearch
-            primaryColumnName={translateResourceName(type, t, true)}
+            primaryColumnName={translateResourceName(
+              type,
+              t,
+              applicationProfile
+            )}
             result={{
               totalHitCount: result.data?.totalHitCount ?? 0,
               items: resultsFormatted,
@@ -203,9 +207,7 @@ export default function ResourceModal({
             onClick={() => handleSubmit('select')}
             id="use-selected-button"
           >
-            {type === ResourceType.ASSOCIATION
-              ? t('select-association-restriction')
-              : t('select-attribute-restriction')}
+            {translateResourceAddition(type, t, applicationProfile)}
           </Button>
 
           {!limitToSelect && (
