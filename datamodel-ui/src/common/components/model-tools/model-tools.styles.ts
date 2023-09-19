@@ -27,7 +27,6 @@ export const ToggleButtonGroup = styled.div`
 
   .fi-toggle--button > * {
     display: flex;
-    flex-direction: ;
   }
 
   .fi-toggle--button > * > .fi-text--body {
