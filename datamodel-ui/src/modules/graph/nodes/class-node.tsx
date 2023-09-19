@@ -35,7 +35,7 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import HasPermission from '@app/common/utils/has-permission';
-import { useAddNodeShapePropertyReferenceMutation } from '@app/common/components/class/class.slice';
+import { useAddPropertyReferenceMutation } from '@app/common/components/class/class.slice';
 import ResourceModal from '@app/modules/class-view/resource-modal';
 import getConnectedElements from '../utils/get-connected-elements';
 
@@ -73,8 +73,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const [showAttributes, setShowAttributes] = useState(true);
   const [showTooltip, setShowTooltip] = useState(false);
   const [hover, setHover] = useState(false);
-  const [addReference, addReferenceResult] =
-    useAddNodeShapePropertyReferenceMutation();
+  const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
 
   const handleTitleClick = () => {
     if (globalSelected.id !== id) {
@@ -107,8 +106,9 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
 
     addReference({
       prefix: data.modelId,
-      nodeshapeId: data.identifier,
+      identifier: data.identifier,
       uri: value.uri,
+      applicationProfile: true,
     });
   };
 

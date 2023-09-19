@@ -17,7 +17,6 @@ import {
 import { useState } from 'react';
 import CommonViewContent from '@app/modules/common-view-content';
 import { TooltipWrapper } from '../model/model.styles';
-import { BasicBlock } from 'yti-common-ui/block';
 import { setSelected, setView } from '@app/common/components/model/model.slice';
 import { useStoreDispatch } from '@app/store';
 import { resourceToResourceFormType } from '../resource/utils';
@@ -113,23 +112,9 @@ export default function ResourceInfo({
   }
 
   function renderActions() {
-    if (!applicationProfile) {
-      return <></>;
-    }
-
     return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}
-      >
-        <BasicBlock title={t('in-use-in-this-model', { ns: 'admin' })}>
-          {data.deactivated
-            ? t('not-in-use', { ns: 'admin' })
-            : t('in-use', { ns: 'admin' })}
-        </BasicBlock>
-        {hasPermission && modelId === data.modelId && (
+      <>
+        {hasPermission && (!applicationProfile || modelId === data.modelId) && (
           <div>
             <Button
               variant="secondary"
@@ -145,14 +130,16 @@ export default function ResourceInfo({
                 open={showTooltip}
                 onCloseButtonClick={() => setShowTooltip(false)}
               >
-                <Button
-                  variant="secondaryNoBorder"
-                  onClick={handleEdit}
-                  id="edit-reference-button"
-                >
-                  {t('edit', { ns: 'admin' })}
-                </Button>
-                {!data.fromShNode && (
+                {modelId === data.modelId && (
+                  <Button
+                    variant="secondaryNoBorder"
+                    onClick={handleEdit}
+                    id="edit-reference-button"
+                  >
+                    {t('edit', { ns: 'admin' })}
+                  </Button>
+                )}
+                {(!data.fromShNode || !applicationProfile) && (
                   <RemoveReferenceModal
                     modelId={modelId}
                     classId={classId}
@@ -163,6 +150,7 @@ export default function ResourceInfo({
                       lang: i18n.language,
                       appendLocale: true,
                     })}
+                    applicationProfile={applicationProfile}
                     resourceType={
                       attribute
                         ? ResourceType.ATTRIBUTE
@@ -174,7 +162,7 @@ export default function ResourceInfo({
             </TooltipWrapper>
           </div>
         )}
-      </div>
+      </>
     );
   }
 
@@ -183,16 +171,14 @@ export default function ResourceInfo({
       <ExpanderTitleButton>{renderTitleButtonContent()}</ExpanderTitleButton>
       <ExpanderContent>
         {isSuccess && (
-          <>
-            {renderActions()}
-            <CommonViewContent
-              data={resourceData}
-              modelId={data.modelId}
-              displayLabel
-              hideInUse
-              applicationProfile={applicationProfile}
-            />
-          </>
+          <CommonViewContent
+            data={resourceData}
+            modelId={data.modelId}
+            displayLabel
+            inUse={!data.deactivated}
+            applicationProfile={applicationProfile}
+            renderActions={renderActions}
+          />
         )}
       </ExpanderContent>
     </Expander>

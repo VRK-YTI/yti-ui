@@ -108,24 +108,38 @@ export const classApi = createApi({
         method: 'GET',
       }),
     }),
-    addNodeShapePropertyReference: builder.mutation<
+    addPropertyReference: builder.mutation<
       string,
-      { prefix: string; nodeshapeId: string; uri: string }
+      {
+        prefix: string;
+        identifier: string;
+        uri: string;
+        applicationProfile: boolean;
+      }
     >({
       query: (value) => ({
-        url: `/class/profile/${value.prefix}/${value.nodeshapeId}/properties`,
+        url: `/class/${pathForModelType(value.applicationProfile)}${
+          value.prefix
+        }/${value.identifier}/properties`,
         params: {
           uri: value.uri,
         },
         method: 'PUT',
       }),
     }),
-    deleteNodeShapePropertyReference: builder.mutation<
+    deletePropertyReference: builder.mutation<
       string,
-      { prefix: string; nodeshapeId: string; uri: string }
+      {
+        prefix: string;
+        identifier: string;
+        uri: string;
+        applicationProfile: boolean;
+      }
     >({
       query: (value) => ({
-        url: `/class/profile/${value.prefix}/${value.nodeshapeId}/properties`,
+        url: `/class/${pathForModelType(value.applicationProfile)}${
+          value.prefix
+        }/${value.identifier}/properties`,
         params: {
           uri: value.uri,
         },
@@ -168,8 +182,8 @@ export const {
   useGetNodeShapesQuery,
   useDeleteClassMutation,
   useGetClassExistsQuery,
-  useAddNodeShapePropertyReferenceMutation,
-  useDeleteNodeShapePropertyReferenceMutation,
+  useAddPropertyReferenceMutation,
+  useDeletePropertyReferenceMutation,
   util: { getRunningQueriesThunk },
 } = classApi;
 

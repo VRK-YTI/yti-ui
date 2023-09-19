@@ -30,6 +30,7 @@ export default function CommonViewContent({
   data,
   displayLabel,
   applicationProfile,
+  renderActions,
 }: {
   modelId: string;
   hideInUse?: boolean;
@@ -37,6 +38,7 @@ export default function CommonViewContent({
   data: Resource;
   displayLabel?: boolean;
   applicationProfile?: boolean;
+  renderActions?: () => void;
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
@@ -312,22 +314,38 @@ export default function CommonViewContent({
 
   return (
     <>
-      {!hideInUse && applicationProfile && (
-        <BasicBlock title={t('in-use-in-this-model', { ns: 'admin' })}>
-          {inUse
-            ? t('in-use', { ns: 'admin' })
-            : t('not-in-use', { ns: 'admin' })}
-        </BasicBlock>
+      {applicationProfile && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <BasicBlock title={t('in-use-in-this-model', { ns: 'admin' })}>
+            {inUse
+              ? t('in-use', { ns: 'admin' })
+              : t('not-in-use', { ns: 'admin' })}
+          </BasicBlock>
+          {renderActions && renderActions()}
+        </div>
       )}
 
       {displayLabel && (
-        <BasicBlock title={getDisplayLabelTitle(data.type)}>
-          {getLanguageVersion({
-            data: data.label,
-            lang: displayLang ?? i18n.language,
-            appendLocale: true,
-          })}
-        </BasicBlock>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <BasicBlock title={getDisplayLabelTitle(data.type)}>
+            {getLanguageVersion({
+              data: data.label,
+              lang: displayLang ?? i18n.language,
+              appendLocale: true,
+            })}
+          </BasicBlock>
+          {!applicationProfile && renderActions && renderActions()}
+        </div>
       )}
 
       <BasicBlock title={translateCommonForm('identifier', data.type, t)}>

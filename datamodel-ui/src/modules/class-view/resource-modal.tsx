@@ -38,6 +38,7 @@ interface ResourceModalProps {
   buttonIcon?: boolean;
   limitSearchTo?: 'LIBRARY' | 'PROFILE';
   limitToSelect?: boolean;
+  applicationProfile?: boolean;
 }
 
 export default function ResourceModal({
@@ -47,6 +48,7 @@ export default function ResourceModal({
   buttonIcon,
   limitSearchTo,
   limitToSelect,
+  applicationProfile,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -185,7 +187,7 @@ export default function ResourceModal({
             searchParams={searchParams}
             setSearchParams={handleSearch}
             setContentLanguage={setContentLanguage}
-            multiTypeSelection
+            multiTypeSelection={applicationProfile}
             languageVersioned
             modelId={modelId}
           />
@@ -194,7 +196,9 @@ export default function ResourceModal({
         <ModalFooter>
           <Button
             disabled={
-              searchParams.limitToModelType === 'LIBRARY' || selectedId === ''
+              (applicationProfile &&
+                searchParams.limitToModelType === 'LIBRARY') ||
+              selectedId === ''
             }
             onClick={() => handleSubmit('select')}
             id="use-selected-button"
