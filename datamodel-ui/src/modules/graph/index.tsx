@@ -303,6 +303,11 @@ const GraphContent = ({
     }
   }, [cleanUnusedCorners, edges, nodes, setNodes]);
 
+  console.log('data', data);
+
+  console.log('nodes', nodes);
+  console.log('edges', edges);
+
   return (
     <div ref={reactFlowWrapper} style={{ height: '100%', width: '100%' }}>
       <ModelFlow

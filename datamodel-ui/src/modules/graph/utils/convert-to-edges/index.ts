@@ -83,11 +83,11 @@ export default function convertToEdges(
             label: parentNode?.label,
             identifier: parent,
             params: {
-              source: parent,
-              sourceHandle: parent,
-              target: node.identifier,
-              targetHandle: node.identifier,
-              id: `reactflow__edge-${parent}-${node.identifier}`,
+              source: node.identifier,
+              sourceHandle: node.identifier,
+              target: parent,
+              targetHandle: parent,
+              id: `reactflow__edge-${node.identifier}-${parent}`,
             },
             applicationProfile,
           });
