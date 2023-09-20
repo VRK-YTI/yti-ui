@@ -1,11 +1,14 @@
+import {
+  ClassNodeDataType,
+  CornerNodeDataType,
+  EdgeDataType,
+} from '@app/common/interfaces/graph.interface';
 import { VisualizationPutType } from '@app/common/interfaces/visualization.interface';
 import { Edge, Node } from 'reactflow';
 
 export default function generatePositionsPayload(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  nodes: Node<any>[],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  edges: Edge<any>[]
+  nodes: Node<ClassNodeDataType | CornerNodeDataType>[],
+  edges: Edge<EdgeDataType>[]
 ): VisualizationPutType[] {
   if (!nodes || nodes.length < 1) {
     return [];

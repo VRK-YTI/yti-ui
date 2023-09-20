@@ -1,3 +1,4 @@
+import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { VisualizationType } from '@app/common/interfaces/visualization.interface';
 import { Node } from 'reactflow';
@@ -7,7 +8,7 @@ export default function createClassNode(
   modelId: string,
   applicationProfile?: boolean,
   refetch?: () => void
-): Node {
+): Node<ClassNodeDataType> {
   return {
     id: node.identifier,
     position: { x: node.position.x, y: node.position.y },
@@ -21,12 +22,12 @@ export default function createClassNode(
       resources: [
         ...node.attributes.map((a) => ({
           ...a,
-          type: ResourceType.ATTRIBUTE,
+          type: ResourceType.ATTRIBUTE as ResourceType.ATTRIBUTE,
         })),
         ...(applicationProfile
           ? node.associations.map((a) => ({
               ...a,
-              type: ResourceType.ASSOCIATION,
+              type: ResourceType.ASSOCIATION as ResourceType.ASSOCIATION,
             }))
           : []),
       ],

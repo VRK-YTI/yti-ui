@@ -63,8 +63,8 @@ export default function convertToEdges(
             params: {
               source: node.identifier,
               sourceHandle: node.identifier,
-              target: assoc.referenceTarget,
-              targetHandle: assoc.referenceTarget,
+              target: assoc.referenceTarget as string,
+              targetHandle: assoc.referenceTarget as string,
               id: `reactflow__edge-${node.identifier}-${assoc.referenceTarget}`,
             },
             applicationProfile: applicationProfile,
@@ -77,7 +77,6 @@ export default function convertToEdges(
       ...node.parentClasses
         .filter((parent) => nodes.find((n) => n.identifier === parent))
         .flatMap((parent) => {
-          console.log('should be here');
           const parentNode = nodes.find(
             (n) => n.identifier === parent
           ) as VisualizationType;

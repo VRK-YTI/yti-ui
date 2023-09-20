@@ -107,8 +107,8 @@ const GraphContent = ({
             position: project({ x: x - left - 20 * getZoom(), y: y - top }),
             referenceTarget: target,
           },
-          applicationProfile,
-          deleteNodeById
+          deleteNodeById,
+          applicationProfile
         ),
       ]);
 
@@ -244,9 +244,9 @@ const GraphContent = ({
           data.nodes,
           data.hiddenNodes,
           modelId,
+          deleteNodeById,
           applicationProfile,
-          applicationProfile ? refetch : undefined,
-          deleteNodeById
+          applicationProfile ? refetch : undefined
         )
       );
       setEdges(
@@ -304,7 +304,6 @@ const GraphContent = ({
   }, [cleanUnusedCorners, edges, nodes, setNodes]);
 
   console.log('data', data);
-
   console.log('nodes', nodes);
   console.log('edges', edges);
 
