@@ -13,7 +13,9 @@ export default function convertToEdges(
   if (
     !nodes ||
     nodes.length < 1 ||
-    nodes.filter((node) => node.associations.length > 0).length < 1
+    nodes.filter(
+      (node) => node.associations.length > 0 || node.parentClasses.length > 0
+    ).length < 1
   ) {
     return [];
   }
@@ -75,6 +77,7 @@ export default function convertToEdges(
       ...node.parentClasses
         .filter((parent) => nodes.find((n) => n.identifier === parent))
         .flatMap((parent) => {
+          console.log('should be here');
           const parentNode = nodes.find(
             (n) => n.identifier === parent
           ) as VisualizationType;

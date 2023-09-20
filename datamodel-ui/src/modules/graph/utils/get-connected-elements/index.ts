@@ -23,10 +23,11 @@ export default function getConnectedElements(
     if (
       node &&
       node.type === 'classNode' &&
-      !edges.find(
+      (!edges.find(
         (e) =>
           e[direction === 'target' ? 'source' : 'target'] === begin[direction]
-      )
+      ) ||
+        nodes.find((n) => n.id === begin[direction])?.type === 'classNode')
     ) {
       return [begin.id, begin[direction]];
     }
