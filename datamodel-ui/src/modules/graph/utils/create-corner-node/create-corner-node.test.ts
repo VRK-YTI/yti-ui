@@ -17,7 +17,9 @@ describe('create-corner-node', () => {
 
     expect(returned).toStrictEqual({
       id: '#corner-1',
-      data: {},
+      data: {
+        handleNodeDelete: handleNodeDeleteMock,
+      },
       position: {
         x: 100,
         y: 250,

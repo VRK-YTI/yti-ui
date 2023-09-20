@@ -32,7 +32,7 @@ describe('convert-to-nodes', () => {
     const input = visualizationTypeArray;
     const inputHidden = visualizationHiddenTypeArray;
 
-    const expected = convertedWithHiddenExpected;
+    const expected = convertedWithHiddenExpected(handleNodeDeleteMock);
 
     const returned = convertToNodes(
       input,
