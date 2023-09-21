@@ -197,8 +197,8 @@ export const Resource = styled.div<{ $highlight?: boolean }>`
   }
 
   .fi-icon {
-    height: 16px;
-    width: 16px;
+    height: 17px;
+    width: 17px;
   }
 
   ${(props) =>
