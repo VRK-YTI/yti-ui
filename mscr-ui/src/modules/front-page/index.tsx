@@ -18,7 +18,6 @@ import Separator from 'yti-common-ui/separator';
 import SchemaFormModal from '../schema-form/schema-form-modal';
 import CrosswalkFormModal from '../crosswalk-form/crosswalk-form-modal';
 import { ButtonBlock } from './front-page.styles';
-import PersonalWorkspace from '../personal-home';
 import CreateCrosswalk from '../create-crosswalk';
 import BasicTable from '@app/common/components/table';
 
@@ -84,9 +83,6 @@ export default function FrontPage() {
       <Separator isLarge />
       <BasicTable></BasicTable>
       <Separator isLarge />
-      <BasicTable></BasicTable>
-      <Separator></Separator>
-      <BasicTable></BasicTable>
     </main>
   );
 }

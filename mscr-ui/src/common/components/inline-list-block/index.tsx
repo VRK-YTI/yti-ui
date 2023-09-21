@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Label } from 'suomifi-ui-components';
 import InlineList from '../inline-list';
+import { Schema } from '@app/common/interfaces/schema.interface';
 
 const InlineListBlockWrapper = styled.div`
   .fi-label,
@@ -13,10 +14,7 @@ const InlineListBlockWrapper = styled.div`
 interface InlineListBlockProps {
   label: string;
   optionalText?: string;
-  items: {
-    id: string;
-    label: string;
-  }[];
+  items: Schema[];
   addNewComponent: React.ReactElement;
   labelRow?: boolean;
   deleteDisabled?: string[] | boolean;

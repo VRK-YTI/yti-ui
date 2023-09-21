@@ -1,12 +1,10 @@
 import { useTranslation } from 'next-i18next';
 import { ExternalLink, Button, Text } from 'suomifi-ui-components';
 import { List, ListItem } from './inline-list.styles';
+import { Schema } from '@app/common/interfaces/schema.interface';
 
 export interface InlineListProps {
-  items: {
-    label: string;
-    id: string;
-  }[];
+  items: Schema[];
   handleRemoval: (value: string) => void;
   labelRow?: boolean;
   deleteDisabled: string[] | boolean;
@@ -27,22 +25,14 @@ export default function InlineList({
   return (
     <List className="inline-list">
       {items.map((item) => (
-        <ListItem key={item.id}>
+        <ListItem key={item.pid}>
           {labelRow ? (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <Text>{item.label}</Text>
-              <ExternalLink
-                href={item.id}
-                labelNewWindow={t('link-opens-new-window-external', {
-                  ns: 'common',
-                })}
-              >
-                {item.id}
-              </ExternalLink>
+              <Text>{item.status}</Text>
             </div>
           ) : (
             <ExternalLink
-              href={item.id}
+              href={item.pid}
               labelNewWindow={t('link-opens-new-window-external', {
                 ns: 'common',
               })}
@@ -57,7 +47,7 @@ export default function InlineList({
             <Button
               variant="secondaryNoBorder"
               icon="remove"
-              onClick={() => handleRemoval(item.id)}
+              onClick={() => handleRemoval(item.pid)}
             >
               {t('remove')}
             </Button>
