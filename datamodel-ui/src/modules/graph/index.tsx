@@ -84,10 +84,6 @@ const GraphContent = ({
   const { data, isSuccess, refetch } = useGetVisualizationQuery(modelId);
   const [putPositions, result] = usePutPositionsMutation();
 
-  console.log('data', data);
-  console.log('nodes', nodes);
-  console.log('edges', edges);
-
   const deleteNodeById = useCallback(
     (id: string) => {
       handleCornerNodeDelete(id, setNodes, setEdges, applicationProfile);
