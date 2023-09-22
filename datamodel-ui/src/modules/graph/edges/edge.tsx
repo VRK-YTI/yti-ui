@@ -2,6 +2,7 @@ import {
   resetHovered,
   selectDisplayLang,
   selectHighlighted,
+  selectModelTools,
   selectSelected,
   setHovered,
 } from '@app/common/components/model/model.slice';
@@ -32,6 +33,9 @@ export default function DefaultEdge({
   const globalSelected = useSelector(selectSelected());
   const displayLang = useSelector(selectDisplayLang());
   const highlighted = useSelector(selectHighlighted());
+  const { showAssociations, showAssociationRestrictions } = useSelector(
+    selectModelTools()
+  );
   const sourceNode = useStore(
     useCallback((store) => store.nodeInternals.get(source), [source])
   );
@@ -60,6 +64,10 @@ export default function DefaultEdge({
 
     dispatch(resetHovered());
   };
+
+  if (!showAssociations || !showAssociationRestrictions) {
+    return <></>;
+  }
 
   return (
     <>
