@@ -1,8 +1,14 @@
+import { EdgeDataType } from '@app/common/interfaces/graph.interface';
 import { Edge, MarkerType } from 'reactflow';
 
 interface CreateEdgeProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  params: any;
+  params: {
+    id: string;
+    source: string;
+    sourceHandle: string;
+    target: string;
+    targetHandle: string;
+  };
   applicationProfile?: boolean;
   identifier?: string;
   isCorner?: boolean;
@@ -17,13 +23,12 @@ export default function createEdge({
   isCorner,
   label,
   offsetSource,
-}: CreateEdgeProps): Edge {
+}: CreateEdgeProps): Edge<EdgeDataType> {
   return {
     ...params,
     type: 'generalEdge',
     markerEnd: getMarkerEnd(applicationProfile, isCorner),
     data: {
-      ...params?.data,
       ...(label ? { label: label } : {}),
       ...(identifier ? { identifier: identifier } : {}),
       ...(offsetSource ? { offsetSource: offsetSource } : {}),

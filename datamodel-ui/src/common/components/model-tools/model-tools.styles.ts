@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 export const ToolsTooltip = styled.div`
   width: 295px;
-  height: 327px;
+  min-height: 200px;
+  height: max-content;
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthBase};
   border-radius: 2px;
@@ -27,7 +28,6 @@ export const ToggleButtonGroup = styled.div`
 
   .fi-toggle--button > * {
     display: flex;
-    flex-direction: ;
   }
 
   .fi-toggle--button > * > .fi-text--body {

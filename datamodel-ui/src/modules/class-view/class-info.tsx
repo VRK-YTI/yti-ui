@@ -37,6 +37,7 @@ import { initializeResource } from '@app/common/components/resource/resource.sli
 import { useStoreDispatch } from '@app/store';
 import UriList from '@app/common/components/uri-list';
 import UriInfo from '@app/common/components/uri-info';
+import { UriData } from '@app/common/interfaces/uri.interface';
 
 interface ClassInfoProps {
   data?: ClassType;
@@ -73,8 +74,7 @@ export default function ClassInfo({
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
 
   const handleFollowUp = (value: {
-    label?: string;
-    uri: string;
+    uriData: UriData;
     type: ResourceType;
     mode: 'select' | 'create';
   }) => {
@@ -86,21 +86,11 @@ export default function ClassInfo({
       addReference({
         prefix: modelId,
         identifier: data.identifier,
-        uri: value.uri,
+        uri: value.uriData.uri,
         applicationProfile: applicationProfile ?? false,
       });
     } else {
-      dispatch(
-        initializeResource(
-          value.type,
-          languages,
-          {
-            uri: value.label ?? '',
-            label: value.label ? { en: value.label } : {},
-          },
-          true
-        )
-      );
+      dispatch(initializeResource(value.type, languages, value.uriData, true));
       setRenderResourceForm(true);
     }
   };
@@ -193,7 +183,11 @@ export default function ClassInfo({
         handleFollowUp={(identifier, type) => {
           setRenderResourceForm(false);
           handleFollowUp({
-            uri: `http://uri.suomi.fi/datamodel/ns/${modelId}/${identifier}`,
+            uriData: {
+              uri: `http://uri.suomi.fi/datamodel/ns/${modelId}/${identifier}`,
+              curie: `${modelId}:${identifier}`,
+              label: {},
+            },
             type: type,
             mode: 'select',
           });
