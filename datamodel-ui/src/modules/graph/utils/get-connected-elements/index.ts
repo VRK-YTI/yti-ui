@@ -13,12 +13,21 @@ export default function getConnectedElements(
     const node = nodes.find((n) => n.id === begin[direction]);
 
     if (
+      direction === 'target'
+        ? begin.source === begin[direction]
+        : begin.target === begin[direction]
+    ) {
+      return [begin.id];
+    }
+
+    if (
       node &&
       node.type === 'classNode' &&
-      !edges.find(
+      (!edges.find(
         (e) =>
           e[direction === 'target' ? 'source' : 'target'] === begin[direction]
-      )
+      ) ||
+        nodes.find((n) => n.id === begin[direction])?.type === 'classNode')
     ) {
       return [begin.id, begin[direction]];
     }
@@ -33,6 +42,10 @@ export default function getConnectedElements(
     }
 
     return [begin.id, begin[direction], ...getConnected(newNode, direction)];
+  }
+
+  if (edges.length < 1) {
+    return [];
   }
 
   if (start.type === 'cornerNode') {

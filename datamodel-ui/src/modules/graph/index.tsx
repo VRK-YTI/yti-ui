@@ -107,8 +107,8 @@ const GraphContent = ({
             position: project({ x: x - left - 20 * getZoom(), y: y - top }),
             referenceTarget: target,
           },
-          applicationProfile,
-          deleteNodeById
+          deleteNodeById,
+          applicationProfile
         ),
       ]);
 
@@ -244,9 +244,9 @@ const GraphContent = ({
           data.nodes,
           data.hiddenNodes,
           modelId,
+          deleteNodeById,
           applicationProfile,
-          applicationProfile ? refetch : undefined,
-          deleteNodeById
+          applicationProfile ? refetch : undefined
         )
       );
       setEdges(
