@@ -7,7 +7,8 @@ export const ToolsPanel = styled(Panel)`
 
 export const ToolsTooltip = styled.div`
   width: 295px;
-  height: 327px;
+  min-height: 200px;
+  height: max-content;
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthBase};
   border-radius: 2px;

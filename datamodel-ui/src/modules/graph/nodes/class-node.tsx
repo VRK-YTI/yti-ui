@@ -39,26 +39,11 @@ import { useAddNodeShapePropertyReferenceMutation } from '@app/common/components
 import ResourceModal from '@app/modules/class-view/resource-modal';
 import getConnectedElements from '../utils/get-connected-elements';
 import { UriData } from '@app/common/interfaces/uri.interface';
+import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
 
 interface ClassNodeProps {
   id: string;
-  data: {
-    identifier: string;
-    label: { [key: string]: string };
-    resources: {
-      label: { [key: string]: string };
-      identifier: string;
-      type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
-      codeLists?: string[];
-      dataType?: string | null;
-      maxCount?: number | null;
-      minCount?: number | null;
-    }[];
-    modelId?: string;
-    resourceType?: 'association' | 'attribute';
-    applicationProfile?: boolean;
-    refetch?: () => void;
-  };
+  data: ClassNodeDataType;
   selected: boolean;
 }
 

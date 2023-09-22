@@ -8,11 +8,18 @@ describe('generate-positions-payload', () => {
   });
 
   it('should generate a payload for positions', () => {
+    const handleNodeDelete = jest.fn();
+
     const returned = generatePositionsPayload(
       [
         {
           id: 'node-1',
-          data: {},
+          data: {
+            identifier: 'node-1',
+            label: {},
+            modelId: 'model-1',
+            resources: [],
+          },
           position: {
             x: 0,
             y: 0,
@@ -20,7 +27,12 @@ describe('generate-positions-payload', () => {
         },
         {
           id: 'node-2',
-          data: {},
+          data: {
+            identifier: 'node-2',
+            label: {},
+            modelId: 'model-1',
+            resources: [],
+          },
           position: {
             x: 50,
             y: 0,
@@ -28,7 +40,12 @@ describe('generate-positions-payload', () => {
         },
         {
           id: 'node-3',
-          data: {},
+          data: {
+            identifier: 'node-3',
+            label: {},
+            modelId: 'model-1',
+            resources: [],
+          },
           position: {
             x: 50,
             y: 50,
@@ -36,7 +53,9 @@ describe('generate-positions-payload', () => {
         },
         {
           id: '#corner-1',
-          data: {},
+          data: {
+            handleNodeDelete: handleNodeDelete,
+          },
           position: {
             x: 25,
             y: 25,

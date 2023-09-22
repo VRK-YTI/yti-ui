@@ -19,6 +19,7 @@ import {
 import getEdgeParams from '../utils/get-edge-params';
 import { EdgeContent, HoveredPath } from './edge.styles';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { EdgeDataType } from '@app/common/interfaces/graph.interface';
 
 export default function DefaultEdge({
   id,
@@ -27,7 +28,7 @@ export default function DefaultEdge({
   target,
   markerEnd,
   style,
-}: EdgeProps) {
+}: EdgeProps<EdgeDataType>) {
   const { i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const globalSelected = useSelector(selectSelected());
@@ -46,7 +47,7 @@ export default function DefaultEdge({
   const { sx, sy, tx, ty } = getEdgeParams(
     sourceNode,
     targetNode,
-    data.offsetSource
+    data?.offsetSource
   );
 
   const [edgePath, labelX, labelY] = getStraightPath({
@@ -57,7 +58,7 @@ export default function DefaultEdge({
   });
 
   const handleHover = (value?: boolean) => {
-    if (value) {
+    if (value && data?.identifier) {
       dispatch(setHovered(data.identifier, 'associations'));
       return;
     }
@@ -87,26 +88,29 @@ export default function DefaultEdge({
         onMouseOver={() => handleHover(true)}
       />
 
-      {getLabel(data.label) && (
+      {getLabel(data?.label) && (
         <EdgeLabelRenderer key={`edge-label-${source}-${target}`}>
           <EdgeContent
             className="nopan"
-            $applicationProfile={data.applicationProfile}
+            $applicationProfile={data ? data.applicationProfile : false}
             $labelX={labelX}
             $labelY={labelY}
             $highlight={
               globalSelected.type === 'associations' &&
+              data &&
               globalSelected.id === data.identifier
+                ? true
+                : false
             }
           >
-            <div>{getLabel(data.label)}</div>
+            <div>{getLabel(data?.label)}</div>
           </EdgeContent>
         </EdgeLabelRenderer>
       )}
     </>
   );
 
-  function getLabel(label: { [key: string]: string }) {
+  function getLabel(label?: { [key: string]: string }) {
     if (!label || Object.keys(label).length < 1) {
       return undefined;
     }
