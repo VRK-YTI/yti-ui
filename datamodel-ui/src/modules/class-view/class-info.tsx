@@ -346,7 +346,7 @@ export default function ClassInfo({
                 handleFollowUp={handleFollowUp}
                 limitSearchTo={'LIBRARY'}
                 applicationProfile={applicationProfile}
-                limitToSelect
+                limitToSelect={!applicationProfile}
               />
               <Button variant="secondary" id="order-attributes-button">
                 {t('order-list', { ns: 'admin' })}
@@ -383,13 +383,16 @@ export default function ClassInfo({
               t('no-assocations')
             )}
           </BasicBlock>
-          {applicationProfile && hasPermission ? (
+
+          {hasPermission ? (
             <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
               <ResourceModal
                 modelId={modelId}
                 type={ResourceType.ASSOCIATION}
                 limitSearchTo="LIBRARY"
                 handleFollowUp={handleFollowUp}
+                applicationProfile={applicationProfile}
+                limitToSelect={!applicationProfile}
               />
               <Button variant="secondary" id="order-associations-button">
                 {t('order-list', { ns: 'admin' })}
