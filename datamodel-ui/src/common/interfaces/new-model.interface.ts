@@ -6,7 +6,6 @@ export interface NewModel {
   languages: string[];
   organizations: string[];
   prefix: string;
-  status: string;
   type: string;
   contact: string;
 }
