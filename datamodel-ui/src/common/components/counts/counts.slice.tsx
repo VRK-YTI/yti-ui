@@ -14,7 +14,7 @@ function getUrl(urlState: UrlState) {
       ? urlState.types.map((type) => type.toUpperCase())
       : [],
     ...(urlState.status.length === 0
-      ? { status: ['VALID', 'DRAFT'] }
+      ? { status: ['VALID', 'SUGGESTED'] }
       : { status: urlState.status }),
   }).filter(
     (item) =>
