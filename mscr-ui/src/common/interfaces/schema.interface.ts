@@ -1,7 +1,3 @@
-import { MultiSelectData } from 'suomifi-ui-components';
-import { LanguageBlockType } from 'yti-common-ui/components/form/language-selector';
-import { Status } from './status.interface';
-
 export interface Schema {
   pid: string;
   format: string;

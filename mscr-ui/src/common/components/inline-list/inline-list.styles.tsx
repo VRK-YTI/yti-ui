@@ -8,6 +8,10 @@ export const List = styled.div`
   > div:not(:last-child) {
     margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
   }
+
+  .header-list {
+    font-weight: bold;
+  }
 `;
 
 export const ListItem = styled.div`
