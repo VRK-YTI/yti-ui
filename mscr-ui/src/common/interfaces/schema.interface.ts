@@ -1,3 +1,4 @@
+
 export interface Schema {
   pid: string;
   format: string;
@@ -11,6 +12,8 @@ export interface Schema {
   languages: string[];
   organizations: Organization[];
   filedata: File;
+  prefix: string;
+  revision: string;
 }
 export interface Organization {
   id: string;
