@@ -31,7 +31,7 @@ import { selectDisplayLang } from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import ResourceModal from './resource-modal';
-import { useAddNodeShapePropertyReferenceMutation } from '@app/common/components/class/class.slice';
+import { useAddPropertyReferenceMutation } from '@app/common/components/class/class.slice';
 import ResourceForm from '../resource/resource-form';
 import { initializeResource } from '@app/common/components/resource/resource.slice';
 import { useStoreDispatch } from '@app/store';
@@ -70,8 +70,7 @@ export default function ClassInfo({
 
   const [renderResourceForm, setRenderResourceForm] = useState(false);
   const displayLang = useSelector(selectDisplayLang());
-  const [addReference, addReferenceResult] =
-    useAddNodeShapePropertyReferenceMutation();
+  const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
 
   const handleFollowUp = (value: {
@@ -86,8 +85,9 @@ export default function ClassInfo({
     if (value.mode === 'select') {
       addReference({
         prefix: modelId,
-        nodeshapeId: data.identifier,
+        identifier: data.identifier,
         uri: value.uriData.uri,
+        applicationProfile: applicationProfile ?? false,
       });
     } else {
       dispatch(initializeResource(value.type, languages, value.uriData, true));
@@ -332,13 +332,15 @@ export default function ClassInfo({
             )}
           </BasicBlock>
 
-          {applicationProfile && hasPermission ? (
+          {hasPermission ? (
             <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
               <ResourceModal
                 modelId={modelId}
                 type={ResourceType.ATTRIBUTE}
                 handleFollowUp={handleFollowUp}
                 limitSearchTo={'LIBRARY'}
+                applicationProfile={applicationProfile}
+                limitToSelect={!applicationProfile}
               />
               <Button variant="secondary" id="order-attributes-button">
                 {t('order-list', { ns: 'admin' })}
@@ -375,13 +377,16 @@ export default function ClassInfo({
               t('no-assocations')
             )}
           </BasicBlock>
-          {applicationProfile && hasPermission ? (
+
+          {hasPermission ? (
             <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
               <ResourceModal
                 modelId={modelId}
                 type={ResourceType.ASSOCIATION}
                 limitSearchTo="LIBRARY"
                 handleFollowUp={handleFollowUp}
+                applicationProfile={applicationProfile}
+                limitToSelect={!applicationProfile}
               />
               <Button variant="secondary" id="order-associations-button">
                 {t('order-list', { ns: 'admin' })}

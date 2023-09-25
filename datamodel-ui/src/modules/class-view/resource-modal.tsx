@@ -38,6 +38,7 @@ interface ResourceModalProps {
   buttonIcon?: boolean;
   limitSearchTo?: 'LIBRARY' | 'PROFILE';
   limitToSelect?: boolean;
+  applicationProfile?: boolean;
 }
 
 export default function ResourceModal({
@@ -47,6 +48,7 @@ export default function ResourceModal({
   buttonIcon,
   limitSearchTo,
   limitToSelect,
+  applicationProfile,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -164,9 +166,7 @@ export default function ResourceModal({
         onClick={() => handleOpen()}
         id="add-resource-button"
       >
-        {type === ResourceType.ASSOCIATION
-          ? t('add-association-restriction')
-          : t('add-attribute-restriction')}
+        {translateResourceAddition(type, t, applicationProfile)}
       </Button>
 
       <WideModal
@@ -176,9 +176,15 @@ export default function ResourceModal({
         onEscKeyDown={() => setVisible(false)}
       >
         <ModalContent>
-          <ModalTitle>{translateResourceAddition(type, t, true)}</ModalTitle>
+          <ModalTitle>
+            {translateResourceAddition(type, t, applicationProfile)}
+          </ModalTitle>
           <MultiColumnSearch
-            primaryColumnName={translateResourceName(type, t, true)}
+            primaryColumnName={translateResourceName(
+              type,
+              t,
+              applicationProfile
+            )}
             result={{
               totalHitCount: result.data?.totalHitCount ?? 0,
               items: resultsFormatted,
@@ -188,7 +194,7 @@ export default function ResourceModal({
             searchParams={searchParams}
             setSearchParams={handleSearch}
             setContentLanguage={setContentLanguage}
-            multiTypeSelection
+            multiTypeSelection={applicationProfile}
             languageVersioned
             modelId={modelId}
           />
@@ -197,14 +203,14 @@ export default function ResourceModal({
         <ModalFooter>
           <Button
             disabled={
-              searchParams.limitToModelType === 'LIBRARY' || selectedId === ''
+              (applicationProfile &&
+                searchParams.limitToModelType === 'LIBRARY') ||
+              selectedId === ''
             }
             onClick={() => handleSubmit('select')}
             id="use-selected-button"
           >
-            {type === ResourceType.ASSOCIATION
-              ? t('select-association-restriction')
-              : t('select-attribute-restriction')}
+            {translateResourceAddition(type, t, applicationProfile)}
           </Button>
 
           {!limitToSelect && (
