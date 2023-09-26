@@ -115,6 +115,7 @@ export default function RangeAndDomain({
                 defaultSelected={data.path?.uri}
               />
             }
+            deleteDisabled={true}
             handleRemoval={() => null}
             items={data.path ? [data.path] : []}
             label={`${t('target-attribute')} (owl:DatatypeProperty)`}
