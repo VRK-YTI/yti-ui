@@ -33,13 +33,11 @@ export function validateFormUpdate(data: ModelFormType) {
   // All selected languages should have a title
   if (
     selectedLanguages.filter(
-      (lang) => !lang.title || lang.title === '' || lang.title.length < 1
+      (lang) => !lang.title || lang.title.trim().length < 1
     ).length > 0
   ) {
     const langsWithError = selectedLanguages
-      .filter(
-        (lang) => !lang.title || lang.title === '' || lang.title.length < 1
-      )
+      .filter((lang) => !lang.title || lang.title.trim().length < 1)
       .map((lang) => lang.uniqueItemId);
 
     errors.titleAmount = langsWithError ?? [];
@@ -64,7 +62,11 @@ export function validateFormUpdate(data: ModelFormType) {
   if (
     data.links.length > 0 &&
     data.links.some(
-      (link) => !link.name || link.name === '' || !link.uri || link.uri === ''
+      (link) =>
+        !link.name ||
+        link.name.trim() === '' ||
+        !link.uri ||
+        link.uri.trim() === ''
     )
   ) {
     errors.linksMissingInfo = true;
