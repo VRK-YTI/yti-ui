@@ -13,9 +13,11 @@ import {
 
 // Suomifi design system tokens
 // Colors:
-const navigationHeadingColor = suomifiDesignTokens.colors.depthDark2;
-const hoverAndSelectedFontColor = suomifiDesignTokens.colors.highlightBase;
-const selectedBackgroundColor = suomifiDesignTokens.colors.highlightLight3;
+const tokenColors = suomifiDesignTokens.colors;
+const navigationHeadingColor = tokenColors.depthDark2;
+const hoverAndSelectedColor = tokenColors.highlightBase;
+const selectedBackgroundColor = tokenColors.highlightLight3;
+const textBaseColor = tokenColors.blackBase;
 // Typography:
 const groupHeadingFont = suomifiDesignTokens.typography.leadTextSmallScreen;
 const navigationLevel3Font = suomifiDesignTokens.typography.actionElementInnerTextBold;
@@ -40,7 +42,7 @@ export const NavigationHeading = styled(Heading)`
 
 export const GroupHeading = styled(Heading)`
   && {
-    color: #212121;
+    color: ${textBaseColor};
     ${groupHeadingFont};
   }
 `;
@@ -49,7 +51,10 @@ export const MscrSideNavigation = styled(SideNavigation)`
   .fi-side-navigation_divider {
     display: none;
   }
-  .fi-side-navigation-item--selected {
+`;
+
+export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`
+  &&&&&&&&&&&&&&&.fi-side-navigation-item--child-selected div {
     background-color: ${selectedBackgroundColor};
   }
 `;
@@ -58,17 +63,23 @@ export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
   .fi-icon {
     display: none;
   }
+  && .fi-side-navigation-item_sub-list {
+    background-color: transparent;
+  }
+  &.fi-side-navigation-item--child-selected {
+    background-color: ${selectedBackgroundColor};
+  }
 `;
 
 export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
   &&&& a {
-    color: black;
+    color: ${textBaseColor};
     ${navigationLevel3Font}
   }
   &.fi-side-navigation-item--selected {
-    border-left: solid .2rem #2a6ebb;
+    border-left: solid 3px ${hoverAndSelectedColor};
     && .fi-link--router {
-      color: #2a6ebb;
+      color: ${hoverAndSelectedColor};
     }
   }
   &&&& .fi-link--router {
@@ -77,7 +88,6 @@ export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
 `;
 
 export const PersonalNavigationWrapper = styled.div`
-  background-color: #EAF2FA;
   margin-left: 30px;
 `;
 
@@ -86,6 +96,6 @@ export const GroupOpenButton = styled.button`
     background-color: transparent;
   }
   &:hover h3 {
-    color: ${hoverAndSelectedFontColor};
+    color: ${hoverAndSelectedColor};
   }
 `;

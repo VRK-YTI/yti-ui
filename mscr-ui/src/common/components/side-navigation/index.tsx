@@ -16,7 +16,8 @@ import {
   PersonalNavigationWrapper,
   MscrSideNavigation,
   GroupHeading,
-  GroupOpenButton
+  GroupOpenButton,
+  MscrSideNavigationLevel1
 } from './side-navigation.styles';
 import {useTranslation} from 'next-i18next';
 import {useState} from 'react';
@@ -29,8 +30,10 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
   // Here should be a collection of selectedness states for each workspace that gets rendered
   const [ openGroup, setOpenGroup ] = useState('');
   const router = useRouter();
+  console.log(router.asPath);
   const personalContentSlug = 'homepage';
   const personalSettingsSlug = 'settings';
+  const groupContentSlug = 'group-home';
 
   return (
     <SideNavigationWrapper $breakpoint={breakpoint} id="sidebar">
@@ -38,7 +41,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
         heading=""
         aria-label={t('workspace-navigation')}
       >
-        <SideNavigationItem
+        <MscrSideNavigationLevel1
           subLevel={1}
           expanded
           content={<NavigationHeading variant="h2">Personal workspace</NavigationHeading>}
@@ -68,8 +71,8 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
               }
             />
           </PersonalNavigationWrapper>
-        </SideNavigationItem>
-        <SideNavigationItem
+        </MscrSideNavigationLevel1>
+        <MscrSideNavigationLevel1
           subLevel={1}
           expanded
           content={<NavigationHeading variant="h2">Group workspace</NavigationHeading>}
@@ -99,11 +102,13 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
             >
               <MscrSideNavigationLevel3
                 subLevel={3}
-                selected={router.pathname == 'group-home'}
+                selected={router.asPath == '/group-home'}
                 content={
-                  <RouterLink href={'group-home'}>
-                    {t('workspace-navigation-content')}
-                  </RouterLink>
+                  <Link href={'/' + groupContentSlug} passHref>
+                    <RouterLink>
+                      {t('workspace-navigation-content')}
+                    </RouterLink>
+                  </Link>
                 }
               />
               <MscrSideNavigationLevel3
@@ -117,7 +122,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
               />
             </MscrSideNavigationLevel2>
           )}
-        </SideNavigationItem>
+        </MscrSideNavigationLevel1>
       </MscrSideNavigation>
     </SideNavigationWrapper>
   );
