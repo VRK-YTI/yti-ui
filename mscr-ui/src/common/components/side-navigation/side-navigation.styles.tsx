@@ -10,7 +10,11 @@ import {
 export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
   flex-grow: 1;
   width: 25%;
+  position: fixed;
+  left: 0;
+  top: 76px;
   background-color: white;
+  // Sync the width to the content margin
   max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
   padding: ${(props) => props.theme.suomifi.spacing.m};
 `;

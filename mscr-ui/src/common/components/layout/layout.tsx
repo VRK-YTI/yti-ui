@@ -9,7 +9,7 @@ import {
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
 import SmartHeader from '../smart-header';
-import { useBreakpoints } from 'yti-common-ui/media-query';
+import {Breakpoint, useBreakpoints} from 'yti-common-ui/media-query';
 import SkipLink from 'yti-common-ui/skip-link';
 import getConfig from 'next/config';
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
@@ -67,7 +67,8 @@ export default function Layout({
 
           <Block>
             <SideNavigationPanel user={user ?? undefined} />
-            <ContentContainer>
+            <ContentContainer
+              $breakpoint={breakpoint}>
               {alerts && alerts}
               <MarginContainer $breakpoint={breakpoint}>
                 {children}

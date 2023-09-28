@@ -45,7 +45,7 @@ export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`
 
 // content layout
 
-export const ContentContainer = styled.div<{ $fullScreen?: boolean }>`
+export const ContentContainer = styled.div<{ $fullScreen?: boolean; $breakpoint?: Breakpoint }>`
   background-color: ${(props) =>
     props.$fullScreen
       ? props.theme.suomifi.colors.whiteBase
@@ -54,7 +54,12 @@ export const ContentContainer = styled.div<{ $fullScreen?: boolean }>`
     !props.$fullScreen &&
     `1px solid ${props.theme.suomifi.colors.depthLight1}`};
   flex-grow: 1;
-
+  // Sync the left margin with the navigation bar width + padding
+  ${(props) =>
+    props.$breakpoint &&
+    `
+    margin-left: ${small(props.$breakpoint, '25%', '454px')}
+  `}
   ${(props) =>
     props.$fullScreen &&
     `
