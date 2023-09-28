@@ -49,10 +49,9 @@ export default function IndexPage(props: IndexPageProps) {
     user?: User;
   }): React.ReactElement {
     if (slug === 'group-home') {
-      console.log('Now showing Group Page');
       return <GroupWorkspace pid={''} />;
     } else {
-      console.log(slug);
+      //console.log(slug);
       return <PersonalWorkspace user={user} />;
     }
   }

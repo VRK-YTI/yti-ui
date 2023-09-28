@@ -27,6 +27,7 @@ export default function BasicTable() {
   return (
     <div>
       {'Schemas'}
+      
       <Separator isLarge />
       <InlineList
         items={data}
