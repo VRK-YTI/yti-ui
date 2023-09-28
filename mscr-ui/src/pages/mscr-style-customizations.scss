@@ -1,0 +1,44 @@
+.linked-tree-item {
+  //background-color: #ede4ff !important;
+}
+.linkable-tree-item {
+  //background-color: #eaffe4 !important;
+}
+.not-linkable-tree-item {
+  //background-color: #ffe4e4 !important;
+}
+.MuiTreeItem-label {
+  cursor: pointer !important;
+  user-select: none;
+}
+
+.content-box {
+  border: 1px solid #c1c1c1;
+  background-color: #fff;
+}
+
+.node-info-box {
+  min-height: 175px;
+  font-size: 0.95rem;
+  margin: 0px;
+  .source-to-destination-wrap {
+    min-height: 42px;
+    button {
+      padding: 0px;
+    }
+    .arrow-icon {
+      margin: 0px 15px;
+      font-size: 1.3rem;
+    }
+  }
+}
+
+h5 {
+  font-size: 1rem;
+  line-height: 2.5rem;
+  font-weight: bold;
+}
+
+.actions-link-icon svg{
+  font-size: 2.1rem;
+}

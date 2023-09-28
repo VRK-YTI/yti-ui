@@ -26,6 +26,7 @@ import { User } from 'yti-common-ui/interfaces/user.interface';
 import GroupWorkspace from '../../modules/group-home';
 import PersonalWorkspace from '../../modules/personal-home';
 import { useBreakpoints } from 'yti-common-ui/media-query';
+import TreeviewTest, {TreeViewTest} from "@app/common/components/treeview-test";
 
 import { Grid } from '@mui/material';
 import SideNavigationPanel from '@app/common/components/side-navigation';
@@ -50,8 +51,12 @@ export default function IndexPage(props: IndexPageProps) {
   }): React.ReactElement {
     if (slug === 'group-home') {
       return <GroupWorkspace pid={''} />;
-    } else {
-      //console.log(slug);
+    }
+    else if (slug === 'crosswalk-edit') {
+      return <TreeviewTest />;
+    }
+    else {
+      console.log(slug);
       return <PersonalWorkspace user={user} />;
     }
   }
