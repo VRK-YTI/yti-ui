@@ -26,15 +26,6 @@ export default function SchemaTree({nodes, treeSelectedArray, treeExpanded, isSo
         performTreeAction(isSourceTree, 'treeToggle', event, nodeIds);
     };
 
-    useEffect(() => {
-        if (treeSelectedArray) {
-            console.log('tree selected array changed -> re-render');
-            //setSelected(treeSelectedArray);
-        }
-    }, [treeSelectedArray]);
-
-    //setSelected(props.treeExpanded);
-
     return (<TreeView
                 aria-label="controlled"
                 expanded={treeExpanded}

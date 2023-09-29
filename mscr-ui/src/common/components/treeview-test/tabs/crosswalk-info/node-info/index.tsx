@@ -3,7 +3,10 @@ import {CrosswalkConnection} from "@app/common/interfaces/crosswalk-connection.i
 import EastIcon from '@mui/icons-material/East';
 
 export default function NodeInfo(props: { isAnySelectedLinked: boolean, isBothSelectedLinked: boolean, sourceData: CrosswalkConnection, targetData: CrosswalkConnection, performNodeInfoAction: any }) {
+    console.log('source', props.sourceData);
+    console.log('target', props.targetData);
     return (<>
+
         <div className='row d-flex justify-content-between node-info-box'>
 
             {/*  SOURCE NODE */}
@@ -25,7 +28,7 @@ export default function NodeInfo(props: { isAnySelectedLinked: boolean, isBothSe
                 <div className='row'>
                     <div className='col-6'>
                         <div className='fw-bold'>Node type:</div>
-                        <div>string</div>
+                        <div>{props.sourceData.sourceType}</div>
                         <br/>
                     </div>
                     <div className='col-6'>
@@ -58,7 +61,7 @@ export default function NodeInfo(props: { isAnySelectedLinked: boolean, isBothSe
                 <div className='row'>
                     <div className='col-6'>
                         <div className='fw-bold'>Node type:</div>
-                        <div>string</div>
+                        <div>{props.sourceData.targetType}</div>
                         <br/>
                     </div>
                     <div className='col-6'>

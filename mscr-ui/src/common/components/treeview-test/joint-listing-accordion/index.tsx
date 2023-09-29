@@ -18,7 +18,7 @@ import LinkOffIcon from '@mui/icons-material/LinkOff';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import {Button as Sbutton, Textarea, TextInput} from "suomifi-ui-components";
 import Button from '@mui/material/Button';
-import {CrosswalkConnection} from "@app/common/interfaces/crosswalk-connection.interface";
+import {CrosswalkConnection, RenderTree} from "@app/common/interfaces/crosswalk-connection.interface";
 
 const crosswalkConnectionInit = {
     source: '',

@@ -26,15 +26,15 @@ export function validateForm(data: CrosswalkFormType) {
 
   // All selected languages should have a title
   if (
-    selectedLanguages.filter(
-      (lang) => !lang.title || lang.title === '' || lang.title.length < 1
-    ).length > 0
+      selectedLanguages.filter(
+          (lang) => !lang.title || lang.title === '' || lang.title.length < 1
+      ).length > 0
   ) {
     const langsWithError = selectedLanguages
-      .filter(
-        (lang) => !lang.title || lang.title === '' || lang.title.length < 1
-      )
-      .map((lang) => lang.uniqueItemId);
+        .filter(
+            (lang) => !lang.title || lang.title === '' || lang.title.length < 1
+        )
+        .map((lang) => lang.uniqueItemId);
 
     errors.titleAmount = langsWithError ?? [];
   }

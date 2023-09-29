@@ -32,8 +32,8 @@ interface CrosswalkFormModalProps {
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
 export default function CrosswalkFormModal({
-  refetch,
-}: CrosswalkFormModalProps) {
+                                             refetch,
+                                           }: CrosswalkFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
@@ -43,7 +43,7 @@ export default function CrosswalkFormModal({
   const [errors, setErrors] = useState<FormErrors>();
   const [userPosted, setUserPosted] = useState(false);
   const [getAuthenticatedUser, authenticateUser] =
-    useGetAuthenticatedUserMutMutation();
+      useGetAuthenticatedUserMutMutation();
   const [putCrosswalk, result] = usePutCrosswalkMutation();
 
   const handleOpen = () => {
@@ -98,54 +98,54 @@ export default function CrosswalkFormModal({
   }
 
   return (
-    <>
-      <Button
-        icon="plus"
-        style={{ height: 'min-content' }}
-        onClick={() => handleOpen()}
-      >
-        {'Add New Crosswalk'}
-      </Button>
+      <>
+        <Button
+            icon="plus"
+            style={{ height: 'min-content' }}
+            onClick={() => handleOpen()}
+        >
+          {'Add New Crosswalk'}
+        </Button>
 
-      <Modal
-        appElementId="__next"
-        visible={visible}
-        onEscKeyDown={() => handleClose()}
-        variant={isSmall ? 'smallScreen' : 'default'}
-      >
-        <ModalContent>
-          <ModalTitle>{'Add New Crosswalk'}</ModalTitle>
-          <Paragraph style={{ marginBottom: '30px' }}>
-            {'Add New Crosswalk Description'}
-          </Paragraph>
-          <CrosswalkForm
-            formData={formData}
-            setFormData={setFormData}
-            userPosted={userPosted}
-            disabled={authenticateUser.data && authenticateUser.data.anonymous}
-            errors={userPosted ? errors : undefined}
-          />
-        </ModalContent>
-        <ModalFooter>
-          {authenticateUser.data && authenticateUser.data.anonymous && (
-            <InlineAlert status="error" role="alert" id="unauthenticated-alert">
-              {t('error-unauthenticated')}
-            </InlineAlert>
-          )}
-          {userPosted && (
-            <FormFooterAlert
-              labelText={t('missing-information-title')}
-              alerts={getErrors(errors)}
+        <Modal
+            appElementId="__next"
+            visible={visible}
+            onEscKeyDown={() => handleClose()}
+            variant={isSmall ? 'smallScreen' : 'default'}
+        >
+          <ModalContent>
+            <ModalTitle>{'Add New Crosswalk'}</ModalTitle>
+            <Paragraph style={{ marginBottom: '30px' }}>
+              {'Add New Crosswalk Description'}
+            </Paragraph>
+            <CrosswalkForm
+                formData={formData}
+                setFormData={setFormData}
+                userPosted={userPosted}
+                disabled={authenticateUser.data && authenticateUser.data.anonymous}
+                errors={userPosted ? errors : undefined}
             />
-          )}
+          </ModalContent>
+          <ModalFooter>
+            {authenticateUser.data && authenticateUser.data.anonymous && (
+                <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+                  {t('error-unauthenticated')}
+                </InlineAlert>
+            )}
+            {userPosted && (
+                <FormFooterAlert
+                    labelText={t('missing-information-title')}
+                    alerts={getErrors(errors)}
+                />
+            )}
 
-          <Button onClick={() => handleSubmit()}>{'Create Crosswalk'}</Button>
-          <Button variant="secondary" onClick={() => handleClose()}>
-            {t('cancel')}
-          </Button>
-        </ModalFooter>
-      </Modal>
-    </>
+            <Button onClick={() => handleSubmit()}>{'Create Crosswalk'}</Button>
+            <Button variant="secondary" onClick={() => handleClose()}>
+              {t('cancel')}
+            </Button>
+          </ModalFooter>
+        </Modal>
+      </>
   );
 
   function getErrors(errors?: FormErrors): string[] | undefined {
@@ -154,17 +154,17 @@ export default function CrosswalkFormModal({
     }
 
     const langsWithError = Object.entries(errors)
-      .filter(([_, value]) => Array.isArray(value))
-      ?.flatMap(([key, value]) =>
-        (value as string[]).map(
-          (lang) =>
-            `${translateModelFormErrors(key, t)} ${translateLanguage(lang, t)}`
-        )
-      );
+        .filter(([_, value]) => Array.isArray(value))
+        ?.flatMap(([key, value]) =>
+            (value as string[]).map(
+                (lang) =>
+                    `${translateModelFormErrors(key, t)} ${translateLanguage(lang, t)}`
+            )
+        );
 
     const otherErrors = Object.entries(errors)
-      .filter(([_, value]) => value && !Array.isArray(value))
-      ?.map(([key, _]) => translateModelFormErrors(key, t));
+        .filter(([_, value]) => value && !Array.isArray(value))
+        ?.map(([key, _]) => translateModelFormErrors(key, t));
 
     if (result.isError) {
       const errorMessage = getApiError(result.error);
