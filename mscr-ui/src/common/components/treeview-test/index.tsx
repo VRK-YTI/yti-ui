@@ -94,12 +94,12 @@ export default function TreeviewTest() {
     );
 
     // STATE VARIABLES
-    const [sourceTreeData, setSourceData] = React.useState<any>(emptyTree);
+    const [sourceTreeData, setSourceData] = React.useState<any>(MockupSchemaLoader(true));
     const [sourceTreeExpanded, setExpanded] = React.useState<string[]>([]);
     const [sourceTreeSelectedArray, selectFromSourceTreeByIds] = React.useState<string[]>([]);
     const [sourceTreeSelection, setSourceSelection] = React.useState<RenderTree>(emptyTreeSelection);
 
-    const [targetTreeData, setTargetData] = React.useState<any>(emptyTree);
+    const [targetTreeData, setTargetData] = React.useState<any>(MockupSchemaLoader(true));
     const [targetTreeExpanded, setTargetExpanded] = React.useState<string[]>([]);
     const [targetTreeSelectedArray, selectFromTargetTreeByIds] = React.useState<string[]>([]);
     const [targetTreeSelection, setTargetSelection] =  React.useState<RenderTree>(emptyTreeSelection);
@@ -107,7 +107,7 @@ export default function TreeviewTest() {
     const [currentlySelectedSource, setCurrentlySelectedSource] = React.useState<CrosswalkConnection>(crosswalkConnectionInit);
     const [currentlySelectedTarget, setCurrentlySelectedTarget] = React.useState<CrosswalkConnection>(crosswalkConnectionInit);
 
-    const [connectedCrosswalks, setConnectedCrosswalks] = React.useState<CrosswalkConnection[]>([crosswalkConnectionInit]);
+    const [connectedCrosswalks, setConnectedCrosswalks] = React.useState<CrosswalkConnection[] | []>([]);
     const [isAnySelectedLinked, setAnySelectedLinkedState] = React.useState<boolean>(false);
     const [isBothSelectedLinked, setBothSelectedLinkedState] = React.useState<boolean>(false);
     const [tabValue, setTabValue] = React.useState(0);
@@ -308,7 +308,7 @@ export default function TreeviewTest() {
     const handleExpandClick = (isSourceTree: boolean) => {
         const retData: string[] = [];
         if (isSourceTree) {
-           sourceTreeData.forEach((item: { children: string | any[], id: string }) => {
+            sourceTreeData.forEach((item: { children: string | any[], id: string }) => {
                 if (item.children?.length > 0) {
                     retData.push(item.id.toString());
                 }
@@ -451,7 +451,7 @@ export default function TreeviewTest() {
                 <Tab label="Version history" {...a11yProps(2)} />
             </Tabs>
         </Box>
-{/*            <CustomTabPanel value={tabValue} index={0}>
+            {/*            <CustomTabPanel value={tabValue} index={0}>
             </CustomTabPanel>
             <CustomTabPanel value={tabValue} index={1}>
             </CustomTabPanel>
@@ -463,11 +463,11 @@ export default function TreeviewTest() {
                     {tabValue === 0 &&
                         <><h5>Node information</h5>
                             <Box sx={{height: 180, flexGrow: 1}}>
-                            <NodeInfo isAnySelectedLinked={isAnySelectedLinked}
-                                      isBothSelectedLinked={isBothSelectedLinked} sourceData={currentlySelectedSource}
-                                      targetData={currentlySelectedTarget}
-                                      performNodeInfoAction={performNodeInfoAction}></NodeInfo>
-                        </Box><br/><h5>Node selection</h5>
+                                <NodeInfo isAnySelectedLinked={isAnySelectedLinked}
+                                          isBothSelectedLinked={isBothSelectedLinked} sourceData={currentlySelectedSource}
+                                          targetData={currentlySelectedTarget}
+                                          performNodeInfoAction={performNodeInfoAction}></NodeInfo>
+                            </Box><br/><h5>Node selection</h5>
                             <div className='row gx-0'>
                                 {/*  SOURCE TREE */}
                                 <div className='col-5 content-box px-0 mr-1'>
@@ -491,11 +491,11 @@ export default function TreeviewTest() {
                                     <Box sx={{height: 400, flexGrow: 1, maxWidth: 700, overflowY: 'auto'}}>
 
                                         <SchemaTree nodes={sourceTreeData[0]}
-    isSourceTree={true}
-    treeSelectedArray={sourceTreeSelectedArray}
-    treeExpanded={sourceTreeExpanded}
-    performTreeAction={performCallbackFromTreeAction}
-    />
+                                                    isSourceTree={true}
+                                                    treeSelectedArray={sourceTreeSelectedArray}
+                                                    treeExpanded={sourceTreeExpanded}
+                                                    performTreeAction={performCallbackFromTreeAction}
+                                        />
 
                                     </Box>
                                 </div>
@@ -505,14 +505,14 @@ export default function TreeviewTest() {
 
                                     <div className='d-flex align-content-center justify-content-center flex-column h-100'>
                                         <div className='d-flex justify-content-center'>
-                                    <IconButton onClick={() => addOrRemoveJoint(!isBothSelectedLinked)}
-                                                 className='actions-link-icon'
-                                                 title={(!isBothSelectedLinked ? 'Link selected nodes' : 'Unlink selected nodes')}
-                                                 aria-label={(!isBothSelectedLinked ? 'Link selected nodes' : 'Unlink selected nodes')}
-                                                 color="primary" size="large"
-                                                 disabled={isAnySelectedLinked && !isBothSelectedLinked || !(currentlySelectedSource.source.length > 0 && currentlySelectedTarget.source.length > 0)}>
-                                        {isBothSelectedLinked ? <LinkOffIcon/> : <AddLinkIcon/>}
-                                    </IconButton>
+                                            <IconButton onClick={() => addOrRemoveJoint(!isBothSelectedLinked)}
+                                                        className='actions-link-icon'
+                                                        title={(!isBothSelectedLinked ? 'Link selected nodes' : 'Unlink selected nodes')}
+                                                        aria-label={(!isBothSelectedLinked ? 'Link selected nodes' : 'Unlink selected nodes')}
+                                                        color="primary" size="large"
+                                                        disabled={isAnySelectedLinked && !isBothSelectedLinked || !(currentlySelectedSource.source.length > 0 && currentlySelectedTarget.source.length > 0)}>
+                                                {isBothSelectedLinked ? <LinkOffIcon/> : <AddLinkIcon/>}
+                                            </IconButton>
                                         </div>
                                     </div>
 
@@ -530,11 +530,11 @@ export default function TreeviewTest() {
                                     </div>
                                     <Box sx={{height: 400, flexGrow: 1, maxWidth: 700, overflowY: 'auto'}}>
                                         <SchemaTree nodes={targetTreeData[0]}
-    isSourceTree={false}
-    treeSelectedArray={targetTreeSelectedArray}
-    treeExpanded={targetTreeExpanded}
-    performTreeAction={performCallbackFromTreeAction}
-    />
+                                                    isSourceTree={false}
+                                                    treeSelectedArray={targetTreeSelectedArray}
+                                                    treeExpanded={targetTreeExpanded}
+                                                    performTreeAction={performCallbackFromTreeAction}
+                                        />
                                     </Box>
                                 </div>
                             </div>
@@ -546,25 +546,25 @@ export default function TreeviewTest() {
                 <div className='col-4'>
                     <h5>Linked nodes</h5>
                     <div className='joint-listing-accordion-wrap'>
-                    <Box className='mb-4' sx={{height: 640, flexGrow: 1, maxWidth: 700, overflowY: 'auto'}}>
-                    <JointListingAccordion crosswalkJoints={connectedCrosswalks}
-                                           performAccordionAction={performCallbackFromAccordionAction}></JointListingAccordion>
-                    </Box>
+                        <Box className='mb-4' sx={{height: 640, flexGrow: 1, maxWidth: 700, overflowY: 'auto'}}>
+                            <JointListingAccordion crosswalkJoints={connectedCrosswalks}
+                                                   performAccordionAction={performCallbackFromAccordionAction}></JointListingAccordion>
+                        </Box>
                     </div>
-                        <div className='row d-flex flex-row pb-4 justify-content-end px-4'>
-                            <div className='col-4'><Sbutton onClick={() => {
+                    <div className='row d-flex flex-row pb-4 justify-content-end px-4'>
+                        {/* <div className='col-4'><Sbutton onClick={() => {
                                 loadCroswalk();
                             }}>Load</Sbutton>
-                            </div>
-                            <div className='col-4'><Sbutton onClick={() => {
-                                loadCroswalk();
-                            }}>Save</Sbutton>
-                            </div>
-                            <div className='col-4'><Sbutton onClick={() => {
-                                saveCroswalk();
-                            }}>Publish</Sbutton>
-                            </div>
+                            </div>*/}
+                        <div className='col-4'><Sbutton onClick={() => {
+                            loadCroswalk();
+                        }}>Save</Sbutton>
                         </div>
+                        <div className='col-4'><Sbutton onClick={() => {
+                            saveCroswalk();
+                        }}>Publish</Sbutton>
+                        </div>
+                    </div>
                 </div>
             </div>
             <hr></hr>
