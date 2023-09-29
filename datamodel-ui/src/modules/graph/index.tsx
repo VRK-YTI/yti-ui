@@ -8,6 +8,7 @@ import {
   EdgeTypes,
   ReactFlowProvider,
   useReactFlow,
+  Node,
 } from 'reactflow';
 import {
   useGetVisualizationQuery,
@@ -43,6 +44,7 @@ import getConnectedElements, {
   getClassConnectedElements,
 } from './utils/get-connected-elements';
 import handleCornerNodeDelete from './utils/handle-corner-node-delete';
+import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
 
 interface GraphProps {
   modelId: string;
@@ -287,6 +289,43 @@ const GraphContent = ({
       dispatch(setNotification('POSITION_SAVE'));
     }
   }, [result, dispatch]);
+
+  useEffect(() => {
+    if (applicationProfile) {
+      setEdges((edges) =>
+        edges.map((edge) => {
+          const sourceNode: Node<ClassNodeDataType> | undefined = nodes.find(
+            (n) => n.id === edge.source
+          );
+
+          if (
+            !sourceNode ||
+            sourceNode.data.resources.length === 0 ||
+            sourceNode.data.resources.filter((r) => r.type !== 'ATTRIBUTE')
+              .length === 0
+          ) {
+            return edge;
+          }
+
+          const attributeCount = sourceNode.data.resources.filter(
+            (r) => r.type === 'ATTRIBUTE'
+          ).length;
+
+          return {
+            ...edge,
+            data: {
+              ...edge.data,
+              offsetSource: tools.showAttributeRestrictions
+                ? edge.data.offsetSource + attributeCount
+                : edge.data.offsetSource - attributeCount,
+            },
+          };
+        })
+      );
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [applicationProfile, tools.showAttributeRestrictions, setEdges]);
 
   useEffect(() => {
     const cleanCorners = () => {

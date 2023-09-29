@@ -56,6 +56,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const globalHover = useSelector(selectHovered());
   const globalShowAttributes = useSelector(selectModelTools()).showAttributes;
   const displayLang = useSelector(selectDisplayLang());
+  const tools = useSelector(selectModelTools());
   const [showAttributes, setShowAttributes] = useState(true);
   const [showTooltip, setShowTooltip] = useState(false);
   const [hover, setHover] = useState(false);
@@ -207,25 +208,47 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
 
       {showAttributes &&
         data.resources &&
-        data.resources.map((r) => (
-          <Resource
-            key={`${id}-child-${r.identifier}`}
-            className="node-resource"
-            onClick={() => handleResourceClick(r.identifier, r.type)}
-            $highlight={getResourceHighlighted(r.identifier, r.type)}
-            onMouseEnter={() => handleResourceHover(r.identifier, r.type)}
-            onMouseLeave={() => handleResourceHover(r.identifier, r.type, true)}
-          >
-            {data.applicationProfile &&
-              (r.type === ResourceType.ASSOCIATION ? (
-                <IconSwapVertical />
-              ) : (
-                <IconRows />
-              ))}
+        data.resources
+          .filter((r) => {
+            if (
+              r.type === ResourceType.ATTRIBUTE &&
+              ((data.applicationProfile && tools.showAttributeRestrictions) ||
+                (!data.applicationProfile && tools.showAttributes))
+            ) {
+              return true;
+            }
 
-            {renderResourceLabel(r)}
-          </Resource>
-        ))}
+            if (
+              r.type === ResourceType.ASSOCIATION &&
+              ((data.applicationProfile && tools.showAssociationRestrictions) ||
+                (!data.applicationProfile && tools.showAssociations))
+            ) {
+              return true;
+            }
+
+            return false;
+          })
+          .map((r) => (
+            <Resource
+              key={`${id}-child-${r.identifier}`}
+              className="node-resource"
+              onClick={() => handleResourceClick(r.identifier, r.type)}
+              $highlight={getResourceHighlighted(r.identifier, r.type)}
+              onMouseEnter={() => handleResourceHover(r.identifier, r.type)}
+              onMouseLeave={() =>
+                handleResourceHover(r.identifier, r.type, true)
+              }
+            >
+              {data.applicationProfile &&
+                (r.type === ResourceType.ASSOCIATION ? (
+                  <IconSwapVertical />
+                ) : (
+                  <IconRows />
+                ))}
+
+              {renderResourceLabel(r)}
+            </Resource>
+          ))}
     </ClassNodeDiv>
   );
 

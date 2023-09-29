@@ -147,6 +147,7 @@ export const ToolsButtonGroup = styled.div<{
     width: 30px !important;
     height: 30px !important;
     padding: 0;
+    pointer-events: all;
 
     ${(props) => props.$isSmall && 'opacity: 0.5;'}
 
