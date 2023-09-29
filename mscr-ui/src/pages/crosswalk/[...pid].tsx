@@ -36,7 +36,6 @@ export default function SchemaPage(props: IndexPageProps) {
     useGetCrosswalkQuery(crosswalkId);
 
   function renderSchema() {
-    console.log(data);
     let crosswalkContent;
     if (isLoading) {
       crosswalkContent = (

@@ -1,5 +1,6 @@
 import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
 import { useTranslation } from 'next-i18next';
+import router from 'next/router';
 import { Button } from 'suomifi-ui-components';
 
 export default function CreateCrosswalk() {
@@ -10,6 +11,8 @@ export default function CreateCrosswalk() {
 
   const handleOpen = () => {
     // Router Push to create crosswalk page
+    router.push({
+      pathname:'/crosswalk-edit/'});
   };
 
   return (
