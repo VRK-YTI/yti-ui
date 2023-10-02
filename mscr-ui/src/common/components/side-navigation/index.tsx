@@ -14,19 +14,34 @@ import {
   MscrSideNavigationLevel2,
   MscrSideNavigationLevel3,
   PersonalNavigationWrapper,
+  MscrSideNavigation,
+  GroupHeading,
+  GroupOpenButton,
+  MscrSideNavigationLevel1
 } from './side-navigation.styles';
-import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import {useTranslation} from 'next-i18next';
+import {useState} from 'react';
+import {useRouter} from 'next/router';
 
 export default function SideNavigationPanel({ user }: { user?: User }) {
+  const groups = user?.organizations;
   const { breakpoint } = useBreakpoints();
   const { t } = useTranslation('common');
   // Here should be a collection of selectedness states for each workspace that gets rendered
-  const [selected, setSelected] = useState(false);
+  const [ openGroup, setOpenGroup ] = useState('');
+  const router = useRouter();
+  console.log(router.asPath);
+  const personalContentSlug = 'homepage';
+  const personalSettingsSlug = 'settings';
+  const groupContentSlug = 'group-home';
+
   return (
     <SideNavigationWrapper $breakpoint={breakpoint} id="sidebar">
-      <SideNavigation heading="" aria-label={t('workspace-navigation')}>
-        <SideNavigationItem
+      <MscrSideNavigation
+        heading=""
+        aria-label={t('workspace-navigation')}
+      >
+        <MscrSideNavigationLevel1
           subLevel={1}
           expanded
           content={
@@ -38,67 +53,83 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
           <PersonalNavigationWrapper>
             <MscrSideNavigationLevel3
               subLevel={3}
-              selected
+              selected = {router.query.homepage == personalContentSlug} // The correct pathname for personal workspace content here
               content={
-                <RouterLink href="/personal-home">
-                  {t('workspace-navigation-content')}
-                </RouterLink>
+                // This is how the links should be once the target pages exist
+                <Link href={'/' + personalContentSlug} passHref>
+                  <RouterLink>
+                    {t('workspace-navigation-content')}
+                  </RouterLink>
+                </Link>
               }
             />
             <MscrSideNavigationLevel3
               subLevel={3}
+              selected = {router.query.homepage == personalSettingsSlug}
               content={
-                <RouterLink href="/personal-home">
-                  {t('workspace-navigation-settings')}
-                </RouterLink>
+                <Link href={'/' + personalSettingsSlug} passHref>
+                  <RouterLink>
+                    {t('workspace-navigation-settings')}
+                  </RouterLink>
+                </Link>
               }
             />
           </PersonalNavigationWrapper>
-        </SideNavigationItem>
-        <SideNavigationItem
+        </MscrSideNavigationLevel1>
+        <MscrSideNavigationLevel1
           subLevel={1}
           expanded
           content={
             <NavigationHeading variant="h2">Group workspace</NavigationHeading>
           }
         >
-          <MscrSideNavigationLevel2
-            subLevel={2}
-            selected={selected}
-            content={
-              <RouterLink
-                // Button opens the children that are links to content
-                asComponent={Button}
-                onClick={() => setSelected(!selected)}
-              >
-                Dilligent professionals
-              </RouterLink>
-            }
-          >
-            <MscrSideNavigationLevel3
-              subLevel={3}
+          {groups?.map(group =>
+            <MscrSideNavigationLevel2
+              key={group.id}
+              subLevel={2}
+              selected={openGroup == group.id}
               content={
-                <RouterLink href="/personal-home">
-                  {t('workspace-navigation-content')}
+                <RouterLink
+                  // Button opens the children that are links to content
+                  asComponent={GroupOpenButton}
+                  onClick={() => {
+                    if (openGroup == group.id) {
+                      setOpenGroup('');
+                      return;
+                    }
+                    setOpenGroup(group.id);
+                  }}
+                >
+                  <GroupHeading variant="h3">
+                    {group.name}
+                  </GroupHeading>
                 </RouterLink>
               }
-            />
-            <MscrSideNavigationLevel3
-              subLevel={3}
-              content={
-                <RouterLink href="/personal-home">
-                  {t('workspace-navigation-settings')}
-                </RouterLink>
-              }
-            />
-          </MscrSideNavigationLevel2>
-          <MscrSideNavigationLevel2
-            subLevel={2}
-            expanded
-            content={<RouterLink href="/group-home">Science 4 ever</RouterLink>}
-          />
-        </SideNavigationItem>
-      </SideNavigation>
+            >
+              <MscrSideNavigationLevel3
+                subLevel={3}
+                selected={router.asPath == '/group-home'}
+                content={
+                  <Link href={'/' + groupContentSlug} passHref>
+                    <RouterLink>
+                      {t('workspace-navigation-content')}
+                    </RouterLink>
+                  </Link>
+                }
+              />
+              <MscrSideNavigationLevel3
+                subLevel={3}
+                selected={router.pathname == group.id + 'settings'}
+                content={
+                  <RouterLink href={group.id + 'settings'}>
+                    {t('workspace-navigation-settings')}
+                  </RouterLink>
+                }
+              />
+            </MscrSideNavigationLevel2>
+          )}
+        </MscrSideNavigationLevel1>
+      </MscrSideNavigation>
     </SideNavigationWrapper>
   );
 }

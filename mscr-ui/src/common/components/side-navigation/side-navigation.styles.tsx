@@ -3,16 +3,18 @@ import { Breakpoint } from 'yti-common-ui/media-query';
 import { small } from 'yti-common-ui/media-query/styled-helpers';
 import {
   Heading,
-  RouterLink,
   SideNavigation,
-  SideNavigationItem,
+  SideNavigationItem
 } from 'suomifi-ui-components';
 
 export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
   flex-grow: 1;
   width: 100%;
+  position: fixed;
+  left: 0;
+  top: 76px;
   background-color: white;
-  // background-color: ${(props) => props.theme.suomifi.colors.depthSecondary};
+  // Sync the width to the content margin
   max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
   padding: ${(props) => props.theme.suomifi.spacing.m};
 `;
@@ -21,33 +23,51 @@ export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
 export const NavigationHeading = styled(Heading)`
   // Adding &-characters increases the specificity so you can override styles
   && {
-    color: #6b6b6b;
-    font-size: 1rem;
+    color: ${(props) => props.theme.suomifi.colors.depthDark2};
+    font-size: 16px;
+  }
+`;
+
+export const GroupHeading = styled(Heading)`
+  && {
+    color: ${(props) => props.theme.suomifi.colors.blackBase};
+    ${(props) => props.theme.suomifi.typography.leadTextSmallScreen};
+  }
+`;
+
+export const MscrSideNavigation = styled(SideNavigation)`
+  .fi-side-navigation_divider {
+    display: none;
+  }
+`;
+
+export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`
+  &&&&&&&&&&&&&&&.fi-side-navigation-item--child-selected div {
+    background-color: ${(props) => props.theme.suomifi.colors.highlightLight3};
   }
 `;
 
 export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
-  & {
-    background-color: #eaf2fa;
-  }
-  ,
   .fi-icon {
     display: none;
   }
-  ,
-  .span {
-    color: yellow;
+  && .fi-side-navigation-item_sub-list {
+    background-color: transparent;
+  }
+  &.fi-side-navigation-item--child-selected {
+    background-color: ${(props) => props.theme.suomifi.colors.highlightLight3};
   }
 `;
 
 export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
   &&&& a {
-    color: black;
+    color: ${(props) => props.theme.suomifi.colors.blackBase};
+    ${(props) => props.theme.suomifi.typography.actionElementInnerTextBold}
   }
   &.fi-side-navigation-item--selected {
-    border-left: solid 0.2rem #2a6ebb;
+    border-left: solid 3px ${(props) => props.theme.suomifi.colors.highlightBase};
     && .fi-link--router {
-      color: #2a6ebb;
+      color: ${(props) => props.theme.suomifi.colors.highlightBase};
     }
   }
   &&&& .fi-link--router {
@@ -56,6 +76,14 @@ export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
 `;
 
 export const PersonalNavigationWrapper = styled.div`
-  background-color: #eaf2fa;
-  padding: 1em;
+  margin-left: 30px;
+`;
+
+export const GroupOpenButton = styled.button`
+  &&&&& {
+    background-color: transparent;
+  }
+  &:hover h3 {
+    color: ${(props) => props.theme.suomifi.colors.highlightBase};
+  }
 `;
