@@ -61,8 +61,11 @@ export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
 
 export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
   &&&& a {
-    color: ${(props) => props.theme.suomifi.colors.blackBase};
+    color: ${(props) => props.theme.suomifi.colors.depthDark2};
     ${(props) => props.theme.suomifi.typography.actionElementInnerTextBold}
+    .fi-side-navigation-item--selected ~ & {
+      color: ${(props) => props.theme.suomifi.colors.blackBase};
+    }
   }
   &.fi-side-navigation-item--selected {
     border-left: solid 3px ${(props) => props.theme.suomifi.colors.highlightBase};

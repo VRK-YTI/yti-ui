@@ -53,7 +53,9 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
               content={
                 // This is how the links should be once the target pages exist
                 <Link href={'/' + personalContentSlug} passHref>
-                  <RouterLink>
+                  <RouterLink
+                    onClick={() => setOpenGroup('')}
+                  >
                     {t('workspace-navigation-content')}
                   </RouterLink>
                 </Link>
@@ -64,7 +66,9 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
               selected = {router.query.homepage == personalSettingsSlug}
               content={
                 <Link href={'/' + personalSettingsSlug} passHref>
-                  <RouterLink>
+                  <RouterLink
+                    onClick={() => setOpenGroup('')}
+                  >
                     {t('workspace-navigation-settings')}
                   </RouterLink>
                 </Link>
