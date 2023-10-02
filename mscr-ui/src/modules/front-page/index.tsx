@@ -20,6 +20,7 @@ import CrosswalkFormModal from '../crosswalk-form/crosswalk-form-modal';
 import { ButtonBlock } from './front-page.styles';
 import CreateCrosswalk from '../create-crosswalk';
 import BasicTable from '@app/common/components/table';
+import CrosswalkSelectionModal from "@app/modules/create-crosswalk/crosswalk-selection-modal";
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -78,7 +79,7 @@ export default function FrontPage() {
       <ButtonBlock>
         <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>
         <CrosswalkFormModal refetch={refetchInfo}></CrosswalkFormModal>
-        <CreateCrosswalk></CreateCrosswalk>
+        <CrosswalkSelectionModal refetch={refetchInfo}></CrosswalkSelectionModal>
       </ButtonBlock>
       <Separator isLarge />
       <BasicTable></BasicTable>

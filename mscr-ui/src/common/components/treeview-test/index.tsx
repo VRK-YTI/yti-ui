@@ -36,39 +36,50 @@ import {
 } from 'suomifi-ui-components';
 import {fetchCrosswalkData} from "@app/common/components/simple-api-service";
 import callback from "@app/pages/api/auth/callback";
+import {RenderTree, CrosswalkConnection} from "@app/common/interfaces/crosswalk-connection.interface";
 
 export default function TreeviewTest() {
-
-    interface crosswalkConnection {
-        source: string;
-        target: string;
-        sourceTitle: string;
-        targetTitle: string;
-        mappingType: string | undefined;
-        notes: string | undefined;
-        isSelected: boolean;
-    }
-
     interface simpleNode {
-        name: string;
+        name: string | undefined;
         id: string;
     }
 
-    const crosswalkConnectionInit = {
-        source: '',
-        target: '',
-        sourceTitle: '',
-        targetTitle: '',
-        mappingType: '',
-        notes: '',
+    const crosswalkConnectionInit: CrosswalkConnection = {
+        description: undefined,
         isSelected: false,
-    };
+        mappingType: undefined,
+        notes: undefined,
+        parentId: '',
+        parentName: undefined,
+        source: "",
+        sourceTitle: undefined,
+        sourceType: undefined,
+        target: "",
+        targetTitle: undefined,
+        targetType: undefined,
+        type: undefined
+    }
 
     const emptyTree: any = [{
         id: '0',
         name: '',
         children: '',
     }];
+
+    const emptyTreeSelection: RenderTree = {
+        children: [],
+        description: '',
+        id: '',
+        idNumeric: 0,
+        isLinked: false,
+        isMappable: '',
+        name: '',
+        required: '',
+        parentName: '',
+        parentId: 0,
+        title: '',
+        type: ''
+    }
 
     const fromTree = (nodes: any) => (
         <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name} className='linked-tree-item'>
@@ -83,20 +94,20 @@ export default function TreeviewTest() {
     );
 
     // STATE VARIABLES
-    const [sourceTreeData, setSourceData] = React.useState<any>(emptyTree);
+    const [sourceTreeData, setSourceData] = React.useState<any>(MockupSchemaLoader(true));
     const [sourceTreeExpanded, setExpanded] = React.useState<string[]>([]);
-    const [sourceTreeSelectedArray, setSourceSelected] = React.useState<string[]>([]);
-    const [sourceTreeSelectionTitle, setSourceSelectedTitle] = React.useState<string>('');
+    const [sourceTreeSelectedArray, selectFromSourceTreeByIds] = React.useState<string[]>([]);
+    const [sourceTreeSelection, setSourceSelection] = React.useState<RenderTree>(emptyTreeSelection);
 
-    const [targetTreeData, setTargetData] = React.useState<any>(emptyTree);
+    const [targetTreeData, setTargetData] = React.useState<any>(MockupSchemaLoader(true));
     const [targetTreeExpanded, setTargetExpanded] = React.useState<string[]>([]);
-    const [targetTreeSelectedArray, setTargetSelected] = React.useState<string[]>([]);
-    const [targetTreeSelectionTitle, setTargetSelectedTitle] = React.useState<string>('');
+    const [targetTreeSelectedArray, selectFromTargetTreeByIds] = React.useState<string[]>([]);
+    const [targetTreeSelection, setTargetSelection] =  React.useState<RenderTree>(emptyTreeSelection);
 
-    const [currentlySelectedSource, setCurrentlySelectedSource] = React.useState<crosswalkConnection>(crosswalkConnectionInit);
-    const [currentlySelectedTarget, setCurrentlySelectedTarget] = React.useState<crosswalkConnection>(crosswalkConnectionInit);
+    const [currentlySelectedSource, setCurrentlySelectedSource] = React.useState<CrosswalkConnection>(crosswalkConnectionInit);
+    const [currentlySelectedTarget, setCurrentlySelectedTarget] = React.useState<CrosswalkConnection>(crosswalkConnectionInit);
 
-    const [connectedCrosswalks, setConnectedCrosswalks] = React.useState<crosswalkConnection[]>([crosswalkConnectionInit]);
+    const [connectedCrosswalks, setConnectedCrosswalks] = React.useState<CrosswalkConnection[] | []>([]);
     const [isAnySelectedLinked, setAnySelectedLinkedState] = React.useState<boolean>(false);
     const [isBothSelectedLinked, setBothSelectedLinkedState] = React.useState<boolean>(false);
     const [tabValue, setTabValue] = React.useState(0);
@@ -106,16 +117,25 @@ export default function TreeviewTest() {
     const crosswalkVisual: string[] = [];
 
     useEffect(() => {
-        const sourceNode: crosswalkConnection = Object.assign({}, crosswalkConnectionInit);
+        // USED BY NODE INFO BOX SOURCE
+        const sourceNode: CrosswalkConnection = Object.assign({}, crosswalkConnectionInit);
         sourceNode.source = sourceTreeSelectedArray.toString();
-        sourceNode.sourceTitle = sourceTreeSelectionTitle;
+        sourceNode.sourceTitle = sourceTreeSelection.name;
+        sourceNode.parentId = sourceTreeSelection.parentId;
+        sourceNode.parentName = sourceTreeSelection.parentName;
+        sourceNode.description = sourceTreeSelection.description;
+        sourceNode.type = sourceTreeSelection.type;
         const target = getJointEndNode(sourceTreeSelectedArray, true);
         sourceNode.targetTitle = target.name;
         sourceNode.target = target.id;
 
-        const targetNode: crosswalkConnection = Object.assign({}, crosswalkConnectionInit);
+        // USED BY NODE INFO BOX TARGET
+        const targetNode: CrosswalkConnection = Object.assign({}, crosswalkConnectionInit);
         targetNode.source = targetTreeSelectedArray.toString();
-        targetNode.sourceTitle = targetTreeSelectionTitle;
+        targetNode.sourceTitle = targetTreeSelection.name;
+        targetNode.parentId = targetTreeSelection.parentId;
+        targetNode.description = targetTreeSelection.description;
+        targetNode.type = sourceTreeSelection.type;
         const source = getJointEndNode(targetTreeSelectedArray, false);
         targetNode.targetTitle = source.name;
         targetNode.target = source.id;
@@ -123,7 +143,7 @@ export default function TreeviewTest() {
         updateIsLinkedStatus(sourceNode, targetNode);
         setCurrentlySelectedSource(sourceNode);
         setCurrentlySelectedTarget(targetNode);
-    }, [sourceTreeSelectedArray, targetTreeSelectedArray, connectedCrosswalks, crosswalksList, isAnySelectedLinked, isBothSelectedLinked]);
+    }, [sourceTreeSelectedArray, targetTreeSelectedArray, connectedCrosswalks, crosswalksList]);
 
 
     // RENDER CROSSWALKS AFTER CHANGE
@@ -140,35 +160,47 @@ export default function TreeviewTest() {
     function addOrRemoveJoint(add: boolean) {
         if (add) {
             setConnectedCrosswalks(crosswalkMappings => [...crosswalkMappings, {
-                source: sourceTreeSelectedArray.toString(),
-                target: targetTreeSelectedArray.toString(),
-                sourceTitle: sourceTreeSelectionTitle,
-                targetTitle: targetTreeSelectionTitle,
-                mappingType: '',
-                notes: '',
-                isSelected: false
+                description: undefined,
+                isSelected: false,
+                mappingType: undefined,
+                notes: undefined,
+                source: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].id,
+                sourceTitle: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].name,
+                parentName: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].parentName,
+                parentId: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].parentId,
+                sourceType: undefined,
+                targetType: undefined,
+                target: targetTreeData[parseInt(targetTreeSelectedArray.toString())].id,
+                targetTitle: targetTreeData[parseInt(targetTreeSelectedArray.toString())].name,
+                type: undefined
             }]);
         } else {
             removeJoint({
                 source: sourceTreeSelectedArray.toString(),
                 target: targetTreeSelectedArray.toString(),
-                sourceTitle: sourceTreeSelectionTitle,
-                targetTitle: targetTreeSelectionTitle,
+                sourceTitle: undefined,
+                targetTitle: undefined,
+                sourceType: undefined,
+                targetType: undefined,
+                parentName: '',
+                parentId: '',
                 mappingType: '',
                 notes: '',
-                isSelected: false
+                isSelected: false,
+                description: undefined,
+                type: undefined
             });
         }
     };
 
     function renderCrosswalksList() {
-        connectedCrosswalks.forEach((item: crosswalkConnection) => {
-            crosswalkVisual.push(item.sourceTitle, item.targetTitle);
+        connectedCrosswalks.forEach((item: CrosswalkConnection) => {
+            //crosswalkVisual.push(item.sourceTitle, item.targetTitle);
             setCrosswalkList([...crosswalkVisual]);
         });
     }
 
-    function updateIsLinkedStatus(source: crosswalkConnection, target: crosswalkConnection) {
+    function updateIsLinkedStatus(source: CrosswalkConnection, target: CrosswalkConnection) {
         setAnySelectedLinkedState(source.target.length > 0 || target.target.length > 0);
         setBothSelectedLinkedState(source.target.length > 0 && source.target === target.source);
     }
@@ -194,25 +226,29 @@ export default function TreeviewTest() {
         connectedCrosswalks.forEach(item => {
             if (isSourceTree) {
                 if (item.source === nodeIds[0].toString()) {
+                    // @ts-ignore
                     ret.push(item.sourceTitle);
+                    // @ts-ignore
                     ret.push(item.targetTitle);
                 }
             } else if (item.target === nodeIds[0]) {
+                // @ts-ignore
                 ret.push(item.sourceTitle);
+                // @ts-ignore
                 ret.push(item.targetTitle);
             }
         });
         return ret;
     }
 
-    function removeJoint(cc: crosswalkConnection) {
+    function removeJoint(cc: CrosswalkConnection) {
         const newCrosswalks = [...connectedCrosswalks.filter(item => {
             return ((item.target !== cc.target) || (item.source !== cc.source));
         })];
         setConnectedCrosswalks(() => [...newCrosswalks]);
     }
 
-    function updateJointData(cc: crosswalkConnection) {
+    function updateJointData(cc: CrosswalkConnection) {
         const newCrosswalks = [...connectedCrosswalks.map(item => {
             if ((item.target === cc.target) && (item.source === cc.source)) {
                 return (cloneDeep(cc));
@@ -225,27 +261,24 @@ export default function TreeviewTest() {
     }
 
     const handleTreeSourceSelect = (event: React.SyntheticEvent, nodeIds: any[], isSourceTree: boolean) => {
-        if (isSourceTree){
-            let name = '';
-            sourceTreeData.forEach((item: { id: string; name: string; }) => {
+        let newTreeSelection: RenderTree = cloneDeep(emptyTreeSelection);
+        if (isSourceTree) {
+            sourceTreeData.forEach((item: RenderTree) => {
                 if (item.id === nodeIds.toString()){
-                    name = item.name;
+                    newTreeSelection = cloneDeep(item);
                 }
-            }
-            );
-            setSourceSelectedTitle(name);
-            setSourceSelected(nodeIds);
+            });
+            setSourceSelection(newTreeSelection);
+            selectFromSourceTreeByIds(nodeIds);
         }
         else {
-            let name = '';
-            sourceTreeData.forEach((item: { id: string; name: string; }) => {
-                    if (item.id === nodeIds.toString()){
-                        name = item.name;
-                    }
+            targetTreeData.forEach((item: RenderTree) => {
+                if (item.id === nodeIds.toString()){
+                    newTreeSelection = cloneDeep(item);
                 }
-            );
-            setTargetSelectedTitle(name);
-            setTargetSelected(nodeIds);
+            });
+            setTargetSelection(newTreeSelection);
+            selectFromTargetTreeByIds(nodeIds);
         }
     };
 
@@ -258,22 +291,24 @@ export default function TreeviewTest() {
     };
 
     const selectFromTree = (nodeId: string, isTargetTree: boolean) => {
+        //TODO: fix source and target name update
         const nodeIds = [];
         nodeIds.push(nodeId);
         if (isTargetTree) {
-            setTargetSelected(nodeIds);
-            setTargetSelectedTitle(getJointTitle(nodeIds, false)[1]);
+            selectFromTargetTreeByIds(nodeIds);
+            const emptySelection = emptyTreeSelection;
+            emptySelection.title = getJointTitle(nodeIds, false)[0];
         } else {
-            setSourceSelected(nodeIds);
-            setSourceSelectedTitle(getJointTitle(nodeIds, true)[0]);
+            selectFromSourceTreeByIds(nodeIds);
+            const emptySelection = emptyTreeSelection;
+            emptySelection.title = getJointTitle(nodeIds, true)[0];
         }
-        ;
     };
 
     const handleExpandClick = (isSourceTree: boolean) => {
         const retData: string[] = [];
         if (isSourceTree) {
-           sourceTreeData.forEach((item: { children: string | any[], id: string }) => {
+            sourceTreeData.forEach((item: { children: string | any[], id: string }) => {
                 if (item.children?.length > 0) {
                     retData.push(item.id.toString());
                 }
@@ -326,7 +361,6 @@ export default function TreeviewTest() {
 
     function searchFromTree(input: any){
         setSourceData(MockupSchemaLoader(true));
-        console.log(input);
         let sourceTreeDataNew: any;
 
         sourceTreeDataNew = sourceTreeData.map((elem: { name: string }) => {
@@ -340,10 +374,10 @@ export default function TreeviewTest() {
     }
 
     function clearSelections() {
-        setSourceSelected([]);
-        setTargetSelected([]);
-        setSourceSelectedTitle('');
-        setTargetSelectedTitle('');
+        selectFromSourceTreeByIds([]);
+        selectFromTargetTreeByIds([]);
+        setSourceSelection(emptyTreeSelection);
+        setTargetSelection(emptyTreeSelection);
     }
 
     const performCallbackFromAccordionAction = (joint: any, action: string, value: string) => {
@@ -360,7 +394,6 @@ export default function TreeviewTest() {
     };
 
     const performCallbackFromTreeAction = (isSourceTree: boolean, action: any, event: any, nodeIds: any) => {
-        console.log('performing tree cb', action, event, nodeIds);
         if (action === 'handleSelect') {
             handleTreeSourceSelect(event, nodeIds, isSourceTree);
         } else if (action === 'treeToggle') {
@@ -418,7 +451,7 @@ export default function TreeviewTest() {
                 <Tab label="Version history" {...a11yProps(2)} />
             </Tabs>
         </Box>
-{/*            <CustomTabPanel value={tabValue} index={0}>
+            {/*            <CustomTabPanel value={tabValue} index={0}>
             </CustomTabPanel>
             <CustomTabPanel value={tabValue} index={1}>
             </CustomTabPanel>
@@ -427,14 +460,14 @@ export default function TreeviewTest() {
             <div className='row d-flex justify-content-between'>
                 {/*  LEFT COLUMN */}
                 <div className='col-8'>
-                    <h5>Node information</h5>
                     {tabValue === 0 &&
-                        <><Box sx={{height: 180, flexGrow: 1}}>
-                            <NodeInfo isAnySelectedLinked={isAnySelectedLinked}
-                                      isBothSelectedLinked={isBothSelectedLinked} sourceData={currentlySelectedSource}
-                                      targetData={currentlySelectedTarget}
-                                      performNodeInfoAction={performNodeInfoAction}></NodeInfo>
-                        </Box><br/><h5>Node selection</h5>
+                        <><h5>Node information</h5>
+                            <Box sx={{height: 180, flexGrow: 1}}>
+                                <NodeInfo isAnySelectedLinked={isAnySelectedLinked}
+                                          isBothSelectedLinked={isBothSelectedLinked} sourceData={currentlySelectedSource}
+                                          targetData={currentlySelectedTarget}
+                                          performNodeInfoAction={performNodeInfoAction}></NodeInfo>
+                            </Box><br/><h5>Node selection</h5>
                             <div className='row gx-0'>
                                 {/*  SOURCE TREE */}
                                 <div className='col-5 content-box px-0 mr-1'>
@@ -458,11 +491,11 @@ export default function TreeviewTest() {
                                     <Box sx={{height: 400, flexGrow: 1, maxWidth: 700, overflowY: 'auto'}}>
 
                                         <SchemaTree nodes={sourceTreeData[0]}
-    isSourceTree={true}
-    treeSelectedArray={sourceTreeSelectedArray}
-    treeExpanded={sourceTreeExpanded}
-    performTreeAction={performCallbackFromTreeAction}
-    />
+                                                    isSourceTree={true}
+                                                    treeSelectedArray={sourceTreeSelectedArray}
+                                                    treeExpanded={sourceTreeExpanded}
+                                                    performTreeAction={performCallbackFromTreeAction}
+                                        />
 
                                     </Box>
                                 </div>
@@ -472,14 +505,14 @@ export default function TreeviewTest() {
 
                                     <div className='d-flex align-content-center justify-content-center flex-column h-100'>
                                         <div className='d-flex justify-content-center'>
-                                    <IconButton onClick={() => addOrRemoveJoint(!isBothSelectedLinked)}
-                                                 className='actions-link-icon'
-                                                 title={(!isBothSelectedLinked ? 'Link selected nodes' : 'Unlink selected nodes')}
-                                                 aria-label={(!isBothSelectedLinked ? 'Link selected nodes' : 'Unlink selected nodes')}
-                                                 color="primary" size="large"
-                                                 disabled={isAnySelectedLinked && !isBothSelectedLinked || !(currentlySelectedSource.source.length > 0 && currentlySelectedTarget.source.length > 0)}>
-                                        {isBothSelectedLinked ? <LinkOffIcon/> : <AddLinkIcon/>}
-                                    </IconButton>
+                                            <IconButton onClick={() => addOrRemoveJoint(!isBothSelectedLinked)}
+                                                        className='actions-link-icon'
+                                                        title={(!isBothSelectedLinked ? 'Link selected nodes' : 'Unlink selected nodes')}
+                                                        aria-label={(!isBothSelectedLinked ? 'Link selected nodes' : 'Unlink selected nodes')}
+                                                        color="primary" size="large"
+                                                        disabled={isAnySelectedLinked && !isBothSelectedLinked || !(currentlySelectedSource.source.length > 0 && currentlySelectedTarget.source.length > 0)}>
+                                                {isBothSelectedLinked ? <LinkOffIcon/> : <AddLinkIcon/>}
+                                            </IconButton>
                                         </div>
                                     </div>
 
@@ -497,11 +530,11 @@ export default function TreeviewTest() {
                                     </div>
                                     <Box sx={{height: 400, flexGrow: 1, maxWidth: 700, overflowY: 'auto'}}>
                                         <SchemaTree nodes={targetTreeData[0]}
-    isSourceTree={false}
-    treeSelectedArray={targetTreeSelectedArray}
-    treeExpanded={targetTreeExpanded}
-    performTreeAction={performCallbackFromTreeAction}
-    />
+                                                    isSourceTree={false}
+                                                    treeSelectedArray={targetTreeSelectedArray}
+                                                    treeExpanded={targetTreeExpanded}
+                                                    performTreeAction={performCallbackFromTreeAction}
+                                        />
                                     </Box>
                                 </div>
                             </div>
@@ -513,25 +546,25 @@ export default function TreeviewTest() {
                 <div className='col-4'>
                     <h5>Linked nodes</h5>
                     <div className='joint-listing-accordion-wrap'>
-                    <Box className='mb-4' sx={{height: 640, flexGrow: 1, maxWidth: 700, overflowY: 'auto'}}>
-                    <JointListingAccordion crosswalkJoints={connectedCrosswalks}
-                                           performAccordionAction={performCallbackFromAccordionAction}></JointListingAccordion>
-                    </Box>
+                        <Box className='mb-4' sx={{height: 640, flexGrow: 1, maxWidth: 700, overflowY: 'auto'}}>
+                            <JointListingAccordion crosswalkJoints={connectedCrosswalks}
+                                                   performAccordionAction={performCallbackFromAccordionAction}></JointListingAccordion>
+                        </Box>
                     </div>
-                        <div className='row d-flex flex-row pb-4 justify-content-end px-4'>
-                            <div className='col-4'><Sbutton onClick={() => {
+                    <div className='row d-flex flex-row pb-4 justify-content-end px-4'>
+                        {/* <div className='col-4'><Sbutton onClick={() => {
                                 loadCroswalk();
                             }}>Load</Sbutton>
-                            </div>
-                            <div className='col-4'><Sbutton onClick={() => {
-                                loadCroswalk();
-                            }}>Save</Sbutton>
-                            </div>
-                            <div className='col-4'><Sbutton onClick={() => {
-                                saveCroswalk();
-                            }}>Publish</Sbutton>
-                            </div>
+                            </div>*/}
+                        <div className='col-4'><Sbutton onClick={() => {
+                            loadCroswalk();
+                        }}>Save</Sbutton>
                         </div>
+                        <div className='col-4'><Sbutton onClick={() => {
+                            saveCroswalk();
+                        }}>Publish</Sbutton>
+                        </div>
+                    </div>
                 </div>
             </div>
             <hr></hr>

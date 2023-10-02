@@ -28,4 +28,19 @@ export interface CrosswalkFormType {
   status?: Status;
   sourceSchema: string;
   targetSchema: string;
+  description?: string;
+}
+
+export interface CrosswalkFormMockupType {
+  sourceSchema: string;
+  targetSchema: string;
+  name: string;
+  description: string;
+}
+
+export interface CreateCrosswalkMockupType {
+  sourceSchema: string;
+  targetSchema: string;
+  name: string;
+  description: string;
 }

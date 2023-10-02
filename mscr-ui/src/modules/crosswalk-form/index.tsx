@@ -21,7 +21,6 @@ import {
 } from './crosswalk-form.styles';
 import LanguageSelector from 'yti-common-ui/form/language-selector';
 import { FormErrors } from './validate-form';
-import AddBlock from './add-block';
 import { Status } from '@app/common/interfaces/status.interface';
 import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import { FormUpdateErrors } from '../schema-form/validate-form-update';

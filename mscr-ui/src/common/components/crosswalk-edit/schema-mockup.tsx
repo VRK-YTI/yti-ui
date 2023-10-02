@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {cloneDeep} from 'lodash';
+import {RenderTree} from "@app/common/interfaces/crosswalk-connection.interface";
 
 export default function MockupSchemaLoader(emptyTemplate: boolean) {
     const testData: any = {
@@ -302,24 +303,10 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
         }
     };
 
-    interface RenderTree {
-        idNumeric: number;
-        id: string;
-        name: string;
-        isLinked: boolean;
-        title?: string;
-        type?: string;
-        description?: string;
-        required?: string;
-        isMappable?: string;
-        root?: string;
-        rootId: number | string;
-        children?: RenderTree[];
-    }
-
     let allTreeNodes: RenderTree[] = [];
 
     let currentTreeNode: RenderTree = {
+        isLinked: false,
         idNumeric: 0,
         id: '0',
         name: '',
@@ -327,7 +314,7 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
         type: '',
         description: '',
         required: '',
-        rootId: 0,
+        parentId: 0,
         children: []
     };
 
@@ -340,16 +327,17 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
     function addObjectToTree(object: string, value: string, parent: string, rootId: any) {
         currentTreeNode.idNumeric = nodeId;
         currentTreeNode.id = nodeId.toString();
-        currentTreeNode.rootId = rootId;
+        currentTreeNode.parentId = rootId;
 
-        if (object === 'description') {
-            currentTreeNode.description = value;
-        } else if (object === 'type') {
-            currentTreeNode.type = value;
-        }
+         // if (object === 'description') {
+         //     currentTreeNode.description = value;
+         // } else if (object === 'type') {
+         //     currentTreeNode.type = value;
+         // }
+
         currentTreeNode.name = object;
         currentTreeNode.title = value;
-        currentTreeNode.root = parent;
+        currentTreeNode.parentName = parent;
 
         increaseNodeNumber();
     }
@@ -362,7 +350,7 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
 
                 // OBJECT IS A LEAF LEVEL OBJECT
                 currentTreeNode = {
-                    isLinked: false, idNumeric: 0, id: '0', name: '', title: '', type: '', description: '', required: '', rootId: 0, children: []};
+                    isLinked: false, idNumeric: 0, id: '0', name: '', title: '', type: '', description: '', required: '', parentId: 0, children: []};
                 addObjectToTree(obj, json_object[obj], parent, rootId);
                 allTreeNodes.push(cloneDeep(currentTreeNode));
                 }
@@ -371,10 +359,10 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
             } else {
                 // OBJECT HAS CHILDREN
                 currentTreeNode = {
-                    isLinked: false, idNumeric: 0, id: '0', name: '', title: '', type: '', description: '', required: '', rootId: 0, children: []};
+                    isLinked: false, idNumeric: 0, id: '0', name: '', title: '', type: '', description: '', required: '', parentId: 0, children: []};
                 currentTreeNode.name = obj;
-                currentTreeNode.root = parent;
-                currentTreeNode.rootId = rootId;
+                currentTreeNode.parentName = parent;
+                currentTreeNode.parentId = rootId;
                 currentTreeNode.idNumeric = nodeId;
                 currentTreeNode.id = nodeId.toString();
                 increaseNodeNumber();
@@ -388,7 +376,7 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
     function processChildNodes() {
         for (let i = allTreeNodes.length - 1; i > 0; i -= 1) {
             if (allTreeNodes[i]) {
-                allTreeNodes[allTreeNodes[i].rootId].children.push(cloneDeep(allTreeNodes[i]));
+                allTreeNodes[allTreeNodes[i].parentId].children.push(cloneDeep(allTreeNodes[i]));
             }
         }
         return {allTreeNodes};
