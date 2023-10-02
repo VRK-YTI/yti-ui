@@ -17,9 +17,11 @@ import { HeaderRow } from '@app/common/components/header';
 
 export default function LinkedDataView({
   modelId,
+  version,
   isApplicationProfile,
 }: {
   modelId: string;
+  version?: string;
   isApplicationProfile: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
@@ -29,7 +31,10 @@ export default function LinkedDataView({
   });
   const [headerHeight, setHeaderHeight] = useState(0);
   const [renderForm, setRenderForm] = useState(false);
-  const { data, refetch } = useGetModelQuery(modelId);
+  const { data, refetch } = useGetModelQuery({
+    modelId: modelId,
+    version: version,
+  });
 
   const handleShowForm = () => {
     setRenderForm(true);

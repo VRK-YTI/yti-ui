@@ -54,9 +54,11 @@ import { IconBold, IconItalics, IconQuotes } from 'suomifi-icons';
 
 export default function Documentation({
   modelId,
+  version,
   languages,
 }: {
   modelId: string;
+  version?: string;
   languages: string[];
 }) {
   const { t, i18n } = useTranslation('admin');
@@ -81,7 +83,10 @@ export default function Documentation({
     end: 0,
   });
 
-  const { data: modelData, refetch } = useGetModelQuery(modelId);
+  const { data: modelData, refetch } = useGetModelQuery({
+    modelId: modelId,
+    version: version,
+  });
   const [updateModel, result] = useUpdateModelMutation();
 
   const validImgUrl = (url: string): boolean => {

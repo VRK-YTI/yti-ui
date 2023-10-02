@@ -268,6 +268,7 @@
   "uri": "URI",
   "utilizes-class-restriction": "Hyödyntää luokkarajoitetta",
   "value-is-not-allowed": "\"{{value}}\" ei sallittu",
+  "version": "Versio",
   "vocabulary-filter-items": "kpl",
   "vocabulary-filter-show-only": "",
   "vocabulary-info-en": "",

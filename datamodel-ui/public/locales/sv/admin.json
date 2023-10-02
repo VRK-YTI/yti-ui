@@ -83,6 +83,7 @@
   "codelist": "",
   "codelist-contents": "",
   "codelist-delete-warning": "",
+  "commentable-version": "",
   "common-form": {
     "add-equivalent-association": "",
     "add-equivalent-attribute": "",
@@ -131,8 +132,11 @@
   "create-new-sub-association-for-selected": "",
   "create-new-sub-attribute-for-selected": "",
   "create-prefix-automatically": "",
+  "create-release": "",
+  "create-release-status": "",
   "create-subclass-for-selected": "",
   "creating-model": "",
+  "creating-release": "",
   "data-model": "",
   "data-model-name": "",
   "data-models-added-to-this-model": "",
@@ -242,6 +246,9 @@
   "range": "",
   "reference-data-counts_one": "",
   "reference-data-counts_other": "",
+  "release": "",
+  "release-version-number": "",
+  "release-version-number-hint": "",
   "remove": "",
   "remove-reference": "",
   "remove-reference-description-association": "",
@@ -306,6 +313,8 @@
   "uri-preview": "",
   "use-codelist-values": "",
   "utilizes-class-restriction": "",
+  "version-number-error": "",
   "work-group-comment": "",
+  "write-version-number": "",
   "you-have-unsaved-changes": ""
 }

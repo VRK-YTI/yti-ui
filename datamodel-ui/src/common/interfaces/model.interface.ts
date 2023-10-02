@@ -30,6 +30,8 @@ export interface ModelType {
     id: string;
     name: string;
   };
+  version?: string;
+  versionIri?: string;
 }
 
 export interface InternalNamespace {

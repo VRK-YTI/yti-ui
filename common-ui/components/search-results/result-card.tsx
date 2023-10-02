@@ -25,6 +25,8 @@ interface ResultCardProps {
   noDescriptionText: string;
   partOfText?: string;
   partOf?: string[];
+  identifier?: string;
+  version?: string;
   status?: string;
   title: string;
   titleLink: string;
@@ -39,6 +41,8 @@ export default function ResultCard({
   noChip = false,
   noDescriptionText,
   partOf,
+  version,
+  identifier,
   partOfText,
   status,
   title,
@@ -69,6 +73,20 @@ export default function ResultCard({
       </Link>
       <Subtitle id="card-subtitle">
         <span>{type}</span>
+        {identifier && (
+          <>
+            <span aria-hidden={true}>&middot;</span>
+            <span style={{ textTransform: 'uppercase' }}>{identifier}</span>
+          </>
+        )}
+        {version && (
+          <>
+            <span aria-hidden={true}>&middot;</span>
+            <span style={{ textTransform: 'uppercase' }}>{`${t(
+              'version'
+            )} ${version}`}</span>
+          </>
+        )}
         {status && renderStatus()}
       </Subtitle>
       <Description id="card-description">

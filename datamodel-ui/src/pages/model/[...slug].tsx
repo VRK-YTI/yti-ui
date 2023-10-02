@@ -36,7 +36,7 @@ import {
   getVisualization,
   getRunningQueriesThunk as getVisualizationRunningQueriesThunk,
 } from '@app/common/components/visualization/visualization.slice';
-import { getModelId } from '@app/common/utils/parse-slug';
+import { getSlugAsString } from '@app/common/utils/parse-slug';
 import {
   getClass,
   getRunningQueriesThunk as getClassRunningQueriesThunk,
@@ -48,6 +48,7 @@ import {
 import { ModelType } from '@app/common/interfaces/model.interface';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -55,7 +56,12 @@ interface IndexPageProps extends CommonContextState {
 }
 
 export default function ModelPage(props: IndexPageProps) {
-  const { data } = useGetModelQuery(props.modelId);
+  const { query } = useRouter();
+  const version = getSlugAsString(query.ver);
+  const { data } = useGetModelQuery({
+    modelId: props.modelId,
+    version: version,
+  });
   const fullScreen = useSelector(selectFullScreen());
 
   return (
@@ -81,13 +87,14 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Missing query for page');
     }
 
-    const modelId = getModelId(query.slug);
+    const modelId = getSlugAsString(query.slug);
+    const version = getSlugAsString(query.ver);
 
     if (!modelId) {
       throw new Error('Missing id for page');
     }
 
-    store.dispatch(getModel.initiate(modelId));
+    store.dispatch(getModel.initiate({ modelId: modelId, version: version }));
     store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
     store.dispatch(

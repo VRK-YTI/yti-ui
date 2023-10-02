@@ -21,13 +21,15 @@ export interface InternalResourcesSearchParams {
   pageFrom?: number;
   limitToModelType?: Type;
   extend?: boolean;
+  fromVersion?: string;
 }
 
 export function initialSearchData(
   sortLang: string,
   modelId: string,
   type: ResourceType,
-  limitToModelType?: 'LIBRARY' | 'PROFILE'
+  limitToModelType?: 'LIBRARY' | 'PROFILE',
+  fromVersion?: string
 ): InternalResourcesSearchParams {
   return {
     query: '',
@@ -40,6 +42,7 @@ export function initialSearchData(
     limitToModelType: limitToModelType ?? 'LIBRARY',
     fromAddedNamespaces: true,
     resourceTypes: [type],
+    fromVersion: fromVersion,
   };
 }
 
@@ -84,6 +87,10 @@ function createUrl(obj: InternalResourcesSearchParams): string {
 
   if (obj.limitToModelType) {
     baseQuery = baseQuery.concat(`&limitToModelType=${obj.limitToModelType}`);
+  }
+
+  if (obj.fromVersion) {
+    baseQuery = baseQuery.concat(`&fromVersion=${obj.fromVersion}`);
   }
 
   return baseQuery;

@@ -1,7 +1,6 @@
 import { toPng } from 'html-to-image';
 import { getRectOfNodes, getTransformForBounds, useReactFlow } from 'reactflow';
 import { Button, IconDownload } from 'suomifi-ui-components';
-import { useGetModelQuery } from '../model/model.slice';
 
 function downloadImg(dataUrl: string, fileName: string) {
   const a = document.createElement('a');
@@ -12,7 +11,6 @@ function downloadImg(dataUrl: string, fileName: string) {
 
 export default function DownloadPicture({ modelId }: { modelId: string }) {
   const { getNodes } = useReactFlow();
-  const { data } = useGetModelQuery(modelId);
 
   const handleClick = () => {
     const el = document
@@ -33,7 +31,6 @@ export default function DownloadPicture({ modelId }: { modelId: string }) {
       0.5,
       2
     );
-    const fileName = data?.prefix ?? 'model';
 
     toPng(el, {
       backgroundColor: 'white',
@@ -44,7 +41,7 @@ export default function DownloadPicture({ modelId }: { modelId: string }) {
         height: imgHeight.toString(),
         transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})})`,
       },
-    }).then((dataUrl) => downloadImg(dataUrl, fileName));
+    }).then((dataUrl) => downloadImg(dataUrl, modelId));
   };
 
   return <Button icon={<IconDownload />} onClick={() => handleClick()} />;

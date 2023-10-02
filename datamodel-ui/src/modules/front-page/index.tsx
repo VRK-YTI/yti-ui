@@ -144,12 +144,16 @@ export default function FrontPage() {
           object.type === 'PROFILE' ? <IconApplicationProfile /> : <IconGrid />,
         status: object.status,
         partOf: partOf,
+        version: object.version,
+        identifier: object.prefix,
         title: getLanguageVersion({
           data: object.label,
           lang: i18n.language,
           appendLocale: true,
         }),
-        titleLink: `/model/${object.prefix}`,
+        titleLink: `/model/${object.prefix}${
+          object.version ? `?ver=${object.version}` : ''
+        }`,
         type: translateModelType(object.type, t),
       };
     });

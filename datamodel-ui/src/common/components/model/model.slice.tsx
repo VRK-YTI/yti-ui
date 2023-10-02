@@ -27,9 +27,14 @@ export const modelApi = createApi({
         data: value,
       }),
     }),
-    getModel: builder.query<ModelType, string>({
-      query: (modelId) => ({
-        url: `/model/${modelId}`,
+    getModel: builder.query<ModelType, { modelId: string; version?: string }>({
+      query: (value) => ({
+        url: `/model/${value.modelId}`,
+        params: {
+          ...(value.version && {
+            version: value.version,
+          }),
+        },
         method: 'GET',
       }),
     }),
@@ -55,6 +60,19 @@ export const modelApi = createApi({
         method: 'DELETE',
       }),
     }),
+    createRelease: builder.mutation<
+      string,
+      { modelId: string; version: string; status: string }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/release`,
+        params: {
+          status: value.status,
+          version: value.version,
+        },
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -63,11 +81,17 @@ export const {
   useGetModelQuery,
   useUpdateModelMutation,
   useDeleteModelMutation,
+  useCreateReleaseMutation,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
-export const { createModel, getModel, updateModel, deleteModel } =
-  modelApi.endpoints;
+export const {
+  createModel,
+  getModel,
+  updateModel,
+  deleteModel,
+  createRelease,
+} = modelApi.endpoints;
 
 // Slice setup below
 

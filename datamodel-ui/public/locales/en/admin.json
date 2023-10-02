@@ -83,6 +83,7 @@
   "codelist": "Code list",
   "codelist-contents": "Code list contents",
   "codelist-delete-warning": "Are you sure you want to delete codelist {{name}}. Codes in codelist will also be removed from other fields.",
+  "commentable-version": "commentable version",
   "common-form": {
     "add-equivalent-association": "Add equivelant association",
     "add-equivalent-attribute": "Add equivalent attribute",
@@ -131,8 +132,11 @@
   "create-new-sub-association-for-selected": "Create new sub-association for selected",
   "create-new-sub-attribute-for-selected": "Create new sub-attribute for selected",
   "create-prefix-automatically": "Create prefix automatically",
+  "create-release": "Create release of data model",
+  "create-release-status": "Choose the status of release version",
   "create-subclass-for-selected": "Create subclass for selected",
   "creating-model": "Adding model",
+  "creating-release": "Creating release",
   "data-model": "Data model",
   "data-model-name": "Data model name",
   "data-models-added-to-this-model": "Data models added to this model",
@@ -242,6 +246,9 @@
   "range": "Range",
   "reference-data-counts_one": "{{count}} reference data",
   "reference-data-counts_other": "{{count}} reference data",
+  "release": "Release",
+  "release-version-number": "Release version number",
+  "release-version-number-hint": "Write version number for the release in format x.y.z (for example 1.1.0)",
   "remove": "Remove",
   "remove-reference": "Remove reference",
   "remove-reference-description-association": "Do you want to remove the reference to the association restriction {{name}} from this class?",
@@ -306,6 +313,8 @@
   "uri-preview": "URI preview",
   "use-codelist-values": "Use codelist values",
   "utilizes-class-restriction": "Utilizes class restriction",
+  "version-number-error": "Version number is not in format x.y.z",
   "work-group-comment": "Work group comment",
+  "write-version-number": "Write version number",
   "you-have-unsaved-changes": "You have unsaved changes."
 }
