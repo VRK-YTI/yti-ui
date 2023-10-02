@@ -48,12 +48,14 @@ import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
 
 interface GraphProps {
   modelId: string;
+  version?: string;
   applicationProfile?: boolean;
   children: JSX.Element[];
 }
 
 const GraphContent = ({
   modelId,
+  version,
   applicationProfile,
   children,
 }: GraphProps) => {
@@ -83,7 +85,10 @@ const GraphContent = ({
     }),
     []
   );
-  const { data, isSuccess, refetch } = useGetVisualizationQuery(modelId);
+  const { data, isSuccess, refetch } = useGetVisualizationQuery({
+    modelid: modelId,
+    version: version,
+  });
   const [putPositions, result] = usePutPositionsMutation();
 
   const deleteNodeById = useCallback(
@@ -367,13 +372,18 @@ const GraphContent = ({
 
 export default function Graph({
   modelId,
+  version,
   applicationProfile,
   children,
 }: GraphProps) {
   return (
     <>
       <ReactFlowProvider>
-        <GraphContent modelId={modelId} applicationProfile={applicationProfile}>
+        <GraphContent
+          modelId={modelId}
+          version={version}
+          applicationProfile={applicationProfile}
+        >
           {children}
         </GraphContent>
       </ReactFlowProvider>

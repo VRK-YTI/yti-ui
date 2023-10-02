@@ -137,6 +137,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         component: (
           <ResourceView
             modelId={modelId}
+            version={version}
             type={ResourceType.ASSOCIATION}
             languages={languages}
             applicationProfile={modelInfo?.type === 'PROFILE'}
@@ -188,11 +189,13 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
       <ContentWrapper>
         <Graph
           modelId={modelId}
+          version={version}
           applicationProfile={modelInfo?.type === 'PROFILE'}
         >
           <Drawer views={views} />
           <ModelTools
             modelId={modelId}
+            version={version}
             applicationProfile={modelInfo?.type === 'PROFILE'}
           />
         </Graph>
