@@ -30,7 +30,6 @@ export default function InlineList({
 
       <div>
         <List className="header-list">
-
           <ListItem>
             <Grid container spacing={2} style={{"fontWeight":"bold"}}>
               <Grid item xs={2}  >
@@ -44,7 +43,6 @@ export default function InlineList({
               <Grid item xs={2}>
                 {"PID"}</Grid>
               <Grid item xs={2}>
-
               </Grid>
             </Grid>
           </ListItem>
@@ -53,7 +51,7 @@ export default function InlineList({
           {items.map((item) => (
               <ListItem key={item.pid}>
                 <Grid container spacing={2}>
-                  <Grid item xs={2}>
+                  <Grid item xs={2} >
                     {item.label}</Grid>
                   <Grid item xs={2}>
                     {item.prefix}</Grid>

@@ -12,10 +12,10 @@ export default function PersonalWorkspace({ pid, user }: PersonalHomeProps) {
   {
     return (
       <Grid container spacing={2}>
-        <Grid item xs={4}>
+        <Grid item xs={2}>
           <SideNavigationPanel user={user}  />
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={10}>
           <FrontPage></FrontPage>
         </Grid>
       </Grid>

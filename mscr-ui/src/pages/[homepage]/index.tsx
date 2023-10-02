@@ -28,8 +28,6 @@ import PersonalWorkspace from '../../modules/personal-home';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import TreeviewTest from "@app/common/components/treeview-test";
 
-import { Grid } from '@mui/material';
-import SideNavigationPanel from '@app/common/components/side-navigation';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;

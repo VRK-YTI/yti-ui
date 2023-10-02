@@ -22,7 +22,9 @@ export const ListItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: ${(props) => props.theme.suomifi.spacing.s};
-  height: 40px;
+  height: 60px;
+  margin: 4px;
+ 
 
   .fi-button {
     white-space: nowrap;
