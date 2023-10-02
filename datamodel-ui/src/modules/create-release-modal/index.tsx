@@ -64,7 +64,6 @@ export default function CreateReleaseModal({
 
   const handleClose = useCallback(() => {
     setReleaseStatus('VALID');
-    setReleaseVersion('');
     setUserPosted(false);
     setVersionError(false);
     hide();
@@ -72,7 +71,10 @@ export default function CreateReleaseModal({
 
   useEffect(() => {
     if (createReleaseResult.isSuccess) {
-      router.push(`/model/${modelId}?version=${releaseVersion}`);
+      router.push({
+        pathname: `/model/${modelId}`,
+        query: { ver: releaseVersion },
+      });
       handleClose();
     }
 
