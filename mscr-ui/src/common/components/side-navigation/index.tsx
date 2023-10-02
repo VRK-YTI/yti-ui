@@ -44,7 +44,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
         <MscrSideNavigationLevel1
           subLevel={1}
           expanded
-          content={<NavigationHeading variant="h2">Personal workspace</NavigationHeading>}
+          content={<NavigationHeading variant="h2">{t('workspace-personal')}</NavigationHeading>}
         >
           <PersonalNavigationWrapper>
             <MscrSideNavigationLevel3
@@ -79,7 +79,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
         <MscrSideNavigationLevel1
           subLevel={1}
           expanded
-          content={<NavigationHeading variant="h2">Group workspace</NavigationHeading>}
+          content={<NavigationHeading variant="h2">{t('workspace-group')}</NavigationHeading>}
         >
           {groups?.map(group =>
             <MscrSideNavigationLevel2
@@ -110,7 +110,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
                 content={
                   <Link href={'/' + groupContentSlug} passHref>
                     <RouterLink>
-                      {t('workspace-navigation-content')}
+                      {t('workspace-group-navigation-content')}
                     </RouterLink>
                   </Link>
                 }
@@ -120,7 +120,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
                 selected={router.pathname == group.id + 'settings'}
                 content={
                   <RouterLink href={group.id + 'settings'}>
-                    {t('workspace-navigation-settings')}
+                    {t('workspace-group-navigation-settings')}
                   </RouterLink>
                 }
               />
