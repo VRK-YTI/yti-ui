@@ -3,7 +3,6 @@
   "add-data-model": "Lisää tietomalli",
   "add-file": "",
   "add-new-link": "Lisää uusi linkki",
-  "add-new-schema": "Luo uusi tietomalli",
   "add-or-drag-a-new-file-here": "",
   "add-reference-data": "Lisää koodisto",
   "allowed-file-formats": "",
@@ -55,7 +54,6 @@
   "contributors": "Sisällöntuottajat",
   "contributors-hint-text": "Voit lisätä vain organisaation, joka on antanut sinulle muokkausoikeudet",
   "create-new-class": "Luo uusi luokka",
-  "create-schema": "",
   "create-subclass-for-selected": "Luo valitulle alaluokka",
   "data-model": "Tietomalli",
   "data-models-added-to-this-model": "Tähän tietomalliin lisätyt tietomallit",
@@ -134,6 +132,7 @@
   "modified": "Muokattu",
   "optional": "valinnainen",
   "reference-data-in-use": "Käytetyt koodistot",
+  "register-schema": "",
   "remove": "Poista",
   "remove-modal": {
     "collection-confirmation": "",

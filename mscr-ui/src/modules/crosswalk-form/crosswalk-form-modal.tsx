@@ -104,7 +104,7 @@ export default function CrosswalkFormModal({
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}
       >
-        {'Add New Crosswalk'}
+        {'Register Crosswalk'}
       </Button>
 
       <Modal

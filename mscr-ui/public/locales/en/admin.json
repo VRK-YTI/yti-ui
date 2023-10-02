@@ -3,7 +3,6 @@
   "add-data-model": "Add Schema File",
   "add-file": "",
   "add-new-link": "Add new link",
-  "add-new-schema": "Add new schema",
   "add-or-drag-a-new-file-here": "",
   "add-reference-data": "Add reference data",
   "allowed-file-formats": "",
@@ -55,7 +54,6 @@
   "contributors": "Contributors",
   "contributors-hint-text": "You can only add organizations to which  you have editing permissions",
   "create-new-class": "Create new class",
-  "create-schema": "",
   "create-subclass-for-selected": "Create subclass for selected",
   "data-model": "Data model",
   "data-models-added-to-this-model": "Data models added to this model",
@@ -134,6 +132,7 @@
   "modified": "Modified",
   "optional": "optional",
   "reference-data-in-use": "Reference data in use",
+  "register-schema": "Register Schema",
   "remove": "Remove",
   "remove-modal": {
     "collection-confirmation": "",
