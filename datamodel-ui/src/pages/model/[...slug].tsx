@@ -133,7 +133,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
         resourceTypes: [],
       })
     );
-    store.dispatch(getVisualization.initiate(modelId));
+    store.dispatch(
+      getVisualization.initiate({ modelid: modelId, version: version })
+    );
 
     await Promise.all(store.dispatch(getRunningQueriesThunk()));
     await Promise.all(store.dispatch(getServiceQueriesThunk()));
