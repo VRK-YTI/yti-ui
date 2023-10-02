@@ -55,8 +55,6 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
     });
   };
 
-  console.log(modelInfo);
-
   if (!model) {
     return <></>;
   }
