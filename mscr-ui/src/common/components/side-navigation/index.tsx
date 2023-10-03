@@ -44,6 +44,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
         >
           <PersonalNavigationWrapper>
             <MscrSideNavigationLevel3
+              className='personal'
               subLevel={3}
               selected = {router.asPath == '/homepage'} // The correct pathname for personal workspace content here
               content={
@@ -58,6 +59,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
               }
             />
             <MscrSideNavigationLevel3
+              className='personal'
               subLevel={3}
               selected = {router.asPath == '/personal/settings'}
               content={
@@ -101,6 +103,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
               }
             >
               <MscrSideNavigationLevel3
+                className='group'
                 subLevel={3}
                 selected={router.asPath == '/group-home'}
                 content={
@@ -112,6 +115,7 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
                 }
               />
               <MscrSideNavigationLevel3
+                className='group'
                 subLevel={3}
                 selected={router.asPath == '/' + group.id + '/settings'}
                 content={

@@ -36,45 +36,62 @@ export const GroupHeading = styled(Heading)`
 `;
 
 export const MscrSideNavigation = styled(SideNavigation)`
+  // Remove line from above navigation
   .fi-side-navigation_divider {
     display: none;
   }
 `;
 
 export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`
-  &&&&&&&&&&&&&&&.fi-side-navigation-item--child-selected div {
-    background-color: ${(props) => props.theme.suomifi.colors.highlightLight3};
+  // When the personal navigation subsection is active, there's a blue background and non-selected links are black
+  &.fi-side-navigation-item--child-selected{
+    div {
+      background-color: ${(props) => props.theme.suomifi.colors.highlightLight3};
+    }
+    && .personal a.fi-link--router {
+       color: ${(props) => props.theme.suomifi.colors.blackBase};
+    }
   }
 `;
 
 export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
+  // Remove arrow icon from group buttons
   .fi-icon {
     display: none;
   }
+  // Group subsection background is white until a link is selected
   && .fi-side-navigation-item_sub-list {
     background-color: transparent;
   }
+  // When the group navigation subsection is active, there's a blue background and non-selected links are black
   &.fi-side-navigation-item--child-selected {
     background-color: ${(props) => props.theme.suomifi.colors.highlightLight3};
+    && .group a.fi-link--router {
+      color: ${(props) => props.theme.suomifi.colors.blackBase};
+    }
   }
 `;
 
 export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
+  // Links in inactive sections are gray
   &&&& a {
     color: ${(props) => props.theme.suomifi.colors.depthDark2};
     ${(props) => props.theme.suomifi.typography.actionElementInnerTextBold}
-    .fi-side-navigation-item--selected ~ & {
-      color: ${(props) => props.theme.suomifi.colors.blackBase};
-    }
   }
+  // Currently selected link is blue and has a blue left border
   &.fi-side-navigation-item--selected {
     border-left: solid 3px ${(props) => props.theme.suomifi.colors.highlightBase};
-    && .fi-link--router {
+    &&& .fi-link--router {
       color: ${(props) => props.theme.suomifi.colors.highlightBase};
     }
   }
-  &&&& .fi-link--router {
+  &&&&& .fi-link--router {
+    // override suomifi default blue background
     background-color: transparent;
+    // Hovered link is blue
+    &:hover {
+      color: ${(props) => props.theme.suomifi.colors.highlightBase};
+    }
   }
 `;
 
@@ -84,8 +101,10 @@ export const PersonalNavigationWrapper = styled.div`
 
 export const GroupOpenButton = styled.button`
   &&&&& {
+    // override suomifi default blue background
     background-color: transparent;
   }
+  // Hovered group name is blue
   &:hover h3 {
     color: ${(props) => props.theme.suomifi.colors.highlightBase};
   }
