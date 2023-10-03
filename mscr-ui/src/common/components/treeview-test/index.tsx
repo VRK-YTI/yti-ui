@@ -67,6 +67,7 @@ export default function TreeviewTest() {
     }];
 
     const emptyTreeSelection: RenderTree = {
+        jsonPath: "",
         children: [],
         description: '',
         id: '',
@@ -135,7 +136,7 @@ export default function TreeviewTest() {
         targetNode.sourceTitle = targetTreeSelection.name;
         targetNode.parentId = targetTreeSelection.parentId;
         targetNode.description = targetTreeSelection.description;
-        targetNode.type = sourceTreeSelection.type;
+        targetNode.type = targetTreeSelection.type;
         const source = getJointEndNode(targetTreeSelectedArray, false);
         targetNode.targetTitle = source.name;
         targetNode.target = source.id;
@@ -168,11 +169,11 @@ export default function TreeviewTest() {
                 sourceTitle: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].name,
                 parentName: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].parentName,
                 parentId: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].parentId,
-                sourceType: undefined,
-                targetType: undefined,
+                sourceType: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].sourceType,
+                targetType: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].targetType,
                 target: targetTreeData[parseInt(targetTreeSelectedArray.toString())].id,
                 targetTitle: targetTreeData[parseInt(targetTreeSelectedArray.toString())].name,
-                type: undefined
+                type: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].type,
             }]);
         } else {
             removeJoint({
@@ -254,7 +255,7 @@ export default function TreeviewTest() {
         setConnectedCrosswalks(() => [...newCrosswalks]);
     }
 
-    const handleTreeSourceSelect = (event: React.SyntheticEvent, nodeIds: any[], isSourceTree: boolean) => {
+    const handleTreeSelect = (event: React.SyntheticEvent | undefined, nodeIds: any[], isSourceTree: boolean) => {
         let newTreeSelection: RenderTree = cloneDeep(emptyTreeSelection);
         if (isSourceTree) {
             sourceTreeData.forEach((item: RenderTree) => {
@@ -384,15 +385,19 @@ export default function TreeviewTest() {
             joint.notes = value;
             updateJointData(joint);
         } else if (action === 'selectFromSourceTree') {
+            //TODO: refactor to use handleTreeSelect for selections. Now loses selection types.
+
+            //handleTreeSelect(undefined, joint.source, true);
             selectFromTree(joint.source, false);
         } else if (action === 'selectFromTargetTree') {
+            //handleTreeSelect(undefined, joint.source, false);
             selectFromTree(joint.target, true);
         }
     };
 
     const performCallbackFromTreeAction = (isSourceTree: boolean, action: any, event: any, nodeIds: any) => {
         if (action === 'handleSelect') {
-            handleTreeSourceSelect(event, nodeIds, isSourceTree);
+            handleTreeSelect(event, nodeIds, isSourceTree);
         } else if (action === 'treeToggle') {
             handleTreeToggle(event, nodeIds, isSourceTree);
         }

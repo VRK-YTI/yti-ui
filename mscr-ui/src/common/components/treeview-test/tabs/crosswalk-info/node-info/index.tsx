@@ -28,7 +28,7 @@ export default function NodeInfo(props: { isAnySelectedLinked: boolean, isBothSe
                 <div className='row'>
                     <div className='col-6'>
                         <div className='fw-bold'>Node type:</div>
-                        <div>{props.sourceData.sourceType}</div>
+                        <div>{props.sourceData.type}</div>
                         <br/>
                     </div>
                     <div className='col-6'>
@@ -61,7 +61,7 @@ export default function NodeInfo(props: { isAnySelectedLinked: boolean, isBothSe
                 <div className='row'>
                     <div className='col-6'>
                         <div className='fw-bold'>Node type:</div>
-                        <div>{props.sourceData.targetType}</div>
+                        <div>{props.targetData.type}</div>
                         <br/>
                     </div>
                     <div className='col-6'>
