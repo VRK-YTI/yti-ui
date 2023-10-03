@@ -8,14 +8,14 @@ import {
 } from 'suomifi-ui-components';
 
 export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
+  // Width and positioning for now, need adjusting when overall layout structure is decided
   flex-grow: 1;
   width: 25%;
+  max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
   position: fixed;
   left: 0;
   top: 76px;
   background-color: white;
-  // Sync the width to the content margin
-  max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
   padding: ${(props) => props.theme.suomifi.spacing.m};
 `;
 

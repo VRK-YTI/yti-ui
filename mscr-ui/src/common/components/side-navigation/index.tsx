@@ -27,9 +27,13 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
   const groups = user?.organizations;
   const { breakpoint } = useBreakpoints();
   const { t } = useTranslation('common');
-  // Here should be a collection of selectedness states for each workspace that gets rendered
   const [ openGroup, setOpenGroup ] = useState('');
   const router = useRouter();
+  // Paths for now
+  const personalContentPath = '/homepage';
+  const personalSettingsPath = '/personal/settings';
+  const groupContentPath = '/group-home';
+  // Group settings path is form '/' + group.id + '/settings'
 
   return (
     <SideNavigationWrapper $breakpoint={breakpoint} id="sidebar">
@@ -46,10 +50,9 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
             <MscrSideNavigationLevel3
               className='personal'
               subLevel={3}
-              selected = {router.asPath == '/homepage'} // The correct pathname for personal workspace content here
+              selected = {router.asPath == personalContentPath}
               content={
-                // This is how the links should be once the target pages exist
-                <Link href={'/homepage'} passHref>
+                <Link href={personalContentPath} passHref>
                   <RouterLink
                     onClick={() => setOpenGroup('')}
                   >
@@ -61,9 +64,9 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
             <MscrSideNavigationLevel3
               className='personal'
               subLevel={3}
-              selected = {router.asPath == '/personal/settings'}
+              selected = {router.asPath == personalSettingsPath}
               content={
-                <Link href={'/personal/settings'} passHref>
+                <Link href={personalSettingsPath} passHref>
                   <RouterLink
                     onClick={() => setOpenGroup('')}
                   >
@@ -105,9 +108,9 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
               <MscrSideNavigationLevel3
                 className='group'
                 subLevel={3}
-                selected={router.asPath == '/group-home'}
+                selected={router.asPath == groupContentPath}
                 content={
-                  <Link href={'/group-home'} passHref>
+                  <Link href={groupContentPath} passHref>
                     <RouterLink>
                       {t('workspace-group-navigation-content')}
                     </RouterLink>
