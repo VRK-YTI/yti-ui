@@ -1,4 +1,4 @@
-import { MainTitle, BadgeBar, Badge } from 'yti-common-ui/title-block';
+import { MainTitle, BadgeBar } from 'yti-common-ui/title-block';
 import { LanguagePickerWrapper, TitleWrapper } from './model.styles';
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import {
@@ -24,6 +24,7 @@ import {
 import { useStoreDispatch } from '@app/store';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import { useRouter } from 'next/router';
+import { Status } from 'yti-common-ui/search-results/result-card.styles';
 
 export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
   const { t, i18n } = useTranslation('common');
@@ -84,10 +85,11 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
             )}{' '}
             {translateModelType(getType(modelInfo), t)}
           </div>
+          {modelInfo?.version && <span>{modelInfo?.version}</span>}
           <span>{modelInfo?.prefix}</span>
-          <Badge $isValid={model.status === 'VALID'}>
+          <Status status={model.status}>
             {translateStatus(getStatus(modelInfo), t)}
-          </Badge>
+          </Status>
         </BadgeBar>
       </div>
 

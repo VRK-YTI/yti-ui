@@ -59,12 +59,22 @@ export const classApi = createApi({
     }),
     getClass: builder.query<
       ClassType,
-      { modelId: string; classId: string; applicationProfile?: boolean }
+      {
+        modelId: string;
+        version?: string;
+        classId: string;
+        applicationProfile?: boolean;
+      }
     >({
       query: (value) => ({
         url: `/class/${pathForModelType(value.applicationProfile)}${
           value.modelId
         }/${value.classId}`,
+        params: {
+          ...(value.version && {
+            version: value.version,
+          }),
+        },
         method: 'GET',
       }),
     }),

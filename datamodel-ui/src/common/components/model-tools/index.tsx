@@ -38,9 +38,11 @@ import DownloadPicture from './download-picture';
 
 export default function ModelTools({
   modelId,
+  version,
   applicationProfile,
 }: {
   modelId: string;
+  version?: string;
   applicationProfile: boolean;
 }) {
   const { t } = useTranslation('common');
@@ -126,7 +128,7 @@ export default function ModelTools({
 
           <DownloadPicture modelId={modelId} />
 
-          {hasPermission && (
+          {hasPermission && !version && (
             <Button
               icon={<IconSave />}
               onClick={() => dispatch(setSavePosition(true))}

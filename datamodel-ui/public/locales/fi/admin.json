@@ -83,6 +83,7 @@
   "codelist": "Koodisto",
   "codelist-contents": "Koodiston sisältö",
   "codelist-delete-warning": "Haluatko poistaa koodiston {{name}}. Koodistosta valitut arvot poistetaan myös muista kentistä.",
+  "commentable-version": "Kommentoitava versio",
   "common-form": {
     "add-equivalent-association": "Lisää vastaava assosiaatio",
     "add-equivalent-attribute": "Lisää vastaava attribuutti",
@@ -131,8 +132,11 @@
   "create-new-sub-association-for-selected": "Luo valitulle uusi ala-assosiaatio",
   "create-new-sub-attribute-for-selected": "Luo valitulle uusi ala-attribuutti",
   "create-prefix-automatically": "Luo tunnus automaattisesti",
+  "create-release": "Julkaise versio tietomallista",
+  "create-release-status": "Valitse julkaistavan version tila",
   "create-subclass-for-selected": "Luo valitulle alaluokka",
   "creating-model": "Luodaan tietomallia",
+  "creating-release": "Julkaistaan",
   "data-model": "Tietomalli",
   "data-model-name": "Tietomallin nimi",
   "data-models-added-to-this-model": "Tähän tietomalliin lisätyt tietomallit",
@@ -242,6 +246,9 @@
   "range": "Tietotyyppi",
   "reference-data-counts_one": "{{count}} koodisto",
   "reference-data-counts_other": "{{count}} koodistoa",
+  "release": "Julkaise",
+  "release-version-number": "Tietomallin versionumero",
+  "release-version-number-hint": "Kirjoita versionumero mouodossa x.y.z (esimerkiksi 1.1.0)",
   "remove": "Poista",
   "remove-reference": "Poista viittaus",
   "remove-reference-description-association": "Haluatko poistaa viittauksen assosiaatiorajoitteeseen {{name}} tästä luokasta?",
@@ -306,6 +313,8 @@
   "uri-preview": "URI:n esikatselu",
   "use-codelist-values": "Käytä koodiston arvoja",
   "utilizes-class-restriction": "Hyödyntää luokkarajoitetta",
+  "version-number-error": "Versionumero ei ole muodossa x.y.z",
   "work-group-comment": "Työryhmän sisäinen kommentti",
+  "write-version-number": "Kirjoita versionumero",
   "you-have-unsaved-changes": "Sinulla on tallentamattomia muutoksia."
 }

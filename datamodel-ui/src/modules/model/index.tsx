@@ -5,7 +5,7 @@ import SearchView from './search-view';
 import ClassView from '../class-view';
 import { useTranslation } from 'next-i18next';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Graph from '../graph';
 import LinkedDataView from '../linked-data-view';
 import { compareLocales } from '@app/common/utils/compare-locals';
@@ -29,6 +29,7 @@ import Notification from '../notification';
 import { useRouter } from 'next/router';
 import { useStoreDispatch } from '@app/store';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { getSlugAsString } from '@app/common/utils/parse-slug';
 
 interface ModelProps {
   modelId: string;
@@ -39,10 +40,14 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const router = useRouter();
+  const [version] = useState(getSlugAsString(router.query.ver));
   const hasPermission = HasPermission({
     actions: 'EDIT_DATA_MODEL',
   });
-  const { data: modelInfo } = useGetModelQuery(modelId);
+  const { data: modelInfo } = useGetModelQuery({
+    modelId: modelId,
+    version: version,
+  });
 
   const languages: string[] = useMemo(() => {
     if (!modelInfo) {
@@ -78,6 +83,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         component: (
           <LinkedDataView
             modelId={modelId}
+            version={version}
             isApplicationProfile={modelInfo?.type === 'PROFILE'}
           />
         ),
@@ -93,6 +99,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         component: (
           <ClassView
             modelId={modelId}
+            version={version}
             languages={languages}
             applicationProfile={modelInfo?.type === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
@@ -130,6 +137,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         component: (
           <ResourceView
             modelId={modelId}
+            version={version}
             type={ResourceType.ASSOCIATION}
             languages={languages}
             applicationProfile={modelInfo?.type === 'PROFILE'}
@@ -146,13 +154,19 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
           id: 'documentation',
           icon: <IconRegisters />,
           buttonLabel: t('documentation-fitted', { ns: 'admin' }),
-          component: <Documentation modelId={modelId} languages={languages} />,
+          component: (
+            <Documentation
+              modelId={modelId}
+              version={version}
+              languages={languages}
+            />
+          ),
         },
       ] as ViewType[];
     }
 
     return v as ViewType[];
-  }, [hasPermission, languages, modelId, modelInfo, t]);
+  }, [hasPermission, languages, modelId, version, modelInfo, t]);
 
   useEffect(() => {
     if (router.query.new) {
@@ -175,11 +189,13 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
       <ContentWrapper>
         <Graph
           modelId={modelId}
+          version={version}
           applicationProfile={modelInfo?.type === 'PROFILE'}
         >
           <Drawer views={views} />
           <ModelTools
             modelId={modelId}
+            version={version}
             applicationProfile={modelInfo?.type === 'PROFILE'}
           />
         </Graph>

@@ -46,6 +46,7 @@ import { UriData } from '@app/common/interfaces/uri.interface';
 
 interface ResourceViewProps {
   modelId: string;
+  version?: string;
   type: ResourceType;
   languages: string[];
   terminologies: string[];
@@ -54,6 +55,7 @@ interface ResourceViewProps {
 
 export default function ResourceView({
   modelId,
+  version,
   type,
   languages,
   terminologies,
@@ -83,6 +85,7 @@ export default function ResourceView({
     pageSize: 20,
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [type],
+    fromVersion: version,
   });
 
   const { data: resourceData, refetch: refetchResource } = useGetResourceQuery(
@@ -90,6 +93,7 @@ export default function ResourceView({
       modelId: globalSelected.modelId ?? modelId,
       resourceIdentifier: globalSelected.id ?? '',
       applicationProfile,
+      version: version,
     },
     {
       skip:

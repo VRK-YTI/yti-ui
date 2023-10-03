@@ -13,6 +13,8 @@ export interface SearchResultData {
   icon?: ReactNode;
   status?: string;
   partOf?: string[];
+  identifier?: string;
+  version?: string;
   title: string;
   titleLink: string;
   type: string;
@@ -101,6 +103,8 @@ export default function SearchResults({
               icon={d.icon}
               status={d.status}
               partOf={d.partOf}
+              version={d.version}
+              identifier={d.identifier}
               partOfText={partOfText}
               noDescriptionText={noDescriptionText}
               noChip={noChip}

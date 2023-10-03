@@ -58,12 +58,16 @@ export const resourceApi = createApi({
         modelId: string;
         resourceIdentifier: string;
         applicationProfile?: boolean;
+        version?: string;
       }
     >({
       query: (value) => ({
         url: `/resource/${pathForModelType(value.applicationProfile)}${
           value.modelId
         }/${value.resourceIdentifier}`,
+        params: {
+          ...(value.version && { version: value.version }),
+        },
         method: 'GET',
       }),
     }),

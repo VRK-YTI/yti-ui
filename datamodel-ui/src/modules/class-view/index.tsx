@@ -45,6 +45,7 @@ import { SimpleResource } from '@app/common/interfaces/simple-resource.interface
 
 interface ClassViewProps {
   modelId: string;
+  version?: string;
   languages: string[];
   terminologies: string[];
   applicationProfile?: boolean;
@@ -52,6 +53,7 @@ interface ClassViewProps {
 
 export default function ClassView({
   modelId,
+  version,
   languages,
   terminologies,
   applicationProfile,
@@ -84,6 +86,7 @@ export default function ClassView({
     pageSize: 20,
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [ResourceType.CLASS],
+    fromVersion: version,
   });
 
   const {
@@ -91,7 +94,12 @@ export default function ClassView({
     isSuccess,
     refetch: refetchData,
   } = useGetClassQuery(
-    { modelId: modelId, classId: globalSelected.id ?? '', applicationProfile },
+    {
+      modelId: modelId,
+      version: version,
+      classId: globalSelected.id ?? '',
+      applicationProfile,
+    },
     { skip: globalSelected.type !== 'classes' }
   );
 
