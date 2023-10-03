@@ -196,12 +196,16 @@
   "vocabulary-info-en": "",
   "vocabulary-info-fi": "",
   "vocabulary-info-sv": "",
-  "vocabulary-results-more": "",
+  "vocabulary-results-more": "",,
   "word-class": {
     "adjective": "",
     "verb": ""
   },
-  "workspace-navigation": "",
-  "workspace-navigation-content": " Workspace Content",
-  "workspace-navigation-settings": "Workspace Settings"
+  "workspace-group": "Group workspaces",
+  "workspace-group-navigation-content": "Group content",
+  "workspace-group-navigation-settings": "Group settings",
+  "workspace-navigation": "Workspaces",
+  "workspace-navigation-content": "Workspace content Workspace Content",
+  "workspace-navigation-settings": "Workspace SettingsWorkspace settings",
+  "workspace-personal": "Personal workspace"
 }
