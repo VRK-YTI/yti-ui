@@ -221,21 +221,15 @@ export default function TreeviewTest() {
         return ret;
     }
 
-    function getJointTitle(nodeIds: string[], isSourceTree: boolean) {
-        const ret: string[] = [];
+    function getJointNodes(nodeIds: string[], isSourceTree: boolean) {
+        const ret: CrosswalkConnection[] = [];
         connectedCrosswalks.forEach(item => {
             if (isSourceTree) {
                 if (item.source === nodeIds[0].toString()) {
-                    // @ts-ignore
-                    ret.push(item.sourceTitle);
-                    // @ts-ignore
-                    ret.push(item.targetTitle);
+                    ret.push(item);
                 }
-            } else if (item.target === nodeIds[0]) {
-                // @ts-ignore
-                ret.push(item.sourceTitle);
-                // @ts-ignore
-                ret.push(item.targetTitle);
+            } else if (item.target === nodeIds[0].toString()) {
+                ret.push(item);
             }
         });
         return ret;
@@ -291,17 +285,20 @@ export default function TreeviewTest() {
     };
 
     const selectFromTree = (nodeId: string, isTargetTree: boolean) => {
-        //TODO: fix source and target name update
         const nodeIds = [];
         nodeIds.push(nodeId);
         if (isTargetTree) {
             selectFromTargetTreeByIds(nodeIds);
-            const emptySelection = emptyTreeSelection;
-            emptySelection.title = getJointTitle(nodeIds, false)[0];
+            const targetObj = cloneDeep(emptyTreeSelection);
+            const targetNode = getJointNodes(nodeIds, false);
+            targetObj.name = targetNode[0].targetTitle ? targetNode[0].targetTitle : '';
+            setTargetSelection(targetObj)
         } else {
             selectFromSourceTreeByIds(nodeIds);
-            const emptySelection = emptyTreeSelection;
-            emptySelection.title = getJointTitle(nodeIds, true)[0];
+            const sourceObj = cloneDeep(emptyTreeSelection);
+            const sourceNode = getJointNodes(nodeIds, true);
+            sourceObj.name = sourceNode[0].sourceTitle ? sourceNode[0].sourceTitle : '';
+            setSourceSelection(sourceObj)
         }
     };
 

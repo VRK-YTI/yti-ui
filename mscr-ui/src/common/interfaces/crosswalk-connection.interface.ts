@@ -25,6 +25,7 @@ export interface RenderTree {
     required?: string;
     isMappable?: string;
     parentName?: string;
+    jsonPath: string;
     parentId: number | string;
     children?: RenderTree[];
 }
