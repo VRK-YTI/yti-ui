@@ -36,10 +36,10 @@ export default function IndexPage(props: IndexPageProps) {
       >
         <PageHead
           baseUrl="https://tietomallit.suomi.fi"
-          title={t('datamodel-title')}
+          title={t('mscr-title')}
           description={t('service-description')}
         />
-        <PersonalWorkspace user={props.user ?? undefined} />
+        <PersonalWorkspace user={props.user ?? undefined} pid={''} />
       </Layout>
     </CommonContextProvider>
   );

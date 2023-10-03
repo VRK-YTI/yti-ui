@@ -51,7 +51,7 @@ export default function IndexPage(props: IndexPageProps) {
       return <GroupWorkspace pid={''} user={user}/>;
     }
     else if (slug === 'crosswalk-edit') {
-      return <TreeviewTest />;
+      return <TreeviewTest  pid={''} user={user} />;
     }
     else {
       console.log(slug);

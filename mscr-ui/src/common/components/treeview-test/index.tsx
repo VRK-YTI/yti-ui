@@ -10,7 +10,7 @@ import {useBreakpoints} from 'yti-common-ui/components/media-query';
 import TableRow from '@mui/material/TableRow';
 import TableCell, {tableCellClasses} from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
-import {styled} from "@mui/material";
+import {Grid, styled} from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
@@ -37,8 +37,16 @@ import {
 import {fetchCrosswalkData} from "@app/common/components/simple-api-service";
 import callback from "@app/pages/api/auth/callback";
 import {RenderTree, CrosswalkConnection} from "@app/common/interfaces/crosswalk-connection.interface";
+import SideNavigationPanel from '../side-navigation';
+import { User } from 'yti-common-ui/interfaces/user.interface';
 
-export default function TreeviewTest() {
+//just added a prop inteface to pass the user
+interface TreeViewTestProps {
+    pid: string;
+    user?: User | undefined;
+  }
+
+export default function TreeviewTest({pid,user}:TreeViewTestProps) {
     interface simpleNode {
         name: string | undefined;
         id: string;
@@ -412,6 +420,11 @@ export default function TreeviewTest() {
         const {children, value, index, ...other} = props;
 
         return (
+            <Grid container spacing={2}>
+            <Grid item xs={2}>
+              <SideNavigationPanel user={user ?? undefined} />
+            </Grid>
+            <Grid item xs={10}>
             <div
                 role="tabpanel"
                 hidden={value !== index}
@@ -425,6 +438,9 @@ export default function TreeviewTest() {
                     </Box>
                 )}
             </div>
+            </Grid>
+          </Grid>
+            
         );
     }
 
