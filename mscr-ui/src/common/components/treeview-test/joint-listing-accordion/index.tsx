@@ -134,7 +134,6 @@ function Row(props: { row: CrosswalkConnectionNew, cbf: any }) {
 let rows = [{...crosswalkConnectionInit}];
 
 function createCrosswalkAccorionData(crosswalkInput: any) {
-    console.log('CW INPUT:',crosswalkInput);
     rows = [{...crosswalkInput}];
 }
 
@@ -159,7 +158,6 @@ export default function JointListingAccordion(props: any) {
                 </TableRow>
             </TableHead>
             <TableBody onClick={(e) => {
-                //TODO: select corresponding nodes from trees
             }}>
                 {crosswalkJointsInput.map((row: { name: React.Key | null | undefined }) => {
                     return(<Row key={row.name} row={row} cbf={props} />)
