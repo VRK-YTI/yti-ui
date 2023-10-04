@@ -37,12 +37,13 @@ export default function validateForm(data: ResourceFormType): CommonFormErrors {
   if (
     data.label &&
     Object.keys(data.label).length > 0 &&
-    Object.values(data.label).filter((val) => val && val !== '').length > 0
+    Object.values(data.label).filter((val) => val && val.trim() !== '').length >
+      0
   ) {
     errors.label = false;
   }
 
-  if (data.identifier !== '') {
+  if (data.identifier.trim() !== '') {
     errors.identifier = false;
   } else {
     return validateNumeric(data, {
