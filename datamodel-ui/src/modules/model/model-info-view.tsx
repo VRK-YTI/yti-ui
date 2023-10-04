@@ -368,11 +368,28 @@ export default function ModelInfoView() {
         />
         {modelInfo && (
           <>
-            <CreateReleaseModal
-              modelId={modelId}
-              visible={openModals.createRelease}
-              hide={() => handleModalChange('createRelease', false)}
-            />
+            {hasPermission && (
+              <>
+                <DeleteModal
+                  modelId={modelId}
+                  label={getLanguageVersion({
+                    data: modelInfo.label,
+                    lang: i18n.language,
+                  })}
+                  type="model"
+                  visible={openModals.delete}
+                  hide={() => handleModalChange('delete', false)}
+                />
+                {!version && (
+                  <CreateReleaseModal
+                    modelId={modelId}
+                    visible={openModals.createRelease}
+                    hide={() => handleModalChange('createRelease', false)}
+                  />
+                )}
+              </>
+            )}
+
             <AsFileModal
               type="download"
               modelId={modelId}
@@ -382,16 +399,6 @@ export default function ModelInfoView() {
               })}
               visible={openModals.downloadAsFile}
               onClose={() => handleModalChange('downloadAsFile', false)}
-            />
-            <DeleteModal
-              modelId={modelId}
-              label={getLanguageVersion({
-                data: modelInfo.label,
-                lang: i18n.language,
-              })}
-              type="model"
-              visible={openModals.delete}
-              hide={() => handleModalChange('delete', false)}
             />
           </>
         )}
