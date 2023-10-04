@@ -66,10 +66,14 @@ export default function CreateReleaseModal({
     setReleaseStatus('VALID');
     setUserPosted(false);
     setVersionError(false);
+    createReleaseResult.reset();
     hide();
-  }, [hide]);
+  }, [hide, createReleaseResult]);
 
   useEffect(() => {
+    if (!userPosted) {
+      return;
+    }
     if (createReleaseResult.isSuccess) {
       router.push({
         pathname: `/model/${modelId}`,
@@ -81,7 +85,14 @@ export default function CreateReleaseModal({
     if (createReleaseResult.isError) {
       setUserPosted(false);
     }
-  }, [createReleaseResult, handleClose, router, modelId, releaseVersion]);
+  }, [
+    userPosted,
+    createReleaseResult,
+    handleClose,
+    router,
+    modelId,
+    releaseVersion,
+  ]);
 
   return (
     <NarrowModal
