@@ -29,3 +29,9 @@ export interface RenderTree {
     parentId: number | string;
     children?: RenderTree[];
 }
+
+export interface CrosswalkConnectionNew {
+    source: RenderTree;
+    target: RenderTree;
+}
+

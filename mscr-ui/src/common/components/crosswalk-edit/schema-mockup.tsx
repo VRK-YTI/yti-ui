@@ -333,11 +333,11 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
         currentTreeNode.id = nodeId.toString();
         currentTreeNode.parentId = rootId;
 
-         // if (object === 'description') {
-         //     currentTreeNode.description = value;
-         // } else if (object === 'type') {
-         //     currentTreeNode.type = value;
-         // }
+         if (object === 'description') {
+             currentTreeNode.description = value;
+         } else if (object === 'title') {
+             currentTreeNode.title = value;
+         }
 
         currentTreeNode.name = object;
         currentTreeNode.title = value;
