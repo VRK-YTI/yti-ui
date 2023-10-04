@@ -16,6 +16,8 @@ export interface Schema {
   filedata: File;
   prefix: string;
   revision: string;
+  visibilty: string;
+  created: string;
 }
 export interface Organization {
   id: string;

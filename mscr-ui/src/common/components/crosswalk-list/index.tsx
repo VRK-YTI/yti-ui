@@ -3,6 +3,7 @@ import { Button } from 'suomifi-ui-components';
 import { List, ListItem } from './crosswalk-list.styles';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import { Grid } from '@mui/material';
+import TreeviewTest from '../treeview-test';
 import router from 'next/router';
 
 export interface CrosswalkListProps {
@@ -15,8 +16,6 @@ export interface CrosswalkListProps {
 export default function CrosswalkList({
   items,
   handleRemoval,
-
-  labelRow,
   deleteDisabled,
 }: CrosswalkListProps) {
   const { t } = useTranslation('admin');
@@ -25,15 +24,14 @@ export default function CrosswalkList({
     return <div>{'There is no Schemas or Crosswalks to show'}</div>;
   }
 
-  function handleClick(pid: string): void {
-    console.log(pid);
-    // will go the schema detail page
-    router.push(`/schema/${pid}`);
+  function handleClick(pid: string) {
+    console.log('crosswalklist');
+    // will go the crosswalk detail page
+    router.push('/crosswalk-edit');
   }
 
   return (
     //Creating Header row
-
     <div>
       <List className="header-list">
         <ListItem>

@@ -1,18 +1,13 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import TreeItem from '@mui/lab/TreeItem';
 import { useEffect } from 'react';
-import { Text } from 'suomifi-ui-components';
 import MockupSchemaLoader from '../crosswalk-edit/schema-mockup';
 import { cloneDeep } from 'lodash';
-import { useBreakpoints } from 'yti-common-ui/components/media-query';
 import TableRow from '@mui/material/TableRow';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableBody from '@mui/material/TableBody';
 import { Grid, styled } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -22,20 +17,10 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import JointListingAccordion from '@app/common/components/treeview-test/joint-listing-accordion';
 import NodeInfo from '@app/common/components/treeview-test/tabs/crosswalk-info/node-info';
-import { SearchInput } from 'suomifi-ui-components';
 import SchemaTree from '@app/common/components/treeview-test/tabs/edit-crosswalk/schema-tree';
 
-import {
-  Button as Sbutton,
-  InlineAlert,
-  Modal,
-  ModalContent,
-  ModalFooter,
-  ModalTitle,
-  Paragraph,
-} from 'suomifi-ui-components';
+import { Button as Sbutton } from 'suomifi-ui-components';
 import { fetchCrosswalkData } from '@app/common/components/simple-api-service';
-import callback from '@app/pages/api/auth/callback';
 import {
   RenderTree,
   CrosswalkConnection,
@@ -470,26 +455,19 @@ export default function TreeviewTest({ pid, user }: TreeViewTestProps) {
     const { children, value, index, ...other } = props;
 
     return (
-      <Grid container spacing={2}>
-        <Grid item xs={2}>
-          <SideNavigationPanel user={user ?? undefined} />
-        </Grid>
-        <Grid item xs={10}>
-          <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-          >
-            {value === index && (
-              <Box sx={{ p: 3 }}>
-                <Typography>{children}</Typography>
-              </Box>
-            )}
-          </div>
-        </Grid>
-      </Grid>
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
     );
   }
 

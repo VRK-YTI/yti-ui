@@ -48,10 +48,6 @@ export const ContentContainer = styled.div<{
   $fullScreen?: boolean;
   $breakpoint?: Breakpoint;
 }>`
-  background-color: ${(props) =>
-    props.$fullScreen
-      ? props.theme.suomifi.colors.whiteBase
-      : props.theme.suomifi.colors.depthLight3};
   border-bottom: ${(props) =>
     !props.$fullScreen &&
     `1px solid ${props.theme.suomifi.colors.depthLight1}`};
@@ -60,7 +56,7 @@ export const ContentContainer = styled.div<{
   ${(props) =>
     props.$breakpoint &&
     `
-    margin-left: ${small(props.$breakpoint, '25%', '454px')}
+    margin-left: ${small(props.$breakpoint, '25%', '200px')}
   `}
   ${(props) =>
     props.$fullScreen &&
