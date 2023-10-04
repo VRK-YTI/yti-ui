@@ -201,11 +201,13 @@
     "adjective": "",
     "verb": ""
   },
-  "workspace-group": "",
-  "workspace-group-navigation-content": "workspace content",
-  "workspace-group-navigation-settings": "settings",
-  "workspace-navigation": "",
-  "workspace-navigation-content": "workspace content",
-  "workspace-navigation-settings": "settings",
-  "workspace-personal": ""
+
+  "workspace-group": "Group workspaces",
+  "workspace-group-navigation-content": "Group content",
+  "workspace-group-navigation-settings": "Group settings",
+  "workspace-navigation": "Workspaces",
+  "workspace-navigation-content": "Workspace content",
+  "workspace-navigation-settings": "Workspace settings",
+  "workspace-personal": "Personal workspace"
+
 }
