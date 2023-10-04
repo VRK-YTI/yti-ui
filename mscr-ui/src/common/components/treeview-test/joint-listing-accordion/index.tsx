@@ -18,7 +18,11 @@ import LinkOffIcon from '@mui/icons-material/LinkOff';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import {Button as Sbutton, Textarea, TextInput} from "suomifi-ui-components";
 import Button from '@mui/material/Button';
-import {CrosswalkConnection, RenderTree} from "@app/common/interfaces/crosswalk-connection.interface";
+import {
+    CrosswalkConnection,
+    CrosswalkConnectionNew,
+    RenderTree
+} from "@app/common/interfaces/crosswalk-connection.interface";
 
 const crosswalkConnectionInit = {
     source: '',
@@ -52,7 +56,7 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
     },
 }));
 
-function Row(props: { row: CrosswalkConnection, cbf: any }) {
+function Row(props: { row: CrosswalkConnectionNew, cbf: any }) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
     const [changedNotes, setChangedNotes] = React.useState<any>('');
@@ -78,7 +82,7 @@ function Row(props: { row: CrosswalkConnection, cbf: any }) {
                     <Button className='ms-2 py-0' style={{textTransform: 'none'}} title='Select linked node from source tree'
                             onClick={() => {
                                 props.cbf.performAccordionAction(row, 'selectFromSourceTree')
-                            }}>{row.sourceTitle}</Button>
+                            }}>{row.source.name}</Button>
                 </StyledTableCell>
 
                 <StyledTableCell className='fw-bold' style={{width: '10%'}}>
@@ -92,7 +96,7 @@ function Row(props: { row: CrosswalkConnection, cbf: any }) {
                     <Button className='me-2 py-0' style={{textTransform: 'none'}} title='Select linked node from target tree'
                             onClick={() => {
                                 props.cbf.performAccordionAction(row, 'selectFromTargetTree')
-                            }}>{row.targetTitle}</Button>
+                            }}>{row.target.name}</Button>
                 </StyledTableCell>
                 <StyledTableCell className='fw-bold' style={{width: '10%'}}>
                     <IconButton
@@ -154,10 +158,9 @@ export default function JointListingAccordion(props: any) {
                 </TableRow>
             </TableHead>
             <TableBody onClick={(e) => {
-                //TODO: select corresponding nodes from trees
             }}>
-                {crosswalkJointsInput.map((row: { name: React.Key | null | undefined }) => {
-                    return(<Row key={row.name} row={row} cbf={props} />)
+                {crosswalkJointsInput.map((row: CrosswalkConnectionNew) => {
+                    return(<Row key={row.id} row={row} cbf={props} />)
                 })}
             </TableBody>
         </Table>

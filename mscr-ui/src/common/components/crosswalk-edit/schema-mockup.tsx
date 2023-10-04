@@ -306,6 +306,9 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
     let allTreeNodes: RenderTree[] = [];
 
     let currentTreeNode: RenderTree = {
+        isMappable: '',
+        jsonPath: '$schema',
+        parentName: '',
         isLinked: false,
         idNumeric: 0,
         id: '0',
@@ -324,16 +327,17 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
         nodeId += 1;
     }
 
-    function addObjectToTree(object: string, value: string, parent: string, rootId: any) {
+    function addObjectToTree(object: string, value: string, parent: string, rootId: any, jsonPath: string) {
+        currentTreeNode.jsonPath = jsonPath + '.' + object + '(LEAF)';
         currentTreeNode.idNumeric = nodeId;
         currentTreeNode.id = nodeId.toString();
         currentTreeNode.parentId = rootId;
 
-         // if (object === 'description') {
-         //     currentTreeNode.description = value;
-         // } else if (object === 'type') {
-         //     currentTreeNode.type = value;
-         // }
+         if (object === 'description') {
+             currentTreeNode.description = value;
+         } else if (object === 'title') {
+             currentTreeNode.title = value;
+         }
 
         currentTreeNode.name = object;
         currentTreeNode.title = value;
@@ -342,7 +346,7 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
         increaseNodeNumber();
     }
 
-    function walkJson(json_object: any, parent: any, rootId: number) {
+    function walkJson(json_object: any, parent: any, rootId: number, jsonPath: string) {
         //console.log('WALK JSON', json_object);
         for (const obj in json_object) {
             if (typeof json_object[obj] === 'string') {
@@ -350,8 +354,8 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
 
                 // OBJECT IS A LEAF LEVEL OBJECT
                 currentTreeNode = {
-                    isLinked: false, idNumeric: 0, id: '0', name: '', title: '', type: '', description: '', required: '', parentId: 0, children: []};
-                addObjectToTree(obj, json_object[obj], parent, rootId);
+                    isLinked: false, idNumeric: 0, id: '0', name: '', title: '', type: 'string', description: '', required: '', parentId: 0, jsonPath, children: []};
+                addObjectToTree(obj, json_object[obj], parent, rootId, jsonPath);
                 allTreeNodes.push(cloneDeep(currentTreeNode));
                 }
             else if (Array.isArray(json_object[obj])) {
@@ -359,15 +363,18 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
             } else {
                 // OBJECT HAS CHILDREN
                 currentTreeNode = {
-                    isLinked: false, idNumeric: 0, id: '0', name: '', title: '', type: '', description: '', required: '', parentId: 0, children: []};
+                    isLinked: false, idNumeric: 0, id: '0', name: '', title: '', type: 'composite', description: '', required: '', parentId: 0, jsonPath, children: []};
                 currentTreeNode.name = obj;
                 currentTreeNode.parentName = parent;
                 currentTreeNode.parentId = rootId;
                 currentTreeNode.idNumeric = nodeId;
                 currentTreeNode.id = nodeId.toString();
+
+
+                currentTreeNode.jsonPath = jsonPath + '.' + obj;
                 increaseNodeNumber();
                 allTreeNodes.push(cloneDeep(currentTreeNode));
-                walkJson(json_object[obj], obj, nodeId - 1);
+                walkJson(json_object[obj], obj, nodeId - 1, currentTreeNode.jsonPath);
             }
         }
         return allTreeNodes;
@@ -382,8 +389,8 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
         return {allTreeNodes};
     }
 
-    walkJson(emptyTemplate ? testSchema : currentTreeNode, null, 0);
+    walkJson(emptyTemplate ? testSchema : currentTreeNode, null, 0, 'ROOT');
     processChildNodes();
-        console.log(allTreeNodes);
+        //console.log(allTreeNodes);
     return allTreeNodes;
 }

@@ -1,5 +1,8 @@
 
 export interface Schema {
+  onClick(): void;
+  onMouseEnter: any;
+  onMouseLeave: any;
   pid: string;
   format: string;
   status: string;

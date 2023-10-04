@@ -36,7 +36,11 @@ import {
 } from 'suomifi-ui-components';
 import {fetchCrosswalkData} from "@app/common/components/simple-api-service";
 import callback from "@app/pages/api/auth/callback";
-import {RenderTree, CrosswalkConnection} from "@app/common/interfaces/crosswalk-connection.interface";
+import {
+    RenderTree,
+    CrosswalkConnection,
+    CrosswalkConnectionNew
+} from "@app/common/interfaces/crosswalk-connection.interface";
 import SideNavigationPanel from '../side-navigation';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 
@@ -52,29 +56,8 @@ export default function TreeviewTest({pid,user}:TreeViewTestProps) {
         id: string;
     }
 
-    const crosswalkConnectionInit: CrosswalkConnection = {
-        description: undefined,
-        isSelected: false,
-        mappingType: undefined,
-        notes: undefined,
-        parentId: '',
-        parentName: undefined,
-        source: "",
-        sourceTitle: undefined,
-        sourceType: undefined,
-        target: "",
-        targetTitle: undefined,
-        targetType: undefined,
-        type: undefined
-    }
-
-    const emptyTree: any = [{
-        id: '0',
-        name: '',
-        children: '',
-    }];
-
     const emptyTreeSelection: RenderTree = {
+        jsonPath: "",
         children: [],
         description: '',
         id: '',
@@ -88,6 +71,34 @@ export default function TreeviewTest({pid,user}:TreeViewTestProps) {
         title: '',
         type: ''
     }
+
+    const crosswalkConnectionInit: CrosswalkConnection = {
+        description: undefined,
+        isSelected: false,
+        mappingType: undefined,
+        notes: undefined,
+        parentId: '',
+        parentName: undefined,
+        source: "",
+        sourceTitle: undefined,
+        sourceType: undefined,
+        target: "",
+        targetTitle: undefined,
+        targetType: undefined,
+        type: undefined,
+    }
+
+    const crosswalkConnectionNewInit: CrosswalkConnectionNew = {
+        source: emptyTreeSelection,
+        target: emptyTreeSelection,
+        id: '0',
+    }
+
+    const emptyTree: any = [{
+        id: '0',
+        name: '',
+        children: '',
+    }];
 
     const fromTree = (nodes: any) => (
         <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name} className='linked-tree-item'>
@@ -115,14 +126,12 @@ export default function TreeviewTest({pid,user}:TreeViewTestProps) {
     const [currentlySelectedSource, setCurrentlySelectedSource] = React.useState<CrosswalkConnection>(crosswalkConnectionInit);
     const [currentlySelectedTarget, setCurrentlySelectedTarget] = React.useState<CrosswalkConnection>(crosswalkConnectionInit);
 
-    const [connectedCrosswalks, setConnectedCrosswalks] = React.useState<CrosswalkConnection[] | []>([]);
+    const [connectedCrosswalksNew, setConnectedCrosswalksNew] = React.useState<CrosswalkConnectionNew[] | []>([]);
     const [isAnySelectedLinked, setAnySelectedLinkedState] = React.useState<boolean>(false);
     const [isBothSelectedLinked, setBothSelectedLinkedState] = React.useState<boolean>(false);
     const [tabValue, setTabValue] = React.useState(0);
 
     const [crosswalksList, setCrosswalkList] = React.useState<string[]>([]);
-
-    const crosswalkVisual: string[] = [];
 
     useEffect(() => {
         // USED BY NODE INFO BOX SOURCE
@@ -143,7 +152,7 @@ export default function TreeviewTest({pid,user}:TreeViewTestProps) {
         targetNode.sourceTitle = targetTreeSelection.name;
         targetNode.parentId = targetTreeSelection.parentId;
         targetNode.description = targetTreeSelection.description;
-        targetNode.type = sourceTreeSelection.type;
+        targetNode.type = targetTreeSelection.type;
         const source = getJointEndNode(targetTreeSelectedArray, false);
         targetNode.targetTitle = source.name;
         targetNode.target = source.id;
@@ -151,13 +160,8 @@ export default function TreeviewTest({pid,user}:TreeViewTestProps) {
         updateIsLinkedStatus(sourceNode, targetNode);
         setCurrentlySelectedSource(sourceNode);
         setCurrentlySelectedTarget(targetNode);
-    }, [sourceTreeSelectedArray, targetTreeSelectedArray, connectedCrosswalks, crosswalksList]);
+    }, [sourceTreeSelectedArray, targetTreeSelectedArray, connectedCrosswalksNew, crosswalksList]);
 
-
-    // RENDER CROSSWALKS AFTER CHANGE
-    useEffect(() => {
-        renderCrosswalksList();
-    }, [connectedCrosswalks]);
 
     // EXPAND TREES WHEN DATA LOADED
     useEffect(() => {
@@ -166,47 +170,24 @@ export default function TreeviewTest({pid,user}:TreeViewTestProps) {
     }, [sourceTreeData]);
 
     function addOrRemoveJoint(add: boolean) {
+        const source = sourceTreeData[parseInt(sourceTreeSelectedArray.toString())];
+        const target = targetTreeData[parseInt(targetTreeSelectedArray.toString())]
+        const key = source.id + '.' + target.id
         if (add) {
-            setConnectedCrosswalks(crosswalkMappings => [...crosswalkMappings, {
-                description: undefined,
-                isSelected: false,
-                mappingType: undefined,
-                notes: undefined,
-                source: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].id,
-                sourceTitle: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].name,
-                parentName: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].parentName,
-                parentId: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())].parentId,
-                sourceType: undefined,
-                targetType: undefined,
-                target: targetTreeData[parseInt(targetTreeSelectedArray.toString())].id,
-                targetTitle: targetTreeData[parseInt(targetTreeSelectedArray.toString())].name,
-                type: undefined
+
+            setConnectedCrosswalksNew(crosswalkMappings => [...crosswalkMappings, {
+                source: source,
+                target: target,
+                id: key
             }]);
         } else {
             removeJoint({
-                source: sourceTreeSelectedArray.toString(),
-                target: targetTreeSelectedArray.toString(),
-                sourceTitle: undefined,
-                targetTitle: undefined,
-                sourceType: undefined,
-                targetType: undefined,
-                parentName: '',
-                parentId: '',
-                mappingType: '',
-                notes: '',
-                isSelected: false,
-                description: undefined,
-                type: undefined
+                source: source,
+                target: target,
+                id: key
             });
         }
     };
-
-    function renderCrosswalksList() {
-        connectedCrosswalks.forEach((item: CrosswalkConnection) => {
-            //crosswalkVisual.push(item.sourceTitle, item.targetTitle);
-            setCrosswalkList([...crosswalkVisual]);
-        });
-    }
 
     function updateIsLinkedStatus(source: CrosswalkConnection, target: CrosswalkConnection) {
         setAnySelectedLinkedState(source.target.length > 0 || target.target.length > 0);
@@ -214,50 +195,39 @@ export default function TreeviewTest({pid,user}:TreeViewTestProps) {
     }
 
     function getJointEndNode(nodes: string[], isSourceTree: boolean) {
-        const ret: simpleNode = {name: '', id: ''};
-        connectedCrosswalks.forEach(item => {
+        let ret: simpleNode = {name: '', id: ''};
+        connectedCrosswalksNew.forEach(item => {
             if (isSourceTree) {
-                if (item.source === nodes.toString()) {
-                    ret.name = item.targetTitle;
-                    ret.id = item.target;
+                if (item.source.id === nodes.toString()){
+                    ret = {name: item.target.name, id:item.target.id}
                 }
-            } else if (item.target === nodes.toString()) {
-                ret.name = item.sourceTitle;
-                ret.id = item.source;
+            }
+            else {
+                if (item.target.id === nodes.toString()){
+                    ret = {name: item.source.name, id:item.source.id}
+                }
             }
         });
         return ret;
     }
 
-    function getJointTitle(nodeIds: string[], isSourceTree: boolean) {
-        const ret: string[] = [];
-        connectedCrosswalks.forEach(item => {
-            if (isSourceTree) {
-                if (item.source === nodeIds[0].toString()) {
-                    // @ts-ignore
-                    ret.push(item.sourceTitle);
-                    // @ts-ignore
-                    ret.push(item.targetTitle);
-                }
-            } else if (item.target === nodeIds[0]) {
-                // @ts-ignore
-                ret.push(item.sourceTitle);
-                // @ts-ignore
-                ret.push(item.targetTitle);
-            }
-        });
-        return ret;
+    function getJointNodes(nodeIds: string[], isSourceTree: boolean) {
+        if (isSourceTree) {
+            return connectedCrosswalksNew.filter(item => item.source.id === nodeIds.toString());
+        } else {
+            return connectedCrosswalksNew.filter(item => item.target.id === nodeIds.toString());
+        }
     }
 
-    function removeJoint(cc: CrosswalkConnection) {
-        const newCrosswalks = [...connectedCrosswalks.filter(item => {
+    function removeJoint(cc: CrosswalkConnectionNew) {
+        const newCrosswalks = [...connectedCrosswalksNew.filter(item => {
             return ((item.target !== cc.target) || (item.source !== cc.source));
         })];
-        setConnectedCrosswalks(() => [...newCrosswalks]);
+        setConnectedCrosswalksNew(() => [...newCrosswalks]);
     }
 
-    function updateJointData(cc: CrosswalkConnection) {
-        const newCrosswalks = [...connectedCrosswalks.map(item => {
+    function updateJointData(cc: CrosswalkConnectionNew) {
+        const newCrosswalks = [...connectedCrosswalksNew.map(item => {
             if ((item.target === cc.target) && (item.source === cc.source)) {
                 return (cloneDeep(cc));
             } else {
@@ -265,10 +235,10 @@ export default function TreeviewTest({pid,user}:TreeViewTestProps) {
             }
             ;
         })];
-        setConnectedCrosswalks(() => [...newCrosswalks]);
+        setConnectedCrosswalksNew(() => [...newCrosswalks]);
     }
 
-    const handleTreeSourceSelect = (event: React.SyntheticEvent, nodeIds: any[], isSourceTree: boolean) => {
+    const handleTreeSelect = (event: React.SyntheticEvent | undefined, nodeIds: any[], isSourceTree: boolean) => {
         let newTreeSelection: RenderTree = cloneDeep(emptyTreeSelection);
         if (isSourceTree) {
             sourceTreeData.forEach((item: RenderTree) => {
@@ -298,18 +268,28 @@ export default function TreeviewTest({pid,user}:TreeViewTestProps) {
         }
     };
 
-    const selectFromTree = (nodeId: string, isTargetTree: boolean) => {
-        //TODO: fix source and target name update
+    const selectFromTreeById = (nodeId: string, isTargetTree: boolean) => {
         const nodeIds = [];
         nodeIds.push(nodeId);
         if (isTargetTree) {
             selectFromTargetTreeByIds(nodeIds);
-            const emptySelection = emptyTreeSelection;
-            emptySelection.title = getJointTitle(nodeIds, false)[0];
+            setTargetSelection(getJointNodes(nodeIds, false)[0].target);
         } else {
             selectFromSourceTreeByIds(nodeIds);
-            const emptySelection = emptyTreeSelection;
-            emptySelection.title = getJointTitle(nodeIds, true)[0];
+            setSourceSelection(getJointNodes(nodeIds, true)[0].source);
+        }
+    };
+
+    const selectFromTree = (node: CrosswalkConnectionNew, isTargetTree: boolean) => {
+        const nodeIds: React.SetStateAction<string[]> = [];
+        if (isTargetTree) {
+            nodeIds.push(node.target.id);
+            selectFromTargetTreeByIds(nodeIds);
+            setTargetSelection(node.target)
+        } else {
+            nodeIds.push(node.source.id);
+            selectFromSourceTreeByIds(nodeIds);
+            setSourceSelection(node.source)
         }
     };
 
@@ -362,7 +342,7 @@ export default function TreeviewTest({pid,user}:TreeViewTestProps) {
         fetchCrosswalkData('organizations').then(data => {
             setTargetData(MockupSchemaLoader(true));
             setSourceData(MockupSchemaLoader(true));
-            setConnectedCrosswalks([]);
+            setConnectedCrosswalksNew([]);
             clearSelections();
         });
     }
@@ -395,15 +375,15 @@ export default function TreeviewTest({pid,user}:TreeViewTestProps) {
             joint.notes = value;
             updateJointData(joint);
         } else if (action === 'selectFromSourceTree') {
-            selectFromTree(joint.source, false);
-        } else if (action === 'selectFromTargetTree') {
-            selectFromTree(joint.target, true);
+            selectFromTree(joint, false);
+        } else if (action === 'selectFromTargetTree') {;
+            selectFromTree(joint, true);
         }
     };
 
     const performCallbackFromTreeAction = (isSourceTree: boolean, action: any, event: any, nodeIds: any) => {
         if (action === 'handleSelect') {
-            handleTreeSourceSelect(event, nodeIds, isSourceTree);
+            handleTreeSelect(event, nodeIds, isSourceTree);
         } else if (action === 'treeToggle') {
             handleTreeToggle(event, nodeIds, isSourceTree);
         }
@@ -456,7 +436,7 @@ export default function TreeviewTest({pid,user}:TreeViewTestProps) {
     };
 
     const performNodeInfoAction = (nodeId: any, isSourceTree: boolean) => {
-        selectFromTree(nodeId, isSourceTree);
+        selectFromTreeById(nodeId, isSourceTree);
     }
 
     return (
@@ -563,7 +543,7 @@ export default function TreeviewTest({pid,user}:TreeViewTestProps) {
                     <h5>Linked nodes</h5>
                     <div className='joint-listing-accordion-wrap'>
                         <Box className='mb-4' sx={{height: 640, flexGrow: 1, maxWidth: 700, overflowY: 'auto'}}>
-                            <JointListingAccordion crosswalkJoints={connectedCrosswalks}
+                            <JointListingAccordion crosswalkJoints={connectedCrosswalksNew}
                                                    performAccordionAction={performCallbackFromAccordionAction}></JointListingAccordion>
                         </Box>
                     </div>
