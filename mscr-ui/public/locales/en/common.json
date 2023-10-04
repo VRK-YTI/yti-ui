@@ -81,7 +81,7 @@
   "library-with-count_one": "",
   "library-with-count_other": "",
   "link-opens-new-window-external": "",
-  "mscr-title": "Metadat Schema and Crosswalk Registry",
+  "mscr-title": "",
   "name": "",
   "navigate-to-homepage": "",
   "navigation-close": "",
@@ -150,7 +150,7 @@
   "skip-link-main": "",
   "skip-link-search-results": "",
   "statuses": {
-    "draft": "",
+    "draft": "Draft",
     "incomplete": "",
     "invalid": "",
     "retired": "",
@@ -196,16 +196,16 @@
   "vocabulary-info-en": "",
   "vocabulary-info-fi": "",
   "vocabulary-info-sv": "",
-  "vocabulary-results-more": "",,
+  "vocabulary-results-more": "",
   "word-class": {
     "adjective": "",
     "verb": ""
   },
-  "workspace-group": "Group workspaces",
-  "workspace-group-navigation-content": "Group content",
-  "workspace-group-navigation-settings": "Group settings",
-  "workspace-navigation": "Workspaces",
-  "workspace-navigation-content": "Workspace content Workspace Content",
-  "workspace-navigation-settings": "Workspace SettingsWorkspace settings",
-  "workspace-personal": "Personal workspace"
+  "workspace-group": "",
+  "workspace-group-navigation-content": "workspace content",
+  "workspace-group-navigation-settings": "settings",
+  "workspace-navigation": "",
+  "workspace-navigation-content": "workspace content",
+  "workspace-navigation-settings": "settings",
+  "workspace-personal": ""
 }

@@ -10,7 +10,7 @@ import {
 export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
   // Width and positioning for now, need adjusting when overall layout structure is decided
   flex-grow: 1;
-  width: 25%;
+  width: 100%;
   max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
   position: fixed;
   left: 0;
