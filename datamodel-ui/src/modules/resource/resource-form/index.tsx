@@ -407,11 +407,27 @@ export default function ResourceForm({
           <div>
             <FormFooterAlert
               labelText={
-                Object.keys(errors).filter(
-                  (key) =>
-                    ['label', 'identifier'].includes(key) &&
+                Object.keys(errors).filter((key) => {
+                  const l: Array<keyof typeof errors> = [
+                    'label',
+                    'identifier',
+                    'identifierInitChar',
+                    'identifierLength',
+                    'identifierCharacters',
+                    'maxCount',
+                    'maxExclusive',
+                    'maxInclusive',
+                    'maxLength',
+                    'minCount',
+                    'minExclusive',
+                    'minInclusive',
+                    'minLength',
+                  ];
+                  return (
+                    (l as string[]).includes(key) &&
                     errors[key as keyof typeof errors] === true
-                ).length > 0
+                  );
+                }).length > 0
                   ? t('missing-information-title')
                   : t('unexpected-error-title')
               }
