@@ -55,6 +55,10 @@ import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { Status } from '@app/common/interfaces/status.interface';
+import {
+  DEFAULT_ASSOCIATION_SUBPROPERTY,
+  DEFAULT_ATTRIBUTE_SUBPROPERTY,
+} from '@app/common/components/resource/utils';
 
 interface ResourceFormProps {
   modelId: string;
@@ -217,10 +221,9 @@ export default function ResourceForm({
       data.subResourceOf &&
       data.subResourceOf.length === 1 &&
       [
-        'owl:topDataProperty',
-        'owl:TopObjectProperty',
-        'owl:topObjectProperty',
-      ].includes(data.subResourceOf[0].uri)
+        DEFAULT_ASSOCIATION_SUBPROPERTY.curie,
+        DEFAULT_ATTRIBUTE_SUBPROPERTY.curie,
+      ].includes(data.subResourceOf[0].curie ?? '')
     ) {
       handleUpdate({
         ...data,
@@ -242,19 +245,13 @@ export default function ResourceForm({
     key: 'equivalentResource' | 'subResourceOf'
   ) => {
     if (key === 'subResourceOf' && data.subResourceOf?.length === 1) {
-      const value =
+      const defaultSubResourceOf =
         data.type === ResourceType.ASSOCIATION
-          ? 'owl:TopObjectProperty'
-          : 'owl:topDataProperty';
+          ? DEFAULT_ASSOCIATION_SUBPROPERTY
+          : DEFAULT_ATTRIBUTE_SUBPROPERTY;
       handleUpdate({
         ...data,
-        subResourceOf: [
-          {
-            uri: value,
-            curie: value,
-            label: { en: value.replace('owl:', '') },
-          },
-        ],
+        subResourceOf: [defaultSubResourceOf],
       });
       return;
     }
@@ -550,9 +547,8 @@ export default function ResourceForm({
                   />
                 }
                 deleteDisabled={[
-                  'owl:topDataProperty',
-                  'owl:TopObjectProperty',
-                  'owl:topObjectProperty',
+                  DEFAULT_ASSOCIATION_SUBPROPERTY.uri,
+                  DEFAULT_ATTRIBUTE_SUBPROPERTY.uri,
                 ]}
                 handleRemoval={(id: string) =>
                   handleResourceRemove(id, 'subResourceOf')

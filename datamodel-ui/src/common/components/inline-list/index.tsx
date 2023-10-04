@@ -44,7 +44,8 @@ export default function InlineList({
           </div>
 
           {(Array.isArray(deleteDisabled) &&
-            deleteDisabled.includes(item.uri)) ||
+            (deleteDisabled.includes(item.uri) ||
+              deleteDisabled.includes(item.curie ?? ''))) ||
           deleteDisabled === true ? (
             <></>
           ) : (

@@ -45,6 +45,18 @@ export interface ApplicationProfileResourcePutType {
   codeList?: string;
 }
 
+export const DEFAULT_ATTRIBUTE_SUBPROPERTY: UriData = {
+  uri: 'owl:topDataProperty',
+  curie: 'owl:topDataProperty',
+  label: { en: 'topDataProperty' },
+};
+
+export const DEFAULT_ASSOCIATION_SUBPROPERTY: UriData = {
+  uri: 'owl:topObjectProperty',
+  curie: 'owl:topObjectProperty',
+  label: { en: 'topObjectProperty' },
+};
+
 export function convertToPayload(
   data: ResourceFormType,
   isEdit: boolean,
@@ -95,15 +107,14 @@ export function convertToPayload(
           return [
             e[0],
             e[1]
-              .map((r: UriData) => r.uri)
               .filter(
-                (r: string) =>
-                  [
-                    'owl:topDataProperty',
-                    'owl:TopObjectProperty',
-                    'owl:topObjectProperty',
-                  ].includes(r) === false
-              ),
+                (r: UriData) =>
+                  ![
+                    DEFAULT_ASSOCIATION_SUBPROPERTY.curie,
+                    DEFAULT_ATTRIBUTE_SUBPROPERTY.curie,
+                  ].includes(r.curie ?? '')
+              )
+              .map((r: UriData) => r.uri),
           ];
         }
 
