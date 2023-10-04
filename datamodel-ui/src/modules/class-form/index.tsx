@@ -457,11 +457,19 @@ export default function ClassForm({
           <div>
             <FormFooterAlert
               labelText={
-                Object.keys(errors).filter(
-                  (key) =>
-                    ['label', 'identifier'].includes(key) &&
+                Object.keys(errors).filter((key) => {
+                  const l: Array<keyof typeof errors> = [
+                    'identifier',
+                    'identifierInitChar',
+                    'identifierLength',
+                    'identifierCharacters',
+                    'label',
+                  ];
+                  return (
+                    (l as string[]).includes(key) &&
                     errors[key as keyof typeof errors] === true
-                ).length > 0
+                  );
+                }).length > 0
                   ? t('missing-information-title')
                   : t('unexpected-error-title')
               }
