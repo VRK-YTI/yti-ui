@@ -1,5 +1,5 @@
-import {useTranslation} from 'next-i18next';
-import {Heading, Paragraph} from 'suomifi-ui-components';
+import { useTranslation } from 'next-i18next';
+import { Heading, Paragraph } from 'suomifi-ui-components';
 
 // This is a mock module for the settings. Please replace with the real one.
 
@@ -13,7 +13,9 @@ export default function GroupSettings({ groupId }: GroupProps) {
   return (
     <>
       <Heading variant="h1">Settings for group ID: {groupId}</Heading>
-      <Paragraph>This is a placeholder for the eventual settings page</Paragraph>
+      <Paragraph>
+        This is a placeholder for the eventual settings page
+      </Paragraph>
     </>
   );
 }

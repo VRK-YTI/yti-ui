@@ -24,7 +24,6 @@ export const ListItem = styled.div`
   padding: ${(props) => props.theme.suomifi.spacing.s};
   height: 60px;
   margin: 4px;
- 
 
   .fi-button {
     white-space: nowrap;

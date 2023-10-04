@@ -44,7 +44,10 @@ export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`
 
 // content layout
 
-export const ContentContainer = styled.div<{ $fullScreen?: boolean; $breakpoint?: Breakpoint }>`
+export const ContentContainer = styled.div<{
+  $fullScreen?: boolean;
+  $breakpoint?: Breakpoint;
+}>`
   background-color: ${(props) =>
     props.$fullScreen
       ? props.theme.suomifi.colors.whiteBase

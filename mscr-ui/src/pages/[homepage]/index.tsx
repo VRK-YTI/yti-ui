@@ -26,8 +26,7 @@ import { User } from 'yti-common-ui/interfaces/user.interface';
 import GroupWorkspace from '../../modules/group-home';
 import PersonalWorkspace from '../../modules/personal-home';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import TreeviewTest from "@app/common/components/treeview-test";
-
+import TreeviewTest from '@app/common/components/treeview-test';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -48,12 +47,10 @@ export default function IndexPage(props: IndexPageProps) {
     user?: User;
   }): React.ReactElement {
     if (slug === 'group-home') {
-      return <GroupWorkspace pid={''} user={user}/>;
-    }
-    else if (slug === 'crosswalk-edit') {
-      return <TreeviewTest  pid={''} user={user} />;
-    }
-    else {
+      return <GroupWorkspace pid={''} user={user} />;
+    } else if (slug === 'crosswalk-edit') {
+      return <TreeviewTest pid={''} user={user} />;
+    } else {
       console.log(slug);
       return <PersonalWorkspace pid={''} user={user} />;
     }
@@ -75,7 +72,6 @@ export default function IndexPage(props: IndexPageProps) {
           slug={(router.query.homepage as string) ?? undefined}
           user={props.user ?? undefined}
         />
-       
       </Layout>
     </CommonContextProvider>
   );

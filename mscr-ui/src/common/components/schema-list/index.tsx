@@ -1,33 +1,34 @@
 import { useTranslation } from 'next-i18next';
 import { ExternalLink, Button, Text, Label } from 'suomifi-ui-components';
-import { List, ListItem } from './inline-list.styles';
+import { List, ListItem } from './schema-list.styles';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import { Grid, InputLabel } from '@mui/material';
+import router from 'next/router';
 
-export interface InlineListProps {
+export interface SchemaListProps {
   items: Schema[];
   handleRemoval: (value: string) => void;
   labelRow?: boolean;
   deleteDisabled: string[] | boolean;
 }
 
-export default function InlineList({
+export default function SchemaList({
   items,
   handleRemoval,
- 
+
   labelRow,
   deleteDisabled,
-}: InlineListProps) {
+}: SchemaListProps) {
   const { t } = useTranslation('admin');
 
   if (items.length < 1) {
     return <div>{'There is no Schemas or Crosswalks to show'}</div>;
   }
 
- 
-
   function handleClick(pid: string): void {
     console.log(pid);
+    // will go the schema detail page
+    router.push(`/schema/${pid}`);
   }
 
   return (

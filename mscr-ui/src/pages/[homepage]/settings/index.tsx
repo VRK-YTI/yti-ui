@@ -1,17 +1,20 @@
-import {CommonContextProvider, CommonContextState} from 'yti-common-ui/components/common-context-provider';
-import {SSRConfig, useTranslation} from 'next-i18next';
+import {
+  CommonContextProvider,
+  CommonContextState,
+} from 'yti-common-ui/components/common-context-provider';
+import { SSRConfig, useTranslation } from 'next-i18next';
 import Layout from '@app/common/components/layout';
 import PageHead from 'yti-common-ui/components/page-head';
 import PersonalSettings from 'src/modules/personal-settings';
-import {createCommonGetServerSideProps} from '@app/common/utils/create-getserversideprops';
-import {User} from 'yti-common-ui/interfaces/user.interface';
+import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
+import { User } from 'yti-common-ui/interfaces/user.interface';
 import GroupSettings from '@app/modules/group-settings';
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
   settingsType: string;
 }
 
-function SettingsByType( settingsType : string): React.ReactElement  {
+function SettingsByType(settingsType: string): React.ReactElement {
   if (settingsType === 'personal') {
     return <PersonalSettings />;
   }
@@ -30,8 +33,8 @@ export default function IndexPage(props: IndexPageProps) {
       >
         <PageHead
           baseUrl="https://tietomallit.suomi.fi"
-          title='Settings testisivu'
-          description='Only for testing'
+          title="Settings testisivu"
+          description="Only for testing"
         />
         {SettingsByType(props.settingsType)}
       </Layout>
@@ -40,7 +43,7 @@ export default function IndexPage(props: IndexPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({query}) => {
+  async ({ query }) => {
     const settingsType = Array.isArray(query.homepage)
       ? query.homepage[0]
       : query.homepage;
@@ -52,7 +55,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     return {
       props: {
-        settingsType: settingsType
+        settingsType: settingsType,
       },
     };
   }

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Label } from 'suomifi-ui-components';
-import InlineList from '../inline-list';
+import SchemaList from '../schema-list';
 import { Schema } from '@app/common/interfaces/schema.interface';
 
 const InlineListBlockWrapper = styled.div`
@@ -33,7 +33,7 @@ export default function InlineListBlock({
   return (
     <InlineListBlockWrapper>
       <Label optionalText={optionalText}>{label}</Label>
-      <InlineList
+      <SchemaList
         labelRow={labelRow}
         handleRemoval={handleRemoval}
         items={items}

@@ -1,4 +1,7 @@
-import {CrosswalkFormMockupType, CrosswalkFormType} from '@app/common/interfaces/crosswalk.interface';
+import {
+  CrosswalkFormMockupType,
+  CrosswalkFormType,
+} from '@app/common/interfaces/crosswalk.interface';
 
 export interface FormErrors {
   name: boolean;

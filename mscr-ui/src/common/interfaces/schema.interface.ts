@@ -1,4 +1,3 @@
-
 export interface Schema {
   onClick(): void;
   onMouseEnter: any;
