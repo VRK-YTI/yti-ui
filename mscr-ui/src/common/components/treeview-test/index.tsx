@@ -82,7 +82,8 @@ export default function TreeviewTest() {
 
     const crosswalkConnectionNewInit: CrosswalkConnectionNew = {
         source: emptyTreeSelection,
-        target: emptyTreeSelection
+        target: emptyTreeSelection,
+        id: '0',
     }
 
     const emptyTree: any = [{
@@ -161,15 +162,21 @@ export default function TreeviewTest() {
     }, [sourceTreeData]);
 
     function addOrRemoveJoint(add: boolean) {
+        const source = sourceTreeData[parseInt(sourceTreeSelectedArray.toString())];
+        const target = targetTreeData[parseInt(targetTreeSelectedArray.toString())]
+        const key = source.id + '.' + target.id
         if (add) {
+
             setConnectedCrosswalksNew(crosswalkMappings => [...crosswalkMappings, {
-                source: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())],
-                target: targetTreeData[parseInt(targetTreeSelectedArray.toString())]
+                source: source,
+                target: target,
+                id: key
             }]);
         } else {
             removeJoint({
-                source: sourceTreeData[parseInt(sourceTreeSelectedArray.toString())],
-                target: targetTreeData[parseInt(targetTreeSelectedArray.toString())]
+                source: source,
+                target: target,
+                id: key
             });
         }
     };

@@ -33,5 +33,6 @@ export interface RenderTree {
 export interface CrosswalkConnectionNew {
     source: RenderTree;
     target: RenderTree;
+    id: string;
 }
 

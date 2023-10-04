@@ -159,8 +159,8 @@ export default function JointListingAccordion(props: any) {
             </TableHead>
             <TableBody onClick={(e) => {
             }}>
-                {crosswalkJointsInput.map((row: { name: React.Key | null | undefined }) => {
-                    return(<Row key={row.name} row={row} cbf={props} />)
+                {crosswalkJointsInput.map((row: CrosswalkConnectionNew) => {
+                    return(<Row key={row.id} row={row} cbf={props} />)
                 })}
             </TableBody>
         </Table>
