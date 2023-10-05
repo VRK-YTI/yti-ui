@@ -221,9 +221,9 @@ export default function ResourceForm({
       data.subResourceOf &&
       data.subResourceOf.length === 1 &&
       [
-        DEFAULT_ASSOCIATION_SUBPROPERTY.curie,
-        DEFAULT_ATTRIBUTE_SUBPROPERTY.curie,
-      ].includes(data.subResourceOf[0].curie ?? '')
+        DEFAULT_ASSOCIATION_SUBPROPERTY.uri,
+        DEFAULT_ATTRIBUTE_SUBPROPERTY.uri,
+      ].includes(data.subResourceOf[0].uri)
     ) {
       handleUpdate({
         ...data,
