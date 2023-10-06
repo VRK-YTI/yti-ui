@@ -185,14 +185,7 @@ export default function ResourceView({
     if (applicationProfile) {
       dispatch(initializeResource(type, languages, value, applicationProfile));
     } else {
-      dispatch(
-        initializeResource(
-          type,
-          languages,
-          value?.label['en'],
-          applicationProfile
-        )
-      );
+      dispatch(initializeResource(type, languages, value, applicationProfile));
     }
 
     setView(
