@@ -85,8 +85,16 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
             )}{' '}
             {translateModelType(getType(modelInfo), t)}
           </div>
-          {modelInfo?.version && <span>{modelInfo?.version}</span>}
           <span>{modelInfo?.prefix}</span>
+          {modelInfo?.version ? (
+            <span style={{ textTransform: 'uppercase' }}>{`${t('version')} ${
+              modelInfo.version
+            }`}</span>
+          ) : (
+            <span style={{ textTransform: 'uppercase' }}>
+              {t('working-version')}
+            </span>
+          )}
           <Status status={model.status}>
             {translateStatus(getStatus(modelInfo), t)}
           </Status>

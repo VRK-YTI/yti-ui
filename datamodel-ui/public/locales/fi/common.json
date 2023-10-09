@@ -178,6 +178,7 @@
   "page-number": "Sivunumero",
   "prefix": "Tunnus",
   "previous-page": "Edellinen sivu",
+  "prior-versions": "Edelliset versiot",
   "profile": "Soveltamisprofiili",
   "profile-with-count_one": "Soveltamisprofiilit ({{count}}) kpl",
   "profile-with-count_other": "Soveltamisprofiilit ({{count}}) kpl",
@@ -274,5 +275,6 @@
   "vocabulary-info-en": "",
   "vocabulary-info-fi": "",
   "vocabulary-info-sv": "",
-  "vocabulary-results-more": ""
+  "vocabulary-results-more": "",
+  "working-version": "Työversio"
 }

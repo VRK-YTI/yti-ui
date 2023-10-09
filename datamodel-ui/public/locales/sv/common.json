@@ -178,6 +178,7 @@
   "page-number": "",
   "prefix": "",
   "previous-page": "",
+  "prior-versions": "",
   "profile": "",
   "profile-with-count_one": "",
   "profile-with-count_other": "",
@@ -274,5 +275,6 @@
   "vocabulary-info-en": "",
   "vocabulary-info-fi": "",
   "vocabulary-info-sv": "",
-  "vocabulary-results-more": ""
+  "vocabulary-results-more": "",
+  "working-version": ""
 }
