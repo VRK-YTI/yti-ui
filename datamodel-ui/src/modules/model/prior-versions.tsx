@@ -7,6 +7,7 @@ import {
   ExpanderContent,
   ExpanderTitleButton,
   ExternalLink,
+  LoadingSpinner,
 } from 'suomifi-ui-components';
 import { Status } from 'yti-common-ui/search-results/result-card.styles';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
@@ -21,37 +22,51 @@ export default function PriorVersions({
 }) {
   const { t, i18n } = useTranslation('common');
   const [open, setOpen] = useState(false);
-  const { data: priorVersions } = useGetPriorVersionsQuery(
+  const { data: priorVersions, isLoading } = useGetPriorVersionsQuery(
     { modelId, version },
     { skip: !open }
   );
+
+  function renderPriorVersions() {
+    return (
+      priorVersions?.map((version) => {
+        return (
+          <div key={version.version}>
+            <ExternalLink
+              labelNewWindow=""
+              href={`/model/${modelId}?ver=${version.version}`}
+            >
+              {getLanguageVersion({
+                data: version.label,
+                lang: i18n.language,
+                appendLocale: true,
+              })}
+            </ExternalLink>
+            <PriorVersionsDetails>
+              {`${t('version')} ${version.version}`}
+              <Status status={version.status}>
+                {translateStatus(version.status, t)}
+              </Status>
+            </PriorVersionsDetails>
+          </div>
+        );
+      }) ?? <>{t('no-prior-versions')}</>
+    );
+  }
+
   return (
     <Expander open={open} onOpenChange={() => setOpen(!open)}>
       <ExpanderTitleButton>{t('prior-versions')}</ExpanderTitleButton>
       <ExpanderContent>
         <PriorVersionsWrapper>
-          {priorVersions?.map((version) => {
-            return (
-              <div key={version.version}>
-                <ExternalLink
-                  labelNewWindow=""
-                  href={`/model/${modelId}?ver=${version.version}`}
-                >
-                  {getLanguageVersion({
-                    data: version.label,
-                    lang: i18n.language,
-                    appendLocale: true,
-                  })}
-                </ExternalLink>
-                <PriorVersionsDetails>
-                  {`${t('version')} ${version.version}`}
-                  <Status status={version.status}>
-                    {translateStatus(version.status, t)}
-                  </Status>
-                </PriorVersionsDetails>
-              </div>
-            );
-          })}
+          {isLoading ? (
+            <LoadingSpinner
+              variant="small"
+              text={t('fetching-prior-versions')}
+            />
+          ) : (
+            renderPriorVersions()
+          )}
         </PriorVersionsWrapper>
       </ExpanderContent>
     </Expander>
