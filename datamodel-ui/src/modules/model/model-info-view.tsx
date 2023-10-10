@@ -239,7 +239,7 @@ export default function ModelInfoView() {
                     >
                       {t('remove', { ns: 'admin' })}
                     </Button>
-                    
+
                     */}
                   </>
                 )}
@@ -365,6 +365,7 @@ export default function ModelInfoView() {
           modelId={modelId}
           visible={openModals.showAsFile}
           onClose={() => handleModalChange('showAsFile', false)}
+          version={version}
         />
         {modelInfo && (
           <>
@@ -399,6 +400,7 @@ export default function ModelInfoView() {
               })}
               visible={openModals.downloadAsFile}
               onClose={() => handleModalChange('downloadAsFile', false)}
+              version={version}
             />
           </>
         )}

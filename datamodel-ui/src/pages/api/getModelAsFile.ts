@@ -5,6 +5,7 @@ import { withIronSessionApiRoute } from 'iron-session/next';
 export default withIronSessionApiRoute(
   async function getModelAsFile(req, res) {
     const target = (req.query['modelId'] as string) ?? '/';
+    const version = (req.query['version'] as string) ?? '';
     const fileType = (req.query['fileType'] as string) ?? 'LD-JSON';
     const isRaw = (req.query['raw'] as string) ?? 'false';
     let filename = (req.query['filename'] as string) ?? 'datamodel';
@@ -39,7 +40,9 @@ export default withIronSessionApiRoute(
     }
 
     const { status, data: response } = await axios.get(
-      `${process.env.DATAMODEL_API_URL}/v2/export/${target}`,
+      `${process.env.DATAMODEL_API_URL}/v2/export/${target}${
+        version ? `?version=${version}` : ''
+      }`,
       {
         headers: headers,
         responseType: 'stream',
