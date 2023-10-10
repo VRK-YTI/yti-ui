@@ -278,6 +278,10 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   }
 
   function renderClassLabel() {
+    if (tools.showById) {
+      return `${data.modelId}:${data.identifier}`;
+    }
+
     if (!data.applicationProfile) {
       return getLanguageVersion({
         data: data.label,
@@ -300,6 +304,14 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   function renderResourceLabel(
     resource: ClassNodeProps['data']['resources'][0]
   ) {
+    if (tools.showById) {
+      return (
+        <>
+          {[getMinMax(resource)]} {getIdentifier(resource)}
+        </>
+      );
+    }
+
     if (!data.applicationProfile) {
       return getLanguageVersion({
         data: resource.label,
