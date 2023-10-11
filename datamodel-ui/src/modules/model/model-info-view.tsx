@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import {
   Button,
+  ExpanderGroup,
   ExternalLink,
   IconOptionsVertical,
   Text,
@@ -39,6 +40,7 @@ import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listene
 import useSetView from '@app/common/utils/hooks/use-set-view';
 import { v4 } from 'uuid';
 import CreateReleaseModal from '../create-release-modal';
+import PriorVersions from './prior-versions';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -326,6 +328,10 @@ export default function ModelInfoView() {
           {modelInfo.creator &&
             modelInfo.creator.name &&
             `, ${modelInfo.creator.name}`}
+        </BasicBlock>
+
+        <BasicBlock title={''}>
+          <PriorVersions modelId={modelId} version={version} />
         </BasicBlock>
 
         <Separator isLarge />

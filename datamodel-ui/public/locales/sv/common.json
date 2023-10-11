@@ -88,6 +88,7 @@
   "error-occured": "",
   "feedback": "",
   "feedback-terminologies": "",
+  "fetching-prior-versions": "",
   "filter-by-keyword": "",
   "filter-by-keyword-placeholder": "",
   "filter-by-language": "",
@@ -163,6 +164,7 @@
   "no-linked-datamodels": "",
   "no-linked-terminologies": "",
   "no-note": "",
+  "no-prior-versions": "",
   "no-references": "",
   "no-results": "",
   "no-source-class": "",
@@ -178,6 +180,7 @@
   "page-number": "",
   "prefix": "",
   "previous-page": "",
+  "prior-versions": "",
   "profile": "",
   "profile-with-count_one": "",
   "profile-with-count_other": "",
@@ -274,5 +277,6 @@
   "vocabulary-info-en": "",
   "vocabulary-info-fi": "",
   "vocabulary-info-sv": "",
-  "vocabulary-results-more": ""
+  "vocabulary-results-more": "",
+  "working-version": ""
 }

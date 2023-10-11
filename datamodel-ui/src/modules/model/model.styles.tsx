@@ -138,3 +138,15 @@ export const LinksWrapper = styled.ul`
   margin: 0;
   padding: 0 ${(props) => props.theme.suomifi.spacing.l};
 `;
+
+export const PriorVersionsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${(props) => props.theme.suomifi.spacing.s};
+`;
+
+export const PriorVersionsDetails = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${(props) => props.theme.suomifi.spacing.xs};
+`;

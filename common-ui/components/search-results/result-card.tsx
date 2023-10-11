@@ -79,12 +79,19 @@ export default function ResultCard({
             <span style={{ textTransform: 'uppercase' }}>{identifier}</span>
           </>
         )}
-        {version && (
+        {version ? (
           <>
             <span aria-hidden={true}>&middot;</span>
             <span style={{ textTransform: 'uppercase' }}>{`${t(
               'version'
             )} ${version}`}</span>
+          </>
+        ) : (
+          <>
+            <span aria-hidden={true}>&middot;</span>
+            <span style={{ textTransform: 'uppercase' }}>
+              {t('working-version')}
+            </span>
           </>
         )}
         {status && renderStatus()}

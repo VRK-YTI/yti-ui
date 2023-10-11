@@ -73,6 +73,25 @@ export const modelApi = createApi({
         method: 'POST',
       }),
     }),
+    getPriorVersions: builder.query<
+      {
+        label: { [key: string]: string };
+        version: string;
+        status: string;
+        versionIri: string;
+      }[],
+      { modelId: string; version?: string }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/versions`,
+        params: {
+          ...(value.version && {
+            version: value.version,
+          }),
+        },
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -82,6 +101,7 @@ export const {
   useUpdateModelMutation,
   useDeleteModelMutation,
   useCreateReleaseMutation,
+  useGetPriorVersionsQuery,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
@@ -91,6 +111,7 @@ export const {
   updateModel,
   deleteModel,
   createRelease,
+  getPriorVersions,
 } = modelApi.endpoints;
 
 // Slice setup below

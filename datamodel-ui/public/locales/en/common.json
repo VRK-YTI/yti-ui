@@ -88,6 +88,7 @@
   "error-occured": "An error occured",
   "feedback": "Feedback",
   "feedback-terminologies": "",
+  "fetching-prior-versions": "Fetching prior versions",
   "filter-by-keyword": "Search by word",
   "filter-by-keyword-placeholder": "e.g. daycare, studying...",
   "filter-by-language": "Filter by language",
@@ -163,6 +164,7 @@
   "no-linked-datamodels": "No linked datamodels",
   "no-linked-terminologies": "No linked terminologies",
   "no-note": "No note",
+  "no-prior-versions": "No prior versions",
   "no-references": "No references",
   "no-results": "No results",
   "no-source-class": "No source class",
@@ -178,6 +180,7 @@
   "page-number": "Page number",
   "prefix": "Prefix",
   "previous-page": "Previous page",
+  "prior-versions": "Prior versions",
   "profile": "Profile",
   "profile-with-count_one": "Profile ({{count}}) item",
   "profile-with-count_other": "Profile ({{count}}) items",
@@ -274,5 +277,6 @@
   "vocabulary-info-en": "",
   "vocabulary-info-fi": "",
   "vocabulary-info-sv": "",
-  "vocabulary-results-more": ""
+  "vocabulary-results-more": "",
+  "working-version": "Working version"
 }

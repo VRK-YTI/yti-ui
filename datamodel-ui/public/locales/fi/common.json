@@ -88,6 +88,7 @@
   "error-occured": "Tapahtui virhe",
   "feedback": "Palaute",
   "feedback-terminologies": "",
+  "fetching-prior-versions": "Haetaan edellisiä versioita",
   "filter-by-keyword": "Hae sanalla",
   "filter-by-keyword-placeholder": "Esim. päivähoito, opiskelu...",
   "filter-by-language": "Rajaa kielen mukaan",
@@ -163,6 +164,7 @@
   "no-linked-datamodels": "Ei linkitettyjä tietomalleja",
   "no-linked-terminologies": "Ei linkitettyjä sanastoja",
   "no-note": "Ei lisätietoja",
+  "no-prior-versions": "Ei edellisiä versioita",
   "no-references": "Ei viittauksia",
   "no-results": "Ei hakutuloksia",
   "no-source-class": "Ei lähdeluokkaa",
@@ -178,6 +180,7 @@
   "page-number": "Sivunumero",
   "prefix": "Tunnus",
   "previous-page": "Edellinen sivu",
+  "prior-versions": "Edelliset versiot",
   "profile": "Soveltamisprofiili",
   "profile-with-count_one": "Soveltamisprofiilit ({{count}}) kpl",
   "profile-with-count_other": "Soveltamisprofiilit ({{count}}) kpl",
@@ -274,5 +277,6 @@
   "vocabulary-info-en": "",
   "vocabulary-info-fi": "",
   "vocabulary-info-sv": "",
-  "vocabulary-results-more": ""
+  "vocabulary-results-more": "",
+  "working-version": "Työversio"
 }
