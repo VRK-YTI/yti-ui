@@ -1,9 +1,7 @@
 import { Panel } from 'reactflow';
 import styled from 'styled-components';
 
-export const ToolsPanel = styled(Panel)`
-  pointer-events: none !important;
-`;
+export const ToolsPanel = styled(Panel)``;
 
 export const ToolsTooltip = styled.div`
   width: 295px;
