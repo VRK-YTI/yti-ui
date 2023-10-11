@@ -1,11 +1,5 @@
-import { Link as MUILink } from '@mui/material';
 import Link from 'next/link';
-import {
-  Button,
-  RouterLink,
-  SideNavigation,
-  SideNavigationItem,
-} from 'suomifi-ui-components';
+import {RouterLink} from 'suomifi-ui-components';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
