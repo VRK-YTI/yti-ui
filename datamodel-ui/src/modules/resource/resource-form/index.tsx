@@ -33,7 +33,7 @@ import { FormWrapper, LanguageVersionedWrapper } from './resource-form.styles';
 import validateForm from './validate-form';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
-import { statusList } from 'yti-common-ui/utils/status-list';
+import { statusList } from '@app/common/utils/status-list';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
   selectHasChanges,

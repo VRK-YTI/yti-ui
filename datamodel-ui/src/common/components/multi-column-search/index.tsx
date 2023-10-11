@@ -144,8 +144,8 @@ export default function MultiColumnSearch({
       const setStatuses =
         value !== '-1'
           ? value === 'in-use'
-            ? (['VALID', 'SUGGESTED'] as Status[])
-            : (['INCOMPLETE', 'DRAFT', 'RETIRED', 'SUPERSEDED'] as Status[])
+            ? (['VALID', 'SUGGESTED', 'DRAFT'] as Status[])
+            : (['RETIRED', 'SUPERSEDED'] as Status[])
           : [];
 
       setSearchParams({

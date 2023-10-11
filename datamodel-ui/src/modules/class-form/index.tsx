@@ -17,7 +17,7 @@ import ConceptBlock from '../concept-block';
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { ClassFormErrors, validateClassForm } from './utils';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
-import { statusList } from 'yti-common-ui/utils/status-list';
+import { statusList } from '@app/common/utils/status-list';
 import {
   translateClassFormErrors,
   translateStatus,
