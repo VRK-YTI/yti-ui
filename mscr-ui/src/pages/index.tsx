@@ -20,6 +20,7 @@ import {
 } from '@app/common/components/counts/counts.slice';
 import PersonalWorkspace from '@app/modules/personal-home';
 import PageHead from 'yti-common-ui/page-head';
+import SearchScreen from "@app/modules/search-screen";
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -39,7 +40,8 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('datamodel-title')}
           description={t('service-description')}
         />
-        <PersonalWorkspace user={props.user ?? undefined} />
+        {/*<PersonalWorkspace user={props.user ?? undefined} />*/}
+        <SearchScreen />
       </Layout>
     </CommonContextProvider>
   );
