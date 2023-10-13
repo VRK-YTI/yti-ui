@@ -208,6 +208,11 @@ export default function ClassView({
     dispatch(resetHovered());
   };
 
+  const handleShowClass = (classId: string) => {
+    handleActive(classId);
+    setView('classes', 'info', classId);
+  };
+
   const handleEdit = () => {
     if (isSuccess) {
       setView('classes', 'edit');
@@ -291,8 +296,7 @@ export default function ClassView({
                 }),
                 subtitle: item.curie,
                 onClick: () => {
-                  handleActive(item.identifier);
-                  setView('classes', 'info', item.identifier);
+                  handleShowClass(item.identifier);
                 },
                 onMouseEnter: () => {
                   dispatch(setHovered(item.identifier, 'classes'));
@@ -352,6 +356,7 @@ export default function ClassView({
         handleEdit={handleEdit}
         handleRefetch={refetchData}
         disableEdit={version ? true : false}
+        handleShowClass={handleShowClass}
       />
     );
   }

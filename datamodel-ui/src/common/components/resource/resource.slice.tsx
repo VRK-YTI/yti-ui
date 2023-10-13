@@ -134,6 +134,22 @@ export const resourceApi = createApi({
         method: 'POST',
       }),
     }),
+    renameResource: builder.mutation<
+      string,
+      {
+        prefix: string;
+        identifier: string;
+        newIdentifier: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/resource/${value.prefix}/${value.identifier}/rename`,
+        params: {
+          newIdentifier: value.newIdentifier,
+        },
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -255,5 +271,6 @@ export const {
   useGetResourceActiveQuery,
   useTogglePropertyShapeMutation,
   useMakeLocalCopyPropertyShapeMutation,
+  useRenameResourceMutation,
   util: { getRunningQueriesThunk, getRunningMutationsThunk },
 } = resourceApi;

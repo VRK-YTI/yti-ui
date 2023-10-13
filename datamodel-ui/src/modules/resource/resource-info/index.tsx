@@ -29,6 +29,7 @@ import { selectDisplayLang } from '@app/common/components/model/model.slice';
 import ApplicationProfileTop from '../resource-form/components/application-profile-top';
 import { useTogglePropertyShapeMutation } from '@app/common/components/resource/resource.slice';
 import getApiError from '@app/common/utils/get-api-errors';
+import { RenameModal } from '@app/modules/rename-modal';
 
 interface CommonViewProps {
   data?: Resource;
@@ -67,6 +68,7 @@ export default function ResourceInfo({
   const [showTooltip, setShowTooltip] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
   const [localCopyVisible, setLocalCopyVisible] = useState(false);
+  const [renameVisible, setRenameVisible] = useState(false);
   const [externalEdit, setExternalEdit] = useState(false);
   const [externalActive, setExternalActive] = useState(inUse);
   const [togglePropertyShape, toggleResult] = useTogglePropertyShapeMutation();
@@ -139,6 +141,13 @@ export default function ResourceInfo({
                       >
                         {t('edit', { ns: 'admin' })}
                       </Button>
+                      <Button
+                        variant="secondaryNoBorder"
+                        onClick={() => setRenameVisible(true)}
+                        id="rename-class-button"
+                      >
+                        {t('rename', { ns: 'admin' })}
+                      </Button>
                       <Separator />
                       <Button
                         variant="secondaryNoBorder"
@@ -190,6 +199,13 @@ export default function ResourceInfo({
                 onClose={handleReturn}
                 visible={deleteVisible}
                 hide={() => setDeleteVisible(false)}
+              />
+              <RenameModal
+                modelId={modelId}
+                resourceId={data.identifier}
+                visible={renameVisible}
+                hide={() => setRenameVisible(false)}
+                handleReturn={handleShowResource}
               />
             </div>
           )}
