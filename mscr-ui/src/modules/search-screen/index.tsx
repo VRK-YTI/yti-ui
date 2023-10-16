@@ -1,7 +1,17 @@
 import {FacetsWrapper, ResultsWrapper, SearchContainer} from '@app/modules/search-screen/search-screen.styles';
 import SearchResult from '@app/common/components/search-result';
+import {MscrSearchParams, useGetMscrSearchResultsQuery} from '@app/common/components/mscr-search/mscr-search.slice';
 
 export default function SearchScreen() {
+  const searchParams = {
+    query: 'false',
+    scope: 'personal',
+    type: 'CROSSWALK'
+  };
+  const { data: mscrSearchResults, refetch: refetchMscrSearchResults } =
+    useGetMscrSearchResultsQuery(searchParams);
+
+  console.log('search results: ', mscrSearchResults);
   return (
     <SearchContainer>
       <p>Search screen is now open</p>
