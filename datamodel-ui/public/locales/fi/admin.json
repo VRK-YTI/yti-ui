@@ -257,7 +257,7 @@
   "remove-reference-description-attribute": "Haluatko poistaa viittauksen attribuuttirajoitteeseen {{name}} tästä luokasta?",
   "rename": "Nimeä uudelleen",
   "rename-resource": "Nimeä resurssi uudelleen",
-  "rename-resource-description": "",
+  "rename-resource-description": "Valitse uusi tunnus. Viittaukset tähän resurssiin päivittyvät automaattisesti.",
   "renaming-resource": "Nimetään resurssi uudelleen",
   "required-value": "Pakollinen arvo",
   "resource-picker-title": "Lisää ominaisuudet valitusta luokasta",
