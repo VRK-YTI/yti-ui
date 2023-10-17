@@ -38,6 +38,7 @@ import { useStoreDispatch } from '@app/store';
 import UriList from '@app/common/components/uri-list';
 import UriInfo from '@app/common/components/uri-info';
 import { UriData } from '@app/common/interfaces/uri.interface';
+import { RenameModal } from '../rename-modal';
 
 interface ClassInfoProps {
   data?: ClassType;
@@ -48,6 +49,7 @@ interface ClassInfoProps {
   handleReturn: () => void;
   handleEdit: () => void;
   handleRefetch: () => void;
+  handleShowClass: (classId: string) => void;
   disableEdit?: boolean;
 }
 
@@ -60,6 +62,7 @@ export default function ClassInfo({
   handleReturn,
   handleEdit,
   handleRefetch,
+  handleShowClass,
   disableEdit,
 }: ClassInfoProps) {
   const { t, i18n } = useTranslation('common');
@@ -68,6 +71,7 @@ export default function ClassInfo({
   const [headerHeight, setHeaderHeight] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showRenameModal, setShowRenameModal] = useState(false);
   const dispatch = useStoreDispatch();
 
   const [renderResourceForm, setRenderResourceForm] = useState(false);
@@ -237,6 +241,13 @@ export default function ClassInfo({
                     >
                       {t('edit', { ns: 'admin' })}
                     </Button>
+                    <Button
+                      variant="secondaryNoBorder"
+                      onClick={() => setShowRenameModal(true)}
+                      id="rename-class-button"
+                    >
+                      {t('rename', { ns: 'admin' })}
+                    </Button>
                     <Separator />
                     <Button
                       variant="secondaryNoBorder"
@@ -252,19 +263,28 @@ export default function ClassInfo({
           )}
         </div>
         {data ? (
-          <DeleteModal
-            modelId={modelId}
-            resourceId={data.identifier}
-            type="class"
-            label={getLanguageVersion({
-              data: data.label,
-              lang: displayLang ?? i18n.language,
-            })}
-            onClose={handleReturn}
-            applicationProfile={applicationProfile}
-            visible={showDeleteModal}
-            hide={() => setShowDeleteModal(false)}
-          />
+          <>
+            <DeleteModal
+              modelId={modelId}
+              resourceId={data.identifier}
+              type="class"
+              label={getLanguageVersion({
+                data: data.label,
+                lang: displayLang ?? i18n.language,
+              })}
+              onClose={handleReturn}
+              applicationProfile={applicationProfile}
+              visible={showDeleteModal}
+              hide={() => setShowDeleteModal(false)}
+            />
+            <RenameModal
+              modelId={modelId}
+              resourceId={data.identifier}
+              visible={showRenameModal}
+              hide={() => setShowRenameModal(false)}
+              handleReturn={handleShowClass}
+            />
+          </>
         ) : (
           <></>
         )}

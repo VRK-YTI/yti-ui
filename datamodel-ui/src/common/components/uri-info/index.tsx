@@ -17,9 +17,9 @@ export function getEnvParam(uri?: string) {
 
   const hostname = window.location.hostname;
   if (hostname.indexOf('dev') > -1) {
-    return '?env=awsdev';
+    return '?env=awsdev_v2';
   } else if (hostname.indexOf('test') > -1) {
-    return '?env=awstest';
+    return '?env=awstest_v2';
   } else if (hostname.indexOf('local') > -1) {
     return '?env=local';
   }

@@ -156,6 +156,22 @@ export const classApi = createApi({
         method: 'DELETE',
       }),
     }),
+    renameClass: builder.mutation<
+      string,
+      {
+        prefix: string;
+        identifier: string;
+        newIdentifier: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/class/${value.prefix}/${value.identifier}/rename`,
+        params: {
+          newIdentifier: value.newIdentifier,
+        },
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -194,6 +210,7 @@ export const {
   useGetClassExistsQuery,
   useAddPropertyReferenceMutation,
   useDeletePropertyReferenceMutation,
+  useRenameClassMutation,
   util: { getRunningQueriesThunk },
 } = classApi;
 
