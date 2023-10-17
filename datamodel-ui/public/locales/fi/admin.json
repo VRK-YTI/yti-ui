@@ -229,6 +229,7 @@
   "namespace-missing-info": "Mikäli et löydä tarvitsemaasi tietomallia, ota yhteyttä ylläpitoon",
   "namespace-with-examples": "Nimiavaruus (URI, URN tms.)",
   "no-terminologies-available": "Sanastoja ei saatavilla",
+  "no-terminologies-linked-to-data-model": "Ei linkitettyjä sanastoja",
   "no-work-group-comment": "Ei työryhmän sisäistä kommenttia",
   "not-in-use": "Ei käytössä",
   "optional": "valinnainen",
