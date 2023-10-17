@@ -248,7 +248,7 @@ export default function ClassView({
             <Text variant="bold">
               {t('classes', { count: data?.totalHitCount ?? 0 })}
             </Text>
-            {hasPermission && (
+            {!version && hasPermission && (
               <>
                 <ClassModal
                   modelId={modelId}
@@ -350,7 +350,8 @@ export default function ClassView({
         applicationProfile={applicationProfile}
         handleReturn={handleReturn}
         handleEdit={handleEdit}
-        handleRefecth={refetchData}
+        handleRefetch={refetchData}
+        disableEdit={version ? true : false}
       />
     );
   }

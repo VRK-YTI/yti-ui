@@ -66,7 +66,7 @@ export default function LinkedDataView({
       <StaticHeader ref={ref}>
         <HeaderRow>
           <Text variant="bold">{t('links')}</Text>
-          {hasPermission && (
+          {!version && hasPermission && (
             <Button
               variant="secondary"
               onClick={() => handleShowForm()}

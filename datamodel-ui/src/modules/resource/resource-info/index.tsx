@@ -41,6 +41,7 @@ interface CommonViewProps {
   isPartOfCurrentModel: boolean;
   applicationProfile?: boolean;
   currentModelId?: string;
+  disableEdit?: boolean;
 }
 
 export default function ResourceInfo({
@@ -54,6 +55,7 @@ export default function ResourceInfo({
   isPartOfCurrentModel,
   applicationProfile,
   currentModelId,
+  disableEdit,
 }: CommonViewProps) {
   const { t, i18n } = useTranslation('common');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -110,7 +112,7 @@ export default function ResourceInfo({
           >
             {data ? translateCommonForm('return', data.type, t) : t('back')}
           </Button>
-          {hasPermission && data && !externalEdit && (
+          {!disableEdit && hasPermission && data && !externalEdit && (
             <div>
               <Button
                 variant="secondary"

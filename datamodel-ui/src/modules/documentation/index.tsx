@@ -26,9 +26,12 @@ import {
   setHasChanges,
   useGetModelQuery,
   useUpdateModelMutation,
+  useUpdateVersionedModelMutation,
 } from '@app/common/components/model/model.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import generatePayload from '../model/generate-payload';
+import generatePayloadUpdate, {
+  generatePayloadVersionedUpdate,
+} from '../model/generate-payload';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import { compareLocales } from '@app/common/utils/compare-locals';
@@ -88,6 +91,8 @@ export default function Documentation({
     version: version,
   });
   const [updateModel, result] = useUpdateModelMutation();
+  const [updateVersionedModel, versionedResult] =
+    useUpdateVersionedModelMutation();
 
   const validImgUrl = (url: string): boolean => {
     const regex = /^http(s)?:\/\/.*\.(jpg|jpeg|png|gif)$/g;
@@ -127,13 +132,29 @@ export default function Documentation({
       return;
     }
 
-    const payload = generatePayload({ ...modelData, documentation: value });
+    if (!version) {
+      const payload = generatePayloadUpdate({
+        ...modelData,
+        documentation: value,
+      });
 
-    updateModel({
-      payload: payload,
-      prefix: modelData.prefix,
-      isApplicationProfile: modelData.type === 'PROFILE',
-    });
+      updateModel({
+        payload: payload,
+        prefix: modelData.prefix,
+        isApplicationProfile: modelData.type === 'PROFILE',
+      });
+    } else {
+      const payload = generatePayloadVersionedUpdate({
+        ...modelData,
+        documentation: value,
+      });
+
+      updateVersionedModel({
+        payload: payload,
+        modelId: modelId,
+        version: version,
+      });
+    }
   };
 
   const handleCancel = () => {
@@ -249,13 +270,13 @@ export default function Documentation({
   }, [modelData, i18n.language]);
 
   useEffect(() => {
-    if (result.isSuccess) {
+    if (result.isSuccess || versionedResult.isSuccess) {
       setIsEdit(false);
       disableConfirmation();
       refetch();
       dispatch(setNotification('DOCUMENTATION_EDIT'));
     }
-  }, [result, refetch, disableConfirmation, dispatch]);
+  }, [result, versionedResult, refetch, disableConfirmation, dispatch]);
 
   useEffect(() => {
     if (!textAreaRef.current) {
@@ -288,7 +309,7 @@ export default function Documentation({
               }}
             >
               <Button onClick={() => handleSubmit()} id="submit-button">
-                {result.isLoading ? (
+                {result.isLoading || versionedResult.isLoading ? (
                   <div role="alert">
                     <StyledSpinner
                       variant="small"

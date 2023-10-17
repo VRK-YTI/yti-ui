@@ -99,9 +99,15 @@ export const resourceApi = createApi({
         method: 'GET',
       }),
     }),
-    getResourceActive: builder.query<boolean, { prefix: string; uri: string }>({
+    getResourceActive: builder.query<
+      boolean,
+      { prefix: string; uri: string; version?: string }
+    >({
       query: (props) => ({
         url: `/resource/profile/${props.prefix}/active?uri=${props.uri}`,
+        params: {
+          ...(props.version && { version: props.version }),
+        },
         method: 'GET',
       }),
     }),

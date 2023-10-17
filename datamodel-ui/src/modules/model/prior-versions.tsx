@@ -28,30 +28,32 @@ export default function PriorVersions({
   );
 
   function renderPriorVersions() {
-    return (
-      priorVersions?.map((version) => {
-        return (
-          <div key={version.version}>
-            <ExternalLink
-              labelNewWindow=""
-              href={`/model/${modelId}?ver=${version.version}`}
-            >
-              {getLanguageVersion({
-                data: version.label,
-                lang: i18n.language,
-                appendLocale: true,
-              })}
-            </ExternalLink>
-            <PriorVersionsDetails>
-              {`${t('version')} ${version.version}`}
-              <Status status={version.status}>
-                {translateStatus(version.status, t)}
-              </Status>
-            </PriorVersionsDetails>
-          </div>
-        );
-      }) ?? <>{t('no-prior-versions')}</>
-    );
+    if (!priorVersions || priorVersions?.length === 0) {
+      return <>{t('no-prior-versions')}</>;
+    }
+
+    return priorVersions.map((version) => {
+      return (
+        <div key={version.version}>
+          <ExternalLink
+            labelNewWindow=""
+            href={`/model/${modelId}?ver=${version.version}`}
+          >
+            {getLanguageVersion({
+              data: version.label,
+              lang: i18n.language,
+              appendLocale: true,
+            })}
+          </ExternalLink>
+          <PriorVersionsDetails>
+            {`${t('version')} ${version.version}`}
+            <Status status={version.status}>
+              {translateStatus(version.status, t)}
+            </Status>
+          </PriorVersionsDetails>
+        </div>
+      );
+    });
   }
 
   return (

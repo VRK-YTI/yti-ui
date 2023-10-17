@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import {
   Button,
-  ExpanderGroup,
   ExternalLink,
   IconOptionsVertical,
   Text,
@@ -170,29 +169,26 @@ export default function ModelInfoView() {
                 open={showTooltip}
                 onCloseButtonClick={() => setShowTooltip(false)}
               >
-                {
-                  //TODO in the future you should be allowed to modify the status of a versioned model
-                  hasPermission && !version && (
-                    <>
-                      <Button
-                        variant="secondaryNoBorder"
-                        onClick={() => handleEditViewItemClick(setShowEditView)}
-                        disabled={!formData}
-                        id="edit-button"
-                      >
-                        {t('edit', { ns: 'admin' })}
-                      </Button>
-                      <Button
-                        variant="secondaryNoBorder"
-                        onClick={() => handleModalChange('createRelease', true)}
-                        disabled={!formData}
-                        id="create-release-button"
-                      >
-                        {t('create-release', { ns: 'admin' })}
-                      </Button>
-                    </>
-                  )
-                }
+                {hasPermission && (
+                  <>
+                    <Button
+                      variant="secondaryNoBorder"
+                      onClick={() => handleEditViewItemClick(setShowEditView)}
+                      disabled={!formData}
+                      id="edit-button"
+                    >
+                      {t('edit', { ns: 'admin' })}
+                    </Button>
+                    <Button
+                      variant="secondaryNoBorder"
+                      onClick={() => handleModalChange('createRelease', true)}
+                      disabled={!formData}
+                      id="create-release-button"
+                    >
+                      {t('create-release', { ns: 'admin' })}
+                    </Button>
+                  </>
+                )}
                 <Button
                   variant="secondaryNoBorder"
                   onClick={() => handleModalChange('showAsFile', true)}
@@ -209,13 +205,17 @@ export default function ModelInfoView() {
                 </Button>
                 {hasPermission && (
                   <>
-                    <Button
-                      variant="secondaryNoBorder"
-                      onClick={() => handleModalChange('updateStatuses', true)}
-                      id="update-statuses-button"
-                    >
-                      {t('update-models-resources-statuses', { ns: 'admin' })}
-                    </Button>
+                    {!version && (
+                      <Button
+                        variant="secondaryNoBorder"
+                        onClick={() =>
+                          handleModalChange('updateStatuses', true)
+                        }
+                        id="update-statuses-button"
+                      >
+                        {t('update-models-resources-statuses', { ns: 'admin' })}
+                      </Button>
+                    )}
                     <Button
                       variant="secondaryNoBorder"
                       onClick={() => handleModalChange('copyModel', true)}
