@@ -2,7 +2,7 @@ import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Button,
   ExternalLink,
@@ -43,6 +43,7 @@ export default function ConceptBlock({
   const [keyword, setKeyword] = useState('');
   const [selected, setSelected] = useState<ConceptType | undefined>(concept);
   const [currentPage, setCurrentPage] = useState(1);
+
   const [terminologyOptions] = useState([
     {
       labelText: t('terminologies-linked-to-data-model'),
@@ -57,13 +58,27 @@ export default function ConceptBlock({
     terminologyOptions.find((o) => o.uniqueItemId === 'linked')
   );
 
-  const { data } = useGetConceptsQuery({
-    keyword: keyword,
-    terminologies:
-      selectedOption?.uniqueItemId === 'linked' ? terminologies : [],
-    highlight: false,
-    pageFrom: currentPage,
-  });
+  // set to false if no terminologies are linked to data model, and the
+  // uniqueItemId is 'linked'
+  const [hasTerminologies, setHasTerminologies] = useState<boolean>(false);
+  useEffect(() => {
+    setHasTerminologies(
+      !(selectedOption?.uniqueItemId === 'linked' && terminologies.length === 0)
+    );
+  }, [selectedOption, terminologies]);
+
+  const { data } = useGetConceptsQuery(
+    {
+      keyword: keyword,
+      terminologies:
+        selectedOption?.uniqueItemId === 'linked' ? terminologies : [],
+      highlight: false,
+      pageFrom: currentPage,
+    },
+    {
+      skip: !hasTerminologies, // no need to fetch if we're not listing concepts
+    }
+  );
 
   const handleOpen = () => {
     setVisible(true);
@@ -156,7 +171,9 @@ export default function ConceptBlock({
               />
             </SearchBlock>
 
-            {!data || data.totalHitCount < 1 ? (
+            {!hasTerminologies ? (
+              <Text>{t('no-terminologies-linked-to-data-model')}</Text>
+            ) : !data || data.totalHitCount < 1 ? (
               <Text>{t('search-concept-by-keyword')}</Text>
             ) : (
               <>

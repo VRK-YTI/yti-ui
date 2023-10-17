@@ -229,6 +229,7 @@
   "namespace-missing-info": "If you didn't find the namespace you need, please contact the administrator",
   "namespace-with-examples": "Namespace (URI, URN etc.)",
   "no-terminologies-available": "No terminologies available",
+  "no-terminologies-linked-to-data-model": "No terminologies linked to data model",
   "no-work-group-comment": "No work group comment",
   "not-in-use": "Not in use",
   "optional": "optional",
