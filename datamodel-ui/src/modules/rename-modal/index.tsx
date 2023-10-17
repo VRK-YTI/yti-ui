@@ -37,12 +37,12 @@ export function RenameModal({
   const { isSmall } = useBreakpoints();
   const [error, setError] = useState(false);
   const [userPosted, setUserPosted] = useState(false);
-  const [newIdentifier, setNewIdentifier] = useState('');
+  const [newIdentifier, setNewIdentifier] = useState(resourceId);
   const [renameResource, renameResourceResult] = useRenameClassMutation();
 
   const { data: resourceAlreadyExists, isSuccess } = useGetResourceExistsQuery(
     { prefix: modelId, identifier: newIdentifier },
-    { skip: newIdentifier === '' }
+    { skip: newIdentifier === '' || newIdentifier === resourceId }
   );
 
   function handleChange(identifier: string) {
@@ -66,7 +66,7 @@ export function RenameModal({
   const handleClose = () => {
     setError(false);
     setUserPosted(false);
-    setNewIdentifier('');
+    setNewIdentifier(resourceId);
     hide();
   };
 
@@ -89,9 +89,12 @@ export function RenameModal({
     >
       <SimpleModalContent>
         <ModalTitle>{t('rename-resource')}</ModalTitle>
-        <Text>{t('rename-resource-description')}</Text>
+        <Text style={{ marginBottom: '15px' }}>
+          {t('rename-resource-description')}
+        </Text>
         <TextInput
           labelText={t('new-identifier')}
+          defaultValue={newIdentifier}
           visualPlaceholder={t('new-identifier')}
           onChange={(e) => handleChange(e?.toString() ?? '')}
           debounce={300}
@@ -110,11 +113,15 @@ export function RenameModal({
         )}
         <ButtonFooter>
           <Button
-            disabled={userPosted}
+            disabled={
+              userPosted ||
+              newIdentifier === resourceId ||
+              resourceAlreadyExists
+            }
             onClick={handleRename}
             id="rename-button"
           >
-            {t('rename-resource')}
+            {t('save')}
           </Button>
           <Button variant="secondary" onClick={handleClose} id="cancel-button">
             {t('cancel-variant')}
