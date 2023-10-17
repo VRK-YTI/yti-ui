@@ -118,6 +118,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         component: (
           <ResourceView
             modelId={modelId}
+            version={version}
             type={ResourceType.ATTRIBUTE}
             languages={languages}
             applicationProfile={modelInfo?.type === 'PROFILE'}

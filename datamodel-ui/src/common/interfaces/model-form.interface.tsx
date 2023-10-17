@@ -23,7 +23,7 @@ export interface ModelFormType {
   organizations: MultiSelectData[];
   prefix: string;
   serviceCategories: MultiSelectData[];
-  status?: Status;
+  status: Status;
   type: ModelType['type'];
   terminologies: ModelTerminology[];
   codeLists: ModelCodeList[];

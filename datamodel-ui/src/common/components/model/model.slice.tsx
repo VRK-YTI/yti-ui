@@ -5,6 +5,7 @@ import { NewModel } from '@app/common/interfaces/new-model.interface';
 import {
   ModelType,
   ModelUpdatePayload,
+  VersionedModelUpdatePayload,
 } from '@app/common/interfaces/model.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
@@ -92,6 +93,23 @@ export const modelApi = createApi({
         method: 'GET',
       }),
     }),
+    updateVersionedModel: builder.mutation<
+      string,
+      {
+        payload: VersionedModelUpdatePayload;
+        modelId: string;
+        version: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/version`,
+        params: {
+          version: value.version,
+        },
+        data: value.payload,
+        method: 'PUT',
+      }),
+    }),
   }),
 });
 
@@ -102,6 +120,7 @@ export const {
   useDeleteModelMutation,
   useCreateReleaseMutation,
   useGetPriorVersionsQuery,
+  useUpdateVersionedModelMutation,
   util: { getRunningQueriesThunk },
 } = modelApi;
 

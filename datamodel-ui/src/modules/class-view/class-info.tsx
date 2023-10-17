@@ -47,7 +47,8 @@ interface ClassInfoProps {
   terminologies: string[];
   handleReturn: () => void;
   handleEdit: () => void;
-  handleRefecth: () => void;
+  handleRefetch: () => void;
+  disableEdit?: boolean;
 }
 
 export default function ClassInfo({
@@ -58,7 +59,8 @@ export default function ClassInfo({
   terminologies,
   handleReturn,
   handleEdit,
-  handleRefecth,
+  handleRefetch,
+  disableEdit,
 }: ClassInfoProps) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: ['EDIT_CLASS'] });
@@ -97,9 +99,9 @@ export default function ClassInfo({
 
   useEffect(() => {
     if (addReferenceResult.isSuccess) {
-      handleRefecth();
+      handleRefetch();
     }
-  }, [addReferenceResult, handleRefecth]);
+  }, [addReferenceResult, handleRefetch]);
 
   useEffect(() => {
     if (ref.current) {
@@ -210,7 +212,7 @@ export default function ClassInfo({
           >
             {t('back')}
           </Button>
-          {hasPermission && data && (
+          {!disableEdit && hasPermission && data && (
             <div>
               <Button
                 variant="secondary"
@@ -322,8 +324,9 @@ export default function ClassInfo({
                     classId={data.identifier}
                     hasPermission={hasPermission}
                     applicationProfile={applicationProfile}
-                    handlePropertyDelete={handleRefecth}
+                    handlePropertyDelete={handleRefetch}
                     attribute
+                    disableEdit={disableEdit}
                   />
                 ))}
               </ExpanderGroup>
@@ -332,7 +335,7 @@ export default function ClassInfo({
             )}
           </BasicBlock>
 
-          {hasPermission ? (
+          {!disableEdit && hasPermission ? (
             <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
               <ResourceModal
                 modelId={modelId}
@@ -368,8 +371,9 @@ export default function ClassInfo({
                     modelId={modelId}
                     classId={data.identifier}
                     hasPermission={hasPermission}
-                    handlePropertyDelete={handleRefecth}
+                    handlePropertyDelete={handleRefetch}
                     applicationProfile={applicationProfile}
+                    disableEdit={disableEdit}
                   />
                 ))}
               </ExpanderGroup>
@@ -378,7 +382,7 @@ export default function ClassInfo({
             )}
           </BasicBlock>
 
-          {hasPermission ? (
+          {!disableEdit && hasPermission ? (
             <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
               <ResourceModal
                 modelId={modelId}

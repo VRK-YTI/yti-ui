@@ -36,6 +36,7 @@ interface ResourceInfoProps {
   applicationProfile?: boolean;
   attribute?: boolean;
   handlePropertyDelete: () => void;
+  disableEdit?: boolean;
 }
 
 export default function ResourceInfo({
@@ -46,6 +47,7 @@ export default function ResourceInfo({
   classId,
   hasPermission,
   handlePropertyDelete,
+  disableEdit,
 }: ResourceInfoProps) {
   const { t, i18n } = useTranslation('common');
   const [open, setOpen] = useState(false);
@@ -115,54 +117,56 @@ export default function ResourceInfo({
   function renderActions() {
     return (
       <>
-        {hasPermission && (!applicationProfile || modelId === data.modelId) && (
-          <div>
-            <Button
-              variant="secondary"
-              iconRight={<IconOptionsVertical />}
-              onClick={() => setShowTooltip(!showTooltip)}
-            >
-              {t('actions')}
-            </Button>
-            <TooltipWrapper id="actions-tooltip">
-              <Tooltip
-                ariaCloseButtonLabelText=""
-                ariaToggleButtonLabelText=""
-                open={showTooltip}
-                onCloseButtonClick={() => setShowTooltip(false)}
+        {!disableEdit &&
+          hasPermission &&
+          (!applicationProfile || modelId === data.modelId) && (
+            <div>
+              <Button
+                variant="secondary"
+                iconRight={<IconOptionsVertical />}
+                onClick={() => setShowTooltip(!showTooltip)}
               >
-                {modelId === data.modelId && (
-                  <Button
-                    variant="secondaryNoBorder"
-                    onClick={handleEdit}
-                    id="edit-reference-button"
-                  >
-                    {t('edit', { ns: 'admin' })}
-                  </Button>
-                )}
-                {(!data.fromShNode || !applicationProfile) && (
-                  <RemoveReferenceModal
-                    modelId={modelId}
-                    classId={classId}
-                    uri={data.uri}
-                    handleReturn={handlePropertyDelete}
-                    name={getLanguageVersion({
-                      data: data.label,
-                      lang: i18n.language,
-                      appendLocale: true,
-                    })}
-                    applicationProfile={applicationProfile}
-                    resourceType={
-                      attribute
-                        ? ResourceType.ATTRIBUTE
-                        : ResourceType.ASSOCIATION
-                    }
-                  />
-                )}
-              </Tooltip>
-            </TooltipWrapper>
-          </div>
-        )}
+                {t('actions')}
+              </Button>
+              <TooltipWrapper id="actions-tooltip">
+                <Tooltip
+                  ariaCloseButtonLabelText=""
+                  ariaToggleButtonLabelText=""
+                  open={showTooltip}
+                  onCloseButtonClick={() => setShowTooltip(false)}
+                >
+                  {modelId === data.modelId && (
+                    <Button
+                      variant="secondaryNoBorder"
+                      onClick={handleEdit}
+                      id="edit-reference-button"
+                    >
+                      {t('edit', { ns: 'admin' })}
+                    </Button>
+                  )}
+                  {(!data.fromShNode || !applicationProfile) && (
+                    <RemoveReferenceModal
+                      modelId={modelId}
+                      classId={classId}
+                      uri={data.uri}
+                      handleReturn={handlePropertyDelete}
+                      name={getLanguageVersion({
+                        data: data.label,
+                        lang: i18n.language,
+                        appendLocale: true,
+                      })}
+                      applicationProfile={applicationProfile}
+                      resourceType={
+                        attribute
+                          ? ResourceType.ATTRIBUTE
+                          : ResourceType.ASSOCIATION
+                      }
+                    />
+                  )}
+                </Tooltip>
+              </TooltipWrapper>
+            </div>
+          )}
       </>
     );
   }

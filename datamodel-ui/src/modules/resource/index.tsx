@@ -106,6 +106,7 @@ export default function ResourceView({
     {
       prefix: modelId,
       uri: `http://uri.suomi.fi/datamodel/ns/${globalSelected.modelId}/${globalSelected.id}`,
+      version: version,
     },
     {
       skip: !globalSelected.id || !globalSelected.modelId,
@@ -231,7 +232,7 @@ export default function ResourceView({
               {translateResourceCountTitle(type, t, data?.totalHitCount)}
             </Text>
 
-            {hasPermission && (
+            {!version && hasPermission && (
               <ResourceModal
                 modelId={modelId}
                 type={type}
@@ -341,6 +342,7 @@ export default function ResourceView({
         currentModelId={
           globalSelected.modelId !== modelId ? modelId : undefined
         }
+        disableEdit={version ? true : false}
       />
     );
   }

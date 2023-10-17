@@ -102,7 +102,6 @@ export interface LangObject {
 }
 
 export interface ModelUpdatePayload {
-  status: string;
   label: { [key: string]: string };
   description: { [key: string]: string };
   languages: string[];
@@ -123,4 +122,19 @@ export interface ModelUpdatePayload {
     name: string;
     uri: string;
   }[];
+}
+
+export interface VersionedModelUpdatePayload {
+  label: { [key: string]: string };
+  description: { [key: string]: string };
+  organizations: string[];
+  groups: string[];
+  contact: string;
+  documentation: { [key: string]: string };
+  links: {
+    description: string;
+    name: string;
+    uri: string;
+  }[];
+  status: Status;
 }
