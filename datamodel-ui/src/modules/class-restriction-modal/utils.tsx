@@ -22,7 +22,7 @@ export function mapInternalClassInfoToResultType(
         }),
       },
     }),
-    partOf: {
+    datamodel: {
       domains: data.dataModelInfo.groups,
       label: getLanguageVersion({
         data: data.dataModelInfo.label,
@@ -31,6 +31,7 @@ export function mapInternalClassInfoToResultType(
       }),
       type: data.dataModelInfo.modelType,
       uri: data.dataModelInfo.uri,
+      status: data.dataModelInfo.status,
     },
     target: {
       identifier: data.id,
@@ -47,7 +48,6 @@ export function mapInternalClassInfoToResultType(
         appendLocale: true,
       }),
       status: data.status,
-      isValid: data.status === 'VALID',
     },
   };
 }
