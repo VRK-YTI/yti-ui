@@ -18,7 +18,7 @@ export interface MscrSearchResults {
     hits: [                     // ToDo: CrosswalkResult interface extending Crosswalk interface
       {                         // ToDo: Update Crosswalk interface
         index: string;          // ToDo: SchemaResult interface extending Schema interface
-        id: string;             // ToDo: Update Schema interface
+        _id: string;             // ToDo: Update Schema interface
         source: {
           id: string;
           label: {              // ToDo: a Label interface?

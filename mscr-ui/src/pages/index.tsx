@@ -13,7 +13,7 @@ import {
   getServiceCategories,
   getRunningQueriesThunk as getServiceCategoriesRunningQueriesThunk,
 } from '@app/common/components/service-categories/service-categories.slice';
-import { initialUrlState } from 'yti-common-ui/utils/hooks/use-url-state';
+import useUrlState, { initialUrlState } from 'yti-common-ui/utils/hooks/use-url-state';
 import {
   getCount,
   getRunningQueriesThunk as getCountRunningQueriesThunk,
@@ -41,7 +41,7 @@ export default function IndexPage(props: IndexPageProps) {
           description={t('service-description')}
         />
         {/*<PersonalWorkspace user={props.user ?? undefined} />*/}
-        <SearchScreen />
+        <SearchScreen urlState={useUrlState().urlState} />
       </Layout>
     </CommonContextProvider>
   );
