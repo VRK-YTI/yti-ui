@@ -1,5 +1,3 @@
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
@@ -20,6 +18,7 @@ import {
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { ResultType } from '@app/common/components/resource-list';
+import { mapInternalClassInfoToResultType } from '../class-restriction-modal/utils';
 
 export interface ClassModalProps {
   modelId: string;
@@ -114,48 +113,9 @@ export default function ClassModal({
   useEffect(() => {
     if (result.isSuccess) {
       setResultsFormatted(
-        result.data.responseObjects.map((r) => ({
-          target: {
-            identifier: r.id,
-            label: getLanguageVersion({
-              data: r.label,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-            linkLabel: r.curie,
-            link: r.id,
-            status: translateStatus(r.status, t),
-            isValid: r.status === 'VALID',
-            note: getLanguageVersion({
-              data: r.note,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-          },
-          partOf: {
-            label: getLanguageVersion({
-              data: r.dataModelInfo.label,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-            type: r.dataModelInfo.modelType,
-            domains: r.dataModelInfo.groups,
-            uri: r.dataModelInfo.uri,
-          },
-          concept: {
-            label: getLanguageVersion({
-              data: r.conceptInfo?.conceptLabel,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-            link: r.conceptInfo?.conceptURI,
-            partOf: getLanguageVersion({
-              data: r.conceptInfo?.terminologyLabel,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-          },
-        }))
+        result.data.responseObjects.map((r) =>
+          mapInternalClassInfoToResultType(r, i18n.language)
+        )
       );
     }
   }, [result, i18n.language, t, contentLanguage]);

@@ -8,11 +8,9 @@ import {
 import WideModal from '@app/common/components/wide-modal';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { UriData } from '@app/common/interfaces/uri.interface';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import {
   translateResourceAddition,
   translateResourceName,
-  translateStatus,
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -23,9 +21,8 @@ import {
   ModalFooter,
   ModalTitle,
 } from 'suomifi-ui-components';
-import format from 'yti-common-ui/formatted-date/format';
-import { Locale } from 'yti-common-ui/locale-chooser/use-locales';
 import { useBreakpoints } from 'yti-common-ui/media-query';
+import { mapInternalClassInfoToResultType } from '../class-restriction-modal/utils';
 
 interface ResourceModalProps {
   modelId: string;
@@ -111,49 +108,9 @@ export default function ResourceModal({
   useEffect(() => {
     if (result.isSuccess) {
       setResultsFormatted(
-        result.data.responseObjects.map((r) => ({
-          target: {
-            identifier: r.id,
-            label: getLanguageVersion({
-              data: r.label,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-            linkLabel: r.curie,
-            link: r.id,
-            status: translateStatus(r.status, t),
-            isValid: r.status === 'VALID',
-            modified: format(r.modified, (i18n.language as Locale) ?? 'fi'),
-            note: getLanguageVersion({
-              data: r.note,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-          },
-          partOf: {
-            label: getLanguageVersion({
-              data: r.dataModelInfo.label,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-            type: r.dataModelInfo.modelType,
-            domains: r.dataModelInfo.groups,
-            uri: r.dataModelInfo.uri,
-          },
-          concept: {
-            label: getLanguageVersion({
-              data: r.conceptInfo?.conceptLabel,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-            link: r.conceptInfo?.conceptURI,
-            partOf: getLanguageVersion({
-              data: r.conceptInfo?.terminologyLabel,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-          },
-        }))
+        result.data.responseObjects.map((r) =>
+          mapInternalClassInfoToResultType(r, contentLanguage ?? i18n.language)
+        )
       );
     }
   }, [result, i18n.language, contentLanguage, t]);
