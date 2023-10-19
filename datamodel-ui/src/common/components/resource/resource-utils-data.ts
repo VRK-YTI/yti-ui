@@ -31,6 +31,7 @@ export const libraryAttribute: ResourceFormType = {
     },
   },
   identifier: 'attr-identifier',
+  uri: 'attr-uri',
   status: 'VALID',
   equivalentResource: [
     {
@@ -84,6 +85,7 @@ export const libraryAssociation: ResourceFormType = {
     },
   },
   identifier: 'assoc-identifier',
+  uri: 'assoc-uri',
   status: 'VALID',
   equivalentResource: [
     {
@@ -152,6 +154,7 @@ export const applicationProfileAttribute: ResourceFormType = {
     },
   },
   identifier: 'attr-identifier',
+  uri: 'attr-uri',
   status: 'VALID',
   note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
   path: { uri: 'path-uri', label: { en: 'path' }, curie: 'path-uri' },
@@ -188,6 +191,7 @@ export const applicationProfileAssociation: ResourceFormType = {
     },
   },
   identifier: 'attr-identifier',
+  uri: 'attr-uri',
   status: 'VALID',
   note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
   path: { uri: 'path-uri', label: { en: 'path' }, curie: 'path-uri' },

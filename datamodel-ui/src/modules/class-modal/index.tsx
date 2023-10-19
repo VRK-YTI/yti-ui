@@ -32,6 +32,7 @@ export interface ClassModalProps {
   initialSelected?: string;
   plusIcon?: boolean;
   limitToModelType?: 'LIBRARY' | 'PROFILE';
+  hideSelfReference?: string;
 }
 
 export default function ClassModal({
@@ -43,6 +44,7 @@ export default function ClassModal({
   initialSelected,
   plusIcon,
   limitToModelType,
+  hideSelfReference,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -113,12 +115,12 @@ export default function ClassModal({
   useEffect(() => {
     if (result.isSuccess) {
       setResultsFormatted(
-        result.data.responseObjects.map((r) =>
-          mapInternalClassInfoToResultType(r, i18n.language)
-        )
+        result.data.responseObjects
+          .filter((r) => r.id !== hideSelfReference)
+          .map((r) => mapInternalClassInfoToResultType(r, i18n.language))
       );
     }
-  }, [result, i18n.language, t, contentLanguage]);
+  }, [result, i18n.language, t, contentLanguage, hideSelfReference]);
 
   return (
     <>

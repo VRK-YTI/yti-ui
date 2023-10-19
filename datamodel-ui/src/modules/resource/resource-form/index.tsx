@@ -544,6 +544,7 @@ export default function ResourceForm({
                     type={data.type}
                     applicationProfile={applicationProfile}
                     buttonIcon
+                    hideSelfReference={data.uri}
                   />
                 }
                 deleteDisabled={[
@@ -583,6 +584,7 @@ export default function ResourceForm({
                     type={data.type}
                     applicationProfile={applicationProfile}
                     buttonIcon
+                    hideSelfReference={data.uri}
                   />
                 }
                 optionalText={t('optional')}

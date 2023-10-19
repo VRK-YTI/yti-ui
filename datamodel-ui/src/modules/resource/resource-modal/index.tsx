@@ -36,6 +36,7 @@ interface ResourceModalProps {
   defaultSelected?: string;
   buttonIcon?: boolean;
   applicationProfile?: boolean;
+  hideSelfReference?: string;
 }
 
 export default function ResourceModal({
@@ -46,6 +47,7 @@ export default function ResourceModal({
   defaultSelected,
   buttonIcon,
   applicationProfile,
+  hideSelfReference,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -110,12 +112,17 @@ export default function ResourceModal({
   useEffect(() => {
     if (result.isSuccess) {
       setResultsFormatted(
-        result.data.responseObjects.map((r) =>
-          mapInternalClassInfoToResultType(r, contentLanguage ?? i18n.language)
-        )
+        result.data.responseObjects
+          .filter((r) => r.id !== hideSelfReference)
+          .map((r) =>
+            mapInternalClassInfoToResultType(
+              r,
+              contentLanguage ?? i18n.language
+            )
+          )
       );
     }
-  }, [result, i18n.language, contentLanguage, t]);
+  }, [result, i18n.language, contentLanguage, t, hideSelfReference]);
 
   return (
     <div>
