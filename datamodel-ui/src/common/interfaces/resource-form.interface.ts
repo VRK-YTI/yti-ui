@@ -25,6 +25,7 @@ export interface ResourceFormType {
   equivalentResource?: UriData[];
   hasValue?: string;
   identifier: string;
+  uri: string;
   label: { [key: string]: string };
   languageIn?: string[];
   maxCount?: number;
@@ -52,6 +53,7 @@ export const initialAssociation: ResourceFormType = {
   equivalentResource: [],
   subResourceOf: [],
   identifier: '',
+  uri: '',
   note: {},
   type: ResourceType.ASSOCIATION,
   domain: undefined,
@@ -61,6 +63,7 @@ export const initialAssociation: ResourceFormType = {
 export const initialAppAssociation: ResourceFormType = {
   label: {},
   identifier: '',
+  uri: '',
   note: {},
   status: 'DRAFT',
   type: ResourceType.ASSOCIATION,
@@ -74,6 +77,7 @@ export const initialAttribute: ResourceFormType = {
   equivalentResource: [],
   subResourceOf: [],
   identifier: '',
+  uri: '',
   note: {},
   type: ResourceType.ATTRIBUTE,
   domain: undefined,
@@ -87,6 +91,7 @@ export const initialAttribute: ResourceFormType = {
 export const initialAppAttribute: ResourceFormType = {
   label: {},
   identifier: '',
+  uri: '',
   note: {},
   status: 'DRAFT',
   type: ResourceType.ATTRIBUTE,
