@@ -41,9 +41,6 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const [version] = useState(getSlugAsString(router.query.ver));
-  const hasPermission = HasPermission({
-    actions: 'EDIT_DATA_MODEL',
-  });
   const { data: modelInfo } = useGetModelQuery({
     modelId: modelId,
     version: version,
@@ -58,7 +55,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
   }, [modelInfo]);
 
   const views: ViewType[] = useMemo(() => {
-    const v = [
+    return [
       {
         id: 'search',
         icon: <IconSearch />,
@@ -146,28 +143,20 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
           />
         ),
       },
-    ];
-
-    if (hasPermission) {
-      return [
-        ...v,
-        {
-          id: 'documentation',
-          icon: <IconRegisters />,
-          buttonLabel: t('documentation-fitted', { ns: 'admin' }),
-          component: (
-            <Documentation
-              modelId={modelId}
-              version={version}
-              languages={languages}
-            />
-          ),
-        },
-      ] as ViewType[];
-    }
-
-    return v as ViewType[];
-  }, [hasPermission, languages, modelId, version, modelInfo, t]);
+      {
+        id: 'documentation',
+        icon: <IconRegisters />,
+        buttonLabel: t('documentation-fitted', { ns: 'admin' }),
+        component: (
+          <Documentation
+            modelId={modelId}
+            version={version}
+            languages={languages}
+          />
+        ),
+      },
+    ] as ViewType[];
+  }, [languages, modelId, version, modelInfo, t]);
 
   useEffect(() => {
     if (router.query.new) {
