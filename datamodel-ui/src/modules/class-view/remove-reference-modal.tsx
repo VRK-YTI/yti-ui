@@ -20,6 +20,7 @@ interface RemoveReferenceModalProps {
   uri: string;
   handleReturn: () => void;
   applicationProfile?: boolean;
+  currentTarget?: string;
 }
 
 export default function RemoveReferenceModal({
@@ -30,6 +31,7 @@ export default function RemoveReferenceModal({
   uri,
   handleReturn,
   applicationProfile,
+  currentTarget,
 }: RemoveReferenceModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -48,6 +50,7 @@ export default function RemoveReferenceModal({
       identifier: classId,
       uri: uri,
       applicationProfile: applicationProfile ?? false,
+      currentTarget,
     });
   };
 

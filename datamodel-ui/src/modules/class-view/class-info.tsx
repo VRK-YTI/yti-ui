@@ -344,7 +344,7 @@ export default function ClassInfo({
                     classId={data.identifier}
                     hasPermission={hasPermission}
                     applicationProfile={applicationProfile}
-                    handlePropertyDelete={handleRefetch}
+                    handlePropertiesUpdate={handleRefetch}
                     attribute
                     disableEdit={disableEdit}
                   />
@@ -391,7 +391,7 @@ export default function ClassInfo({
                     modelId={modelId}
                     classId={data.identifier}
                     hasPermission={hasPermission}
-                    handlePropertyDelete={handleRefetch}
+                    handlePropertiesUpdate={handleRefetch}
                     applicationProfile={applicationProfile}
                     disableEdit={disableEdit}
                     targetInClassRestriction={assoc.range}

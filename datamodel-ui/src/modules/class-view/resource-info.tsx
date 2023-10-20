@@ -32,7 +32,7 @@ import { InternalClassInfo } from '@app/common/interfaces/internal-class.interfa
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { useUpdateClassResrictionTargetMutation } from '@app/common/components/class/class.slice';
 import getApiError from '@app/common/utils/get-api-errors';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface ResourceInfoProps {
   data: SimpleResource;
@@ -41,7 +41,7 @@ interface ResourceInfoProps {
   hasPermission: boolean;
   applicationProfile?: boolean;
   attribute?: boolean;
-  handlePropertyDelete: () => void;
+  handlePropertiesUpdate: () => void;
   disableEdit?: boolean;
   targetInClassRestriction?: UriData;
 }
@@ -53,7 +53,7 @@ export default function ResourceInfo({
   attribute,
   classId,
   hasPermission,
-  handlePropertyDelete,
+  handlePropertiesUpdate,
   disableEdit,
   targetInClassRestriction,
 }: ResourceInfoProps) {
@@ -92,6 +92,12 @@ export default function ResourceInfo({
     });
     setShowTooltip(false);
   };
+
+  useEffect(() => {
+    if (updateResult.isSuccess) {
+      handlePropertiesUpdate();
+    }
+  }, [updateResult, handlePropertiesUpdate]);
 
   function renderTitleButtonContent() {
     return (
@@ -175,7 +181,7 @@ export default function ResourceInfo({
                       modelId={modelId}
                       classId={classId}
                       uri={data.uri}
-                      handleReturn={handlePropertyDelete}
+                      handleReturn={handlePropertiesUpdate}
                       name={getLanguageVersion({
                         data: data.label,
                         lang: i18n.language,
@@ -187,6 +193,7 @@ export default function ResourceInfo({
                           ? ResourceType.ATTRIBUTE
                           : ResourceType.ASSOCIATION
                       }
+                      currentTarget={targetInClassRestriction?.uri}
                     />
                   )}
                 </Tooltip>

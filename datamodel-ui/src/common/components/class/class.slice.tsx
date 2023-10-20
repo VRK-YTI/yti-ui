@@ -143,6 +143,7 @@ export const classApi = createApi({
         prefix: string;
         identifier: string;
         uri: string;
+        currentTarget?: string;
         applicationProfile: boolean;
       }
     >({
@@ -152,6 +153,7 @@ export const classApi = createApi({
         }/${value.identifier}/properties`,
         params: {
           uri: value.uri,
+          currentTarget: value.currentTarget,
         },
         method: 'DELETE',
       }),
@@ -169,7 +171,7 @@ export const classApi = createApi({
       query: (value) => ({
         url: `/class/library/${value.prefix}/${value.identifier}/properties/modify`,
         params: {
-          restrictionURI: value.uri,
+          uri: value.uri,
           currentTarget: value.currentTarget,
           newTarget: value.newTarget,
         },
