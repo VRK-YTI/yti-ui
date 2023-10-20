@@ -67,7 +67,7 @@ export interface MscrSearchResults {
         }
       ];
       docCountErrorUpperBound: number;
-      sunOtherDocCoint: number;
+      sumOtherDocCount: number;
     };
   };
 }

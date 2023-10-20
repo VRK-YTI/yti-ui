@@ -13,14 +13,14 @@ import {
   getServiceCategories,
   getRunningQueriesThunk as getServiceCategoriesRunningQueriesThunk,
 } from '@app/common/components/service-categories/service-categories.slice';
-import useUrlState, { initialUrlState } from 'yti-common-ui/utils/hooks/use-url-state';
+import useUrlState, { initialUrlState } from '@app/common/utils/hooks/use-url-state';
 import {
   getCount,
   getRunningQueriesThunk as getCountRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
 import PersonalWorkspace from '@app/modules/personal-home';
 import PageHead from 'yti-common-ui/page-head';
-import SearchScreen from "@app/modules/search-screen";
+import SearchScreen from '@app/modules/search-screen';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -41,7 +41,7 @@ export default function IndexPage(props: IndexPageProps) {
           description={t('service-description')}
         />
         {/*<PersonalWorkspace user={props.user ?? undefined} />*/}
-        <SearchScreen urlState={useUrlState().urlState} />
+        <SearchScreen />
       </Layout>
     </CommonContextProvider>
   );
@@ -63,28 +63,46 @@ export const getServerSideProps = createCommonGetServerSideProps(
         urlState.page = !isNaN(pageValue) ? pageValue : initialUrlState.page;
       }
 
-      if (query.status !== undefined) {
-        urlState.status = Array.isArray(query.status)
-          ? query.status
-          : [query.status];
+      if (query.state !== undefined) {
+        urlState.state = Array.isArray(query.state)
+          ? query.state
+          : [query.state];
       }
 
-      if (query.types !== undefined) {
-        urlState.types = Array.isArray(query.types)
-          ? query.types
-          : [query.types];
+      if (query.type !== undefined) {
+        urlState.type = Array.isArray(query.type)
+          ? query.type
+          : [query.type];
       }
 
-      if (query.domain) {
-        urlState.domain = Array.isArray(query.domain)
-          ? query.domain
-          : [query.domain];
-      }
-
-      if (query.organization) {
+      if (query.organization !== undefined) {
         urlState.organization = Array.isArray(query.organization)
-          ? query.organization[0]
-          : query.organization;
+          ? query.organization
+          : [query.organization];
+      }
+
+      if (query.format !== undefined) {
+        urlState.format = Array.isArray(query.format)
+          ? query.format
+          : [query.format];
+      }
+
+      if (query.sourceType !== undefined) {
+        urlState.sourceType = Array.isArray(query.sourceType)
+          ? query.sourceType
+          : [query.sourceType];
+      }
+
+      if (query.sourceSchema !== undefined) {
+        urlState.sourceSchema = Array.isArray(query.sourceSchema)
+          ? query.sourceSchema
+          : [query.sourceSchema];
+      }
+
+      if (query.targetSchema !== undefined) {
+        urlState.targetSchema = Array.isArray(query.targetSchema)
+          ? query.targetSchema
+          : [query.targetSchema];
       }
 
       if (query.lang) {
