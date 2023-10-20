@@ -116,6 +116,7 @@ export function RenameModal({
             disabled={
               userPosted ||
               newIdentifier === resourceId ||
+              newIdentifier.length < 2 ||
               resourceAlreadyExists
             }
             onClick={handleRename}
