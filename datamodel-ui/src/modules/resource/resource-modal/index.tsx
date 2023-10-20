@@ -37,6 +37,7 @@ interface ResourceModalProps {
   buttonIcon?: boolean;
   applicationProfile?: boolean;
   hideSelfReference?: string;
+  buttonVariant?: 'secondary' | 'secondaryNoBorder';
 }
 
 export default function ResourceModal({
@@ -48,6 +49,7 @@ export default function ResourceModal({
   buttonIcon,
   applicationProfile,
   hideSelfReference,
+  buttonVariant,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -125,9 +127,9 @@ export default function ResourceModal({
   }, [result, i18n.language, contentLanguage, t, hideSelfReference]);
 
   return (
-    <div>
+    <>
       <Button
-        variant="secondary"
+        variant={buttonVariant ?? 'secondary'}
         icon={buttonIcon ? <IconPlus /> : undefined}
         onClick={() => handleOpen()}
         id="add-resource-button"
@@ -194,6 +196,6 @@ export default function ResourceModal({
           </Button>
         </ModalFooter>
       </WideModal>
-    </div>
+    </>
   );
 }

@@ -386,7 +386,7 @@ export default function ClassInfo({
               >
                 {data.association.map((assoc) => (
                   <ResourceInfo
-                    key={`${data.identifier}-attr-${assoc.identifier}`}
+                    key={`${data.identifier}-attr-${assoc.identifier}-${assoc.range?.curie}`}
                     data={assoc}
                     modelId={modelId}
                     classId={data.identifier}
@@ -394,6 +394,7 @@ export default function ClassInfo({
                     handlePropertyDelete={handleRefetch}
                     applicationProfile={applicationProfile}
                     disableEdit={disableEdit}
+                    targetInClassRestriction={assoc.range}
                   />
                 ))}
               </ExpanderGroup>

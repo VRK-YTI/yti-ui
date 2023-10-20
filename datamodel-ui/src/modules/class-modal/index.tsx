@@ -33,6 +33,7 @@ export interface ClassModalProps {
   plusIcon?: boolean;
   limitToModelType?: 'LIBRARY' | 'PROFILE';
   hideSelfReference?: string;
+  buttonVariant?: 'secondary' | 'secondaryNoBorder';
 }
 
 export default function ClassModal({
@@ -45,6 +46,7 @@ export default function ClassModal({
   plusIcon,
   limitToModelType,
   hideSelfReference,
+  buttonVariant,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -125,7 +127,7 @@ export default function ClassModal({
   return (
     <>
       <Button
-        variant="secondary"
+        variant={buttonVariant ?? 'secondary'}
         icon={modalButtonLabel && !plusIcon ? undefined : <IconPlus />}
         onClick={() => handleOpen()}
         id="add-class-button"

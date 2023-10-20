@@ -156,6 +156,26 @@ export const classApi = createApi({
         method: 'DELETE',
       }),
     }),
+    updateClassResrictionTarget: builder.mutation<
+      string,
+      {
+        prefix: string;
+        identifier: string;
+        uri: string;
+        currentTarget?: string;
+        newTarget?: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/class/library/${value.prefix}/${value.identifier}/properties/modify`,
+        params: {
+          restrictionURI: value.uri,
+          currentTarget: value.currentTarget,
+          newTarget: value.newTarget,
+        },
+        method: 'PUT',
+      }),
+    }),
     renameClass: builder.mutation<
       string,
       {
@@ -211,6 +231,7 @@ export const {
   useAddPropertyReferenceMutation,
   useDeletePropertyReferenceMutation,
   useRenameClassMutation,
+  useUpdateClassResrictionTargetMutation,
   util: { getRunningQueriesThunk },
 } = classApi;
 
