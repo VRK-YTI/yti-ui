@@ -301,14 +301,25 @@ export default function ModelInfoView() {
                     labelNewWindow={t('link-opens-new-window-external')}
                     href={l.uri}
                   >
-                    {l.name}
+                    {getLanguageVersion({
+                      data: l.name,
+                      lang: i18n.language,
+                      appendLocale: true,
+                    })}
                   </ExternalLink>
-                  {l.description && (
-                    <>
-                      <br />
-                      {l.description}
-                    </>
-                  )}
+                  {l.description &&
+                    Object.values(l.description).some(
+                      (desc) => desc.length > 0
+                    ) && (
+                      <>
+                        <br />
+                        {getLanguageVersion({
+                          data: l.description,
+                          lang: i18n.language,
+                          appendLocale: true,
+                        })}
+                      </>
+                    )}
                 </li>
               ))}
             </LinksWrapper>

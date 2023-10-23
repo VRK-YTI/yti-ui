@@ -25,11 +25,11 @@ interface LinkedItemProps {
         type: 'datamodel-internal';
       }
     | {
-        name: string;
+        name: { [key: string]: string };
         namespace: string;
         prefix: string;
         type: 'datamodel-external';
-        setData: (value: string) => void;
+        setData: (value: { [key: string]: string }) => void;
       }
     | {
         prefLabel: { [key: string]: string };
@@ -37,11 +37,13 @@ interface LinkedItemProps {
         id: string;
       };
   handleRemove: (id: string) => void;
+  languages?: string[];
 }
 
 export default function LinkedItem({
   itemData,
   handleRemove,
+  languages,
 }: LinkedItemProps) {
   const { t, i18n } = useTranslation('admin');
 
@@ -114,13 +116,18 @@ export default function LinkedItem({
               })}
             </BasicBlock>
           )}
-          {itemData.type == 'datamodel-external' && (
-            <TextInput
-              labelText={t('data-model-name')}
-              defaultValue={itemData.name}
-              onChange={(e) => itemData.setData(e?.toString() ?? '')}
-            />
-          )}
+          {itemData.type == 'datamodel-external' &&
+            languages?.map((lang) => (
+              <TextInput
+                key={`external-name-${lang}`}
+                labelText={`${t('data-model-name')}, ${lang}`}
+                defaultValue={itemData.name[lang]}
+                onChange={(e) => {
+                  console.info('change', e);
+                  itemData.setData({ [lang]: e?.toString() ?? '' });
+                }}
+              />
+            ))}
           <BasicBlock title={t('prefix-in-this-service')}>
             {itemData.prefix}
           </BasicBlock>

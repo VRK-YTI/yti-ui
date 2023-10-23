@@ -249,7 +249,7 @@ export default function LinkedDataForm({
                   })
                 }
                 setExternalData={(external: {
-                  name: string;
+                  name: { [key: string]: string };
                   namespace: string;
                   prefix: string;
                 }) =>
@@ -259,6 +259,7 @@ export default function LinkedDataForm({
                   })
                 }
                 currentModel={model.prefix}
+                languages={model.languages}
               />
             </div>
           }
@@ -291,16 +292,17 @@ export default function LinkedDataForm({
                   ...n,
                   type: 'datamodel-external',
                   setData: (name) => {
+                    console.info('set data', name);
                     const updated = data.externalNamespaces.map((ext) => {
                       if (ext.prefix === n.prefix) {
                         return {
                           ...ext,
-                          name: name,
+                          name: { ...ext.name, ...name },
                         };
                       }
                       return ext;
                     });
-
+                    console.info('updated', updated);
                     handleUpdate({
                       ...data,
                       externalNamespaces: updated,
@@ -315,6 +317,7 @@ export default function LinkedDataForm({
                     ),
                   })
                 }
+                languages={model.languages}
               />
             ))}
           </div>

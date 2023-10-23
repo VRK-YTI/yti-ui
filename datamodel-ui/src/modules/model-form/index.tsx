@@ -417,6 +417,7 @@ export default function ModelForm({
     return (
       <LinkBlock
         data={formData.links}
+        languages={formData.languages}
         errors={{
           linksInvalidUri:
             errors && 'linksInvalidUri' in errors

@@ -64,7 +64,7 @@ export function validateFormUpdate(data: ModelFormType) {
     data.links.some(
       (link) =>
         !link.name ||
-        link.name.trim() === '' ||
+        Object.values(link.name).some((name) => name.trim().length === 0) ||
         !link.uri ||
         link.uri.trim() === ''
     )
