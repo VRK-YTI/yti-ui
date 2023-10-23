@@ -277,8 +277,9 @@ export default function MultiColumnSearch({
                 ]
           }
           noItemsText=""
-          allowItemAddition={false}
-          ariaOptionsAvailableText={t('information-domains-available')}
+          ariaOptionsAvailableText={
+            t('information-domains-available') as string
+          }
           ariaOptionChipRemovedText=""
           ariaSelectedAmountTextFunction={() => ''}
           onItemSelectionsChange={(values) => {
