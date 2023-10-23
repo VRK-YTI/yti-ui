@@ -39,6 +39,7 @@ interface SearchResultsProps {
   noChip?: boolean;
   tagsTitle: string;
   tagsHiddenTitle: string;
+  withDefaultStatuses?: string[];
   extra?:
     | {
         expander: {
@@ -73,6 +74,7 @@ export default function SearchResults({
   noChip,
   tagsTitle,
   tagsHiddenTitle,
+  withDefaultStatuses,
   extra,
 }: SearchResultsProps) {
   const { isSmall } = useBreakpoints();
@@ -88,6 +90,7 @@ export default function SearchResults({
         hiddenTitle={tagsHiddenTitle}
         organizations={organizations}
         types={types}
+        withDefaultStatuses={withDefaultStatuses}
         domains={domains}
       />
       <ResultWrapper $isSmall={isSmall} id="search-results">

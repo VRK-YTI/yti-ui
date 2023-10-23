@@ -7,3 +7,7 @@ export const statusList: Status[] = [
   'SUPERSEDED',
   'VALID',
 ];
+
+export const inUseStatusList: Status[] = ['DRAFT', 'SUGGESTED', 'VALID'];
+
+export const notInUseStatusList: Status[] = ['RETIRED', 'SUPERSEDED'];
