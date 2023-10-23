@@ -24,7 +24,7 @@ function createUrl(urlState: UrlState) {
   //   baseQuery = baseQuery.concat('?');
   // }
 
-  // baseQuery = baseQuery.concat(`query=${urlState.q}`);
+  baseQuery = baseQuery.concat(`query=${urlState.q}`);
 
   if (urlState.type && urlState.type.length > 0) {
     baseQuery = baseQuery.concat(`&type=${urlState.type.join(',')}`);

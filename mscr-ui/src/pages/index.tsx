@@ -40,8 +40,7 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('datamodel-title')}
           description={t('service-description')}
         />
-        {/*<PersonalWorkspace user={props.user ?? undefined} />*/}
-        <SearchScreen />
+        <PersonalWorkspace user={props.user ?? undefined} />
       </Layout>
     </CommonContextProvider>
   );

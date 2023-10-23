@@ -6,19 +6,20 @@ import {
 import {useTranslation} from 'next-i18next';
 import useUrlState, {initialUrlState} from '@app/common/utils/hooks/use-url-state';
 import {useRouter} from 'next/router';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {SEARCH_FIELD_PATTERN, TEXT_INPUT_MAX} from 'yti-common-ui/utils/constants';
+import {SearchContext} from "@app/common/components/search-context-provider";
 
 export default function SearchBar() {
   const { t } = useTranslation('admin');
   const router = useRouter();
-  const isSearchPage = router.route === '/';
+  const {isSearchActive, setIsSearchActive} = useContext(SearchContext);
 
   // Does this work for our project? Copied from datamodel-ui
   const { urlState, patchUrlState } = useUrlState();
   const q = urlState.q;
   const [searchInputValue, setSearchInputValue] = useState<string>(
-    isSearchPage ? q : ''
+    isSearchActive ? q : ''
   );
 
   // const scopes = [
@@ -36,10 +37,10 @@ export default function SearchBar() {
   };
 
   useEffect(() => {
-    if (isSearchPage) {
+    if (isSearchActive) {
       setSearchInputValue(q);
     }
-  }, [q, setSearchInputValue, isSearchPage]);
+  }, [q, setSearchInputValue, isSearchActive]);
 
 
   return (
@@ -50,7 +51,10 @@ export default function SearchBar() {
         searchButtonLabel={t('search.bar.search-button')}
         value={searchInputValue ?? ''}
         onSearch={(value) => {
-          if (typeof value === 'string') search(selectedType, value);
+          if (typeof value === 'string') {
+            setIsSearchActive(true);
+            search(selectedType, value);
+          };
         }}
         onChange={(value) => handleChange(value?.toString() ?? '')}
         maxLength={TEXT_INPUT_MAX}
@@ -94,7 +98,7 @@ export default function SearchBar() {
   );
 
   function search(selectedType: string, q?: string) {
-    if (isSearchPage) {
+    if (isSearchActive) {
       patchUrlState({
         q: q ?? '',
         // domain: domain,

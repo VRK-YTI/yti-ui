@@ -1,7 +1,7 @@
-export default function SearchResult({ id }: { id: string }) {
+export default function SearchResult({ id, index }: { id: string; index: string }) {
   return (
     <div>
-      <h4>This is a search result with id {id}</h4>
+      <h4>This is a search result indexed {index} with id {id}</h4>
     </div>
   );
 }

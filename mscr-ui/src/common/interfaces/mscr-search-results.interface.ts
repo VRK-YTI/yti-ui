@@ -17,7 +17,7 @@ export interface MscrSearchResults {
     };
     hits: [                     // ToDo: CrosswalkResult interface extending Crosswalk interface
       {                         // ToDo: Update Crosswalk interface
-        index: string;          // ToDo: SchemaResult interface extending Schema interface
+        _index: string;          // ToDo: SchemaResult interface extending Schema interface
         _id: string;             // ToDo: Update Schema interface
         source: {
           id: string;
@@ -54,7 +54,7 @@ export interface MscrSearchResults {
             }
           ];
         };
-        sort: string[];                 // No idea what this should be, all I have is null
+        sort: Object[];
       }
     ];
   };
