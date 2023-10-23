@@ -54,6 +54,7 @@ import { TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import Image from 'next/image';
 import { IconBold, IconItalics, IconQuotes } from 'suomifi-icons';
+import HasPermission from '@app/common/utils/has-permission';
 
 export default function Documentation({
   modelId,
@@ -65,6 +66,9 @@ export default function Documentation({
   languages: string[];
 }) {
   const { t, i18n } = useTranslation('admin');
+  const hasPermission = HasPermission({
+    actions: 'EDIT_DATA_MODEL',
+  });
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
   const ref = useRef<HTMLDivElement>(null);
@@ -301,43 +305,44 @@ export default function Documentation({
         <HeaderRow>
           <Text variant="bold">{t('documentation')}</Text>
 
-          {isEdit ? (
-            <div
-              style={{
-                display: 'flex',
-                gap: '15px',
-              }}
-            >
-              <Button onClick={() => handleSubmit()} id="submit-button">
-                {result.isLoading || versionedResult.isLoading ? (
-                  <div role="alert">
-                    <StyledSpinner
-                      variant="small"
-                      text={t('saving')}
-                      textAlign="right"
-                    />
-                  </div>
-                ) : (
-                  <>{t('save')}</>
-                )}
-              </Button>
+          {hasPermission &&
+            (isEdit ? (
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '15px',
+                }}
+              >
+                <Button onClick={() => handleSubmit()} id="submit-button">
+                  {result.isLoading || versionedResult.isLoading ? (
+                    <div role="alert">
+                      <StyledSpinner
+                        variant="small"
+                        text={t('saving')}
+                        textAlign="right"
+                      />
+                    </div>
+                  ) : (
+                    <>{t('save')}</>
+                  )}
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => handleCancel()}
+                  id="cancel-button"
+                >
+                  {t('cancel-variant')}
+                </Button>
+              </div>
+            ) : (
               <Button
                 variant="secondary"
-                onClick={() => handleCancel()}
-                id="cancel-button"
+                onClick={() => setIsEdit(true)}
+                id="edit-button"
               >
-                {t('cancel-variant')}
+                {t('edit')}
               </Button>
-            </div>
-          ) : (
-            <Button
-              variant="secondary"
-              onClick={() => setIsEdit(true)}
-              id="edit-button"
-            >
-              {t('edit')}
-            </Button>
-          )}
+            ))}
         </HeaderRow>
       </StaticHeader>
 
