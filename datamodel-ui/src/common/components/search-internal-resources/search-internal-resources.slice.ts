@@ -8,6 +8,7 @@ import {
 } from '@app/common/interfaces/search-internal-classes.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Type } from '@app/common/interfaces/type.interface';
+import { inUseStatusList } from '@app/common/utils/status-list';
 
 export interface InternalResourcesSearchParams {
   query: string;
@@ -33,7 +34,7 @@ export function initialSearchData(
 ): InternalResourcesSearchParams {
   return {
     query: '',
-    status: ['VALID', 'SUGGESTED', 'DRAFT'],
+    status: inUseStatusList,
     groups: [],
     sortLang: sortLang,
     pageSize: 50,
