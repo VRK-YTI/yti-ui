@@ -277,7 +277,6 @@ export default function MultiColumnSearch({
                 ]
           }
           noItemsText=""
-          itemAdditionHelpText=""
           allowItemAddition={false}
           ariaOptionsAvailableText={t('information-domains-available')}
           ariaOptionChipRemovedText=""
