@@ -168,7 +168,9 @@ export default function ResourceInfo({
                   )}
                   {!applicationProfile && !attribute && (
                     <ClassModal
-                      modalButtonLabel={t('choose-association-target')}
+                      modalButtonLabel={t('choose-association-target', {
+                        ns: 'admin',
+                      })}
                       mode="select"
                       handleFollowUp={handleChangeTarget}
                       modelId={modelId}
