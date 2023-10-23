@@ -8,13 +8,13 @@ import {
   IconCheckCircle,
   IconDisabled,
   IconOptionsVertical,
+  InlineAlert,
 } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import {
   setResource,
   useGetResourceQuery,
 } from '@app/common/components/resource/resource.slice';
-import { useState } from 'react';
 import CommonViewContent from '@app/modules/common-view-content';
 import { TooltipWrapper } from '../model/model.styles';
 import { setSelected, setView } from '@app/common/components/model/model.slice';
@@ -27,6 +27,12 @@ import {
   SecondaryTextWrapper,
 } from './resource-info-styles';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
+import ClassModal from '../class-modal';
+import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
+import { UriData } from '@app/common/interfaces/uri.interface';
+import { useUpdateClassResrictionTargetMutation } from '@app/common/components/class/class.slice';
+import getApiError from '@app/common/utils/get-api-errors';
+import { useEffect, useState } from 'react';
 
 interface ResourceInfoProps {
   data: SimpleResource;
@@ -35,8 +41,9 @@ interface ResourceInfoProps {
   hasPermission: boolean;
   applicationProfile?: boolean;
   attribute?: boolean;
-  handlePropertyDelete: () => void;
+  handlePropertiesUpdate: () => void;
   disableEdit?: boolean;
+  targetInClassRestriction?: UriData;
 }
 
 export default function ResourceInfo({
@@ -46,8 +53,9 @@ export default function ResourceInfo({
   attribute,
   classId,
   hasPermission,
-  handlePropertyDelete,
+  handlePropertiesUpdate,
   disableEdit,
+  targetInClassRestriction,
 }: ResourceInfoProps) {
   const { t, i18n } = useTranslation('common');
   const [open, setOpen] = useState(false);
@@ -64,6 +72,8 @@ export default function ResourceInfo({
     { skip: !open }
   );
 
+  const [updateTarget, updateResult] = useUpdateClassResrictionTargetMutation();
+
   const handleEdit = () => {
     if (isSuccess) {
       dispatch(setSelected(data.identifier, 'attributes', data.modelId));
@@ -72,19 +82,24 @@ export default function ResourceInfo({
     }
   };
 
-  function renderTitleButtonContent() {
-    if (!applicationProfile) {
-      return (
-        <>
-          {getLanguageVersion({
-            data: data.label,
-            lang: i18n.language,
-            appendLocale: true,
-          })}
-        </>
-      );
-    }
+  const handleChangeTarget = (newTarget?: InternalClassInfo) => {
+    updateTarget({
+      prefix: data.modelId,
+      identifier: classId,
+      uri: data.uri,
+      currentTarget: targetInClassRestriction?.uri,
+      newTarget: newTarget?.id,
+    });
+    setShowTooltip(false);
+  };
 
+  useEffect(() => {
+    if (updateResult.isSuccess) {
+      handlePropertiesUpdate();
+    }
+  }, [updateResult, handlePropertiesUpdate]);
+
+  function renderTitleButtonContent() {
     return (
       <div
         style={{
@@ -95,21 +110,28 @@ export default function ResourceInfo({
       >
         <div>
           <PrimaryTextWrapper>
-            {getLanguageVersion({
+            {`${getLanguageVersion({
               data: data.label,
               lang: i18n.language,
               appendLocale: true,
-            })}
+            })} (${data.modelId}:${data.identifier})`}
           </PrimaryTextWrapper>
           <SecondaryTextWrapper>
-            {`${data.modelId}:${data.identifier}`}
+            {data.range && !attribute
+              ? `${getLanguageVersion({
+                  data: data.range.label,
+                  lang: i18n.language,
+                  appendLocale: true,
+                })} (${data.range.curie})`
+              : ''}
           </SecondaryTextWrapper>
         </div>
-        {data.deactivated ? (
-          <IconDisabled fill="depthDark2" />
-        ) : (
-          <IconCheckCircle fill="#09a580" />
-        )}
+        {applicationProfile &&
+          (data.deactivated ? (
+            <IconDisabled fill="depthDark2" />
+          ) : (
+            <IconCheckCircle fill="#09a580" />
+          ))}
       </div>
     );
   }
@@ -144,12 +166,24 @@ export default function ResourceInfo({
                       {t('edit', { ns: 'admin' })}
                     </Button>
                   )}
+                  {!applicationProfile && !attribute && (
+                    <ClassModal
+                      modalButtonLabel={t('choose-association-target', {
+                        ns: 'admin',
+                      })}
+                      mode="select"
+                      handleFollowUp={handleChangeTarget}
+                      modelId={modelId}
+                      applicationProfile={applicationProfile}
+                      buttonVariant="secondaryNoBorder"
+                    />
+                  )}
                   {(!data.fromShNode || !applicationProfile) && (
                     <RemoveReferenceModal
                       modelId={modelId}
                       classId={classId}
                       uri={data.uri}
-                      handleReturn={handlePropertyDelete}
+                      handleReturn={handlePropertiesUpdate}
                       name={getLanguageVersion({
                         data: data.label,
                         lang: i18n.language,
@@ -161,6 +195,7 @@ export default function ResourceInfo({
                           ? ResourceType.ATTRIBUTE
                           : ResourceType.ASSOCIATION
                       }
+                      currentTarget={targetInClassRestriction?.uri}
                     />
                   )}
                 </Tooltip>
@@ -174,6 +209,11 @@ export default function ResourceInfo({
   return (
     <Expander open={open} onOpenChange={() => setOpen(!open)}>
       <ExpanderTitleButton>{renderTitleButtonContent()}</ExpanderTitleButton>
+      {updateResult.error && (
+        <InlineAlert status="error">
+          {getApiError(updateResult.error)[0]}
+        </InlineAlert>
+      )}
       <ExpanderContent>
         {isSuccess && (
           <CommonViewContent

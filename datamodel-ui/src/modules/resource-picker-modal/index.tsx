@@ -62,10 +62,10 @@ export default function ResourcePicker({
           classData.association?.map((assoc) => ({
             target: {
               identifier: assoc.identifier,
-              label: getLanguageVersion({
+              label: `${getLanguageVersion({
                 data: assoc.label,
                 lang: i18n.language,
-              }),
+              })} ${assoc.range ? `(${assoc.range.curie})` : ''}`,
               linkLabel: assoc.curie,
               link: assoc.uri,
               note: getLanguageVersion({

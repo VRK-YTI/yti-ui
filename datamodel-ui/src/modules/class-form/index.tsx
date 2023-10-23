@@ -725,7 +725,7 @@ export default function ClassForm({
                     classId={data.identifier}
                     applicationProfile={applicationProfile}
                     hasPermission
-                    handlePropertyDelete={() => {
+                    handlePropertiesUpdate={() => {
                       const newAttributes = data.attribute
                         ? data.attribute.filter(
                             (attribute) =>
@@ -767,7 +767,7 @@ export default function ClassForm({
                     classId={data.identifier}
                     applicationProfile={applicationProfile}
                     hasPermission
-                    handlePropertyDelete={() => {
+                    handlePropertiesUpdate={() => {
                       const newAssociations = data.association
                         ? data.association.filter(
                             (association) =>

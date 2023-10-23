@@ -1,4 +1,5 @@
 import { ConceptType } from './concept-interface';
+import { UriData } from './uri.interface';
 
 export interface SimpleResource {
   identifier: string;
@@ -11,4 +12,5 @@ export interface SimpleResource {
   deactivated?: boolean;
   fromShNode?: boolean;
   version?: string;
+  range?: UriData;
 }

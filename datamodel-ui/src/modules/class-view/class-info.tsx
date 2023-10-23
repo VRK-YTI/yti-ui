@@ -344,7 +344,7 @@ export default function ClassInfo({
                     classId={data.identifier}
                     hasPermission={hasPermission}
                     applicationProfile={applicationProfile}
-                    handlePropertyDelete={handleRefetch}
+                    handlePropertiesUpdate={handleRefetch}
                     attribute
                     disableEdit={disableEdit}
                   />
@@ -386,14 +386,15 @@ export default function ClassInfo({
               >
                 {data.association.map((assoc) => (
                   <ResourceInfo
-                    key={`${data.identifier}-attr-${assoc.identifier}`}
+                    key={`${data.identifier}-attr-${assoc.identifier}-${assoc.range?.curie}`}
                     data={assoc}
                     modelId={modelId}
                     classId={data.identifier}
                     hasPermission={hasPermission}
-                    handlePropertyDelete={handleRefetch}
+                    handlePropertiesUpdate={handleRefetch}
                     applicationProfile={applicationProfile}
                     disableEdit={disableEdit}
+                    targetInClassRestriction={assoc.range}
                   />
                 ))}
               </ExpanderGroup>
