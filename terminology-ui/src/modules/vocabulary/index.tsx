@@ -40,7 +40,6 @@ import getPrefLabel from '@app/common/utils/get-preflabel';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import {
-  StatusChip,
   TitleType,
   TitleTypeAndStatusWrapper,
 } from 'yti-common-ui/title/title.styles';
@@ -51,6 +50,7 @@ import {
 import InfoExpander from '@app/common/components/info-dropdown/info-expander';
 import { useStoreDispatch } from '@app/store';
 import { setTitle } from '@app/common/components/title/title.slice';
+import { StatusChip } from 'yti-common-ui/status-chip';
 
 const NewConceptModal = dynamic(
   () => import('@app/common/components/new-concept-modal')
@@ -213,11 +213,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                 </TitleType>{' '}
                 &middot;
                 <StatusChip
-                  valid={
-                    info?.properties.status?.[0].value === 'VALID'
-                      ? 'true'
-                      : undefined
-                  }
+                  status={info?.properties.status?.[0].value ?? 'DRAFT'}
                   id="status-chip"
                 >
                   {translateStatus(

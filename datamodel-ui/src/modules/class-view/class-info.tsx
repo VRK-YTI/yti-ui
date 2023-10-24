@@ -319,7 +319,7 @@ export default function ClassInfo({
                 lang: displayLang ?? i18n.language,
               })}
             </Text>
-            <StatusChip $isValid={data.status === 'VALID'}>
+            <StatusChip status={data.status}>
               {translateStatus(data.status, t)}
             </StatusChip>
           </div>
