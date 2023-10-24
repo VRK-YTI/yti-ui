@@ -194,7 +194,7 @@ export default function ResourceList({
                       )}
                       <Text>{translateModelType(item.datamodel.type, t)}</Text>
                       <Status status={item.datamodel.status}>
-                        {translateStatus(item.target.status, t)}
+                        {translateStatus(item.datamodel.status, t)}
                       </Status>
                     </div>
                     <Text>
