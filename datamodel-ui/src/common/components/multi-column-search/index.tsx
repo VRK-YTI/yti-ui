@@ -17,6 +17,10 @@ import ResourceList, { ResultType } from '../resource-list';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import { Status } from '@app/common/interfaces/status.interface';
+import {
+  inUseStatusList,
+  notInUseStatusList,
+} from '@app/common/utils/status-list';
 
 interface MultiColumnSearchProps {
   primaryColumnName: string;
@@ -144,8 +148,8 @@ export default function MultiColumnSearch({
       const setStatuses =
         value !== '-1'
           ? value === 'in-use'
-            ? (['VALID', 'SUGGESTED', 'DRAFT'] as Status[])
-            : (['RETIRED', 'SUPERSEDED'] as Status[])
+            ? inUseStatusList
+            : notInUseStatusList
           : [];
 
       setSearchParams({

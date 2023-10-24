@@ -3,6 +3,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { CountsType } from '@app/common/interfaces/counts.interface';
 import { UrlState } from 'yti-common-ui/utils/hooks/use-url-state';
+import { inUseStatusList } from '@app/common/utils/status-list';
 
 function getUrl(urlState: UrlState) {
   const validEntries = Object.entries({
@@ -14,7 +15,7 @@ function getUrl(urlState: UrlState) {
       ? urlState.types.map((type) => type.toUpperCase())
       : [],
     ...(urlState.status.length === 0
-      ? { status: ['VALID', 'SUGGESTED'] }
+      ? { status: inUseStatusList }
       : { status: urlState.status }),
   }).filter(
     (item) =>
