@@ -2,9 +2,9 @@ import {FacetsWrapper, ResultsWrapper, SearchContainer} from '@app/modules/searc
 import SearchResult from '@app/common/components/search-result';
 import {useGetMscrSearchResultsQuery} from '@app/common/components/mscr-search/mscr-search.slice';
 import useUrlState, {initialUrlState, UrlState} from '@app/common/utils/hooks/use-url-state';
-import {IconClose} from "suomifi-icons";
-import {useContext} from "react";
-import {SearchContext} from "@app/common/components/search-context-provider";
+import {IconClose} from 'suomifi-icons';
+import {useContext} from 'react';
+import {SearchContext} from '@app/common/components/search-context-provider';
 
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
@@ -30,7 +30,7 @@ export default function SearchScreen() {
       <ResultsWrapper>
         {/* Only a list of results if searching all of mscr, but two lists if searching own workspace */}
         {mscrSearchResults?.hits.hits.map((hit) => (
-          <SearchResult key={hit._id} id={hit._id} index={hit._index} />
+          <SearchResult key={hit._id} hit={hit} />
         ))}
       </ResultsWrapper>
       {/* Close button */}

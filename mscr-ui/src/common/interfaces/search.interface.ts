@@ -1,7 +1,44 @@
-import {Status} from '@app/common/interfaces/status.interface';
-import {Organization} from '@app/common/interfaces/organizations.interface';
+import {Organization} from "@app/common/interfaces/organizations.interface";
+
+export interface Label {
+  [key: string]: string;
+}
+
+export type Status = 'DRAFT' | 'PUBLISHED' | 'INVALID' | 'DEPRECATED' | 'REMOVED'
+
+export type Visibility = 'PRIVATE' | 'PUBLIC'
+
+export type Type = 'CROSSWALK' | 'SCHEMA'
+
+export interface ResultInfo {
+  id: string;
+  label: Label;
+  status: Status;
+  visibility: Visibility;
+  modified: Date;
+  created: Date;
+  contentModified: Date;
+  type: Type;
+}
+
+export interface PatchedResult extends ResultInfo {
+  description: {
+    [key: string]: string;
+  };
+}
+
+export interface MscrSearchResult {
+  _id: string;
+  _source: ResultInfo;
+}
 
 export interface MscrSearchResults {
+  hits: {
+    hits: MscrSearchResult[];
+  };
+}
+
+export interface MscrSearchResultsX {
   took: number;
   timedOut: boolean;
   shards: {
