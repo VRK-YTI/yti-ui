@@ -1,7 +1,7 @@
 import {FacetsWrapper, ResultsWrapper, SearchContainer} from '@app/modules/search-screen/search-screen.styles';
 import SearchResult from '@app/common/components/search-result';
 import {useGetMscrSearchResultsQuery} from '@app/common/components/mscr-search/mscr-search.slice';
-import useUrlState, { UrlState } from '@app/common/utils/hooks/use-url-state';
+import useUrlState, {initialUrlState, UrlState} from '@app/common/utils/hooks/use-url-state';
 import {IconClose} from "suomifi-icons";
 import {useContext} from "react";
 import {SearchContext} from "@app/common/components/search-context-provider";
@@ -12,8 +12,15 @@ export default function SearchScreen() {
   const { data: mscrSearchResults, refetch: refetchMscrSearchResults } =
     useGetMscrSearchResultsQuery(urlState);
 
-  console.log('search results: ', mscrSearchResults);  // Prints in the browser
-  console.log('screen uses urlstate: ', urlState);
+  const handleClose = () => {
+    setIsSearchActive(false);
+    patchUrlState({
+      q: initialUrlState.q,
+      type: initialUrlState.type,
+      page: initialUrlState.page,
+    });
+  };
+
   return (
     <SearchContainer>
       <p>Search screen is now open</p>
@@ -27,7 +34,7 @@ export default function SearchScreen() {
         ))}
       </ResultsWrapper>
       {/* Close button */}
-      <button onClick={() => setIsSearchActive(false)}>
+      <button onClick={handleClose}>
         <IconClose />
       </button>
     </SearchContainer>

@@ -30,7 +30,7 @@ function createUrl(urlState: UrlState) {
     baseQuery = baseQuery.concat(`&type=${urlState.type.join(',')}`);
   }
 
-  console.log('url to call: ', baseQuery);  // Logs on the client, not server!
+  console.log('url to call (mscr-search.slice): ', baseQuery);  // Logs on the client, not server!
   return baseQuery;
 }
 

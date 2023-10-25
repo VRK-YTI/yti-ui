@@ -97,24 +97,20 @@ export default function SearchBar() {
 
   );
 
-  function search(selectedType: string, q?: string) {
-    if (isSearchActive) {
+  function search(selectedType?: string, q?: string) {
+    if (q) {
+      const type = selectedType ?? 'ALL';
       patchUrlState({
-        q: q ?? '',
-        // domain: domain,
-        type: selectedType == 'ALL' ? ['SCHEMA', 'CROSSWALK'] : [selectedType],
+        q: q,
+        type: type == 'ALL' ? ['SCHEMA', 'CROSSWALK'] : [type],
         page: initialUrlState.page,
       });
-      console.log('we patched to', urlState);
     } else {
-      return router.push(
-        {
-          pathname: '/',
-          query: q ? { q } : {},
-        },
-        undefined,
-        { shallow: true }
-      );
+      patchUrlState({
+        q: initialUrlState.q,
+        type: initialUrlState.type,
+        page: initialUrlState.page,
+      });
     }
   }
 }
