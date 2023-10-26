@@ -417,7 +417,9 @@ export default function ModelForm({
     return (
       <LinkBlock
         data={formData.links}
-        languages={formData.languages}
+        languages={formData.languages.sort((a, b) =>
+          compareLocales(a.uniqueItemId, b.uniqueItemId)
+        )}
         errors={{
           linksInvalidUri:
             errors && 'linksInvalidUri' in errors

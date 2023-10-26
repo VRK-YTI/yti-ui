@@ -26,6 +26,7 @@ import {
   InternalNamespace,
 } from '@app/common/interfaces/model.interface';
 import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 export default function LinkedModel({
   initialData,
@@ -359,20 +360,22 @@ export default function LinkedModel({
               {ADMIN_EMAIL}
             </ExternalLink>
           </InlineAlert>
-          {languages.map((lang) => (
-            <TextInput
-              key={`datamodel-name-${lang}`}
-              labelText={`${t('data-model-name')}, ${lang}`}
-              visualPlaceholder={t('input-data-model-name')}
-              fullWidth
-              onChange={(e) =>
-                setDataValue('name', { [lang]: e?.toString() ?? '' })
-              }
-              status={userPosted && errors.name ? 'error' : 'default'}
-              id="data-model-name-input"
-              maxLength={TEXT_INPUT_MAX}
-            />
-          ))}
+          {Array.from(languages)
+            .sort((a, b) => compareLocales(a, b))
+            .map((lang) => (
+              <TextInput
+                key={`datamodel-name-${lang}`}
+                labelText={`${t('data-model-name')}, ${lang}`}
+                visualPlaceholder={t('input-data-model-name')}
+                fullWidth
+                onChange={(e) =>
+                  setDataValue('name', { [lang]: e?.toString() ?? '' })
+                }
+                status={userPosted && errors.name ? 'error' : 'default'}
+                id="data-model-name-input"
+                maxLength={TEXT_INPUT_MAX}
+              />
+            ))}
 
           <TextInput
             labelText={t('prefix-in-this-service')}

@@ -292,7 +292,6 @@ export default function LinkedDataForm({
                   ...n,
                   type: 'datamodel-external',
                   setData: (name) => {
-                    console.info('set data', name);
                     const updated = data.externalNamespaces.map((ext) => {
                       if (ext.prefix === n.prefix) {
                         return {
@@ -302,7 +301,6 @@ export default function LinkedDataForm({
                       }
                       return ext;
                     });
-                    console.info('updated', updated);
                     handleUpdate({
                       ...data,
                       externalNamespaces: updated,

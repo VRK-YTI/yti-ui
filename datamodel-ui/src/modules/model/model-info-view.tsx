@@ -1,4 +1,5 @@
 import {
+  selectDisplayLang,
   setHasChanges,
   useGetModelQuery,
 } from '@app/common/components/model/model.slice';
@@ -40,6 +41,7 @@ import useSetView from '@app/common/utils/hooks/use-set-view';
 import { v4 } from 'uuid';
 import CreateReleaseModal from '../create-release-modal';
 import PriorVersions from './prior-versions';
+import { useSelector } from 'react-redux';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -51,6 +53,7 @@ export default function ModelInfoView() {
   const [showEditView, setShowEditView] = useState(false);
   const [formData, setFormData] = useState<ModelFormType | undefined>();
   const [headerHeight, setHeaderHeight] = useState(0);
+  const displayLang = useSelector(selectDisplayLang());
   const [openModals, setOpenModals] = useState({
     showAsFile: false,
     downloadAsFile: false,
@@ -303,7 +306,7 @@ export default function ModelInfoView() {
                   >
                     {getLanguageVersion({
                       data: l.name,
-                      lang: i18n.language,
+                      lang: displayLang ?? i18n.language,
                       appendLocale: true,
                     })}
                   </ExternalLink>
@@ -315,7 +318,7 @@ export default function ModelInfoView() {
                         <br />
                         {getLanguageVersion({
                           data: l.description,
-                          lang: i18n.language,
+                          lang: displayLang ?? i18n.language,
                           appendLocale: true,
                         })}
                       </>
