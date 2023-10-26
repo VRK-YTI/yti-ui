@@ -9,6 +9,7 @@ import { LinkedItemWrapper } from './linked-data-form.styles';
 import { useTranslation } from 'next-i18next';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { BasicBlock } from 'yti-common-ui/block';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 interface LinkedItemProps {
   itemData:
@@ -117,16 +118,18 @@ export default function LinkedItem({
             </BasicBlock>
           )}
           {itemData.type == 'datamodel-external' &&
-            languages?.map((lang) => (
-              <TextInput
-                key={`external-name-${lang}`}
-                labelText={`${t('data-model-name')}, ${lang}`}
-                defaultValue={itemData.name[lang]}
-                onChange={(e) => {
-                  itemData.setData({ [lang]: e?.toString() ?? '' });
-                }}
-              />
-            ))}
+            Array.from(languages ?? [])
+              .sort((a, b) => compareLocales(a, b))
+              ?.map((lang) => (
+                <TextInput
+                  key={`external-name-${lang}`}
+                  labelText={`${t('data-model-name')}, ${lang}`}
+                  defaultValue={itemData.name[lang]}
+                  onChange={(e) => {
+                    itemData.setData({ [lang]: e?.toString() ?? '' });
+                  }}
+                />
+              ))}
           <BasicBlock title={t('prefix-in-this-service')}>
             {itemData.prefix}
           </BasicBlock>

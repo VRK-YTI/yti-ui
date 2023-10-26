@@ -55,7 +55,10 @@ export default function LinkedModel({
     prefix: true,
   });
   const [data, setData] = useState({
-    name: languages.reduce((n, lang) => Object.assign(n, { [lang]: '' }), {}),
+    name: languages.reduce(
+      (n, lang) => Object.assign(n, { [lang]: '' }),
+      {}
+    ) as { [key: string]: string },
     namespace: '',
     prefix: '',
   });
@@ -95,7 +98,9 @@ export default function LinkedModel({
   ) => {
     if (userPosted && Object.values(errors).some((val) => val === true)) {
       const newErrors = {
-        name: !data.name || data.name === '',
+        name:
+          !data.name ||
+          Object.values(data.name).some((n) => n.trim().length === 0),
         namespace:
           !data.namespace || data.namespace === '' || !isURL(data.namespace),
         prefix: !data.prefix || data.namespace === '',
@@ -118,7 +123,7 @@ export default function LinkedModel({
     setShowExternalForm(false);
     setSelected(initialData.internalNamespaces);
     setData({
-      name: '',
+      name: {},
       namespace: '',
       prefix: '',
     });
@@ -133,7 +138,9 @@ export default function LinkedModel({
 
     if (showExternalForm) {
       const newErrors = {
-        name: !data.name || data.name === '',
+        name:
+          !data.name ||
+          Object.values(data.name).some((n) => n.trim().length === 0),
         namespace:
           !data.namespace || data.namespace === '' || !isURL(data.namespace),
         prefix: !data.prefix || data.namespace === '',
@@ -195,7 +202,9 @@ export default function LinkedModel({
             onClick={() => handleSubmit()}
             disabled={
               showExternalForm
-                ? Object.values(data).filter((val) => val !== '').length < 3
+                ? data.prefix.trim().length === 0 ||
+                  data.namespace.trim().length === 0 ||
+                  Object.values(data.name).some((n) => n.trim().length === 0)
                 : (initialData.internalNamespaces.length === 0 &&
                     selected.length === 0) ||
                   (selected.length === initialData.internalNamespaces.length &&
