@@ -63,10 +63,12 @@ export function RenameModal({
     });
   }
 
-  const handleClose = () => {
+  const handleClose = (reset?: boolean) => {
     setError(false);
     setUserPosted(false);
-    setNewIdentifier(resourceId);
+    if (reset) {
+      setNewIdentifier(resourceId);
+    }
     hide();
   };
 
@@ -124,7 +126,11 @@ export function RenameModal({
           >
             {t('save')}
           </Button>
-          <Button variant="secondary" onClick={handleClose} id="cancel-button">
+          <Button
+            variant="secondary"
+            onClick={() => handleClose(true)}
+            id="cancel-button"
+          >
             {t('cancel-variant')}
           </Button>
           {userPosted && <SaveSpinner text={t('renaming-resource')} />}
