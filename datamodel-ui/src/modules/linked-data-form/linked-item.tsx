@@ -123,7 +123,6 @@ export default function LinkedItem({
                 labelText={`${t('data-model-name')}, ${lang}`}
                 defaultValue={itemData.name[lang]}
                 onChange={(e) => {
-                  console.info('change', e);
                   itemData.setData({ [lang]: e?.toString() ?? '' });
                 }}
               />
