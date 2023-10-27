@@ -8,7 +8,6 @@ import {
   ModalTitle,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import { LargeModal } from './class-modal.styles';
 import MultiColumnSearch from '@app/common/components/multi-column-search';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import {
@@ -19,6 +18,7 @@ import {
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { ResultType } from '@app/common/components/resource-list';
 import { mapInternalClassInfoToResultType } from '../class-restriction-modal/utils';
+import LargeModal from '@app/common/components/large-modal';
 
 export interface ClassModalProps {
   modelId: string;

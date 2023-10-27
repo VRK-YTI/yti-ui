@@ -1,3 +1,4 @@
+import LargeModal from '@app/common/components/large-modal';
 import MultiColumnSearch from '@app/common/components/multi-column-search';
 import { ResultType } from '@app/common/components/resource-list';
 import {
@@ -5,7 +6,6 @@ import {
   initialSearchData,
   useGetInternalResourcesInfoMutation,
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
-import WideModal from '@app/common/components/wide-modal';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import {
@@ -138,7 +138,7 @@ export default function ResourceModal({
           translateResourceAddition(type, t, applicationProfile)}
       </Button>
 
-      <WideModal
+      <LargeModal
         appElementId="__next"
         visible={visible}
         variant={isSmall ? 'smallScreen' : 'default'}
@@ -195,7 +195,7 @@ export default function ResourceModal({
             {t('cancel-variant')}
           </Button>
         </ModalFooter>
-      </WideModal>
+      </LargeModal>
     </>
   );
 }

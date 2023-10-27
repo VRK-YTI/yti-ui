@@ -1,5 +1,4 @@
 import ResourceList, { ResultType } from '@app/common/components/resource-list';
-import WideModal from '@app/common/components/wide-modal';
 import { useTranslation } from 'next-i18next';
 import {
   Button,
@@ -18,6 +17,7 @@ import {
   InternalClassInfo,
 } from '@app/common/interfaces/internal-class.interface';
 import { mapInternalClassInfoToResultType } from './utils';
+import LargeModal from '@app/common/components/large-modal';
 
 interface ClassRestrictionModalProps {
   visible: boolean;
@@ -66,7 +66,7 @@ export default function ClassRestrictionModal({
   }, [isSuccess, handleFollowUp, data, selected]);
 
   return (
-    <WideModal
+    <LargeModal
       appElementId="__next"
       visible={visible}
       onEscKeyDown={() => handleClose()}
@@ -170,6 +170,6 @@ export default function ClassRestrictionModal({
           {t('cancel-variant')}
         </Button>
       </ModalFooter>
-    </WideModal>
+    </LargeModal>
   );
 }
