@@ -146,6 +146,7 @@
   "datamodel-type": "Data Model type",
   "default-value": "Default value",
   "delete-codelist": "Remove codelist",
+  "delete-concept": "Remove concept",
   "delete-modal": {
     "association-description": "Remove association {{targetName}}?",
     "association-error": "An error occurred while removing association {{targetName}}",

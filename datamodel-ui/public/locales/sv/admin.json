@@ -146,6 +146,7 @@
   "datamodel-type": "",
   "default-value": "",
   "delete-codelist": "",
+  "delete-concept": "",
   "delete-modal": {
     "association-description": "",
     "association-error": "",

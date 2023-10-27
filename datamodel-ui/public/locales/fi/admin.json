@@ -146,6 +146,7 @@
   "datamodel-type": "Tietomallin tyyppi",
   "default-value": "Oletusarvo",
   "delete-codelist": "Poista koodisto",
+  "delete-concept": "Poista käsite",
   "delete-modal": {
     "association-description": "Haluatko poistaa assosiaation {{targetName}}?",
     "association-error": "Assosiaation {{targetName}} poistamisessa ilmeni ongelma",
