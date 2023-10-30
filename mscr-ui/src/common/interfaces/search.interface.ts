@@ -52,22 +52,22 @@ export interface MscrSearchResultsX {
       relation: string;
       value: number;
     };
-    hits: [                     // ToDo: CrosswalkResult interface extending Crosswalk interface
-      {                         // ToDo: Update Crosswalk interface
-        _index: string;          // ToDo: SchemaResult interface extending Schema interface
-        _id: string;             // ToDo: Update Schema interface
+    hits: [                     // ToDo: CrosswalkResult interface extending Crosswalk interface?
+      {                         // ToDo: Update Crosswalk interface?
+        _index: string;          // ToDo: SchemaResult interface extending Schema interface?
+        _id: string;             // ToDo: Update Schema interface?
         source: {
           id: string;
-          label: {              // ToDo: a Label interface?
+          label: {
             [key: string]: string;
           };
           status: Status;
-          state: string;        // ToDo: a State interface
-          visibility: string;   // ToDo: a Visibility interface
+          state: string;
+          visibility: string;
           modified: Date;
           created: Date;
           contentModified: Date;
-          type: string;         // ToDo: a Type interface (ours, with SCHEMA and CROSSWALK)
+          type: string;
           prefix: string;
           comment: {            // ToDo: a Comment interface?
             [key: string]: string;
