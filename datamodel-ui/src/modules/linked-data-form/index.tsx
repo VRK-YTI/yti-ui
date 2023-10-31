@@ -249,7 +249,7 @@ export default function LinkedDataForm({
                   })
                 }
                 setExternalData={(external: {
-                  name: string;
+                  name: { [key: string]: string };
                   namespace: string;
                   prefix: string;
                 }) =>
@@ -259,6 +259,7 @@ export default function LinkedDataForm({
                   })
                 }
                 currentModel={model.prefix}
+                languages={model.languages}
               />
             </div>
           }
@@ -295,12 +296,11 @@ export default function LinkedDataForm({
                       if (ext.prefix === n.prefix) {
                         return {
                           ...ext,
-                          name: name,
+                          name: { ...ext.name, ...name },
                         };
                       }
                       return ext;
                     });
-
                     handleUpdate({
                       ...data,
                       externalNamespaces: updated,
@@ -315,6 +315,7 @@ export default function LinkedDataForm({
                     ),
                   })
                 }
+                languages={model.languages}
               />
             ))}
           </div>

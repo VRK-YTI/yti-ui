@@ -11,9 +11,13 @@ import {
 } from './linked-data-view.styles';
 import LinkedDataForm from '../linked-data-form';
 import HasPermission from '@app/common/utils/has-permission';
-import { useGetModelQuery } from '@app/common/components/model/model.slice';
+import {
+  selectDisplayLang,
+  useGetModelQuery,
+} from '@app/common/components/model/model.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { HeaderRow } from '@app/common/components/header';
+import { useSelector } from 'react-redux';
 
 export default function LinkedDataView({
   modelId,
@@ -25,6 +29,7 @@ export default function LinkedDataView({
   isApplicationProfile: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
+  const displayLang = useSelector(selectDisplayLang());
   const ref = useRef<HTMLDivElement>(null);
   const hasPermission = HasPermission({
     actions: ['EDIT_DATA_MODEL'],
@@ -152,7 +157,7 @@ export default function LinkedDataView({
                       >
                         {getLanguageVersion({
                           data: namespace.name,
-                          lang: i18n.language,
+                          lang: displayLang ?? i18n.language,
                           appendLocale: true,
                         })}
                       </ExternalLink>
@@ -174,7 +179,7 @@ export default function LinkedDataView({
                         labelNewWindow={t('link-opens-new-window-external')}
                         href={namespace.namespace}
                       >
-                        {namespace.name}
+                        {namespace.name[displayLang ?? i18n.language]}
                       </ExternalLink>
                       <div>
                         {t('linked-datamodel-prefix', {

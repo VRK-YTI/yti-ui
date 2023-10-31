@@ -1,4 +1,5 @@
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
+import { Link } from '@app/common/interfaces/model.interface';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
 import {
@@ -11,12 +12,14 @@ import {
 import { v4 } from 'uuid';
 import isURL from 'validator/lib/isURL';
 import { BasicBlock } from 'yti-common-ui/block';
+import { LanguageBlockType } from 'yti-common-ui/form/language-selector';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 
 export default function LinkBlock({
   data,
   errors,
   setData,
+  languages,
 }: {
   data: ModelFormType['links'];
   errors: {
@@ -24,15 +27,21 @@ export default function LinkBlock({
     linksInvalidUri?: boolean;
   };
   setData: (data: ModelFormType['links']) => void;
+  languages: LanguageBlockType[];
 }) {
   const { t } = useTranslation('admin');
 
   const addLink = () => {
+    const defaultValue = languages.reduce(
+      (def, lang) => Object.assign(def, { [lang.uniqueItemId]: '' }),
+      {}
+    );
+
     setData([
       ...data,
       {
-        description: '',
-        name: '',
+        description: defaultValue,
+        name: defaultValue,
         uri: '',
         id: v4().split('-')[0],
       },
@@ -43,16 +52,24 @@ export default function LinkBlock({
     setData(data.filter((link) => link.id !== id));
   };
 
-  const handleUpdate = (id: string, key: string, value: string) => {
+  const handleUpdate = (
+    id: string,
+    key: string,
+    value: { [key: string]: string } | string
+  ) => {
     setData(
       data.map((link) => {
         if (link.id !== id) {
           return link;
         }
+        const newValue =
+          typeof value === 'object'
+            ? { ...link[key as 'name' | 'description'], ...value }
+            : value;
 
         return {
           ...link,
-          [key]: value,
+          [key]: newValue,
         };
       })
     );
@@ -67,20 +84,39 @@ export default function LinkBlock({
             {data.map((link) => (
               <div key={`link-wrapper-${link.id}`} className="link-wrapper">
                 <div className="text-fields">
-                  <TextInput
-                    labelText={t('link-name')}
-                    defaultValue={link.name}
-                    onBlur={(e) =>
-                      handleUpdate(link.id, 'name', e.target.value ?? '')
-                    }
-                    status={
-                      errors.linksMissingInfo &&
-                      (!link.name || link.name === '')
-                        ? 'error'
-                        : 'default'
-                    }
-                    maxLength={TEXT_INPUT_MAX}
-                  />
+                  {languages.map((lang) => (
+                    <span key={`link-text-fields-${lang.uniqueItemId}`}>
+                      <TextInput
+                        key={`link-name-${lang.uniqueItemId}`}
+                        labelText={`${t('link-name')}, ${lang.uniqueItemId}`}
+                        defaultValue={link.name[lang.uniqueItemId]}
+                        onBlur={(e) =>
+                          handleUpdate(link.id, 'name', {
+                            [lang.uniqueItemId]: e.target.value ?? '',
+                          })
+                        }
+                        status={
+                          errors.linksMissingInfo &&
+                          (!link.name || link.name[lang.uniqueItemId] === '')
+                            ? 'error'
+                            : 'default'
+                        }
+                        maxLength={TEXT_INPUT_MAX}
+                      />
+                      <Textarea
+                        key={`link-description-${lang.uniqueItemId}`}
+                        labelText={`${t('description')}, ${lang.uniqueItemId}`}
+                        optionalText={t('optional')}
+                        defaultValue={link.description[lang.uniqueItemId]}
+                        onBlur={(e) =>
+                          handleUpdate(link.id, 'description', {
+                            [lang.uniqueItemId]: e.target.value ?? '',
+                          })
+                        }
+                        maxLength={TEXT_AREA_MAX}
+                      />
+                    </span>
+                  ))}
 
                   <TextInput
                     labelText={t('link-url')}
@@ -93,16 +129,6 @@ export default function LinkBlock({
                       (!link.uri || link.uri === '' || !isURL(link.uri))
                         ? 'error'
                         : 'default'
-                    }
-                    maxLength={TEXT_AREA_MAX}
-                  />
-
-                  <Textarea
-                    labelText={t('description')}
-                    optionalText={t('optional')}
-                    defaultValue={link.description}
-                    onBlur={(e) =>
-                      handleUpdate(link.id, 'description', e.target.value ?? '')
                     }
                     maxLength={TEXT_AREA_MAX}
                   />
@@ -126,7 +152,7 @@ export default function LinkBlock({
               className="add-link"
               onClick={() => addLink()}
             >
-              Lisää linkki
+              {t('add-link', { ns: 'admin' })}
             </Button>
           </>
         }
