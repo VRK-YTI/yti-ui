@@ -6,9 +6,9 @@ export const SearchContainer = styled(Block)`
 `;
 
 export const FacetsWrapper = styled(Block)`
-
+  position: absolute;
 `;
 
 export const ResultsWrapper = styled(Block)`
-
+  margin-left: 200px;
 `;

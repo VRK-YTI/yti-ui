@@ -5,6 +5,7 @@ import useUrlState, {initialUrlState, UrlState} from '@app/common/utils/hooks/us
 import {IconClose} from 'suomifi-icons';
 import {useContext} from 'react';
 import {SearchContext} from '@app/common/components/search-context-provider';
+import SearchFilterSet from "@app/common/components/search-filter-set";
 
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
@@ -23,9 +24,10 @@ export default function SearchScreen() {
 
   return (
     <SearchContainer>
-      <p>Search screen is now open</p>
       <FacetsWrapper>
         {/* Groups of facets for different contexts, made with search-filter-set */}
+        <SearchFilterSet title="First set of facets" all={9} schemas={3} crosswalks={5} />
+        <SearchFilterSet title="Second set of facets" all={12} schemas={8} crosswalks={4} />
       </FacetsWrapper>
       <ResultsWrapper>
         {/* Only a list of results if searching all of mscr, but two lists if searching own workspace */}
