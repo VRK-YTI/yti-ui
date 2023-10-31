@@ -17,7 +17,7 @@ import {useTranslation} from 'next-i18next';
 import {useState} from 'react';
 import {useRouter} from 'next/router';
 
-interface MscrUser extends User {
+export interface MscrUser extends User {
   organizations: Array<{ [key: string]: string }>;
 }
 

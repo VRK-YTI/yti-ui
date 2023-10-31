@@ -9,7 +9,7 @@ import {
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
 import SmartHeader from '../smart-header';
-import {Breakpoint, useBreakpoints} from 'yti-common-ui/media-query';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import SkipLink from 'yti-common-ui/skip-link';
 import getConfig from 'next/config';
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
@@ -17,7 +17,7 @@ import generateFakeableUsers from 'yti-common-ui/utils/generate-impersonate';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 import MSCRSideBar from '../sidebar/MSCRSideBar';
 import { Block } from 'suomifi-ui-components';
-import SideNavigationPanel from '../side-navigation';
+import SideNavigationPanel, {MscrUser} from '../side-navigation';
 import Title from 'yti-common-ui/title';
 
 export default function Layout({
@@ -31,7 +31,7 @@ export default function Layout({
 }: {
   children: React.ReactNode;
   feedbackSubject?: string;
-  user?: User;
+  user?: MscrUser;
   fakeableUsers?: FakeableUser[] | null;
   matomo?: React.ReactNode;
   alerts?: React.ReactNode;
@@ -67,8 +67,7 @@ export default function Layout({
 
           <Block>
             <SideNavigationPanel user={user ?? undefined} />
-            <ContentContainer
-              $breakpoint={breakpoint}>
+            <ContentContainer>
               {alerts && alerts}
               <MarginContainer $breakpoint={breakpoint}>
                 {children}
