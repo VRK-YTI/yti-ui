@@ -20,12 +20,15 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { IconArrowLeft } from 'suomifi-icons';
 import {
+  Block,
   Button,
   Dropdown,
   DropdownItem,
+  Label,
   Text,
   TextInput,
   Textarea,
+  ToggleInput,
 } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
@@ -59,6 +62,7 @@ import {
   DEFAULT_ASSOCIATION_SUBPROPERTY,
   DEFAULT_ATTRIBUTE_SUBPROPERTY,
 } from '@app/common/components/resource/utils';
+import PropertyToggle from './components/property-toggle';
 
 interface ResourceFormProps {
   modelId: string;
@@ -601,6 +605,63 @@ export default function ResourceForm({
             applicationProfile={applicationProfile}
             handleUpdate={handleUpdateByKey}
           />
+
+          {!applicationProfile && (
+            <>
+              <PropertyToggle
+                label={`${translateCommonForm(
+                  'functional',
+                  data.type,
+                  t
+                )} (owl:FunctionalProperty)`}
+                handleUpdate={(value) =>
+                  handleUpdate({
+                    ...data,
+                    functionalProperty: value ?? undefined,
+                  })
+                }
+                value={data.functionalProperty}
+                id="functional-property-toggle"
+                optionalText={t('optional')}
+              />
+              {data.type === ResourceType.ASSOCIATION && (
+                <>
+                  <PropertyToggle
+                    label={`${translateCommonForm(
+                      'transitive',
+                      data.type,
+                      t
+                    )} (owl:TransitiveProperty)`}
+                    handleUpdate={(value) =>
+                      handleUpdate({
+                        ...data,
+                        transitiveProperty: value ?? undefined,
+                      })
+                    }
+                    value={data.transitiveProperty}
+                    id="transitive-property-toggle"
+                    optionalText={t('optional')}
+                  />
+                  <PropertyToggle
+                    label={`${translateCommonForm(
+                      'reflexive',
+                      data.type,
+                      t
+                    )} (owl:ReflexiveProperty)`}
+                    handleUpdate={(value) =>
+                      handleUpdate({
+                        ...data,
+                        reflexiveProperty: value ?? undefined,
+                      })
+                    }
+                    value={data.reflexiveProperty}
+                    id="reflexive-property-toggle"
+                    optionalText={t('optional')}
+                  />
+                </>
+              )}
+            </>
+          )}
 
           <div>
             <Dropdown

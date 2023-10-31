@@ -48,14 +48,18 @@
   "common-view": {
     "associations-contact": "",
     "associations-contact-description": "",
+    "associations-functional": "",
     "associations-return": "",
     "attributes-contact": "",
     "attributes-contact-description": "",
+    "attributes-functional": "",
     "attributes-return": "",
     "no-equivalent-associations": "",
     "no-equivalent-attributes": "",
     "no-upper-associations": "",
-    "no-upper-attributes": ""
+    "no-upper-attributes": "",
+    "reflexive": "",
+    "transitive": ""
   },
   "concept": "",
   "concept-not-added": "",
@@ -150,6 +154,7 @@
   "new-access-request": "",
   "new-access-request-description": "",
   "next-page": "",
+  "no": "",
   "no-assocations": "",
   "no-attributes": "",
   "no-contributors": "",
@@ -217,7 +222,6 @@
   "show-associations": "",
   "show-attributes": "",
   "show-by-information-domain": "",
-  "show-domain-range-references": "",
   "show-from-resource": "",
   "show-only": "",
   "site-cancel": "",
@@ -278,5 +282,6 @@
   "vocabulary-info-fi": "",
   "vocabulary-info-sv": "",
   "vocabulary-results-more": "",
-  "working-version": ""
+  "working-version": "",
+  "yes": ""
 }
