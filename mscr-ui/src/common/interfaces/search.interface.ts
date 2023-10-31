@@ -32,9 +32,27 @@ export interface MscrSearchResult {
   _source: ResultInfo;
 }
 
+export interface Filter {
+  name: string;
+  options: Array<{
+    name: string;
+    count: number;
+  }>;
+}
+
+export interface Bucket {
+  key: string;
+  doc_count: number;
+}
+
 export interface MscrSearchResults {
   hits: {
     hits: MscrSearchResult[];
+  };
+  aggregations: {
+    [key: string]: {
+      buckets: Bucket[];
+    };
   };
 }
 
