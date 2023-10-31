@@ -9,6 +9,7 @@ import {
   IconCopy,
   Link,
   Text,
+  Tooltip,
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import FormattedDate from 'yti-common-ui/formatted-date';
@@ -292,6 +293,61 @@ export default function CommonViewContent({
             <UriList items={data.equivalentResource} lang={displayLang} />
           )}
         </BasicBlock>
+
+        {!applicationProfile && (
+          <>
+            <BasicBlock
+              title={
+                <>
+                  {translateCommonForm('functional', data.type, t)}
+                  <Tooltip
+                    ariaToggleButtonLabelText={''}
+                    ariaCloseButtonLabelText={''}
+                  >
+                    <Text>Tooltip sisältö</Text>
+                  </Tooltip>
+                </>
+              }
+            >
+              {data.functionalProperty ? t('yes') : t('no')}
+            </BasicBlock>
+
+            {data.type === ResourceType.ASSOCIATION && (
+              <>
+                <BasicBlock
+                  title={
+                    <>
+                      {translateCommonForm('transitive', data.type, t)}
+                      <Tooltip
+                        ariaToggleButtonLabelText={''}
+                        ariaCloseButtonLabelText={''}
+                      >
+                        <Text>Tooltip sisältö</Text>
+                      </Tooltip>
+                    </>
+                  }
+                >
+                  {data.transitiveProperty ? t('yes') : t('no')}
+                </BasicBlock>
+                <BasicBlock
+                  title={
+                    <>
+                      {translateCommonForm('reflexive', data.type, t)}
+                      <Tooltip
+                        ariaToggleButtonLabelText={''}
+                        ariaCloseButtonLabelText={''}
+                      >
+                        <Text>Tooltip sisältö</Text>
+                      </Tooltip>
+                    </>
+                  }
+                >
+                  {data.reflexiveProperty ? t('yes') : t('no')}
+                </BasicBlock>
+              </>
+            )}
+          </>
+        )}
 
         <BasicBlock title={translateCommonForm('note', data.type, t)}>
           {getLanguageVersion({

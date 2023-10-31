@@ -49,14 +49,18 @@
   "common-view": {
     "associations-contact": "Anna palautetta assosiaatiosta",
     "associations-contact-description": "Voit antaa palautetta assosiaatiosta tietomallin vastuuorganisaatiolle",
+    "associations-functional": "Yksiarvoinen assosiaatio",
     "associations-return": "Assosiaatio-listaan",
     "attributes-contact": "Anna palautetta attribuutista",
     "attributes-contact-description": "Voit antaa palautetta attribuutista tietomallin vastuuorganisaatiolle",
+    "attributes-functional": "Yksiarvoinen attribuutti",
     "attributes-return": "Attribuutti-listaan",
     "no-equivalent-associations": "Ei vastaavia assosiaatioita",
     "no-equivalent-attributes": "Ei vastaavia attribuutteja",
     "no-upper-associations": "Ei yläassosiaatioita",
-    "no-upper-attributes": "Ei yläattribuutteja"
+    "no-upper-attributes": "Ei yläattribuutteja",
+    "reflexive": "Itseensä viittava assosiaatio",
+    "transitive": "Johdannainen assosiaatio"
   },
   "concept": "Käsite",
   "concept-not-added": "Ei käsitettä",
@@ -151,6 +155,7 @@
   "new-access-request": "Uusi käyttöoikeuspyyntö",
   "new-access-request-description": "Jos haluat muokkausoikeudet sisältöihin, tee käyttöoikeuspyyntö. Pyynnön käsittelee organisaation pääkäyttäjä.",
   "next-page": "Seuraava sivu",
+  "no": "Ei",
   "no-assocations": "Ei assosiaatioita",
   "no-attributes": "Ei attribuutteja",
   "no-contributors": "Ei sisällöntuottajia",
@@ -278,5 +283,6 @@
   "vocabulary-info-fi": "",
   "vocabulary-info-sv": "",
   "vocabulary-results-more": "",
-  "working-version": "Työversio"
+  "working-version": "Työversio",
+  "yes": "Kyllä"
 }

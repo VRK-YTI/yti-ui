@@ -49,14 +49,18 @@
   "common-view": {
     "associations-contact": "Give feedback on the association",
     "associations-contact-description": "You can give feedback on the association to the responsible organization of the datamodel",
+    "associations-functional": "Functional association",
     "associations-return": "To associations list",
     "attributes-contact": "Give feedback on the attribute",
     "attributes-contact-description": "You can give feedback on the attribute to the responsible organization of the datamodel",
+    "attributes-functional": "Functional attribute",
     "attributes-return": "To attribute list",
     "no-equivalent-associations": "No equivalent associations",
     "no-equivalent-attributes": "No equivalent attributes",
     "no-upper-associations": "No upper associations",
-    "no-upper-attributes": "No upper attributes"
+    "no-upper-attributes": "No upper attributes",
+    "reflexive": "Reflexive association",
+    "transitive": "Transitive association"
   },
   "concept": "Concept",
   "concept-not-added": "No concept",
@@ -151,6 +155,7 @@
   "new-access-request": "New access request",
   "new-access-request-description": "Send an access request to apply for content editor rights. Request is processed by organization admin.",
   "next-page": "Next page",
+  "no": "No",
   "no-assocations": "No assocations",
   "no-attributes": "No attributes",
   "no-contributors": "No contributors",
@@ -278,5 +283,6 @@
   "vocabulary-info-fi": "",
   "vocabulary-info-sv": "",
   "vocabulary-results-more": "",
-  "working-version": "Working version"
+  "working-version": "Working version",
+  "yes": "Yes"
 }

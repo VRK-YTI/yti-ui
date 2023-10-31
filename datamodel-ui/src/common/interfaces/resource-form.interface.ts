@@ -43,6 +43,9 @@ export interface ResourceFormType {
   status: Status;
   subResourceOf?: UriData[];
   type: ResourceType;
+  functionalProperty?: boolean;
+  transitiveProperty?: boolean;
+  reflexiveProperty?: boolean;
 }
 
 export const initialAssociation: ResourceFormType = {
