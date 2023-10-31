@@ -60,14 +60,17 @@ export default function Documentation({
   modelId,
   version,
   languages,
+  organizationIds,
 }: {
   modelId: string;
   version?: string;
   languages: string[];
+  organizationIds?: string[];
 }) {
   const { t, i18n } = useTranslation('admin');
   const hasPermission = HasPermission({
     actions: 'EDIT_DATA_MODEL',
+    targetOrganization: organizationIds,
   });
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');

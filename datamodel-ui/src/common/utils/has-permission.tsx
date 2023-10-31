@@ -31,7 +31,7 @@ export type Actions = typeof actions[number];
 
 export interface hasPermissionProps {
   actions: Actions | Actions[];
-  targetOrganization?: string;
+  targetOrganization?: string[];
 }
 
 export interface checkPermissionProps {
@@ -77,7 +77,9 @@ export default function HasPermission({
   return checkPermission({
     user,
     actions: Array.isArray(actions) ? actions : [actions],
-    targetOrganizations: [targetOrganization],
+    targetOrganizations: Array.isArray(targetOrganization)
+      ? targetOrganization
+      : [targetOrganization],
   });
 }
 

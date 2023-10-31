@@ -43,6 +43,7 @@ interface CommonViewProps {
   applicationProfile?: boolean;
   currentModelId?: string;
   disableEdit?: boolean;
+  organizationIds?: string[];
 }
 
 export default function ResourceInfo({
@@ -57,6 +58,7 @@ export default function ResourceInfo({
   applicationProfile,
   currentModelId,
   disableEdit,
+  organizationIds,
 }: CommonViewProps) {
   const { t, i18n } = useTranslation('common');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -64,6 +66,7 @@ export default function ResourceInfo({
   const displayLang = useSelector(selectDisplayLang());
   const hasPermission = HasPermission({
     actions: ['EDIT_ASSOCIATION', 'EDIT_ATTRIBUTE'],
+    targetOrganization: organizationIds,
   });
   const [showTooltip, setShowTooltip] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);

@@ -19,15 +19,18 @@ export default function LinkedDataView({
   modelId,
   version,
   isApplicationProfile,
+  organizationIds,
 }: {
   modelId: string;
   version?: string;
   isApplicationProfile: boolean;
+  organizationIds?: string[];
 }) {
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
   const hasPermission = HasPermission({
     actions: ['EDIT_DATA_MODEL'],
+    targetOrganization: organizationIds,
   });
   const [headerHeight, setHeaderHeight] = useState(0);
   const [renderForm, setRenderForm] = useState(false);
