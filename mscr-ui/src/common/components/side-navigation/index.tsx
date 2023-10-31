@@ -17,7 +17,11 @@ import {useTranslation} from 'next-i18next';
 import {useState} from 'react';
 import {useRouter} from 'next/router';
 
-export default function SideNavigationPanel({ user }: { user?: User }) {
+interface MscrUser extends User {
+  organizations: Array<{ [key: string]: string }>;
+}
+
+export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const groups = user?.organizations;
   const { breakpoint } = useBreakpoints();
   const { t } = useTranslation('common');
