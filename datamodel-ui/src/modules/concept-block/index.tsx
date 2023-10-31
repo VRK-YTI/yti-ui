@@ -130,15 +130,34 @@ export default function ConceptBlock({
         ) : (
           <ConceptView data={concept} />
         )}
-        <Button
-          variant="secondary"
-          style={{ width: 'min-content', whiteSpace: 'nowrap' }}
-          onClick={() => handleOpen()}
-          id="select-concept-button"
-        >
-          {t('select-concept')}
-        </Button>
-
+        <div>
+          <Button
+            variant="secondary"
+            style={{
+              width: 'min-content',
+              marginLeft: '1px',
+              whiteSpace: 'nowrap',
+            }}
+            onClick={() => handleOpen()}
+            id="select-concept-button"
+          >
+            {t('select-concept')}
+          </Button>
+          {concept && (
+            <Button
+              variant="secondary"
+              style={{
+                width: 'min-content',
+                marginLeft: '10px',
+                whiteSpace: 'nowrap',
+              }}
+              onClick={() => setConcept(undefined)}
+              id="delete-concept-button"
+            >
+              {t('delete-concept')}
+            </Button>
+          )}
+        </div>
         <Modal
           appElementId="__next"
           visible={visible}
