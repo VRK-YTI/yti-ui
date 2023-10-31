@@ -13,7 +13,8 @@ export default function convertToNodes(
   modelId: string,
   handleNodeDelete: (id: string) => void,
   applicationProfile?: boolean,
-  refetch?: () => void
+  refetch?: () => void,
+  organizationIds?: string[]
 ): Node[] {
   if (!nodes || nodes.length < 1) {
     return [];
@@ -22,7 +23,13 @@ export default function convertToNodes(
   if (!hiddenNodes || hiddenNodes.length < 1) {
     return nodes.map((node) => {
       return !node.identifier.includes(':')
-        ? createClassNode(node, modelId, applicationProfile, refetch)
+        ? createClassNode(
+            node,
+            modelId,
+            applicationProfile,
+            refetch,
+            organizationIds
+          )
         : createExternalNode(node, applicationProfile);
     });
   }
@@ -30,7 +37,13 @@ export default function convertToNodes(
   return [
     ...nodes.map((node) => {
       return !node.identifier.includes(':')
-        ? createClassNode(node, modelId, applicationProfile, refetch)
+        ? createClassNode(
+            node,
+            modelId,
+            applicationProfile,
+            refetch,
+            organizationIds
+          )
         : createExternalNode(node, applicationProfile);
     }),
     ...hiddenNodes.map((node) =>

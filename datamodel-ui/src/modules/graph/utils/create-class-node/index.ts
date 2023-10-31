@@ -7,7 +7,8 @@ export default function createClassNode(
   node: VisualizationType,
   modelId: string,
   applicationProfile?: boolean,
-  refetch?: () => void
+  refetch?: () => void,
+  organizationIds?: string[]
 ): Node<ClassNodeDataType> {
   return {
     id: node.identifier,
@@ -35,6 +36,9 @@ export default function createClassNode(
             })
           : []),
       ],
+      ...(typeof organizationIds !== 'undefined'
+        ? { organizationIds: organizationIds }
+        : undefined),
       ...(refetch ? { refetch: refetch } : {}),
     },
     type: 'classNode',

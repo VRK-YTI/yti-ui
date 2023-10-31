@@ -49,7 +49,10 @@ interface ClassNodeProps {
 
 export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const { i18n } = useTranslation('common');
-  const hasPermission = HasPermission({ actions: 'EDIT_CLASS' });
+  const hasPermission = HasPermission({
+    actions: 'EDIT_CLASS',
+    targetOrganization: data.organizationIds,
+  });
   const dispatch = useStoreDispatch();
   const { getNodes, getEdges } = useReactFlow();
   const globalSelected = useSelector(selectSelected());

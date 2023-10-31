@@ -193,6 +193,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
           modelId={modelId}
           version={version}
           applicationProfile={modelInfo?.type === 'PROFILE'}
+          organizationIds={organizationIds}
         >
           <Drawer views={views} />
           <ModelTools

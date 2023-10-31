@@ -50,6 +50,7 @@ interface GraphProps {
   modelId: string;
   version?: string;
   applicationProfile?: boolean;
+  organizationIds?: string[];
   children: JSX.Element[];
 }
 
@@ -57,6 +58,7 @@ const GraphContent = ({
   modelId,
   version,
   applicationProfile,
+  organizationIds,
   children,
 }: GraphProps) => {
   const { i18n } = useTranslation('common');
@@ -253,7 +255,8 @@ const GraphContent = ({
           modelId,
           deleteNodeById,
           applicationProfile,
-          applicationProfile ? refetch : undefined
+          applicationProfile ? refetch : undefined,
+          organizationIds
         )
       );
       setEdges(
@@ -277,6 +280,7 @@ const GraphContent = ({
     modelId,
     refetch,
     deleteNodeById,
+    organizationIds,
   ]);
 
   useEffect(() => {
@@ -374,6 +378,7 @@ export default function Graph({
   modelId,
   version,
   applicationProfile,
+  organizationIds,
   children,
 }: GraphProps) {
   return (
@@ -383,6 +388,7 @@ export default function Graph({
           modelId={modelId}
           version={version}
           applicationProfile={applicationProfile}
+          organizationIds={organizationIds}
         >
           {children}
         </GraphContent>
