@@ -25,6 +25,7 @@ import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import getConnectedElements from '../graph/utils/get-connected-elements';
+import useSetView from '@app/common/utils/hooks/use-set-view';
 
 export default function SearchView({
   modelId,
@@ -35,6 +36,7 @@ export default function SearchView({
 }) {
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
+  const { setView } = useSetView();
   const { setPage, getPage } = useSetPage();
   const { getNodes, getEdges } = useReactFlow();
   const dispatch = useStoreDispatch();
@@ -65,6 +67,7 @@ export default function SearchView({
 
   const handleItemClick = (data: InternalClass) => {
     const resourceModelId = getPrefixFromURI(data.namespace);
+    setView(getResourceType(data.resourceType), 'info', data.identifier);
     dispatch(
       setSelected(
         data.identifier,
