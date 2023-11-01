@@ -1,4 +1,4 @@
-import {FacetsWrapper, ResultsWrapper, SearchContainer} from '@app/modules/search-screen/search-screen.styles';
+import {FacetsWrapper, ResultsWrapper, SearchContainer, CloseButton} from '@app/modules/search-screen/search-screen.styles';
 import SearchResult from '@app/common/components/search-result';
 import {useGetMscrSearchResultsQuery} from '@app/common/components/mscr-search/mscr-search.slice';
 import useUrlState, {initialUrlState, UrlState} from '@app/common/utils/hooks/use-url-state';
@@ -47,75 +47,10 @@ export default function SearchScreen() {
 
   let filters : Filter[] = [];
   if (mscrSearchResults) {
-    console.log('here');
     Object.keys(mscrSearchResults.aggregations).forEach((key) => {
       const newFilter : Filter = makeFilter(key, mscrSearchResults.aggregations[key].buckets);
       filters = filters.concat(newFilter);
     });
-    // if (aggregations['sterms#format']) {
-    //   const formatFilter : Filter = {
-    //     name: 'Format',
-    //     options: [
-    //       {
-    //         name: 'CSV',
-    //         count: aggregations['sterms#format'].buckets.find((b) => b.key == 'CSV')?.doc_count ?? 0
-    //       },
-    //       {
-    //         name: 'JSONSCHEMA',
-    //         count: aggregations['sterms#format'].buckets.find((b) => b.key == 'JSONSCHEMA')?.doc_count ?? 0
-    //       }
-    //     ]
-    //   };
-    //   filters = filters.concat(formatFilter);
-    // }
-    // if (aggregations['sterms#state']) {
-    //   const stateFilter : Filter = {
-    //     name: 'State',
-    //     options: [
-    //       {
-    //         name: 'Draft',
-    //         count: aggregations['sterms#state'].buckets.find((b) => b.key == 'DRAFT')?.doc_count ?? 0
-    //       },
-    //       {
-    //         name: 'Published',
-    //         count: aggregations['sterms#state'].buckets.find((b) => b.key == 'PUBLISHED')?.doc_count ?? 0
-    //       }
-    //     ]
-    //   };
-    //   filters = filters.concat(stateFilter);
-    // }
-    // if (aggregations['sterms#status']) {
-    //   const stateFilter : Filter = {
-    //     name: 'Status',
-    //     options: [
-    //       {
-    //         name: 'Draft',
-    //         count: aggregations['sterms#status'].buckets.find((b) => b.key == 'DRAFT')?.doc_count ?? 0
-    //       },
-    //       {
-    //         name: 'Published',
-    //         count: aggregations['sterms#status'].buckets.find((b) => b.key == 'PUBLISHED')?.doc_count ?? 0
-    //       }
-    //     ]
-    //   };
-    //   filters = filters.concat(stateFilter);
-    // }
-    // if (aggregations['sterms#type']) {
-    //   const typeFilter : Filter = {
-    //     name: 'Type',
-    //     options: [
-    //       {
-    //         name: 'Schema',
-    //         count: aggregations['sterms#type'].buckets.find((b) => b.key == 'SCHEMA')?.doc_count ?? 0
-    //       },
-    //       {
-    //         name: 'Crosswalk',
-    //         count: aggregations['sterms#type'].buckets.find((b) => b.key == 'CROSSWALK')?.doc_count ?? 0
-    //       }
-    //     ]
-    //   };
-    //   filters = filters.concat(typeFilter);
-    // }
   }
 
   return (
@@ -124,16 +59,15 @@ export default function SearchScreen() {
         {/* Groups of facets for different contexts, made with search-filter-set */}
         <SearchFilterSet title="Just one set for now" filters={filters} />
       </FacetsWrapper>
+      <CloseButton onClick={handleClose}>
+        <IconClose />
+      </CloseButton>
       <ResultsWrapper>
         {/* Only a list of results if searching all of mscr, but two lists if searching own workspace */}
         {mscrSearchResults?.hits.hits.map((hit) => (
           <SearchResult key={hit._id} hit={hit} />
         ))}
       </ResultsWrapper>
-      {/* Close button */}
-      <button onClick={handleClose}>
-        <IconClose />
-      </button>
     </SearchContainer>
   );
 }

@@ -54,7 +54,7 @@ export default function SearchBar() {
           if (typeof value === 'string') {
             setIsSearchActive(true);
             search(selectedType, value);
-          };
+          }
         }}
         onChange={(value) => handleChange(value?.toString() ?? '')}
         maxLength={TEXT_INPUT_MAX}

@@ -9,10 +9,3 @@ export const FacetTitle = styled(Heading)`
   }
 `;
 
-export const NavigationHeading = styled(Heading)`
-  // Adding &-characters increases the specificity so you can override styles
-  && {
-    color: ${(props) => props.theme.suomifi.colors.depthDark2};
-    font-size: 16px;
-  }
-`;
