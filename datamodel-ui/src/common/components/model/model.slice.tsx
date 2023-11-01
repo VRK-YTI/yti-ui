@@ -5,6 +5,7 @@ import { NewModel } from '@app/common/interfaces/new-model.interface';
 import {
   ModelType,
   ModelUpdatePayload,
+  VersionedModelUpdatePayload,
 } from '@app/common/interfaces/model.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
@@ -27,9 +28,14 @@ export const modelApi = createApi({
         data: value,
       }),
     }),
-    getModel: builder.query<ModelType, string>({
-      query: (modelId) => ({
-        url: `/model/${modelId}`,
+    getModel: builder.query<ModelType, { modelId: string; version?: string }>({
+      query: (value) => ({
+        url: `/model/${value.modelId}`,
+        params: {
+          ...(value.version && {
+            version: value.version,
+          }),
+        },
         method: 'GET',
       }),
     }),
@@ -55,6 +61,55 @@ export const modelApi = createApi({
         method: 'DELETE',
       }),
     }),
+    createRelease: builder.mutation<
+      string,
+      { modelId: string; version: string; status: string }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/release`,
+        params: {
+          status: value.status,
+          version: value.version,
+        },
+        method: 'POST',
+      }),
+    }),
+    getPriorVersions: builder.query<
+      {
+        label: { [key: string]: string };
+        version: string;
+        status: string;
+        versionIri: string;
+      }[],
+      { modelId: string; version?: string }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/versions`,
+        params: {
+          ...(value.version && {
+            version: value.version,
+          }),
+        },
+        method: 'GET',
+      }),
+    }),
+    updateVersionedModel: builder.mutation<
+      string,
+      {
+        payload: VersionedModelUpdatePayload;
+        modelId: string;
+        version: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/version`,
+        params: {
+          version: value.version,
+        },
+        data: value.payload,
+        method: 'PUT',
+      }),
+    }),
   }),
 });
 
@@ -63,11 +118,20 @@ export const {
   useGetModelQuery,
   useUpdateModelMutation,
   useDeleteModelMutation,
+  useCreateReleaseMutation,
+  useGetPriorVersionsQuery,
+  useUpdateVersionedModelMutation,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
-export const { createModel, getModel, updateModel, deleteModel } =
-  modelApi.endpoints;
+export const {
+  createModel,
+  getModel,
+  updateModel,
+  deleteModel,
+  createRelease,
+  getPriorVersions,
+} = modelApi.endpoints;
 
 // Slice setup below
 
@@ -141,10 +205,8 @@ const initialState = {
     resetPosition: false,
     savePosition: false,
     showAttributes: true,
-    showCardinality: false,
-    showStatus: false,
-    showNotes: false,
-    showOriginalClass: false,
+    showAssociations: true,
+    showDomainRange: true,
     showAssociationRestrictions: true,
     showAttributeRestrictions: true,
     showByName: true,

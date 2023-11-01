@@ -59,12 +59,22 @@ export const classApi = createApi({
     }),
     getClass: builder.query<
       ClassType,
-      { modelId: string; classId: string; applicationProfile?: boolean }
+      {
+        modelId: string;
+        version?: string;
+        classId: string;
+        applicationProfile?: boolean;
+      }
     >({
       query: (value) => ({
         url: `/class/${pathForModelType(value.applicationProfile)}${
           value.modelId
         }/${value.classId}`,
+        params: {
+          ...(value.version && {
+            version: value.version,
+          }),
+        },
         method: 'GET',
       }),
     }),
@@ -108,28 +118,80 @@ export const classApi = createApi({
         method: 'GET',
       }),
     }),
-    addNodeShapePropertyReference: builder.mutation<
+    addPropertyReference: builder.mutation<
       string,
-      { prefix: string; nodeshapeId: string; uri: string }
+      {
+        prefix: string;
+        identifier: string;
+        uri: string;
+        applicationProfile: boolean;
+      }
     >({
       query: (value) => ({
-        url: `/class/profile/${value.prefix}/${value.nodeshapeId}/properties`,
+        url: `/class/${pathForModelType(value.applicationProfile)}${
+          value.prefix
+        }/${value.identifier}/properties`,
         params: {
           uri: value.uri,
         },
         method: 'PUT',
       }),
     }),
-    deleteNodeShapePropertyReference: builder.mutation<
+    deletePropertyReference: builder.mutation<
       string,
-      { prefix: string; nodeshapeId: string; uri: string }
+      {
+        prefix: string;
+        identifier: string;
+        uri: string;
+        currentTarget?: string;
+        applicationProfile: boolean;
+      }
     >({
       query: (value) => ({
-        url: `/class/profile/${value.prefix}/${value.nodeshapeId}/properties`,
+        url: `/class/${pathForModelType(value.applicationProfile)}${
+          value.prefix
+        }/${value.identifier}/properties`,
         params: {
           uri: value.uri,
+          currentTarget: value.currentTarget,
         },
         method: 'DELETE',
+      }),
+    }),
+    updateClassResrictionTarget: builder.mutation<
+      string,
+      {
+        prefix: string;
+        identifier: string;
+        uri: string;
+        currentTarget?: string;
+        newTarget?: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/class/library/${value.prefix}/${value.identifier}/properties/modify`,
+        params: {
+          uri: value.uri,
+          currentTarget: value.currentTarget,
+          newTarget: value.newTarget,
+        },
+        method: 'PUT',
+      }),
+    }),
+    renameClass: builder.mutation<
+      string,
+      {
+        prefix: string;
+        identifier: string;
+        newIdentifier: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/class/${value.prefix}/${value.identifier}/rename`,
+        params: {
+          newIdentifier: value.newIdentifier,
+        },
+        method: 'POST',
       }),
     }),
   }),
@@ -168,8 +230,10 @@ export const {
   useGetNodeShapesQuery,
   useDeleteClassMutation,
   useGetClassExistsQuery,
-  useAddNodeShapePropertyReferenceMutation,
-  useDeleteNodeShapePropertyReferenceMutation,
+  useAddPropertyReferenceMutation,
+  useDeletePropertyReferenceMutation,
+  useRenameClassMutation,
+  useUpdateClassResrictionTargetMutation,
   util: { getRunningQueriesThunk },
 } = classApi;
 

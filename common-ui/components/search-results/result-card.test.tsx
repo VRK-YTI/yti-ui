@@ -7,6 +7,7 @@ describe('result-card-expander', () => {
     render(
       <ResultCard
         description="test description"
+        noDescriptionText="no description"
         title="title"
         titleLink=""
         type="type"
@@ -27,6 +28,7 @@ describe('result-card-expander', () => {
     render(
       <ResultCard
         description="test description"
+        noDescriptionText="no description"
         title="title"
         titleLink=""
         type="type"

@@ -35,46 +35,35 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import HasPermission from '@app/common/utils/has-permission';
-import { useAddNodeShapePropertyReferenceMutation } from '@app/common/components/class/class.slice';
+import { useAddPropertyReferenceMutation } from '@app/common/components/class/class.slice';
 import ResourceModal from '@app/modules/class-view/resource-modal';
 import getConnectedElements from '../utils/get-connected-elements';
+import { UriData } from '@app/common/interfaces/uri.interface';
+import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
 
 interface ClassNodeProps {
   id: string;
-  data: {
-    identifier: string;
-    label: { [key: string]: string };
-    resources: {
-      label: { [key: string]: string };
-      identifier: string;
-      type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
-      codeLists?: string[];
-      dataType?: string | null;
-      maxCount?: number | null;
-      minCount?: number | null;
-    }[];
-    modelId?: string;
-    resourceType?: 'association' | 'attribute';
-    applicationProfile?: boolean;
-    refetch?: () => void;
-  };
+  data: ClassNodeDataType;
   selected: boolean;
 }
 
 export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const { i18n } = useTranslation('common');
-  const hasPermission = HasPermission({ actions: 'EDIT_CLASS' });
+  const hasPermission = HasPermission({
+    actions: 'EDIT_CLASS',
+    targetOrganization: data.organizationIds,
+  });
   const dispatch = useStoreDispatch();
   const { getNodes, getEdges } = useReactFlow();
   const globalSelected = useSelector(selectSelected());
   const globalHover = useSelector(selectHovered());
   const globalShowAttributes = useSelector(selectModelTools()).showAttributes;
   const displayLang = useSelector(selectDisplayLang());
+  const tools = useSelector(selectModelTools());
   const [showAttributes, setShowAttributes] = useState(true);
   const [showTooltip, setShowTooltip] = useState(false);
   const [hover, setHover] = useState(false);
-  const [addReference, addReferenceResult] =
-    useAddNodeShapePropertyReferenceMutation();
+  const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
 
   const handleTitleClick = () => {
     if (globalSelected.id !== id) {
@@ -96,8 +85,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   };
 
   const handleMenuFollowUp = (value: {
-    label?: string;
-    uri: string;
+    uriData: UriData;
     type: ResourceType;
     mode: 'select' | 'create';
   }) => {
@@ -107,8 +95,9 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
 
     addReference({
       prefix: data.modelId,
-      nodeshapeId: data.identifier,
-      uri: value.uri,
+      identifier: data.identifier,
+      uri: value.uriData.uri,
+      applicationProfile: true,
     });
   };
 
@@ -222,25 +211,47 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
 
       {showAttributes &&
         data.resources &&
-        data.resources.map((r) => (
-          <Resource
-            key={`${id}-child-${r.identifier}`}
-            className="node-resource"
-            onClick={() => handleResourceClick(r.identifier, r.type)}
-            $highlight={getResourceHighlighted(r.identifier, r.type)}
-            onMouseEnter={() => handleResourceHover(r.identifier, r.type)}
-            onMouseLeave={() => handleResourceHover(r.identifier, r.type, true)}
-          >
-            {data.applicationProfile &&
-              (r.type === ResourceType.ASSOCIATION ? (
-                <IconSwapVertical />
-              ) : (
-                <IconRows />
-              ))}
+        data.resources
+          .filter((r) => {
+            if (
+              r.type === ResourceType.ATTRIBUTE &&
+              ((data.applicationProfile && tools.showAttributeRestrictions) ||
+                (!data.applicationProfile && tools.showAttributes))
+            ) {
+              return true;
+            }
 
-            {renderResourceLabel(r)}
-          </Resource>
-        ))}
+            if (
+              r.type === ResourceType.ASSOCIATION &&
+              ((data.applicationProfile && tools.showAssociationRestrictions) ||
+                (!data.applicationProfile && tools.showAssociations))
+            ) {
+              return true;
+            }
+
+            return false;
+          })
+          .map((r) => (
+            <Resource
+              key={`${id}-child-${r.identifier}`}
+              className="node-resource"
+              onClick={() => handleResourceClick(r.identifier, r.type)}
+              $highlight={getResourceHighlighted(r.identifier, r.type)}
+              onMouseEnter={() => handleResourceHover(r.identifier, r.type)}
+              onMouseLeave={() =>
+                handleResourceHover(r.identifier, r.type, true)
+              }
+            >
+              {data.applicationProfile &&
+                (r.type === ResourceType.ASSOCIATION ? (
+                  <IconSwapVertical />
+                ) : (
+                  <IconRows />
+                ))}
+
+              {renderResourceLabel(r)}
+            </Resource>
+          ))}
     </ClassNodeDiv>
   );
 
@@ -270,6 +281,10 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   }
 
   function renderClassLabel() {
+    if (tools.showById) {
+      return `${data.modelId}:${data.identifier}`;
+    }
+
     if (!data.applicationProfile) {
       return getLanguageVersion({
         data: data.label,
@@ -292,6 +307,14 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   function renderResourceLabel(
     resource: ClassNodeProps['data']['resources'][0]
   ) {
+    if (tools.showById) {
+      return (
+        <>
+          {[getMinMax(resource)]} {getIdentifier(resource)}
+        </>
+      );
+    }
+
     if (!data.applicationProfile) {
       return getLanguageVersion({
         data: resource.label,

@@ -9,9 +9,12 @@ describe('search-count-tags', () => {
   it('should render component', () => {
     mockRouter.setCurrentUrl('/');
 
-    render(<SearchCountTags title="4 items found" />, {
-      wrapper: themeProvider,
-    });
+    render(
+      <SearchCountTags title="4 items found" hiddenTitle="hidden title" />,
+      {
+        wrapper: themeProvider,
+      }
+    );
 
     expect(screen.getByText(/4/)).toBeInTheDocument();
   });

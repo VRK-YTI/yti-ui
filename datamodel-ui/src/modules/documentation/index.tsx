@@ -26,9 +26,12 @@ import {
   setHasChanges,
   useGetModelQuery,
   useUpdateModelMutation,
+  useUpdateVersionedModelMutation,
 } from '@app/common/components/model/model.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import generatePayload from '../model/generate-payload';
+import generatePayloadUpdate, {
+  generatePayloadVersionedUpdate,
+} from '../model/generate-payload';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import { compareLocales } from '@app/common/utils/compare-locals';
@@ -51,15 +54,24 @@ import { TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import Image from 'next/image';
 import { IconBold, IconItalics, IconQuotes } from 'suomifi-icons';
+import HasPermission from '@app/common/utils/has-permission';
 
 export default function Documentation({
   modelId,
+  version,
   languages,
+  organizationIds,
 }: {
   modelId: string;
+  version?: string;
   languages: string[];
+  organizationIds?: string[];
 }) {
   const { t, i18n } = useTranslation('admin');
+  const hasPermission = HasPermission({
+    actions: 'EDIT_DATA_MODEL',
+    targetOrganization: organizationIds,
+  });
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
   const ref = useRef<HTMLDivElement>(null);
@@ -81,8 +93,13 @@ export default function Documentation({
     end: 0,
   });
 
-  const { data: modelData, refetch } = useGetModelQuery(modelId);
+  const { data: modelData, refetch } = useGetModelQuery({
+    modelId: modelId,
+    version: version,
+  });
   const [updateModel, result] = useUpdateModelMutation();
+  const [updateVersionedModel, versionedResult] =
+    useUpdateVersionedModelMutation();
 
   const validImgUrl = (url: string): boolean => {
     const regex = /^http(s)?:\/\/.*\.(jpg|jpeg|png|gif)$/g;
@@ -122,13 +139,29 @@ export default function Documentation({
       return;
     }
 
-    const payload = generatePayload({ ...modelData, documentation: value });
+    if (!version) {
+      const payload = generatePayloadUpdate({
+        ...modelData,
+        documentation: value,
+      });
 
-    updateModel({
-      payload: payload,
-      prefix: modelData.prefix,
-      isApplicationProfile: modelData.type === 'PROFILE',
-    });
+      updateModel({
+        payload: payload,
+        prefix: modelData.prefix,
+        isApplicationProfile: modelData.type === 'PROFILE',
+      });
+    } else {
+      const payload = generatePayloadVersionedUpdate({
+        ...modelData,
+        documentation: value,
+      });
+
+      updateVersionedModel({
+        payload: payload,
+        modelId: modelId,
+        version: version,
+      });
+    }
   };
 
   const handleCancel = () => {
@@ -244,13 +277,13 @@ export default function Documentation({
   }, [modelData, i18n.language]);
 
   useEffect(() => {
-    if (result.isSuccess) {
+    if (result.isSuccess || versionedResult.isSuccess) {
       setIsEdit(false);
       disableConfirmation();
       refetch();
       dispatch(setNotification('DOCUMENTATION_EDIT'));
     }
-  }, [result, refetch, disableConfirmation, dispatch]);
+  }, [result, versionedResult, refetch, disableConfirmation, dispatch]);
 
   useEffect(() => {
     if (!textAreaRef.current) {
@@ -275,43 +308,44 @@ export default function Documentation({
         <HeaderRow>
           <Text variant="bold">{t('documentation')}</Text>
 
-          {isEdit ? (
-            <div
-              style={{
-                display: 'flex',
-                gap: '15px',
-              }}
-            >
-              <Button onClick={() => handleSubmit()} id="submit-button">
-                {result.isLoading ? (
-                  <div role="alert">
-                    <StyledSpinner
-                      variant="small"
-                      text={t('saving')}
-                      textAlign="right"
-                    />
-                  </div>
-                ) : (
-                  <>{t('save')}</>
-                )}
-              </Button>
+          {hasPermission &&
+            (isEdit ? (
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '15px',
+                }}
+              >
+                <Button onClick={() => handleSubmit()} id="submit-button">
+                  {result.isLoading || versionedResult.isLoading ? (
+                    <div role="alert">
+                      <StyledSpinner
+                        variant="small"
+                        text={t('saving')}
+                        textAlign="right"
+                      />
+                    </div>
+                  ) : (
+                    <>{t('save')}</>
+                  )}
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => handleCancel()}
+                  id="cancel-button"
+                >
+                  {t('cancel-variant')}
+                </Button>
+              </div>
+            ) : (
               <Button
                 variant="secondary"
-                onClick={() => handleCancel()}
-                id="cancel-button"
+                onClick={() => setIsEdit(true)}
+                id="edit-button"
               >
-                {t('cancel-variant')}
+                {t('edit')}
               </Button>
-            </div>
-          ) : (
-            <Button
-              variant="secondary"
-              onClick={() => setIsEdit(true)}
-              id="edit-button"
-            >
-              {t('edit')}
-            </Button>
-          )}
+            ))}
         </HeaderRow>
       </StaticHeader>
 

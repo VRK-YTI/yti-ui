@@ -14,11 +14,9 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { getPrefixFromURI } from '@app/common/utils/get-value';
 import useSetPage from '@app/common/utils/hooks/use-set-page';
-import useSetView from '@app/common/utils/hooks/use-set-view';
 import { translateResourceType } from '@app/common/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useReactFlow } from 'reactflow';
@@ -27,8 +25,15 @@ import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import getConnectedElements from '../graph/utils/get-connected-elements';
+import useSetView from '@app/common/utils/hooks/use-set-view';
 
-export default function SearchView({ modelId }: { modelId: string }) {
+export default function SearchView({
+  modelId,
+  version,
+}: {
+  modelId: string;
+  version?: string;
+}) {
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
   const { setView } = useSetView();
@@ -46,8 +51,8 @@ export default function SearchView({ modelId }: { modelId: string }) {
     pageSize: 20,
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [],
+    fromVersion: version,
   });
-  const router = useRouter();
 
   const getResourceType = (type: ResourceType): keyof ViewList => {
     switch (type) {
@@ -62,8 +67,7 @@ export default function SearchView({ modelId }: { modelId: string }) {
 
   const handleItemClick = (data: InternalClass) => {
     const resourceModelId = getPrefixFromURI(data.namespace);
-
-    setView(getResourceType(data.resourceType), 'info');
+    setView(getResourceType(data.resourceType), 'info', data.identifier);
     dispatch(
       setSelected(
         data.identifier,
@@ -71,16 +75,6 @@ export default function SearchView({ modelId }: { modelId: string }) {
         resourceModelId
       )
     );
-    router.replace({
-      pathname: `${modelId}/${data.resourceType.toLowerCase()}/${
-        resourceModelId !== modelId ? `${resourceModelId}:` : ''
-      }${data.identifier}`,
-      query: {
-        lang: Array.isArray(router.query.lang)
-          ? router.query.lang[0]
-          : router.query.lang,
-      },
-    });
   };
 
   const handleItemHover = (id?: string, type?: string) => {

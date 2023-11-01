@@ -2,22 +2,21 @@
 import {
   Checkbox,
   ExternalLink,
-  IconCalendar,
+  IconApplicationProfile,
+  IconGrid,
   RadioButton,
   Text,
 } from 'suomifi-ui-components';
-import { StatusChip, ResultsTable } from './resource-list.styles';
+import { ResultsTable } from './resource-list.styles';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { i18n, useTranslation } from 'next-i18next';
-import {
-  translateModelType,
-  translateResourceType,
-} from '@app/common/utils/translation-helpers';
+import { translateModelType } from '@app/common/utils/translation-helpers';
 import { ServiceCategory } from '@app/common/interfaces/service-categories.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
-import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Type } from '@app/common/interfaces/type.interface';
+import { Status } from 'yti-common-ui/search-results/result-card.styles';
+import { Status as StatusType } from '@app/common/interfaces/status.interface';
 
 export interface ResultType {
   target: {
@@ -26,12 +25,12 @@ export interface ResultType {
     linkLabel: string;
     link: string;
     note: string;
-    status: string;
-    isValid?: boolean;
+    status: StatusType;
   };
-  partOf?: {
+  datamodel?: {
     label: string;
-    type: ResourceType | Type;
+    type: Type;
+    status: StatusType;
     domains: string[];
     uri: string;
   };
@@ -144,7 +143,8 @@ export default function ResourceList({
         {extraHeader && extraHeader}
         <tr>
           {renderHeaderButton()}
-          {(!extraHeader || items.filter((item) => item.partOf).length > 0) && (
+          {(!extraHeader ||
+            items.filter((item) => item.datamodel).length > 0) && (
             <td>
               <Text variant="bold">{t('data-model')}</Text>
             </td>
@@ -175,27 +175,30 @@ export default function ResourceList({
                 </ExternalLink>
               </div>
             </td>
-            {item.partOf && (
+            {item.datamodel && (
               <td>
-                {item.partOf?.type ? (
+                {item.datamodel?.type ? (
                   <div>
-                    <Text>{item.partOf.label}</Text>
-                    <div>
-                      <Text>
-                        <IconCalendar />{' '}
-                        {['LIBRARY', 'PROFILE'].includes(item.partOf.type)
-                          ? translateModelType(item.partOf.type as Type, t)
-                          : translateResourceType(
-                              item.partOf.type as ResourceType,
-                              t
-                            )}
-                      </Text>{' '}
-                      <StatusChip $isValid={item.target.isValid}>
-                        {translateStatus(item.target.status, t)}
-                      </StatusChip>
+                    <Text>{item.datamodel.label}</Text>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                      }}
+                    >
+                      {item.datamodel.type === 'PROFILE' ? (
+                        <IconApplicationProfile />
+                      ) : (
+                        <IconGrid />
+                      )}
+                      <Text>{translateModelType(item.datamodel.type, t)}</Text>
+                      <Status status={item.datamodel.status}>
+                        {translateStatus(item.datamodel.status, t)}
+                      </Status>
                     </div>
                     <Text>
-                      {item.partOf.domains
+                      {item.datamodel.domains
                         ?.map((domain) =>
                           getLanguageVersion({
                             data: serviceCategories?.find(
@@ -209,7 +212,7 @@ export default function ResourceList({
                   </div>
                 ) : (
                   <div>
-                    <Text>{item.partOf?.uri}</Text>
+                    <Text>{item.datamodel?.uri}</Text>
                   </div>
                 )}
               </td>

@@ -8,6 +8,7 @@ export interface ClassFormType {
   concept?: ConceptType;
   equivalentClass?: UriData[];
   identifier: string;
+  uri: string;
   label: { [key: string]: string };
   note: { [key: string]: string };
   subClassOf?: UriData[];
@@ -24,6 +25,7 @@ export const initialClassForm: ClassFormType = {
   concept: undefined,
   equivalentClass: [],
   identifier: '',
+  uri: '',
   label: {},
   note: {},
   subClassOf: [],

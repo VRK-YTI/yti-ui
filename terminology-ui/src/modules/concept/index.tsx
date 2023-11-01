@@ -35,13 +35,14 @@ import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
 import { getProperty } from '@app/common/utils/get-property';
-import { MainTitle, BadgeBar, Badge } from 'yti-common-ui/title-block';
+import { MainTitle, BadgeBar } from 'yti-common-ui/title-block';
 import HasPermission from '@app/common/utils/has-permission';
 import Link from 'next/link';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import isEmail from 'validator/lib/isEmail';
 import RemovalModal from '@app/common/components/removal-modal';
 import { getBlockData } from './utils';
+import { Status } from 'yti-common-ui/search-results/result-card.styles';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -151,9 +152,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           <BadgeBar>
             {t('heading')}
             <PropertyValue property={terminology?.properties.prefLabel} />
-            <Badge $isValid={status === 'VALID'}>
-              {translateStatus(status, t)}
-            </Badge>
+            <Status status={status}>{translateStatus(status, t)}</Status>
           </BadgeBar>
 
           <TermBlock title={<h2>{t('field-terms-label')}</h2>} data={terms} />

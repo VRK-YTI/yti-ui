@@ -40,16 +40,3 @@ export const BadgeBarWrapper = styled.div<{
     width: 20px !important;
   }
 `;
-
-export const Badge = styled.span<{ $isValid?: boolean }>`
-  line-height: 18px;
-  border-radius: 10px;
-  padding: 0 5px;
-  background-color: ${(props) =>
-    props.$isValid
-      ? props.theme.suomifi.colors.successBase
-      : props.theme.suomifi.colors.depthDark2};
-  color: white;
-  height: 18px;
-  display: inline-block;
-`;

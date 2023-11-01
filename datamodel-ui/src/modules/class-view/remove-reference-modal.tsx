@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { Text, Button, ModalTitle, InlineAlert } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import getApiError from '@app/common/utils/get-api-errors';
-import { useDeleteNodeShapePropertyReferenceMutation } from '@app/common/components/class/class.slice';
+import { useDeletePropertyReferenceMutation } from '@app/common/components/class/class.slice';
 import { translateDeleteReferenceModalDescription } from '@app/common/utils/translation-helpers';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
@@ -19,6 +19,8 @@ interface RemoveReferenceModalProps {
   classId: string;
   uri: string;
   handleReturn: () => void;
+  applicationProfile?: boolean;
+  currentTarget?: string;
 }
 
 export default function RemoveReferenceModal({
@@ -28,12 +30,13 @@ export default function RemoveReferenceModal({
   classId,
   uri,
   handleReturn,
+  applicationProfile,
+  currentTarget,
 }: RemoveReferenceModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [error, setError] = useState(false);
-  const [deleteReference, result] =
-    useDeleteNodeShapePropertyReferenceMutation();
+  const [deleteReference, result] = useDeletePropertyReferenceMutation();
   const [showModal, setShowModal] = useState(false);
 
   const handleClose = () => {
@@ -44,8 +47,10 @@ export default function RemoveReferenceModal({
   const handleDelete = () => {
     deleteReference({
       prefix: modelId,
-      nodeshapeId: classId,
+      identifier: classId,
       uri: uri,
+      applicationProfile: applicationProfile ?? false,
+      currentTarget,
     });
   };
 

@@ -21,10 +21,15 @@ export default function useSetView() {
       return;
     }
 
+    const query = {
+      ...(router.query.lang && { lang: router.query.lang }),
+      ...(router.query.ver && { ver: router.query.ver }),
+    };
+
     if (key === 'info' || !subkey || subkey === 'list') {
       router.replace({
         pathname: `${modelId}/${key}`,
-        query: router.query.lang && { lang: router.query.lang },
+        query: query,
       });
       return;
     }
@@ -44,7 +49,7 @@ export default function useSetView() {
 
     router.replace({
       pathname: `${modelId}/${type}/${id}`,
-      query: router.query.lang && { lang: router.query.lang },
+      query: query,
     });
   };
 

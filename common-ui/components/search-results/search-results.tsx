@@ -13,6 +13,8 @@ export interface SearchResultData {
   icon?: ReactNode;
   status?: string;
   partOf?: string[];
+  identifier?: string;
+  version?: string;
   title: string;
   titleLink: string;
   type: string;
@@ -37,6 +39,7 @@ interface SearchResultsProps {
   noChip?: boolean;
   tagsTitle: string;
   tagsHiddenTitle: string;
+  withDefaultStatuses?: string[];
   extra?:
     | {
         expander: {
@@ -71,6 +74,7 @@ export default function SearchResults({
   noChip,
   tagsTitle,
   tagsHiddenTitle,
+  withDefaultStatuses,
   extra,
 }: SearchResultsProps) {
   const { isSmall } = useBreakpoints();
@@ -86,6 +90,7 @@ export default function SearchResults({
         hiddenTitle={tagsHiddenTitle}
         organizations={organizations}
         types={types}
+        withDefaultStatuses={withDefaultStatuses}
         domains={domains}
       />
       <ResultWrapper $isSmall={isSmall} id="search-results">
@@ -101,6 +106,8 @@ export default function SearchResults({
               icon={d.icon}
               status={d.status}
               partOf={d.partOf}
+              version={d.version}
+              identifier={d.identifier}
               partOfText={partOfText}
               noDescriptionText={noDescriptionText}
               noChip={noChip}

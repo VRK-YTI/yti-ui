@@ -72,6 +72,6 @@ export default function LoginModalView({
     e.preventDefault();
     window.location.href = `/api/auth/login?target=/${
       i18n.language ?? 'fi'
-    }${asPath}`;
+    }${encodeURIComponent(asPath)}`;
   }
 }

@@ -20,12 +20,15 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { IconArrowLeft } from 'suomifi-icons';
 import {
+  Block,
   Button,
   Dropdown,
   DropdownItem,
+  Label,
   Text,
   TextInput,
   Textarea,
+  ToggleInput,
 } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
@@ -33,7 +36,7 @@ import { FormWrapper, LanguageVersionedWrapper } from './resource-form.styles';
 import validateForm from './validate-form';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
-import { statusList } from 'yti-common-ui/utils/status-list';
+import { statusList } from '@app/common/utils/status-list';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
   selectHasChanges,
@@ -55,6 +58,11 @@ import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { Status } from '@app/common/interfaces/status.interface';
+import {
+  DEFAULT_ASSOCIATION_SUBPROPERTY,
+  DEFAULT_ATTRIBUTE_SUBPROPERTY,
+} from '@app/common/components/resource/utils';
+import PropertyToggle from './components/property-toggle';
 
 interface ResourceFormProps {
   modelId: string;
@@ -217,9 +225,8 @@ export default function ResourceForm({
       data.subResourceOf &&
       data.subResourceOf.length === 1 &&
       [
-        'owl:topDataProperty',
-        'owl:TopObjectProperty',
-        'owl:topObjectProperty',
+        DEFAULT_ASSOCIATION_SUBPROPERTY.uri,
+        DEFAULT_ATTRIBUTE_SUBPROPERTY.uri,
       ].includes(data.subResourceOf[0].uri)
     ) {
       handleUpdate({
@@ -242,19 +249,13 @@ export default function ResourceForm({
     key: 'equivalentResource' | 'subResourceOf'
   ) => {
     if (key === 'subResourceOf' && data.subResourceOf?.length === 1) {
-      const value =
+      const defaultSubResourceOf =
         data.type === ResourceType.ASSOCIATION
-          ? 'owl:TopObjectProperty'
-          : 'owl:topDataProperty';
+          ? DEFAULT_ASSOCIATION_SUBPROPERTY
+          : DEFAULT_ATTRIBUTE_SUBPROPERTY;
       handleUpdate({
         ...data,
-        subResourceOf: [
-          {
-            uri: value,
-            curie: value,
-            label: { en: value.replace('owl:', '') },
-          },
-        ],
+        subResourceOf: [defaultSubResourceOf],
       });
       return;
     }
@@ -407,11 +408,27 @@ export default function ResourceForm({
           <div>
             <FormFooterAlert
               labelText={
-                Object.keys(errors).filter(
-                  (key) =>
-                    ['label', 'identifier'].includes(key) &&
+                Object.keys(errors).filter((key) => {
+                  const l: Array<keyof typeof errors> = [
+                    'label',
+                    'identifier',
+                    'identifierInitChar',
+                    'identifierLength',
+                    'identifierCharacters',
+                    'maxCount',
+                    'maxExclusive',
+                    'maxInclusive',
+                    'maxLength',
+                    'minCount',
+                    'minExclusive',
+                    'minInclusive',
+                    'minLength',
+                  ];
+                  return (
+                    (l as string[]).includes(key) &&
                     errors[key as keyof typeof errors] === true
-                ).length > 0
+                  );
+                }).length > 0
                   ? t('missing-information-title')
                   : t('unexpected-error-title')
               }
@@ -531,12 +548,12 @@ export default function ResourceForm({
                     type={data.type}
                     applicationProfile={applicationProfile}
                     buttonIcon
+                    hideSelfReference={data.uri}
                   />
                 }
                 deleteDisabled={[
-                  'owl:topDataProperty',
-                  'owl:TopObjectProperty',
-                  'owl:topObjectProperty',
+                  DEFAULT_ASSOCIATION_SUBPROPERTY.uri,
+                  DEFAULT_ATTRIBUTE_SUBPROPERTY.uri,
                 ]}
                 handleRemoval={(id: string) =>
                   handleResourceRemove(id, 'subResourceOf')
@@ -571,6 +588,7 @@ export default function ResourceForm({
                     type={data.type}
                     applicationProfile={applicationProfile}
                     buttonIcon
+                    hideSelfReference={data.uri}
                   />
                 }
                 optionalText={t('optional')}
@@ -587,6 +605,63 @@ export default function ResourceForm({
             applicationProfile={applicationProfile}
             handleUpdate={handleUpdateByKey}
           />
+
+          {!applicationProfile && (
+            <>
+              <PropertyToggle
+                label={`${translateCommonForm(
+                  'functional',
+                  data.type,
+                  t
+                )} (owl:FunctionalProperty)`}
+                handleUpdate={(value) =>
+                  handleUpdate({
+                    ...data,
+                    functionalProperty: value ?? undefined,
+                  })
+                }
+                value={data.functionalProperty}
+                id="functional-property-toggle"
+                optionalText={t('optional')}
+              />
+              {data.type === ResourceType.ASSOCIATION && (
+                <>
+                  <PropertyToggle
+                    label={`${translateCommonForm(
+                      'transitive',
+                      data.type,
+                      t
+                    )} (owl:TransitiveProperty)`}
+                    handleUpdate={(value) =>
+                      handleUpdate({
+                        ...data,
+                        transitiveProperty: value ?? undefined,
+                      })
+                    }
+                    value={data.transitiveProperty}
+                    id="transitive-property-toggle"
+                    optionalText={t('optional')}
+                  />
+                  <PropertyToggle
+                    label={`${translateCommonForm(
+                      'reflexive',
+                      data.type,
+                      t
+                    )} (owl:ReflexiveProperty)`}
+                    handleUpdate={(value) =>
+                      handleUpdate({
+                        ...data,
+                        reflexiveProperty: value ?? undefined,
+                      })
+                    }
+                    value={data.reflexiveProperty}
+                    id="reflexive-property-toggle"
+                    optionalText={t('optional')}
+                  />
+                </>
+              )}
+            </>
+          )}
 
           <div>
             <Dropdown

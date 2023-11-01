@@ -2,15 +2,59 @@ import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import {
   ModelType,
   ModelUpdatePayload,
+  VersionedModelUpdatePayload,
 } from '@app/common/interfaces/model.interface';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 
-export default function generatePayload(
+export function generatePayloadVersionedUpdate(
+  data: ModelFormType | ModelType
+): VersionedModelUpdatePayload {
+  if ('description' in data) {
+    return {
+      label: data.label,
+      description: data.description,
+      organizations: data.organizations.map((o) => o.id) ?? [],
+      groups: data.groups.map((g) => g.identifier) ?? [],
+      documentation: data.documentation ?? {},
+      contact: data.contact !== '' ? data.contact : '',
+      links: data.links,
+      status: data.status,
+    };
+  } else {
+    return {
+      label: data.languages
+        .filter((l) => l.selected)
+        .reduce(
+          (obj, l) => ({
+            ...obj,
+            [l.uniqueItemId]: l.title,
+          }),
+          {}
+        ),
+      description: data.languages
+        .filter((l) => l.selected && l.description && l.description !== '')
+        .reduce(
+          (obj, l) => ({
+            ...obj,
+            [l.uniqueItemId]: l.description,
+          }),
+          {}
+        ),
+      organizations: data.organizations.map((o) => o.uniqueItemId),
+      groups: data.serviceCategories.map((s) => s.uniqueItemId),
+      documentation: data.documentation ?? {},
+      contact: data.contact !== '' ? data.contact : '',
+      links: data.links,
+      status: data.status,
+    };
+  }
+}
+
+export default function generatePayloadUpdate(
   data: ModelFormType | ModelType
 ): ModelUpdatePayload {
   if ('description' in data) {
     return {
-      status: data.status ?? 'DRAFT',
       label: data.label,
       description: data.description,
       languages: data.languages,
@@ -26,7 +70,6 @@ export default function generatePayload(
     };
   } else {
     return {
-      status: data.status ?? 'DRAFT',
       label: data.languages
         .filter((l) => l.selected)
         .reduce(

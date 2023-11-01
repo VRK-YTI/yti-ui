@@ -45,21 +45,28 @@ import { SimpleResource } from '@app/common/interfaces/simple-resource.interface
 
 interface ClassViewProps {
   modelId: string;
+  version?: string;
   languages: string[];
   terminologies: string[];
   applicationProfile?: boolean;
+  organizationIds?: string[];
 }
 
 export default function ClassView({
   modelId,
+  version,
   languages,
   terminologies,
   applicationProfile,
+  organizationIds,
 }: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
-  const hasPermission = HasPermission({ actions: ['CREATE_CLASS'] });
+  const hasPermission = HasPermission({
+    actions: ['CREATE_CLASS'],
+    targetOrganization: organizationIds,
+  });
   const { setView } = useSetView();
   const { setPage, getPage } = useSetPage();
   const displayLang = useSelector(selectDisplayLang());
@@ -84,6 +91,7 @@ export default function ClassView({
     pageSize: 20,
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [ResourceType.CLASS],
+    fromVersion: version,
   });
 
   const {
@@ -91,7 +99,12 @@ export default function ClassView({
     isSuccess,
     refetch: refetchData,
   } = useGetClassQuery(
-    { modelId: modelId, classId: globalSelected.id ?? '', applicationProfile },
+    {
+      modelId: modelId,
+      version: version,
+      classId: globalSelected.id ?? '',
+      applicationProfile,
+    },
     { skip: globalSelected.type !== 'classes' }
   );
 
@@ -200,6 +213,11 @@ export default function ClassView({
     dispatch(resetHovered());
   };
 
+  const handleShowClass = (classId: string) => {
+    handleActive(classId);
+    setView('classes', 'info', classId);
+  };
+
   const handleEdit = () => {
     if (isSuccess) {
       setView('classes', 'edit');
@@ -240,7 +258,7 @@ export default function ClassView({
             <Text variant="bold">
               {t('classes', { count: data?.totalHitCount ?? 0 })}
             </Text>
-            {hasPermission && (
+            {!version && hasPermission && (
               <>
                 <ClassModal
                   modelId={modelId}
@@ -283,8 +301,7 @@ export default function ClassView({
                 }),
                 subtitle: item.curie,
                 onClick: () => {
-                  handleActive(item.identifier);
-                  setView('classes', 'info', item.identifier);
+                  handleShowClass(item.identifier);
                 },
                 onMouseEnter: () => {
                   dispatch(setHovered(item.identifier, 'classes'));
@@ -342,7 +359,10 @@ export default function ClassView({
         applicationProfile={applicationProfile}
         handleReturn={handleReturn}
         handleEdit={handleEdit}
-        handleRefecth={refetchData}
+        handleRefetch={refetchData}
+        disableEdit={version ? true : false}
+        handleShowClass={handleShowClass}
+        organizationIds={organizationIds}
       />
     );
   }
