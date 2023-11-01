@@ -10,7 +10,6 @@ import Graph from '../graph';
 import LinkedDataView from '../linked-data-view';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import Documentation from '../documentation';
-import HasPermission from '@app/common/utils/has-permission';
 import {
   IconApplicationProfile,
   IconInfo,
@@ -60,7 +59,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         id: 'search',
         icon: <IconSearch />,
         buttonLabel: t('search-variant'),
-        component: <SearchView modelId={modelId} />,
+        component: <SearchView modelId={modelId} version={version} />,
       },
       {
         id: 'graph',
