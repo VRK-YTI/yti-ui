@@ -147,6 +147,8 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
     }
   }, [addReferenceResult, data]);
 
+  // console.log('data', data);
+
   return (
     <ClassNodeDiv
       onMouseEnter={() => handleHover(true)}
@@ -307,29 +309,37 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   function renderResourceLabel(
     resource: ClassNodeProps['data']['resources'][0]
   ) {
-    if (tools.showById) {
-      return (
+    if (!data.applicationProfile) {
+      return !tools.showById ? (
+        getLanguageVersion({
+          data: resource.label,
+          lang: displayLang !== i18n.language ? displayLang : i18n.language,
+          appendLocale: true,
+        })
+      ) : (
         <>
-          {[getMinMax(resource)]} {getIdentifier(resource)}
+          {resource.identifier.includes(':')
+            ? resource.identifier
+            : `${data.modelId}:${resource.identifier}`}
         </>
       );
     }
 
-    if (!data.applicationProfile) {
-      return getLanguageVersion({
-        data: resource.label,
-        lang: displayLang !== i18n.language ? displayLang : i18n.language,
-        appendLocale: true,
-      });
-    }
-
     return (
       <div>
-        {getLanguageVersion({
-          data: resource.label,
-          lang: displayLang !== i18n.language ? displayLang : i18n.language,
-          appendLocale: true,
-        })}
+        {!tools.showById ? (
+          getLanguageVersion({
+            data: resource.label,
+            lang: displayLang !== i18n.language ? displayLang : i18n.language,
+            appendLocale: true,
+          })
+        ) : (
+          <>
+            {resource.identifier.includes(':')
+              ? resource.identifier
+              : `${data.modelId}:${resource.identifier}`}
+          </>
+        )}
         : [{getMinMax(resource)}] {getIdentifier(resource)}
       </div>
     );
