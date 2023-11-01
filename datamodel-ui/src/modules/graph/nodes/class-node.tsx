@@ -147,8 +147,6 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
     }
   }, [addReferenceResult, data]);
 
-  // console.log('data', data);
-
   return (
     <ClassNodeDiv
       onMouseEnter={() => handleHover(true)}
