@@ -19,6 +19,7 @@ import {
   SimpleModalContent,
 } from './../as-file-modal/as-file-modal.styles';
 import SaveSpinner from 'yti-common-ui/save-spinner';
+import getApiError from '@app/common/utils/get-api-errors';
 
 interface DeleteModalProps {
   modelId: string;
@@ -53,6 +54,7 @@ export default function DeleteModal({
 
   const handleClose = () => {
     setUserPosted(false);
+    setError(false);
     hide();
   };
 
@@ -159,6 +161,11 @@ export default function DeleteModal({
 
         <InlineAlert status="error">
           {translateDeleteModalError(type, t)}
+          <br />
+          {deleteModelResult.isError && getApiError(deleteModelResult.error)}
+          {deleteClassResult.isError && getApiError(deleteClassResult.error)}
+          {deleteResourceResult.isError &&
+            getApiError(deleteResourceResult.error)}
         </InlineAlert>
         <ButtonFooter>
           <Button onClick={() => handleDelete()} id="try-again-button">
