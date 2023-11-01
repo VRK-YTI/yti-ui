@@ -4,17 +4,11 @@ import {HYDRATE} from 'next-redux-wrapper';
 import {MscrSearchResults} from '@app/common/interfaces/search.interface';
 import {UrlState} from '@app/common/utils/hooks/use-url-state';
 
-// Construct url based on search params.
-// Base: /frontend/
-// mscrSearch                     <- Takes a _type param, only returns published
-// mscrSearchPersonalContent      <- Takes a _type param
-// mscrSearchOrgContent
-//
-
 function createUrl(urlState: UrlState) {
   let baseQuery = '/frontend/mscrSearch?';
 
-  // Not clear what the logic for using Personal or Org endpoints will be
+  // Not clear what the logic for using /mscrSearchOrgContent or /mscrSearchPersonalContent endpoints will be
+  // The idea is that they can access content that is not public
 
   baseQuery = baseQuery.concat(`query=${urlState.q}`);
 
@@ -34,7 +28,6 @@ function createUrl(urlState: UrlState) {
     baseQuery = baseQuery.concat(`&organization=${urlState.organization.join(',')}`);
   }
 
-  console.log('url to call (mscr-search.slice): ', baseQuery);  // Logs on the client, not server!
   return baseQuery;
 }
 

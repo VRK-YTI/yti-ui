@@ -1,7 +1,7 @@
 import {FacetsWrapper, ResultsWrapper, SearchContainer, CloseButton} from '@app/modules/search-screen/search-screen.styles';
 import SearchResult from '@app/common/components/search-result';
 import {useGetMscrSearchResultsQuery} from '@app/common/components/mscr-search/mscr-search.slice';
-import useUrlState, {initialUrlState, UrlState} from '@app/common/utils/hooks/use-url-state';
+import useUrlState, {initialUrlState} from '@app/common/utils/hooks/use-url-state';
 import {IconClose} from 'suomifi-icons';
 import {useContext} from 'react';
 import {SearchContext} from '@app/common/components/search-context-provider';
@@ -56,7 +56,7 @@ export default function SearchScreen() {
     <SearchContainer>
       <FacetsWrapper>
         {/* Groups of facets for different contexts, made with search-filter-set */}
-        <SearchFilterSet title="Just one set for now" filters={filters} />
+        <SearchFilterSet title={t('in-all-mscr')} filters={filters} />
       </FacetsWrapper>
       <CloseButton onClick={handleClose}>
         <IconClose />

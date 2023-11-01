@@ -6,10 +6,8 @@ import {SEARCH_FIELD_PATTERN, TEXT_INPUT_MAX} from 'yti-common-ui/utils/constant
 import {SearchContext} from '@app/common/components/search-context-provider';
 
 export default function SearchBar() {
-  const { t } = useTranslation('admin');
-  const {isSearchActive, setIsSearchActive} = useContext(SearchContext);
-
-  // Does this work for our project? Copied from datamodel-ui
+  const { t } = useTranslation('common');
+  const { isSearchActive, setIsSearchActive} = useContext(SearchContext);
   const { urlState, patchUrlState } = useUrlState();
   const q = urlState.q;
   const [searchInputValue, setSearchInputValue] = useState<string>(

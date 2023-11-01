@@ -2,6 +2,10 @@ import isEqual from 'lodash/isEqual';
 import sortBy from 'lodash/sortBy';
 import { NextRouter, useRouter } from 'next/router';
 
+// UrlState is used for storing and mutating the query, search parameters and pagination
+// This is modeled after the common-ui implementation, and should at some point be checked for
+// faulty and unnecessary code
+
 export interface UrlState {
   q: string;
   domain: string;
