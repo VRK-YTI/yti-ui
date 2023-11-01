@@ -2,6 +2,11 @@ import { useGetCountQuery } from '@app/common/components/counts/counts.slice';
 import { Organization } from '@app/common/interfaces/organizations.interface';
 import { ServiceCategory } from '@app/common/interfaces/service-categories.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import {
+  inUseStatusList,
+  notInUseStatusList,
+  statusList,
+} from '@app/common/utils/status-list';
 import { useTranslation } from 'next-i18next';
 import { SingleSelectData } from 'suomifi-ui-components';
 import Filter, {
@@ -91,25 +96,24 @@ export default function FrontPageFilter({
       <Separator />
       <StatusFilterRadio
         title={t('show')}
+        defaultValue={inUseStatusList.join(',')}
         items={[
           {
-            value: 'VALID,SUGGESTED',
+            value: inUseStatusList.join(','),
             label: t('datamodels-in-use'),
-            hintText: `${translateStatus('VALID', t)}, ${translateStatus(
-              'SUGGESTED',
-              t
-            )}`,
+            hintText: inUseStatusList
+              .map((s) => translateStatus(s, t))
+              .join(', '),
           },
           {
-            value: 'RETIRED,SUPERSEDED,INVALID',
+            value: notInUseStatusList.join(','),
             label: t('datamodels-unused'),
-            hintText: `${translateStatus('RETIRED', t)}, ${translateStatus(
-              'SUPERSEDED',
-              t
-            )}, ${translateStatus('INVALID', t)}`,
+            hintText: notInUseStatusList
+              .map((s) => translateStatus(s, t))
+              .join(', '),
           },
           {
-            value: 'VALID,SUGGESTED,RETIRED,SUPERSEDED,DRAFT',
+            value: statusList.join(','),
             label: t('datamodels-all'),
           },
         ]}

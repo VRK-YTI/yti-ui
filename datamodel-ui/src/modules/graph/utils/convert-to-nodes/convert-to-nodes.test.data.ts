@@ -138,87 +138,95 @@ export const convertedExpected = [
   },
 ];
 
-export const convertedWithHiddenExpected = [
-  {
-    id: '1',
-    position: {
-      x: 0,
-      y: 0,
-    },
-    data: {
-      identifier: '1',
-      label: {
-        fi: 'label-1-fi',
-        en: 'label-1-en',
+export function convertedWithHiddenExpected(
+  handleNodeDelete: (value: string) => void
+) {
+  return [
+    {
+      id: '1',
+      position: {
+        x: 0,
+        y: 0,
       },
-      modelId: 'modelId',
-      resources: [],
-    },
-    type: 'classNode',
-  },
-  {
-    id: '2',
-    position: {
-      x: 0,
-      y: 0,
-    },
-    data: {
-      identifier: '2',
-      label: {
-        en: 'label-2-en',
-      },
-      modelId: 'modelId',
-      resources: [],
-    },
-    type: 'classNode',
-  },
-  {
-    id: '3',
-    position: {
-      x: 0,
-      y: 0,
-    },
-    data: {
-      identifier: '3',
-      label: {
-        fi: 'label-3-fi',
-        en: 'label-3-en',
-        sv: 'label-3-sv',
-      },
-      modelId: 'modelId',
-      resources: [
-        {
-          identifier: '3-1',
-          label: {
-            fi: 'attr-1-fi',
-            en: 'attr-1-en',
-            sv: 'attr-1-sv',
-          },
-          type: 'ATTRIBUTE',
+      data: {
+        identifier: '1',
+        label: {
+          fi: 'label-1-fi',
+          en: 'label-1-en',
         },
-      ],
+        modelId: 'modelId',
+        resources: [],
+      },
+      type: 'classNode',
     },
-    type: 'classNode',
-  },
-  {
-    id: '#corner-1',
-    position: {
-      x: 0,
-      y: 0,
+    {
+      id: '2',
+      position: {
+        x: 0,
+        y: 0,
+      },
+      data: {
+        identifier: '2',
+        label: {
+          en: 'label-2-en',
+        },
+        modelId: 'modelId',
+        resources: [],
+      },
+      type: 'classNode',
     },
-    data: {},
-    type: 'cornerNode',
-  },
-  {
-    id: '#corner-2',
-    position: {
-      x: 0,
-      y: 0,
+    {
+      id: '3',
+      position: {
+        x: 0,
+        y: 0,
+      },
+      data: {
+        identifier: '3',
+        label: {
+          fi: 'label-3-fi',
+          en: 'label-3-en',
+          sv: 'label-3-sv',
+        },
+        modelId: 'modelId',
+        resources: [
+          {
+            identifier: '3-1',
+            label: {
+              fi: 'attr-1-fi',
+              en: 'attr-1-en',
+              sv: 'attr-1-sv',
+            },
+            type: 'ATTRIBUTE',
+          },
+        ],
+      },
+      type: 'classNode',
     },
-    data: {},
-    type: 'cornerNode',
-  },
-];
+    {
+      id: '#corner-1',
+      position: {
+        x: 0,
+        y: 0,
+      },
+      data: {
+        handleNodeDelete: handleNodeDelete,
+      },
+      type: 'cornerNode',
+    },
+    {
+      id: '#corner-2',
+      position: {
+        x: 0,
+        y: 0,
+      },
+      data: {
+        handleNodeDelete: handleNodeDelete,
+      },
+      type: 'cornerNode',
+    },
+  ];
+}
 
 export const visualizationHiddenTypeArray: VisualizationHiddenNode[] = [
   {

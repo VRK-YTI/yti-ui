@@ -22,6 +22,7 @@ interface AsFileModalProps {
   visible: boolean;
   onClose: () => void;
   filename?: string;
+  version?: string;
 }
 
 export default function AsFileModal({
@@ -30,6 +31,7 @@ export default function AsFileModal({
   visible,
   onClose,
   filename,
+  version,
 }: AsFileModalProps) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
@@ -40,6 +42,8 @@ export default function AsFileModal({
     onClose();
     setChosenFileType('JSON-LD');
   };
+
+  const versionParam = version ? `&version=${version}` : '';
 
   return (
     <>
@@ -76,7 +80,7 @@ export default function AsFileModal({
 
         <ButtonFooter>
           <Link
-            href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&raw=true`}
+            href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&raw=true${versionParam}`}
             passHref
             download
           >
@@ -118,7 +122,7 @@ export default function AsFileModal({
 
         <ButtonFooter>
           <Link
-            href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&filename=${filename}`}
+            href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&filename=${filename}${versionParam}`}
             passHref
           >
             <SuomiLink href="">

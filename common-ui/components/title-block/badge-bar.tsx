@@ -17,7 +17,7 @@ export default function BadgeBar({
     <BadgeBarWrapper $larger={larger} $smBottom={smBottom} {...rest}>
       {React.Children.map(children, (child, i) => (
         <>
-          {i > 0 && ' \u00b7 '}
+          {child && i > 0 && ' \u00b7 '}
           {child}
         </>
       ))}

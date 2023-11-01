@@ -8,6 +8,7 @@ import {
   EdgeTypes,
   ReactFlowProvider,
   useReactFlow,
+  Node,
 } from 'reactflow';
 import {
   useGetVisualizationQuery,
@@ -43,16 +44,21 @@ import getConnectedElements, {
   getClassConnectedElements,
 } from './utils/get-connected-elements';
 import handleCornerNodeDelete from './utils/handle-corner-node-delete';
+import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
 
 interface GraphProps {
   modelId: string;
+  version?: string;
   applicationProfile?: boolean;
+  organizationIds?: string[];
   children: JSX.Element[];
 }
 
 const GraphContent = ({
   modelId,
+  version,
   applicationProfile,
+  organizationIds,
   children,
 }: GraphProps) => {
   const { i18n } = useTranslation('common');
@@ -81,7 +87,10 @@ const GraphContent = ({
     }),
     []
   );
-  const { data, isSuccess, refetch } = useGetVisualizationQuery(modelId);
+  const { data, isSuccess, refetch } = useGetVisualizationQuery({
+    modelid: modelId,
+    version: version,
+  });
   const [putPositions, result] = usePutPositionsMutation();
 
   const deleteNodeById = useCallback(
@@ -107,8 +116,8 @@ const GraphContent = ({
             position: project({ x: x - left - 20 * getZoom(), y: y - top }),
             referenceTarget: target,
           },
-          applicationProfile,
-          deleteNodeById
+          deleteNodeById,
+          applicationProfile
         ),
       ]);
 
@@ -244,9 +253,10 @@ const GraphContent = ({
           data.nodes,
           data.hiddenNodes,
           modelId,
+          deleteNodeById,
           applicationProfile,
           applicationProfile ? refetch : undefined,
-          deleteNodeById
+          organizationIds
         )
       );
       setEdges(
@@ -270,6 +280,7 @@ const GraphContent = ({
     modelId,
     refetch,
     deleteNodeById,
+    organizationIds,
   ]);
 
   useEffect(() => {
@@ -287,6 +298,43 @@ const GraphContent = ({
       dispatch(setNotification('POSITION_SAVE'));
     }
   }, [result, dispatch]);
+
+  useEffect(() => {
+    if (applicationProfile) {
+      setEdges((edges) =>
+        edges.map((edge) => {
+          const sourceNode: Node<ClassNodeDataType> | undefined = nodes.find(
+            (n) => n.id === edge.source
+          );
+
+          if (
+            !sourceNode ||
+            sourceNode.data.resources.length === 0 ||
+            sourceNode.data.resources.filter((r) => r.type !== 'ATTRIBUTE')
+              .length === 0
+          ) {
+            return edge;
+          }
+
+          const attributeCount = sourceNode.data.resources.filter(
+            (r) => r.type === 'ATTRIBUTE'
+          ).length;
+
+          return {
+            ...edge,
+            data: {
+              ...edge.data,
+              offsetSource: tools.showAttributeRestrictions
+                ? edge.data.offsetSource + attributeCount
+                : edge.data.offsetSource - attributeCount,
+            },
+          };
+        })
+      );
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [applicationProfile, tools.showAttributeRestrictions, setEdges]);
 
   useEffect(() => {
     const cleanCorners = () => {
@@ -328,13 +376,20 @@ const GraphContent = ({
 
 export default function Graph({
   modelId,
+  version,
   applicationProfile,
+  organizationIds,
   children,
 }: GraphProps) {
   return (
     <>
       <ReactFlowProvider>
-        <GraphContent modelId={modelId} applicationProfile={applicationProfile}>
+        <GraphContent
+          modelId={modelId}
+          version={version}
+          applicationProfile={applicationProfile}
+          organizationIds={organizationIds}
+        >
           {children}
         </GraphContent>
       </ReactFlowProvider>

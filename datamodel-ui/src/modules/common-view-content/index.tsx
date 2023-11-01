@@ -9,6 +9,7 @@ import {
   IconCopy,
   Link,
   Text,
+  Tooltip,
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import FormattedDate from 'yti-common-ui/formatted-date';
@@ -30,6 +31,7 @@ export default function CommonViewContent({
   data,
   displayLabel,
   applicationProfile,
+  renderActions,
 }: {
   modelId: string;
   hideInUse?: boolean;
@@ -37,6 +39,7 @@ export default function CommonViewContent({
   data: Resource;
   displayLabel?: boolean;
   applicationProfile?: boolean;
+  renderActions?: () => void;
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
@@ -291,6 +294,61 @@ export default function CommonViewContent({
           )}
         </BasicBlock>
 
+        {!applicationProfile && (
+          <>
+            <BasicBlock
+              title={
+                <>
+                  {translateCommonForm('functional', data.type, t)}
+                  <Tooltip
+                    ariaToggleButtonLabelText={''}
+                    ariaCloseButtonLabelText={''}
+                  >
+                    <Text>Tooltip sisältö</Text>
+                  </Tooltip>
+                </>
+              }
+            >
+              {data.functionalProperty ? t('yes') : t('no')}
+            </BasicBlock>
+
+            {data.type === ResourceType.ASSOCIATION && (
+              <>
+                <BasicBlock
+                  title={
+                    <>
+                      {translateCommonForm('transitive', data.type, t)}
+                      <Tooltip
+                        ariaToggleButtonLabelText={''}
+                        ariaCloseButtonLabelText={''}
+                      >
+                        <Text>Tooltip sisältö</Text>
+                      </Tooltip>
+                    </>
+                  }
+                >
+                  {data.transitiveProperty ? t('yes') : t('no')}
+                </BasicBlock>
+                <BasicBlock
+                  title={
+                    <>
+                      {translateCommonForm('reflexive', data.type, t)}
+                      <Tooltip
+                        ariaToggleButtonLabelText={''}
+                        ariaCloseButtonLabelText={''}
+                      >
+                        <Text>Tooltip sisältö</Text>
+                      </Tooltip>
+                    </>
+                  }
+                >
+                  {data.reflexiveProperty ? t('yes') : t('no')}
+                </BasicBlock>
+              </>
+            )}
+          </>
+        )}
+
         <BasicBlock title={translateCommonForm('note', data.type, t)}>
           {getLanguageVersion({
             data: data.note,
@@ -312,22 +370,38 @@ export default function CommonViewContent({
 
   return (
     <>
-      {!hideInUse && applicationProfile && (
-        <BasicBlock title={t('in-use-in-this-model', { ns: 'admin' })}>
-          {inUse
-            ? t('in-use', { ns: 'admin' })
-            : t('not-in-use', { ns: 'admin' })}
-        </BasicBlock>
+      {applicationProfile && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <BasicBlock title={t('in-use-in-this-model', { ns: 'admin' })}>
+            {inUse
+              ? t('in-use', { ns: 'admin' })
+              : t('not-in-use', { ns: 'admin' })}
+          </BasicBlock>
+          {renderActions && renderActions()}
+        </div>
       )}
 
       {displayLabel && (
-        <BasicBlock title={getDisplayLabelTitle(data.type)}>
-          {getLanguageVersion({
-            data: data.label,
-            lang: displayLang ?? i18n.language,
-            appendLocale: true,
-          })}
-        </BasicBlock>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <BasicBlock title={getDisplayLabelTitle(data.type)}>
+            {getLanguageVersion({
+              data: data.label,
+              lang: displayLang ?? i18n.language,
+              appendLocale: true,
+            })}
+          </BasicBlock>
+          {!applicationProfile && renderActions && renderActions()}
+        </div>
       )}
 
       <BasicBlock title={translateCommonForm('identifier', data.type, t)}>

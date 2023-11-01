@@ -1,4 +1,4 @@
-export function getModelId(slug?: string | string[]): string | undefined {
+export function getSlugAsString(slug?: string | string[]): string | undefined {
   if (!slug) {
     return;
   }

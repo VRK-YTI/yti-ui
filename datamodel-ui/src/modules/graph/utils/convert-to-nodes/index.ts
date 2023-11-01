@@ -11,9 +11,10 @@ export default function convertToNodes(
   nodes: VisualizationType[],
   hiddenNodes: VisualizationHiddenNode[],
   modelId: string,
+  handleNodeDelete: (id: string) => void,
   applicationProfile?: boolean,
   refetch?: () => void,
-  handleNodeDelete?: (id: string) => void
+  organizationIds?: string[]
 ): Node[] {
   if (!nodes || nodes.length < 1) {
     return [];
@@ -22,7 +23,13 @@ export default function convertToNodes(
   if (!hiddenNodes || hiddenNodes.length < 1) {
     return nodes.map((node) => {
       return !node.identifier.includes(':')
-        ? createClassNode(node, modelId, applicationProfile, refetch)
+        ? createClassNode(
+            node,
+            modelId,
+            applicationProfile,
+            refetch,
+            organizationIds
+          )
         : createExternalNode(node, applicationProfile);
     });
   }
@@ -30,11 +37,17 @@ export default function convertToNodes(
   return [
     ...nodes.map((node) => {
       return !node.identifier.includes(':')
-        ? createClassNode(node, modelId, applicationProfile, refetch)
+        ? createClassNode(
+            node,
+            modelId,
+            applicationProfile,
+            refetch,
+            organizationIds
+          )
         : createExternalNode(node, applicationProfile);
     }),
     ...hiddenNodes.map((node) =>
-      createCornerNode(node, applicationProfile, handleNodeDelete)
+      createCornerNode(node, handleNodeDelete, applicationProfile)
     ),
   ];
 }

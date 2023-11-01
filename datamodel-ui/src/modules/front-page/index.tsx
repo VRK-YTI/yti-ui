@@ -34,6 +34,7 @@ import { translateModelType } from '@app/common/utils/translation-helpers';
 import ModelFormModal from '../model-form/model-form-modal';
 import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
 import { useGetCountQuery } from '@app/common/components/counts/counts.slice';
+import { inUseStatusList } from '@app/common/utils/status-list';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -144,12 +145,16 @@ export default function FrontPage() {
           object.type === 'PROFILE' ? <IconApplicationProfile /> : <IconGrid />,
         status: object.status,
         partOf: partOf,
+        version: object.version,
+        identifier: object.prefix,
         title: getLanguageVersion({
           data: object.label,
           lang: i18n.language,
           appendLocale: true,
         }),
-        titleLink: `/model/${object.prefix}`,
+        titleLink: `/model/${object.prefix}${
+          object.version ? `?ver=${object.version}` : ''
+        }`,
         type: translateModelType(object.type, t),
       };
     });
@@ -242,6 +247,7 @@ export default function FrontPage() {
             tagsTitle={t('results-with-current', {
               count: searchModels?.totalHitCount ?? 0,
             })}
+            withDefaultStatuses={inUseStatusList}
           />
           <Pagination
             maxPages={Math.ceil((searchModels?.totalHitCount ?? 1) / 50)}

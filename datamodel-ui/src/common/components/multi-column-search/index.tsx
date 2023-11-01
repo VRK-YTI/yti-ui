@@ -17,6 +17,10 @@ import ResourceList, { ResultType } from '../resource-list';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import { Status } from '@app/common/interfaces/status.interface';
+import {
+  inUseStatusList,
+  notInUseStatusList,
+} from '@app/common/utils/status-list';
 
 interface MultiColumnSearchProps {
   primaryColumnName: string;
@@ -52,7 +56,7 @@ export default function MultiColumnSearch({
     isSuccess: serviceCategoriesIsSuccess,
   } = useGetServiceCategoriesQuery(i18n.language);
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataModelType] = useState<SingleSelectData[]>([
+  const dataModelType: SingleSelectData[] = [
     {
       labelText: t('data-models-added-to-this-model'),
       uniqueItemId: 'self',
@@ -61,12 +65,12 @@ export default function MultiColumnSearch({
       labelText: t('datamodels-all', { ns: 'common' }),
       uniqueItemId: 'all',
     },
-  ]);
-  const [languages] = useState<SingleSelectData[]>([
+  ];
+  const languages: SingleSelectData[] = [
     { labelText: translateLanguage('fi', t), uniqueItemId: 'fi' },
     { labelText: translateLanguage('sv', t), uniqueItemId: 'sv' },
     { labelText: translateLanguage('en', t), uniqueItemId: 'en' },
-  ]);
+  ];
 
   const statuses: SingleSelectData[] = [
     {
@@ -84,10 +88,6 @@ export default function MultiColumnSearch({
   ];
 
   const serviceCategories: SingleSelectData[] = useMemo(() => {
-    if (!serviceCategoriesIsSuccess) {
-      return [];
-    }
-
     const returnValue = [
       {
         labelText: t('information-domains-all'),
@@ -95,13 +95,17 @@ export default function MultiColumnSearch({
       },
     ];
 
+    if (!serviceCategoriesIsSuccess) {
+      return returnValue;
+    }
+
     return returnValue.concat(
-      serviceCategoriesResult.map((result) => ({
+      serviceCategoriesResult.map((category) => ({
         labelText: getLanguageVersion({
-          data: result.label,
+          data: category.label,
           lang: i18n.language,
         }),
-        uniqueItemId: result.identifier,
+        uniqueItemId: category.identifier,
       }))
     );
   }, [serviceCategoriesResult, serviceCategoriesIsSuccess, t, i18n.language]);
@@ -144,8 +148,8 @@ export default function MultiColumnSearch({
       const setStatuses =
         value !== '-1'
           ? value === 'in-use'
-            ? (['VALID', 'SUGGESTED'] as Status[])
-            : (['INCOMPLETE', 'DRAFT', 'RETIRED', 'SUPERSEDED'] as Status[])
+            ? inUseStatusList
+            : notInUseStatusList
           : [];
 
       setSearchParams({

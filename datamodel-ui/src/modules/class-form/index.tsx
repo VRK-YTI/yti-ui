@@ -16,7 +16,7 @@ import ConceptBlock from '../concept-block';
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { ClassFormErrors, validateClassForm } from './utils';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
-import { statusList } from 'yti-common-ui/utils/status-list';
+import { statusList } from '@app/common/utils/status-list';
 import {
   translateClassFormErrors,
   translateStatus,
@@ -331,40 +331,35 @@ export default function ClassForm({
     }
 
     let backendErrorFields: string[] = [];
+
+    const handleError = (error: AxiosQueryError): void => {
+      if (error?.status === 401) {
+        setErrors({
+          ...validateClassForm(data),
+          unauthorized: true,
+        });
+        return;
+      }
+      if (error.data.details) {
+        const asFields = (error as AxiosQueryErrorFields).data.details;
+        backendErrorFields = Array.isArray(asFields)
+          ? asFields.map((d) => d.field)
+          : [];
+      }
+    };
+
     if (
       createResult.isError &&
       createResult.error &&
       'data' in createResult.error
     ) {
-      if (createResult.error?.status === 401) {
-        setErrors({
-          ...validateClassForm(data),
-          unauthorized: true,
-        });
-        return;
-      }
-      const asFields = (createResult.error as AxiosQueryErrorFields).data
-        ?.details;
-      backendErrorFields = Array.isArray(asFields)
-        ? asFields.map((d) => d.field)
-        : [];
+      handleError(createResult.error);
     } else if (
       updateResult.isError &&
       updateResult.error &&
       'data' in updateResult.error
     ) {
-      if (updateResult.error?.status === 401) {
-        setErrors({
-          ...validateClassForm(data),
-          unauthorized: true,
-        });
-        return;
-      }
-      const asFields = (updateResult.error as AxiosQueryErrorFields).data
-        ?.details;
-      backendErrorFields = Array.isArray(asFields)
-        ? asFields.map((d) => d.field)
-        : [];
+      handleError(updateResult.error);
     }
 
     if (backendErrorFields.length > 0) {
@@ -457,11 +452,19 @@ export default function ClassForm({
           <div>
             <FormFooterAlert
               labelText={
-                Object.keys(errors).filter(
-                  (key) =>
-                    ['label', 'identifier'].includes(key) &&
+                Object.keys(errors).filter((key) => {
+                  const l: Array<keyof typeof errors> = [
+                    'identifier',
+                    'identifierInitChar',
+                    'identifierLength',
+                    'identifierCharacters',
+                    'label',
+                  ];
+                  return (
+                    (l as string[]).includes(key) &&
                     errors[key as keyof typeof errors] === true
-                ).length > 0
+                  );
+                }).length > 0
                   ? t('missing-information-title')
                   : t('unexpected-error-title')
               }
@@ -544,6 +547,7 @@ export default function ClassForm({
                 applicationProfile={applicationProfile}
                 modalButtonLabel={t('add-upper-class')}
                 plusIcon
+                hideSelfReference={data.uri}
               />
             }
             items={data.subClassOf}
@@ -568,6 +572,7 @@ export default function ClassForm({
                   handleFollowUp={handleTargetClassUpdate}
                   initialSelected={data.targetClass?.uri}
                   applicationProfile
+                  hideSelfReference={data.uri}
                 />
               }
               items={data.targetClass ? [data.targetClass] : []}
@@ -597,6 +602,7 @@ export default function ClassForm({
                 applicationProfile={applicationProfile}
                 modalButtonLabel={t('add-corresponding-class')}
                 plusIcon
+                hideSelfReference={data.uri}
               />
             }
             items={data.equivalentClass}
@@ -621,6 +627,7 @@ export default function ClassForm({
                   initialSelected={data.node?.uri}
                   applicationProfile
                   limitToModelType="PROFILE"
+                  hideSelfReference={data.uri}
                 />
               }
               items={data.node ? [data.node] : []}
@@ -640,6 +647,7 @@ export default function ClassForm({
                 applicationProfile={applicationProfile}
                 modalButtonLabel={t('add-disjoint-class')}
                 plusIcon
+                hideSelfReference={data.uri}
               />
             }
             items={data.disjointWith}
@@ -712,7 +720,7 @@ export default function ClassForm({
                     classId={data.identifier}
                     applicationProfile={applicationProfile}
                     hasPermission
-                    handlePropertyDelete={() => {
+                    handlePropertiesUpdate={() => {
                       const newAttributes = data.attribute
                         ? data.attribute.filter(
                             (attribute) =>
@@ -754,7 +762,7 @@ export default function ClassForm({
                     classId={data.identifier}
                     applicationProfile={applicationProfile}
                     hasPermission
-                    handlePropertyDelete={() => {
+                    handlePropertiesUpdate={() => {
                       const newAssociations = data.association
                         ? data.association.filter(
                             (association) =>

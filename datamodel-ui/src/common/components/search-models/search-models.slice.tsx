@@ -3,6 +3,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { SearchModels } from '@app/common/interfaces/search-models.interface';
 import { UrlState } from 'yti-common-ui/utils/hooks/use-url-state';
+import { inUseStatusList } from '@app/common/utils/status-list';
 
 /*
   Drops keys with "empty" values in urlState
@@ -33,7 +34,7 @@ function getUrl(urlState: UrlState, lang?: string) {
       ? urlState.types.map((type) => type.toUpperCase())
       : [],
     ...(urlState.status.length === 0
-      ? { status: ['VALID', 'SUGGESTED'] }
+      ? { status: inUseStatusList }
       : { status: urlState.status }),
   }).filter(
     (item) =>

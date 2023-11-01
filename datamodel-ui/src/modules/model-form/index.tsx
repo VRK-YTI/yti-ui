@@ -3,7 +3,7 @@ import { useGetServiceCategoriesQuery } from '@app/common/components/service-cat
 import getOrganizations from '@app/common/utils/get-organizations';
 import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Dropdown,
   DropdownItem,
@@ -31,6 +31,9 @@ import { FormUpdateErrors } from '../model/validate-form-update';
 import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
 import LinkBlock from './link-block';
 import { compareLocales } from '@app/common/utils/compare-locals';
+import { translateStatus } from '@app/common/utils/translation-helpers';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '@app/common/components/login/login.slice';
 
 interface ModelFormProps {
   formData: ModelFormType;
@@ -49,8 +52,9 @@ export default function ModelForm({
   disabled,
   errors,
   editMode,
-  oldVersion = true,
+  oldVersion,
 }: ModelFormProps) {
+  const user = useSelector(selectLogin());
   const { t, i18n } = useTranslation('admin');
   const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
     i18n.language
@@ -59,7 +63,14 @@ export default function ModelForm({
   const { data: languages, isSuccess } = useGetLanguagesQuery();
   const [languageList, setLanguageList] = useState<LanguageBlockType[]>([]);
 
-  const [initialStatus, setInitialStatus] = useState(formData.status);
+  const initialStatus = useRef(formData.status);
+
+  const statuses: Status[] = [
+    'VALID',
+    'RETIRED',
+    'SUPERSEDED',
+    ...(initialStatus.current === 'SUGGESTED' ? ['SUGGESTED' as Status] : []),
+  ];
 
   const serviceCategories = useMemo(() => {
     if (!serviceCategoriesData) {
@@ -84,8 +95,11 @@ export default function ModelForm({
         labelText: o.label,
         uniqueItemId: o.id,
       }))
+      .filter((o) =>
+        Object.keys(user.rolesInOrganizations).includes(o.uniqueItemId)
+      )
       .sort((o1, o2) => (o1.labelText > o2.labelText ? 1 : -1));
-  }, [organizationsData, i18n.language]);
+  }, [organizationsData, user, i18n.language]);
 
   useEffect(() => {
     if (isSuccess && languageList.length === 0) {
@@ -251,7 +265,7 @@ export default function ModelForm({
           ariaOptionChipRemovedText={''}
           noItemsText={''}
           status={errors?.languageAmount ? 'error' : 'default'}
-          disabled={disabled}
+          disabled={disabled || oldVersion}
           defaultSelectedItems={formData.languages
             .filter((lang) => lang.selected)
             .sort((a, b) => compareLocales(a.uniqueItemId, b.uniqueItemId))}
@@ -275,35 +289,26 @@ export default function ModelForm({
             >{`http://uri.suomi.fi/datamodel/ns/${formData.prefix}`}</Text>
           </div>
           {oldVersion &&
-            (formData.status === 'SUGGESTED' ||
-              formData.status === 'VALID') && (
+            (initialStatus.current === 'SUGGESTED' ||
+              initialStatus.current === 'VALID') && (
               <Dropdown
                 labelText={t('status')}
-                defaultValue={formData.status ?? ''}
+                defaultValue={initialStatus.current}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    status: e as Status | undefined,
+                    status: e as Status,
                   })
                 }
                 id="status-dropdown"
               >
-                {initialStatus === 'SUGGESTED' ? (
-                  <DropdownItem value={'SUGGESTED'}>
-                    {t('statuses.suggested', { ns: 'common' })}
-                  </DropdownItem>
-                ) : (
-                  <></>
-                )}
-                <DropdownItem value={'VALID'}>
-                  {t('statuses.valid', { ns: 'common' })}
-                </DropdownItem>
-                <DropdownItem value={'SUPERSEDED'}>
-                  {t('statuses.superseded', { ns: 'common' })}
-                </DropdownItem>
-                <DropdownItem value={'RETIRED'}>
-                  {t('statuses.retired', { ns: 'common' })}
-                </DropdownItem>
+                {statuses.map((status) => {
+                  return (
+                    <DropdownItem key={status} value={status}>
+                      {translateStatus(status, t)}
+                    </DropdownItem>
+                  );
+                })}
               </Dropdown>
             )}
         </div>
@@ -418,6 +423,9 @@ export default function ModelForm({
     return (
       <LinkBlock
         data={formData.links}
+        languages={formData.languages.sort((a, b) =>
+          compareLocales(a.uniqueItemId, b.uniqueItemId)
+        )}
         errors={{
           linksInvalidUri:
             errors && 'linksInvalidUri' in errors

@@ -29,6 +29,7 @@ import { selectDisplayLang } from '@app/common/components/model/model.slice';
 import ApplicationProfileTop from '../resource-form/components/application-profile-top';
 import { useTogglePropertyShapeMutation } from '@app/common/components/resource/resource.slice';
 import getApiError from '@app/common/utils/get-api-errors';
+import { RenameModal } from '@app/modules/rename-modal';
 
 interface CommonViewProps {
   data?: Resource;
@@ -41,6 +42,8 @@ interface CommonViewProps {
   isPartOfCurrentModel: boolean;
   applicationProfile?: boolean;
   currentModelId?: string;
+  disableEdit?: boolean;
+  organizationIds?: string[];
 }
 
 export default function ResourceInfo({
@@ -54,6 +57,8 @@ export default function ResourceInfo({
   isPartOfCurrentModel,
   applicationProfile,
   currentModelId,
+  disableEdit,
+  organizationIds,
 }: CommonViewProps) {
   const { t, i18n } = useTranslation('common');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -61,10 +66,12 @@ export default function ResourceInfo({
   const displayLang = useSelector(selectDisplayLang());
   const hasPermission = HasPermission({
     actions: ['EDIT_ASSOCIATION', 'EDIT_ATTRIBUTE'],
+    targetOrganization: organizationIds,
   });
   const [showTooltip, setShowTooltip] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
   const [localCopyVisible, setLocalCopyVisible] = useState(false);
+  const [renameVisible, setRenameVisible] = useState(false);
   const [externalEdit, setExternalEdit] = useState(false);
   const [externalActive, setExternalActive] = useState(inUse);
   const [togglePropertyShape, toggleResult] = useTogglePropertyShapeMutation();
@@ -110,7 +117,7 @@ export default function ResourceInfo({
           >
             {data ? translateCommonForm('return', data.type, t) : t('back')}
           </Button>
-          {hasPermission && data && !externalEdit && (
+          {!disableEdit && hasPermission && data && !externalEdit && (
             <div>
               <Button
                 variant="secondary"
@@ -136,6 +143,13 @@ export default function ResourceInfo({
                         id="edit-button"
                       >
                         {t('edit', { ns: 'admin' })}
+                      </Button>
+                      <Button
+                        variant="secondaryNoBorder"
+                        onClick={() => setRenameVisible(true)}
+                        id="rename-class-button"
+                      >
+                        {t('rename', { ns: 'admin' })}
                       </Button>
                       <Separator />
                       <Button
@@ -188,6 +202,13 @@ export default function ResourceInfo({
                 onClose={handleReturn}
                 visible={deleteVisible}
                 hide={() => setDeleteVisible(false)}
+              />
+              <RenameModal
+                modelId={modelId}
+                resourceId={data.identifier}
+                visible={renameVisible}
+                hide={() => setRenameVisible(false)}
+                handleReturn={handleShowResource}
               />
             </div>
           )}
