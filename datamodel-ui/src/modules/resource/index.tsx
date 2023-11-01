@@ -51,6 +51,7 @@ interface ResourceViewProps {
   languages: string[];
   terminologies: string[];
   applicationProfile?: boolean;
+  organizationIds?: string[];
 }
 
 export default function ResourceView({
@@ -60,10 +61,14 @@ export default function ResourceView({
   languages,
   terminologies,
   applicationProfile,
+  organizationIds,
 }: ResourceViewProps) {
   const { t, i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
-  const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
+  const hasPermission = HasPermission({
+    actions: ['CREATE_ATTRIBUTE'],
+    targetOrganization: organizationIds,
+  });
   const globalSelected = useSelector(selectSelected());
   const view = useSelector(
     selectResourceView(
@@ -339,6 +344,7 @@ export default function ResourceView({
           globalSelected.modelId !== modelId ? modelId : undefined
         }
         disableEdit={version ? true : false}
+        organizationIds={organizationIds}
       />
     );
   }

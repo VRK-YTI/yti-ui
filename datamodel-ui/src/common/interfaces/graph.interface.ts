@@ -14,6 +14,7 @@ export interface ClassNodeDataType {
     maxCount?: number | null;
     minCount?: number | null;
   }[];
+  organizationIds?: string[];
   refetch?: () => void;
 }
 

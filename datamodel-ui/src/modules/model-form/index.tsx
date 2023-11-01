@@ -32,6 +32,8 @@ import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
 import LinkBlock from './link-block';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import { translateStatus } from '@app/common/utils/translation-helpers';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '@app/common/components/login/login.slice';
 
 interface ModelFormProps {
   formData: ModelFormType;
@@ -52,6 +54,7 @@ export default function ModelForm({
   editMode,
   oldVersion,
 }: ModelFormProps) {
+  const user = useSelector(selectLogin());
   const { t, i18n } = useTranslation('admin');
   const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
     i18n.language
@@ -92,8 +95,11 @@ export default function ModelForm({
         labelText: o.label,
         uniqueItemId: o.id,
       }))
+      .filter((o) =>
+        Object.keys(user.rolesInOrganizations).includes(o.uniqueItemId)
+      )
       .sort((o1, o2) => (o1.labelText > o2.labelText ? 1 : -1));
-  }, [organizationsData, i18n.language]);
+  }, [organizationsData, user, i18n.language]);
 
   useEffect(() => {
     if (isSuccess && languageList.length === 0) {

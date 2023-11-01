@@ -45,6 +45,14 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
     version: version,
   });
 
+  const organizationIds = useMemo(() => {
+    if (!modelInfo) {
+      return [];
+    }
+
+    return modelInfo.organizations.map((o) => o.id);
+  }, [modelInfo]);
+
   const languages: string[] = useMemo(() => {
     if (!modelInfo) {
       return [];
@@ -70,7 +78,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         id: 'info',
         icon: <IconInfo />,
         buttonLabel: t('details'),
-        component: <ModelInfoView />,
+        component: <ModelInfoView organizationIds={organizationIds} />,
       },
       {
         id: 'links',
@@ -81,6 +89,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
             modelId={modelId}
             version={version}
             isApplicationProfile={modelInfo?.type === 'PROFILE'}
+            organizationIds={organizationIds}
           />
         ),
       },
@@ -99,6 +108,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
             languages={languages}
             applicationProfile={modelInfo?.type === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
+            organizationIds={organizationIds}
           />
         ),
       },
@@ -119,6 +129,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
             languages={languages}
             applicationProfile={modelInfo?.type === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
+            organizationIds={organizationIds}
           />
         ),
       },
@@ -139,6 +150,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
             languages={languages}
             applicationProfile={modelInfo?.type === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
+            organizationIds={organizationIds}
           />
         ),
       },
@@ -151,11 +163,12 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
             modelId={modelId}
             version={version}
             languages={languages}
+            organizationIds={organizationIds}
           />
         ),
       },
     ] as ViewType[];
-  }, [languages, modelId, version, modelInfo, t]);
+  }, [languages, modelId, version, modelInfo, organizationIds, t]);
 
   useEffect(() => {
     if (router.query.new) {
@@ -180,6 +193,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
           modelId={modelId}
           version={version}
           applicationProfile={modelInfo?.type === 'PROFILE'}
+          organizationIds={organizationIds}
         >
           <Drawer views={views} />
           <ModelTools

@@ -51,6 +51,7 @@ interface ClassInfoProps {
   handleRefetch: () => void;
   handleShowClass: (classId: string) => void;
   disableEdit?: boolean;
+  organizationIds?: string[];
 }
 
 export default function ClassInfo({
@@ -64,9 +65,13 @@ export default function ClassInfo({
   handleRefetch,
   handleShowClass,
   disableEdit,
+  organizationIds,
 }: ClassInfoProps) {
   const { t, i18n } = useTranslation('common');
-  const hasPermission = HasPermission({ actions: ['EDIT_CLASS'] });
+  const hasPermission = HasPermission({
+    actions: ['EDIT_CLASS'],
+    targetOrganization: organizationIds,
+  });
   const ref = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);

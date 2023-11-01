@@ -43,7 +43,11 @@ import CreateReleaseModal from '../create-release-modal';
 import PriorVersions from './prior-versions';
 import { useSelector } from 'react-redux';
 
-export default function ModelInfoView() {
+export default function ModelInfoView({
+  organizationIds,
+}: {
+  organizationIds?: string[];
+}) {
   const { t, i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const { query } = useRouter();
@@ -66,7 +70,10 @@ export default function ModelInfoView() {
   const ref = useRef<HTMLDivElement>(null);
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
   const { setView } = useSetView();
-  const hasPermission = HasPermission({ actions: ['EDIT_DATA_MODEL'] });
+  const hasPermission = HasPermission({
+    actions: ['EDIT_DATA_MODEL'],
+    targetOrganization: organizationIds,
+  });
   const { data: modelInfo, refetch } = useGetModelQuery({
     modelId: modelId,
     version: version,

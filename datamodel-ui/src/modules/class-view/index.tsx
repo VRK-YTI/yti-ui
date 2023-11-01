@@ -49,6 +49,7 @@ interface ClassViewProps {
   languages: string[];
   terminologies: string[];
   applicationProfile?: boolean;
+  organizationIds?: string[];
 }
 
 export default function ClassView({
@@ -57,11 +58,15 @@ export default function ClassView({
   languages,
   terminologies,
   applicationProfile,
+  organizationIds,
 }: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
-  const hasPermission = HasPermission({ actions: ['CREATE_CLASS'] });
+  const hasPermission = HasPermission({
+    actions: ['CREATE_CLASS'],
+    targetOrganization: organizationIds,
+  });
   const { setView } = useSetView();
   const { setPage, getPage } = useSetPage();
   const displayLang = useSelector(selectDisplayLang());
@@ -357,6 +362,7 @@ export default function ClassView({
         handleRefetch={refetchData}
         disableEdit={version ? true : false}
         handleShowClass={handleShowClass}
+        organizationIds={organizationIds}
       />
     );
   }
