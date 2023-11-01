@@ -331,40 +331,35 @@ export default function ClassForm({
     }
 
     let backendErrorFields: string[] = [];
+
+    const handleError = (error: AxiosQueryError): void => {
+      if (error?.status === 401) {
+        setErrors({
+          ...validateClassForm(data),
+          unauthorized: true,
+        });
+        return;
+      }
+      if (error.data.details) {
+        const asFields = (error as AxiosQueryErrorFields).data.details;
+        backendErrorFields = Array.isArray(asFields)
+          ? asFields.map((d) => d.field)
+          : [];
+      }
+    };
+
     if (
       createResult.isError &&
       createResult.error &&
       'data' in createResult.error
     ) {
-      if (createResult.error?.status === 401) {
-        setErrors({
-          ...validateClassForm(data),
-          unauthorized: true,
-        });
-        return;
-      }
-      const asFields = (createResult.error as AxiosQueryErrorFields).data
-        ?.details;
-      backendErrorFields = Array.isArray(asFields)
-        ? asFields.map((d) => d.field)
-        : [];
+      handleError(createResult.error);
     } else if (
       updateResult.isError &&
       updateResult.error &&
       'data' in updateResult.error
     ) {
-      if (updateResult.error?.status === 401) {
-        setErrors({
-          ...validateClassForm(data),
-          unauthorized: true,
-        });
-        return;
-      }
-      const asFields = (updateResult.error as AxiosQueryErrorFields).data
-        ?.details;
-      backendErrorFields = Array.isArray(asFields)
-        ? asFields.map((d) => d.field)
-        : [];
+      handleError(updateResult.error);
     }
 
     if (backendErrorFields.length > 0) {
