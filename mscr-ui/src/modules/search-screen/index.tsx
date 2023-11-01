@@ -6,7 +6,7 @@ import {IconClose} from 'suomifi-icons';
 import {useContext} from 'react';
 import {SearchContext} from '@app/common/components/search-context-provider';
 import SearchFilterSet from '@app/common/components/search-filter-set';
-import {Bucket, Filter} from '@app/common/interfaces/search.interface';
+import {Bucket, Facet, Filter} from '@app/common/interfaces/search.interface';
 import {useTranslation} from 'next-i18next';
 
 export default function SearchScreen() {
@@ -28,8 +28,7 @@ export default function SearchScreen() {
   // Constructing filters
 
   const makeFilter = (key: string, buckets: Bucket[]) : Filter => {
-    const filterKey = key.substring(7);
-    console.log(filterKey);
+    const filterKey : Facet = key.substring(7) as Facet;
     const filterLabel = t(filterKey);
     const options = buckets.map((bucket) => {
       return {
@@ -40,7 +39,7 @@ export default function SearchScreen() {
     });
     return {
       label: filterLabel,
-      key: filterKey,
+      facet: filterKey,
       options: options
     };
   };

@@ -1,4 +1,4 @@
-import {Organization} from "@app/common/interfaces/organizations.interface";
+import {Organization} from '@app/common/interfaces/organizations.interface';
 
 export interface Label {
   [key: string]: string;
@@ -32,9 +32,11 @@ export interface MscrSearchResult {
   _source: ResultInfo;
 }
 
+export type Facet = 'state' | 'type' | 'format' | 'organization' | 'sourceType'
+
 export interface Filter {
   label: string;
-  key: string;
+  facet: Facet;
   options: Array<{
     label: string;
     key: string;
