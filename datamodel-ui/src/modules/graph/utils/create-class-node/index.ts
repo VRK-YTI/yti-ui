@@ -21,11 +21,11 @@ export default function createClassNode(
         ? { applicationProfile: applicationProfile }
         : {}),
       resources: [
-        ...node.attributes.map((a) => ({
+        ...(node.attributes ?? []).map((a) => ({
           ...a,
           type: ResourceType.ATTRIBUTE as ResourceType.ATTRIBUTE,
         })),
-        ...(applicationProfile
+        ...(node.associations
           ? node.associations.map((a) => {
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               const { referenceTarget, ...rest } = a;

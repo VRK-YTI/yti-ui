@@ -28,7 +28,7 @@ import {
   setSelected,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
-import { ClassNode, CornerNode, ExternalNode } from './nodes';
+import { ClassNode, CornerNode, ExternalNode, AttributeNode } from './nodes';
 import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
 import { ClearArrow } from './marker-ends';
@@ -45,6 +45,7 @@ import getConnectedElements, {
 } from './utils/get-connected-elements';
 import handleCornerNodeDelete from './utils/handle-corner-node-delete';
 import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
+import { ReferenceType } from '@app/common/interfaces/visualization.interface';
 
 interface GraphProps {
   modelId: string;
@@ -61,7 +62,7 @@ const GraphContent = ({
   organizationIds,
   children,
 }: GraphProps) => {
-  const { i18n } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const { project, getZoom } = useReactFlow();
@@ -78,6 +79,7 @@ const GraphContent = ({
       classNode: ClassNode,
       cornerNode: CornerNode,
       externalNode: ExternalNode,
+      attributeNode: AttributeNode,
     }),
     []
   );
@@ -101,7 +103,13 @@ const GraphContent = ({
   );
 
   const splitEdge = useCallback(
-    (source: string, target: string, x: number, y: number) => {
+    (
+      source: string,
+      target: string,
+      x: number,
+      y: number,
+      referenceType: ReferenceType
+    ) => {
       const { top, left } = reactFlowWrapper.current
         ? reactFlowWrapper.current.getBoundingClientRect()
         : { top: 0, left: 0 };
@@ -115,6 +123,7 @@ const GraphContent = ({
             identifier: newCornerId,
             position: project({ x: x - left - 20 * getZoom(), y: y - top }),
             referenceTarget: target,
+            referenceType: referenceType,
           },
           deleteNodeById,
           applicationProfile
@@ -186,7 +195,13 @@ const GraphContent = ({
         return;
       }
 
-      splitEdge(edge.source, edge.target, e.clientX, e.clientY);
+      splitEdge(
+        edge.source,
+        edge.target,
+        e.clientX,
+        e.clientY,
+        edge.referenceType
+      );
     },
     [dispatch, globalSelected.id, splitEdge]
   );
@@ -260,7 +275,7 @@ const GraphContent = ({
         )
       );
       setEdges(
-        convertToEdges(data.nodes, data.hiddenNodes, applicationProfile)
+        convertToEdges(data.nodes, data.hiddenNodes, t, applicationProfile)
       );
 
       if (resetPosition) {
@@ -309,6 +324,7 @@ const GraphContent = ({
 
           if (
             !sourceNode ||
+            sourceNode.id.startsWith('#corner') ||
             sourceNode.data.resources.length === 0 ||
             sourceNode.data.resources.filter((r) => r.type !== 'ATTRIBUTE')
               .length === 0

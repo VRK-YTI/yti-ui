@@ -110,7 +110,11 @@ export default function DefaultEdge({
     </>
   );
 
-  function getLabel(label?: { [key: string]: string }) {
+  function getLabel(label?: { [key: string]: string } | string) {
+    if (typeof label === 'string') {
+      return label;
+    }
+
     if (!label || Object.keys(label).length < 1) {
       return undefined;
     }
