@@ -6,10 +6,12 @@ import {IconClose} from 'suomifi-icons';
 import {useContext} from 'react';
 import {SearchContext} from '@app/common/components/search-context-provider';
 import SearchFilterSet from '@app/common/components/search-filter-set';
-import {Filter} from '@app/common/interfaces/search.interface';
+import {Bucket, Filter} from '@app/common/interfaces/search.interface';
+import {useTranslation} from 'next-i18next';
 
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
+  const { t } = useTranslation('common');
   const {isSearchActive, setIsSearchActive} = useContext(SearchContext);
   const { data: mscrSearchResults, refetch: refetchMscrSearchResults } =
     useGetMscrSearchResultsQuery(urlState);
@@ -24,81 +26,103 @@ export default function SearchScreen() {
   };
 
   // Constructing filters
+
+  const makeFilter = (key: string, buckets: Bucket[]) : Filter => {
+    const filterKey = key.substring(7);
+    console.log(filterKey);
+    const filterLabel = t(filterKey);
+    const options = buckets.map((bucket) => {
+      return {
+        label: bucket.label,
+        key: bucket.key,
+        count: bucket.doc_count
+      };
+    });
+    return {
+      label: filterLabel,
+      key: filterKey,
+      options: options
+    };
+  };
+
   let filters : Filter[] = [];
   if (mscrSearchResults) {
-    const aggregations = mscrSearchResults.aggregations;
-    if (aggregations['sterms#format']) {
-      const formatFilter : Filter = {
-        name: 'Format',
-        options: [
-          {
-            name: 'CSV',
-            count: aggregations['sterms#format'].buckets.find((b) => b.key == 'CSV')?.doc_count ?? 0
-          },
-          {
-            name: 'JSONSCHEMA',
-            count: aggregations['sterms#format'].buckets.find((b) => b.key == 'JSONSCHEMA')?.doc_count ?? 0
-          }
-        ]
-      };
-      filters = filters.concat(formatFilter);
-    }
-    if (aggregations['sterms#state']) {
-      const stateFilter : Filter = {
-        name: 'State',
-        options: [
-          {
-            name: 'Draft',
-            count: aggregations['sterms#state'].buckets.find((b) => b.key == 'DRAFT')?.doc_count ?? 0
-          },
-          {
-            name: 'Published',
-            count: aggregations['sterms#state'].buckets.find((b) => b.key == 'PUBLISHED')?.doc_count ?? 0
-          }
-        ]
-      };
-      filters = filters.concat(stateFilter);
-    }
-    if (aggregations['sterms#status']) {
-      const stateFilter : Filter = {
-        name: 'Status',
-        options: [
-          {
-            name: 'Draft',
-            count: aggregations['sterms#status'].buckets.find((b) => b.key == 'DRAFT')?.doc_count ?? 0
-          },
-          {
-            name: 'Published',
-            count: aggregations['sterms#status'].buckets.find((b) => b.key == 'PUBLISHED')?.doc_count ?? 0
-          }
-        ]
-      };
-      filters = filters.concat(stateFilter);
-    }
-    if (aggregations['sterms#type']) {
-      const typeFilter : Filter = {
-        name: 'Type',
-        options: [
-          {
-            name: 'Schema',
-            count: aggregations['sterms#type'].buckets.find((b) => b.key == 'SCHEMA')?.doc_count ?? 0
-          },
-          {
-            name: 'Crosswalk',
-            count: aggregations['sterms#type'].buckets.find((b) => b.key == 'CROSSWALK')?.doc_count ?? 0
-          }
-        ]
-      };
-      filters = filters.concat(typeFilter);
-    }
+    console.log('here');
+    Object.keys(mscrSearchResults.aggregations).forEach((key) => {
+      const newFilter : Filter = makeFilter(key, mscrSearchResults.aggregations[key].buckets);
+      filters = filters.concat(newFilter);
+    });
+    // if (aggregations['sterms#format']) {
+    //   const formatFilter : Filter = {
+    //     name: 'Format',
+    //     options: [
+    //       {
+    //         name: 'CSV',
+    //         count: aggregations['sterms#format'].buckets.find((b) => b.key == 'CSV')?.doc_count ?? 0
+    //       },
+    //       {
+    //         name: 'JSONSCHEMA',
+    //         count: aggregations['sterms#format'].buckets.find((b) => b.key == 'JSONSCHEMA')?.doc_count ?? 0
+    //       }
+    //     ]
+    //   };
+    //   filters = filters.concat(formatFilter);
+    // }
+    // if (aggregations['sterms#state']) {
+    //   const stateFilter : Filter = {
+    //     name: 'State',
+    //     options: [
+    //       {
+    //         name: 'Draft',
+    //         count: aggregations['sterms#state'].buckets.find((b) => b.key == 'DRAFT')?.doc_count ?? 0
+    //       },
+    //       {
+    //         name: 'Published',
+    //         count: aggregations['sterms#state'].buckets.find((b) => b.key == 'PUBLISHED')?.doc_count ?? 0
+    //       }
+    //     ]
+    //   };
+    //   filters = filters.concat(stateFilter);
+    // }
+    // if (aggregations['sterms#status']) {
+    //   const stateFilter : Filter = {
+    //     name: 'Status',
+    //     options: [
+    //       {
+    //         name: 'Draft',
+    //         count: aggregations['sterms#status'].buckets.find((b) => b.key == 'DRAFT')?.doc_count ?? 0
+    //       },
+    //       {
+    //         name: 'Published',
+    //         count: aggregations['sterms#status'].buckets.find((b) => b.key == 'PUBLISHED')?.doc_count ?? 0
+    //       }
+    //     ]
+    //   };
+    //   filters = filters.concat(stateFilter);
+    // }
+    // if (aggregations['sterms#type']) {
+    //   const typeFilter : Filter = {
+    //     name: 'Type',
+    //     options: [
+    //       {
+    //         name: 'Schema',
+    //         count: aggregations['sterms#type'].buckets.find((b) => b.key == 'SCHEMA')?.doc_count ?? 0
+    //       },
+    //       {
+    //         name: 'Crosswalk',
+    //         count: aggregations['sterms#type'].buckets.find((b) => b.key == 'CROSSWALK')?.doc_count ?? 0
+    //       }
+    //     ]
+    //   };
+    //   filters = filters.concat(typeFilter);
+    // }
   }
 
   return (
     <SearchContainer>
       <FacetsWrapper>
         {/* Groups of facets for different contexts, made with search-filter-set */}
-        <SearchFilterSet title="First set of facets" filters={filters} />
-        <SearchFilterSet title="Second set of facets" filters={[]} />
+        <SearchFilterSet title="Just one set for now" filters={filters} />
       </FacetsWrapper>
       <ResultsWrapper>
         {/* Only a list of results if searching all of mscr, but two lists if searching own workspace */}

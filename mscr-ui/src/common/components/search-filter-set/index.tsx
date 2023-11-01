@@ -13,7 +13,7 @@ export default function SearchFilterSet({ title, filters }: SearchFilterProps) {
       <FacetTitle variant="h2">{title}</FacetTitle>
       {filters.map((f) => (
         <>
-          <SearchFilter key={f.name} name={f.name} options={f.options}/>
+          <SearchFilter key={f.key} label={f.label} options={f.options}/>
         </>
       ))}
     </>
@@ -22,9 +22,9 @@ export default function SearchFilterSet({ title, filters }: SearchFilterProps) {
 
 function SearchFilter(filter: Filter) {
   return (
-    <CheckboxGroup labelText={filter.name}>
+    <CheckboxGroup labelText={filter.label}>
       {filter.options.map((option) => (
-        <Checkbox key={option.name}>{option.name} ({option.count})</Checkbox>
+        <Checkbox key={option.key}>{option.label} ({option.count})</Checkbox>
       ))}
     </CheckboxGroup>
   );

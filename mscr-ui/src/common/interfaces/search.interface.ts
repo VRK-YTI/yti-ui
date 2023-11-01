@@ -33,15 +33,18 @@ export interface MscrSearchResult {
 }
 
 export interface Filter {
-  name: string;
+  label: string;
+  key: string;
   options: Array<{
-    name: string;
+    label: string;
+    key: string;
     count: number;
   }>;
 }
 
 export interface Bucket {
   key: string;
+  label: string;
   doc_count: number;
 }
 
