@@ -45,6 +45,7 @@ export default function IndexPage(props: IndexPageProps) {
   );
 }
 
+//CreateCommonGetSevverside Props creat
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, query, locale }) => {
     const urlState = Object.assign({}, initialUrlState);
@@ -53,6 +54,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       if (query.q !== undefined) {
         urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
       }
+      console.log("server side props are "+ query);
 
       if (query.page !== undefined) {
         const pageValue = Array.isArray(query.page)

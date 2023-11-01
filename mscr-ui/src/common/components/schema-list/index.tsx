@@ -21,7 +21,8 @@ export default function SchemaList({
 }: SchemaListProps) {
   const { t } = useTranslation('admin');
 
-  if (items.length < 1) {
+  if (items && items.length < 1) {
+    items = [];// initialize empty array
     return <div>{'There is no Schemas or Crosswalks to show'}</div>;
   }
 
@@ -33,6 +34,7 @@ export default function SchemaList({
 
   return (
     //Creating Header row
+    
 
     <div>
       <List className="header-list">
@@ -58,7 +60,7 @@ export default function SchemaList({
         </ListItem>
       </List>
       <List className="inline-list">
-        {items.map((item) => (
+        {items && items.map((item) => (
           <ListItem
             key={item.pid}
             onClick={() => handleClick(item.pid)}
