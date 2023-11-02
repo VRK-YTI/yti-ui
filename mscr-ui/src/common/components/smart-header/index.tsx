@@ -23,6 +23,7 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 import LoginModalView from 'yti-common-ui/login-modal';
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 import { User } from 'yti-common-ui/interfaces/user.interface';
+import SearchBar from "@app/modules/search-bar";
 
 export default function SmartHeader({
   user,
@@ -161,10 +162,11 @@ export default function SmartHeader({
 
   function renderHeaderSearch() {
     return (
-      <HeaderSearch
-        isSearchOpen={isSearchOpen}
-        setIsSearchOpen={setIsSearchOpen}
-      />
+      <SearchBar />
+      // <HeaderSearch
+      //   isSearchOpen={isSearchOpen}
+      //   setIsSearchOpen={setIsSearchOpen}
+      // />
     );
   }
 
