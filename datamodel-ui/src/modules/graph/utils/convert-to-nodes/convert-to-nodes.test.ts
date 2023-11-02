@@ -1,10 +1,10 @@
 import convertToNodes from '.';
 import {
-  convertedExpected,
-  convertedWithHiddenExpected,
-  visualizationTypeArray,
-  visualizationHiddenTypeArray,
-} from './convert-to-nodes.test.data';
+  expectedLibraryNodes,
+  expectedProfilesNodes,
+  libraryData,
+  profileData,
+} from '../visualization-test-data';
 
 describe('convert-to-nodes', () => {
   it('should return an empty array if given an empty array', () => {
@@ -15,31 +15,30 @@ describe('convert-to-nodes', () => {
     expect(returned).toStrictEqual([]);
   });
 
-  it('should convert VisualizationType[] to a Node[]', () => {
+  it('should return nodes for library', () => {
     const handleNodeDeleteMock = jest.fn();
 
-    const input = visualizationTypeArray;
-
-    const expected = convertedExpected;
-
-    const returned = convertToNodes(input, [], 'modelId', handleNodeDeleteMock);
+    const returned = convertToNodes(
+      libraryData.nodes,
+      libraryData.hiddenNodes,
+      'visu',
+      handleNodeDeleteMock
+    );
+    const expected = expectedLibraryNodes(handleNodeDeleteMock);
     expect(returned).toStrictEqual(expected);
   });
 
-  it('should convert VisualizationType[] and VisualizationHiddenNode[] to a Node[]', () => {
+  it('should return nodes for application profile', () => {
     const handleNodeDeleteMock = jest.fn();
 
-    const input = visualizationTypeArray;
-    const inputHidden = visualizationHiddenTypeArray;
-
-    const expected = convertedWithHiddenExpected(handleNodeDeleteMock);
-
     const returned = convertToNodes(
-      input,
-      inputHidden,
-      'modelId',
-      handleNodeDeleteMock
+      profileData.nodes,
+      profileData.hiddenNodes,
+      'visuprof',
+      handleNodeDeleteMock,
+      true
     );
+    const expected = expectedProfilesNodes(handleNodeDeleteMock);
     expect(returned).toStrictEqual(expected);
   });
 });

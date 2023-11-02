@@ -1,39 +1,34 @@
 import convertToEdges from '.';
 import {
-  dottedEdgeExpected,
-  solidEdgeExpected,
-  visualizationHiddenTypeArray,
-  visualizationTypeArray,
-  withHiddenEdgeExpected,
-} from './convert-to-edges.test.data';
+  expectedLibraryEdges,
+  expectedProfileEdges,
+  libraryData,
+  profileData,
+} from '../visualization-test-data';
 
 describe('convert-to-edges', () => {
-  it('should return an empty array if no associations defined', () => {
-    const returned = convertToEdges([], []);
+  it('should return an empty array if no associations or parent class references defined', () => {
+    const returned = convertToEdges([], [], (key: string) => key);
 
     expect(returned).toStrictEqual([]);
   });
 
-  it('should return solid edges', () => {
-    const returned = convertToEdges(visualizationTypeArray(), []);
-
-    expect(returned).toHaveLength(2);
-    expect(returned).toStrictEqual(solidEdgeExpected);
-  });
-
-  it('should return dotted edges', () => {
-    const returned = convertToEdges(visualizationTypeArray(), [], true);
-
-    expect(returned).toHaveLength(2);
-    expect(returned).toStrictEqual(dottedEdgeExpected);
-  });
-
-  it('should return edges with corners', () => {
+  it('should return edges for library', () => {
     const returned = convertToEdges(
-      visualizationTypeArray(true),
-      visualizationHiddenTypeArray
+      libraryData.nodes,
+      libraryData.hiddenNodes,
+      (key: string) => key
     );
+    expect(returned).toStrictEqual(expectedLibraryEdges);
+  });
 
-    expect(returned).toStrictEqual(withHiddenEdgeExpected);
+  it('should return edges for application profile', () => {
+    const returned = convertToEdges(
+      profileData.nodes,
+      profileData.hiddenNodes,
+      (key: string) => key,
+      true
+    );
+    expect(returned).toStrictEqual(expectedProfileEdges);
   });
 });

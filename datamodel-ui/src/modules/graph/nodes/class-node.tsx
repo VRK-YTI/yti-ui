@@ -242,12 +242,11 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
                 handleResourceHover(r.identifier, r.type, true)
               }
             >
-              {data.applicationProfile &&
-                (r.type === ResourceType.ASSOCIATION ? (
-                  <IconSwapVertical />
-                ) : (
-                  <IconRows />
-                ))}
+              {r.type === ResourceType.ASSOCIATION ? (
+                <IconSwapVertical />
+              ) : (
+                <IconRows />
+              )}
 
               {renderResourceLabel(r)}
             </Resource>

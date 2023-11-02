@@ -9,13 +9,14 @@ describe('create-class-node', () => {
           fi: 'label-1-fi',
           en: 'label-1-en',
         },
-        parentClasses: [],
+        references: [],
         position: {
           x: 0,
           y: 0,
         },
         attributes: [],
         associations: [],
+        type: 'CLASS',
       },
       'modelId'
     );
@@ -43,10 +44,11 @@ describe('create-class-node', () => {
     const returned = createClassNode(
       {
         identifier: 'id-1',
+        type: 'CLASS',
         label: {
           fi: 'label-1-fi',
         },
-        parentClasses: [],
+        references: [],
         position: {
           x: 0,
           y: 0,
@@ -78,6 +80,7 @@ describe('create-class-node', () => {
               fi: 'assoc-1-fi',
             },
             referenceTarget: 'id-2',
+            referenceType: 'ASSOCIATION',
           },
           {
             identifier: 'assoc-2',
@@ -85,6 +88,7 @@ describe('create-class-node', () => {
               fi: 'assoc-2-fi',
             },
             referenceTarget: 'id-3',
+            referenceType: 'ASSOCIATION',
           },
           {
             identifier: 'assoc-3',
@@ -92,6 +96,7 @@ describe('create-class-node', () => {
               fi: 'assoc-3-fi',
             },
             referenceTarget: 'id-4',
+            referenceType: 'ASSOCIATION',
           },
         ],
       },

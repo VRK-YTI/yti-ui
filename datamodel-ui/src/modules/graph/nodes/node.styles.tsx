@@ -201,6 +201,12 @@ export const Resource = styled.div<{ $highlight?: boolean }>`
     width: 17px;
   }
 
+  .react-flow__handle {
+    display: none;
+  }
+  min-width: 360px;
+  padding: 0px 10px;
+
   ${(props) =>
     props.$highlight &&
     `
