@@ -79,7 +79,7 @@ export default function FrontPage() {
         ></CrosswalkSelectionModal>
       </ButtonBlock>
       <Separator isLarge />
-     
+      <BasicTable></BasicTable>
       <Separator isLarge />
     </main>
   );
