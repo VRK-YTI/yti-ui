@@ -14,10 +14,16 @@ const getNodeByType = (
   modelId: string,
   applicationProfile?: boolean,
   refetch?: () => void,
-  organizationIds?: string[],
+  organizationIds?: string[]
 ) => {
   if (node.type === 'CLASS') {
-    return createClassNode(node, modelId, applicationProfile, refetch, organizationIds);
+    return createClassNode(
+      node,
+      modelId,
+      applicationProfile,
+      refetch,
+      organizationIds
+    );
   } else if (node.type === 'ATTRIBUTE') {
     return createAttributeNode(node, modelId, refetch);
   } else {
