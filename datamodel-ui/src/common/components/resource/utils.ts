@@ -96,13 +96,10 @@ export function convertToPayload(
           e[0] === 'range' ||
           e[0] === 'domain' ||
           e[0] === 'classType' ||
-          e[0] === 'path'
+          e[0] === 'path' ||
+          e[0] === 'dataType'
         ) {
           return [e[0], e[1].uri];
-        }
-
-        if (e[0] === 'dataType') {
-          return [e[0], e[1].id];
         }
 
         if (e[0] === 'subResourceOf' || e[0] === 'equivalentResource') {

@@ -15,10 +15,7 @@ export interface ResourceFormType {
     status: Status;
   }[];
   concept?: ConceptType;
-  dataType?: {
-    id: string;
-    label: string;
-  };
+  dataType?: UriData;
   defaultValue?: string;
   domain?: UriData;
   editorialNote?: string;
@@ -98,5 +95,9 @@ export const initialAppAttribute: ResourceFormType = {
   note: {},
   status: 'DRAFT',
   type: ResourceType.ATTRIBUTE,
-  dataType: { id: 'rdfs:Literal', label: 'rdfs:Literal' },
+  dataType: {
+    uri: 'http://www.w3.org/2000/01/rdf-schema#Literal',
+    curie: 'rdfs:Literal',
+    label: {},
+  },
 };
