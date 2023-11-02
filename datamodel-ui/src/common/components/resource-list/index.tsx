@@ -33,6 +33,7 @@ export interface ResultType {
     status: StatusType;
     domains: string[];
     uri: string;
+    version?: string;
   };
   concept?: {
     label: string;
@@ -179,7 +180,14 @@ export default function ResourceList({
               <td>
                 {item.datamodel?.type ? (
                   <div>
-                    <Text>{item.datamodel.label}</Text>
+                    <div>
+                      <Text>{item.datamodel.label} </Text>
+                      {item.datamodel.version && (
+                        <Text>{`(${t('version', {
+                          ns: 'common',
+                        })} ${item.datamodel.version})`}</Text>
+                      )}
+                    </div>
                     <div
                       style={{
                         display: 'flex',

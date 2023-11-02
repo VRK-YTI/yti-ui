@@ -30,6 +30,7 @@ export interface InternalClassInfo extends InternalClass {
     status: Status;
     modelType: Type;
     uri: string;
+    version?: string;
   };
   conceptInfo: {
     conceptURI: string;
