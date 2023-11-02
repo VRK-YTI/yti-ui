@@ -8,6 +8,7 @@ export interface LibraryResourcePutType {
     [key: string]: string;
   };
   identifier?: string;
+  uri?: string;
   subject?: string;
   note?: {
     [key: string]: string;
@@ -25,6 +26,7 @@ export interface ApplicationProfileResourcePutType {
     [key: string]: string;
   };
   identifier?: string;
+  uri?: string;
   subject?: string;
   note?: {
     [key: string]: string;
