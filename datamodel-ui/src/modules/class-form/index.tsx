@@ -33,7 +33,10 @@ import {
   useGetClassExistsQuery,
   useUpdateClassMutation,
 } from '@app/common/components/class/class.slice';
-import { AxiosQueryErrorFields } from 'yti-common-ui/interfaces/axios-base-query.interface';
+import {
+  AxiosBaseQueryError,
+  AxiosQueryErrorFields,
+} from 'yti-common-ui/interfaces/axios-base-query.interface';
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '@app/store';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
@@ -332,7 +335,7 @@ export default function ClassForm({
 
     let backendErrorFields: string[] = [];
 
-    const handleError = (error: AxiosQueryError): void => {
+    const handleError = (error: AxiosBaseQueryError): void => {
       if (error?.status === 401) {
         setErrors({
           ...validateClassForm(data),
@@ -340,7 +343,7 @@ export default function ClassForm({
         });
         return;
       }
-      if (error.data.details) {
+      if ('data' in error && (error as AxiosQueryErrorFields).data.details) {
         const asFields = (error as AxiosQueryErrorFields).data.details;
         backendErrorFields = Array.isArray(asFields)
           ? asFields.map((d) => d.field)
