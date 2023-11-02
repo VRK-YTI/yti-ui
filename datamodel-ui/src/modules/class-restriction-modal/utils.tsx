@@ -32,6 +32,7 @@ export function mapInternalClassInfoToResultType(
       type: data.dataModelInfo.modelType,
       uri: data.dataModelInfo.uri,
       status: data.dataModelInfo.status,
+      version: data.dataModelInfo.version,
     },
     target: {
       identifier: data.id,
