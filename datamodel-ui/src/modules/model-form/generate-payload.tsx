@@ -27,7 +27,6 @@ export default function generatePayload(data: ModelFormType): NewModel {
     languages: data.languages.map((l) => l.uniqueItemId),
     organizations: data.organizations.map((o) => o.uniqueItemId),
     prefix: data.prefix,
-    status: 'DRAFT',
     type: data.type.toUpperCase(),
     contact: data.contact !== '' ? data.contact : ADMIN_EMAIL,
   };

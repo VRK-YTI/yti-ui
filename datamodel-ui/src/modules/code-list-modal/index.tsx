@@ -18,7 +18,6 @@ import {
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { ModelCodeList } from '@app/common/interfaces/model.interface';
 import { DetachedPagination } from 'yti-common-ui/pagination';
-import WideModal from '@app/common/components/wide-modal';
 import FilterBlock, { FilterType } from './filter-block';
 import ResultsAndInfoBlock from './results-and-info-block';
 import { SelectedChipsWrapper } from './code-list-modal.styles';
@@ -27,6 +26,7 @@ import {
   NarrowModal,
   SimpleModalContent,
 } from '../as-file-modal/as-file-modal.styles';
+import LargeModal from '@app/common/components/large-modal';
 
 export default function CodeListModal({
   initialData,
@@ -75,7 +75,7 @@ export default function CodeListModal({
 
   const renderWideModal = () => {
     return (
-      <WideModal
+      <LargeModal
         appElementId="__next"
         visible={visible}
         onEscKeyDown={handleClose}
@@ -88,7 +88,7 @@ export default function CodeListModal({
           close={handleClose}
           setData={setData}
         />
-      </WideModal>
+      </LargeModal>
     );
   };
 

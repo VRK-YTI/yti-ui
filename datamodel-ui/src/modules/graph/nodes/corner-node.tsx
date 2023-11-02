@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { Handle, Position } from 'reactflow';
 import { CornerNodeWrapper } from './node.styles';
 import { IconClose } from 'suomifi-icons';
+import { CornerNodeDataType } from '@app/common/interfaces/graph.interface';
 
 export default function CornerNode({
   id,
@@ -13,10 +14,7 @@ export default function CornerNode({
 }: {
   id: string;
   selected: boolean;
-  data: {
-    handleNodeDelete: (id: string) => void;
-    applicationProfile?: boolean;
-  };
+  data: CornerNodeDataType;
 }) {
   const highlighted = useSelector(selectHighlighted());
 

@@ -21,4 +21,7 @@ export interface DataModel {
   prefix: string;
   status: Status;
   type: Type;
+  version?: string;
+  versionIri?: string;
+  uri: string;
 }

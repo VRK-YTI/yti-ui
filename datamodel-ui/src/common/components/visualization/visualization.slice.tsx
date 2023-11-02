@@ -16,9 +16,17 @@ export const visualizationApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    getVisualization: builder.query<VisualizationResult, string>({
-      query: (modelId) => ({
-        url: `/visualization/${modelId}`,
+    getVisualization: builder.query<
+      VisualizationResult,
+      { modelid: string; version?: string }
+    >({
+      query: (value) => ({
+        url: `/visualization/${value.modelid}`,
+        params: {
+          ...(value.version && {
+            version: value.version,
+          }),
+        },
         method: 'GET',
       }),
     }),

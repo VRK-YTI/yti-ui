@@ -22,7 +22,6 @@ export const SiteContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 100vh;
 `;
 
 // header layout
@@ -45,15 +44,18 @@ export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`
 
 // content layout
 
+
 export const ContentContainer = styled.div<{ $fullScreen?: boolean }>`
   background-color: ${(props) =>
     props.$fullScreen
       ? props.theme.suomifi.colors.whiteBase
       : props.theme.suomifi.colors.depthLight3};
+
   border-bottom: ${(props) =>
     !props.$fullScreen &&
     `1px solid ${props.theme.suomifi.colors.depthLight1}`};
   flex-grow: 1;
+
   ${(props) =>
     props.$fullScreen &&
     `

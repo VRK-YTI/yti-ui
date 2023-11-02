@@ -1,25 +1,21 @@
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
 import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
 import Title from 'yti-common-ui/title';
-import { SearchResultData } from 'yti-common-ui/search-results/search-results';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
 
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import { SingleSelectData } from 'suomifi-ui-components';
 import useUrlState from 'yti-common-ui/utils/hooks/use-url-state';
 import {
   Description,
   TitleDescriptionWrapper,
 } from 'yti-common-ui/title/title.styles';
-import { translateModelType } from '@app/common/utils/translation-helpers';
 import Separator from 'yti-common-ui/separator';
 import SchemaFormModal from '../schema-form/schema-form-modal';
 import CrosswalkFormModal from '../crosswalk-form/crosswalk-form-modal';
 import { ButtonBlock } from './front-page.styles';
-import PersonalWorkspace from '../personal-home';
-import CreateCrosswalk from '../create-crosswalk';
+import BasicTable from '@app/common/components/table';
+import CrosswalkSelectionModal from '@app/modules/create-crosswalk/crosswalk-selection-modal';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -78,8 +74,12 @@ export default function FrontPage() {
       <ButtonBlock>
         <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>
         <CrosswalkFormModal refetch={refetchInfo}></CrosswalkFormModal>
-        <CreateCrosswalk></CreateCrosswalk>
+        <CrosswalkSelectionModal
+          refetch={refetchInfo}
+        ></CrosswalkSelectionModal>
       </ButtonBlock>
+      <Separator isLarge />
+      <BasicTable></BasicTable>
       <Separator isLarge />
     </main>
   );

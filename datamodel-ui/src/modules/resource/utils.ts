@@ -43,22 +43,6 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
           },
         }
       : undefined,
-    subResourceOf:
-      data.subResourceOf && data.subResourceOf.length > 0
-        ? data.subResourceOf.map((sro) => {
-            if (
-              sro.uri.endsWith('/owl#topDataProperty') ||
-              sro.uri.endsWith('/owl#topObjectProperty') ||
-              sro.uri.endsWith('/owl#TopObjectProperty')
-            ) {
-              return {
-                uri: sro.uri,
-                curie: sro.curie,
-                label: { en: sro.curie ? sro.curie?.replace('/owl#', '') : '' },
-              };
-            }
-            return sro;
-          })
-        : [],
+    subResourceOf: data.subResourceOf,
   };
 }

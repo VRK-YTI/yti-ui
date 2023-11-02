@@ -16,7 +16,7 @@ import {
   setHasChanges,
   useUpdateModelMutation,
 } from '@app/common/components/model/model.slice';
-import generatePayload from '../model/generate-payload';
+import generatePayloadUpdate from '../model/generate-payload';
 import CodeListModal from '../code-list-modal';
 import LinkedModel from '../linked-model';
 import LinkedItem from './linked-item';
@@ -65,7 +65,7 @@ export default function LinkedDataForm({
     disableConfirmation();
     dispatch(setHasChanges(false));
 
-    const payload = generatePayload({
+    const payload = generatePayloadUpdate({
       ...model,
       codeLists: data.codeLists,
       externalNamespaces: data.externalNamespaces,
@@ -249,7 +249,7 @@ export default function LinkedDataForm({
                   })
                 }
                 setExternalData={(external: {
-                  name: string;
+                  name: { [key: string]: string };
                   namespace: string;
                   prefix: string;
                 }) =>
@@ -259,6 +259,7 @@ export default function LinkedDataForm({
                   })
                 }
                 currentModel={model.prefix}
+                languages={model.languages}
               />
             </div>
           }
@@ -295,12 +296,11 @@ export default function LinkedDataForm({
                       if (ext.prefix === n.prefix) {
                         return {
                           ...ext,
-                          name: name,
+                          name: { ...ext.name, ...name },
                         };
                       }
                       return ext;
                     });
-
                     handleUpdate({
                       ...data,
                       externalNamespaces: updated,
@@ -315,6 +315,7 @@ export default function LinkedDataForm({
                     ),
                   })
                 }
+                languages={model.languages}
               />
             ))}
           </div>

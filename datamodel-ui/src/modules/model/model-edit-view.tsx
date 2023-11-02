@@ -1,6 +1,7 @@
 import {
   setHasChanges,
   useUpdateModelMutation,
+  useUpdateVersionedModelMutation,
 } from '@app/common/components/model/model.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { ModelType } from '@app/common/interfaces/model.interface';
@@ -20,7 +21,9 @@ import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import ModelForm from '../model-form';
-import generatePayload from './generate-payload';
+import generatePayloadUpdate, {
+  generatePayloadVersionedUpdate,
+} from './generate-payload';
 import { FormUpdateErrors, validateFormUpdate } from './validate-form-update';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
@@ -48,6 +51,8 @@ export default function ModelEditView({
   const ref = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [updateModel, result] = useUpdateModelMutation();
+  const [updateVersionedModel, versionedResult] =
+    useUpdateVersionedModelMutation();
   const [formData, setFormData] = useState<ModelFormType>({
     contact: model.contact,
     externalNamespaces: model.externalNamespaces ?? [],
@@ -74,11 +79,11 @@ export default function ModelEditView({
   });
 
   useEffect(() => {
-    if (result.isSuccess) {
+    if (result.isSuccess || versionedResult.isSuccess) {
       handleSuccess();
       dispatch(setNotification('MODEL_EDIT'));
     }
-  }, [result, dispatch, handleSuccess]);
+  }, [result, versionedResult, dispatch, handleSuccess]);
 
   useEffect(() => {
     if (!userPosted) {
@@ -97,11 +102,12 @@ export default function ModelEditView({
     if (
       ref.current &&
       ((errors && Object.values(errors).filter((val) => val).length > 0) ||
-        result.isError)
+        result.isError ||
+        versionedResult.isError)
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors, result]);
+  }, [ref, errors, result, versionedResult]);
 
   const handleSubmit = () => {
     setUserPosted(true);
@@ -119,13 +125,22 @@ export default function ModelEditView({
       return;
     }
 
-    const payload = generatePayload(formData);
+    if (!model.version) {
+      const payload = generatePayloadUpdate(formData);
 
-    updateModel({
-      payload: payload,
-      prefix: formData.prefix,
-      isApplicationProfile: formData.type === 'PROFILE',
-    });
+      updateModel({
+        payload: payload,
+        prefix: formData.prefix,
+        isApplicationProfile: formData.type === 'PROFILE',
+      });
+    } else {
+      const payload = generatePayloadVersionedUpdate(formData);
+      updateVersionedModel({
+        payload: payload,
+        modelId: formData.prefix,
+        version: model.version,
+      });
+    }
   };
 
   const handleUpdate = (data: ModelFormType) => {
@@ -141,7 +156,7 @@ export default function ModelEditView({
           <Text variant="bold">{t('details', { ns: 'common' })}</Text>
           <HeaderRow>
             <Button onClick={() => handleSubmit()}>
-              {result.isLoading ? (
+              {result.isLoading || versionedResult.isLoading ? (
                 <div role="alert">
                   <StyledSpinner
                     variant="small"
@@ -178,6 +193,7 @@ export default function ModelEditView({
           userPosted={userPosted}
           editMode={true}
           errors={userPosted ? errors : undefined}
+          oldVersion={!!model.version}
         />
       </DrawerContent>
     </>
@@ -203,6 +219,11 @@ export default function ModelEditView({
 
     if (result.isError) {
       const errorMessage = getApiError(result.error);
+      return [...langsWithError, ...otherErrors, ...errorMessage];
+    }
+
+    if (versionedResult.isError) {
+      const errorMessage = getApiError(versionedResult.error);
       return [...langsWithError, ...otherErrors, ...errorMessage];
     }
 

@@ -46,22 +46,29 @@ import { UriData } from '@app/common/interfaces/uri.interface';
 
 interface ResourceViewProps {
   modelId: string;
+  version?: string;
   type: ResourceType;
   languages: string[];
   terminologies: string[];
   applicationProfile?: boolean;
+  organizationIds?: string[];
 }
 
 export default function ResourceView({
   modelId,
+  version,
   type,
   languages,
   terminologies,
   applicationProfile,
+  organizationIds,
 }: ResourceViewProps) {
   const { t, i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
-  const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
+  const hasPermission = HasPermission({
+    actions: ['CREATE_ATTRIBUTE'],
+    targetOrganization: organizationIds,
+  });
   const globalSelected = useSelector(selectSelected());
   const view = useSelector(
     selectResourceView(
@@ -83,6 +90,7 @@ export default function ResourceView({
     pageSize: 20,
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [type],
+    fromVersion: version,
   });
 
   const { data: resourceData, refetch: refetchResource } = useGetResourceQuery(
@@ -90,6 +98,7 @@ export default function ResourceView({
       modelId: globalSelected.modelId ?? modelId,
       resourceIdentifier: globalSelected.id ?? '',
       applicationProfile,
+      version: version,
     },
     {
       skip:
@@ -102,6 +111,7 @@ export default function ResourceView({
     {
       prefix: modelId,
       uri: `http://uri.suomi.fi/datamodel/ns/${globalSelected.modelId}/${globalSelected.id}`,
+      version: version,
     },
     {
       skip: !globalSelected.id || !globalSelected.modelId,
@@ -178,18 +188,7 @@ export default function ResourceView({
   };
 
   const handleFollowUp = (value?: UriData) => {
-    if (applicationProfile) {
-      dispatch(initializeResource(type, languages, value, applicationProfile));
-    } else {
-      dispatch(
-        initializeResource(
-          type,
-          languages,
-          value?.label['en'],
-          applicationProfile
-        )
-      );
-    }
+    dispatch(initializeResource(type, languages, value, applicationProfile));
 
     setView(
       type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
@@ -234,7 +233,7 @@ export default function ResourceView({
               {translateResourceCountTitle(type, t, data?.totalHitCount)}
             </Text>
 
-            {hasPermission && (
+            {!version && hasPermission && (
               <ResourceModal
                 modelId={modelId}
                 type={type}
@@ -344,6 +343,8 @@ export default function ResourceView({
         currentModelId={
           globalSelected.modelId !== modelId ? modelId : undefined
         }
+        disableEdit={version ? true : false}
+        organizationIds={organizationIds}
       />
     );
   }

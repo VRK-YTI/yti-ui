@@ -1,5 +1,3 @@
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
@@ -10,7 +8,6 @@ import {
   ModalTitle,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import { LargeModal } from './class-modal.styles';
 import MultiColumnSearch from '@app/common/components/multi-column-search';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import {
@@ -20,6 +17,8 @@ import {
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { ResultType } from '@app/common/components/resource-list';
+import { mapInternalClassInfoToResultType } from '../class-restriction-modal/utils';
+import LargeModal from '@app/common/components/large-modal';
 
 export interface ClassModalProps {
   modelId: string;
@@ -33,6 +32,8 @@ export interface ClassModalProps {
   initialSelected?: string;
   plusIcon?: boolean;
   limitToModelType?: 'LIBRARY' | 'PROFILE';
+  hideSelfReference?: string;
+  buttonVariant?: 'secondary' | 'secondaryNoBorder';
 }
 
 export default function ClassModal({
@@ -44,6 +45,8 @@ export default function ClassModal({
   initialSelected,
   plusIcon,
   limitToModelType,
+  hideSelfReference,
+  buttonVariant,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -114,56 +117,17 @@ export default function ClassModal({
   useEffect(() => {
     if (result.isSuccess) {
       setResultsFormatted(
-        result.data.responseObjects.map((r) => ({
-          target: {
-            identifier: r.id,
-            label: getLanguageVersion({
-              data: r.label,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-            linkLabel: r.curie,
-            link: r.id,
-            status: translateStatus(r.status, t),
-            isValid: r.status === 'VALID',
-            note: getLanguageVersion({
-              data: r.note,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-          },
-          partOf: {
-            label: getLanguageVersion({
-              data: r.dataModelInfo.label,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-            type: r.dataModelInfo.modelType,
-            domains: r.dataModelInfo.groups,
-            uri: r.dataModelInfo.uri,
-          },
-          concept: {
-            label: getLanguageVersion({
-              data: r.conceptInfo?.conceptLabel,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-            link: r.conceptInfo?.conceptURI,
-            partOf: getLanguageVersion({
-              data: r.conceptInfo?.terminologyLabel,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-          },
-        }))
+        result.data.responseObjects
+          .filter((r) => r.id !== hideSelfReference)
+          .map((r) => mapInternalClassInfoToResultType(r, i18n.language))
       );
     }
-  }, [result, i18n.language, t, contentLanguage]);
+  }, [result, i18n.language, t, contentLanguage, hideSelfReference]);
 
   return (
     <>
       <Button
-        variant="secondary"
+        variant={buttonVariant ?? 'secondary'}
         icon={modalButtonLabel && !plusIcon ? undefined : <IconPlus />}
         onClick={() => handleOpen()}
         id="add-class-button"

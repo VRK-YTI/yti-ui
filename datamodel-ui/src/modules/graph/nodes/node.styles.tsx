@@ -80,7 +80,7 @@ export const CornerNodeWrapper = styled.div<{
     height: 0;
     border: 0;
     top: 0;
-    bottom 0;
+    bottom: 0;
   }
 
   .delete-wrapper {
@@ -143,8 +143,8 @@ export const CollapseButton = styled.button`
   width: 30px;
 
   svg {
-    padding 0;
-    margin 0;
+    padding: 0;
+    margin: 0;
     color: ${(props) => props.theme.suomifi.colors.whiteBase};
     width: 24px;
     height: 24px;
@@ -197,8 +197,8 @@ export const Resource = styled.div<{ $highlight?: boolean }>`
   }
 
   .fi-icon {
-    height: 16px;
-    width: 16px;
+    height: 17px;
+    width: 17px;
   }
 
   ${(props) =>
@@ -216,7 +216,7 @@ export const TooltipWrapper = styled.div`
 
   .fi-tooltip_toggle-button {
     display: none;
-    visiblity: hidden;
+    visibility: hidden;
   }
 
   .fi-tooltip_content {

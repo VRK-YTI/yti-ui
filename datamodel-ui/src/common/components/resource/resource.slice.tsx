@@ -12,7 +12,12 @@ import {
   initialAppAssociation,
   initialAppAttribute,
 } from '@app/common/interfaces/resource-form.interface';
-import { convertToPayload, pathForResourceType } from './utils';
+import {
+  DEFAULT_ASSOCIATION_SUBPROPERTY,
+  DEFAULT_ATTRIBUTE_SUBPROPERTY,
+  convertToPayload,
+  pathForResourceType,
+} from './utils';
 import { pathForModelType } from '@app/common/utils/api-utils';
 import { UriData } from '@app/common/interfaces/uri.interface';
 
@@ -58,12 +63,16 @@ export const resourceApi = createApi({
         modelId: string;
         resourceIdentifier: string;
         applicationProfile?: boolean;
+        version?: string;
       }
     >({
       query: (value) => ({
         url: `/resource/${pathForModelType(value.applicationProfile)}${
           value.modelId
         }/${value.resourceIdentifier}`,
+        params: {
+          ...(value.version && { version: value.version }),
+        },
         method: 'GET',
       }),
     }),
@@ -90,9 +99,15 @@ export const resourceApi = createApi({
         method: 'GET',
       }),
     }),
-    getResourceActive: builder.query<boolean, { prefix: string; uri: string }>({
+    getResourceActive: builder.query<
+      boolean,
+      { prefix: string; uri: string; version?: string }
+    >({
       query: (props) => ({
         url: `/resource/profile/${props.prefix}/active?uri=${props.uri}`,
+        params: {
+          ...(props.version && { version: props.version }),
+        },
         method: 'GET',
       }),
     }),
@@ -119,87 +134,69 @@ export const resourceApi = createApi({
         method: 'POST',
       }),
     }),
+    renameResource: builder.mutation<
+      string,
+      {
+        prefix: string;
+        identifier: string;
+        newIdentifier: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/resource/${value.prefix}/${value.identifier}/rename`,
+        params: {
+          newIdentifier: value.newIdentifier,
+        },
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
 function resourceInitialData(
   type: ResourceType,
   languages?: string[],
-  initialSubResourceOf?: string | UriData,
+  initialReferenceResource?: UriData,
   applicationProfile?: boolean
 ): ResourceFormType {
   let retValue = {} as ResourceFormType;
 
   if (applicationProfile) {
-    const path =
-      initialSubResourceOf && typeof initialSubResourceOf !== 'string'
-        ? initialSubResourceOf
-        : undefined;
-
     retValue =
       type === ResourceType.ASSOCIATION
         ? {
             ...initialAppAssociation,
-            path: path,
+            path: initialReferenceResource,
           }
         : {
             ...initialAppAttribute,
-            path: path,
+            path: initialReferenceResource,
           };
   } else {
-    if (!initialSubResourceOf || typeof initialSubResourceOf !== 'string') {
-      retValue =
-        type === ResourceType.ASSOCIATION
-          ? {
-              ...initialAssociation,
-              subResourceOf: [
-                {
-                  label: { en: 'owl:TopObjectProperty' },
-                  uri: 'owl:TopObjectProperty',
-                  curie: 'owl:TopObjectProperty',
-                },
-              ],
-            }
-          : {
-              ...initialAttribute,
-              subResourceOf: [
-                {
-                  label: { en: 'owl:topDataProperty' },
-                  uri: 'owl:topDataProperty',
-                  curie: 'owl:topDataProperty',
-                },
-              ],
-            };
-    } else {
-      retValue =
-        type === ResourceType.ASSOCIATION
-          ? {
-              ...initialAssociation,
-              subResourceOf: [
-                {
-                  label: { en: initialSubResourceOf },
-                  uri: initialSubResourceOf,
-                  curie: initialSubResourceOf,
-                },
-              ],
-            }
-          : {
-              ...initialAttribute,
-              subResourceOf: [
-                {
-                  label: { en: initialSubResourceOf },
-                  uri: initialSubResourceOf,
-                  curie: initialSubResourceOf,
-                },
-              ],
-            };
-    }
+    retValue =
+      type === ResourceType.ASSOCIATION
+        ? {
+            ...initialAssociation,
+            label: initialReferenceResource?.label ?? {},
+            subResourceOf: [
+              initialReferenceResource ?? DEFAULT_ASSOCIATION_SUBPROPERTY,
+            ],
+          }
+        : {
+            ...initialAttribute,
+            label: initialReferenceResource?.label ?? {},
+            subResourceOf: [
+              initialReferenceResource ?? DEFAULT_ATTRIBUTE_SUBPROPERTY,
+            ],
+          };
   }
 
   if (languages) {
     retValue = {
       ...retValue,
-      label: Object.fromEntries(languages.map((lang) => [lang, ''])),
+      label: Object.fromEntries(
+        languages.map((lang) => [lang, retValue.label[lang] ?? ''])
+      ),
     };
   }
 
@@ -233,7 +230,7 @@ export function setResource(data: ResourceFormType): AppThunk {
 export function initializeResource(
   type: ResourceType,
   langs: string[],
-  initialSubResourceOf?: string | UriData,
+  initialReferenceResource?: UriData,
   applicationProfile?: boolean
 ): AppThunk {
   return (dispatch) =>
@@ -242,7 +239,7 @@ export function initializeResource(
         resourceInitialData(
           type,
           langs,
-          initialSubResourceOf,
+          initialReferenceResource,
           applicationProfile
         )
       )
@@ -274,5 +271,6 @@ export const {
   useGetResourceActiveQuery,
   useTogglePropertyShapeMutation,
   useMakeLocalCopyPropertyShapeMutation,
+  useRenameResourceMutation,
   util: { getRunningQueriesThunk, getRunningMutationsThunk },
 } = resourceApi;

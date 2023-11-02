@@ -4,13 +4,13 @@ import { small } from 'yti-common-ui/media-query/styled-helpers';
 import {
   Heading,
   SideNavigation,
-  SideNavigationItem
+  SideNavigationItem,
 } from 'suomifi-ui-components';
 
 export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
   // Width and positioning for now, need adjusting when overall layout structure is decided
   flex-grow: 1;
-  width: 25%;
+  width: 100%;
   max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
   left: 0;
   top: 76px;
@@ -43,12 +43,13 @@ export const MscrSideNavigation = styled(SideNavigation)`
 
 export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`
   // When the personal navigation subsection is active, there's a blue background and non-selected links are black
-  &.fi-side-navigation-item--child-selected{
+  &.fi-side-navigation-item--child-selected {
     div {
-      background-color: ${(props) => props.theme.suomifi.colors.highlightLight3};
+      background-color: ${(props) =>
+        props.theme.suomifi.colors.highlightLight3};
     }
     && .personal a.fi-link--router {
-       color: ${(props) => props.theme.suomifi.colors.blackBase};
+      color: ${(props) => props.theme.suomifi.colors.blackBase};
     }
   }
 `;
@@ -79,7 +80,8 @@ export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
   }
   // Currently selected link is blue and has a blue left border
   &.fi-side-navigation-item--selected {
-    border-left: solid 3px ${(props) => props.theme.suomifi.colors.highlightBase};
+    border-left: solid 3px
+      ${(props) => props.theme.suomifi.colors.highlightBase};
     &&& .fi-link--router {
       color: ${(props) => props.theme.suomifi.colors.highlightBase};
     }

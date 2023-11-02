@@ -6,6 +6,7 @@ import {
   ModelCodeList,
   ExternalNamespace,
   InternalNamespace,
+  Link,
 } from './model.interface';
 import { Status } from './status.interface';
 
@@ -14,16 +15,11 @@ export interface ModelFormType {
   externalNamespaces: ExternalNamespace[];
   internalNamespaces: InternalNamespace[];
   languages: (LanguageBlockType & { selected: boolean })[];
-  links: {
-    description: string;
-    name: string;
-    uri: string;
-    id: string;
-  }[];
+  links: Link[];
   organizations: MultiSelectData[];
   prefix: string;
   serviceCategories: MultiSelectData[];
-  status?: Status;
+  status: Status;
   type: ModelType['type'];
   terminologies: ModelTerminology[];
   codeLists: ModelCodeList[];

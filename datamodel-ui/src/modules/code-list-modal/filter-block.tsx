@@ -1,6 +1,6 @@
 import { Dropdown, DropdownItem, TextInput } from 'suomifi-ui-components';
 import { FilterBlockWrapper } from './code-list-modal.styles';
-import { statusList } from 'yti-common-ui/utils/status-list';
+import { statusList } from '@app/common/utils/status-list';
 import { useTranslation } from 'next-i18next';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
@@ -105,7 +105,7 @@ export default function FilterBlock({
           }}
           id="status-dropdown"
         >
-          {statuses.map((status) => (
+          {['VALID', 'DRAFT', 'SUPERSEDED', 'RETIRED'].map((status) => (
             <DropdownItem key={`status-${status}`} value={status}>
               {status !== 'all-statuses'
                 ? translateStatus(status, t)

@@ -55,13 +55,13 @@ export function validateClassForm(data: ClassFormType): ClassFormErrors {
   };
 
   if (
-    Object.values(data.label).filter((value) => value || value !== '').length >
-    0
+    Object.values(data.label).filter((value) => value.trim().length > 0)
+      .length > 0
   ) {
     returnErrors.label = false;
   }
 
-  if (data.identifier !== '') {
+  if (data.identifier.trim() !== '') {
     returnErrors.identifier = false;
   } else {
     return {
@@ -76,7 +76,7 @@ export function validateClassForm(data: ClassFormType): ClassFormErrors {
     returnErrors.identifierLength = false;
   }
 
-  if (/^[^0-9]/.test(data.identifier) || data.identifier === '') {
+  if (/^[^0-9]/.test(data.identifier) || data.identifier.trim() === '') {
     returnErrors.identifierInitChar = false;
   }
 
