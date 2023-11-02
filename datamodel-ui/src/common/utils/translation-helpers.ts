@@ -75,10 +75,6 @@ export function translateStatus(status: string, t: TFunction) {
   switch (status) {
     case 'DRAFT':
       return t('statuses.draft', { ns: 'common' });
-    case 'INCOMPLETE':
-      return t('statuses.incomplete', { ns: 'common' });
-    case 'INVALID':
-      return t('statuses.invalid', { ns: 'common' });
     case 'RETIRED':
       return t('statuses.retired', { ns: 'common' });
     case 'SUGGESTED':
@@ -161,6 +157,14 @@ export function translateCommonForm(
       return type === ResourceType.ASSOCIATION
         ? t('common-view.associations-contact-description', { ns: 'common' })
         : t('common-view.attributes-contact-description', { ns: 'common' });
+    case 'functional':
+      return type === ResourceType.ASSOCIATION
+        ? t('common-view.associations-functional', { ns: 'common' })
+        : t('common-view.attributes-functional', { ns: 'common' });
+    case 'transitive':
+      return t('common-view.transitive', { ns: 'common' });
+    case 'reflexive':
+      return t('common-view.reflexive', { ns: 'common' });
     default:
       return '';
   }

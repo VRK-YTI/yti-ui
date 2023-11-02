@@ -13,7 +13,7 @@ export interface VisualizationType {
   associations: {
     identifier: string;
     label: { [key: string]: string };
-    referenceTarget?: string;
+    referenceTarget: string;
   }[];
 }
 

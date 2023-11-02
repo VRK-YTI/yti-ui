@@ -1,7 +1,1 @@
-export type Status =
-  | 'DRAFT'
-  | 'INCOMPLETE'
-  | 'SUGGESTED'
-  | 'RETIRED'
-  | 'SUPERSEDED'
-  | 'VALID';
+export type Status = 'DRAFT' | 'SUGGESTED' | 'RETIRED' | 'SUPERSEDED' | 'VALID';

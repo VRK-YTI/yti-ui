@@ -46,7 +46,7 @@ describe('documentation utils', () => {
       start: 10,
       end: 13,
     };
-    const elem = ['**', '**'];
+    const elem: [string, string] = ['**', '**'];
     const expected = 'this is a **row** of text';
     const result = injectSpecialCharacters(data, selection, elem);
     expect(result).toStrictEqual(expected);

@@ -31,12 +31,14 @@ import { selectDisplayLang } from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import ResourceModal from './resource-modal';
-import { useAddNodeShapePropertyReferenceMutation } from '@app/common/components/class/class.slice';
+import { useAddPropertyReferenceMutation } from '@app/common/components/class/class.slice';
 import ResourceForm from '../resource/resource-form';
 import { initializeResource } from '@app/common/components/resource/resource.slice';
 import { useStoreDispatch } from '@app/store';
 import UriList from '@app/common/components/uri-list';
 import UriInfo from '@app/common/components/uri-info';
+import { UriData } from '@app/common/interfaces/uri.interface';
+import { RenameModal } from '../rename-modal';
 
 interface ClassInfoProps {
   data?: ClassType;
@@ -46,7 +48,10 @@ interface ClassInfoProps {
   terminologies: string[];
   handleReturn: () => void;
   handleEdit: () => void;
-  handleRefecth: () => void;
+  handleRefetch: () => void;
+  handleShowClass: (classId: string) => void;
+  disableEdit?: boolean;
+  organizationIds?: string[];
 }
 
 export default function ClassInfo({
@@ -57,25 +62,30 @@ export default function ClassInfo({
   terminologies,
   handleReturn,
   handleEdit,
-  handleRefecth,
+  handleRefetch,
+  handleShowClass,
+  disableEdit,
+  organizationIds,
 }: ClassInfoProps) {
   const { t, i18n } = useTranslation('common');
-  const hasPermission = HasPermission({ actions: ['EDIT_CLASS'] });
+  const hasPermission = HasPermission({
+    actions: ['EDIT_CLASS'],
+    targetOrganization: organizationIds,
+  });
   const ref = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showRenameModal, setShowRenameModal] = useState(false);
   const dispatch = useStoreDispatch();
 
   const [renderResourceForm, setRenderResourceForm] = useState(false);
   const displayLang = useSelector(selectDisplayLang());
-  const [addReference, addReferenceResult] =
-    useAddNodeShapePropertyReferenceMutation();
+  const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
 
   const handleFollowUp = (value: {
-    label?: string;
-    uri: string;
+    uriData: UriData;
     type: ResourceType;
     mode: 'select' | 'create';
   }) => {
@@ -86,30 +96,21 @@ export default function ClassInfo({
     if (value.mode === 'select') {
       addReference({
         prefix: modelId,
-        nodeshapeId: data.identifier,
-        uri: value.uri,
+        identifier: data.identifier,
+        uri: value.uriData.uri,
+        applicationProfile: applicationProfile ?? false,
       });
     } else {
-      dispatch(
-        initializeResource(
-          value.type,
-          languages,
-          {
-            uri: value.label ?? '',
-            label: value.label ? { en: value.label } : {},
-          },
-          true
-        )
-      );
+      dispatch(initializeResource(value.type, languages, value.uriData, true));
       setRenderResourceForm(true);
     }
   };
 
   useEffect(() => {
     if (addReferenceResult.isSuccess) {
-      handleRefecth();
+      handleRefetch();
     }
-  }, [addReferenceResult, handleRefecth]);
+  }, [addReferenceResult, handleRefetch]);
 
   useEffect(() => {
     if (ref.current) {
@@ -193,7 +194,11 @@ export default function ClassInfo({
         handleFollowUp={(identifier, type) => {
           setRenderResourceForm(false);
           handleFollowUp({
-            uri: `http://uri.suomi.fi/datamodel/ns/${modelId}/${identifier}`,
+            uriData: {
+              uri: `http://uri.suomi.fi/datamodel/ns/${modelId}/${identifier}`,
+              curie: `${modelId}:${identifier}`,
+              label: {},
+            },
             type: type,
             mode: 'select',
           });
@@ -216,7 +221,7 @@ export default function ClassInfo({
           >
             {t('back')}
           </Button>
-          {hasPermission && data && (
+          {!disableEdit && hasPermission && data && (
             <div>
               <Button
                 variant="secondary"
@@ -241,6 +246,13 @@ export default function ClassInfo({
                     >
                       {t('edit', { ns: 'admin' })}
                     </Button>
+                    <Button
+                      variant="secondaryNoBorder"
+                      onClick={() => setShowRenameModal(true)}
+                      id="rename-class-button"
+                    >
+                      {t('rename', { ns: 'admin' })}
+                    </Button>
                     <Separator />
                     <Button
                       variant="secondaryNoBorder"
@@ -256,19 +268,28 @@ export default function ClassInfo({
           )}
         </div>
         {data ? (
-          <DeleteModal
-            modelId={modelId}
-            resourceId={data.identifier}
-            type="class"
-            label={getLanguageVersion({
-              data: data.label,
-              lang: displayLang ?? i18n.language,
-            })}
-            onClose={handleReturn}
-            applicationProfile={applicationProfile}
-            visible={showDeleteModal}
-            hide={() => setShowDeleteModal(false)}
-          />
+          <>
+            <DeleteModal
+              modelId={modelId}
+              resourceId={data.identifier}
+              type="class"
+              label={getLanguageVersion({
+                data: data.label,
+                lang: displayLang ?? i18n.language,
+              })}
+              onClose={handleReturn}
+              applicationProfile={applicationProfile}
+              visible={showDeleteModal}
+              hide={() => setShowDeleteModal(false)}
+            />
+            <RenameModal
+              modelId={modelId}
+              resourceId={data.identifier}
+              visible={showRenameModal}
+              hide={() => setShowRenameModal(false)}
+              handleReturn={handleShowClass}
+            />
+          </>
         ) : (
           <></>
         )}
@@ -328,8 +349,9 @@ export default function ClassInfo({
                     classId={data.identifier}
                     hasPermission={hasPermission}
                     applicationProfile={applicationProfile}
-                    handlePropertyDelete={handleRefecth}
+                    handlePropertiesUpdate={handleRefetch}
                     attribute
+                    disableEdit={disableEdit}
                   />
                 ))}
               </ExpanderGroup>
@@ -338,13 +360,15 @@ export default function ClassInfo({
             )}
           </BasicBlock>
 
-          {applicationProfile && hasPermission ? (
+          {!disableEdit && hasPermission ? (
             <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
               <ResourceModal
                 modelId={modelId}
                 type={ResourceType.ATTRIBUTE}
                 handleFollowUp={handleFollowUp}
                 limitSearchTo={'LIBRARY'}
+                applicationProfile={applicationProfile}
+                limitToSelect={!applicationProfile}
               />
               <Button variant="secondary" id="order-attributes-button">
                 {t('order-list', { ns: 'admin' })}
@@ -367,13 +391,15 @@ export default function ClassInfo({
               >
                 {data.association.map((assoc) => (
                   <ResourceInfo
-                    key={`${data.identifier}-attr-${assoc.identifier}`}
+                    key={`${data.identifier}-attr-${assoc.identifier}-${assoc.range?.curie}`}
                     data={assoc}
                     modelId={modelId}
                     classId={data.identifier}
                     hasPermission={hasPermission}
-                    handlePropertyDelete={handleRefecth}
+                    handlePropertiesUpdate={handleRefetch}
                     applicationProfile={applicationProfile}
+                    disableEdit={disableEdit}
+                    targetInClassRestriction={assoc.range}
                   />
                 ))}
               </ExpanderGroup>
@@ -381,13 +407,16 @@ export default function ClassInfo({
               t('no-assocations')
             )}
           </BasicBlock>
-          {applicationProfile && hasPermission ? (
+
+          {!disableEdit && hasPermission ? (
             <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
               <ResourceModal
                 modelId={modelId}
                 type={ResourceType.ASSOCIATION}
                 limitSearchTo="LIBRARY"
                 handleFollowUp={handleFollowUp}
+                applicationProfile={applicationProfile}
+                limitToSelect={!applicationProfile}
               />
               <Button variant="secondary" id="order-associations-button">
                 {t('order-list', { ns: 'admin' })}

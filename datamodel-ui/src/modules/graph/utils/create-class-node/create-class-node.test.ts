@@ -77,18 +77,21 @@ describe('create-class-node', () => {
             label: {
               fi: 'assoc-1-fi',
             },
+            referenceTarget: 'id-2',
           },
           {
             identifier: 'assoc-2',
             label: {
               fi: 'assoc-2-fi',
             },
+            referenceTarget: 'id-3',
           },
           {
             identifier: 'assoc-3',
             label: {
               fi: 'assoc-3-fi',
             },
+            referenceTarget: 'id-4',
           },
         ],
       },

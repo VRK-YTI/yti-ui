@@ -25,10 +25,8 @@ import { useRouter } from 'next/router';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 import GroupWorkspace from '../../modules/group-home';
 import PersonalWorkspace from '../../modules/personal-home';
-import BasicTable from '@app/common/components/table';
-import MSCRSideBar from '@app/common/components/sidebar/MSCRSideBar';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import { TableAndSidebarWrapper } from './homepage.styles';
+import TreeviewTest from '@app/common/components/treeview-test';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -49,11 +47,12 @@ export default function IndexPage(props: IndexPageProps) {
     user?: User;
   }): React.ReactElement {
     if (slug === 'group-home') {
-      console.log('Now showing Group Page');
-      return <GroupWorkspace pid={''} />;
+      return <GroupWorkspace pid={''} user={user} />;
+    } else if (slug === 'crosswalk-edit') {
+      return <TreeviewTest pid={''} user={user} />;
     } else {
       console.log(slug);
-      return <PersonalWorkspace user={user} />;
+      return <PersonalWorkspace pid={''} user={user} />;
     }
   }
 
@@ -64,19 +63,15 @@ export default function IndexPage(props: IndexPageProps) {
         fakeableUsers={props.fakeableUsers}
       >
         <PageHead
-          baseUrl="https://tietomallit.suomi.fi"
-          title={t('datamodel-title')}
+          baseUrl="http:/localhost:3000"
+          title={t('mscr-title')}
           description={t('service-description')}
         />
-        <FrontPage></FrontPage>
+
         <DisplayedComponent
           slug={(router.query.homepage as string) ?? undefined}
           user={props.user ?? undefined}
         />
-        <TableAndSidebarWrapper $breakpoint={breakpoint} id="table-and-sidebar">
-          <MSCRSideBar />
-          <BasicTable />
-        </TableAndSidebarWrapper>
       </Layout>
     </CommonContextProvider>
   );

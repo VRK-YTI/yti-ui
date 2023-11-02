@@ -43,8 +43,9 @@ export default function InlineList({
             </ExternalLink>
           </div>
 
-          {Array.isArray(deleteDisabled) &&
-          deleteDisabled.includes(item.uri) ? (
+          {(Array.isArray(deleteDisabled) &&
+            deleteDisabled.includes(item.uri)) ||
+          deleteDisabled === true ? (
             <></>
           ) : (
             <Button

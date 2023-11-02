@@ -39,7 +39,7 @@ export default function IndexPage(props: IndexPageProps) {
         fakeableUsers={props.fakeableUsers}
       >
         <PageHead
-          baseUrl="https://tietomallit.suomi.fi"
+          baseUrl="https://mscr.fi"
           title={t('datamodel-title')}
           description={t('service-description')}
         />

@@ -1,7 +1,6 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
-import { NewModel } from '@app/common/interfaces/new-model.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
 import isHydrate from '@app/store/isHydrate';
@@ -56,6 +55,12 @@ export const schemaApi = createApi({
         method: 'DELETE',
       }),
     }),
+    getSchemas: builder.query<Schema[], string>({
+      query: (value) => ({
+        url: `/schemas`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -64,10 +69,11 @@ export const {
   useGetSchemaQuery,
   usePostSchemaMutation,
   useDeleteSchemaMutation,
+  useGetSchemasQuery,
   util: { getRunningQueriesThunk },
 } = schemaApi;
 
-export const { putSchema, getSchema, postSchema, deleteSchema } =
+export const { putSchema, getSchema, postSchema, deleteSchema, getSchemas } =
   schemaApi.endpoints;
 
 // Slice setup below

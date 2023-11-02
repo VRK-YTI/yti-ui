@@ -53,4 +53,7 @@ export interface Resource {
   type: ResourceType;
   uri: string;
   curie: string;
+  functionalProperty?: boolean;
+  transitiveProperty?: boolean;
+  reflexiveProperty?: boolean;
 }

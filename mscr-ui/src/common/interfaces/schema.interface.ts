@@ -1,8 +1,7 @@
-import { MultiSelectData } from 'suomifi-ui-components';
-import { LanguageBlockType } from 'yti-common-ui/components/form/language-selector';
-import { Status } from './status.interface';
-
 export interface Schema {
+  onClick(): void;
+  onMouseEnter: any;
+  onMouseLeave: any;
   pid: string;
   format: string;
   status: string;
@@ -15,6 +14,10 @@ export interface Schema {
   languages: string[];
   organizations: Organization[];
   filedata: File;
+  prefix: string;
+  revision: string;
+  visibilty: string;
+  created: string;
 }
 export interface Organization {
   id: string;

@@ -8,6 +8,7 @@ import {
 } from '@app/common/interfaces/search-internal-classes.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Type } from '@app/common/interfaces/type.interface';
+import { inUseStatusList } from '@app/common/utils/status-list';
 
 export interface InternalResourcesSearchParams {
   query: string;
@@ -21,17 +22,19 @@ export interface InternalResourcesSearchParams {
   pageFrom?: number;
   limitToModelType?: Type;
   extend?: boolean;
+  fromVersion?: string;
 }
 
 export function initialSearchData(
   sortLang: string,
   modelId: string,
   type: ResourceType,
-  limitToModelType?: 'LIBRARY' | 'PROFILE'
+  limitToModelType?: 'LIBRARY' | 'PROFILE',
+  fromVersion?: string
 ): InternalResourcesSearchParams {
   return {
     query: '',
-    status: ['VALID', 'SUGGESTED'],
+    status: inUseStatusList,
     groups: [],
     sortLang: sortLang,
     pageSize: 50,
@@ -40,6 +43,7 @@ export function initialSearchData(
     limitToModelType: limitToModelType ?? 'LIBRARY',
     fromAddedNamespaces: true,
     resourceTypes: [type],
+    fromVersion: fromVersion,
   };
 }
 
@@ -84,6 +88,10 @@ function createUrl(obj: InternalResourcesSearchParams): string {
 
   if (obj.limitToModelType) {
     baseQuery = baseQuery.concat(`&limitToModelType=${obj.limitToModelType}`);
+  }
+
+  if (obj.fromVersion) {
+    baseQuery = baseQuery.concat(`&fromVersion=${obj.fromVersion}`);
   }
 
   return baseQuery;

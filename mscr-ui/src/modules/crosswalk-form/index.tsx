@@ -21,14 +21,14 @@ import {
 } from './crosswalk-form.styles';
 import LanguageSelector from 'yti-common-ui/form/language-selector';
 import { FormErrors } from './validate-form';
-import AddBlock from './add-block';
 import { Status } from '@app/common/interfaces/status.interface';
-import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
+import { CrosswalkFormMockupType, CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import { FormUpdateErrors } from '../schema-form/validate-form-update';
 import { translateFileUploadError } from '@app/common/utils/translation-helpers copy';
 import FileDropArea from 'yti-common-ui/file-drop-area';
+import CrosswalkForm from '../create-crosswalk';
 
-interface CrosswalkFormProps {
+interface RegisterCrosswalkFormProps {
   formData: CrosswalkFormType;
   setFormData: (value: CrosswalkFormType) => void;
   userPosted: boolean;
@@ -37,14 +37,14 @@ interface CrosswalkFormProps {
   editMode?: boolean;
 }
 
-export default function CrosswalkForm({
+export default function RegisterCrosswalkForm({
   formData,
   setFormData,
   userPosted,
   disabled,
   errors,
   editMode,
-}: CrosswalkFormProps) {
+}: RegisterCrosswalkFormProps) {
   const { t, i18n } = useTranslation('admin');
   const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
     i18n.language
@@ -82,9 +82,14 @@ export default function CrosswalkForm({
 
   return (
     <ModelFormContainer>
+  <CrosswalkForm
+            formData={formData}
+            setFormData={setFormData}
+            userPosted={userPosted}
+            errors={userPosted ? errors : undefined}>
+          </CrosswalkForm>
       {renderCrosswalkFormat()}
-      {renderSourceSchema()}
-      {renderTargetSchema()}
+      
       <FileDropArea
         setFileData={setFileData}
         setIsValid={setIsValid}
@@ -108,21 +113,7 @@ export default function CrosswalkForm({
     );
   }
 
-  function renderSourceSchema() {
-    return (
-      <div>
-        <TextInput labelText={'Source Schema'} />
-      </div>
-    );
-  }
-
-  function renderTargetSchema() {
-    return (
-      <div>
-        <TextInput labelText={'Target Schema'} />
-      </div>
-    );
-  }
+  
 
   function renderLanguages() {
     return (

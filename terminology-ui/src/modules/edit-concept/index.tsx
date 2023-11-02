@@ -1,11 +1,6 @@
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import PropertyValue from '@app/common/components/property-value';
-import {
-  MainTitle,
-  SubTitle,
-  BadgeBar,
-  Badge,
-} from 'yti-common-ui/title-block';
+import { MainTitle, SubTitle, BadgeBar } from 'yti-common-ui/title-block';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';
@@ -36,6 +31,7 @@ import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-b
 import validateForm, { FormError } from './validate-form';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { translateStatus } from '@app/common/utils/translation-helpers';
+import { Status } from 'yti-common-ui/search-results/result-card.styles';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -211,9 +207,9 @@ export default function EditConcept({
         <BadgeBar>
           {t('heading')}
           <PropertyValue property={terminology?.properties.prefLabel} />
-          <Badge $isValid={formData.basicInformation.status === 'VALID'}>
+          <Status status={formData.basicInformation.status}>
             {translateStatus(formData.basicInformation.status, t)}
-          </Badge>
+          </Status>
         </BadgeBar>
         <PageHelpText>{t('new-concept-page-help')}</PageHelpText>
 

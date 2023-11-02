@@ -109,7 +109,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}
       >
-        {t('add-new-schema')}
+        {t('register-schema')}
       </Button>
 
       <Modal
@@ -119,7 +119,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
-          <ModalTitle>{t('add-new-schema')}</ModalTitle>
+          <ModalTitle>{t('register-schema')}</ModalTitle>
           <Paragraph style={{ marginBottom: '30px' }}>
             {
               'Provide a URI reference to the content in XSD, SKOS or RDF metadata schema format'
@@ -146,7 +146,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
             />
           )}
 
-          <Button onClick={() => handleSubmit()}>{t('create-schema')}</Button>
+          <Button onClick={() => handleSubmit()}>{t('register-schema')}</Button>
           <Button variant="secondary" onClick={() => handleClose()}>
             {t('cancel')}
           </Button>

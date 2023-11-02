@@ -39,16 +39,16 @@ export default function handleCornerNodeDelete(
     }
 
     const newEdge = createEdge({
-      params: {},
+      params: {
+        source: sourceNode,
+        sourceHandle: sourceNode,
+        target: targetNode,
+        targetHandle: targetNode,
+        id: `reactflow__edge-${sourceNode}-${targetNode}`,
+      },
       isCorner: true,
       applicationProfile: applicationProfile ? true : false,
     });
-
-    newEdge.source = sourceNode;
-    newEdge.sourceHandle = sourceNode;
-    newEdge.target = targetNode;
-    newEdge.targetHandle = targetNode;
-    newEdge.id = `reactflow__edge-${sourceNode}-${targetNode}`;
 
     return [
       ...edges.filter((edge) => edge.target !== id && edge.source !== id),

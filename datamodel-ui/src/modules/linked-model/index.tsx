@@ -26,12 +26,14 @@ import {
   InternalNamespace,
 } from '@app/common/interfaces/model.interface';
 import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 export default function LinkedModel({
   initialData,
   setInternalData,
   setExternalData,
   currentModel,
+  languages,
 }: {
   initialData: {
     internalNamespaces: InternalNamespace[];
@@ -39,6 +41,7 @@ export default function LinkedModel({
   setInternalData: (value: InternalNamespace[]) => void;
   setExternalData: (value: ExternalNamespace) => void;
   currentModel: string;
+  languages: string[];
 }) {
   const { t, i18n } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
@@ -52,7 +55,10 @@ export default function LinkedModel({
     prefix: true,
   });
   const [data, setData] = useState({
-    name: '',
+    name: languages.reduce(
+      (n, lang) => Object.assign(n, { [lang]: '' }),
+      {}
+    ) as { [key: string]: string },
     namespace: '',
     prefix: '',
   });
@@ -86,10 +92,15 @@ export default function LinkedModel({
     skip: !showExternalForm,
   });
 
-  const setDataValue = (key: keyof typeof data, value: string) => {
+  const setDataValue = (
+    key: keyof typeof data,
+    value: { [key: string]: string } | string
+  ) => {
     if (userPosted && Object.values(errors).some((val) => val === true)) {
       const newErrors = {
-        name: !data.name || data.name === '',
+        name:
+          !data.name ||
+          Object.values(data.name).some((n) => n.trim().length === 0),
         namespace:
           !data.namespace || data.namespace === '' || !isURL(data.namespace),
         prefix: !data.prefix || data.namespace === '',
@@ -98,9 +109,12 @@ export default function LinkedModel({
       setErrors(newErrors);
     }
 
+    const newValue =
+      typeof value === 'object' ? { ...data['name'], ...value } : value;
+
     setData({
       ...data,
-      [key]: value,
+      [key]: newValue,
     });
   };
 
@@ -109,7 +123,7 @@ export default function LinkedModel({
     setShowExternalForm(false);
     setSelected(initialData.internalNamespaces);
     setData({
-      name: '',
+      name: {},
       namespace: '',
       prefix: '',
     });
@@ -124,7 +138,9 @@ export default function LinkedModel({
 
     if (showExternalForm) {
       const newErrors = {
-        name: !data.name || data.name === '',
+        name:
+          !data.name ||
+          Object.values(data.name).some((n) => n.trim().length === 0),
         namespace:
           !data.namespace || data.namespace === '' || !isURL(data.namespace),
         prefix: !data.prefix || data.namespace === '',
@@ -186,7 +202,9 @@ export default function LinkedModel({
             onClick={() => handleSubmit()}
             disabled={
               showExternalForm
-                ? Object.values(data).filter((val) => val !== '').length < 3
+                ? data.prefix.trim().length === 0 ||
+                  data.namespace.trim().length === 0 ||
+                  Object.values(data.name).some((n) => n.trim().length === 0)
                 : (initialData.internalNamespaces.length === 0 &&
                     selected.length === 0) ||
                   (selected.length === initialData.internalNamespaces.length &&
@@ -351,15 +369,22 @@ export default function LinkedModel({
               {ADMIN_EMAIL}
             </ExternalLink>
           </InlineAlert>
-          <TextInput
-            labelText={t('data-model-name')}
-            visualPlaceholder={t('input-data-model-name')}
-            fullWidth
-            onChange={(e) => setDataValue('name', e?.toString() ?? '')}
-            status={userPosted && errors.name ? 'error' : 'default'}
-            id="data-model-name-input"
-            maxLength={TEXT_INPUT_MAX}
-          />
+          {Array.from(languages)
+            .sort((a, b) => compareLocales(a, b))
+            .map((lang) => (
+              <TextInput
+                key={`datamodel-name-${lang}`}
+                labelText={`${t('data-model-name')}, ${lang}`}
+                visualPlaceholder={t('input-data-model-name')}
+                fullWidth
+                onChange={(e) =>
+                  setDataValue('name', { [lang]: e?.toString() ?? '' })
+                }
+                status={userPosted && errors.name ? 'error' : 'default'}
+                id="data-model-name-input"
+                maxLength={TEXT_INPUT_MAX}
+              />
+            ))}
 
           <TextInput
             labelText={t('prefix-in-this-service')}

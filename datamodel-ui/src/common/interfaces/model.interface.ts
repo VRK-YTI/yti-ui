@@ -16,8 +16,8 @@ export interface ModelType {
   terminologies: ModelTerminology[];
   codeLists: ModelCodeList[];
   links: {
-    description: string;
-    name: string;
+    description: { [key: string]: string };
+    name: { [key: string]: string };
     uri: string;
   }[];
   created: string;
@@ -30,6 +30,8 @@ export interface ModelType {
     id: string;
     name: string;
   };
+  version?: string;
+  versionIri?: string;
 }
 
 export interface InternalNamespace {
@@ -39,7 +41,7 @@ export interface InternalNamespace {
 }
 
 export interface ExternalNamespace {
-  name: string;
+  name: { [key: string]: string };
   namespace: string;
   prefix: string;
 }
@@ -58,10 +60,10 @@ export interface Organization {
 
 // Note: This might need a more descriptive name
 export interface Link {
+  description: { [key: string]: string };
+  name: { [key: string]: string };
+  uri: string;
   id: string;
-  description: LangObject;
-  homepage: string;
-  title: LangObject;
 }
 
 export interface ModelTerminology {
@@ -100,7 +102,6 @@ export interface LangObject {
 }
 
 export interface ModelUpdatePayload {
-  status: string;
   label: { [key: string]: string };
   description: { [key: string]: string };
   languages: string[];
@@ -108,7 +109,7 @@ export interface ModelUpdatePayload {
   groups: string[];
   internalNamespaces: string[];
   externalNamespaces: {
-    name: string;
+    name: { [key: string]: string };
     namespace: string;
     prefix: string;
   }[];
@@ -117,8 +118,23 @@ export interface ModelUpdatePayload {
   documentation: { [key: string]: string };
   contact: string;
   links: {
-    description: string;
-    name: string;
+    description: { [key: string]: string };
+    name: { [key: string]: string };
     uri: string;
   }[];
+}
+
+export interface VersionedModelUpdatePayload {
+  label: { [key: string]: string };
+  description: { [key: string]: string };
+  organizations: string[];
+  groups: string[];
+  contact: string;
+  documentation: { [key: string]: string };
+  links: {
+    description: { [key: string]: string };
+    name: { [key: string]: string };
+    uri: string;
+  }[];
+  status: Status;
 }

@@ -5,12 +5,11 @@ import SearchView from './search-view';
 import ClassView from '../class-view';
 import { useTranslation } from 'next-i18next';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Graph from '../graph';
 import LinkedDataView from '../linked-data-view';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import Documentation from '../documentation';
-import HasPermission from '@app/common/utils/has-permission';
 import {
   IconApplicationProfile,
   IconInfo,
@@ -29,6 +28,7 @@ import Notification from '../notification';
 import { useRouter } from 'next/router';
 import { useStoreDispatch } from '@app/store';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { getSlugAsString } from '@app/common/utils/parse-slug';
 
 interface ModelProps {
   modelId: string;
@@ -39,10 +39,19 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const hasPermission = HasPermission({
-    actions: 'EDIT_DATA_MODEL',
+  const [version] = useState(getSlugAsString(router.query.ver));
+  const { data: modelInfo } = useGetModelQuery({
+    modelId: modelId,
+    version: version,
   });
-  const { data: modelInfo } = useGetModelQuery(modelId);
+
+  const organizationIds = useMemo(() => {
+    if (!modelInfo) {
+      return [];
+    }
+
+    return modelInfo.organizations.map((o) => o.id);
+  }, [modelInfo]);
 
   const languages: string[] = useMemo(() => {
     if (!modelInfo) {
@@ -53,12 +62,12 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
   }, [modelInfo]);
 
   const views: ViewType[] = useMemo(() => {
-    const v = [
+    return [
       {
         id: 'search',
         icon: <IconSearch />,
         buttonLabel: t('search-variant'),
-        component: <SearchView modelId={modelId} />,
+        component: <SearchView modelId={modelId} version={version} />,
       },
       {
         id: 'graph',
@@ -69,7 +78,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         id: 'info',
         icon: <IconInfo />,
         buttonLabel: t('details'),
-        component: <ModelInfoView />,
+        component: <ModelInfoView organizationIds={organizationIds} />,
       },
       {
         id: 'links',
@@ -78,7 +87,9 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         component: (
           <LinkedDataView
             modelId={modelId}
+            version={version}
             isApplicationProfile={modelInfo?.type === 'PROFILE'}
+            organizationIds={organizationIds}
           />
         ),
       },
@@ -93,9 +104,11 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         component: (
           <ClassView
             modelId={modelId}
+            version={version}
             languages={languages}
             applicationProfile={modelInfo?.type === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
+            organizationIds={organizationIds}
           />
         ),
       },
@@ -111,10 +124,12 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         component: (
           <ResourceView
             modelId={modelId}
+            version={version}
             type={ResourceType.ATTRIBUTE}
             languages={languages}
             applicationProfile={modelInfo?.type === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
+            organizationIds={organizationIds}
           />
         ),
       },
@@ -130,29 +145,30 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         component: (
           <ResourceView
             modelId={modelId}
+            version={version}
             type={ResourceType.ASSOCIATION}
             languages={languages}
             applicationProfile={modelInfo?.type === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
+            organizationIds={organizationIds}
           />
         ),
       },
-    ];
-
-    if (hasPermission) {
-      return [
-        ...v,
-        {
-          id: 'documentation',
-          icon: <IconRegisters />,
-          buttonLabel: t('documentation-fitted', { ns: 'admin' }),
-          component: <Documentation modelId={modelId} languages={languages} />,
-        },
-      ] as ViewType[];
-    }
-
-    return v as ViewType[];
-  }, [hasPermission, languages, modelId, modelInfo, t]);
+      {
+        id: 'documentation',
+        icon: <IconRegisters />,
+        buttonLabel: t('documentation-fitted', { ns: 'admin' }),
+        component: (
+          <Documentation
+            modelId={modelId}
+            version={version}
+            languages={languages}
+            organizationIds={organizationIds}
+          />
+        ),
+      },
+    ] as ViewType[];
+  }, [languages, modelId, version, modelInfo, organizationIds, t]);
 
   useEffect(() => {
     if (router.query.new) {
@@ -175,11 +191,14 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
       <ContentWrapper>
         <Graph
           modelId={modelId}
+          version={version}
           applicationProfile={modelInfo?.type === 'PROFILE'}
+          organizationIds={organizationIds}
         >
           <Drawer views={views} />
           <ModelTools
             modelId={modelId}
+            version={version}
             applicationProfile={modelInfo?.type === 'PROFILE'}
           />
         </Graph>

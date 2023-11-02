@@ -3,17 +3,19 @@ import { Breakpoint } from 'yti-common-ui/media-query';
 import { small } from 'yti-common-ui/media-query/styled-helpers';
 import {
   Heading,
-  RouterLink,
   SideNavigation,
   SideNavigationItem,
 } from 'suomifi-ui-components';
 
 export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
-  // flex-grow: 1;
-  // width: 25%;
+  // Width and positioning for now, need adjusting when overall layout structure is decided
+  flex-grow: 1;
+  width: 100%;
+  max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
+  position: fixed;
+  left: 0;
+  top: 76px;
   background-color: white;
-  // background-color: ${(props) => props.theme.suomifi.colors.depthSecondary};
-  // max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
   padding: ${(props) => props.theme.suomifi.spacing.m};
 `;
 
@@ -21,39 +23,91 @@ export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
 export const NavigationHeading = styled(Heading)`
   // Adding &-characters increases the specificity so you can override styles
   && {
-    color: #6b6b6b;
-    font-size: 1rem;
+    color: ${(props) => props.theme.suomifi.colors.depthDark2};
+    font-size: 16px;
+  }
+`;
+
+export const GroupHeading = styled(Heading)`
+  && {
+    color: ${(props) => props.theme.suomifi.colors.blackBase};
+    ${(props) => props.theme.suomifi.typography.leadTextSmallScreen};
+  }
+`;
+
+export const MscrSideNavigation = styled(SideNavigation)`
+  // Remove line from above navigation
+  .fi-side-navigation_divider {
+    display: none;
+  }
+`;
+
+export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`
+  // When the personal navigation subsection is active, there's a blue background and non-selected links are black
+  &.fi-side-navigation-item--child-selected {
+    div {
+      background-color: ${(props) =>
+        props.theme.suomifi.colors.highlightLight3};
+    }
+    && .personal a.fi-link--router {
+      color: ${(props) => props.theme.suomifi.colors.blackBase};
+    }
   }
 `;
 
 export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
-  & {
-    background-color: #EAF2FA;
-  },
+  // Remove arrow icon from group buttons
   .fi-icon {
     display: none;
-  },
-  .span {
-    color: yellow;
+  }
+  // Group subsection background is white until a link is selected
+  && .fi-side-navigation-item_sub-list {
+    background-color: transparent;
+  }
+  // When the group navigation subsection is active, there's a blue background and non-selected links are black
+  &.fi-side-navigation-item--child-selected {
+    background-color: ${(props) => props.theme.suomifi.colors.highlightLight3};
+    && .group a.fi-link--router {
+      color: ${(props) => props.theme.suomifi.colors.blackBase};
+    }
   }
 `;
 
 export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
-&&&& a {
-  color: black;
-}
+  // Links in inactive sections are gray
+  &&&& a {
+    color: ${(props) => props.theme.suomifi.colors.depthDark2};
+    ${(props) => props.theme.suomifi.typography.actionElementInnerTextBold}
+  }
+  // Currently selected link is blue and has a blue left border
   &.fi-side-navigation-item--selected {
-    border-left: solid .2rem #2a6ebb;
-    && .fi-link--router {
-      color: #2a6ebb;
+    border-left: solid 3px
+      ${(props) => props.theme.suomifi.colors.highlightBase};
+    &&& .fi-link--router {
+      color: ${(props) => props.theme.suomifi.colors.highlightBase};
     }
   }
-  &&&& .fi-link--router {
+  &&&&& .fi-link--router {
+    // override suomifi default blue background
     background-color: transparent;
+    // Hovered link is blue
+    &:hover {
+      color: ${(props) => props.theme.suomifi.colors.highlightBase};
+    }
   }
 `;
 
 export const PersonalNavigationWrapper = styled.div`
-  background-color: #EAF2FA;
-  padding: 1em;
+  margin-left: 30px;
+`;
+
+export const GroupOpenButton = styled.button`
+  &&&&& {
+    // override suomifi default blue background
+    background-color: transparent;
+  }
+  // Hovered group name is blue
+  &:hover h3 {
+    color: ${(props) => props.theme.suomifi.colors.highlightBase};
+  }
 `;

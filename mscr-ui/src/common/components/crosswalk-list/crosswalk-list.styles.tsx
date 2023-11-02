@@ -8,6 +8,10 @@ export const List = styled.div`
   > div:not(:last-child) {
     margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
   }
+
+  .header-list {
+    font-weight: bold;
+  }
 `;
 
 export const ListItem = styled.div`
@@ -18,7 +22,8 @@ export const ListItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: ${(props) => props.theme.suomifi.spacing.s};
-  height: 40px;
+  height: 60px;
+  margin: 4px;
 
   .fi-button {
     white-space: nowrap;

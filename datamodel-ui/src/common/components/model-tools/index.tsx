@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Panel, useStore, useReactFlow } from 'reactflow';
+import { useStore, useReactFlow } from 'reactflow';
 import {
   Button,
   HintText,
@@ -18,7 +18,11 @@ import {
 } from 'suomifi-ui-components';
 import { ToolsButtonGroup } from 'yti-common-ui/drawer/drawer.styles';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import { ToggleButtonGroup, ToolsTooltip } from './model-tools.styles';
+import {
+  ToggleButtonGroup,
+  ToolsPanel,
+  ToolsTooltip,
+} from './model-tools.styles';
 import { useTranslation } from 'next-i18next';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
@@ -34,9 +38,11 @@ import DownloadPicture from './download-picture';
 
 export default function ModelTools({
   modelId,
+  version,
   applicationProfile,
 }: {
   modelId: string;
+  version?: string;
   applicationProfile: boolean;
 }) {
   const { t } = useTranslation('common');
@@ -78,7 +84,7 @@ export default function ModelTools({
   }
 
   return (
-    <Panel position="top-right">
+    <ToolsPanel position="top-right">
       <div
         style={{
           marginRight: '10px',
@@ -122,7 +128,7 @@ export default function ModelTools({
 
           <DownloadPicture modelId={modelId} />
 
-          {hasPermission && (
+          {hasPermission && !version && (
             <Button
               icon={<IconSave />}
               onClick={() => dispatch(setSavePosition(true))}
@@ -141,7 +147,7 @@ export default function ModelTools({
           </div>
         </ToolsButtonGroup>
       </div>
-    </Panel>
+    </ToolsPanel>
   );
 
   function renderLibraryVersion() {
@@ -174,41 +180,28 @@ export default function ModelTools({
                 {t('show-attributes')}
               </ToggleButton>
               <ToggleButton
-                checked={tools.showCardinality}
+                checked={tools.showAssociations}
                 onClick={() =>
                   dispatch(
-                    setModelTools('showCardinality', !tools.showCardinality)
+                    setModelTools('showAssociations', !tools.showAssociations)
                   )
                 }
               >
-                {t('show-cardinality')}
+                {t('show-associations')}
               </ToggleButton>
+              {/*
               <ToggleButton
-                checked={tools.showStatus}
-                onClick={() =>
-                  dispatch(setModelTools('showStatus', !tools.showStatus))
-                }
-              >
-                {t('show-statuses', { ns: 'admin' })}
-              </ToggleButton>
-              <ToggleButton
-                checked={tools.showNotes}
-                onClick={() =>
-                  dispatch(setModelTools('showNotes', !tools.showNotes))
-                }
-              >
-                {t('show-notes')}
-              </ToggleButton>
-              <ToggleButton
-                checked={tools.showOriginalClass}
+                checked={tools.showDomainRange}
                 onClick={() =>
                   dispatch(
-                    setModelTools('showOriginalClass', !tools.showOriginalClass)
+                    setModelTools('showDomainRange', !tools.showDomainRange)
                   )
                 }
               >
-                {t('show-original-class')}
+                {t('show-domain-range-references')}
               </ToggleButton>
+              */}
+
               <ToggleButton
                 checked={tools.showClassHighlights}
                 onClick={() =>

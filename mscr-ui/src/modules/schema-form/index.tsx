@@ -161,14 +161,14 @@ export default function SchemaForm({
           <DropdownItem value={'VALID'}>
             {t('statuses.valid', { ns: 'common' })}
           </DropdownItem>
-          <DropdownItem value={'SUPERSEDED'}>
-            {t('statuses.superseded', { ns: 'common' })}
-          </DropdownItem>
           <DropdownItem value={'RETIRED'}>
             {t('statuses.retired', { ns: 'common' })}
           </DropdownItem>
           <DropdownItem value={'INVALID'}>
             {t('statuses.invalid', { ns: 'common' })}
+          </DropdownItem>
+          <DropdownItem value={'INCOMPETE'}>
+            {t('statuses.incomplete', { ns: 'common' })}
           </DropdownItem>
         </Dropdown>
       </div>

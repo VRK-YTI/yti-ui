@@ -75,6 +75,8 @@ export function createCommonGetServerSideProps<
           );
         }
 
+        //getting the fake user info
+
         if (process.env.ENV_TYPE !== 'production') {
           store.dispatch(getFakeableUsers.initiate());
           await Promise.all(store.dispatch(getFakeableRunningQueriesThunk()));

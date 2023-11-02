@@ -8,6 +8,7 @@ export function useInitialModelForm(): ModelFormType {
     prefix: '',
     serviceCategories: [],
     type: 'profile' as ModelFormType['type'],
+    status: 'DRAFT',
     terminologies: [],
     externalNamespaces: [],
     internalNamespaces: [],
