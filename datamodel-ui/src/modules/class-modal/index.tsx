@@ -156,7 +156,7 @@ export default function ClassModal({
             setContentLanguage={setContentLanguage}
             modelId={modelId}
             languageVersioned
-            multiTypeSelection={applicationProfile}
+            multiTypeSelection={applicationProfile && !limitToModelType}
           />
         </ModalContent>
         <ModalFooter>
