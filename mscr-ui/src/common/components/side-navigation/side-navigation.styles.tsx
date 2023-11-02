@@ -9,11 +9,11 @@ import {
 } from 'suomifi-ui-components';
 
 export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
-  flex-grow: 1;
-  width: 25%;
+  // flex-grow: 1;
+  // width: 25%;
   background-color: white;
   // background-color: ${(props) => props.theme.suomifi.colors.depthSecondary};
-  max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
+  // max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
   padding: ${(props) => props.theme.suomifi.spacing.m};
 `;
 

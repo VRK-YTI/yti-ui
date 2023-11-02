@@ -8,6 +8,7 @@ import {SearchContext} from '@app/common/components/search-context-provider';
 import SearchFilterSet from '@app/common/components/search-filter-set';
 import {Bucket, Facet, Filter} from '@app/common/interfaces/search.interface';
 import {useTranslation} from 'next-i18next';
+import {Grid} from "@mui/material";
 
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
@@ -54,19 +55,27 @@ export default function SearchScreen() {
 
   return (
     <SearchContainer>
-      <FacetsWrapper>
-        {/* Groups of facets for different contexts, made with search-filter-set */}
-        <SearchFilterSet title={t('in-all-mscr')} filters={filters} />
-      </FacetsWrapper>
-      <CloseButton onClick={handleClose}>
-        <IconClose />
-      </CloseButton>
-      <ResultsWrapper>
-        {/* Only a list of results if searching all of mscr, but two lists if searching own workspace */}
-        {mscrSearchResults?.hits.hits.map((hit) => (
-          <SearchResult key={hit._id} hit={hit} />
-        ))}
-      </ResultsWrapper>
+      <Grid container justifyContent="space-between">
+        <Grid item xs={2}>
+          <FacetsWrapper>
+            {/* Groups of facets for different contexts, made with search-filter-set */}
+            <SearchFilterSet title={t('in-all-mscr')} filters={filters} />
+          </FacetsWrapper>
+        </Grid>
+        <Grid item xs={8}>
+          <ResultsWrapper>
+            {/* Only a list of results if searching all of mscr, but later can be two lists if searching own workspace */}
+            {mscrSearchResults?.hits.hits.map((hit) => (
+              <SearchResult key={hit._id} hit={hit} />
+            ))}
+          </ResultsWrapper>
+        </Grid>
+        <Grid item xs={1}>
+          <CloseButton onClick={handleClose}>
+            <IconClose />
+          </CloseButton>
+        </Grid>
+      </Grid>
     </SearchContainer>
   );
 }

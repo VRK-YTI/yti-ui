@@ -21,6 +21,7 @@ import SideNavigationPanel from '../side-navigation';
 import Title from 'yti-common-ui/title';
 import {SearchContext} from "@app/common/components/search-context-provider";
 import SearchScreen from "@app/modules/search-screen";
+import {Grid} from "@mui/material";
 
 export default function Layout({
   children,
@@ -75,16 +76,20 @@ export default function Layout({
               fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
             />
 
-            <Block>
-              <SideNavigationPanel user={user ?? undefined} />
-              <ContentContainer>
-                {alerts && alerts}
-                <MarginContainer $breakpoint={breakpoint}>
-                  {isSearchActive && <SearchScreen />}
-                  {children}
-                </MarginContainer>
-              </ContentContainer>
-            </Block>
+            <Grid container spacing={2}>
+              <Grid item xs={2}>
+                <SideNavigationPanel user={user ?? undefined} />
+              </Grid>
+              <Grid item xs={10}>
+                <ContentContainer>
+                  {alerts && alerts}
+                  <MarginContainer $breakpoint={breakpoint}>
+                    {isSearchActive && <SearchScreen />}
+                    {children}
+                  </MarginContainer>
+                </ContentContainer>
+              </Grid>
+            </Grid>
           </SiteContainer>
         )}
       </SearchContext.Provider>

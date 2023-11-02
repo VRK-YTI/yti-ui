@@ -3,17 +3,23 @@ import {Block} from 'suomifi-ui-components';
 
 export const SearchContainer = styled(Block)`
   height: 800px;
+  position: absolute;
+  background-color: ${(props) => props.theme.suomifi.colors.depthLight3};
+  z-index: 1;
+  width: 80vw;
 `;
 
 export const FacetsWrapper = styled(Block)`
-  position: absolute;
+  // position: absolute;
   padding-top: 20px;
 `;
 
 export const ResultsWrapper = styled(Block)`
-  margin-left: 200px;
+  // margin-left: 200px;
 `;
 
 export const CloseButton = styled.button`
-  position: absolute;
+  //position: absolute;
+  //top: 85px;
+  //right: 5px;
 `;
