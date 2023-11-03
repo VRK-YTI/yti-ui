@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   Button,
   ExternalLink,
+  IconCopy,
   IconOptionsVertical,
   Text,
   Tooltip,
@@ -285,7 +286,18 @@ export default function ModelInfoView({
           )}
         </BasicBlock>
         <BasicBlock title={t('prefix')}>{modelInfo.prefix}</BasicBlock>
-        <BasicBlock title={t('model-uri')}>{getUri(modelInfo)}</BasicBlock>
+        <BasicBlock title={t('model-uri')}>
+          {getUri(modelInfo)}
+          <Button
+            icon={<IconCopy />}
+            variant="secondary"
+            onClick={() => navigator.clipboard.writeText(getUri(modelInfo))}
+            style={{ width: 'max-content' }}
+            id="copy-uri-button"
+          >
+            {t('copy-to-clipboard')}
+          </Button>
+        </BasicBlock>
         <BasicBlock title={t('information-domains')}>
           {modelInfo.groups
             .map((group) =>
