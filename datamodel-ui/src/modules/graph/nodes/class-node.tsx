@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Handle, Position, useReactFlow } from 'reactflow';
 import {
+  ExternalLink,
   IconChevronDown,
   IconChevronUp,
   IconOptionsVertical,
@@ -48,7 +49,7 @@ interface ClassNodeProps {
 }
 
 export default function ClassNode({ id, data, selected }: ClassNodeProps) {
-  const { i18n } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
     actions: 'EDIT_CLASS',
     targetOrganization: data.organizationIds,
@@ -306,40 +307,42 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   function renderResourceLabel(
     resource: ClassNodeProps['data']['resources'][0]
   ) {
-    if (!data.applicationProfile) {
-      return !tools.showById ? (
-        getLanguageVersion({
+    const label = !tools.showById
+      ? getLanguageVersion({
           data: resource.label,
           lang: displayLang !== i18n.language ? displayLang : i18n.language,
           appendLocale: true,
         })
-      ) : (
-        <>
-          {resource.identifier.includes(':')
-            ? resource.identifier
-            : `${data.modelId}:${resource.identifier}`}
-        </>
+      : resource.identifier.includes(':')
+      ? resource.identifier
+      : `${data.modelId}:${resource.identifier}`;
+
+    const dataType =
+      resource.dataType && resource.type === ResourceType.ATTRIBUTE
+        ? `(${resource.dataType})`
+        : '';
+
+    if (!data.applicationProfile) {
+      return `${label} ${dataType}`;
+    } else {
+      const codeListLink =
+        resource.codeLists && resource.codeLists.length > 0
+          ? resource.codeLists[0]
+          : undefined;
+      return (
+        <div>
+          {`${label} [${getMinMax(resource)}] ${dataType} `}
+          {codeListLink && (
+            <ExternalLink
+              href={codeListLink}
+              labelNewWindow={t('site-open-link-new-window')}
+            >
+              {t('codelist', { ns: 'admin' })}
+            </ExternalLink>
+          )}
+        </div>
       );
     }
-
-    return (
-      <div>
-        {!tools.showById ? (
-          getLanguageVersion({
-            data: resource.label,
-            lang: displayLang !== i18n.language ? displayLang : i18n.language,
-            appendLocale: true,
-          })
-        ) : (
-          <>
-            {resource.identifier.includes(':')
-              ? resource.identifier
-              : `${data.modelId}:${resource.identifier}`}
-          </>
-        )}
-        : [{getMinMax(resource)}] {getIdentifier(resource)}
-      </div>
-    );
   }
 
   function getMinMax(resource: ClassNodeProps['data']['resources'][0]) {

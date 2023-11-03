@@ -145,6 +145,7 @@ describe('create-class-node', () => {
               fi: 'assoc-1-fi',
             },
             type: 'ASSOCIATION',
+            referenceType: 'ASSOCIATION',
           },
           {
             identifier: 'assoc-2',
@@ -152,6 +153,7 @@ describe('create-class-node', () => {
               fi: 'assoc-2-fi',
             },
             type: 'ASSOCIATION',
+            referenceType: 'ASSOCIATION',
           },
           {
             identifier: 'assoc-3',
@@ -159,6 +161,7 @@ describe('create-class-node', () => {
               fi: 'assoc-3-fi',
             },
             type: 'ASSOCIATION',
+            referenceType: 'ASSOCIATION',
           },
         ],
       },
