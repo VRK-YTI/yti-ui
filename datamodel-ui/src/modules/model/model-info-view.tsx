@@ -43,7 +43,6 @@ import { v4 } from 'uuid';
 import CreateReleaseModal from '../create-release-modal';
 import PriorVersions from './prior-versions';
 import { useSelector } from 'react-redux';
-import { get } from 'lodash';
 
 export default function ModelInfoView({
   organizationIds,
