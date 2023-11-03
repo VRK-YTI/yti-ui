@@ -325,21 +325,13 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
     if (!data.applicationProfile) {
       return `${label} ${dataType}`;
     } else {
-      const codeListLink =
+      const codeListsText =
         resource.codeLists && resource.codeLists.length > 0
-          ? resource.codeLists[0]
-          : undefined;
+          ? `(+ ${t('codelist', { ns: 'admin' })})`
+          : '';
       return (
         <div>
-          {`${label} [${getMinMax(resource)}] ${dataType} `}
-          {codeListLink && (
-            <ExternalLink
-              href={codeListLink}
-              labelNewWindow={t('site-open-link-new-window')}
-            >
-              {t('codelist', { ns: 'admin' })}
-            </ExternalLink>
-          )}
+          {`${label} [${getMinMax(resource)}] ${dataType} ${codeListsText}`}
         </div>
       );
     }
@@ -351,13 +343,5 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
     }
 
     return `${resource.minCount ?? '0'}..${resource.maxCount ?? '*'}`;
-  }
-
-  function getIdentifier(resource: ClassNodeProps['data']['resources'][0]) {
-    return (
-      <ResourceTechnicalName>
-        ({data.identifier}:{resource.identifier})
-      </ResourceTechnicalName>
-    );
   }
 }
