@@ -10,12 +10,12 @@ import { SimpleResource } from '@app/common/interfaces/simple-resource.interface
 
 export default function ApplicationProfileFlow({
   visible,
-  selectedNodeShape,
+  selectedTargetClass,
   handleFollowUp,
 }: {
   visible: boolean;
-  selectedNodeShape: {
-    nodeShape: InternalClassInfo;
+  selectedTargetClass: {
+    targetClass: InternalClassInfo;
     isAppProfile?: boolean;
   };
   handleFollowUp: (data?: {
@@ -30,10 +30,10 @@ export default function ApplicationProfileFlow({
   const [resourcePickerVisible, setResourcePickerVisible] = useState(false);
 
   useEffect(() => {
-    if (!selectedNodeShape.isAppProfile) {
+    if (!selectedTargetClass.isAppProfile) {
       setRestrictionVisible(visible);
     }
-  }, [visible, selectedNodeShape]);
+  }, [visible, selectedTargetClass]);
 
   const handleClassRestrictionClose = () => {
     setRestrictionVisible(false);
@@ -41,7 +41,7 @@ export default function ApplicationProfileFlow({
 
   const handleClassRestrictionFollowUp = (
     createNew?: boolean,
-    classRestriction?: InternalClass
+    existingNodeShape?: InternalClass
   ) => {
     setRestrictionVisible(false);
 
@@ -53,9 +53,8 @@ export default function ApplicationProfileFlow({
     setRestrictionVisible(false);
     setResourcePickerVisible(false);
     handleFollowUp({
-      value: selectedNodeShape.nodeShape,
+      value: existingNodeShape,
       targetIsAppProfile: true,
-      targetClass: classRestriction,
     });
   };
 
@@ -72,7 +71,7 @@ export default function ApplicationProfileFlow({
     }
 
     handleFollowUp({
-      value: selectedNodeShape.nodeShape,
+      value: selectedTargetClass.targetClass,
       associations: value.associations,
       attributes: value.attributes,
     });
@@ -84,7 +83,7 @@ export default function ApplicationProfileFlow({
         <ClassRestrictionModal
           hide={() => handleClassRestrictionClose()}
           visible={restrictionVisible}
-          selectedNodeShape={selectedNodeShape.nodeShape}
+          selectedTargetClass={selectedTargetClass.targetClass}
           handleFollowUp={(createNew, classRestriction) =>
             handleClassRestrictionFollowUp(createNew, classRestriction)
           }
@@ -96,9 +95,9 @@ export default function ApplicationProfileFlow({
           visible={resourcePickerVisible}
           selectedNodeShape={{
             modelId:
-              getPrefixFromURI(selectedNodeShape.nodeShape.namespace) ?? '',
-            classId: selectedNodeShape.nodeShape.identifier ?? '',
-            isAppProfile: selectedNodeShape.isAppProfile ?? false,
+              getPrefixFromURI(selectedTargetClass.targetClass.namespace) ?? '',
+            classId: selectedTargetClass.targetClass.identifier ?? '',
+            isAppProfile: selectedTargetClass.isAppProfile ?? false,
           }}
           handleFollowUp={(value?: {
             associations: SimpleResource[];
