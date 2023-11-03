@@ -164,7 +164,11 @@ export const applicationProfileAttribute: ResourceFormType = {
     curie: 'class-type',
   },
   type: ResourceType.ATTRIBUTE,
-  dataType: { id: 'data-type', label: 'data-type' },
+  dataType: {
+    uri: 'data-type',
+    curie: 'data-type',
+    label: { fi: 'data-type' },
+  },
   allowedValues: [
     { id: 'allowed-1', label: 'allowed-1' },
     { id: 'allowed-2', label: 'allowed-2' },
@@ -201,7 +205,11 @@ export const applicationProfileAssociation: ResourceFormType = {
     curie: 'class-type',
   },
   type: ResourceType.ASSOCIATION,
-  dataType: { id: 'data-type', label: 'data-type' },
+  dataType: {
+    uri: 'data-type',
+    curie: 'data-type',
+    label: { fi: 'data-type' },
+  },
   allowedValues: [
     { id: 'allowed-1', label: 'allowed-1' },
     { id: 'allowed-2', label: 'allowed-2' },
