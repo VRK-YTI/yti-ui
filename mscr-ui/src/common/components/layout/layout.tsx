@@ -3,25 +3,20 @@ import { ThemeProvider } from 'styled-components';
 import { lightTheme } from 'yti-common-ui/theme';
 import {
   ContentContainer,
-  FooterContainer,
   SiteContainer,
   MarginContainer,
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
 import SmartHeader from '../smart-header';
-import { Breakpoint, useBreakpoints } from 'yti-common-ui/media-query';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import SkipLink from 'yti-common-ui/skip-link';
-import getConfig from 'next/config';
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 import generateFakeableUsers from 'yti-common-ui/utils/generate-impersonate';
-import MSCRSideBar from '../sidebar/MSCRSideBar';
-import { Block } from 'suomifi-ui-components';
-import Title from 'yti-common-ui/title';
-import {SearchContext} from "@app/common/components/search-context-provider";
-import SearchScreen from "@app/modules/search-screen";
-import {Grid} from "@mui/material";
 import SideNavigationPanel from '../side-navigation';
 import {MscrUser} from '@app/common/interfaces/mscr-user.interface';
+import {SearchContext} from '@app/common/components/search-context-provider';
+import SearchScreen from '@app/modules/search-screen';
+import {Grid} from '@mui/material';
 
 export default function Layout({
   children,
