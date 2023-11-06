@@ -15,7 +15,6 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Handle, Position, useReactFlow } from 'reactflow';
 import {
-  ExternalLink,
   IconChevronDown,
   IconChevronUp,
   IconOptionsVertical,
@@ -28,7 +27,6 @@ import {
   CollapseButton,
   OptionsButton,
   Resource,
-  ResourceTechnicalName,
   TooltipWrapper,
 } from './node.styles';
 import { useStoreDispatch } from '@app/store';

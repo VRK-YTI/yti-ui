@@ -5,7 +5,11 @@ import { Handle, Position } from 'reactflow';
 import { Resource } from './node.styles';
 import { IconRows } from 'suomifi-icons';
 import { useSelector } from 'react-redux';
-import { selectModelTools } from '@app/common/components/model/model.slice';
+import {
+  selectModelTools,
+  setSelected,
+} from '@app/common/components/model/model.slice';
+import { useStoreDispatch } from '@app/store';
 
 interface AttributeNodeProps {
   id: string;
@@ -23,6 +27,11 @@ export default function AttributeNode({ id, data }: AttributeNodeProps) {
   const { i18n } = useTranslation('common');
   const [hover, setHover] = useState(false);
   const tools = useSelector(selectModelTools());
+  const dispatch = useStoreDispatch();
+
+  const handleResourceClick = (id: string) => {
+    dispatch(setSelected(id, 'attributes'));
+  };
 
   const label = tools.showById
     ? `${data.modelId}:${id}`
@@ -38,6 +47,7 @@ export default function AttributeNode({ id, data }: AttributeNodeProps) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       $highlight={hover}
+      onClick={() => handleResourceClick(id)}
     >
       <IconRows />
       <Handle type="target" position={Position.Top} id={id} />
