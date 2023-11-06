@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import { default as styled } from 'styled-components';
 import { Button } from 'suomifi-ui-components';
 import { Breakpoint } from 'yti-common-ui/media-query';
 import { small } from 'yti-common-ui/media-query/styled-helpers';

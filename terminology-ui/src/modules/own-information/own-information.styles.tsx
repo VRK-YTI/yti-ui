@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import { default as styled } from 'styled-components';
 import { Breakpoint } from 'yti-common-ui/media-query';
 import { small } from 'yti-common-ui/media-query/styled-helpers';
 
@@ -18,18 +18,18 @@ export const MainContent = styled.main`
 
 export const OrganizationAndRolesWrapper = styled.div`
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+
+  > :not(:first-child) {
+    border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+  }
+
+  > :nth-child(even) {
+    background-color: ${(props) => props.theme.suomifi.colors.depthLight3};
+  }
 `;
 
 export const OrganizationAndRoles = styled.div`
   padding: ${(props) => props.theme.suomifi.spacing.s};
-
-  :not(:first-child) {
-    border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-  }
-
-  :nth-child(even) {
-    background-color: ${(props) => props.theme.suomifi.colors.depthLight3};
-  }
 `;
 
 export const OrganizationAndRolesItem = styled.div`

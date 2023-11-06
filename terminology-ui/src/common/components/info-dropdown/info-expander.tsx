@@ -317,10 +317,9 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           </>
         )}
 
-        {/* TODO: A bug here with ref name*/}
-        {/* <VisuallyHidden as="h3">
+        <VisuallyHidden as="h3">
           {t('additional-technical-information', { ns: 'common' })}
-        </VisuallyHidden> */}
+        </VisuallyHidden>
         <BasicBlock title={t('vocabulary-info-organization')} id="organization">
           <PropertyList>
             {data.references.contributor

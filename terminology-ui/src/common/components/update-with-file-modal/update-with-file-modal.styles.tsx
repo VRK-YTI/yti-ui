@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import { default as styled } from 'styled-components';
 import { Block, IconCheckCircleFilled } from 'suomifi-ui-components';
 
 export const ModalContentWrapper = styled.div`

@@ -260,7 +260,6 @@ export default function TermForm({
           <span> ({t('optional')})</span>
         </label>
         <span>{t('term-equivalency-description')}</span>
-        {/* TODO: A bug here with ref name*/}
         <Dropdown
           labelText=""
           labelMode="hidden"

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import { default as styled } from 'styled-components';
 import { Button, Heading, Text } from 'suomifi-ui-components';
 
 export const TermHeading = styled(Heading)`

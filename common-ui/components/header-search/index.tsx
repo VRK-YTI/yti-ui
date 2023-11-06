@@ -56,8 +56,7 @@ export default function HeaderSearch({
         clearButtonLabel={t('terminology-search-clear')}
         labelText=""
         value={searchInputValue ?? ''}
-        // TODO: A bug here with ref name
-        // labelMode='hidden'
+        labelMode="hidden"
         searchButtonLabel={t('terminology-search')}
         visualPlaceholder={t('terminology-search-placeholder')}
         wrapperProps={{ style: { flexGrow: isSmall ? 1 : 0 } }}

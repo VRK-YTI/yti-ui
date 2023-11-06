@@ -60,7 +60,10 @@ const reducers = {
 const reducer = combineReducers(reducers);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const makeStore: MakeStore<any> = ({ reduxWrapperMiddleware, context }) =>
+export const makeStore: MakeStore<any> = ({
+  reduxWrapperMiddleware,
+  context,
+}) =>
   configureStore({
     reducer,
     middleware: (getDefaultMiddleware) => [
