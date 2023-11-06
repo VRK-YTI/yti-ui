@@ -39,6 +39,7 @@ import ResourceModal from '@app/modules/class-view/resource-modal';
 import getConnectedElements from '../utils/get-connected-elements';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
+import useSetView from '@app/common/utils/hooks/use-set-view';
 
 interface ClassNodeProps {
   id: string;
@@ -63,6 +64,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const [showTooltip, setShowTooltip] = useState(false);
   const [hover, setHover] = useState(false);
   const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
+  const { setView } = useSetView();
 
   const handleTitleClick = () => {
     if (globalSelected.id !== id) {
@@ -104,12 +106,10 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
     id: string,
     type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE
   ) => {
-    dispatch(
-      setSelected(
-        id,
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
-      )
-    );
+    const resourceType =
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes';
+    setView(resourceType, 'info', id);
+    dispatch(setSelected(id, resourceType));
   };
 
   const handleResourceHover = (

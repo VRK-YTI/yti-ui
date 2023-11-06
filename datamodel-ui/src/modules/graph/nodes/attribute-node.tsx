@@ -10,6 +10,7 @@ import {
   setSelected,
 } from '@app/common/components/model/model.slice';
 import { useStoreDispatch } from '@app/store';
+import useSetView from '@app/common/utils/hooks/use-set-view';
 
 interface AttributeNodeProps {
   id: string;
@@ -28,8 +29,10 @@ export default function AttributeNode({ id, data }: AttributeNodeProps) {
   const [hover, setHover] = useState(false);
   const tools = useSelector(selectModelTools());
   const dispatch = useStoreDispatch();
+  const { setView } = useSetView();
 
   const handleResourceClick = (id: string) => {
+    setView('attributes', 'info', id);
     dispatch(setSelected(id, 'attributes'));
   };
 
