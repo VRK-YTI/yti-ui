@@ -76,9 +76,9 @@ export default function ClassView({
   const [isEdit, setIsEdit] = useState(false);
   const [showAppProfileModal, setShowAppProfileModal] = useState(false);
   const [basedOnNodeShape, setBasedOnNodeShape] = useState(false);
-  const [selectedNodeShape, setSelectedNodeShape] = useState<
+  const [selectedTargetClass, setSelectedTargetClass] = useState<
     | {
-        nodeShape: InternalClassInfo;
+        targetClass: InternalClassInfo;
         isAppProfile?: boolean;
       }
     | undefined
@@ -124,9 +124,9 @@ export default function ClassView({
 
     if (applicationProfile && value && !targetIsAppProfile) {
       setShowAppProfileModal(true);
-      setSelectedNodeShape({
-        nodeShape: value,
-        isAppProfile: targetIsAppProfile ?? false,
+      setSelectedTargetClass({
+        targetClass: value,
+        isAppProfile: false,
       });
       return;
     }
@@ -167,7 +167,7 @@ export default function ClassView({
     attributes?: SimpleResource[];
   }) => {
     setShowAppProfileModal(false);
-    setSelectedNodeShape(undefined);
+    setSelectedTargetClass(undefined);
 
     if (!data || !data.value) {
       return;
@@ -265,10 +265,10 @@ export default function ClassView({
                   handleFollowUp={handleFollowUpAction}
                   applicationProfile={applicationProfile}
                 />
-                {selectedNodeShape && (
+                {selectedTargetClass && (
                   <ApplicationProfileFlow
                     visible={showAppProfileModal}
-                    selectedNodeShape={selectedNodeShape}
+                    selectedTargetClass={selectedTargetClass}
                     handleFollowUp={handleAppProfileFollowUpAction}
                   />
                 )}
