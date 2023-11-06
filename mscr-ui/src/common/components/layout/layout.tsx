@@ -14,14 +14,14 @@ import SkipLink from 'yti-common-ui/skip-link';
 import getConfig from 'next/config';
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 import generateFakeableUsers from 'yti-common-ui/utils/generate-impersonate';
-import { User } from 'yti-common-ui/interfaces/user.interface';
 import MSCRSideBar from '../sidebar/MSCRSideBar';
 import { Block } from 'suomifi-ui-components';
-import SideNavigationPanel, {MscrUser} from '../side-navigation';
 import Title from 'yti-common-ui/title';
 import {SearchContext} from "@app/common/components/search-context-provider";
 import SearchScreen from "@app/modules/search-screen";
 import {Grid} from "@mui/material";
+import SideNavigationPanel from '../side-navigation';
+import {MscrUser} from '@app/common/interfaces/mscr-user.interface';
 
 export default function Layout({
   children,

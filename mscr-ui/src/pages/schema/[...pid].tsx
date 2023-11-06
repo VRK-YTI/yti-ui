@@ -23,9 +23,11 @@ import Separator from 'yti-common-ui/components/separator';
 import InlineListBlock from '@app/common/components/inline-list-block';
 import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import FormattedDate from 'yti-common-ui/formatted-date';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
+  user: MscrUser;
   schemaId: string;
 }
 

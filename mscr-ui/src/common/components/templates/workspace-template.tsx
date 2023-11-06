@@ -20,9 +20,11 @@ import {
   getCount,
   getRunningQueriesThunk as getCountRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
+  user: MscrUser;
 }
 
 export default function IndexPage(props: IndexPageProps) {

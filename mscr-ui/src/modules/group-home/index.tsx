@@ -1,11 +1,11 @@
 import SideNavigationPanel from '@app/common/components/side-navigation';
 import { Grid } from '@mui/material';
-import { User } from 'yti-common-ui/interfaces/user.interface';
 import FrontPage from '../front-page';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 interface GroupHomeProps {
   pid: string;
-  user?: User | undefined;
+  user?: MscrUser | undefined;
 }
 export default function GroupWorkspace({ pid, user }: GroupHomeProps) {
   {

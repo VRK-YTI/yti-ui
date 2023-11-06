@@ -1,9 +1,9 @@
 import { FakeableUser } from 'yti-common-ui/interfaces/fakeable-user.interface';
-import { User } from 'yti-common-ui/interfaces/user.interface';
 import { default as CommonLayout } from './layout';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 interface LayoutProps {
-  user?: User | null;
+  user?: MscrUser | null;
   fakeableUsers?: FakeableUser[] | null;
   feedbackSubject?: string;
   children: React.ReactNode;

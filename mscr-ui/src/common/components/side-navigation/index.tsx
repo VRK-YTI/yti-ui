@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import {RouterLink} from 'suomifi-ui-components';
-import { User } from 'yti-common-ui/interfaces/user.interface';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
   NavigationHeading,
@@ -16,10 +15,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-
-export interface MscrUser extends User {
-  organizations: Array<{ [key: string]: string }>;
-}
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const groups = user?.organizations;

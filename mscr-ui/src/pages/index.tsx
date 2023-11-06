@@ -20,10 +20,11 @@ import {
 } from '@app/common/components/counts/counts.slice';
 import PersonalWorkspace from '@app/modules/personal-home';
 import PageHead from 'yti-common-ui/page-head';
-import SearchScreen from '@app/modules/search-screen';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
+  user: MscrUser;
 }
 
 export default function IndexPage(props: IndexPageProps) {
