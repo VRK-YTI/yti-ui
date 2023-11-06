@@ -41,7 +41,7 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('mscr-title')}
           description={t('service-description')}
         />
-        <PersonalWorkspace user={props.user ?? undefined} pid={''} />
+        <h2>This page is the landing page</h2>
       </Layout>
     </CommonContextProvider>
   );

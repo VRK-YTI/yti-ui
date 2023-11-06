@@ -70,10 +70,9 @@ export default function Layout({
               user={user}
               fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
             />
-
             <Grid container spacing={2}>
               <Grid item xs={2}>
-                <SideNavigationPanel user={user ?? undefined} />
+                {user && <SideNavigationPanel user={user}/>}
               </Grid>
               <Grid item xs={10}>
                 <ContentContainer>

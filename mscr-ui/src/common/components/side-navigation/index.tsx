@@ -24,7 +24,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const [openGroup, setOpenGroup] = useState('');
   const router = useRouter();
   // Paths for now
-  const personalContentPath = '/homepage';
+  const personalContentPath = '/personal/content';
   const personalSettingsPath = '/personal/settings';
   const groupContentPath = '/group-home';
   // Group settings path is form '/' + group.id + '/settings'
@@ -101,9 +101,9 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
               <MscrSideNavigationLevel3
                 className="group"
                 subLevel={3}
-                selected={router.asPath == groupContentPath}
+                selected={router.asPath == '/' + group.id + '/content'}
                 content={
-                  <Link href={groupContentPath} passHref>
+                  <Link href={'/' + group.id + '/content'} passHref>
                     <RouterLink>
                       {t('workspace-group-navigation-content')}
                     </RouterLink>
