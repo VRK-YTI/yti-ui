@@ -19,9 +19,6 @@ export const SiteContainer = styled.div`
   width: 100%;
   margin: auto;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 `;
 
 // header layout
@@ -44,28 +41,22 @@ export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`
 
 // content layout
 
-export const ContentContainer = styled.div<{
-  $fullScreen?: boolean;
-  $breakpoint?: Breakpoint;
-}>`
+
+export const ContentContainer = styled.div<{ $fullScreen?: boolean }>`
+  background-color: ${(props) =>
+    props.$fullScreen
+      ? props.theme.suomifi.colors.whiteBase
+      : props.theme.suomifi.colors.depthLight3};
+
   border-bottom: ${(props) =>
     !props.$fullScreen &&
     `1px solid ${props.theme.suomifi.colors.depthLight1}`};
   flex-grow: 1;
-  // Sync the left margin with the navigation bar width + padding
-  ${(props) =>
-    props.$breakpoint &&
-    `
-    margin-left: ${small(props.$breakpoint, '25%', '200px')}
-  `}
+
   ${(props) =>
     props.$fullScreen &&
     `
     display: flex;
     flex-direction: column;
   `}
-`;
-
-export const FooterContainer = styled.footer`
-  background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
 `;

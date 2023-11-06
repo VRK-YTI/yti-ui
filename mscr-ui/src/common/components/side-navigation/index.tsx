@@ -1,12 +1,5 @@
-import { Link as MUILink } from '@mui/material';
 import Link from 'next/link';
-import {
-  Button,
-  RouterLink,
-  SideNavigation,
-  SideNavigationItem,
-} from 'suomifi-ui-components';
-import { User } from 'yti-common-ui/interfaces/user.interface';
+import {RouterLink} from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
   NavigationHeading,
@@ -22,15 +15,16 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
-export default function SideNavigationPanel({ user }: { user?: User }) {
+export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const groups = user?.organizations;
   const { breakpoint } = useBreakpoints();
   const { t } = useTranslation('common');
   const [openGroup, setOpenGroup] = useState('');
   const router = useRouter();
   // Paths for now
-  const personalContentPath = '/homepage';
+  const personalContentPath = '/personal/content';
   const personalSettingsPath = '/personal/settings';
   const groupContentPath = '/group-home';
   // Group settings path is form '/' + group.id + '/settings'
@@ -107,9 +101,9 @@ export default function SideNavigationPanel({ user }: { user?: User }) {
               <MscrSideNavigationLevel3
                 className="group"
                 subLevel={3}
-                selected={router.asPath == groupContentPath}
+                selected={router.asPath == '/' + group.id + '/content'}
                 content={
-                  <Link href={groupContentPath} passHref>
+                  <Link href={'/' + group.id + '/content'} passHref>
                     <RouterLink>
                       {t('workspace-group-navigation-content')}
                     </RouterLink>

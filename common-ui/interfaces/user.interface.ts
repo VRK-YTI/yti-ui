@@ -17,7 +17,6 @@ export interface User {
   hasToken: boolean;
   tokenRole: string;
   containerUri: string;
-  organizations: Array<{ [key: string]: string }>;
 }
 
 export const anonymousUser: User = {
@@ -39,7 +38,6 @@ export const anonymousUser: User = {
   hasToken: false,
   tokenRole: '',
   containerUri: '',
-  organizations: [],
 };
 
 export type UserProps = {

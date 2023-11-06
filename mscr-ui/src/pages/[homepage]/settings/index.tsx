@@ -7,10 +7,12 @@ import Layout from '@app/common/components/layout';
 import PageHead from 'yti-common-ui/components/page-head';
 import PersonalSettings from 'src/modules/personal-settings';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
-import { User } from 'yti-common-ui/interfaces/user.interface';
 import GroupSettings from '@app/modules/group-settings';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
+
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
+  user: MscrUser;
   settingsType: string;
 }
 

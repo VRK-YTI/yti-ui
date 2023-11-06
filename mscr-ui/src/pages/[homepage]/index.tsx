@@ -27,8 +27,10 @@ import GroupWorkspace from '../../modules/group-home';
 import PersonalWorkspace from '../../modules/personal-home';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import TreeviewTest from '@app/common/components/treeview-test';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 interface IndexPageProps extends CommonContextState {
+  user: MscrUser;
   _netI18Next: SSRConfig;
 }
 
@@ -44,7 +46,7 @@ export default function IndexPage(props: IndexPageProps) {
     user,
   }: {
     slug?: string;
-    user?: User;
+    user?: MscrUser;
   }): React.ReactElement {
     if (slug === 'group-home') {
       return <GroupWorkspace pid={''} user={user} />;
