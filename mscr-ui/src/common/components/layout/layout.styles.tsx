@@ -19,9 +19,6 @@ export const SiteContainer = styled.div`
   width: 100%;
   margin: auto;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 `;
 
 // header layout
