@@ -60,7 +60,7 @@ export default function ResultCard({
             : `${contributors.length} ${t('card-organizations')}`}
         </OrganizationParagraph>
       )}
-      <Link passHref href={titleLink}>
+      <Link passHref href={titleLink} legacyBehavior>
         <TitleLink href="">
           {icon && icon}
           <Title variant="h2" id="card-title-link">

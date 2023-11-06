@@ -111,12 +111,7 @@ flag.
 
 ```tsx
 // This will render "This text contains HTML markup.".
-<PropertyValue
-  property={[
-    { lang: '', value: 'This text contains <b>HTML</b> markup.', regex: '' },
-  ]}
-  stripHtml
-/>
+<PropertyValue property={[{ lang: '', value: 'This text contains <b>HTML</b> markup.', regex: '' }]} stripHtml />
 ```
 
 ### Language
@@ -138,10 +133,7 @@ something else than the value of the property.
 
 ```tsx
 // This will render "sv".
-<PropertyValue
-  property={[{ lang: 'sv', value: '', regex: '' }]}
-  valueAccessor={(property) => property.lang}
-/>
+<PropertyValue property={[{ lang: 'sv', value: '', regex: '' }]} valueAccessor={(property) => property.lang} />
 ```
 
 ## GetPropertyValue function

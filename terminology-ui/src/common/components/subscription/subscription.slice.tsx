@@ -1,6 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getMessagingApiBaseQuery } from '@app/store/api-base-query';
-import { HYDRATE } from 'next-redux-wrapper';
 import {
   Subscription,
   Subscriptions,
@@ -9,11 +8,6 @@ import {
 export const subscriptionApi = createApi({
   reducerPath: 'subsriptionApi',
   baseQuery: getMessagingApiBaseQuery(),
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
   tagTypes: ['Subscription'],
   endpoints: (builder) => ({
     getSubscription: builder.query<Subscription | '', string>({

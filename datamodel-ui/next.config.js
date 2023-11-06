@@ -1,5 +1,4 @@
 const { i18n } = require('./next-i18next.config');
-const withTM = require('next-transpile-modules')(['../common-ui']);
 
 module.exports = () => {
   let config = {
@@ -20,6 +19,7 @@ module.exports = () => {
       ],
     },
     i18n,
+    transpilePackages: ['common-ui'],
     async headers() {
       const isProd = process.env.NODE_ENV === 'production';
 
@@ -124,7 +124,7 @@ module.exports = () => {
             destination: 'http://yti-datamodel-api:9004/datamodel-api/:path*',
           },
           {
-            source: '/terminology-api/:path*',
+            source: '/terminology-awithTMpi/:path*',
             destination:
               'http://yti-terminology-api:9103/terminology-api/:path*',
           },
@@ -142,5 +142,5 @@ module.exports = () => {
     };
   }
 
-  return withTM(config);
+  return config;
 };

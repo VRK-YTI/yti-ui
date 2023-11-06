@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export interface MDLWProps {
-  maxSize: number;
+  $maxSize: number;
 }
 
 export const MultilingualDefinitionListWrapper = styled.ul<MDLWProps>`
@@ -13,7 +13,7 @@ export const MultilingualDefinitionListWrapper = styled.ul<MDLWProps>`
 
   > li {
     padding-left: calc(
-      ${(props) => props.theme.suomifi.spacing.s} + ${(props) => props.maxSize} *
+      ${(props) => props.theme.suomifi.spacing.s} + ${(props) => props.$maxSize} *
         7px + 25px
     );
   }

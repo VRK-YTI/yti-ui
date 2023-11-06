@@ -20,7 +20,7 @@ export default function MultilingualDefinitionList({
     maxBy(items, (item) => item.language.length)?.language.length ?? 0;
 
   return (
-    <MultilingualDefinitionListWrapper maxSize={maxSize}>
+    <MultilingualDefinitionListWrapper $maxSize={maxSize}>
       {items.map(({ language, content }, index) => (
         <MultilingualDefinitionListItem key={index} lang={language}>
           {typeof content === 'string' ? (

@@ -209,9 +209,10 @@ export default function Collection({
             </>
           )}
 
-          <VisuallyHidden as="h2">
+          {/* TODO: A bug here with ref name*/}
+          {/* <VisuallyHidden as="h2">
             {t('additional-technical-information', { ns: 'common' })}
-          </VisuallyHidden>
+          </VisuallyHidden> */}
 
           <BasicBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}

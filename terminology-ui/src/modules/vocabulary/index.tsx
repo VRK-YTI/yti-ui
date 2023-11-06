@@ -256,7 +256,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
             </Modal>
           )}
           <ResultAndStatsWrapper id="search-results">
-            <QuickActionsWrapper isSmall={isSmall}>
+            <QuickActionsWrapper $isSmall={isSmall}>
               <Heading variant="h2" id="results-title">
                 {urlState.type === 'concept'
                   ? t('vocabulary-concepts')

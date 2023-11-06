@@ -22,7 +22,7 @@ export default function generateFormData(
         draftComment: '',
         editorialNote: [],
         historyNote: '',
-        id: v4(),
+        id: '',
         language: term.lang,
         prefLabel: term.value,
         scope: '',

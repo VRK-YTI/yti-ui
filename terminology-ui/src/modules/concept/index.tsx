@@ -57,7 +57,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery({
     id: terminologyId,
   });
-  //We cannot call a hook on a conditional statement so this has to be checked before rendering
   const hasPermission = HasPermission({
     actions: ['EDIT_CONCEPT', 'DELETE_CONCEPT'],
     targetOrganization: terminology?.references.contributor,
@@ -214,9 +213,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             </>
           )}
 
-          <VisuallyHidden as="h2">
+          {/* TODO: A bug here with ref name*/}
+          {/* <VisuallyHidden as="h2">
             {t('additional-technical-information', { ns: 'common' })}
-          </VisuallyHidden>
+          </VisuallyHidden> */}
 
           <BasicBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}

@@ -20,12 +20,14 @@ import Layout from '@app/common/components/layout';
 import EditVocabulary from '@app/modules/edit-vocabulary';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import { wrapper } from '@app/store';
 
 interface EditTerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
 export default function EditTerminology(props: EditTerminologyPageProps) {
+  wrapper.useHydration(props);
   const { t } = useTranslation('admin');
   const { query } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;

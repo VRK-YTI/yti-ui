@@ -7,7 +7,6 @@ import {
 } from '@app/common/interfaces/terminology.interface';
 import { UrlState } from '@app/common/utils/hooks/use-url-state';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
-import { HYDRATE } from 'next-redux-wrapper';
 
 export const initialState = {};
 
@@ -20,11 +19,6 @@ export const terminologySearchSlice = createSlice({
 export const terminologySearchApi = createApi({
   reducerPath: 'terminologySearchApi',
   baseQuery: getTerminologyApiBaseQuery(),
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
   tagTypes: ['TerminologySearch'],
   endpoints: (builder) => ({
     getSearchResult: builder.query<
