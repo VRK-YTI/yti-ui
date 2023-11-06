@@ -1,6 +1,7 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
+import { UriData } from '@app/common/interfaces/uri.interface';
 
 export const datatypesApi = createApi({
   reducerPath: 'datatypesApi',
@@ -15,7 +16,7 @@ export const datatypesApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    getDatatypes: builder.query<string[], void>({
+    getDatatypes: builder.query<UriData[], void>({
       query: () => ({
         url: '/frontend/data-types',
         method: 'GET',

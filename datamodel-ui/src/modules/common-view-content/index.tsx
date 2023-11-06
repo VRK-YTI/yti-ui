@@ -125,7 +125,7 @@ export default function CommonViewContent({
                 <UriInfo uri={data.path} lang={displayLang} />
               </BasicBlock>
               <BasicBlock title={t('data-type')}>
-                {data.dataType ?? t('not-defined')}
+                {data.dataType?.curie ?? t('not-defined')}
               </BasicBlock>
               <Separator />
               <div>

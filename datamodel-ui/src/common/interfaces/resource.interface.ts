@@ -20,7 +20,7 @@ export interface Resource {
     id: string;
     name: string;
   };
-  dataType?: string;
+  dataType?: UriData;
   dataTypeProperty?: string;
   defaultValue?: string;
   domain?: UriData;

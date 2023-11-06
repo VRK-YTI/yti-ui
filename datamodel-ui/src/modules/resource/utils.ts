@@ -25,24 +25,11 @@ export function resourceToResourceFormType(data: Resource): ResourceFormType {
           status: 'DRAFT',
         }))
       : [],
-    dataType: data.dataType
-      ? { id: data.dataType, label: data.dataType }
-      : undefined,
+    dataType: data.dataType,
     domain: data.domain,
     equivalentResource: data.equivalentResource,
     path: data.path,
-    range: data.range
-      ? {
-          uri: data.range.uri,
-          curie: data.range.curie,
-          label: {
-            en:
-              data.type == ResourceType.ASSOCIATION
-                ? data.range.curie ?? ''
-                : data.range.uri,
-          },
-        }
-      : undefined,
+    range: data.range,
     subResourceOf: data.subResourceOf,
   };
 }

@@ -33,8 +33,8 @@ export default function RangeAndDomain({
     }
 
     return dataTypesResult.map((result) => ({
-      labelText: result,
-      uniqueItemId: result,
+      labelText: result.curie ?? result.uri,
+      uniqueItemId: result.uri,
     }));
   }, [dataTypesResult, isDataTypesSuccess]);
 
@@ -133,9 +133,12 @@ export default function RangeAndDomain({
             if (!applicationProfile && data.range != undefined) {
               return value.uniqueItemId == data.range.uri;
             } else if (applicationProfile && data.dataType) {
-              return value.uniqueItemId == data.dataType.id;
+              return value.uniqueItemId == data.dataType.uri;
             } else {
-              return value.uniqueItemId == 'rdfs:Literal';
+              return (
+                value.uniqueItemId ==
+                'http://www.w3.org/2000/01/rdf-schema#Literal'
+              );
             }
           })}
           clearButtonLabel={t('clear-selection')}
@@ -144,7 +147,7 @@ export default function RangeAndDomain({
             handleUpdate({
               ...data,
               ...(applicationProfile
-                ? { dataType: { id: e, label: e } }
+                ? { dataType: { uri: e, curie: e, label: { en: e } } }
                 : { range: { uri: e, curie: e, label: { en: e } } }),
             })
           }
@@ -201,7 +204,7 @@ export default function RangeAndDomain({
           />
         }
         handleRemoval={() => handleDomainOrRangeRemoval('range')}
-        items={data.range && typeof data.range !== 'string' ? [data.range] : []}
+        items={data.range ? [data.range] : []}
         label={`${t('target-class')} (rdfs:range)`}
         optionalText={t('optional')}
       />
