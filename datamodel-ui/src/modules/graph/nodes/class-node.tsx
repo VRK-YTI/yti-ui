@@ -7,6 +7,7 @@ import {
   selectHovered,
   selectModelTools,
   selectSelected,
+  setAddResourceRestrictionToClass,
   setHighlighted,
   setHovered,
   setSelected,
@@ -40,6 +41,7 @@ import getConnectedElements from '../utils/get-connected-elements';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
 import useSetView from '@app/common/utils/hooks/use-set-view';
+import { initializeResource } from '@app/common/components/resource/resource.slice';
 
 interface ClassNodeProps {
   id: string;
@@ -94,12 +96,18 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
       return;
     }
 
-    addReference({
-      prefix: data.modelId,
-      identifier: data.identifier,
-      uri: value.uriData.uri,
-      applicationProfile: true,
-    });
+    if (value.mode === 'select') {
+      addReference({
+        prefix: data.modelId,
+        identifier: data.identifier,
+        uri: value.uriData.uri,
+        applicationProfile: true,
+      });
+    } else {
+      dispatch(setSelected(id, 'classes'));
+      dispatch(initializeResource(value.type, ['fi'], value.uriData, true));
+      dispatch(setAddResourceRestrictionToClass(true));
+    }
   };
 
   const handleResourceClick = (
@@ -180,21 +188,23 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
                 open={showTooltip}
               >
                 <ResourceModal
-                  modelId={'profile1'}
+                  modelId={data.modelId}
                   type={ResourceType.ATTRIBUTE}
                   handleFollowUp={handleMenuFollowUp}
-                  limitSearchTo={'PROFILE'}
+                  limitSearchTo={'LIBRARY'}
+                  applicationProfile={data.applicationProfile}
+                  limitToSelect={!data.applicationProfile}
                   buttonIcon
-                  limitToSelect
                 />
 
                 <ResourceModal
-                  modelId={'profile1'}
+                  modelId={data.modelId}
                   type={ResourceType.ASSOCIATION}
                   handleFollowUp={handleMenuFollowUp}
-                  limitSearchTo={'PROFILE'}
+                  limitSearchTo={'LIBRARY'}
+                  applicationProfile={data.applicationProfile}
+                  limitToSelect={!data.applicationProfile}
                   buttonIcon
-                  limitToSelect
                 />
               </Tooltip>
             </TooltipWrapper>

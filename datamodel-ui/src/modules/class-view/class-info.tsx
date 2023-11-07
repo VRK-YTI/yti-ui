@@ -27,7 +27,11 @@ import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listene
 import HasPermission from '@app/common/utils/has-permission';
 import DeleteModal from '../delete-modal';
 import { useSelector } from 'react-redux';
-import { selectDisplayLang } from '@app/common/components/model/model.slice';
+import {
+  selectAddResourceRestrictionToClass,
+  selectDisplayLang,
+  setAddResourceRestrictionToClass,
+} from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import ResourceModal from './resource-modal';
@@ -78,8 +82,8 @@ export default function ClassInfo({
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
   const dispatch = useStoreDispatch();
+  const renderResourceForm = useSelector(selectAddResourceRestrictionToClass());
 
-  const [renderResourceForm, setRenderResourceForm] = useState(false);
   const displayLang = useSelector(selectDisplayLang());
   const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
@@ -102,7 +106,7 @@ export default function ClassInfo({
       });
     } else {
       dispatch(initializeResource(value.type, languages, value.uriData, true));
-      setRenderResourceForm(true);
+      dispatch(setAddResourceRestrictionToClass(true));
     }
   };
 
@@ -190,9 +194,9 @@ export default function ClassInfo({
         modelId={modelId}
         languages={languages}
         terminologies={terminologies}
-        handleReturn={() => setRenderResourceForm(false)}
+        handleReturn={() => dispatch(setAddResourceRestrictionToClass(false))}
         handleFollowUp={(identifier, type) => {
-          setRenderResourceForm(false);
+          dispatch(setAddResourceRestrictionToClass(false));
           handleFollowUp({
             uriData: {
               uri: `http://uri.suomi.fi/datamodel/ns/${modelId}/${identifier}`,
