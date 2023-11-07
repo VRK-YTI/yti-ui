@@ -200,6 +200,7 @@ const initialState = {
   hasChanges: false,
   displayWarning: false,
   displayLang: 'fi',
+  addResourceRestrictionToClass: false,
   tools: {
     fullScreen: false,
     resetPosition: false,
@@ -318,6 +319,12 @@ export const modelSlice = createSlice({
       return {
         ...state,
         displayLang: action.payload,
+      };
+    },
+    setAddResourceRestrictionToClass(state, action) {
+      return {
+        ...state,
+        addResourceRestrictionToClass: action.payload,
       };
     },
     setTools(state, action) {
@@ -477,4 +484,13 @@ export function setResetPosition(value: boolean): AppThunk {
 
 export function selectResetPosition() {
   return (state: AppState) => state.model.tools.resetPosition;
+}
+
+export function setAddResourceRestrictionToClass(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setAddResourceRestrictionToClass(value));
+}
+
+export function selectAddResourceRestrictionToClass() {
+  return (state: AppState) => state.model.addResourceRestrictionToClass;
 }
