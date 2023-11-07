@@ -80,7 +80,7 @@ export function validateClassForm(data: ClassFormType): ClassFormErrors {
     returnErrors.identifierInitChar = false;
   }
 
-  if (data.identifier.match(/^[a-z0-9\-_]+$/)) {
+  if (data.identifier.match(/^[a-zA-Z0-9\-_]+$/)) {
     returnErrors.identifierCharacters = false;
   }
 
