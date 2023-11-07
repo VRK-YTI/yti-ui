@@ -16,7 +16,6 @@ import { InternalResourcesSearchParams } from '../search-internal-resources/sear
 import ResourceList, { ResultType } from '../resource-list';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import { compareLocales } from '@app/common/utils/compare-locals';
-import { Status } from '@app/common/interfaces/status.interface';
 import {
   inUseStatusList,
   notInUseStatusList,

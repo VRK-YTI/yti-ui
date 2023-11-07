@@ -1,4 +1,4 @@
-import { default as styled } from 'styled-components';
+import styled from 'styled-components';
 import { Modal, ModalContent } from 'suomifi-ui-components';
 
 export const RemoveModal = styled(Modal)`

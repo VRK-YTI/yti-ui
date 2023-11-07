@@ -1,4 +1,4 @@
-import { default as styled } from 'styled-components';
+import styled from 'styled-components';
 import { Block, Text, Textarea, TextInput } from 'suomifi-ui-components';
 
 export const NewCollectionBlock = styled(Block)<{ $isSmall?: boolean }>`

@@ -24,12 +24,14 @@ import {
   getCount,
   getRunningQueriesThunk as getCountRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
+import { wrapper } from '@app/store';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
 export default function IndexPage(props: IndexPageProps) {
+  wrapper.useHydration(props);
   const { t } = useTranslation('common');
 
   return (

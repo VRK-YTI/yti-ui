@@ -10,12 +10,14 @@ import { getOrganizations } from '@app/common/components/organizations/organizat
 import { getSubscriptions } from '@app/common/components/subscription/subscription.slice';
 import { getRequests } from '@app/common/components/requests/requests.slice';
 import OwnInformation from '@app/modules/own-information';
+import { wrapper } from '@app/store';
 
 interface OwnInformationPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
 export default function OwnInformationPage(props: OwnInformationPageProps) {
+  wrapper.useHydration(props);
   const { t } = useTranslation('common');
 
   return (

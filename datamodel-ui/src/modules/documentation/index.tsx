@@ -125,8 +125,8 @@ export default function Documentation({
       <Image
         src={src.startsWith('https://') ? src : ''}
         alt={'Markdown image'}
-        width={width ?? 350}
-        height={height ?? 190}
+        width={width ? parseInt(width) : 350}
+        height={height ? parseInt(height) : 190}
       />
     );
   };

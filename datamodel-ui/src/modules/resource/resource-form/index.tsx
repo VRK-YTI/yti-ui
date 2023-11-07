@@ -20,15 +20,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { IconArrowLeft } from 'suomifi-icons';
 import {
-  Block,
   Button,
   Dropdown,
   DropdownItem,
-  Label,
   Text,
   TextInput,
   Textarea,
-  ToggleInput,
 } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
@@ -262,7 +259,7 @@ export default function ResourceForm({
 
     handleUpdate({
       ...data,
-      [key]: data[key]?.filter((r) => r.uri !== id) ?? [],
+      [key]: data[key]?.filter((r: UriData) => r.uri !== id) ?? [],
     });
   };
 
