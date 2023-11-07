@@ -1,7 +1,10 @@
 import { useGetDatatypesQuery } from '@app/common/components/datatypes/datatypes.slice';
 import InlineListBlock from '@app/common/components/inline-list-block';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
-import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
+import {
+  DEFAULT_DATA_TYPE,
+  ResourceFormType,
+} from '@app/common/interfaces/resource-form.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import ClassModal from '@app/modules/class-modal';
 import { useTranslation } from 'next-i18next';
@@ -127,7 +130,7 @@ export default function RangeAndDomain({
           itemAdditionHelpText=""
           ariaOptionsAvailableText={t('available-ranges') as string}
           defaultSelectedItem={attributeRanges.find(
-            (value) => value.uniqueItemId == '-1'
+            (value) => value.uniqueItemId === DEFAULT_DATA_TYPE.uri
           )}
           selectedItem={attributeRanges.find((value) => {
             if (!applicationProfile && data.range != undefined) {
@@ -135,10 +138,7 @@ export default function RangeAndDomain({
             } else if (applicationProfile && data.dataType) {
               return value.uniqueItemId == data.dataType.uri;
             } else {
-              return (
-                value.uniqueItemId ==
-                'http://www.w3.org/2000/01/rdf-schema#Literal'
-              );
+              return value.uniqueItemId == DEFAULT_DATA_TYPE.uri;
             }
           })}
           clearButtonLabel={t('clear-selection')}

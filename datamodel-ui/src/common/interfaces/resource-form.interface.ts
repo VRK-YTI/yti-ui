@@ -69,6 +69,12 @@ export const initialAppAssociation: ResourceFormType = {
   type: ResourceType.ASSOCIATION,
 };
 
+export const DEFAULT_DATA_TYPE = {
+  uri: 'http://www.w3.org/2000/01/rdf-schema#Literal',
+  curie: 'rdfs:Literal',
+  label: { en: 'rdfs:Literal' },
+};
+
 export const initialAttribute: ResourceFormType = {
   label: {},
   editorialNote: '',
@@ -81,11 +87,7 @@ export const initialAttribute: ResourceFormType = {
   note: {},
   type: ResourceType.ATTRIBUTE,
   domain: undefined,
-  range: {
-    uri: 'rdfs:Literal',
-    curie: 'rdfs:Literal',
-    label: { en: 'rdfs:Literal' },
-  },
+  range: DEFAULT_DATA_TYPE,
 };
 
 export const initialAppAttribute: ResourceFormType = {
@@ -95,9 +97,5 @@ export const initialAppAttribute: ResourceFormType = {
   note: {},
   status: 'DRAFT',
   type: ResourceType.ATTRIBUTE,
-  dataType: {
-    uri: 'http://www.w3.org/2000/01/rdf-schema#Literal',
-    curie: 'rdfs:Literal',
-    label: {},
-  },
+  dataType: DEFAULT_DATA_TYPE,
 };
