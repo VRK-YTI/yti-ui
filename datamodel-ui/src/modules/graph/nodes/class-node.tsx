@@ -27,7 +27,6 @@ import {
   CollapseButton,
   OptionsButton,
   Resource,
-  ResourceTechnicalName,
   TooltipWrapper,
 } from './node.styles';
 import { useStoreDispatch } from '@app/store';
@@ -40,6 +39,7 @@ import ResourceModal from '@app/modules/class-view/resource-modal';
 import getConnectedElements from '../utils/get-connected-elements';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
+import useSetView from '@app/common/utils/hooks/use-set-view';
 
 interface ClassNodeProps {
   id: string;
@@ -48,7 +48,7 @@ interface ClassNodeProps {
 }
 
 export default function ClassNode({ id, data, selected }: ClassNodeProps) {
-  const { i18n } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
     actions: 'EDIT_CLASS',
     targetOrganization: data.organizationIds,
@@ -64,6 +64,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const [showTooltip, setShowTooltip] = useState(false);
   const [hover, setHover] = useState(false);
   const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
+  const { setView } = useSetView();
 
   const handleTitleClick = () => {
     if (globalSelected.id !== id) {
@@ -105,12 +106,10 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
     id: string,
     type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE
   ) => {
-    dispatch(
-      setSelected(
-        id,
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
-      )
-    );
+    const resourceType =
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes';
+    setView(resourceType, 'info', id);
+    dispatch(setSelected(id, resourceType));
   };
 
   const handleResourceHover = (
@@ -306,40 +305,34 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   function renderResourceLabel(
     resource: ClassNodeProps['data']['resources'][0]
   ) {
-    if (!data.applicationProfile) {
-      return !tools.showById ? (
-        getLanguageVersion({
+    const label = !tools.showById
+      ? getLanguageVersion({
           data: resource.label,
           lang: displayLang !== i18n.language ? displayLang : i18n.language,
           appendLocale: true,
         })
-      ) : (
-        <>
-          {resource.identifier.includes(':')
-            ? resource.identifier
-            : `${data.modelId}:${resource.identifier}`}
-        </>
+      : resource.identifier.includes(':')
+      ? resource.identifier
+      : `${data.modelId}:${resource.identifier}`;
+
+    const dataType =
+      resource.dataType && resource.type === ResourceType.ATTRIBUTE
+        ? `(${resource.dataType})`
+        : '';
+
+    if (!data.applicationProfile) {
+      return `${label} ${dataType}`;
+    } else {
+      const codeListsText =
+        resource.codeLists && resource.codeLists.length > 0
+          ? `(+ ${t('codelist', { ns: 'admin' })})`
+          : '';
+      return (
+        <div>
+          {`${label} [${getMinMax(resource)}] ${dataType} ${codeListsText}`}
+        </div>
       );
     }
-
-    return (
-      <div>
-        {!tools.showById ? (
-          getLanguageVersion({
-            data: resource.label,
-            lang: displayLang !== i18n.language ? displayLang : i18n.language,
-            appendLocale: true,
-          })
-        ) : (
-          <>
-            {resource.identifier.includes(':')
-              ? resource.identifier
-              : `${data.modelId}:${resource.identifier}`}
-          </>
-        )}
-        : [{getMinMax(resource)}] {getIdentifier(resource)}
-      </div>
-    );
   }
 
   function getMinMax(resource: ClassNodeProps['data']['resources'][0]) {
@@ -348,13 +341,5 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
     }
 
     return `${resource.minCount ?? '0'}..${resource.maxCount ?? '*'}`;
-  }
-
-  function getIdentifier(resource: ClassNodeProps['data']['resources'][0]) {
-    return (
-      <ResourceTechnicalName>
-        ({data.identifier}:{resource.identifier})
-      </ResourceTechnicalName>
-    );
   }
 }
