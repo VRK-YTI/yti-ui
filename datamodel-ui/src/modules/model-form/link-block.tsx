@@ -1,5 +1,4 @@
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
-import { Link } from '@app/common/interfaces/model.interface';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
 import {

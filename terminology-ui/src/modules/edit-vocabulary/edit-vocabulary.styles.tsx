@@ -1,4 +1,4 @@
-import { default as styled } from 'styled-components';
+import styled from 'styled-components';
 import { Block } from 'suomifi-ui-components';
 
 export const FormWrapper = styled(Block)`

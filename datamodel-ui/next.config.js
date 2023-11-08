@@ -124,7 +124,7 @@ module.exports = () => {
             destination: 'http://yti-datamodel-api:9004/datamodel-api/:path*',
           },
           {
-            source: '/terminology-awithTMpi/:path*',
+            source: '/terminology-api/:path*',
             destination:
               'http://yti-terminology-api:9103/terminology-api/:path*',
           },

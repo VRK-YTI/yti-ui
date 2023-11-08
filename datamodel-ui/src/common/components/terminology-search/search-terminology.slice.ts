@@ -1,4 +1,3 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getTerminologyBaseQuery } from '@app/store/api-base-query';
 import { Status } from '@app/common/interfaces/status.interface';
@@ -17,11 +16,6 @@ export const searchTerminologyApi = createApi({
   reducerPath: 'searchTerminologyApi',
   baseQuery: getTerminologyBaseQuery(),
   tagTypes: ['searchTerminology'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
   endpoints: (builder) => ({
     getTerminologies: builder.mutation<
       SearchTerminology,

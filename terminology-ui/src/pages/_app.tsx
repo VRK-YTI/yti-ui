@@ -16,7 +16,6 @@ export default appWithTranslation(App);
 function App({ Component, pageProps }: AppProps) {
   const { t } = useTranslation('common');
   const store = wrapper.useStore();
-
   const title = store.getState().title.title;
 
   return (

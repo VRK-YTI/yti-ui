@@ -1,4 +1,4 @@
-import { default as styled } from 'styled-components';
+import styled from 'styled-components';
 import { Block, Heading } from 'suomifi-ui-components';
 
 export const SiteTitle = styled(Heading)`

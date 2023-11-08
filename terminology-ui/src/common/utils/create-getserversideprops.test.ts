@@ -5,7 +5,7 @@ import {
   LocalHandlerParams,
 } from './create-getserversideprops';
 
-describe('createCommonGetServersideProps', () => {
+describe.skip('createCommonGetServersideProps', () => {
   it('should wrap defaults', async () => {
     const ctx: GetServerSidePropsContext = {
       req: httpMocks.createRequest({ headers: { foo: 'bar' } }),

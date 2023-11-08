@@ -1,4 +1,3 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { ClassType } from '@app/common/interfaces/class.interface';
@@ -23,11 +22,6 @@ export const classApi = createApi({
   reducerPath: 'classApi',
   baseQuery: getDatamodelApiBaseQuery(),
   tagTypes: ['classApi'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
   endpoints: (builder) => ({
     updateClass: builder.mutation<string, ClassData>({
       query: (value) => ({

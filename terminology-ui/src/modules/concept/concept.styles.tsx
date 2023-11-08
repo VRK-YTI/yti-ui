@@ -1,4 +1,4 @@
-import { default as styled } from 'styled-components';
+import styled from 'styled-components';
 import { Breakpoint } from 'yti-common-ui/media-query';
 import { small } from 'yti-common-ui/media-query/styled-helpers';
 import { Block, ExpanderGroup } from 'suomifi-ui-components';

@@ -1,5 +1,5 @@
 import { forwardRef, RefObject } from 'react';
-import styled from 'styled-components';
+import { default as styled } from 'styled-components';
 
 const StaticHeaderWrapper = styled.div`
   width: inherit;

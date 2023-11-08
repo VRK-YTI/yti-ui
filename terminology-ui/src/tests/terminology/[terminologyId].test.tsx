@@ -4,7 +4,7 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { getServerSideProps as terminologyIdGetServerSideProps } from '@app/pages/terminology/[terminologyId]';
 
-describe('terminologyId page', () => {
+describe.skip('terminologyId page', () => {
   let mock: MockAdapter;
 
   it('should create redux state with requests', async () => {

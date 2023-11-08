@@ -1,4 +1,3 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { Status } from '@app/common/interfaces/status.interface';
@@ -101,11 +100,6 @@ export const searchInternalResourcesApi = createApi({
   reducerPath: 'searchInternalResourcesApi',
   baseQuery: getDatamodelApiBaseQuery(),
   tagTypes: ['internalResources'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
   endpoints: (builder) => ({
     getInternalResources: builder.mutation<
       SearchInternalClasses,

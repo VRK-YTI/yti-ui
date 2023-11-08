@@ -1,6 +1,5 @@
-import { themeProvider } from '@app/tests/test-utils';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { renderWithProviders } from '@app/tests/test-utils';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { v4 } from 'uuid';
 import { EmptyFormError } from '../validate-form';
 import TermForm from './term-form';
@@ -9,7 +8,7 @@ describe('term-form', () => {
   it('should render component', () => {
     const mockFn = jest.fn();
 
-    render(
+    renderWithProviders(
       <TermForm
         update={mockFn}
         term={{
@@ -36,17 +35,16 @@ describe('term-form', () => {
         errors={EmptyFormError}
         currentTerms={[]}
         handleSwitchTerms={mockFn}
-      />,
-      { wrapper: themeProvider }
+      />
     );
 
     expect(screen.getByText('tr-term-name-label')).toBeInTheDocument();
   });
 
-  it('should render all statuses', () => {
+  it('should render all statuses', async () => {
     const mockFn = jest.fn();
 
-    render(
+    renderWithProviders(
       <TermForm
         update={mockFn}
         term={{
@@ -73,15 +71,17 @@ describe('term-form', () => {
         errors={EmptyFormError}
         currentTerms={[]}
         handleSwitchTerms={mockFn}
-      />,
-      { wrapper: themeProvider }
+      />
     );
 
     expect(screen.getByText(/tr-statuses\.draft/)).toBeInTheDocument();
 
-    userEvent.click(screen.getAllByText(/tr-statuses\.draft/)[0]);
+    fireEvent.click(screen.getAllByText(/tr-statuses\.draft/)[0]);
 
-    expect(screen.getByText('tr-statuses.incomplete')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('tr-statuses.incomplete')).toBeInTheDocument();
+    });
+
     expect(screen.getByText('tr-statuses.valid')).toBeInTheDocument();
     expect(screen.getByText('tr-statuses.superseded')).toBeInTheDocument();
     expect(screen.getByText('tr-statuses.retired')).toBeInTheDocument();
