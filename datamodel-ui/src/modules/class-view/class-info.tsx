@@ -12,6 +12,7 @@ import {
   IconOptionsVertical,
   Text,
   Tooltip,
+  InlineAlert,
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
@@ -43,6 +44,7 @@ import UriList from '@app/common/components/uri-list';
 import UriInfo from '@app/common/components/uri-info';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { RenameModal } from '../rename-modal';
+import getApiError from '@app/common/utils/get-api-errors';
 
 interface ClassInfoProps {
   data?: ClassType;
@@ -301,6 +303,13 @@ export default function ClassInfo({
 
       {data && (
         <DrawerContent height={headerHeight}>
+          {addReferenceResult.error ? (
+            <InlineAlert status="error">
+              {getApiError(addReferenceResult.error)[0]}
+            </InlineAlert>
+          ) : (
+            <></>
+          )}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <Text variant="bold">
               {getLanguageVersion({
