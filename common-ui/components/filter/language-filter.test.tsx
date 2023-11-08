@@ -1,8 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import LanguageFilter from './language-filter';
 import { themeProvider } from '../../utils/test-utils';
 import mockRouter from 'next-router-mock';
-import userEvent from '@testing-library/user-event';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
@@ -43,16 +42,16 @@ describe('language-filter', () => {
       }
     );
 
-    userEvent.click(screen.getByPlaceholderText('tr-choose-language'));
-    userEvent.click(screen.getByText('fi'));
+    fireEvent.click(screen.getByPlaceholderText('tr-choose-language'));
+    fireEvent.click(screen.getByText('fi'));
 
     expect(mockRouter.query.lang).toBe('fi');
 
-    userEvent.click(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole('button'));
     expect(mockRouter.query.lang).toBeUndefined();
 
-    userEvent.click(screen.getByPlaceholderText('tr-choose-language'));
-    userEvent.click(screen.getByText('en'));
+    fireEvent.click(screen.getByPlaceholderText('tr-choose-language'));
+    fireEvent.click(screen.getByText('en'));
 
     expect(mockRouter.query.lang).toBe('en');
   });
