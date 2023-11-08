@@ -62,7 +62,7 @@ export default function validateForm(data: ResourceFormType): CommonFormErrors {
     errors.identifierLength = false;
   }
 
-  if (data.identifier.match(/^[a-z0-9\-_]+$/)) {
+  if (data.identifier.match(/^[a-zA-Z0-9\-_]+$/)) {
     errors.identifierCharacters = false;
   }
 
