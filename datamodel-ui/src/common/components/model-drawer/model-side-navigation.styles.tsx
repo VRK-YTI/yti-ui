@@ -1,9 +1,7 @@
-import { Panel } from 'reactflow';
 import styled from 'styled-components';
 
-export const ModelPanel = styled(Panel)<{ $isSmall: boolean }>`
+export const ModelPanel = styled.div<{ $isSmall: boolean }>`
   height: ${(props) => (props.$isSmall ? 'auto' : '100%')};
-  position: absolute;
   display: flex;
 
   ${(props) =>

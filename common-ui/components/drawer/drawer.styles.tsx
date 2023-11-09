@@ -64,6 +64,7 @@ export const DrawerContent = styled.div.attrs<{
   `}
 
   /* This is necessary for <DrawerContentWrapper /> to align correctly */
+  transform: translate3d(0, 0, 0);
   -webkit-transform: translate3d(0, 0, 0);
 `;
 

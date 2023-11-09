@@ -71,7 +71,7 @@ export default function Drawer({ views }: SideNavigationProps) {
   }, [activeView, currentView, views, router]);
 
   return (
-    <ModelPanel position="bottom-left" $isSmall={isSmall}>
+    <ModelPanel $isSmall={isSmall}>
       <ModelDrawerContainer $isSmall={isSmall}>
         <CommonDrawer
           buttons={views

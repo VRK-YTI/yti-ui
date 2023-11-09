@@ -9,6 +9,7 @@ import {
   ReactFlowProvider,
   useReactFlow,
   Node,
+  FitViewOptions,
 } from 'reactflow';
 import {
   useGetVisualizationQuery,
@@ -46,13 +47,15 @@ import getConnectedElements, {
 import handleCornerNodeDelete from './utils/handle-corner-node-delete';
 import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
 import { ReferenceType } from '@app/common/interfaces/visualization.interface';
+import { max } from 'lodash';
 
 interface GraphProps {
   modelId: string;
   version?: string;
   applicationProfile?: boolean;
   organizationIds?: string[];
-  children: JSX.Element[];
+  drawer?: JSX.Element;
+  children: JSX.Element | JSX.Element[];
 }
 
 const GraphContent = ({
@@ -65,7 +68,7 @@ const GraphContent = ({
   const { t, i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
-  const { project, getZoom } = useReactFlow();
+  const { project, getZoom, fitView } = useReactFlow();
   const globalSelected = useSelector(selectSelected());
   const displayLang = useSelector(selectDisplayLang());
   const savePosition = useSelector(selectSavePosition());
@@ -368,7 +371,14 @@ const GraphContent = ({
   }, [cleanUnusedCorners, edges, nodes, setNodes]);
 
   return (
-    <div ref={reactFlowWrapper} style={{ height: '100%', width: '100%' }}>
+    <div
+      ref={reactFlowWrapper}
+      style={{
+        height: '100%',
+        width: '100%',
+        position: 'relative',
+      }}
+    >
       <ModelFlow
         nodes={nodes}
         edges={edges}
@@ -382,7 +392,12 @@ const GraphContent = ({
         onEdgeMouseEnter={onEdgeMouseEnter}
         onEdgeMouseLeave={onEdgeMouseLeave}
         fitView
-        maxZoom={100}
+        fitViewOptions={{
+          maxZoom: 1.2,
+          minZoom: 1,
+        }}
+        maxZoom={5}
+        minZoom={0.2}
       >
         {children}
       </ModelFlow>
@@ -395,11 +410,14 @@ export default function Graph({
   version,
   applicationProfile,
   organizationIds,
+  drawer,
   children,
 }: GraphProps) {
   return (
     <>
       <ReactFlowProvider>
+        {drawer}
+
         <GraphContent
           modelId={modelId}
           version={version}

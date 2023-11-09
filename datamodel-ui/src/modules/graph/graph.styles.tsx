@@ -19,9 +19,13 @@ export const ModelFlow = styled(ReactFlow)`
     pointer-events: none;
   }
 
+  .react-flow__renderer {
+    z-index: 0;
+  }
+
   .react-flow__panel {
     margin: 0;
-    z-index: 4;
+    z-index: 1;
   }
 
   [data-id^='#corner-'] {
