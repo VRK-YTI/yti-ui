@@ -31,6 +31,7 @@ import {
   selectAddResourceRestrictionToClass,
   selectDisplayLang,
   setAddResourceRestrictionToClass,
+  setUpdateVisualization,
 } from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
@@ -113,8 +114,9 @@ export default function ClassInfo({
   useEffect(() => {
     if (addReferenceResult.isSuccess) {
       handleRefetch();
+      dispatch(setUpdateVisualization(true));
     }
-  }, [addReferenceResult, handleRefetch]);
+  }, [addReferenceResult, handleRefetch, dispatch]);
 
   useEffect(() => {
     if (ref.current) {

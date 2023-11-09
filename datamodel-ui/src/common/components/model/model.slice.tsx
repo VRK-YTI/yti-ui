@@ -201,6 +201,7 @@ const initialState = {
   displayWarning: false,
   displayLang: 'fi',
   addResourceRestrictionToClass: false,
+  updateVisualization: false,
   tools: {
     fullScreen: false,
     resetPosition: false,
@@ -325,6 +326,12 @@ export const modelSlice = createSlice({
       return {
         ...state,
         addResourceRestrictionToClass: action.payload,
+      };
+    },
+    setUpdateVisualization(state, action) {
+      return {
+        ...state,
+        updateVisualization: action.payload,
       };
     },
     setTools(state, action) {
@@ -493,4 +500,13 @@ export function setAddResourceRestrictionToClass(value: boolean): AppThunk {
 
 export function selectAddResourceRestrictionToClass() {
   return (state: AppState) => state.model.addResourceRestrictionToClass;
+}
+
+export function setUpdateVisualization(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setUpdateVisualization(value));
+}
+
+export function selectUpdateVisualization() {
+  return (state: AppState) => state.model.updateVisualization;
 }

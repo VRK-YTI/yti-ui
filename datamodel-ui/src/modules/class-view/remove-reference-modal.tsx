@@ -11,6 +11,8 @@ import getApiError from '@app/common/utils/get-api-errors';
 import { useDeletePropertyReferenceMutation } from '@app/common/components/class/class.slice';
 import { translateDeleteReferenceModalDescription } from '@app/common/utils/translation-helpers';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { setUpdateVisualization } from '@app/common/components/model/model.slice';
+import { useStoreDispatch } from '@app/store';
 
 interface RemoveReferenceModalProps {
   name: string;
@@ -38,6 +40,7 @@ export default function RemoveReferenceModal({
   const [error, setError] = useState(false);
   const [deleteReference, result] = useDeletePropertyReferenceMutation();
   const [showModal, setShowModal] = useState(false);
+  const dispatch = useStoreDispatch();
 
   const handleClose = () => {
     setShowModal(false);
@@ -58,10 +61,11 @@ export default function RemoveReferenceModal({
     if (result.isSuccess) {
       handleClose();
       handleReturn();
+      dispatch(setUpdateVisualization(true));
     } else if (result.isError) {
       setError(true);
     }
-  }, [result, handleReturn]);
+  }, [result, handleReturn, dispatch]);
 
   return (
     <>

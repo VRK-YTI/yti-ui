@@ -17,22 +17,23 @@ import {
 import { useStoreDispatch } from '@app/store';
 import {
   resetHighlighted,
-  selectDisplayLang,
   selectModelTools,
   selectResetPosition,
   selectSavePosition,
   selectSelected,
+  selectUpdateVisualization,
   setHighlighted,
   setResetPosition,
   setSavePosition,
   setSelected,
+  setUpdateVisualization,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
 import { ClassNode, CornerNode, ExternalNode, AttributeNode } from './nodes';
 import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
 import { ClearArrow } from './marker-ends';
-import convertToNodes from './utils/convert-to-nodes';
+import convertToNodes, { updateNodes } from './utils/convert-to-nodes';
 import createCornerNode from './utils/create-corner-node';
 import convertToEdges from './utils/convert-to-edges';
 import generatePositionsPayload from './utils/generate-positions-payload';
@@ -62,18 +63,19 @@ const GraphContent = ({
   organizationIds,
   children,
 }: GraphProps) => {
-  const { t, i18n } = useTranslation('common');
+  const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const { project, getZoom } = useReactFlow();
   const globalSelected = useSelector(selectSelected());
-  const displayLang = useSelector(selectDisplayLang());
   const savePosition = useSelector(selectSavePosition());
   const resetPosition = useSelector(selectResetPosition());
+  const updateVisualization = useSelector(selectUpdateVisualization());
   const tools = useSelector(selectModelTools());
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
@@ -89,11 +91,16 @@ const GraphContent = ({
     }),
     []
   );
-  const { data, isSuccess, refetch } = useGetVisualizationQuery({
+  const { data, isFetching, isSuccess, refetch } = useGetVisualizationQuery({
     modelid: modelId,
     version: version,
   });
   const [putPositions, result] = usePutPositionsMutation();
+
+  const refetchNodes = useCallback(() => {
+    setFetching(true);
+    refetch();
+  }, [refetch]);
 
   const deleteNodeById = useCallback(
     (id: string) => {
@@ -261,41 +268,84 @@ const GraphContent = ({
     dispatch(resetHighlighted());
   }, [dispatch, globalSelected, edges, nodes]);
 
-  useEffect(() => {
-    if (isSuccess || (isSuccess && resetPosition)) {
-      setNodes(
-        convertToNodes(
-          data.nodes,
-          data.hiddenNodes,
-          modelId,
-          deleteNodeById,
-          applicationProfile,
-          applicationProfile ? refetch : undefined,
-          organizationIds
-        )
-      );
-      setEdges(
-        convertToEdges(data.nodes, data.hiddenNodes, t, applicationProfile)
-      );
+  const setNodePositions = useCallback(() => {
+    if (!data) {
+      return;
+    }
+    setNodes(
+      convertToNodes(
+        data.nodes,
+        data.hiddenNodes,
+        modelId,
+        deleteNodeById,
+        applicationProfile,
+        applicationProfile ? refetchNodes : undefined,
+        organizationIds
+      )
+    );
+    setEdges(
+      convertToEdges(data.nodes, data.hiddenNodes, t, applicationProfile)
+    );
 
-      if (resetPosition) {
-        dispatch(setResetPosition(false));
+    if (resetPosition) {
+      dispatch(setResetPosition(false));
+    }
+  }, [
+    applicationProfile,
+    data,
+    deleteNodeById,
+    dispatch,
+    modelId,
+    organizationIds,
+    refetchNodes,
+    resetPosition,
+    setEdges,
+    setNodes,
+    t,
+  ]);
+
+  useEffect(() => {
+    if (fetching && isSuccess && !isFetching) {
+      setFetching(false);
+      if (updateVisualization) {
+        setNodes(
+          updateNodes(
+            nodes,
+            data.nodes,
+            data.hiddenNodes,
+            modelId,
+            deleteNodeById,
+            applicationProfile,
+            refetchNodes,
+            organizationIds
+          )
+        );
+        setEdges(
+          convertToEdges(data.nodes, data.hiddenNodes, t, applicationProfile)
+        );
+        dispatch(setUpdateVisualization(false));
+      } else {
+        setNodePositions();
       }
     }
   }, [
-    data,
+    fetching,
     isSuccess,
-    setNodes,
-    setEdges,
-    i18n.language,
-    displayLang,
-    resetPosition,
-    dispatch,
+    setNodePositions,
     applicationProfile,
-    modelId,
-    refetch,
+    data,
     deleteNodeById,
+    dispatch,
+    modelId,
+    nodes,
     organizationIds,
+    refetchNodes,
+    resetPosition,
+    setEdges,
+    setNodes,
+    t,
+    isFetching,
+    updateVisualization,
   ]);
 
   useEffect(() => {
@@ -366,6 +416,18 @@ const GraphContent = ({
       setCleanUnusedCorners(false);
     }
   }, [cleanUnusedCorners, edges, nodes, setNodes]);
+
+  useEffect(() => {
+    if (updateVisualization) {
+      refetchNodes();
+    }
+  }, [updateVisualization, refetchNodes, dispatch]);
+
+  useEffect(() => {
+    if (resetPosition) {
+      setNodePositions();
+    }
+  }, [resetPosition, setNodePositions]);
 
   return (
     <div ref={reactFlowWrapper} style={{ height: '100%', width: '100%' }}>
