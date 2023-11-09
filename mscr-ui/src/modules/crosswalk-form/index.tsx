@@ -22,7 +22,10 @@ import {
 import LanguageSelector from 'yti-common-ui/form/language-selector';
 import { FormErrors } from './validate-form';
 import { Status } from '@app/common/interfaces/status.interface';
-import { CrosswalkFormMockupType, CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
+import {
+  CrosswalkFormMockupType,
+  CrosswalkFormType,
+} from '@app/common/interfaces/crosswalk.interface';
 import { FormUpdateErrors } from '../schema-form/validate-form-update';
 import { translateFileUploadError } from '@app/common/utils/translation-helpers copy';
 import FileDropArea from 'yti-common-ui/file-drop-area';
@@ -82,14 +85,14 @@ export default function RegisterCrosswalkForm({
 
   return (
     <ModelFormContainer>
-  <CrosswalkForm
-            formData={formData}
-            setFormData={setFormData}
-            userPosted={userPosted}
-            errors={userPosted ? errors : undefined}>
-          </CrosswalkForm>
+      <CrosswalkForm
+        formData={formData}
+        setFormData={setFormData}
+        userPosted={userPosted}
+        errors={userPosted ? errors : undefined}
+      ></CrosswalkForm>
       {renderCrosswalkFormat()}
-      
+
       <FileDropArea
         setFileData={setFileData}
         setIsValid={setIsValid}
@@ -112,8 +115,6 @@ export default function RegisterCrosswalkForm({
       </div>
     );
   }
-
-  
 
   function renderLanguages() {
     return (

@@ -22,7 +22,7 @@ export default function SchemaList({
   const { t } = useTranslation('admin');
 
   if (items && items.length < 1) {
-    items = [];// initialize empty array
+    items = []; // initialize empty array
     return <div>{'There is no Schemas or Crosswalks to show'}</div>;
   }
 
@@ -34,7 +34,6 @@ export default function SchemaList({
 
   return (
     //Creating Header row
-    
 
     <div>
       <List className="header-list">
@@ -60,47 +59,48 @@ export default function SchemaList({
         </ListItem>
       </List>
       <List className="inline-list">
-        {items && items.map((item) => (
-          <ListItem
-            key={item.pid}
-            onClick={() => handleClick(item.pid)}
-            onMouseEnter={() => item.onMouseEnter && item.onMouseEnter()}
-            onMouseLeave={() => item.onMouseLeave && item.onMouseLeave()}
-            onKeyDown={(e) => e.key === 'Enter' && item.onClick()}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={2}>
-                {item.label}
+        {items &&
+          items.map((item) => (
+            <ListItem
+              key={item.pid}
+              onClick={() => handleClick(item.pid)}
+              onMouseEnter={() => item.onMouseEnter && item.onMouseEnter()}
+              onMouseLeave={() => item.onMouseLeave && item.onMouseLeave()}
+              onKeyDown={(e) => e.key === 'Enter' && item.onClick()}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={2}>
+                  {item.label}
+                </Grid>
+                <Grid item xs={2}>
+                  {item.prefix}
+                </Grid>
+                <Grid item xs={2}>
+                  {item.status}
+                </Grid>
+                <Grid item xs={2}>
+                  {item.revision}
+                </Grid>
+                <Grid item xs={2}>
+                  {item.pid}
+                </Grid>
+                <Grid item xs={2}>
+                  {Array.isArray(deleteDisabled) &&
+                  deleteDisabled.includes(item.pid) ? (
+                    <></>
+                  ) : (
+                    <Button
+                      variant="secondaryNoBorder"
+                      icon="remove"
+                      onClick={() => handleRemoval(item.pid)}
+                    >
+                      {t('remove')}
+                    </Button>
+                  )}
+                </Grid>
               </Grid>
-              <Grid item xs={2}>
-                {item.prefix}
-              </Grid>
-              <Grid item xs={2}>
-                {item.status}
-              </Grid>
-              <Grid item xs={2}>
-                {item.revision}
-              </Grid>
-              <Grid item xs={2}>
-                {item.pid}
-              </Grid>
-              <Grid item xs={2}>
-                {Array.isArray(deleteDisabled) &&
-                deleteDisabled.includes(item.pid) ? (
-                  <></>
-                ) : (
-                  <Button
-                    variant="secondaryNoBorder"
-                    icon="remove"
-                    onClick={() => handleRemoval(item.pid)}
-                  >
-                    {t('remove')}
-                  </Button>
-                )}
-              </Grid>
-            </Grid>
-          </ListItem>
-        ))}
+            </ListItem>
+          ))}
       </List>
     </div>
   );

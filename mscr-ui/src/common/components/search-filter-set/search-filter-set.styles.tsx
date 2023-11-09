@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {Heading} from 'suomifi-ui-components';
+import { Heading } from 'suomifi-ui-components';
 
 export const FacetTitle = styled(Heading)`
   && {
@@ -8,4 +8,3 @@ export const FacetTitle = styled(Heading)`
     text-transform: uppercase;
   }
 `;
-

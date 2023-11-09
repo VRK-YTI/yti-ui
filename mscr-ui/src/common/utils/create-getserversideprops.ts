@@ -79,6 +79,7 @@ export function createCommonGetServerSideProps<
 
         if (process.env.ENV_TYPE !== 'production') {
           store.dispatch(getFakeableUsers.initiate());
+          console.log('getting fake user');
           await Promise.all(store.dispatch(getFakeableRunningQueriesThunk()));
         }
 
@@ -87,7 +88,7 @@ export function createCommonGetServerSideProps<
           reduxKey: 'fakeableUsers',
           functionKey: 'getFakeableUsers',
         });
-
+        console.log(fakeableUsers);
         // store.dispatch(
         //   setAdminControls(process.env.ADMIN_CONTROLS_DISABLED === 'true')
         // );

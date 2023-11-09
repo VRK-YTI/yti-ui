@@ -41,7 +41,6 @@ export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`
 
 // content layout
 
-
 export const ContentContainer = styled.div<{ $fullScreen?: boolean }>`
   background-color: ${(props) =>
     props.$fullScreen

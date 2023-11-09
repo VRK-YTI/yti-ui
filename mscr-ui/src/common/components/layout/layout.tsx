@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from 'yti-common-ui/theme';
 import {
@@ -13,10 +13,10 @@ import SkipLink from 'yti-common-ui/skip-link';
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 import generateFakeableUsers from 'yti-common-ui/utils/generate-impersonate';
 import SideNavigationPanel from '../side-navigation';
-import {MscrUser} from '@app/common/interfaces/mscr-user.interface';
-import {SearchContext} from '@app/common/components/search-context-provider';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
+import { SearchContext } from '@app/common/components/search-context-provider';
 import SearchScreen from '@app/modules/search-screen';
-import {Grid} from '@mui/material';
+import { Grid } from '@mui/material';
 
 export default function Layout({
   children,
@@ -39,22 +39,24 @@ export default function Layout({
   const { breakpoint } = useBreakpoints();
   const [isSearchActive, setIsSearchActive] = useState(false);
 
-
   return (
     <ThemeProvider theme={lightTheme}>
       <SearchContext.Provider
         value={{
           isSearchActive,
-          setIsSearchActive
+          setIsSearchActive,
         }}
-        >
+      >
         {matomo && matomo}
         <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
         {fullScreenElements ? (
           <SiteContainer>
             <SmartHeader
               user={user}
-              fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
+              fakeableUsers={generateFakeableUsers(
+                i18n.language,
+                fakeableUsers
+              )}
               fullScreenElements={fullScreenElements}
             />
 
@@ -68,11 +70,14 @@ export default function Layout({
           <SiteContainer>
             <SmartHeader
               user={user}
-              fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
+              fakeableUsers={generateFakeableUsers(
+                i18n.language,
+                fakeableUsers
+              )}
             />
             <Grid container spacing={2}>
               <Grid item xs={2}>
-                {user && <SideNavigationPanel user={user}/>}
+                {user && <SideNavigationPanel user={user} />}
               </Grid>
               <Grid item xs={10}>
                 <ContentContainer>
@@ -87,7 +92,6 @@ export default function Layout({
           </SiteContainer>
         )}
       </SearchContext.Provider>
-
     </ThemeProvider>
   );
 }

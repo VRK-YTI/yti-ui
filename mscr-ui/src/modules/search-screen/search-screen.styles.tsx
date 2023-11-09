@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {Block} from 'suomifi-ui-components';
+import { Block } from 'suomifi-ui-components';
 
 export const SearchContainer = styled(Block)`
   height: 800px;

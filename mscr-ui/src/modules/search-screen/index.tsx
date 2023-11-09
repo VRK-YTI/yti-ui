@@ -1,19 +1,26 @@
-import {FacetsWrapper, ResultsWrapper, SearchContainer, CloseButton} from '@app/modules/search-screen/search-screen.styles';
+import {
+  FacetsWrapper,
+  ResultsWrapper,
+  SearchContainer,
+  CloseButton,
+} from '@app/modules/search-screen/search-screen.styles';
 import SearchResult from '@app/common/components/search-result';
-import {useGetMscrSearchResultsQuery} from '@app/common/components/mscr-search/mscr-search.slice';
-import useUrlState, {initialUrlState} from '@app/common/utils/hooks/use-url-state';
-import {IconClose} from 'suomifi-icons';
-import {useContext} from 'react';
-import {SearchContext} from '@app/common/components/search-context-provider';
+import { useGetMscrSearchResultsQuery } from '@app/common/components/mscr-search/mscr-search.slice';
+import useUrlState, {
+  initialUrlState,
+} from '@app/common/utils/hooks/use-url-state';
+import { IconClose } from 'suomifi-icons';
+import { useContext } from 'react';
+import { SearchContext } from '@app/common/components/search-context-provider';
 import SearchFilterSet from '@app/common/components/search-filter-set';
-import {Bucket, Facet, Filter} from '@app/common/interfaces/search.interface';
-import {useTranslation} from 'next-i18next';
-import {Grid} from "@mui/material";
+import { Bucket, Facet, Filter } from '@app/common/interfaces/search.interface';
+import { useTranslation } from 'next-i18next';
+import { Grid } from '@mui/material';
 
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
   const { t } = useTranslation('common');
-  const {isSearchActive, setIsSearchActive} = useContext(SearchContext);
+  const { isSearchActive, setIsSearchActive } = useContext(SearchContext);
   const { data: mscrSearchResults, refetch: refetchMscrSearchResults } =
     useGetMscrSearchResultsQuery(urlState);
 
@@ -28,27 +35,30 @@ export default function SearchScreen() {
 
   // Constructing filters
 
-  const makeFilter = (key: string, buckets: Bucket[]) : Filter => {
-    const filterKey : Facet = key.substring(7) as Facet;
+  const makeFilter = (key: string, buckets: Bucket[]): Filter => {
+    const filterKey: Facet = key.substring(7) as Facet;
     const filterLabel = t(filterKey);
     const options = buckets.map((bucket) => {
       return {
         label: bucket.label,
         key: bucket.key,
-        count: bucket.doc_count
+        count: bucket.doc_count,
       };
     });
     return {
       label: filterLabel,
       facet: filterKey,
-      options: options
+      options: options,
     };
   };
 
-  let filters : Filter[] = [];
+  let filters: Filter[] = [];
   if (mscrSearchResults) {
     Object.keys(mscrSearchResults.aggregations).forEach((key) => {
-      const newFilter : Filter = makeFilter(key, mscrSearchResults.aggregations[key].buckets);
+      const newFilter: Filter = makeFilter(
+        key,
+        mscrSearchResults.aggregations[key].buckets
+      );
       filters = filters.concat(newFilter);
     });
   }

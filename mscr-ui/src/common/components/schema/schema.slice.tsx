@@ -29,6 +29,13 @@ export const schemaApi = createApi({
         data: value,
       }),
     }),
+    putSchemaFull: builder.mutation<SchemaFormType, SchemaFormType>({
+      query: (value) => ({
+        url: '/schemaFull',
+        method: 'PUT',
+        data: value,
+      }),
+    }),
     getSchema: builder.query<Schema, string>({
       query: (pid) => ({
         url: `/schema/${pid}`,
