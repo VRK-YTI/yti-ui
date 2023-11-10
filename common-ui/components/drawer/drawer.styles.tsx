@@ -60,6 +60,7 @@ export const DrawerContent = styled.div.attrs<{
     props.$isSmall &&
     props.$viewOpen &&
     `
+    z-index: 1;
     height: 100vh;
   `}
 

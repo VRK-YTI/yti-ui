@@ -73,6 +73,20 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         id: 'graph',
         icon: <IconApplicationProfile />,
         buttonLabel: t('graph'),
+        component: (
+          <Graph
+            modelId={modelId}
+            version={version}
+            applicationProfile={modelInfo?.type === 'PROFILE'}
+            organizationIds={organizationIds}
+          >
+            <ModelTools
+              modelId={modelId}
+              version={version}
+              applicationProfile={modelInfo?.type === 'PROFILE'}
+            />
+          </Graph>
+        ),
       },
       {
         id: 'info',
