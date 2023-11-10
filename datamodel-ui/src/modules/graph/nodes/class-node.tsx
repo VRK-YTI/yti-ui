@@ -105,7 +105,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
       });
     } else {
       dispatch(setSelected(id, 'classes'));
-      dispatch(initializeResource(value.type, ['fi'], value.uriData, true));
+      dispatch(initializeResource(value.type, value.uriData, true));
       dispatch(setAddResourceRestrictionToClass(true));
     }
   };

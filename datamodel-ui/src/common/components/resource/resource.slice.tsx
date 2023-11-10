@@ -155,52 +155,34 @@ export const resourceApi = createApi({
 
 function resourceInitialData(
   type: ResourceType,
-  languages?: string[],
   initialReferenceResource?: UriData,
   applicationProfile?: boolean
 ): ResourceFormType {
-  let retValue = {} as ResourceFormType;
-
   if (applicationProfile) {
-    retValue =
+    const initialData =
       type === ResourceType.ASSOCIATION
-        ? {
-            ...initialAppAssociation,
-            path: initialReferenceResource,
-          }
-        : {
-            ...initialAppAttribute,
-            path: initialReferenceResource,
-          };
+        ? initialAppAssociation
+        : initialAppAttribute;
+    return {
+      ...initialData,
+      path: initialReferenceResource,
+    };
   } else {
-    retValue =
-      type === ResourceType.ASSOCIATION
-        ? {
-            ...initialAssociation,
-            label: initialReferenceResource?.label ?? {},
-            subResourceOf: [
-              initialReferenceResource ?? DEFAULT_ASSOCIATION_SUBPROPERTY,
-            ],
-          }
-        : {
-            ...initialAttribute,
-            label: initialReferenceResource?.label ?? {},
-            subResourceOf: [
-              initialReferenceResource ?? DEFAULT_ATTRIBUTE_SUBPROPERTY,
-            ],
-          };
-  }
-
-  if (languages) {
-    retValue = {
-      ...retValue,
-      label: Object.fromEntries(
-        languages.map((lang) => [lang, retValue.label[lang] ?? ''])
-      ),
+    if (type === ResourceType.ASSOCIATION) {
+      return {
+        ...initialAssociation,
+        subResourceOf: [
+          initialReferenceResource ?? DEFAULT_ASSOCIATION_SUBPROPERTY,
+        ],
+      };
+    }
+    return {
+      ...initialAttribute,
+      subResourceOf: [
+        initialReferenceResource ?? DEFAULT_ATTRIBUTE_SUBPROPERTY,
+      ],
     };
   }
-
-  return retValue;
 }
 
 export const resourceSlice = createSlice({
@@ -229,19 +211,13 @@ export function setResource(data: ResourceFormType): AppThunk {
 
 export function initializeResource(
   type: ResourceType,
-  langs: string[],
   initialReferenceResource?: UriData,
   applicationProfile?: boolean
 ): AppThunk {
   return (dispatch) =>
     dispatch(
       resourceSlice.actions.setResource(
-        resourceInitialData(
-          type,
-          langs,
-          initialReferenceResource,
-          applicationProfile
-        )
+        resourceInitialData(type, initialReferenceResource, applicationProfile)
       )
     );
 }

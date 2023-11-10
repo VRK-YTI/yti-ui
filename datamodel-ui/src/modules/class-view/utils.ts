@@ -11,22 +11,17 @@ export const DEFAULT_SUBCLASS_OF = {
 
 export function internalClassToClassForm(
   data: InternalClass,
-  languages: string[],
   applicationProfile?: boolean,
   targetIsAppProfile?: boolean,
   associations?: SimpleResource[],
   attributes?: SimpleResource[]
 ): ClassFormType {
-  const label = languages.reduce(
-    (acc, lang) => ({ ...acc, [lang]: data.label[lang] }),
-    {}
-  );
   const obj = {
     editorialNote: '',
     equivalentClass: [],
     identifier: applicationProfile ? data.identifier : '',
     uri: data.id,
-    label: label,
+    label: {},
     inheritedAttributes: [],
     note: {},
     subClassOf: [],
