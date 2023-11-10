@@ -27,10 +27,14 @@ export default function useSetView() {
     };
 
     if (key === 'info' || !subkey || subkey === 'list') {
-      router.replace({
-        pathname: `${modelId}/${key}`,
-        query: query,
-      });
+      router.replace(
+        {
+          pathname: `${modelId}/${key}`,
+          query: query,
+        },
+        undefined,
+        { shallow: true }
+      );
       return;
     }
 
@@ -47,10 +51,14 @@ export default function useSetView() {
         type = 'class';
     }
 
-    router.replace({
-      pathname: `${modelId}/${type}/${id}`,
-      query: query,
-    });
+    router.replace(
+      {
+        pathname: `${modelId}/${type}/${id}`,
+        query: query,
+      },
+      undefined,
+      { shallow: true }
+    );
   };
 
   const setView = (

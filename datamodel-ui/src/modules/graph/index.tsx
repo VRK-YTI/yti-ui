@@ -9,7 +9,6 @@ import {
   ReactFlowProvider,
   useReactFlow,
   Node,
-  FitViewOptions,
 } from 'reactflow';
 import {
   useGetVisualizationQuery,
@@ -47,7 +46,9 @@ import getConnectedElements, {
 import handleCornerNodeDelete from './utils/handle-corner-node-delete';
 import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
 import { ReferenceType } from '@app/common/interfaces/visualization.interface';
-import { max } from 'lodash';
+import { useBreakpoints } from 'yti-common-ui/media-query';
+import GraphNotification from './graph-notification';
+import { selectLogin } from '@app/common/components/login/login.slice';
 
 interface GraphProps {
   modelId: string;
@@ -66,17 +67,20 @@ const GraphContent = ({
   children,
 }: GraphProps) => {
   const { t, i18n } = useTranslation('common');
+  const { isSmall } = useBreakpoints();
   const dispatch = useStoreDispatch();
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
-  const { project, getZoom, fitView } = useReactFlow();
+  const { project, getZoom } = useReactFlow();
   const globalSelected = useSelector(selectSelected());
   const displayLang = useSelector(selectDisplayLang());
   const savePosition = useSelector(selectSavePosition());
   const resetPosition = useSelector(selectResetPosition());
   const tools = useSelector(selectModelTools());
+  const user = useSelector(selectLogin());
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
@@ -205,6 +209,7 @@ const GraphContent = ({
         e.clientY,
         edge.referenceType
       );
+      setHasChanges(true);
     },
     [dispatch, globalSelected.id, splitEdge]
   );
@@ -264,6 +269,15 @@ const GraphContent = ({
     dispatch(resetHighlighted());
   }, [dispatch, globalSelected, edges, nodes]);
 
+  const nodeDragStop = useCallback(
+    (_: React.MouseEvent, node: Node) => {
+      if (!user.anonymous && node.dragging) {
+        setHasChanges(true);
+      }
+    },
+    [user]
+  );
+
   useEffect(() => {
     if (isSuccess || (isSuccess && resetPosition)) {
       setNodes(
@@ -283,6 +297,7 @@ const GraphContent = ({
 
       if (resetPosition) {
         dispatch(setResetPosition(false));
+        setHasChanges(false);
       }
     }
   }, [
@@ -299,6 +314,7 @@ const GraphContent = ({
     refetch,
     deleteNodeById,
     organizationIds,
+    t,
   ]);
 
   useEffect(() => {
@@ -314,7 +330,12 @@ const GraphContent = ({
   useEffect(() => {
     if (result.isSuccess) {
       dispatch(setNotification('POSITION_SAVE'));
+
+      if (hasChanges) {
+        setHasChanges(false);
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result, dispatch]);
 
   useEffect(() => {
@@ -376,7 +397,7 @@ const GraphContent = ({
       style={{
         height: '100%',
         width: '100%',
-        position: 'relative',
+        position: isSmall ? 'fixed' : 'relative',
       }}
     >
       <ModelFlow
@@ -391,6 +412,7 @@ const GraphContent = ({
         onNodeMouseLeave={onNodeMouseLeave}
         onEdgeMouseEnter={onEdgeMouseEnter}
         onEdgeMouseLeave={onEdgeMouseLeave}
+        onNodeDragStop={nodeDragStop}
         fitView
         fitViewOptions={{
           maxZoom: 1.2,
@@ -399,6 +421,7 @@ const GraphContent = ({
         maxZoom={5}
         minZoom={0.2}
       >
+        <GraphNotification hasChanges={hasChanges} />
         {children}
       </ModelFlow>
     </div>

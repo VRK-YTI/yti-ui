@@ -92,10 +92,10 @@ export default function Drawer({
             {open ? <IconChevronLeft /> : <IconChevronRight />}
           </ToggleButton>
 
-          {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions*/}
+          {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
           <div
             style={{
-              height: '100%',
+              height: 'calc(100% - 70px)',
               width: '8px',
               cursor: 'w-resize',
             }}

@@ -183,6 +183,7 @@
   "error-unauthenticated": "An error occured with login information verification. Please login to the service again.",
   "feedback": "Feedback",
   "file-added": "",
+  "graph-has-unsaved-changes": "Graph has unsaved changes",
   "identifier": "Identifier",
   "in-use": "In use",
   "in-use-in-this-model": "In use in this data model",

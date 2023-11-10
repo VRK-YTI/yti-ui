@@ -1,5 +1,6 @@
 import { ReactFlow } from 'reactflow';
 import styled from 'styled-components';
+import { InlineAlert } from 'suomifi-ui-components';
 
 export const ModelFlow = styled(ReactFlow)`
   max-height: 100%;
@@ -41,5 +42,14 @@ export const ModelFlow = styled(ReactFlow)`
 
   .react-flow__edge-path {
     stroke: ${(props) => props.theme.suomifi.colors.blackBase};
+  }
+`;
+
+export const NotificationInlineAlert = styled(InlineAlert)`
+  width: max-content !important;
+
+  .fi-inline-alert_text-content-wrapper {
+    padding: 0px 5px !important;
+    margin: 5px !important;
   }
 `;

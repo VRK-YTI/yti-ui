@@ -70,7 +70,7 @@ export const DrawerContent = styled.div.attrs<{
 
 export const DrawerWrapper = styled.div<{ $open: boolean }>`
   min-height: min-content;
-  max-height: 100%;
+  max-height: calc(100% - 1px);
   height: 100%;
   width: ${(props) => (props.$open ? 'min-content' : '0')};
   display: flex;
@@ -79,6 +79,7 @@ export const DrawerWrapper = styled.div<{ $open: boolean }>`
     props.$open
       ? `1px solid ${props.theme.suomifi.colors.depthDark3}`
       : 'none'};
+  border-bottom: none;
 `;
 
 export const DrawerButtonGroup = styled.div<{ $isSmall: boolean }>`
