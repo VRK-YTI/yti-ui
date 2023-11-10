@@ -108,7 +108,7 @@ export default function ClassInfo({
         applicationProfile: applicationProfile ?? false,
       });
     } else {
-      dispatch(initializeResource(value.type, languages, value.uriData, true));
+      dispatch(initializeResource(value.type, value.uriData, true));
       dispatch(setAddResourceRestrictionToClass(true));
     }
   };
