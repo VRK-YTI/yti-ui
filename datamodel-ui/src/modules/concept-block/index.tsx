@@ -122,11 +122,9 @@ export default function ConceptBlock({
 
   return (
     <>
-      <BasicBlock title={`${t('concept')} (dcterms:subject)`}>
+      <BasicBlock largeGap title={`${t('concept')} (dcterms:subject)`}>
         {!concept ? (
-          <InlineAlert status="warning" style={{ marginBottom: '5px' }}>
-            {t('concept-undefined')}
-          </InlineAlert>
+          <InlineAlert>{t('choose-concept-from-terminology')}</InlineAlert>
         ) : (
           <ConceptView data={concept} />
         )}
