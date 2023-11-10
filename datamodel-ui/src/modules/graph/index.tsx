@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ModelFlow } from './graph.styles';
+import { FlowWrapper, ModelFlow } from './graph.styles';
 import 'reactflow/dist/style.css';
 import {
   useEdgesState,
@@ -392,14 +392,7 @@ const GraphContent = ({
   }, [cleanUnusedCorners, edges, nodes, setNodes]);
 
   return (
-    <div
-      ref={reactFlowWrapper}
-      style={{
-        height: '100%',
-        width: '100%',
-        position: isSmall ? 'fixed' : 'relative',
-      }}
-    >
+    <FlowWrapper ref={reactFlowWrapper} $isSmall={isSmall}>
       <ModelFlow
         nodes={nodes}
         edges={edges}
@@ -424,7 +417,7 @@ const GraphContent = ({
         <GraphNotification hasChanges={hasChanges} />
         {children}
       </ModelFlow>
-    </div>
+    </FlowWrapper>
   );
 };
 

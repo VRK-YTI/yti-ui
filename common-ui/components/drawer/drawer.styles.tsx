@@ -221,3 +221,26 @@ export const DrawerButton = styled(Button)<{
     margin: 0 !important;
   }
 `;
+
+export const WidthDragger = styled.div`
+  height: calc(100% - 70px);
+  width: 30px;
+  cursor: w-resize;
+  z-index: -1;
+
+  &:hover {
+    background-image: linear-gradient(
+      to right,
+      ${(props) => props.theme.suomifi.colors.depthLight1},
+      transparent
+    );
+  }
+
+  &:active {
+    background-image: linear-gradient(
+      to right,
+      ${(props) => props.theme.suomifi.colors.depthBase},
+      transparent
+    );
+  }
+`;

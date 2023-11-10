@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const ModelPanel = styled.div<{ $isSmall: boolean }>`
   height: ${(props) => (props.$isSmall ? 'auto' : '100%')};
   display: flex;
+  z-index: 1;
 
   ${(props) =>
     props.$isSmall &&

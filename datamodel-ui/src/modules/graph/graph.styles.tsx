@@ -53,3 +53,10 @@ export const NotificationInlineAlert = styled(InlineAlert)`
     margin: 5px !important;
   }
 `;
+
+export const FlowWrapper = styled.div<{ $isSmall: boolean }>`
+  height: 100%;
+  width: 100%;
+  position: ${(props) => (props.$isSmall ? 'fixed' : 'relative')};
+  margin-left: -42px;
+`;
