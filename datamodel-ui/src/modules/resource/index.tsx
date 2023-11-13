@@ -43,6 +43,7 @@ import useSetPage from '@app/common/utils/hooks/use-set-page';
 import { useReactFlow } from 'reactflow';
 import getConnectedElements from '../graph/utils/get-connected-elements';
 import { UriData } from '@app/common/interfaces/uri.interface';
+import ResourceError from '@app/common/components/resource-error';
 
 interface ResourceViewProps {
   modelId: string;
@@ -93,7 +94,11 @@ export default function ResourceView({
     fromVersion: version,
   });
 
-  const { data: resourceData, refetch: refetchResource } = useGetResourceQuery(
+  const {
+    data: resourceData,
+    refetch: refetchResource,
+    isError: resourceIsError,
+  } = useGetResourceQuery(
     {
       modelId: globalSelected.modelId ?? modelId,
       resourceIdentifier: globalSelected.id ?? '',
@@ -326,9 +331,14 @@ export default function ResourceView({
   }
 
   function renderInfo() {
-    if (!view.info || !resourceData) {
+    if (!view.info) {
       return <></>;
     }
+
+    if (resourceIsError) {
+      return <ResourceError handleReturn={handleReturn} />;
+    }
+
     return (
       <ResourceInfo
         data={resourceData}

@@ -33,6 +33,7 @@ import { UriData } from '@app/common/interfaces/uri.interface';
 import { useUpdateClassResrictionTargetMutation } from '@app/common/components/class/class.slice';
 import getApiError from '@app/common/utils/get-api-errors';
 import { useEffect, useState } from 'react';
+import ResourceError from '@app/common/components/resource-error';
 
 interface ResourceInfoProps {
   data: SimpleResource;
@@ -62,7 +63,11 @@ export default function ResourceInfo({
   const dispatch = useStoreDispatch();
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const { data: resourceData, isSuccess } = useGetResourceQuery(
+  const {
+    data: resourceData,
+    isSuccess,
+    isError,
+  } = useGetResourceQuery(
     {
       modelId: data.modelId,
       resourceIdentifier: data.identifier,
@@ -215,6 +220,7 @@ export default function ResourceInfo({
         </InlineAlert>
       )}
       <ExpanderContent>
+        {isError && <ResourceError noHeader={true} />}
         {isSuccess && (
           <CommonViewContent
             data={resourceData}
