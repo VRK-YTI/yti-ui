@@ -1,5 +1,6 @@
 import { ReactFlow } from 'reactflow';
 import styled from 'styled-components';
+import { InlineAlert } from 'suomifi-ui-components';
 
 export const ModelFlow = styled(ReactFlow)`
   max-height: 100%;
@@ -19,9 +20,13 @@ export const ModelFlow = styled(ReactFlow)`
     pointer-events: none;
   }
 
+  .react-flow__renderer {
+    z-index: 0;
+  }
+
   .react-flow__panel {
     margin: 0;
-    z-index: 4;
+    z-index: 1;
   }
 
   [data-id^='#corner-'] {
@@ -38,4 +43,28 @@ export const ModelFlow = styled(ReactFlow)`
   .react-flow__edge-path {
     stroke: ${(props) => props.theme.suomifi.colors.blackBase};
   }
+`;
+
+export const NotificationInlineAlert = styled(InlineAlert)`
+  width: max-content !important;
+
+  .fi-inline-alert_text-content-wrapper {
+    padding: 0px 5px !important;
+    margin: 5px !important;
+  }
+`;
+
+export const FlowWrapper = styled.div<{ $isSmall: boolean }>`
+  height: 100%;
+  width: 100%;
+
+  ${(props) =>
+    props.$isSmall
+      ? `
+    position: fixed;
+  `
+      : `
+    position: relative;
+    margin-left: -42px;
+  `}
 `;

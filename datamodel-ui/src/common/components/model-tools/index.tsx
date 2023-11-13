@@ -73,9 +73,9 @@ export default function ModelTools({
     const x = node.positionAbsolute ? node.positionAbsolute.x : node.position.x;
     const y = node.positionAbsolute ? node.positionAbsolute.y : node.position.y;
 
-    setCenter(x + (node.width ?? 1) / 2, y + (node.height ?? 1) / 2, {
+    setCenter(x + (node.width ?? 1) / 2, y + (node.height ?? 1), {
       duration: 500,
-      zoom: 3,
+      zoom: 1.5,
     });
   };
 

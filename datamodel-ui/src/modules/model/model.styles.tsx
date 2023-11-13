@@ -27,7 +27,9 @@ export const TitleWrapper = styled.div<{ $fullScreen?: boolean }>`
 `;
 
 export const ContentWrapper = styled.div`
+  display: flex;
   flex: 1 1 auto;
+  flex-direction: row;
   height: 100%;
   width: 100%;
 `;

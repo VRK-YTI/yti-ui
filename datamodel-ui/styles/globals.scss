@@ -6,4 +6,13 @@ body {
   margin: 0;
   @include fi-text-body-text;
   background-color: $fi-color-depth-light3;
+
+  .fi-modal_base {
+    position: absolute;
+    z-index: 1;
+  }
+
+  .fi-portal {
+    z-index: 2;
+  }
 }

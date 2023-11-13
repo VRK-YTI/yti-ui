@@ -20,19 +20,27 @@ export default function useSetPage() {
       return;
     }
 
-    router.replace({
-      pathname: router.pathname,
-      query: { ...router.query, page: page },
-    });
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, page: page },
+      },
+      undefined,
+      { shallow: true }
+    );
   };
 
   const resetPage = () => {
     const { page, ...query } = router.query;
 
-    router.replace({
-      pathname: router.pathname,
-      query: query,
-    });
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: query,
+      },
+      undefined,
+      { shallow: true }
+    );
   };
 
   return {

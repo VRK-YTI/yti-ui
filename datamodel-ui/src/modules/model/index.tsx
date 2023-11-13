@@ -73,6 +73,20 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         id: 'graph',
         icon: <IconApplicationProfile />,
         buttonLabel: t('graph'),
+        component: (
+          <Graph
+            modelId={modelId}
+            version={version}
+            applicationProfile={modelInfo?.type === 'PROFILE'}
+            organizationIds={organizationIds}
+          >
+            <ModelTools
+              modelId={modelId}
+              version={version}
+              applicationProfile={modelInfo?.type === 'PROFILE'}
+            />
+          </Graph>
+        ),
       },
       {
         id: 'info',
@@ -182,8 +196,6 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
       style={{
         height: fullScreen ? '100vh' : 0,
         flex: '1 1 auto',
-        display: 'flex',
-        flexDirection: 'column',
       }}
     >
       <Notification applicationProfile={modelInfo?.type === 'PROFILE'} />
@@ -194,8 +206,8 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
           version={version}
           applicationProfile={modelInfo?.type === 'PROFILE'}
           organizationIds={organizationIds}
+          drawer={<Drawer views={views} />}
         >
-          <Drawer views={views} />
           <ModelTools
             modelId={modelId}
             version={version}

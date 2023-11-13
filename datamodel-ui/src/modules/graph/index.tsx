@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ModelFlow } from './graph.styles';
+import { FlowWrapper, ModelFlow } from './graph.styles';
 import 'reactflow/dist/style.css';
 import {
   useEdgesState,
@@ -47,13 +47,17 @@ import getConnectedElements, {
 import handleCornerNodeDelete from './utils/handle-corner-node-delete';
 import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
 import { ReferenceType } from '@app/common/interfaces/visualization.interface';
+import { useBreakpoints } from 'yti-common-ui/media-query';
+import GraphNotification from './graph-notification';
+import { selectLogin } from '@app/common/components/login/login.slice';
 
 interface GraphProps {
   modelId: string;
   version?: string;
   applicationProfile?: boolean;
   organizationIds?: string[];
-  children: JSX.Element[];
+  drawer?: JSX.Element;
+  children: JSX.Element | JSX.Element[];
 }
 
 const GraphContent = ({
@@ -64,6 +68,7 @@ const GraphContent = ({
   children,
 }: GraphProps) => {
   const { t } = useTranslation('common');
+  const { isSmall } = useBreakpoints();
   const dispatch = useStoreDispatch();
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const { project, getZoom } = useReactFlow();
@@ -72,9 +77,11 @@ const GraphContent = ({
   const resetPosition = useSelector(selectResetPosition());
   const updateVisualization = useSelector(selectUpdateVisualization());
   const tools = useSelector(selectModelTools());
+  const user = useSelector(selectLogin());
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
   const [fetching, setFetching] = useState(true);
   const nodeTypes: NodeTypes = useMemo(
     () => ({
@@ -100,6 +107,7 @@ const GraphContent = ({
   const refetchNodes = useCallback(() => {
     setFetching(true);
     refetch();
+    setHasChanges(false);
   }, [refetch]);
 
   const deleteNodeById = useCallback(
@@ -209,6 +217,7 @@ const GraphContent = ({
         e.clientY,
         edge.referenceType
       );
+      setHasChanges(true);
     },
     [dispatch, globalSelected.id, splitEdge]
   );
@@ -289,6 +298,7 @@ const GraphContent = ({
 
     if (resetPosition) {
       dispatch(setResetPosition(false));
+      setHasChanges(false);
     }
   }, [
     applicationProfile,
@@ -303,6 +313,15 @@ const GraphContent = ({
     setNodes,
     t,
   ]);
+
+  const nodeDragStop = useCallback(
+    (_: React.MouseEvent, node: Node) => {
+      if (!user.anonymous && node.dragging) {
+        setHasChanges(true);
+      }
+    },
+    [user]
+  );
 
   useEffect(() => {
     if (fetching && isSuccess && !isFetching) {
@@ -361,7 +380,12 @@ const GraphContent = ({
   useEffect(() => {
     if (result.isSuccess) {
       dispatch(setNotification('POSITION_SAVE'));
+
+      if (hasChanges) {
+        setHasChanges(false);
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result, dispatch]);
 
   useEffect(() => {
@@ -430,7 +454,7 @@ const GraphContent = ({
   }, [resetPosition, setNodePositions]);
 
   return (
-    <div ref={reactFlowWrapper} style={{ height: '100%', width: '100%' }}>
+    <FlowWrapper ref={reactFlowWrapper} $isSmall={isSmall}>
       <ModelFlow
         nodes={nodes}
         edges={edges}
@@ -443,12 +467,19 @@ const GraphContent = ({
         onNodeMouseLeave={onNodeMouseLeave}
         onEdgeMouseEnter={onEdgeMouseEnter}
         onEdgeMouseLeave={onEdgeMouseLeave}
+        onNodeDragStop={nodeDragStop}
         fitView
-        maxZoom={100}
+        fitViewOptions={{
+          maxZoom: 1.2,
+          minZoom: 1,
+        }}
+        maxZoom={5}
+        minZoom={0.2}
       >
+        <GraphNotification hasChanges={hasChanges} />
         {children}
       </ModelFlow>
-    </div>
+    </FlowWrapper>
   );
 };
 
@@ -457,11 +488,14 @@ export default function Graph({
   version,
   applicationProfile,
   organizationIds,
+  drawer,
   children,
 }: GraphProps) {
   return (
     <>
       <ReactFlowProvider>
+        {drawer}
+
         <GraphContent
           modelId={modelId}
           version={version}

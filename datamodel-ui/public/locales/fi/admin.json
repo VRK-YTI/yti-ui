@@ -183,6 +183,7 @@
   "error-unauthenticated": "Kirjautumistietojen varmistuksessa ilmeni ongelma. Kirjaudu palveluun uudestaan.",
   "feedback": "Palaute",
   "file-added": "",
+  "graph-has-unsaved-changes": "Kaavion muutoksia ei ole tallennettu",
   "identifier": "Tunniste",
   "in-use": "Käytössä",
   "in-use-in-this-model": "Käytössä tässä tietomallissa",

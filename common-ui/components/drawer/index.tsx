@@ -12,6 +12,7 @@ import {
   DrawerContent,
   DrawerWrapper,
   ToggleButton,
+  WidthDragger,
 } from './drawer.styles';
 import ScrollableButtonMenu from './scrollable-button-menu';
 
@@ -92,15 +93,8 @@ export default function Drawer({
             {open ? <IconChevronLeft /> : <IconChevronRight />}
           </ToggleButton>
 
-          {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions*/}
-          <div
-            style={{
-              height: '100%',
-              width: '8px',
-              cursor: 'w-resize',
-            }}
-            onMouseDown={(e) => handleResize(e)}
-          />
+          {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+          {open && <WidthDragger onMouseDown={(e) => handleResize(e)} />}
         </div>
       )}
 
