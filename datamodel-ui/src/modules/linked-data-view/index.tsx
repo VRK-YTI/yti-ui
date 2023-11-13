@@ -182,7 +182,11 @@ export default function LinkedDataView({
                         labelNewWindow={t('link-opens-new-window-external')}
                         href={namespace.namespace}
                       >
-                        {namespace.name[displayLang ?? i18n.language]}
+                        {getLanguageVersion({
+                          lang: displayLang ?? i18n.language,
+                          data: namespace.name,
+                          appendLocale: true,
+                        })}
                       </ExternalLink>
                       <div>
                         {t('linked-datamodel-prefix', {
