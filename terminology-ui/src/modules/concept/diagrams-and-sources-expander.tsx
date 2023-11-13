@@ -70,7 +70,7 @@ export default function DiagramsAndSourcesExpander({
                 const link = getDiagramValues(l.value);
                 return (
                   <li key={`diagrams-${idx}`}>
-                    <Link href={link.url} passHref>
+                    <Link href={link.url} passHref legacyBehavior>
                       <ExternalLink
                         href=""
                         labelNewWindow=""

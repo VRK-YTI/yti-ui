@@ -1,5 +1,10 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import { Context, createWrapper } from 'next-redux-wrapper';
+import {
+  configureStore,
+  ThunkAction,
+  Action,
+  combineReducers,
+} from '@reduxjs/toolkit';
+import { Context, MakeStore, createWrapper } from 'next-redux-wrapper';
 import {
   terminologySearchSlice,
   terminologySearchApi,
@@ -29,53 +34,59 @@ import { codeListApi } from '@app/common/components/codelist/codelist.slice';
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
 
-export function makeStore(ctx: NextIronContext) {
-  return configureStore({
-    reducer: {
-      [terminologySearchSlice.name]: terminologySearchSlice.reducer,
-      [terminologySearchApi.reducerPath]: terminologySearchApi.reducer,
-      [vocabularySlice.name]: vocabularySlice.reducer,
-      [vocabularyApi.reducerPath]: vocabularyApi.reducer,
-      [conceptApi.reducerPath]: conceptApi.reducer,
-      [collectionApi.reducerPath]: collectionApi.reducer,
-      [countsApi.reducerPath]: countsApi.reducer,
-      [loginSlice.name]: loginSlice.reducer,
-      [loginApi.reducerPath]: loginApi.reducer,
-      [alertSlice.name]: alertSlice.reducer,
-      [titleSlice.name]: titleSlice.reducer,
-      [subscriptionApi.reducerPath]: subscriptionApi.reducer,
-      [accessRequestApi.reducerPath]: accessRequestApi.reducer,
-      [adminControlsSlice.name]: adminControlsSlice.reducer,
-      [importApi.reducerPath]: importApi.reducer,
-      [modifyApi.reducerPath]: modifyApi.reducer,
-      [removeApi.reducerPath]: removeApi.reducer,
-      [modifyStatusesApi.reducerPath]: modifyStatusesApi.reducer,
-      [fakeableUsersApi.reducerPath]: fakeableUsersApi.reducer,
-      [codeListApi.reducerPath]: codeListApi.reducer,
-    },
+const reducers = {
+  [terminologySearchSlice.name]: terminologySearchSlice.reducer,
+  [terminologySearchApi.reducerPath]: terminologySearchApi.reducer,
+  [vocabularySlice.name]: vocabularySlice.reducer,
+  [vocabularyApi.reducerPath]: vocabularyApi.reducer,
+  [conceptApi.reducerPath]: conceptApi.reducer,
+  [collectionApi.reducerPath]: collectionApi.reducer,
+  [countsApi.reducerPath]: countsApi.reducer,
+  [loginSlice.name]: loginSlice.reducer,
+  [loginApi.reducerPath]: loginApi.reducer,
+  [alertSlice.name]: alertSlice.reducer,
+  [titleSlice.name]: titleSlice.reducer,
+  [subscriptionApi.reducerPath]: subscriptionApi.reducer,
+  [accessRequestApi.reducerPath]: accessRequestApi.reducer,
+  [adminControlsSlice.name]: adminControlsSlice.reducer,
+  [importApi.reducerPath]: importApi.reducer,
+  [modifyApi.reducerPath]: modifyApi.reducer,
+  [removeApi.reducerPath]: removeApi.reducer,
+  [modifyStatusesApi.reducerPath]: modifyStatusesApi.reducer,
+  [fakeableUsersApi.reducerPath]: fakeableUsersApi.reducer,
+  [codeListApi.reducerPath]: codeListApi.reducer,
+};
 
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({ thunk: { extraArgument: ctx } }).concat(
-        terminologySearchApi.middleware,
-        vocabularyApi.middleware,
-        conceptApi.middleware,
-        collectionApi.middleware,
-        countsApi.middleware,
-        subscriptionApi.middleware,
-        accessRequestApi.middleware,
-        importApi.middleware,
-        modifyApi.middleware,
-        removeApi.middleware,
-        loginApi.middleware,
-        modifyStatusesApi.middleware,
-        fakeableUsersApi.middleware,
-        codeListApi.middleware
-      ),
+const reducer = combineReducers(reducers);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const makeStore: MakeStore<any> = ({
+  reduxWrapperMiddleware,
+  context,
+}) =>
+  configureStore({
+    reducer,
+    middleware: (getDefaultMiddleware) => [
+      ...getDefaultMiddleware({ thunk: { extraArgument: context } }),
+      terminologySearchApi.middleware,
+      vocabularyApi.middleware,
+      conceptApi.middleware,
+      collectionApi.middleware,
+      countsApi.middleware,
+      subscriptionApi.middleware,
+      accessRequestApi.middleware,
+      importApi.middleware,
+      modifyApi.middleware,
+      removeApi.middleware,
+      loginApi.middleware,
+      modifyStatusesApi.middleware,
+      fakeableUsersApi.middleware,
+      codeListApi.middleware,
+      reduxWrapperMiddleware,
+    ],
     // Development tools should be available only in development environments
     devTools: process.env.NODE_ENV !== 'production',
   });
-}
 
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppState = ReturnType<AppStore['getState']>;
@@ -88,7 +99,4 @@ export type AppThunk<ReturnType = void> = ThunkAction<
 export type AppDispatch = AppStore['dispatch'];
 export const useStoreDispatch: () => AppDispatch = useDispatch;
 
-export const wrapper = createWrapper<AppStore>(makeStore, {
-  serializeState: (state) => JSON.stringify(state),
-  deserializeState: (state) => JSON.parse(state),
-});
+export const wrapper = createWrapper<AppStore>(makeStore);

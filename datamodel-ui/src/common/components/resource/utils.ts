@@ -65,10 +65,10 @@ export function convertToPayload(
   applicationProfile?: boolean
 ): LibraryResourcePutType | ApplicationProfileResourcePutType | {} {
   const removeKeys: string[] = isEdit
-    ? ['identifier', 'type', 'concept']
+    ? ['identifier', 'type', 'concept', 'uri']
     : applicationProfile
-    ? ['concept']
-    : ['concept', 'type'];
+    ? ['concept', 'uri']
+    : ['concept', 'type', 'uri'];
 
   const ret = Object.fromEntries(
     Object.entries(data)

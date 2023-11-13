@@ -30,7 +30,6 @@ import {
   translateLanguage,
   translateTerminologyType,
 } from '@app/common/utils/translation-helpers';
-import Link from 'next/link';
 import { getPropertyValue } from '../property-value/get-property-value';
 import PropertyValue from '../property-value';
 import RemovalModal from '../removal-modal';
@@ -44,6 +43,7 @@ import { setAlert } from '../alert/alert.slice';
 import UpdateWithFileModal from '../update-with-file-modal';
 import StatusMassEdit from '../status-mass-edit';
 import isEmail from 'validator/lib/isEmail';
+import { useRouter } from 'next/router';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
@@ -57,6 +57,7 @@ interface InfoExpanderProps {
 export default function InfoExpander({ data }: InfoExpanderProps) {
   const { t, i18n } = useTranslation('common');
   const { urlState } = useUrlState();
+  const router = useRouter();
   const user = useSelector(selectLogin());
   const terminologyId =
     data?.type?.graph.id ?? data?.identifier?.type.graph?.id ?? '';
@@ -194,15 +195,16 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
               extra={
                 <BasicBlockExtraWrapper>
                   <ActionBlock>
-                    <Link href={`/terminology/${terminologyId}/edit`}>
-                      <Button
-                        icon={<IconEdit />}
-                        variant="secondary"
-                        id="edit-terminology-button"
-                      >
-                        {t('edit-terminology', { ns: 'admin' })}
-                      </Button>
-                    </Link>
+                    <Button
+                      icon={<IconEdit />}
+                      variant="secondary"
+                      id="edit-terminology-button"
+                      onClick={() =>
+                        router.push(`/terminology/${terminologyId}/edit`)
+                      }
+                    >
+                      {t('edit-terminology', { ns: 'admin' })}
+                    </Button>
 
                     <UpdateWithFileModal />
 
@@ -251,15 +253,18 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                       terminologyId={terminologyId}
                     />
 
-                    <Link href={`/terminology/${terminologyId}/new-collection`}>
-                      <Button
-                        icon={<IconPlus />}
-                        variant="secondary"
-                        id="create-collection-button"
-                      >
-                        {t('add-new-collection', { ns: 'admin' })}
-                      </Button>
-                    </Link>
+                    <Button
+                      icon={<IconPlus />}
+                      variant="secondary"
+                      id="create-collection-button"
+                      onClick={() =>
+                        router.push(
+                          `/terminology/${terminologyId}/new-collection`
+                        )
+                      }
+                    >
+                      {t('add-new-collection', { ns: 'admin' })}
+                    </Button>
 
                     <StatusMassEdit terminologyId={terminologyId} />
                   </ActionBlock>

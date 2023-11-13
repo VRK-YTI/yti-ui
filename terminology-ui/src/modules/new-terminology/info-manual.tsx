@@ -138,7 +138,6 @@ export default function InfoManual({
 
   return (
     <form>
-      {/* <TallerSeparator /> */}
       <LanguageSelector
         items={languageList}
         labelText={t('information-description-languages')}

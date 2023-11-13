@@ -23,6 +23,7 @@ import PageHead from 'yti-common-ui/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getProperty } from '@app/common/utils/get-property';
 import { getStoreData } from '@app/common/utils/get-store-data';
+import { wrapper } from '@app/store';
 
 interface ConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -32,6 +33,7 @@ interface ConceptPageProps extends CommonContextState {
 }
 
 export default function ConceptPage(props: ConceptPageProps) {
+  wrapper.useHydration(props);
   const { t } = useTranslation('common');
   const { query, asPath } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;

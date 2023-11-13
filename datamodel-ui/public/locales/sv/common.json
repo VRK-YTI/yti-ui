@@ -7,6 +7,7 @@
   "actions": "",
   "add-email-subscription": "",
   "allowed-values": "",
+  "an-error-occured-while-fetching-resource": "",
   "association": "",
   "association-count-title_one": "",
   "association-count-title_other": "",
@@ -286,5 +287,6 @@
   "vocabulary-info-sv": "",
   "vocabulary-results-more": "",
   "working-version": "",
-  "yes": ""
+  "yes": "",
+  "you-can-try-to-reload-the-page-or-the-resource-does-not-exist": ""
 }

@@ -1,18 +1,14 @@
 import styled from 'styled-components';
 
-export const EdgeContent = styled.div.attrs(
-  (props: { $labelX: number; $labelY: number; $highlight: boolean }) => ({
-    style: {
-      transform: `translate(-50%, -50%) translate(${props.$labelX}px, ${props.$labelY}px)`,
-    },
-  })
-)<{
+interface EdgeContentProps {
   $applicationProfile?: boolean;
   $labelX: number;
   $labelY: number;
   $highlight: boolean;
   $borderless?: boolean;
-}>`
+}
+
+export const EdgeContent = styled.div<EdgeContentProps>`
   pointer-events: all;
   position: absolute;
   background: #ffffff;
@@ -24,6 +20,8 @@ export const EdgeContent = styled.div.attrs(
       : 'none'};
   font-size: 16px;
   font-weight: 400;
+  transform: translate(-50%, -50%)
+    translate(${(props) => props.$labelX}px, ${(props) => props.$labelY}px);
 
   ${(props) =>
     props.$highlight &&
@@ -38,7 +36,7 @@ export const EdgeContent = styled.div.attrs(
       border: 0;
       padding: ${props.theme.suomifi.spacing.xxs};
       color: ${props.theme.suomifi.colors.highlightDark1};
-    `}
+    `};
 `;
 
 export const HoveredPath = styled.path<{ $highlight?: boolean }>`

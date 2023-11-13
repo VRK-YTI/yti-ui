@@ -32,6 +32,7 @@ import validateForm, { FormError } from './validate-form';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { Status } from 'yti-common-ui/search-results/result-card.styles';
+import { v4 } from 'uuid';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -135,6 +136,19 @@ export default function EditConcept({
       );
     }
   }, [addConceptStatus, postedData, terminologyId, router]);
+
+  useEffect(() => {
+    if (formData.terms.some((term) => term.id === '')) {
+      setFormData({
+        ...formData,
+        terms: formData.terms.map((term) => ({
+          ...term,
+          id: v4(),
+        })),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (preferredTerms.length < 1) {
     return (

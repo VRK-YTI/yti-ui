@@ -90,6 +90,7 @@ export default function SubscriptionBlock({
                 <Link
                   passHref
                   href={`/terminology-api/api/v1/resolve?uri=${resource.uri}`}
+                  legacyBehavior
                 >
                   <SuomiLink href="">
                     {resource.prefLabel

@@ -7,6 +7,7 @@
   "actions": "Toiminnot",
   "add-email-subscription": "Tilaa sähköposti-ilmoitukset",
   "allowed-values": "Sallitut arvot",
+  "an-error-occured-while-fetching-resource": "Resurssin tietojen haussa ilmeni ongelma.",
   "association": "Assosiaatio",
   "association-count-title_one": "{{count}} Assosiaatio",
   "association-count-title_other": "{{count}} Assosiaatiota",
@@ -286,5 +287,6 @@
   "vocabulary-info-sv": "",
   "vocabulary-results-more": "",
   "working-version": "Työversio",
-  "yes": "Kyllä"
+  "yes": "Kyllä",
+  "you-can-try-to-reload-the-page-or-the-resource-does-not-exist": "Voit yrittää ladata sivun uudestaan tai resurssia ei ole olemassa."
 }

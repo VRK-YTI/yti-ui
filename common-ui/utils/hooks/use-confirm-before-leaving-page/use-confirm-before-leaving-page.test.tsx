@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import originalUseConfirmBeforeLeavingPage from './use-confirm-before-leaving-page';
 import Router from 'next/router';
 

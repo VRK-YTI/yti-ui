@@ -36,11 +36,11 @@ export default function DesktopNavigation({
   return (
     <NavigationWrapper id="top-navigation">
       <NavigationItem
-        active={router.pathname === '/'}
+        $active={router.pathname === '/'}
         id="top-navigation-front-page"
         className="top-navigation-li"
       >
-        <Link href="/" passHref>
+        <Link href="/" passHref legacyBehavior>
           <SuomiFiLink className="main" href="">
             {t('site-frontpage')}
           </SuomiFiLink>
@@ -83,9 +83,9 @@ export default function DesktopNavigation({
       <NavigationItem
         id="top-navigation-site-information"
         className="top-navigation-li"
-        active={router.pathname === '/site-information'}
+        $active={router.pathname === '/site-information'}
       >
-        <Link href="/site-information" passHref>
+        <Link href="/site-information" passHref legacyBehavior>
           <SuomiFiLink className="main" href="">
             {t('site-information')}
           </SuomiFiLink>
@@ -93,11 +93,11 @@ export default function DesktopNavigation({
       </NavigationItem>
       {isLoggedIn && (
         <NavigationItem
-          active={router.pathname === '/own-information'}
+          $active={router.pathname === '/own-information'}
           id="top-navigation-own-information"
           className="top-navigation-li"
         >
-          <Link href="/own-information" passHref>
+          <Link href="/own-information" passHref legacyBehavior>
             <SuomiFiLink className="main" href="">
               {t('own-information')}
             </SuomiFiLink>

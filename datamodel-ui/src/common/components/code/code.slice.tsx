@@ -1,4 +1,3 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { CodeType } from '@app/common/interfaces/code';
 import { getCodeListApiBaseQuery } from '@app/store/api-base-query';
@@ -44,11 +43,6 @@ export const codeApi = createApi({
   reducerPath: 'codeApi',
   baseQuery: getCodeListApiBaseQuery(),
   tagTypes: ['codeApi'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
   endpoints: (builder) => ({
     getCodes: builder.query<
       {

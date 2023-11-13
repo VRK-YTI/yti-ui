@@ -25,6 +25,7 @@ import {
   getStatusCounts,
   getRunningQueriesThunk as countsGetRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
+import { wrapper } from '@app/store';
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -33,6 +34,8 @@ interface TerminologyPageProps extends CommonContextState {
 }
 
 export default function TerminologyPage(props: TerminologyPageProps) {
+  wrapper.useHydration(props);
+
   const { t } = useTranslation('common');
   const { query, asPath } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;

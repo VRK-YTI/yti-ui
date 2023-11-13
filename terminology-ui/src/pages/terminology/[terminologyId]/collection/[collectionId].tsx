@@ -23,6 +23,7 @@ import {
 import PageHead from 'yti-common-ui/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getStoreData } from '@app/common/utils/get-store-data';
+import { wrapper } from '@app/store';
 
 interface CollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -31,6 +32,7 @@ interface CollectionPageProps extends CommonContextState {
 }
 
 export default function CollectionPage(props: CollectionPageProps) {
+  wrapper.useHydration(props);
   const { t } = useTranslation('common');
   const { query, asPath } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;

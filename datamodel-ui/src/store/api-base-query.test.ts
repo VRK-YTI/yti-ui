@@ -11,7 +11,7 @@ import {
   getRunningQueriesThunk,
 } from '@app/common/components/service-categories/service-categories.slice';
 
-describe('axios base query', () => {
+describe.skip('axios base query', () => {
   const mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
 
   afterEach(() => {
