@@ -49,6 +49,7 @@ import { ReferenceType } from '@app/common/interfaces/visualization.interface';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import GraphNotification from './graph-notification';
 import { selectLogin } from '@app/common/components/login/login.slice';
+import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 
 interface GraphProps {
   modelId: string;
@@ -68,6 +69,8 @@ const GraphContent = ({
 }: GraphProps) => {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const dispatch = useStoreDispatch();
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const { project, getZoom } = useReactFlow();
@@ -210,8 +213,9 @@ const GraphContent = ({
         edge.referenceType
       );
       setHasChanges(true);
+      enableConfirmation();
     },
-    [dispatch, globalSelected.id, splitEdge]
+    [dispatch, globalSelected.id, splitEdge, enableConfirmation]
   );
 
   const onNodeMouseEnter = useCallback(
@@ -273,9 +277,10 @@ const GraphContent = ({
     (_: React.MouseEvent, node: Node) => {
       if (!user.anonymous && node.dragging) {
         setHasChanges(true);
+        enableConfirmation();
       }
     },
-    [user]
+    [user, enableConfirmation]
   );
 
   useEffect(() => {
@@ -298,6 +303,7 @@ const GraphContent = ({
       if (resetPosition) {
         dispatch(setResetPosition(false));
         setHasChanges(false);
+        disableConfirmation();
       }
     }
   }, [
@@ -315,6 +321,7 @@ const GraphContent = ({
     deleteNodeById,
     organizationIds,
     t,
+    disableConfirmation,
   ]);
 
   useEffect(() => {
@@ -333,6 +340,7 @@ const GraphContent = ({
 
       if (hasChanges) {
         setHasChanges(false);
+        disableConfirmation();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
