@@ -20,12 +20,14 @@ import {
   getOrganizations,
   getRunningQueriesThunk as getOrganizationsRunningQueriesThunk,
 } from '@app/common/components/terminology-search/terminology-search.slice';
+import { wrapper } from '@app/store';
 
 interface OwnInformationPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
 export default function OwnInformationPage(props: OwnInformationPageProps) {
+  wrapper.useHydration(props);
   const { t } = useTranslation('common');
 
   return (

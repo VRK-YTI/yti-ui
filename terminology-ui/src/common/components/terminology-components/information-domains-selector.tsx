@@ -62,7 +62,7 @@ export default function InformationDomainsSelector({
   return (
     <BlankFieldset>
       <MultiselectSmBot
-        items={infoDomains}
+        items={infoDomains ?? []}
         hintText={t('info-domains-hint')}
         labelText={t('info-domains')}
         visualPlaceholder={t('info-domains-placeholder')}

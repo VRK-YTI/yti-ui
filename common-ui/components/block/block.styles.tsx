@@ -13,7 +13,7 @@ export const BasicBlockWrapper = styled.div<{
   font-size: 16px;
   line-height: 24px;
 
-  :not(:first-child) {
+  &:not(:first-child) {
     margin-top: 20px;
   }
 `;

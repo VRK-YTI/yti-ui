@@ -1,17 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { Counts } from '@app/common/interfaces/counts.interface';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
-import { HYDRATE } from 'next-redux-wrapper';
 import { StatusCounts } from '@app/common/interfaces/status-counts.interface';
 
 export const countsApi = createApi({
   reducerPath: 'countsApi',
   baseQuery: getTerminologyApiBaseQuery(),
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
   tagTypes: ['Counts'],
   endpoints: (builder) => ({
     getCounts: builder.query<Counts, null>({

@@ -1,27 +1,20 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import RenderConcepts from './render-concepts';
-import { getMockContext, themeProvider } from '@app/tests/test-utils';
-import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
-import { makeStore } from '@app/store';
+import { renderWithProviders } from '@app/tests/test-utils';
 import mockRouter from 'next-router-mock';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('render-concepts', () => {
   it('should render component', () => {
-    const store = makeStore(getMockContext());
     const mockFn = jest.fn();
 
     mockRouter.setCurrentUrl(
       'terminology/123-456-789/concept/123-123-123/edit'
     );
 
-    render(
-      <Provider store={store}>
-        <RenderConcepts concepts={concepts} chosen={[]} setChosen={mockFn} />
-      </Provider>,
-      { wrapper: themeProvider }
+    renderWithProviders(
+      <RenderConcepts concepts={concepts} chosen={[]} setChosen={mockFn} />
     );
 
     expect(screen.getByText('label1')).toBeInTheDocument();
@@ -29,21 +22,17 @@ describe('render-concepts', () => {
   });
 
   it('should call update when concept selected', () => {
-    const store = makeStore(getMockContext());
     const mockFn = jest.fn();
 
     mockRouter.setCurrentUrl(
       'terminology/123-456-789/concept/123-123-123/edit'
     );
 
-    render(
-      <Provider store={store}>
-        <RenderConcepts concepts={concepts} chosen={[]} setChosen={mockFn} />
-      </Provider>,
-      { wrapper: themeProvider }
+    renderWithProviders(
+      <RenderConcepts concepts={concepts} chosen={[]} setChosen={mockFn} />
     );
 
-    userEvent.click(screen.queryAllByRole('checkbox')[0]);
+    fireEvent.click(screen.queryAllByRole('checkbox')[0]);
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenCalledWith([concepts[0]]);
   });

@@ -1,5 +1,4 @@
 const { i18n } = require('./next-i18next.config');
-const withTM = require('next-transpile-modules')(['../common-ui']);
 
 module.exports = () => {
   let config = {
@@ -20,6 +19,7 @@ module.exports = () => {
       ],
     },
     i18n,
+    transpilePackages: ['common-ui'],
     async headers() {
       const isProd = process.env.NODE_ENV === 'production';
 
@@ -142,5 +142,5 @@ module.exports = () => {
     };
   }
 
-  return withTM(config);
+  return config;
 };

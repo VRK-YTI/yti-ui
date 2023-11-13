@@ -21,6 +21,7 @@ import {
 } from '@app/common/components/concept/concept.slice';
 import { getStoreData } from '@app/common/utils/get-store-data';
 import { Concept } from '@app/common/interfaces/concept.interface';
+import { wrapper } from '@app/store';
 
 interface NewConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -28,6 +29,7 @@ interface NewConceptPageProps extends CommonContextState {
 }
 
 export default function EditConcept(props: NewConceptPageProps) {
+  wrapper.useHydration(props);
   const { t } = useTranslation('admin');
   const router = useRouter();
   const terminologyId = Array.isArray(router.query.terminologyId)

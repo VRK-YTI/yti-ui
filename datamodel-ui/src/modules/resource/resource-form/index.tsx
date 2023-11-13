@@ -260,7 +260,7 @@ export default function ResourceForm({
 
     handleUpdate({
       ...data,
-      [key]: data[key]?.filter((r) => r.uri !== id) ?? [],
+      [key]: data[key]?.filter((r: UriData) => r.uri !== id) ?? [],
     });
   };
 

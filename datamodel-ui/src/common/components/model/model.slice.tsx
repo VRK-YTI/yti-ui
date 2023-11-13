@@ -1,4 +1,3 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { NewModel } from '@app/common/interfaces/new-model.interface';
@@ -9,17 +8,11 @@ import {
 } from '@app/common/interfaces/model.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
-import isHydrate from '@app/store/isHydrate';
 
 export const modelApi = createApi({
   reducerPath: 'modelApi',
   baseQuery: getDatamodelApiBaseQuery(),
   tagTypes: ['modelApi'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
   endpoints: (builder) => ({
     createModel: builder.mutation<string, NewModel>({
       query: (value) => ({
@@ -229,14 +222,6 @@ export const modelSlice = createSlice({
       },
     },
   },
-  extraReducers: (builder) => {
-    builder.addMatcher(isHydrate, (state, action) => {
-      return {
-        ...state,
-        ...action.payload.model,
-      };
-    });
-  },
   reducers: {
     setSelected(state, action) {
       return {
@@ -417,7 +402,7 @@ export function selectResourceView(type: 'associations' | 'attributes') {
 
 export function selectCurrentViewName() {
   return (state: AppState) =>
-    Object.entries(state.model.view).find((v) =>
+    Object.entries(state.model.view as ViewList).find((v) =>
       typeof v[1] === 'object'
         ? Object.entries(v[1]).filter(
             (val) => Object.values(val).filter((c) => c === true).length > 0

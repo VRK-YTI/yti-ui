@@ -1,8 +1,7 @@
-import { render, screen } from '@testing-library/react';
-import { themeProvider } from '@app/tests/test-utils';
+import { fireEvent, screen } from '@testing-library/react';
+import { renderWithProviders } from '@app/tests/test-utils';
 import RelationalInformationBlock from '.';
 import mockRouter from 'next-router-mock';
-import userEvent from '@testing-library/user-event';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
@@ -21,7 +20,7 @@ describe('relational-information-block', () => {
       '/terminology/123-456-789/new-concept?terminologyId=123-456-789'
     );
 
-    render(
+    renderWithProviders(
       <RelationalInformationBlock
         infoKey="relationalInformation"
         title="title"
@@ -30,8 +29,7 @@ describe('relational-information-block', () => {
         chipLabel="chipLabel"
         data={{ empty: [] }}
         updateData={mockFn}
-      />,
-      { wrapper: themeProvider }
+      />
     );
 
     expect(screen.getByText('title')).toBeInTheDocument();
@@ -45,7 +43,7 @@ describe('relational-information-block', () => {
       '/terminology/123-456-789/new-concept?terminologyId=123-456-789'
     );
 
-    render(
+    renderWithProviders(
       <RelationalInformationBlock
         infoKey="relationalInformation"
         title="title"
@@ -54,8 +52,7 @@ describe('relational-information-block', () => {
         chipLabel="chipLabel"
         data={data}
         updateData={mockFn}
-      />,
-      { wrapper: themeProvider }
+      />
     );
 
     expect(screen.getByText('label1')).toBeInTheDocument();
@@ -68,7 +65,7 @@ describe('relational-information-block', () => {
       '/terminology/123-456-789/new-concept?terminologyId=123-456-789'
     );
 
-    render(
+    renderWithProviders(
       <RelationalInformationBlock
         infoKey="relationalInformation"
         title="title"
@@ -77,18 +74,17 @@ describe('relational-information-block', () => {
         chipLabel="chipLabel"
         data={data}
         updateData={mockFn}
-      />,
-      { wrapper: themeProvider }
+      />
     );
 
-    userEvent.click(screen.getByText('label2'));
+    fireEvent.click(screen.getByText('label2'));
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenCalledWith('relationalInformation', [
       data.relationalInformation[0],
     ]);
     expect(screen.queryByText('label2')).not.toBeInTheDocument();
 
-    userEvent.click(screen.getByText('label1'));
+    fireEvent.click(screen.getByText('label1'));
     expect(mockFn).toHaveBeenCalledTimes(2);
     expect(mockFn).toHaveBeenCalledWith('relationalInformation', []);
     expect(screen.queryByText('label1')).not.toBeInTheDocument();

@@ -49,6 +49,7 @@ import { ModelType } from '@app/common/interfaces/model.interface';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import { wrapper } from '@app/store';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -56,6 +57,8 @@ interface IndexPageProps extends CommonContextState {
 }
 
 export default function ModelPage(props: IndexPageProps) {
+  wrapper.useHydration(props);
+
   const { query } = useRouter();
   const version = getSlugAsString(query.ver);
   const { data } = useGetModelQuery({
@@ -82,7 +85,7 @@ export default function ModelPage(props: IndexPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ store, query, locale, res }) => {
+  async ({ store, query, locale }) => {
     if (!query.slug) {
       throw new Error('Missing query for page');
     }

@@ -1,8 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { themeProvider } from '../../utils/test-utils';
 import mockRouter from 'next-router-mock';
 import KeywordFilter from './keyword-filter';
-import userEvent from '@testing-library/user-event';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
@@ -39,9 +38,11 @@ describe('keyword-filter', () => {
       { wrapper: themeProvider }
     );
 
-    userEvent.click(screen.getByPlaceholderText('testPlaceholder'));
-    userEvent.keyboard('new value');
-    userEvent.tab();
+    const el = screen.getByPlaceholderText('testPlaceholder');
+
+    fireEvent.click(el);
+    fireEvent.change(el, { target: { value: 'new value' } });
+    fireEvent.focusOut(el);
 
     expect(mockRouter.query.q).toBe('new value');
   });
@@ -56,29 +57,29 @@ describe('keyword-filter', () => {
 
     const input = screen.getByLabelText('testTitle');
 
-    userEvent.click(input);
-    userEvent.keyboard('>');
-    userEvent.tab();
+    fireEvent.click(input);
+    fireEvent.change(input, { target: { value: '>' } });
+    fireEvent.focusOut(input);
 
     expect(mockRouter.query.q).toBeUndefined();
 
-    userEvent.click(input);
-    userEvent.keyboard('<');
-    userEvent.tab();
+    fireEvent.click(input);
+    fireEvent.change(input, { target: { value: '<' } });
+    fireEvent.focusOut(input);
 
     expect(mockRouter.query.q).toBeUndefined();
 
-    userEvent.clear(input);
+    fireEvent.change(input, { target: { value: '' } });
 
-    userEvent.click(input);
-    userEvent.keyboard('test value');
-    userEvent.tab();
+    fireEvent.click(input);
+    fireEvent.change(input, { target: { value: 'test value' } });
+    fireEvent.focusOut(input);
 
     expect(mockRouter.query.q).toBe('test value');
 
-    userEvent.click(input);
-    userEvent.keyboard('>');
-    userEvent.tab();
+    fireEvent.click(input);
+    fireEvent.change(input, { target: { value: '>' } });
+    fireEvent.focusOut(input);
 
     expect(mockRouter.query.q).toBe('test value');
     expect(

@@ -15,12 +15,14 @@ import {
   getVocabulary,
   getRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
+import { wrapper } from '@app/store';
 
 interface NewCollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
 export default function NewConcept(props: NewCollectionPageProps) {
+  wrapper.useHydration(props);
   const { t } = useTranslation('admin');
   const { query } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;

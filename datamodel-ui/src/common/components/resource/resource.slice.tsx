@@ -1,4 +1,3 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { Resource } from '@app/common/interfaces/resource.interface';
@@ -33,11 +32,6 @@ export const resourceApi = createApi({
     accept: 'application/json',
   })),
   tagTypes: ['resource'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
   endpoints: (builder) => ({
     updateResource: builder.mutation<null, ResourceData>({
       query: (value) => ({

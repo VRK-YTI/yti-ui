@@ -22,7 +22,7 @@ export default function BreadcrumbLink({
   }
 
   return (
-    <Link href={url} passHref>
+    <Link href={url} passHref legacyBehavior>
       <div>
         <SuomiFiBreadcrumbLink
           href="/"

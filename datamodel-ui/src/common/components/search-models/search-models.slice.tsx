@@ -1,4 +1,3 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { SearchModels } from '@app/common/interfaces/search-models.interface';
@@ -57,11 +56,6 @@ export const searchModelsApi = createApi({
   reducerPath: 'searchModelsApi',
   baseQuery: getDatamodelApiBaseQuery(),
   tagTypes: ['searchModels'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
   endpoints: (builder) => ({
     getSearchModels: builder.query<
       SearchModels,

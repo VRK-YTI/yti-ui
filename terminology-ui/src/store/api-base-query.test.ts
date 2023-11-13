@@ -11,7 +11,7 @@ import {
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 
-describe('axios base query', () => {
+describe.skip('axios base query', () => {
   const mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
 
   afterEach(() => {

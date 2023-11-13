@@ -1,17 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { Concept } from '@app/common/interfaces/concept.interface';
-import { HYDRATE } from 'next-redux-wrapper';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
 
 export const conceptApi = createApi({
   reducerPath: 'conceptAPI',
   baseQuery: getTerminologyApiBaseQuery(),
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
   tagTypes: ['Concept'],
   endpoints: (builder) => ({
     getConcept: builder.query<

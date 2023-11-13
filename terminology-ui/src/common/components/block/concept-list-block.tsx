@@ -29,6 +29,7 @@ export default function ConceptListBlock({
             <Link
               href={`/terminology/${concept.identifier.type.graph.id}/concept/${concept.id}`}
               passHref
+              legacyBehavior
             >
               <SuomiLink href="">
                 <PropertyValue

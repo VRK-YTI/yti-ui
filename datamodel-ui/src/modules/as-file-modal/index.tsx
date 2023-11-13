@@ -82,6 +82,7 @@ export default function AsFileModal({
           <Link
             href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&raw=true${versionParam}`}
             passHref
+            legacyBehavior
             download
           >
             <SuomiLink target="_blank" href="">
@@ -124,6 +125,7 @@ export default function AsFileModal({
           <Link
             href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&filename=${filename}${versionParam}`}
             passHref
+            legacyBehavior
           >
             <SuomiLink href="">
               <Button id="download-button">{t('download')}</Button>

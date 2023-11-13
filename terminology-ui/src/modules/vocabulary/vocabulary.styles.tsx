@@ -19,15 +19,15 @@ export const ResultAndFilterContainer = styled.div`
 
 export const ResultAndStatsWrapper = styled.div`
   position: relative;
-  display: flex,
+  display: flex;
   flex-direction: column;
   width: 100%;
 `;
 
-export const QuickActionsWrapper = styled.div<{ isSmall?: boolean }>`
+export const QuickActionsWrapper = styled.div<{ $isSmall?: boolean }>`
   width: 100%;
   display: flex;
-  flex-direction: ${(props) => (props.isSmall ? 'column' : 'row')};
+  flex-direction: ${(props) => (props.$isSmall ? 'column' : 'row')};
 
   gap: ${(props) => props.theme.suomifi.spacing.xs};
   & :nth-child(1) {

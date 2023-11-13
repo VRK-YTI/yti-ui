@@ -16,7 +16,6 @@ import { InternalResourcesSearchParams } from '../search-internal-resources/sear
 import ResourceList, { ResultType } from '../resource-list';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import { compareLocales } from '@app/common/utils/compare-locals';
-import { Status } from '@app/common/interfaces/status.interface';
 import {
   inUseStatusList,
   notInUseStatusList,
@@ -137,7 +136,7 @@ export default function MultiColumnSearch({
 
   const handleSearchChange = (
     key: keyof InternalResourcesSearchParams,
-    value: typeof searchParams[keyof InternalResourcesSearchParams]
+    value: (typeof searchParams)[keyof InternalResourcesSearchParams]
   ) => {
     if (key === 'groups' && isEqual(value, ['-1'])) {
       setSearchParams({ ...searchParams, [key]: [] });

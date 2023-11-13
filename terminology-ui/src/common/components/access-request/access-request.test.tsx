@@ -1,16 +1,12 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
+import { fireEvent, screen } from '@testing-library/react';
 import AccessRequest from '.';
-import { makeStore } from '../../../store';
-import { getMockContext, themeProvider } from '../../../tests/test-utils';
-import { setLogin, initialState } from '../login/login.slice';
+import { initialState } from '../login/login.slice';
+import { renderWithProviders } from '@app/tests/test-utils';
+import { accessRequestApi } from './access-request.slice';
 
 describe('access-request', () => {
-  let appRoot: HTMLDivElement | null = null;
-
   beforeEach(() => {
-    appRoot = document.createElement('div');
+    const appRoot = document.createElement('div');
     appRoot.setAttribute('id', '__next');
     document.body.appendChild(appRoot);
   });
@@ -37,44 +33,42 @@ describe('access-request', () => {
   ];
 
   it('should render component', async () => {
-    const store = makeStore(getMockContext());
+    renderWithProviders(<AccessRequest organizations={organizations} />, [
+      accessRequestApi,
+    ]);
 
-    render(
-      <Provider store={store}>
-        <AccessRequest organizations={organizations} />
-      </Provider>,
-      { wrapper: themeProvider }
-    );
+    fireEvent.click(screen.getByText('tr-access-request-access'));
 
-    userEvent.click(screen.getByText('tr-access-request-access'));
     const el = await screen.findByText('tr-access-pick-org');
     expect(el).toBeInTheDocument();
+
     expect(screen.getByText(/tr-access-terminology/)).toBeInTheDocument();
     expect(screen.getByText(/tr-access-reference-data/)).toBeInTheDocument();
     expect(screen.getByText(/tr-access-data-vocabularies/)).toBeInTheDocument();
   });
 
   it('should mark checkboxes if user already has role', async () => {
-    const store = makeStore(getMockContext());
     const loginInitialState = Object.assign({}, initialState);
     loginInitialState['rolesInOrganizations'] = {
       '123123-321321': ['TERMINOLOGY_EDITOR'],
     };
-    store.dispatch(setLogin(loginInitialState));
 
-    render(
-      <Provider store={store}>
-        <AccessRequest organizations={organizations} />
-      </Provider>,
-      { wrapper: themeProvider }
+    renderWithProviders(
+      <AccessRequest organizations={organizations} />,
+      [accessRequestApi],
+      {
+        preloadedState: {
+          login: loginInitialState,
+        },
+      }
     );
 
-    userEvent.click(screen.getByText('tr-access-request-access'));
+    fireEvent.click(screen.getByText('tr-access-request-access'));
     const el = await screen.findAllByText('tr-access-pick-org');
-    userEvent.click(el[0]);
-    userEvent.click(screen.getByText('Test-org'));
-    userEvent.click(screen.getByText('tr-access-terminology'));
-    userEvent.click(screen.getByText('tr-access-send-request'));
+    fireEvent.click(el[0]);
+    fireEvent.click(screen.getByText('Test-org'));
+    fireEvent.click(screen.getByText('tr-access-terminology'));
+    fireEvent.click(screen.getByText('tr-access-send-request'));
     expect(
       screen.getByText(/tr-access-request-already-sent/)
     ).toBeInTheDocument();

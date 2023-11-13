@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Layout from '@app/common/components/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
@@ -19,13 +19,44 @@ import {
 } from '@app/common/components/counts/counts.slice';
 import PageHead from 'yti-common-ui/page-head';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
+import { useStoreDispatch, wrapper } from '@app/store';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '@app/common/components/login/login.slice';
+import { setAlert } from '@app/common/components/alert/alert.slice';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
 export default function IndexPage(props: IndexPageProps) {
+  wrapper.useHydration(props);
+
   const { t } = useTranslation('common');
+
+  const login = useSelector(selectLogin());
+  const dispatch = useStoreDispatch();
+
+  useEffect(() => {
+    if (!login.anonymous) {
+      window.localStorage.setItem('user-signed', 'true');
+    } else if (login.anonymous && window.localStorage.getItem('user-signed')) {
+      window.localStorage.removeItem('user-signed');
+      dispatch(
+        setAlert(
+          [
+            {
+              note: {
+                status: 0,
+                data: 'logged-out',
+              },
+              displayText: t('logged-out'),
+            },
+          ],
+          []
+        )
+      );
+    }
+  }, [dispatch, login, t]);
 
   return (
     <CommonContextProvider value={props}>

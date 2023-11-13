@@ -20,6 +20,7 @@ import {
 import Layout from '@app/common/components/layout';
 import EditCollection from '@app/modules/edit-collection';
 import { SSRConfig } from 'next-i18next';
+import { wrapper } from '@app/store';
 
 interface CollectionEditPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -34,6 +35,8 @@ interface CollectionEditPageProps extends CommonContextState {
 }
 
 export default function CollectionEdit(props: CollectionEditPageProps) {
+  wrapper.useHydration(props);
+
   return (
     <CommonContextProvider value={props}>
       <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
