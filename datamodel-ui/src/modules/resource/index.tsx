@@ -188,7 +188,7 @@ export default function ResourceView({
   };
 
   const handleFollowUp = (value?: UriData) => {
-    dispatch(initializeResource(type, languages, value, applicationProfile));
+    dispatch(initializeResource(type, value, applicationProfile));
 
     setView(
       type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',

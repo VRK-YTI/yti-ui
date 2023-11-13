@@ -20,15 +20,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { IconArrowLeft } from 'suomifi-icons';
 import {
-  Block,
   Button,
   Dropdown,
   DropdownItem,
-  Label,
   Text,
   TextInput,
   Textarea,
-  ToggleInput,
 } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
@@ -42,6 +39,7 @@ import {
   selectHasChanges,
   setHasChanges,
   setSelected,
+  setUpdateVisualization,
 } from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
 import getApiError from '@app/common/utils/get-api-errors';
@@ -318,6 +316,7 @@ export default function ResourceForm({
           data.type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
         }/${data.identifier}`
       );
+      dispatch(setUpdateVisualization(true));
     }
 
     if (

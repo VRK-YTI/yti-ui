@@ -17,22 +17,23 @@ import {
 import { useStoreDispatch } from '@app/store';
 import {
   resetHighlighted,
-  selectDisplayLang,
   selectModelTools,
   selectResetPosition,
   selectSavePosition,
   selectSelected,
+  selectUpdateVisualization,
   setHighlighted,
   setResetPosition,
   setSavePosition,
   setSelected,
+  setUpdateVisualization,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
 import { ClassNode, CornerNode, ExternalNode, AttributeNode } from './nodes';
 import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
 import { ClearArrow } from './marker-ends';
-import convertToNodes from './utils/convert-to-nodes';
+import convertToNodes, { updateNodes } from './utils/convert-to-nodes';
 import createCornerNode from './utils/create-corner-node';
 import convertToEdges from './utils/convert-to-edges';
 import generatePositionsPayload from './utils/generate-positions-payload';
@@ -49,7 +50,6 @@ import { ReferenceType } from '@app/common/interfaces/visualization.interface';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import GraphNotification from './graph-notification';
 import { selectLogin } from '@app/common/components/login/login.slice';
-import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 
 interface GraphProps {
   modelId: string;
@@ -67,23 +67,22 @@ const GraphContent = ({
   organizationIds,
   children,
 }: GraphProps) => {
-  const { t, i18n } = useTranslation('common');
+  const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
-  const { enableConfirmation, disableConfirmation } =
-    useConfirmBeforeLeavingPage('disabled');
   const dispatch = useStoreDispatch();
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const { project, getZoom } = useReactFlow();
   const globalSelected = useSelector(selectSelected());
-  const displayLang = useSelector(selectDisplayLang());
   const savePosition = useSelector(selectSavePosition());
   const resetPosition = useSelector(selectResetPosition());
+  const updateVisualization = useSelector(selectUpdateVisualization());
   const tools = useSelector(selectModelTools());
   const user = useSelector(selectLogin());
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
@@ -99,11 +98,17 @@ const GraphContent = ({
     }),
     []
   );
-  const { data, isSuccess, refetch } = useGetVisualizationQuery({
+  const { data, isFetching, isSuccess, refetch } = useGetVisualizationQuery({
     modelid: modelId,
     version: version,
   });
   const [putPositions, result] = usePutPositionsMutation();
+
+  const refetchNodes = useCallback(() => {
+    setFetching(true);
+    refetch();
+    setHasChanges(false);
+  }, [refetch]);
 
   const deleteNodeById = useCallback(
     (id: string) => {
@@ -213,9 +218,8 @@ const GraphContent = ({
         edge.referenceType
       );
       setHasChanges(true);
-      enableConfirmation();
     },
-    [dispatch, globalSelected.id, splitEdge, enableConfirmation]
+    [dispatch, globalSelected.id, splitEdge]
   );
 
   const onNodeMouseEnter = useCallback(
@@ -273,55 +277,94 @@ const GraphContent = ({
     dispatch(resetHighlighted());
   }, [dispatch, globalSelected, edges, nodes]);
 
+  const setNodePositions = useCallback(() => {
+    if (!data) {
+      return;
+    }
+    setNodes(
+      convertToNodes(
+        data.nodes,
+        data.hiddenNodes,
+        modelId,
+        deleteNodeById,
+        applicationProfile,
+        applicationProfile ? refetchNodes : undefined,
+        organizationIds
+      )
+    );
+    setEdges(
+      convertToEdges(data.nodes, data.hiddenNodes, t, applicationProfile)
+    );
+
+    if (resetPosition) {
+      dispatch(setResetPosition(false));
+      setHasChanges(false);
+    }
+  }, [
+    applicationProfile,
+    data,
+    deleteNodeById,
+    dispatch,
+    modelId,
+    organizationIds,
+    refetchNodes,
+    resetPosition,
+    setEdges,
+    setNodes,
+    t,
+  ]);
+
   const nodeDragStop = useCallback(
     (_: React.MouseEvent, node: Node) => {
       if (!user.anonymous && node.dragging) {
         setHasChanges(true);
-        enableConfirmation();
       }
     },
-    [user, enableConfirmation]
+    [user]
   );
 
   useEffect(() => {
-    if (isSuccess || (isSuccess && resetPosition)) {
-      setNodes(
-        convertToNodes(
-          data.nodes,
-          data.hiddenNodes,
-          modelId,
-          deleteNodeById,
-          applicationProfile,
-          applicationProfile ? refetch : undefined,
-          organizationIds
-        )
-      );
-      setEdges(
-        convertToEdges(data.nodes, data.hiddenNodes, t, applicationProfile)
-      );
-
-      if (resetPosition) {
-        dispatch(setResetPosition(false));
-        setHasChanges(false);
-        disableConfirmation();
+    if (fetching && isSuccess && !isFetching) {
+      setFetching(false);
+      if (updateVisualization) {
+        setNodes(
+          updateNodes(
+            nodes,
+            data.nodes,
+            data.hiddenNodes,
+            modelId,
+            deleteNodeById,
+            applicationProfile,
+            refetchNodes,
+            organizationIds
+          )
+        );
+        setEdges(
+          convertToEdges(data.nodes, data.hiddenNodes, t, applicationProfile)
+        );
+        dispatch(setUpdateVisualization(false));
+      } else {
+        setNodePositions();
       }
     }
   }, [
-    data,
+    fetching,
     isSuccess,
-    setNodes,
-    setEdges,
-    i18n.language,
-    displayLang,
-    resetPosition,
-    dispatch,
+    setNodePositions,
     applicationProfile,
-    modelId,
-    refetch,
+    data,
     deleteNodeById,
+    dispatch,
+    modelId,
+    nodes,
     organizationIds,
+    refetchNodes,
+    resetPosition,
+    setEdges,
+    setNodes,
     t,
-    disableConfirmation,
+    isFetching,
+    updateVisualization,
   ]);
 
   useEffect(() => {
@@ -340,7 +383,6 @@ const GraphContent = ({
 
       if (hasChanges) {
         setHasChanges(false);
-        disableConfirmation();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -398,6 +440,18 @@ const GraphContent = ({
       setCleanUnusedCorners(false);
     }
   }, [cleanUnusedCorners, edges, nodes, setNodes]);
+
+  useEffect(() => {
+    if (updateVisualization) {
+      refetchNodes();
+    }
+  }, [updateVisualization, refetchNodes, dispatch]);
+
+  useEffect(() => {
+    if (resetPosition) {
+      setNodePositions();
+    }
+  }, [resetPosition, setNodePositions]);
 
   return (
     <FlowWrapper ref={reactFlowWrapper} $isSmall={isSmall}>

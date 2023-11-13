@@ -147,12 +147,7 @@ export default function ClassView({
 
     dispatch(
       setClass(
-        internalClassToClassForm(
-          value,
-          languages,
-          applicationProfile,
-          targetIsAppProfile
-        )
+        internalClassToClassForm(value, applicationProfile, targetIsAppProfile)
       )
     );
 
@@ -177,7 +172,6 @@ export default function ClassView({
       setClass(
         internalClassToClassForm(
           data.value,
-          languages,
           applicationProfile,
           data.targetIsAppProfile,
           data.associations,

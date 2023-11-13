@@ -31,6 +31,40 @@ const getNodeByType = (
   }
 };
 
+export function updateNodes(
+  oldNodes: Node[],
+  newNodes: VisualizationType[],
+  newHiddenNodes: VisualizationHiddenNode[],
+  modelId: string,
+  handleNodeDelete: (id: string) => void,
+  applicationProfile?: boolean,
+  refetch?: () => void,
+  organizationIds?: string[]
+): Node[] {
+  const mappedNodes = convertToNodes(
+    newNodes,
+    newHiddenNodes,
+    modelId,
+    handleNodeDelete,
+    applicationProfile,
+    refetch,
+    organizationIds
+  );
+
+  mappedNodes.forEach((node) => {
+    const oldNode = oldNodes.find((oldNode) => oldNode.id === node.id);
+    if (oldNode) {
+      node.position = oldNode.position;
+    }
+  });
+
+  const filteredNodes = oldNodes.filter((node) => {
+    return !mappedNodes.some((mappedNode) => mappedNode.id === node.id);
+  });
+
+  return [...mappedNodes, ...filteredNodes];
+}
+
 export default function convertToNodes(
   nodes: VisualizationType[],
   hiddenNodes: VisualizationHiddenNode[],
