@@ -55,7 +55,6 @@ import {
 import ResourcePicker from '../resource-picker-modal';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 import { getPrefixFromURI } from '@app/common/utils/get-value';
-import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import {
   IDENTIFIER_MAX,
   TEXT_AREA_MAX,
@@ -329,9 +328,6 @@ export default function ClassForm({
   useEffect(() => {
     if (updateResult.isSuccess || createResult.isSuccess) {
       handleFollowUp(data.identifier);
-      dispatch(
-        setNotification(updateResult.isSuccess ? 'CLASS_EDIT' : 'CLASS_ADD')
-      );
       dispatch(setUpdateVisualization(true));
     }
 

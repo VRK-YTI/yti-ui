@@ -22,7 +22,6 @@ import LinkedModel from '../linked-model';
 import LinkedItem from './linked-item';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
-import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 
 export default function LinkedDataForm({
@@ -90,7 +89,6 @@ export default function LinkedDataForm({
     if (result.isSuccess) {
       setUserPosted(false);
       handleReturn();
-      dispatch(setNotification('LINK_EDIT'));
     }
   }, [result, dispatch, handleReturn]);
 

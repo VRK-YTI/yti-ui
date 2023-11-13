@@ -51,7 +51,6 @@ import AssociationRestrictions from './components/association-restrictions';
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import ResourceModal from '../resource-modal';
 import useSetView from '@app/common/utils/hooks/use-set-view';
-import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import { UriData } from '@app/common/interfaces/uri.interface';
@@ -274,22 +273,6 @@ export default function ResourceForm({
       (toggleResult.isSuccess ||
         (toggleResult.isUninitialized && inUse === inUseResult))
     ) {
-      switch (data.type) {
-        case ResourceType.ATTRIBUTE:
-          dispatch(
-            setNotification(
-              updateResult.isSuccess ? 'ATTRIBUTE_EDIT' : 'ATTRIBUTE_ADD'
-            )
-          );
-          break;
-        case ResourceType.ASSOCIATION:
-          dispatch(
-            setNotification(
-              updateResult.isSuccess ? 'ASSOCIATION_EDIT' : 'ASSOCIATION_ADD'
-            )
-          );
-      }
-
       if (handleFollowUp) {
         handleFollowUp(data.identifier, data.type);
         return;

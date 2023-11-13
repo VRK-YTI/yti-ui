@@ -474,40 +474,10 @@ export function translateNotification(
       return applicationProfile
         ? t('profile-added', { ns: 'admin' })
         : t('library-added', { ns: 'admin' });
-    case 'MODEL_EDIT':
-      return applicationProfile
-        ? t('profile-edited', { ns: 'admin' })
-        : t('library-edited', { ns: 'admin' });
-    case 'ASSOCIATION_ADD':
-      return applicationProfile
-        ? t('association-restriction-added', { ns: 'admin' })
-        : t('association-added', { ns: 'admin' });
-    case 'ASSOCIATION_EDIT':
-      return applicationProfile
-        ? t('association-restriction-edited', { ns: 'admin' })
-        : t('association-edited', { ns: 'admin' });
-    case 'ATTRIBUTE_ADD':
-      return applicationProfile
-        ? t('attribute-restriction-added', { ns: 'admin' })
-        : t('attribute-added', { ns: 'admin' });
-    case 'ATTRIBUTE_EDIT':
-      return applicationProfile
-        ? t('attribute-restriction-edited', { ns: 'admin' })
-        : t('attribute-edited', { ns: 'admin' });
-    case 'CLASS_ADD':
-      return applicationProfile
-        ? t('class-restriction-added', { ns: 'admin' })
-        : t('class-added', { ns: 'admin' });
-    case 'CLASS_EDIT':
-      return applicationProfile
-        ? t('class-restriction-edited', { ns: 'admin' })
-        : t('class-edited', { ns: 'admin' });
-    case 'DOCUMENTATION_EDIT':
-      return t('documentation-edited', { ns: 'admin' });
-    case 'LINK_EDIT':
-      return t('link-edited', { ns: 'admin' });
     case 'POSITION_SAVE':
       return t('position-saved', { ns: 'admin' });
+    case 'VERSION_RELEASED':
+      return t('version-released', { ns: 'admin' });
     default:
       return '';
   }

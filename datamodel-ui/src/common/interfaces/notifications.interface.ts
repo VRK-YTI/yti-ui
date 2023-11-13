@@ -6,13 +6,5 @@ export type NotificationType = {
 
 export type NotificationKeys =
   | 'MODEL_ADD'
-  | 'MODEL_EDIT'
-  | 'LINK_EDIT'
-  | 'CLASS_ADD'
-  | 'CLASS_EDIT'
-  | 'ASSOCIATION_ADD'
-  | 'ASSOCIATION_EDIT'
-  | 'ATTRIBUTE_ADD'
-  | 'ATTRIBUTE_EDIT'
-  | 'DOCUMENTATION_EDIT'
-  | 'POSITION_SAVE';
+  | 'POSITION_SAVE'
+  | 'VERSION_RELEASED';

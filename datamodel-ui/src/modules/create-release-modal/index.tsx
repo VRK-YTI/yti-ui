@@ -20,6 +20,8 @@ import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { useCreateReleaseMutation } from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
 import getApiError from '@app/common/utils/get-api-errors';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { useStoreDispatch } from '@app/store';
 
 interface CreateReleaseModalProps {
   hide: () => void;
@@ -40,6 +42,7 @@ export default function CreateReleaseModal({
   const [userPosted, setUserPosted] = useState(false);
   const [versionError, setVersionError] = useState(false);
   const [createRelease, createReleaseResult] = useCreateReleaseMutation();
+  const dispatch = useStoreDispatch();
 
   const handleReleaseVersionChange = (e: string) => {
     if (e.match(/[0-9]+\.[0-9]+\.[0-9]+/)) {
@@ -80,12 +83,14 @@ export default function CreateReleaseModal({
         query: { ver: releaseVersion },
       });
       handleClose();
+      dispatch(setNotification('VERSION_RELEASED'));
     }
 
     if (createReleaseResult.isError) {
       setUserPosted(false);
     }
   }, [
+    dispatch,
     userPosted,
     createReleaseResult,
     handleClose,

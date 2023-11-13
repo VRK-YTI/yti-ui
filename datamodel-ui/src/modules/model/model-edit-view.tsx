@@ -28,7 +28,6 @@ import { FormUpdateErrors, validateFormUpdate } from './validate-form-update';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
 import { v4 } from 'uuid';
-import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 
 interface ModelEditViewProps {
@@ -81,7 +80,6 @@ export default function ModelEditView({
   useEffect(() => {
     if (result.isSuccess || versionedResult.isSuccess) {
       handleSuccess();
-      dispatch(setNotification('MODEL_EDIT'));
     }
   }, [result, versionedResult, dispatch, handleSuccess]);
 
