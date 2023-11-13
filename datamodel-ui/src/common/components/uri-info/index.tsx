@@ -11,7 +11,11 @@ interface UriInfoProps {
 }
 
 export function getEnvParam(uri?: string) {
-  if (!uri || uri.indexOf('uri.suomi.fi') === -1) {
+  if (
+    !uri ||
+    uri.indexOf('uri.suomi.fi') === -1 ||
+    typeof window === 'undefined'
+  ) {
     return '';
   }
 

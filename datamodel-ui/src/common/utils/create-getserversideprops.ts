@@ -110,7 +110,7 @@ export function createCommonGetServerSideProps<
 
         return {
           ...results,
-          redirect: redirectProp,
+          ...(redirectProp && { redirect: redirectProp }),
           props: {
             ...resultsProps,
             ...(await serverSideTranslations(locale ?? 'fi', [

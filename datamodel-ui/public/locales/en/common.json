@@ -7,6 +7,7 @@
   "actions": "Actions",
   "add-email-subscription": "Add email subscription",
   "allowed-values": "Allowed values",
+  "an-error-occured-while-fetching-resource": "An error occured while fetching resource.",
   "association": "Association",
   "association-count-title_one": "{{count}} Association",
   "association-count-title_other": "{{count}} Associations",
@@ -286,5 +287,6 @@
   "vocabulary-info-sv": "",
   "vocabulary-results-more": "",
   "working-version": "Working version",
-  "yes": "Yes"
+  "yes": "Yes",
+  "you-can-try-to-reload-the-page-or-the-resource-does-not-exist": "You can try to reload the page or the resource does not exist."
 }

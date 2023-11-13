@@ -45,9 +45,7 @@ export default function Drawer({ views }: SideNavigationProps) {
   const router = useRouter();
   const currentView = useSelector(selectCurrentViewName());
   const [activeView, setActiveView] = useState<ViewType | undefined>(
-    isSmall
-      ? views.find((v) => v.id === 'graph')
-      : views.find((v) => v.id === 'info')
+    views.find((v) => v.id === currentView)
   );
   const { setView } = useSetView();
 

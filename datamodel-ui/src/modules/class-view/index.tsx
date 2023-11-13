@@ -42,6 +42,7 @@ import ClassInfo from './class-info';
 import useSetView from '@app/common/utils/hooks/use-set-view';
 import useSetPage from '@app/common/utils/hooks/use-set-page';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
+import ResourceError from '@app/common/components/resource-error';
 
 interface ClassViewProps {
   modelId: string;
@@ -97,6 +98,7 @@ export default function ClassView({
   const {
     data: classData,
     isSuccess,
+    isError: classIsError,
     refetch: refetchData,
   } = useGetClassQuery(
     {
@@ -342,6 +344,10 @@ export default function ClassView({
   function renderClass() {
     if (!view.info) {
       return <></>;
+    }
+
+    if (classIsError) {
+      return <ResourceError handleReturn={handleReturn} />;
     }
 
     return (

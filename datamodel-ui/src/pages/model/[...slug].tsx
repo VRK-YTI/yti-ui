@@ -148,14 +148,26 @@ export const getServerSideProps = createCommonGetServerSideProps(
     );
     await Promise.all(store.dispatch(getVisualizationRunningQueriesThunk()));
 
-    const model = store.getState().modelApi.queries[`getModel("${modelId}")`]
-      ?.data as ModelType | undefined | null;
+    const model = store.getState().modelApi.queries[
+      `getModel({"modelId":"${modelId}"${
+        version ? `,"version":"${version}"` : ''
+      }})`
+    ]?.data as ModelType | undefined | null;
+
+    if (!model) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: '/404',
+        },
+      };
+    }
 
     if (query.lang) {
       store.dispatch(
         setDisplayLang(Array.isArray(query.lang) ? query.lang[0] : query.lang)
       );
-    } else if (model?.languages && !model.languages.includes(locale ?? 'fi')) {
+    } else if (model.languages && !model.languages.includes(locale ?? 'fi')) {
       store.dispatch(
         setDisplayLang(
           [...model.languages].sort((a, b) => compareLocales(a, b))[0]
@@ -182,7 +194,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       const resourceType = query.slug[1];
       const resourceId = query.slug[2];
 
-      const modelType = model?.type;
+      const modelType = model.type;
 
       if (resourceType === 'class') {
         store.dispatch(setView('classes', 'info'));
