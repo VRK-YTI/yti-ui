@@ -44,8 +44,8 @@ export default function Drawer({ views }: SideNavigationProps) {
   const hasChanges = useSelector(selectHasChanges());
   const router = useRouter();
   const currentView = useSelector(selectCurrentViewName());
-  const [activeView, setActiveView] = useState<ViewType | undefined>(
-    views.find((v) => v.id === currentView)
+  const [activeView, setActiveView] = useState<ViewType>(
+    views.find((v) => v.id === currentView) as ViewType
   );
   const { setView } = useSetView();
 
