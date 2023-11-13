@@ -2,7 +2,6 @@ import {
   CommonContextProvider,
   CommonContextState,
 } from 'yti-common-ui/common-context-provider';
-import Layout from 'yti-common-ui/layout/layout';
 import { SSRConfig } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import PageHead from 'yti-common-ui/page-head';
@@ -50,16 +49,20 @@ import { compareLocales } from '@app/common/utils/compare-locals';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { wrapper } from '@app/store';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import Layout from '@app/common/components/layout';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
   modelId: string;
+  title?: string;
+  description?: string;
 }
 
 export default function ModelPage(props: IndexPageProps) {
   wrapper.useHydration(props);
 
-  const { query } = useRouter();
+  const { query, asPath } = useRouter();
   const version = getSlugAsString(query.ver);
   const { data } = useGetModelQuery({
     modelId: props.modelId,
@@ -76,7 +79,12 @@ export default function ModelPage(props: IndexPageProps) {
         headerHidden={fullScreen}
         langPickerHidden={true}
       >
-        <PageHead baseUrl="https://tietomallit.suomi.fi" />
+        <PageHead
+          baseUrl="https://tietomallit.suomi.fi"
+          title={props.title ?? ''}
+          description={props.description ?? ''}
+          path={asPath}
+        />
 
         <Model modelId={props.modelId} fullScreen={fullScreen} />
       </Layout>
@@ -241,9 +249,20 @@ export const getServerSideProps = createCommonGetServerSideProps(
       store.dispatch(setDisplayLang(query.lang as string));
     }
 
+    const title = getLanguageVersion({
+      data: model.label,
+      lang: locale ?? 'fi',
+    });
+    const description = getLanguageVersion({
+      data: model.description,
+      lang: locale ?? 'fi',
+    });
+
     return {
       props: {
         modelId: modelId,
+        title: title,
+        description: description,
       },
     };
   }
