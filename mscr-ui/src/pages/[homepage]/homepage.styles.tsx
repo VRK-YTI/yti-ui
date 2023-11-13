@@ -11,3 +11,6 @@ export const TableAndSidebarWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
   //   max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
   padding: ${(props) => props.theme.suomifi.spacing.m};
 `;
+export default function Temp() {
+  return <>{/* nothing */}</>;
+}
