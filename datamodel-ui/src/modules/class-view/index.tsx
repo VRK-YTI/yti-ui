@@ -201,11 +201,11 @@ export default function ClassView({
 
   const handleFollowUp = (classId: string) => {
     setView('classes', 'info', classId);
-    dispatch(setSelected(classId, 'classes'));
+    dispatch(setSelected(classId, 'classes', modelId));
   };
 
   const handleActive = (classId: string) => {
-    dispatch(setSelected(classId, 'classes'));
+    dispatch(setSelected(classId, 'classes', modelId));
     dispatch(resetHovered());
   };
 

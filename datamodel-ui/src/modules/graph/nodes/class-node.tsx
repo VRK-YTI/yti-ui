@@ -70,7 +70,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
 
   const handleTitleClick = () => {
     if (globalSelected.id !== id) {
-      dispatch(setSelected(id, 'classes'));
+      dispatch(setSelected(id, 'classes', data.modelId));
     }
   };
 
@@ -104,7 +104,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
         applicationProfile: true,
       });
     } else {
-      dispatch(setSelected(id, 'classes'));
+      dispatch(setSelected(id, 'classes', data.modelId));
       dispatch(initializeResource(value.type, value.uriData, true));
       dispatch(setAddResourceRestrictionToClass(true));
     }
@@ -117,7 +117,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
     const resourceType =
       type === ResourceType.ASSOCIATION ? 'associations' : 'attributes';
     setView(resourceType, 'info', id);
-    dispatch(setSelected(id, resourceType));
+    dispatch(setSelected(id, resourceType, data.modelId));
   };
 
   const handleResourceHover = (

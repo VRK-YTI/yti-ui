@@ -206,7 +206,7 @@ const GraphContent = ({
   const onEdgeClick = useCallback(
     (e, edge) => {
       if (edge.data.identifier && globalSelected.id !== edge.data.identifier) {
-        dispatch(setSelected(edge.data.identifier, 'associations'));
+        dispatch(setSelected(edge.data.identifier, 'associations', modelId));
         return;
       }
 
@@ -219,7 +219,7 @@ const GraphContent = ({
       );
       setHasChanges(true);
     },
-    [dispatch, globalSelected.id, splitEdge]
+    [dispatch, globalSelected.id, modelId, splitEdge]
   );
 
   const onNodeMouseEnter = useCallback(

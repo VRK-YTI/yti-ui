@@ -33,7 +33,7 @@ export default function AttributeNode({ id, data }: AttributeNodeProps) {
 
   const handleResourceClick = (id: string) => {
     setView('attributes', 'info', id);
-    dispatch(setSelected(id, 'attributes'));
+    dispatch(setSelected(id, 'attributes', data.modelId));
   };
 
   const label = tools.showById
