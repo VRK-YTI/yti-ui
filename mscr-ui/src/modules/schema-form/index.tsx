@@ -25,6 +25,9 @@ import { Paragraph } from 'suomifi-ui-components';
 import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 import { translateFileUploadError } from '@app/common/utils/translation-helpers copy';
 import FileDropArea from 'yti-common-ui/file-drop-area';
+import FileUpload from '@app/common/components/update-with-file-modal/file-upload';
+import { ImportDescriptionBlock } from '@app/common/components/update-with-file-modal/update-with-file-modal.styles';
+import { Format } from '@app/common/interfaces/format.interface';
 
 interface SchemaFormProps {
   formData: SchemaFormType;
@@ -72,12 +75,6 @@ export default function SchemaForm({
       <Paragraph style={{ marginBottom: '30px' }}>
         {'or Upload a document'}
       </Paragraph>
-      <FileDropArea
-        setFileData={setFileData}
-        setIsValid={setIsValid}
-        validFileTypes={['csv', 'json']}
-        translateFileUploadError={translateFileUploadError}
-      />
       {renderSchemaFormat()}
       {renderLanguages()}
 
@@ -91,8 +88,24 @@ export default function SchemaForm({
 
   function renderSchemaFormat() {
     return (
-      <div>
-        <TextInput labelText={'Format'} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <Dropdown
+          labelText={'Format'}
+          defaultValue={'JSONSCHEMA'}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              format: e,
+            })
+          }
+        >
+          <DropdownItem value={'JSONSCHEMA'}>
+            {'JSON'}
+          </DropdownItem>
+          <DropdownItem value={'CSVSCHEMA'}>
+            {'CSV'}
+          </DropdownItem>
+        </Dropdown>
       </div>
     );
   }
@@ -100,7 +113,13 @@ export default function SchemaForm({
   function renderURI() {
     return (
       <div>
-        <TextInput labelText={'Add URI'} />
+        <TextInput labelText={'Add URI'}
+         onChange={(e) =>
+          setFormData({
+            ...formData,
+            uri:e,
+          })
+        }/>
       </div>
     );
   }

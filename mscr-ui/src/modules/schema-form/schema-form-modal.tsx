@@ -77,14 +77,20 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       return;
     }
 
+    console.log(formData);
+   
+
     const errors = validateForm(formData);
     setErrors(errors);
-
+    
+    
     if (Object.values(errors).includes(true)) {
       return;
     }
-
+   
     const payload = generatePayload(formData);
+    console.log(payload);
+
     // Here formdata should also contain the file, need modification
     putSchema(payload);
   };
@@ -93,8 +99,9 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
     if (!userPosted) {
       return;
     }
-    const errors = validateForm(formData);
-    setErrors(errors);
+    //const errors = validateForm(formData);
+    //setErrors(errors);
+    //console.log(errors);
   }, [userPosted, formData]);
 
   // Need to add action type create_schema

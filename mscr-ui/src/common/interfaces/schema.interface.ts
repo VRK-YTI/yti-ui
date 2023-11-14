@@ -1,23 +1,22 @@
 export interface Schema {
-  onClick(): void;
-  onMouseEnter: any;
-  onMouseLeave: any;
-  pid: string;
-  format: string;
-  status: string;
-  label: {
+  namespace?: string;
+  pid?: string;
+  format?: string;
+  status?: string;
+  label?: {
     [key: string]: string;
   };
   description: {
     [key: string]: string;
   };
-  languages: string[];
+  languages?: string[];
   organizations: Organization[];
-  filedata: File;
-  prefix: string;
-  revision: string;
-  visibilty: string;
-  created: string;
+  filedata?: File;
+  prefix?: string;
+  revision?: string;
+  visibilty?: string;
+  created?: string;
+  uri?: string;
 }
 export interface Organization {
   id: string;
@@ -25,15 +24,18 @@ export interface Organization {
   label: { [key: string]: string };
 }
 
-export interface SchemaFormType {
+export interface SchemaFormType{
+  namespace?: string;
   contact?: boolean;
   serviceCategories?: any;
   pid?: string;
-  format: string;
+  format?: string;
   label?: { [key: string]: string };
   languages: any;
   organizations: any;
   filedata?: any;
   description?: any;
   status?: any;
+  uri?: any;
+  
 }

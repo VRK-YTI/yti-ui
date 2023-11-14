@@ -37,3 +37,11 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 ## Troubleshooting and more documentation
 
 You can find more documentation in [docs](../docs).
+
+
+curl -X 'PUT' \
+  'http://localhost:9004/datamodel-api/v2/schemaFull?metadata=%7Bmetadata%3A%7B%20%20%20%22namespace%22%3A%20%22http%3A%2F%2Ftest.com%22%2C%20%22%20%20%20%20%20%22format%22%3A%20%22JSONSCHEMA%22%2C%20%20%20%22status%22%3A%20%22INCOMPLETE%22%2C%20%20%20%22label%22%3A%20%7B%20%20%20%20%20%22en%22%3A%20%22string%22%20%20%20%7D%2C%20%20%20%22description%22%3A%20%7B%20%20%20%20%20%22en%22%3A%20%22string%22%20%20%20%7D%2C%20%20%20%22languages%22%3A%20%5B%20%20%20%20%20%22en%22%20%20%20%5D%2C%20%20%20%22organizations%22%3A%20%5B%227d3a3c00-5a6b-489b-a3ed-63bb58c26a63%22%5D%20%7D%7D' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI0Y2U3MDkzNy02ZmE0LTQ5YWYtYTIyOS1iNWYxMDMyOGFkYjgiLCJleHAiOjE3MTUzMzk5NjUsImlhdCI6MTY5OTYxNTE2NX0.oNDwK2Cv3C4LZ2bt8Z9F4druC58fTs_dXfbK3WSpYuW1gTK_ZplCvrBP8h6orZJbnW6fpk_I1rMuw7yFUhM2tA' \
+  -H 'Content-Type: multipart/form-data' \
+  -F 'file=@test_json_trimmed.json;type=application/json'

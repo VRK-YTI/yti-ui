@@ -11,10 +11,7 @@ import {
 
 export const schemaApi = createApi({
   reducerPath: 'schemaApi',
-  baseQuery: getDatamodelApiBaseQuery((headers) => ({
-    ...headers,
-    'content-type': 'multipart/form-data',
-  })),
+  baseQuery: getDatamodelApiBaseQuery(),
   tagTypes: ['schemaApi'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
@@ -22,7 +19,7 @@ export const schemaApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putSchema: builder.mutation<SchemaFormType, SchemaFormType>({
+    putSchema: builder.mutation<Schema, Schema>({
       query: (value) => ({
         url: '/schema',
         method: 'PUT',
@@ -40,20 +37,6 @@ export const schemaApi = createApi({
       query: (pid) => ({
         url: `/schema/${pid}`,
         method: 'GET',
-      }),
-    }),
-    postSchema: builder.mutation<
-      string,
-      {
-        // Need to check How it works with our api
-        payload: Schema;
-        prefix: string;
-      }
-    >({
-      query: (value) => ({
-        url: `/schema/${value.prefix}`,
-        method: 'POST',
-        data: value.payload,
       }),
     }),
     deleteSchema: builder.mutation<string, string>({
@@ -74,13 +57,12 @@ export const schemaApi = createApi({
 export const {
   usePutSchemaMutation,
   useGetSchemaQuery,
-  usePostSchemaMutation,
   useDeleteSchemaMutation,
   useGetSchemasQuery,
   util: { getRunningQueriesThunk },
 } = schemaApi;
 
-export const { putSchema, getSchema, postSchema, deleteSchema, getSchemas } =
+export const { putSchema, getSchema, deleteSchema, getSchemas } =
   schemaApi.endpoints;
 
 // Slice setup below
