@@ -186,8 +186,8 @@ export function getUri(data?: ModelType): string {
   return `http://uri.suomi.fi/datamodel/ns/${data?.prefix}`;
 }
 
-export function getPrefixFromURI(namespace: string) {
-  return namespace.split('/').filter(Boolean).pop()?.replace('#', '');
+export function getPrefixFromURI(namespace: string): string {
+  return namespace.split('/').filter(Boolean).pop()?.replace('#', '') ?? '';
 }
 
 export function getTerminology(
