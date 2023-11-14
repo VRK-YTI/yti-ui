@@ -293,7 +293,13 @@ const GraphContent = ({
       )
     );
     setEdges(
-      convertToEdges(data.nodes, data.hiddenNodes, t, applicationProfile)
+      convertToEdges(
+        data.nodes,
+        data.hiddenNodes,
+        t,
+        modelId,
+        applicationProfile
+      )
     );
 
     if (resetPosition) {
@@ -340,7 +346,13 @@ const GraphContent = ({
           )
         );
         setEdges(
-          convertToEdges(data.nodes, data.hiddenNodes, t, applicationProfile)
+          convertToEdges(
+            data.nodes,
+            data.hiddenNodes,
+            t,
+            modelId,
+            applicationProfile
+          )
         );
         dispatch(setUpdateVisualization(false));
       } else {
