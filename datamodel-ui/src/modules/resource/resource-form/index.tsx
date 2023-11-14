@@ -298,7 +298,10 @@ export default function ResourceForm({
       dispatch(
         setSelected(
           data.identifier,
-          data.type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
+          data.type === ResourceType.ASSOCIATION
+            ? 'associations'
+            : 'attributes',
+          modelId
         )
       );
       setView(
