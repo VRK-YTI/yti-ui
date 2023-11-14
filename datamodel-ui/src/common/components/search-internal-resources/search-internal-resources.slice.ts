@@ -22,6 +22,7 @@ export interface InternalResourcesSearchParams {
   limitToModelType?: Type;
   extend?: boolean;
   fromVersion?: string;
+  includeDraftFrom?: string[];
 }
 
 export function initialSearchData(
@@ -91,6 +92,14 @@ function createUrl(obj: InternalResourcesSearchParams): string {
 
   if (obj.fromVersion) {
     baseQuery = baseQuery.concat(`&fromVersion=${obj.fromVersion}`);
+  }
+
+  if (obj.includeDraftFrom) {
+    baseQuery = baseQuery.concat(
+      `&includeDraftFrom=${obj.includeDraftFrom
+        .map((modelId) => `http://uri.suomi.fi/datamodel/ns/${modelId}`)
+        .join(',')}`
+    );
   }
 
   return baseQuery;

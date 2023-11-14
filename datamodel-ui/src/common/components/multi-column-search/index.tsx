@@ -127,6 +127,7 @@ export default function MultiColumnSearch({
         ...searchParams,
         ['limitToDataModel']: '',
         ['fromAddedNamespaces']: false,
+        ['includeDraftFrom']: [modelId],
         pageFrom: 0,
       });
     }
@@ -136,7 +137,7 @@ export default function MultiColumnSearch({
 
   const handleSearchChange = (
     key: keyof InternalResourcesSearchParams,
-    value: (typeof searchParams)[keyof InternalResourcesSearchParams]
+    value: typeof searchParams[keyof InternalResourcesSearchParams]
   ) => {
     if (key === 'groups' && isEqual(value, ['-1'])) {
       setSearchParams({ ...searchParams, [key]: [] });
