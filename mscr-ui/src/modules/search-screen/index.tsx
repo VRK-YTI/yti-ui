@@ -16,6 +16,7 @@ export default function SearchScreen() {
   const {isSearchActive, setIsSearchActive} = useContext(SearchContext);
   const { data: mscrSearchResults, refetch: refetchMscrSearchResults } =
     useGetMscrSearchResultsQuery(urlState);
+  const foundHits = mscrSearchResults ? mscrSearchResults.hits.hits.length !== 0 : false;
 
   const handleClose = () => {
     setIsSearchActive(false);
@@ -46,7 +47,7 @@ export default function SearchScreen() {
   };
 
   let filters : Filter[] = [];
-  if (mscrSearchResults) {
+  if (mscrSearchResults && foundHits) {
     Object.keys(mscrSearchResults.aggregations).forEach((key) => {
       const newFilter : Filter = makeFilter(key, mscrSearchResults.aggregations[key].buckets);
       filters = filters.concat(newFilter);
@@ -68,6 +69,7 @@ export default function SearchScreen() {
             {mscrSearchResults?.hits.hits.map((hit) => (
               <SearchResult key={hit._id} hit={hit} />
             ))}
+            {!foundHits && <p>{t('search-no-match')}</p>}
           </ResultsWrapper>
         </Grid>
         <Grid item xs={1}>
