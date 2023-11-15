@@ -21,7 +21,7 @@ export default function MultilingualBlock({ data }: MultilingualBlockProps) {
   const maxSize = maxBy(data, (item) => item.lang.length)?.lang.length ?? 0;
 
   return (
-    <MultilingualBlockWrapper maxSize={maxSize}>
+    <MultilingualBlockWrapper $maxSize={maxSize}>
       {data.map((d, idx) => (
         <MultilingualBlockItem
           key={`multilingual-block-${id}-item-${idx}`}

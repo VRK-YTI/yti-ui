@@ -42,6 +42,7 @@
     "jest/require-hook": 0,
     "jest/prefer-expect-assertions": 0,
     "jest/no-hooks": 0,
-    "jest/max-expects": 0
+    "jest/max-expects": 0,
+    "import/no-named-as-default": 0
   }
 }

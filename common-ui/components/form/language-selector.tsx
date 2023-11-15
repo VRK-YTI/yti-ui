@@ -125,7 +125,7 @@ export default function LanguageSelector(
           key={`${item.uniqueItemId}-${idx}`}
           id={`language-block-${item.uniqueItemId}`}
         >
-          <Paragraph marginBottomSpacing="m">
+          <Paragraph mb="m">
             <Text variant="bold">{item.labelText}</Text>
           </Paragraph>
           <NameInput
