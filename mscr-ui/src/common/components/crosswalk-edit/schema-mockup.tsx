@@ -311,7 +311,7 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
       open_access: {
         title: 'Open Access',
         description:
-          "Indicate whether the record's files are publicly accessible or not. In case of restricted access the uploaded files will only be accessible by the record's owner and the community administrators. Please note that the record's metadata is always publicly accessible. ",
+          'Indicate whether the record files are publicly accessible or not. In case of restricted access the uploaded files will only be accessible by the record owner and the community administrators. Please note that the record metadata is always publicly accessible. ',
         type: 'boolean',
       },
       embargo_date: {
@@ -401,7 +401,7 @@ export default function MockupSchemaLoader(emptyTemplate: boolean) {
     },
   };
 
-  let allTreeNodes: RenderTree[] = [];
+  const allTreeNodes: RenderTree[] = [];
 
   let currentTreeNode: RenderTree = {
     isMappable: '',

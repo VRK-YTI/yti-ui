@@ -20,9 +20,7 @@ import { useGetSchemaQuery } from '@app/common/components/schema/schema.slice';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 import Separator from 'yti-common-ui/components/separator';
-import InlineListBlock from '@app/common/components/inline-list-block';
 import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
-import FormattedDate from 'yti-common-ui/formatted-date';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 interface IndexPageProps extends CommonContextState {
@@ -34,7 +32,7 @@ interface IndexPageProps extends CommonContextState {
 export default function SchemaPage(props: IndexPageProps) {
   const { query, asPath } = useRouter();
   const schemaId = (query?.pid ?? '') as string;
-  let items: Schema[] = [];
+  const items: Schema[] = [];
 
   const { data, isLoading, isSuccess, isError, error } =
     useGetSchemaQuery(schemaId);
