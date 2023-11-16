@@ -13,8 +13,8 @@ import {Grid} from '@mui/material';
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
   const { t } = useTranslation('common');
-  const {isSearchActive, setIsSearchActive} = useContext(SearchContext);
-  const { data: mscrSearchResults, refetch: refetchMscrSearchResults } =
+  const { setIsSearchActive } = useContext(SearchContext);
+  const { data: mscrSearchResults } =
     useGetMscrSearchResultsQuery(urlState);
   const foundHits = mscrSearchResults ? mscrSearchResults.hits.hits.length !== 0 : false;
 
