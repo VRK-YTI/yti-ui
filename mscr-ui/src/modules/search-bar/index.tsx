@@ -18,7 +18,10 @@ export default function SearchBar() {
     if (val.match(SEARCH_FIELD_PATTERN)) {
       setSearchInputValue(val ?? '');
     }
-    if (val === '') search();
+    if (val === '') {
+      setIsSearchActive(false);
+      search();
+    }
   };
 
   useEffect(() => {
