@@ -78,7 +78,7 @@ export default function Documentation({
   const dispatch = useStoreDispatch();
   const textAreaRef = createRef<HTMLTextAreaElement>();
   const displayLang = useSelector(selectDisplayLang());
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(hasPermission ? 57 : 42);
   const [value, setValue] = useState<{ [key: string]: string }>({});
   const [isEdit, setIsEdit] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(

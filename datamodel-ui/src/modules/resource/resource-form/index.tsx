@@ -97,7 +97,7 @@ export default function ResourceForm({
   const hasChanges = useSelector(selectHasChanges());
   const { setView } = useSetView();
   const [userPosted, setUserPosted] = useState(false);
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(99);
   const [errors, setErrors] = useState(validateForm(data));
   const [updateResource, updateResult] = useUpdateResourceMutation();
   const [createResource, createResult] = useCreateResourceMutation();

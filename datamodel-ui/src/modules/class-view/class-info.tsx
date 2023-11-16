@@ -80,7 +80,7 @@ export default function ClassInfo({
     targetOrganization: organizationIds,
   });
   const ref = useRef<HTMLDivElement>(null);
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(hasPermission ? 57 : 55);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
