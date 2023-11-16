@@ -8,7 +8,7 @@ import {SearchContext} from '@app/common/components/search-context-provider';
 import SearchFilterSet from '@app/common/components/search-filter-set';
 import {Bucket, Facet, Filter} from '@app/common/interfaces/search.interface';
 import {useTranslation} from 'next-i18next';
-import {Grid} from "@mui/material";
+import {Grid} from '@mui/material';
 
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
@@ -47,7 +47,7 @@ export default function SearchScreen() {
   };
 
   let filters : Filter[] = [];
-  if (mscrSearchResults && foundHits) {
+  if (mscrSearchResults?.aggregations) {
     Object.keys(mscrSearchResults.aggregations).forEach((key) => {
       const newFilter : Filter = makeFilter(key, mscrSearchResults.aggregations[key].buckets);
       filters = filters.concat(newFilter);
@@ -60,7 +60,7 @@ export default function SearchScreen() {
         <Grid item xs={2}>
           <FacetsWrapper>
             {/* Groups of facets for different contexts, made with search-filter-set */}
-            <SearchFilterSet title={t('in-all-mscr')} filters={filters} />
+            {filters.length > 0 && <SearchFilterSet title={t('in-all-mscr')} filters={filters}/>}
           </FacetsWrapper>
         </Grid>
         <Grid item xs={8}>
