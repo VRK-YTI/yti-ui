@@ -6,7 +6,7 @@ export const StatusChip = styled(StaticChip)<{ status?: string }>`
     switch (props.status) {
       case 'DRAFT':
       case 'INCOMPLETE':
-        return props.theme.suomifi.colors.depthDark1;
+        return props.theme.suomifi.colors.depthLight2;
       case 'SUGGESTED':
         return props.theme.suomifi.colors.warningBase;
       case 'VALID':
@@ -20,7 +20,8 @@ export const StatusChip = styled(StaticChip)<{ status?: string }>`
   }} !important;
 
   ${(props) =>
-    props.status === 'SUGGESTED' &&
+    props.status &&
+    ['DRAFT', 'INCOMPLETE', 'SUGGESTED'].includes(props.status) &&
     `color: ${props.theme.suomifi.colors.blackBase} !important;`}
 
   font-size: 12px;
