@@ -19,6 +19,10 @@ export const StatusChip = styled(StaticChip)<{ status?: string }>`
     }
   }} !important;
 
+  ${(props) =>
+    props.status === 'SUGGESTED' &&
+    `color: ${props.theme.suomifi.colors.blackBase} !important;`}
+
   font-size: 12px;
   line-height: 0;
   padding: 0px 10px !important;
