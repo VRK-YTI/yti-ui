@@ -47,7 +47,7 @@ export const schemaApi = createApi({
     }),
     getSchemas: builder.query<Schema[], string>({
       query: (value) => ({
-        url: `/schemas`,
+        url: '/schemas',
         method: 'GET',
       }),
     }),

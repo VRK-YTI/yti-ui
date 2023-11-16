@@ -7,22 +7,15 @@ import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { useBreakpoints } from '../../../../../../common-ui/components/media-query';
 import { styled } from '@mui/material';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
-import AddLinkIcon from '@mui/icons-material/AddLink';
-import { Button as Sbutton, Textarea, TextInput } from 'suomifi-ui-components';
+import { Textarea } from 'suomifi-ui-components';
 import Button from '@mui/material/Button';
-import {
-  CrosswalkConnection,
-  CrosswalkConnectionNew,
-  RenderTree,
-} from '@app/common/interfaces/crosswalk-connection.interface';
+import { CrosswalkConnectionNew } from '@app/common/interfaces/crosswalk-connection.interface';
 
 const crosswalkConnectionInit = {
   source: '',

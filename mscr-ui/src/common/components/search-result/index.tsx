@@ -40,7 +40,7 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
         <h4>
           This is a search result of type {result.type} with id {result.id}
         </h4>
-        <p>Where are names?? Here's a placeholder for a description</p>
+        <p>Where are names?? Here is a placeholder for a description</p>
         {/* patchedResult && Object.keys(patchedResult.description).map((key) => <p key={key}>{patchedResult.description[key]}</p>) */}
         {Object.keys(result.label).map((key) => (
           <ChipWrapper key={key}>
