@@ -24,7 +24,6 @@ export const SearchToolsBlock = styled.div`
 
   .fi-dropdown_button {
     min-width: 135px !important;
-    overflow: hidden;
 
     span {
       white-space: nowrap;
