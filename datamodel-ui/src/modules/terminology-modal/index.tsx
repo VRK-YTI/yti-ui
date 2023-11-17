@@ -288,7 +288,7 @@ export default function TerminologyModal({
 
                 <SearchResultSubTitle>
                   <span>
-                    <StatusChip $isValid={result.status === 'VALID'}>
+                    <StatusChip status={result.status}>
                       {translateStatus(result.status, t)}
                     </StatusChip>
                   </span>

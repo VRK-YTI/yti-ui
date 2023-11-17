@@ -31,8 +31,8 @@ import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-b
 import validateForm, { FormError } from './validate-form';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { translateStatus } from '@app/common/utils/translation-helpers';
-import { Status } from 'yti-common-ui/search-results/result-card.styles';
 import { v4 } from 'uuid';
+import { StatusChip } from 'yti-common-ui/status-chip';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -221,9 +221,9 @@ export default function EditConcept({
         <BadgeBar>
           {t('heading')}
           <PropertyValue property={terminology?.properties.prefLabel} />
-          <Status status={formData.basicInformation.status}>
+          <StatusChip status={formData.basicInformation.status}>
             {translateStatus(formData.basicInformation.status, t)}
-          </Status>
+          </StatusChip>
         </BadgeBar>
         <PageHelpText>{t('new-concept-page-help')}</PageHelpText>
 

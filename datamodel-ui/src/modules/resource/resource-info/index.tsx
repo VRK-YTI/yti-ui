@@ -223,7 +223,7 @@ export default function ResourceInfo({
                     lang: displayLang ?? i18n.language,
                   })}
               </Text>
-              <StatusChip $isValid={data && data.status === 'VALID'}>
+              <StatusChip status={data?.status}>
                 {data && translateStatus(data.status, t)}
               </StatusChip>
             </div>

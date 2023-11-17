@@ -15,8 +15,8 @@ import { ServiceCategory } from '@app/common/interfaces/service-categories.inter
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { Type } from '@app/common/interfaces/type.interface';
-import { Status } from 'yti-common-ui/search-results/result-card.styles';
 import { Status as StatusType } from '@app/common/interfaces/status.interface';
+import { StatusChip } from 'yti-common-ui/status-chip';
 
 export interface ResultType {
   target: {
@@ -201,9 +201,9 @@ export default function ResourceList({
                         <IconGrid />
                       )}
                       <Text>{translateModelType(item.datamodel.type, t)}</Text>
-                      <Status status={item.datamodel.status}>
+                      <StatusChip status={item.datamodel.status}>
                         {translateStatus(item.datamodel.status, t)}
-                      </Status>
+                      </StatusChip>
                     </div>
                     <Text>
                       {item.datamodel.domains
