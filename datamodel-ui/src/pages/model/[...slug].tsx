@@ -53,8 +53,9 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import Layout from '@app/common/components/layout';
 import {
   getAuthenticatedUser,
-  getRunningQueriesThunk as getAuthenticatedUserQueriesThunk,
+  getRunningQueriesThunk as getAuthenticatedUserRunningQueriesThunk,
 } from '@app/common/components/login/login.slice';
+import { checkPermission } from '@app/common/utils/has-permission';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -153,7 +154,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
       getVisualization.initiate({ modelid: modelId, version: version })
     );
 
-    await Promise.all(store.dispatch(getAuthenticatedUserQueriesThunk()));
+    await Promise.all(
+      store.dispatch(getAuthenticatedUserRunningQueriesThunk())
+    );
     await Promise.all(store.dispatch(getRunningQueriesThunk()));
     await Promise.all(store.dispatch(getServiceQueriesThunk()));
     await Promise.all(store.dispatch(getOrgQueriesThunk()));
@@ -173,6 +176,27 @@ export const getServerSideProps = createCommonGetServerSideProps(
         redirect: {
           permanent: false,
           destination: '/404',
+        },
+      };
+    }
+
+    const user =
+      store.getState().loginApi.queries['getAuthenticatedUser(undefined)']
+        ?.data;
+
+    if (
+      !model.version &&
+      (!user ||
+        !checkPermission({
+          user: user,
+          actions: ['EDIT_DATA_MODEL'],
+          targetOrganizations: model.organizations.map((org) => org.id),
+        }))
+    ) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: '/',
         },
       };
     }
