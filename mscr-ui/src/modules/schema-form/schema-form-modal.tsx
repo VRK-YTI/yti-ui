@@ -8,6 +8,7 @@ import {
   ModalFooter,
   ModalTitle,
   Paragraph,
+  Text,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { FormErrors, validateForm } from './validate-form';
@@ -23,9 +24,15 @@ import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import { useInitialSchemaForm } from '@app/common/utils/hooks/use-initial-schema-form';
-import { usePutSchemaFullMutation, usePutSchemaMutation } from '@app/common/components/schema/schema.slice';
+import {
+  putSchema,
+  usePutSchemaFullMutation,
+  usePutSchemaMutation,
+} from '@app/common/components/schema/schema.slice';
 import SchemaForm from '.';
 import FileDropArea from 'yti-common-ui/file-drop-area';
+import { TextSnippet } from '@mui/icons-material';
+import Separator from 'yti-common-ui/separator';
 
 interface SchemaFormModalProps {
   refetch: () => void;
@@ -50,7 +57,8 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   const [userPosted, setUserPosted] = useState(false);
   const [getAuthenticatedUser, authenticateUser] =
     useGetAuthenticatedUserMutMutation();
-  const [putSchemaFull, result] = usePutSchemaFullMutation();
+  const [putSchemaFull, resultSchemaFull] = usePutSchemaFullMutation();
+  const [putSchema, resultSchema] = usePutSchemaMutation();
 
   const handleOpen = () => {
     setVisible(true);
@@ -65,15 +73,23 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   }, [schemaFormInitialData]);
 
   useEffect(() => {
-    if (userPosted && result.isSuccess) {
+    if (userPosted && resultSchema.isSuccess||resultSchema.isSuccess) {
       //Get the pid from the result
-      refetch();
       handleClose();
+      if (resultSchema && resultSchema.data.pid) {
+        router.push(`/schema/${resultSchema.data.pid}`);
+      }
+      //otherwise schema was created with file
+      else if (resultSchemaFull && resultSchemaFull.data.pid) {
+        router.push(`/schema/${resultSchema.data.pid}`);
+      }
+    
       // After post route to  saved schema get by PID
       // Later we should show the created schema in the list
-      alert('Schema Creation is Successful');
+      
+      
     }
-  }, [result, refetch, userPosted, handleClose, router, formData]);
+  }, [resultSchema,resultSchema, refetch, userPosted, handleClose, router, formData]);
 
   const handleSubmit = () => {
     setUserPosted(true);
@@ -84,119 +100,134 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
 
     const errors = validateForm(formData);
     setErrors(errors);
-    
+
     if (Object.values(errors).includes(true)) {
       return;
     }
-  
+
     console.log(formData);
     const payload = generatePayload(formData);
-    
+
     const schemaFormData = new FormData();
     schemaFormData.append('metadata', JSON.stringify(payload));
     if (fileData) {
       console.log(fileData);
       schemaFormData.append('file', fileData);
       putSchemaFull(schemaFormData);
-    } else {
+    } else{
       //Register Schema with no filedata
+      putSchema(payload);
     }
-    
-    
-
   };
-  
+
   useEffect(() => {
-      if (!userPosted) {
-        return;
-      }
-      //const errors = validateForm(formData);
-      //setErrors(errors);
-      //console.log(errors);
-    }, [userPosted, formData]);
-
-    // Need to add action type create_schema
-    if (!HasPermission({ actions: ['CREATE_SCHEMA'] })) {
-      return null;
+    if (!userPosted) {
+      return;
     }
+    const errors = validateForm(formData);
+    setErrors(errors);
+    //console.log(errors);
+  }, [userPosted, formData]);
 
-    return (
-      <>
-        <Button
-          icon="plus"
-          style={{ height: 'min-content' }}
-          onClick={() => handleOpen()}
-        >
-          {t('register-schema')}
-        </Button>
-
-        <Modal
-          appElementId="__next"
-          visible={visible}
-          onEscKeyDown={() => handleClose()}
-          variant={isSmall ? 'smallScreen' : 'default'}
-        >
-          <ModalContent>
-            <ModalTitle>{t('register-schema')}</ModalTitle>
-            <SchemaForm
-              formData={formData}
-              setFormData={setFormData}
-              userPosted={userPosted}
-              disabled={authenticateUser.data && authenticateUser.data.anonymous}
-              errors={userPosted ? errors : undefined}
-            />
-            <FileDropArea
-              setFileData={setFileData}
-              setIsValid={setIsValid}
-              validFileTypes={['json','csv']}
-              translateFileUploadError={translateFileUploadError}
-            />
-          </ModalContent>
-          <ModalFooter>
-            {authenticateUser.data && authenticateUser.data.anonymous && (
-              <InlineAlert status="error" role="alert" id="unauthenticated-alert">
-                {t('error-unauthenticated')}
-              </InlineAlert>
-            )}
-            {userPosted && (
-              <FormFooterAlert
-                labelText={'Something went wrong'}
-                alerts={getErrors(errors)}
-              />
-            )}
-
-            <Button onClick={() => handleSubmit()}>{t('register-schema')}</Button>
-            <Button variant="secondary" onClick={() => handleClose()}>
-              {t('cancel')}
-            </Button>
-          </ModalFooter>
-        </Modal>
-      </>
-    );
-
-    function getErrors(errors?: FormErrors): string[] | undefined {
-      if (!errors) {
-        return [];
-      }
-
-      const langsWithError = Object.entries(errors)
-        .filter(([_, value]) => Array.isArray(value))
-        ?.flatMap(([key, value]) =>
-          (value as string[]).map(
-            (lang) =>
-              `${translateModelFormErrors(key, t)} ${translateLanguage(lang, t)}`
-          )
-        );
-
-      const otherErrors = Object.entries(errors)
-        .filter(([_, value]) => value && !Array.isArray(value))
-        ?.map(([key, _]) => translateModelFormErrors(key, t));
-
-      if (result.isError) {
-        const errorMessage = getApiError(result.error);
-        return [...langsWithError, ...otherErrors, errorMessage];
-      }
-
-      return [...langsWithError, ...otherErrors];
-    }
+  // Need to add action type create_schema
+  if (!HasPermission({ actions: ['CREATE_SCHEMA'] })) {
+    return null;
   }
+
+  return (
+    <>
+      <Button
+        icon="plus"
+        style={{ height: 'min-content' }}
+        onClick={() => handleOpen()}
+      >
+        {t('register-schema')}
+      </Button>
+
+      <Modal
+        appElementId="__next"
+        visible={visible}
+        onEscKeyDown={() => handleClose()}
+        variant={isSmall ? 'smallScreen' : 'default'}
+      >
+        <ModalContent>
+          <ModalTitle>{t('register-schema')}</ModalTitle>
+          <SchemaForm
+            formData={formData}
+            setFormData={setFormData}
+            userPosted={userPosted}
+            disabled={authenticateUser.data && authenticateUser.data.anonymous}
+            errors={userPosted ? errors : undefined}
+          />
+          <Separator></Separator>
+          <Text>
+            {'Upload a Schema File. You can upload file also later'}
+          </Text>
+          <FileDropArea
+            setFileData={setFileData}
+            setIsValid={setIsValid}
+            validFileTypes={['json', 'csv']}
+            translateFileUploadError={translateFileUploadError}
+          />
+          <Separator isLarge></Separator>
+          <Text>
+            {
+              'All Contents will be registered as draft. You can choose to publish content later'
+            }
+          </Text>
+        </ModalContent>
+        <ModalFooter>
+          {authenticateUser.data && authenticateUser.data.anonymous && (
+            <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+              {t('error-unauthenticated')}
+            </InlineAlert>
+          )}
+          {userPosted && (
+            <FormFooterAlert
+              labelText={'Something went wrong'}
+              alerts={getErrors(errors)}
+            />
+          )}
+
+          <Button onClick={() => handleSubmit()}>{t('register-schema')}</Button>
+          <Button variant="secondary" onClick={() => handleClose()}>
+            {t('cancel')}
+          </Button>
+        </ModalFooter>
+      </Modal>
+    </>
+  );
+
+  function getErrors(errors?: FormErrors): string[] | undefined {
+    if (!errors) {
+      return [];
+    }
+
+    console.log(errors);
+
+    const langsWithError = Object.entries(errors)
+      .filter(([_, value]) => Array.isArray(value))
+      ?.flatMap(([key, value]) =>
+        (value as string[]).map(
+          (lang) =>
+            `${translateModelFormErrors(key, t)} ${translateLanguage(lang, t)}`
+        )
+      );
+
+    const otherErrors = Object.entries(errors)
+      .filter(([_, value]) => value && !Array.isArray(value))
+      ?.map(([key, _]) => translateModelFormErrors(key, t));
+
+    if (resultSchema.isError) {
+      const errorMessage = getApiError(resultSchema.error);
+      return [...langsWithError, ...otherErrors, errorMessage];
+    }
+
+    if (resultSchemaFull.isError) {
+      const errorMessage = getApiError(resultSchema.error);
+      return [...langsWithError, ...otherErrors, errorMessage];
+    }
+
+    return [...langsWithError, ...otherErrors];
+  }
+}

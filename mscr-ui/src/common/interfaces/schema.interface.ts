@@ -14,9 +14,10 @@ export interface Schema {
   filedata?: File;
   prefix?: string;
   revision?: string;
-  visibilty?: string;
+  visibility?: string;
   created?: string;
   uri?: string;
+  versionLabel?: string;
 }
 export interface Organization {
   id: string;
