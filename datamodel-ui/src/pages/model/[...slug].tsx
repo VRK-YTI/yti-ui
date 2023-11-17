@@ -51,6 +51,10 @@ import { useRouter } from 'next/router';
 import { wrapper } from '@app/store';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import Layout from '@app/common/components/layout';
+import {
+  getAuthenticatedUser,
+  getRunningQueriesThunk as getAuthenticatedUserQueriesThunk,
+} from '@app/common/components/login/login.slice';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -105,6 +109,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Missing id for page');
     }
 
+    store.dispatch(getAuthenticatedUser.initiate());
     store.dispatch(getModel.initiate({ modelId: modelId, version: version }));
     store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
@@ -148,6 +153,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       getVisualization.initiate({ modelid: modelId, version: version })
     );
 
+    await Promise.all(store.dispatch(getAuthenticatedUserQueriesThunk()));
     await Promise.all(store.dispatch(getRunningQueriesThunk()));
     await Promise.all(store.dispatch(getServiceQueriesThunk()));
     await Promise.all(store.dispatch(getOrgQueriesThunk()));

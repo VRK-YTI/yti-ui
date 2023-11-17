@@ -61,13 +61,13 @@ export default function ResourceInfo({
   organizationIds,
 }: CommonViewProps) {
   const { t, i18n } = useTranslation('common');
-  const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const displayLang = useSelector(selectDisplayLang());
   const hasPermission = HasPermission({
     actions: ['EDIT_ASSOCIATION', 'EDIT_ATTRIBUTE'],
     targetOrganization: organizationIds,
   });
+  const [headerHeight, setHeaderHeight] = useState(hasPermission ? 117 : 55);
   const [showTooltip, setShowTooltip] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
   const [localCopyVisible, setLocalCopyVisible] = useState(false);

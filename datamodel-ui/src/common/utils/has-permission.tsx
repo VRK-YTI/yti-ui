@@ -114,7 +114,7 @@ export function checkPermission({
   }
 
   if (
-    !targetOrganizations &&
+    (!targetOrganizations || targetOrganizations.length === 0) &&
     rolesInOrganizations.includes('DATA_MODEL_EDITOR') &&
     !actions.some((action) => action.includes('ADMIN'))
   ) {

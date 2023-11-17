@@ -17,7 +17,7 @@ export default function ResourceError({
   const { t } = useTranslation('common');
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(55);
 
   const handleReturnFallback = () => {
     const modelId = router.query.slug?.[0];
