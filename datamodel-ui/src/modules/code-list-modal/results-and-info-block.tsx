@@ -115,7 +115,7 @@ export default function ResultsAndInfoBlock({
                       .join(', ')}
                   </div>
                   &middot;
-                  <StatusChip $isValid={code.status === 'VALID'}>
+                  <StatusChip status={code.status}>
                     {translateStatus(code.status, t)}
                   </StatusChip>
                 </div>

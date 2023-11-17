@@ -16,6 +16,7 @@ interface CreateEdgeProps {
   isCorner?: boolean;
   label?: { [key: string]: string } | string;
   offsetSource?: number;
+  modelId?: string;
 }
 
 export default function createEdge({
@@ -25,12 +26,14 @@ export default function createEdge({
   isCorner,
   label,
   offsetSource,
+  modelId,
 }: CreateEdgeProps): Edge<EdgeDataType> {
   return {
     ...params,
     type: 'generalEdge',
     markerEnd: getMarkerEnd(isCorner, params.referenceType),
     data: {
+      ...(modelId ? { modelId: modelId } : {}),
       ...(label ? { label: label } : {}),
       ...(identifier ? { identifier: identifier } : {}),
       ...(offsetSource ? { offsetSource: offsetSource } : {}),

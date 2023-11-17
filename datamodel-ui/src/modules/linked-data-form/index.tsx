@@ -40,7 +40,7 @@ export default function LinkedDataForm({
   const dispatch = useStoreDispatch();
   const ref = useRef<HTMLDivElement>(null);
   const [updateModel, result] = useUpdateModelMutation();
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(57);
   const [userPosted, setUserPosted] = useState(false);
   const [data, setData] = useState<{
     codeLists: ModelCodeList[];

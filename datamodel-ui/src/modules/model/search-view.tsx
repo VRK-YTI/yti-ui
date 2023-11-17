@@ -41,7 +41,7 @@ export default function SearchView({
   const { getNodes, getEdges } = useReactFlow();
   const dispatch = useStoreDispatch();
   const displayLang = useSelector(selectDisplayLang());
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(128);
   const [query, setQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(getPage());
 

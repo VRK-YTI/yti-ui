@@ -23,7 +23,7 @@ import {
 import { useStoreDispatch } from '@app/store';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import { useRouter } from 'next/router';
-import { Status } from 'yti-common-ui/search-results/result-card.styles';
+import { StatusChip } from 'yti-common-ui/status-chip';
 
 export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
   const { t, i18n } = useTranslation('common');
@@ -85,9 +85,9 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
               {t('working-version')}
             </span>
           )}
-          <Status status={getStatus(modelInfo)}>
+          <StatusChip status={getStatus(modelInfo)}>
             {translateStatus(getStatus(modelInfo), t)}
-          </Status>
+          </StatusChip>
         </BadgeBar>
       </div>
 

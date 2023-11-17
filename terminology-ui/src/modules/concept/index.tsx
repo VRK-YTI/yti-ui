@@ -42,7 +42,7 @@ import { translateStatus } from '@app/common/utils/translation-helpers';
 import isEmail from 'validator/lib/isEmail';
 import RemovalModal from '@app/common/components/removal-modal';
 import { getBlockData } from './utils';
-import { Status } from 'yti-common-ui/search-results/result-card.styles';
+import { StatusChip } from 'yti-common-ui/status-chip';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -151,7 +151,9 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           <BadgeBar>
             {t('heading')}
             <PropertyValue property={terminology?.properties.prefLabel} />
-            <Status status={status}>{translateStatus(status, t)}</Status>
+            <StatusChip status={status}>
+              {translateStatus(status, t)}
+            </StatusChip>
           </BadgeBar>
 
           <TermBlock title={<h2>{t('field-terms-label')}</h2>} data={terms} />

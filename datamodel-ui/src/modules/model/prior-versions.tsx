@@ -9,7 +9,7 @@ import {
   ExternalLink,
   LoadingSpinner,
 } from 'suomifi-ui-components';
-import { Status } from 'yti-common-ui/search-results/result-card.styles';
+import { StatusChip } from 'yti-common-ui/status-chip';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { PriorVersionsDetails, PriorVersionsWrapper } from './model.styles';
 
@@ -47,9 +47,9 @@ export default function PriorVersions({
           </ExternalLink>
           <PriorVersionsDetails>
             {`${t('version')} ${version.version}`}
-            <Status status={version.status}>
+            <StatusChip status={version.status}>
               {translateStatus(version.status, t)}
-            </Status>
+            </StatusChip>
           </PriorVersionsDetails>
         </div>
       );

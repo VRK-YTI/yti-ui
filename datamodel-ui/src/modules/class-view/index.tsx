@@ -73,7 +73,7 @@ export default function ClassView({
   const displayLang = useSelector(selectDisplayLang());
   const [currentPage, setCurrentPage] = useState(getPage());
   const [query, setQuery] = useState('');
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(hasPermission ? 112 : 97);
   const [isEdit, setIsEdit] = useState(false);
   const [showAppProfileModal, setShowAppProfileModal] = useState(false);
   const [basedOnNodeShape, setBasedOnNodeShape] = useState(false);
