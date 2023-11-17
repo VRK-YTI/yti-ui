@@ -58,7 +58,7 @@ export default function HeaderSearch({
         value={searchInputValue ?? ''}
         searchButtonLabel={t('terminology-search')}
         visualPlaceholder={t('terminology-search-placeholder')}
-        wrapperProps={{ style: { flexGrow: isSmall ? 1 : 0 } }}
+        style={{ flexGrow: isSmall ? 1 : 0 }}
         onSearch={(value) => {
           if (typeof value === 'string') search(value);
         }}

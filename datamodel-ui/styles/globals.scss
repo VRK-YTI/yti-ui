@@ -7,8 +7,7 @@ body {
   @include fi-text-body-text;
   background-color: $fi-color-depth-light3;
 
-  .fi-modal_base {
-    position: absolute;
+  .fi-modal_overlay {
     z-index: 1;
   }
 
