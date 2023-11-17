@@ -552,7 +552,10 @@ export default function ClassForm({
                 applicationProfile={applicationProfile}
                 modalButtonLabel={t('add-upper-class')}
                 plusIcon
-                hideSelfReference={data.uri}
+                hiddenClasses={[
+                  data.uri,
+                  ...(data.subClassOf?.map((s) => s.uri) ?? []),
+                ]}
               />
             }
             items={data.subClassOf}
@@ -577,7 +580,7 @@ export default function ClassForm({
                   handleFollowUp={handleTargetClassUpdate}
                   initialSelected={data.targetClass?.uri}
                   applicationProfile
-                  hideSelfReference={data.uri}
+                  hiddenClasses={[data.uri]}
                 />
               }
               items={data.targetClass ? [data.targetClass] : []}
@@ -607,7 +610,10 @@ export default function ClassForm({
                 applicationProfile={applicationProfile}
                 modalButtonLabel={t('add-corresponding-class')}
                 plusIcon
-                hideSelfReference={data.uri}
+                hiddenClasses={[
+                  data.uri,
+                  ...(data.equivalentClass?.map((s) => s.uri) ?? []),
+                ]}
               />
             }
             items={data.equivalentClass}
@@ -632,7 +638,7 @@ export default function ClassForm({
                   initialSelected={data.node?.uri}
                   applicationProfile
                   limitToModelType="PROFILE"
-                  hideSelfReference={data.uri}
+                  hiddenClasses={[data.uri]}
                 />
               }
               items={data.node ? [data.node] : []}
@@ -652,7 +658,10 @@ export default function ClassForm({
                 applicationProfile={applicationProfile}
                 modalButtonLabel={t('add-disjoint-class')}
                 plusIcon
-                hideSelfReference={data.uri}
+                hiddenClasses={[
+                  data.uri,
+                  ...(data.disjointWith?.map((s) => s.uri) ?? []),
+                ]}
               />
             }
             items={data.disjointWith}

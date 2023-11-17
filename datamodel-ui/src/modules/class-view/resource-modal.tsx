@@ -36,6 +36,7 @@ interface ResourceModalProps {
   limitSearchTo?: 'LIBRARY' | 'PROFILE';
   limitToSelect?: boolean;
   applicationProfile?: boolean;
+  hiddenResources?: string[];
 }
 
 export default function ResourceModal({
@@ -46,6 +47,7 @@ export default function ResourceModal({
   limitSearchTo,
   limitToSelect,
   applicationProfile,
+  hiddenResources,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -108,12 +110,17 @@ export default function ResourceModal({
   useEffect(() => {
     if (result.isSuccess) {
       setResultsFormatted(
-        result.data.responseObjects.map((r) =>
-          mapInternalClassInfoToResultType(r, contentLanguage ?? i18n.language)
-        )
+        result.data.responseObjects
+          .filter((r) => !hiddenResources?.includes(r.id))
+          .map((r) =>
+            mapInternalClassInfoToResultType(
+              r,
+              contentLanguage ?? i18n.language
+            )
+          )
       );
     }
-  }, [result, i18n.language, contentLanguage, t]);
+  }, [result, i18n.language, contentLanguage, t, hiddenResources]);
 
   return (
     <div>
@@ -143,7 +150,7 @@ export default function ResourceModal({
               applicationProfile
             )}
             result={{
-              totalHitCount: result.data?.totalHitCount ?? 0,
+              totalHitCount: resultsFormatted.length,
               items: resultsFormatted,
             }}
             selectedId={selectedId}

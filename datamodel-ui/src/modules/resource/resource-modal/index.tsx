@@ -36,8 +36,8 @@ interface ResourceModalProps {
   defaultSelected?: string;
   buttonIcon?: boolean;
   applicationProfile?: boolean;
-  hideSelfReference?: string;
   buttonVariant?: 'secondary' | 'secondaryNoBorder';
+  hiddenResources?: string[];
 }
 
 export default function ResourceModal({
@@ -48,8 +48,8 @@ export default function ResourceModal({
   defaultSelected,
   buttonIcon,
   applicationProfile,
-  hideSelfReference,
   buttonVariant,
+  hiddenResources,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -115,7 +115,7 @@ export default function ResourceModal({
     if (result.isSuccess) {
       setResultsFormatted(
         result.data.responseObjects
-          .filter((r) => r.id !== hideSelfReference)
+          .filter((r) => !hiddenResources?.includes(r.id))
           .map((r) =>
             mapInternalClassInfoToResultType(
               r,
@@ -124,7 +124,7 @@ export default function ResourceModal({
           )
       );
     }
-  }, [result, i18n.language, contentLanguage, t, hideSelfReference]);
+  }, [result, i18n.language, contentLanguage, t, hiddenResources]);
 
   return (
     <>
@@ -153,7 +153,7 @@ export default function ResourceModal({
               applicationProfile
             )}
             result={{
-              totalHitCount: result.data?.totalHitCount ?? 0,
+              totalHitCount: resultsFormatted.length,
               items: resultsFormatted,
             }}
             selectedId={selectedId}
