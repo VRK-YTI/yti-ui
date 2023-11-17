@@ -8,6 +8,7 @@ import {
   Schema,
   SchemaFormType,
 } from '@app/common/interfaces/schema.interface';
+import { AnyNsRecord } from 'dns';
 
 export const schemaApi = createApi({
   reducerPath: 'schemaApi',
@@ -19,18 +20,24 @@ export const schemaApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putSchema: builder.mutation<Schema, Schema>({
+    putSchema: builder.mutation<any, any>({
       query: (value) => ({
         url: '/schema',
         method: 'PUT',
         data: value,
+        headers: {
+          'content-Type': 'application/json;'
+        },
       }),
     }),
-    putSchemaFull: builder.mutation<SchemaFormType, SchemaFormType>({
-      query: (value) => ({
+    putSchemaFull: builder.mutation<any, FormData>({
+      query: (file) => ({
         url: '/schemaFull',
         method: 'PUT',
-        data: value,
+        data: file,
+        headers: {
+          'content-Type': 'multipart/form-data;'
+        },
       }),
     }),
     getSchema: builder.query<Schema, string>({
@@ -59,10 +66,11 @@ export const {
   useGetSchemaQuery,
   useDeleteSchemaMutation,
   useGetSchemasQuery,
+  usePutSchemaFullMutation,
   util: { getRunningQueriesThunk },
 } = schemaApi;
 
-export const { putSchema, getSchema, deleteSchema, getSchemas } =
+export const { putSchema, getSchema, deleteSchema, getSchemas,putSchemaFull } =
   schemaApi.endpoints;
 
 // Slice setup below
