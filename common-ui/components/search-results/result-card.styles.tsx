@@ -1,12 +1,5 @@
 import styled from 'styled-components';
-import {
-  Block,
-  Heading,
-  Link,
-  Paragraph,
-  StaticChip,
-} from 'suomifi-ui-components';
-import { CardChipProps } from './search-count-tags.props';
+import { Block, Heading, Link, Paragraph } from 'suomifi-ui-components';
 
 export const CardBlock = styled(Block)`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
@@ -70,17 +63,4 @@ export const Description = styled.p`
 
 export const PartOf = styled.p`
   margin: ${(props) => props.theme.suomifi.spacing.xs} 0 0 0;
-`;
-
-export const Status = styled(StaticChip)<CardChipProps>`
-  background-color: ${(props) =>
-    (props.status === 'VALID' && props.theme.suomifi.colors.successBase) ||
-    ((props.status === 'DRAFT' || props.status === 'SUGGESTED') &&
-      props.theme.suomifi.colors.warningBase) ||
-    props.theme.suomifi.colors.depthDark1} !important;
-  font-size: 12px;
-  line-height: 0;
-  padding: 0px 5px !important;
-  text-transform: uppercase;
-  vertical-align: bottom;
 `;

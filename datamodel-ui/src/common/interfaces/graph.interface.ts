@@ -33,6 +33,7 @@ export interface CornerNodeDataType {
 
 export interface EdgeDataType {
   identifier?: string;
+  modelId?: string;
   label?: { [key: string]: string } | string;
   applicationProfile?: boolean;
   offsetSource?: number;

@@ -38,7 +38,7 @@ export default function ConceptView({
         </ExpanderTitleButton>
         <ExpanderContent>
           {data.definition && Object.keys(data.definition).length !== 0 && (
-            <Paragraph marginBottomSpacing="m">
+            <Paragraph mb="m">
               <SanitizedTextContent
                 text={getLanguageVersion({
                   data: data.definition,
@@ -49,7 +49,7 @@ export default function ConceptView({
             </Paragraph>
           )}
           <Heading variant="h4">{t('concept')}</Heading>
-          <Paragraph marginBottomSpacing="m">
+          <Paragraph mb="m">
             <ExternalLink
               href={data.conceptURI}
               labelNewWindow={t('link-opens-new-window-external')}
@@ -65,9 +65,7 @@ export default function ConceptView({
           <Separator />
 
           <Heading variant="h4">{t('concept-status')}</Heading>
-          <Paragraph marginBottomSpacing="m">
-            {translateStatus(data.status, t)}
-          </Paragraph>
+          <Paragraph mb="m">{translateStatus(data.status, t)}</Paragraph>
 
           <Heading variant="h4">{t('terminology')}</Heading>
           <Paragraph>

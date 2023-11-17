@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { StaticChip } from 'suomifi-ui-components';
+import { StatusChip as BaseStatusChip } from 'yti-common-ui/status-chip';
+import { Status } from '@app/common/interfaces/status.interface';
 
 export const FilterBlockWrapper = styled.div<{ extendedView?: boolean }>`
   width: 100%;
@@ -129,18 +130,10 @@ export const ResultBlock = styled.div`
   }
 `;
 
-export const StatusChip = styled(StaticChip)<{ $isValid?: boolean }>`
-  font-size: inherit;
-  line-height: inherit;
+export const StatusChip = styled(BaseStatusChip)<{ status?: Status }>`
   padding: 3px 6px 0 6px !important;
   width: min-content;
   font-size: 12px;
-
-  background: ${(props) =>
-    props.$isValid
-      ? props.theme.suomifi.colors.successBase
-      : props.theme.suomifi.colors.depthDark1} !important;
-
   .fi-chip--content {
     line-height: 1em !important;
     white-space: nowrap;

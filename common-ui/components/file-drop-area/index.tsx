@@ -116,12 +116,12 @@ export default function FileDropArea({
       onDragOver={(e) => e.preventDefault()}
     >
       <FileBlock padding="m" id="file-drop-block">
-        <Paragraph marginBottomSpacing="xxs">
+        <Paragraph mb="xxs">
           <Text variant="bold" smallScreen>
             {t('add-or-drag-a-new-file-here')}
           </Text>
         </Paragraph>
-        <Paragraph marginBottomSpacing="l">
+        <Paragraph mb="l">
           <Text smallScreen>
             {t('allowed-file-formats')} {validFileTypes.join(', ')}
           </Text>

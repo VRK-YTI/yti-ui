@@ -80,7 +80,7 @@ export default function ClassInfo({
     targetOrganization: organizationIds,
   });
   const ref = useRef<HTMLDivElement>(null);
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(hasPermission ? 57 : 55);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
@@ -319,7 +319,7 @@ export default function ClassInfo({
                 lang: displayLang ?? i18n.language,
               })}
             </Text>
-            <StatusChip $isValid={data.status === 'VALID'}>
+            <StatusChip status={data.status}>
               {translateStatus(data.status, t)}
             </StatusChip>
           </div>
@@ -385,9 +385,11 @@ export default function ClassInfo({
                 applicationProfile={applicationProfile}
                 limitToSelect={!applicationProfile}
               />
-              <Button variant="secondary" id="order-attributes-button">
-                {t('order-list', { ns: 'admin' })}
-              </Button>
+              {!applicationProfile && (
+                <Button variant="secondary" id="order-attributes-button">
+                  {t('order-list', { ns: 'admin' })}
+                </Button>
+              )}
             </div>
           ) : (
             <></>
@@ -433,9 +435,11 @@ export default function ClassInfo({
                 applicationProfile={applicationProfile}
                 limitToSelect={!applicationProfile}
               />
-              <Button variant="secondary" id="order-associations-button">
-                {t('order-list', { ns: 'admin' })}
-              </Button>
+              {!applicationProfile && (
+                <Button variant="secondary" id="order-associations-button">
+                  {t('order-list', { ns: 'admin' })}
+                </Button>
+              )}
             </div>
           ) : (
             <></>

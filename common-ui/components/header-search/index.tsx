@@ -3,7 +3,7 @@ import { IconSearch, SearchInput } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import IconButton from '../icon-button';
 import { useBreakpoints } from '../media-query';
-import { CloseButton } from './header-search.styles';
+import { CloseButton, SearchInputWrapper } from './header-search.styles';
 import { useRouter } from 'next/router';
 import useUrlState, { initialUrlState } from '../../utils/hooks/use-url-state';
 import { SEARCH_FIELD_PATTERN, TEXT_INPUT_MAX } from '../../utils/constants';
@@ -51,15 +51,14 @@ export default function HeaderSearch({
     );
   }
   return (
-    <>
+    <SearchInputWrapper>
       <SearchInput
         clearButtonLabel={t('terminology-search-clear')}
         labelText=""
         value={searchInputValue ?? ''}
-        labelMode="hidden"
         searchButtonLabel={t('terminology-search')}
         visualPlaceholder={t('terminology-search-placeholder')}
-        wrapperProps={{ style: { flexGrow: isSmall ? 1 : 0 } }}
+        style={{ flexGrow: isSmall ? 1 : 0 }}
         onSearch={(value) => {
           if (typeof value === 'string') search(value);
         }}
@@ -77,7 +76,7 @@ export default function HeaderSearch({
       ) : (
         <></>
       )}
-    </>
+    </SearchInputWrapper>
   );
 
   function search(q?: string) {

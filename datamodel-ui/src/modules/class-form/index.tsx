@@ -89,7 +89,7 @@ export default function ClassForm({
   const { t, i18n } = useTranslation('admin');
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(99);
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
   const data = useSelector(selectClass());
