@@ -11,6 +11,7 @@ export const ClassNodeDiv = styled.div<{
   padding: ${(props) => props.theme.suomifi.spacing.xxs};
 
   min-width: 360px;
+  max-width: 560px;
   width: min-content;
 
   > div {
@@ -34,6 +35,13 @@ export const ClassNodeDiv = styled.div<{
         props.$appProfile ? props.theme.suomifi.colors.brandBase : '#86499c'};
     border-radius: 2px 2px 0px 0px;
     font-weight: 600;
+    max-width: 100%;
+
+    > div:first-child {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
 
     *:first-child {
       flex-grow: 1;
@@ -191,21 +199,30 @@ export const Resource = styled.div<{ $highlight?: boolean }>`
   gap: ${(props) => props.theme.suomifi.spacing.xs};
   align-items: center;
   white-space: nowrap;
+  min-width: 360px;
+  padding: 0px 10px;
 
   &:hover {
     background: ${(props) => props.theme.suomifi.colors.depthLight2};
   }
 
   .fi-icon {
+    min-height: 17px;
+    min-width: 17px;
     height: 17px;
     width: 17px;
+  }
+
+  > div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   .react-flow__handle {
     display: none;
   }
-  min-width: 360px;
-  padding: 0px 10px;
 
   ${(props) =>
     props.$highlight &&
