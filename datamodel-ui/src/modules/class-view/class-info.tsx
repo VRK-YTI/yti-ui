@@ -385,9 +385,11 @@ export default function ClassInfo({
                 applicationProfile={applicationProfile}
                 limitToSelect={!applicationProfile}
               />
-              <Button variant="secondary" id="order-attributes-button">
-                {t('order-list', { ns: 'admin' })}
-              </Button>
+              {!applicationProfile && (
+                <Button variant="secondary" id="order-attributes-button">
+                  {t('order-list', { ns: 'admin' })}
+                </Button>
+              )}
             </div>
           ) : (
             <></>
@@ -433,9 +435,11 @@ export default function ClassInfo({
                 applicationProfile={applicationProfile}
                 limitToSelect={!applicationProfile}
               />
-              <Button variant="secondary" id="order-associations-button">
-                {t('order-list', { ns: 'admin' })}
-              </Button>
+              {!applicationProfile && (
+                <Button variant="secondary" id="order-associations-button">
+                  {t('order-list', { ns: 'admin' })}
+                </Button>
+              )}
             </div>
           ) : (
             <></>

@@ -43,6 +43,7 @@ import { v4 } from 'uuid';
 import CreateReleaseModal from '../create-release-modal';
 import PriorVersions from './prior-versions';
 import { useSelector } from 'react-redux';
+import { selectLogin } from '@app/common/components/login/login.slice';
 
 export default function ModelInfoView({
   organizationIds,
@@ -59,6 +60,7 @@ export default function ModelInfoView({
   const [formData, setFormData] = useState<ModelFormType | undefined>();
   const [headerHeight, setHeaderHeight] = useState(0);
   const displayLang = useSelector(selectDisplayLang());
+  const user = useSelector(selectLogin());
   const [openModals, setOpenModals] = useState({
     showAsFile: false,
     downloadAsFile: false,
@@ -190,14 +192,16 @@ export default function ModelInfoView({
                     >
                       {t('edit', { ns: 'admin' })}
                     </Button>
-                    <Button
-                      variant="secondaryNoBorder"
-                      onClick={() => handleModalChange('createRelease', true)}
-                      disabled={!formData}
-                      id="create-release-button"
-                    >
-                      {t('create-release', { ns: 'admin' })}
-                    </Button>
+                    {!version && (
+                      <Button
+                        variant="secondaryNoBorder"
+                        onClick={() => handleModalChange('createRelease', true)}
+                        disabled={!formData}
+                        id="create-release-button"
+                      >
+                        {t('create-release', { ns: 'admin' })}
+                      </Button>
+                    )}
                   </>
                 )}
                 <Button
@@ -214,26 +218,8 @@ export default function ModelInfoView({
                 >
                   {t('download-as-file')}
                 </Button>
-                {hasPermission && (
+                {!user.anonymous && (
                   <>
-                    {!version && (
-                      <Button
-                        variant="secondaryNoBorder"
-                        onClick={() =>
-                          handleModalChange('updateStatuses', true)
-                        }
-                        id="update-statuses-button"
-                      >
-                        {t('update-models-resources-statuses', { ns: 'admin' })}
-                      </Button>
-                    )}
-                    <Button
-                      variant="secondaryNoBorder"
-                      onClick={() => handleModalChange('copyModel', true)}
-                      id="copy-model-button"
-                    >
-                      {t('create-copy-from-model', { ns: 'admin' })}
-                    </Button>
                     <Button
                       variant="secondaryNoBorder"
                       onClick={() =>
@@ -243,17 +229,6 @@ export default function ModelInfoView({
                     >
                       {t('add-email-subscription')}
                     </Button>
-                    {/* TODO No deletion of datamodels in MVP of version history
-                    <Separator />
-                    <Button
-                      variant="secondaryNoBorder"
-                      onClick={() => handleModalChange('delete', true)}
-                      id="delete-modal-button"
-                    >
-                      {t('remove', { ns: 'admin' })}
-                    </Button>
-
-                    */}
                   </>
                 )}
               </Tooltip>
