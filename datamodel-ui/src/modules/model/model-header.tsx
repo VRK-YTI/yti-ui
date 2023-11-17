@@ -13,7 +13,6 @@ import {
   translateStatus,
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import { useMemo } from 'react';
 import { ModelType } from '@app/common/interfaces/model.interface';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { useSelector } from 'react-redux';
@@ -33,17 +32,6 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
   const dispatch = useStoreDispatch();
   const router = useRouter();
 
-  const model = useMemo(
-    () => ({
-      title: getTitle(modelInfo, displayLang ?? i18n.language),
-      status: getStatus(modelInfo),
-      languages: modelInfo
-        ? [...modelInfo.languages].sort((a, b) => compareLocales(a, b))
-        : [],
-    }),
-    [modelInfo, i18n.language, displayLang]
-  );
-
   const handleDisplayLangChange = (lang: string) => {
     dispatch(setDisplayLang(lang));
 
@@ -55,7 +43,7 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
     });
   };
 
-  if (!model) {
+  if (!modelInfo) {
     return <></>;
   }
 
@@ -72,10 +60,12 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
       >
         <Breadcrumb baseUrl={t('datamodel-title')}>
           <BreadcrumbLink current={true} url="">
-            {model.title}
+            {getTitle(modelInfo, displayLang ?? i18n.language)}
           </BreadcrumbLink>
         </Breadcrumb>
-        <MainTitle>{model.title}</MainTitle>
+        <MainTitle>
+          {getTitle(modelInfo, displayLang ?? i18n.language)}
+        </MainTitle>
         <BadgeBar larger={true} smBottom={true}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             {modelInfo?.type === 'PROFILE' ? (
@@ -95,7 +85,7 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
               {t('working-version')}
             </span>
           )}
-          <StatusChip status={model.status}>
+          <StatusChip status={getStatus(modelInfo)}>
             {translateStatus(getStatus(modelInfo), t)}
           </StatusChip>
         </BadgeBar>
@@ -108,11 +98,13 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
             value={displayLang}
             onChange={(e) => handleDisplayLangChange(e)}
           >
-            {model.languages.map((lang) => (
-              <DropdownItem value={lang} key={lang}>
-                {t('content-in-language')} {lang}
-              </DropdownItem>
-            ))}
+            {[...modelInfo.languages]
+              .sort((a, b) => compareLocales(a, b))
+              .map((lang) => (
+                <DropdownItem value={lang} key={lang}>
+                  {t('content-in-language')} {lang}
+                </DropdownItem>
+              ))}
           </Dropdown>
         </LanguagePickerWrapper>
       )}
