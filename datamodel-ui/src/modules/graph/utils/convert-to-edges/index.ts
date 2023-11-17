@@ -5,12 +5,13 @@ import {
 } from '@app/common/interfaces/visualization.interface';
 import { Edge } from 'reactflow';
 import createEdge from '../create-edge';
-import { TFunction, useTranslation } from 'next-i18next';
+import { TFunction } from 'next-i18next';
 
 export default function convertToEdges(
   nodes: VisualizationType[],
   hiddenNodes: VisualizationHiddenNode[],
   t: TFunction,
+  modelId: string,
   applicationProfile?: boolean
 ): Edge[] {
   if (
@@ -116,6 +117,7 @@ export default function convertToEdges(
         }
 
         return createEdge({
+          modelId: modelId,
           label: label,
           identifier: reference.identifier,
           params: getEdgeParams(node.identifier, reference),

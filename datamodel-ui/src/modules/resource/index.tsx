@@ -81,7 +81,7 @@ export default function ResourceView({
   const { setPage, getPage } = useSetPage();
   const { getNodes, getEdges } = useReactFlow();
   const displayLang = useSelector(selectDisplayLang());
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(hasPermission ? 112 : 97);
   const [currentPage, setCurrentPage] = useState(getPage());
   const [query, setQuery] = useState('');
 

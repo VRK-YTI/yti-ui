@@ -11,10 +11,10 @@ import {
   Description,
   PartOf,
   TitleLink,
-  Status,
   Extra,
 } from './result-card.styles';
 import SanitizedTextContent from '../sanitized-text-content';
+import { StatusChip } from '../status-chip/status-chip.styles';
 
 interface ResultCardProps {
   contributors?: string[];
@@ -122,9 +122,9 @@ export default function ResultCard({
         {noChip ? (
           translateStatus(status ?? 'DRAFT', t)
         ) : (
-          <Status status={status ?? 'DRAFT'} id="card-status">
+          <StatusChip status={status ?? 'DRAFT'} id="card-status">
             {translateStatus(status ?? 'DRAFT', t)}
-          </Status>
+          </StatusChip>
         )}
       </>
     );

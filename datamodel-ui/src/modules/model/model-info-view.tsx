@@ -57,7 +57,7 @@ export default function ModelInfoView({
   const [showTooltip, setShowTooltip] = useState(false);
   const [showEditView, setShowEditView] = useState(false);
   const [formData, setFormData] = useState<ModelFormType | undefined>();
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(57);
   const displayLang = useSelector(selectDisplayLang());
   const [openModals, setOpenModals] = useState({
     showAsFile: false,

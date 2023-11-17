@@ -37,7 +37,7 @@ export default function LinkedDataView({
     actions: ['EDIT_DATA_MODEL'],
     targetOrganization: organizationIds,
   });
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(hasPermission ? 57 : 42);
   const [renderForm, setRenderForm] = useState(false);
   const { data, refetch } = useGetModelQuery({
     modelId: modelId,
