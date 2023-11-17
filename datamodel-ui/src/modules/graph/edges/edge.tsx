@@ -34,9 +34,8 @@ export default function DefaultEdge({
   const globalSelected = useSelector(selectSelected());
   const displayLang = useSelector(selectDisplayLang());
   const highlighted = useSelector(selectHighlighted());
-  const { showAssociations, showAssociationRestrictions } = useSelector(
-    selectModelTools()
-  );
+  const { showAssociations, showAssociationRestrictions, showById } =
+    useSelector(selectModelTools());
   const sourceNode = useStore(
     useCallback((store) => store.nodeInternals.get(source), [source])
   );
@@ -119,6 +118,9 @@ export default function DefaultEdge({
       return undefined;
     }
 
+    if (showById) {
+      return `${data?.modelId}:${data?.identifier}`;
+    }
     return getLanguageVersion({
       data: label,
       lang: displayLang !== i18n.language ? displayLang : i18n.language,
