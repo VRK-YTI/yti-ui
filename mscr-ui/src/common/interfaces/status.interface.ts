@@ -1,4 +1,1 @@
-export type Status =
-  | 'DRAFT'
-  | 'PUBLISHED'
-  | 'DEPRECATED';
+export type Status = 'DRAFT' | 'PUBLISHED' | 'DEPRECATED';

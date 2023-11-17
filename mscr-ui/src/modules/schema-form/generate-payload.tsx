@@ -1,14 +1,12 @@
 /* eslint-disable */
 import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 
-
 // here we can create the schema payload
 
-export default function generatePayload(data: SchemaFormType):any{
-  
+export default function generatePayload(data: SchemaFormType): any {
   console.log(data.format);
   return {
-    namespace: "http://test.com", 
+    namespace: 'http://test.com',
     description: data.languages
       .filter((l: { description: string }) => l.description !== '')
       .reduce(
@@ -34,13 +32,9 @@ export default function generatePayload(data: SchemaFormType):any{
       (o: { uniqueItemId: any }) => o.uniqueItemId
     ),
     status: data.status,
-    format:data.format,
+    format: data.format,
     uri: data.uri,
     state: 'DRAFT',
-    versionLabel:'1'
- 
-       
+    versionLabel: '1',
   };
-
-
 }

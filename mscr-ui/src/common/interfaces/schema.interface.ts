@@ -25,7 +25,7 @@ export interface Organization {
   label: { [key: string]: string };
 }
 
-export interface SchemaFormType{
+export interface SchemaFormType {
   namespace?: string;
   contact?: boolean;
   serviceCategories?: any;
@@ -38,5 +38,4 @@ export interface SchemaFormType{
   description?: any;
   status?: any;
   uri?: any;
-  
 }

@@ -26,7 +26,7 @@ export const schemaApi = createApi({
         method: 'PUT',
         data: value,
         headers: {
-          'content-Type': 'application/json;'
+          'content-Type': 'application/json;',
         },
       }),
     }),
@@ -36,7 +36,7 @@ export const schemaApi = createApi({
         method: 'PUT',
         data: file,
         headers: {
-          'content-Type': 'multipart/form-data;'
+          'content-Type': 'multipart/form-data;',
         },
       }),
     }),
@@ -70,7 +70,7 @@ export const {
   util: { getRunningQueriesThunk },
 } = schemaApi;
 
-export const { putSchema, getSchema, deleteSchema, getSchemas,putSchemaFull } =
+export const { putSchema, getSchema, deleteSchema, getSchemas, putSchemaFull } =
   schemaApi.endpoints;
 
 // Slice setup below

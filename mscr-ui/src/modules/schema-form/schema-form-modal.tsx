@@ -73,7 +73,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   }, [schemaFormInitialData]);
 
   useEffect(() => {
-    if (userPosted && resultSchema.isSuccess||resultSchema.isSuccess) {
+    if ((userPosted && resultSchema.isSuccess) || resultSchema.isSuccess) {
       //Get the pid from the result
       handleClose();
       if (resultSchema && resultSchema.data.pid) {
@@ -83,13 +83,19 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       else if (resultSchemaFull && resultSchemaFull.data.pid) {
         router.push(`/schema/${resultSchema.data.pid}`);
       }
-    
+
       // After post route to  saved schema get by PID
       // Later we should show the created schema in the list
-      
-      
     }
-  }, [resultSchema,resultSchema, refetch, userPosted, handleClose, router, formData]);
+  }, [
+    resultSchema,
+    resultSchema,
+    refetch,
+    userPosted,
+    handleClose,
+    router,
+    formData,
+  ]);
 
   const handleSubmit = () => {
     setUserPosted(true);
@@ -114,7 +120,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       console.log(fileData);
       schemaFormData.append('file', fileData);
       putSchemaFull(schemaFormData);
-    } else{
+    } else {
       //Register Schema with no filedata
       putSchema(payload);
     }
@@ -160,9 +166,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
             errors={userPosted ? errors : undefined}
           />
           <Separator></Separator>
-          <Text>
-            {'Upload a Schema File. You can upload file also later'}
-          </Text>
+          <Text>{'Upload a Schema File. You can upload file also later'}</Text>
           <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}

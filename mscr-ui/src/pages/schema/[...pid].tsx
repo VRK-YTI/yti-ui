@@ -98,7 +98,6 @@ export default function SchemaPage(props: IndexPageProps) {
   const { data, isLoading, isSuccess, isError, error } =
     useGetSchemaQuery(schemaId);
 
- 
   function renderSchema() {
     let schemaContent;
     if (isLoading) {
@@ -115,9 +114,7 @@ export default function SchemaPage(props: IndexPageProps) {
         <div className="col-lg-12 mb-3 ">
           <div className="card">
             <div className="card-body">
-              <BasicBlock title={'Schema Name'}>
-                {data.label?.en}
-              </BasicBlock>
+              <BasicBlock title={'Schema Name'}>{data.label?.en}</BasicBlock>
               <BasicBlock title={'Schema Name'}>
                 {data.description?.en}
               </BasicBlock>

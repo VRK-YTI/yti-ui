@@ -51,7 +51,7 @@ export default function SchemaForm({
     i18n.language
   );
   const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
-  
+
   const organizations = useMemo(() => {
     if (!organizationsData) {
       return [];
@@ -89,18 +89,12 @@ export default function SchemaForm({
             })
           }
         >
-          <DropdownItem value={'JSONSCHEMA'}>
-            {'JSON'}
-          </DropdownItem>
-          <DropdownItem value={'CSV'}>
-            {'CSV'}
-          </DropdownItem>
+          <DropdownItem value={'JSONSCHEMA'}>{'JSON'}</DropdownItem>
+          <DropdownItem value={'CSV'}>{'CSV'}</DropdownItem>
         </Dropdown>
       </div>
     );
   }
-
-
 
   function renderLanguages() {
     return (
@@ -118,9 +112,9 @@ export default function SchemaForm({
           }
           userPosted={userPosted}
           translations={{
-            textInput:'Name(required)',
-            textDescription:'Description',
-            optionalText: ''
+            textInput: 'Name(required)',
+            textDescription: 'Description',
+            optionalText: '',
           }}
           allowItemAddition={false}
           ariaChipActionLabel={''}
@@ -151,15 +145,9 @@ export default function SchemaForm({
             })
           }
         >
-          <DropdownItem value={'DRAFT'}>
-            {'DRAFT'}
-          </DropdownItem>
-          <DropdownItem value={'PUBLISHED'}>
-            {'PUBLISHED'}
-          </DropdownItem>
-          <DropdownItem value={'DEPRECATED'}>
-            {'DEPRECATED'}
-          </DropdownItem>
+          <DropdownItem value={'DRAFT'}>{'DRAFT'}</DropdownItem>
+          <DropdownItem value={'PUBLISHED'}>{'PUBLISHED'}</DropdownItem>
+          <DropdownItem value={'DEPRECATED'}>{'DEPRECATED'}</DropdownItem>
         </Dropdown>
       </div>
     );
