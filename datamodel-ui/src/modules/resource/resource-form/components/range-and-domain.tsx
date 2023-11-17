@@ -116,6 +116,7 @@ export default function RangeAndDomain({
                 handleFollowUp={handlePathFollowUP}
                 applicationProfile={applicationProfile}
                 defaultSelected={data.path?.uri}
+                hiddenResources={[data.uri]}
               />
             }
             deleteDisabled={true}

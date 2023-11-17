@@ -65,6 +65,7 @@ export default function AssociationRestrictions({
               }
               buttonIcon={true}
               applicationProfile={applicationProfile}
+              hiddenResources={[data.uri]}
             />
           }
           handleRemoval={() => handleUpdate('path', undefined)}

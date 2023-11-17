@@ -196,7 +196,7 @@ export const resourceSlice = createSlice({
 });
 
 export function selectResource() {
-  return (state: AppState) => state.resource;
+  return (state: AppState): ResourceFormType => state.resource;
 }
 
 export function setResource(data: ResourceFormType): AppThunk {

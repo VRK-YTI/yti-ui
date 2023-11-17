@@ -32,7 +32,7 @@ export interface ClassModalProps {
   initialSelected?: string;
   plusIcon?: boolean;
   limitToModelType?: 'LIBRARY' | 'PROFILE';
-  hideSelfReference?: string;
+  hiddenClasses?: string[];
   buttonVariant?: 'secondary' | 'secondaryNoBorder';
 }
 
@@ -45,7 +45,7 @@ export default function ClassModal({
   initialSelected,
   plusIcon,
   limitToModelType,
-  hideSelfReference,
+  hiddenClasses,
   buttonVariant,
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
@@ -118,11 +118,11 @@ export default function ClassModal({
     if (result.isSuccess) {
       setResultsFormatted(
         result.data.responseObjects
-          .filter((r) => r.id !== hideSelfReference)
+          .filter((r) => !hiddenClasses?.includes(r.id))
           .map((r) => mapInternalClassInfoToResultType(r, i18n.language))
       );
     }
-  }, [result, i18n.language, t, contentLanguage, hideSelfReference]);
+  }, [result, i18n.language, t, contentLanguage, hiddenClasses]);
 
   return (
     <>
@@ -146,7 +146,7 @@ export default function ClassModal({
           <MultiColumnSearch
             primaryColumnName={t('class-name')}
             result={{
-              totalHitCount: result.data?.totalHitCount ?? 0,
+              totalHitCount: resultsFormatted.length,
               items: resultsFormatted,
             }}
             selectedId={selectedId}

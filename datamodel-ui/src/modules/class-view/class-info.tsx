@@ -384,6 +384,7 @@ export default function ClassInfo({
                 limitSearchTo={'LIBRARY'}
                 applicationProfile={applicationProfile}
                 limitToSelect={!applicationProfile}
+                hiddenResources={data.attribute?.map((attr) => attr.uri)}
               />
               <Button variant="secondary" id="order-attributes-button">
                 {t('order-list', { ns: 'admin' })}
@@ -432,6 +433,7 @@ export default function ClassInfo({
                 handleFollowUp={handleFollowUp}
                 applicationProfile={applicationProfile}
                 limitToSelect={!applicationProfile}
+                hiddenResources={data.association?.map((assoc) => assoc.uri)}
               />
               <Button variant="secondary" id="order-associations-button">
                 {t('order-list', { ns: 'admin' })}
