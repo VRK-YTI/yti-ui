@@ -20,6 +20,7 @@ export default function createClassNode(
       ...(applicationProfile !== undefined
         ? { applicationProfile: applicationProfile }
         : {}),
+      uri: node.uri,
       resources: [
         ...(node.attributes ?? []).map((a) => ({
           ...a,

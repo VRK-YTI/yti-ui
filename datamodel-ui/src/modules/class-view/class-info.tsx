@@ -31,7 +31,9 @@ import { useSelector } from 'react-redux';
 import {
   selectAddResourceRestrictionToClass,
   selectDisplayLang,
+  selectUpdateClassData,
   setAddResourceRestrictionToClass,
+  setUpdateClassData,
   setUpdateVisualization,
 } from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
@@ -84,12 +86,20 @@ export default function ClassInfo({
   const [showTooltip, setShowTooltip] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
+  const updateClassData = useSelector(selectUpdateClassData());
   const dispatch = useStoreDispatch();
   const renderResourceForm = useSelector(selectAddResourceRestrictionToClass());
 
   const displayLang = useSelector(selectDisplayLang());
   const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
   const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
+
+  useEffect(() => {
+    if (updateClassData) {
+      handleRefetch();
+      dispatch(setUpdateClassData(false));
+    }
+  }, [dispatch, handleRefetch, updateClassData]);
 
   const handleFollowUp = (value: {
     uriData: UriData;

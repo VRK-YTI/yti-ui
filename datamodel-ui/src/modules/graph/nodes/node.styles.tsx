@@ -47,7 +47,7 @@ export const ClassNodeDiv = styled.div<{
       flex-grow: 1;
     }
 
-    height: ${(props) => (props.$appProfile ? '37px' : '27px')};
+    padding: ${(props) => props.theme.suomifi.spacing.xxs};
   }
 
   .react-flow__handle {

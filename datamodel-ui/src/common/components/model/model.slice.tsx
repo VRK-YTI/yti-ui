@@ -195,6 +195,7 @@ const initialState = {
   displayLang: 'fi',
   addResourceRestrictionToClass: false,
   updateVisualization: false,
+  updateClassData: false,
   tools: {
     fullScreen: false,
     resetPosition: false,
@@ -319,6 +320,12 @@ export const modelSlice = createSlice({
         updateVisualization: action.payload,
       };
     },
+    setUpdateClassData(state, action) {
+      return {
+        ...state,
+        updateClassData: action.payload,
+      };
+    },
     setTools(state, action) {
       if (
         action.payload.key === 'showByName' ||
@@ -393,7 +400,7 @@ export function selectViews() {
 }
 
 export function selectClassView() {
-  return (state: AppState) => state.model.view.classes;
+  return (state: AppState): ViewListItem => state.model.view.classes;
 }
 
 export function selectResourceView(type: 'associations' | 'attributes') {
@@ -484,7 +491,8 @@ export function setAddResourceRestrictionToClass(value: boolean): AppThunk {
 }
 
 export function selectAddResourceRestrictionToClass() {
-  return (state: AppState) => state.model.addResourceRestrictionToClass;
+  return (state: AppState): boolean =>
+    state.model.addResourceRestrictionToClass;
 }
 
 export function setUpdateVisualization(value: boolean): AppThunk {
@@ -493,5 +501,13 @@ export function setUpdateVisualization(value: boolean): AppThunk {
 }
 
 export function selectUpdateVisualization() {
-  return (state: AppState) => state.model.updateVisualization;
+  return (state: AppState): boolean => state.model.updateVisualization;
+}
+
+export function setUpdateClassData(value: boolean): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setUpdateClassData(value));
+}
+
+export function selectUpdateClassData() {
+  return (state: AppState): boolean => state.model.updateClassData;
 }
