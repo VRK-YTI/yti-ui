@@ -82,7 +82,6 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
           >
             <ModelTools
               modelId={modelId}
-              version={version}
               applicationProfile={modelInfo?.type === 'PROFILE'}
             />
           </Graph>
@@ -210,7 +209,6 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         >
           <ModelTools
             modelId={modelId}
-            version={version}
             applicationProfile={modelInfo?.type === 'PROFILE'}
           />
         </Graph>
