@@ -28,11 +28,14 @@ export const visualizationApi = createApi({
       null,
       {
         modelId: string;
+        version?: string;
         data: VisualizationPutType[];
       }
     >({
       query: (value) => ({
-        url: `/visualization/${value.modelId}/positions`,
+        url: `/visualization/${value.modelId}/positions${
+          value.version ? `?version=${value.version}` : ''
+        }`,
         method: 'PUT',
         data: value.data,
       }),
