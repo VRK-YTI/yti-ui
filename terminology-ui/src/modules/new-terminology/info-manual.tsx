@@ -187,7 +187,7 @@ export default function InfoManual({
         disabled={disabled}
       />
       <TallerSeparator />
-      <Paragraph marginBottomSpacing="m">
+      <Paragraph mb="m">
         <Text variant="bold">{t('terminology-other-information')}</Text>
       </Paragraph>
       <OrganizationSelector

@@ -6,7 +6,7 @@ import {
 } from './expander-title.styles';
 
 export interface ExpanderTitleProps
-  extends ComponentProps<typeof ExpanderTitleButton> {
+  extends Omit<ComponentProps<typeof ExpanderTitleButton>, 'title'> {
   title: ReactNode;
   extra?: ReactNode;
 }

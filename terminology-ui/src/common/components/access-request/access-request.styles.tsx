@@ -8,8 +8,10 @@ export const AccessRequestDescription = styled.div`
 
 export const AccessRequestDropdown = styled(Dropdown)<{ $error: boolean }>`
   .fi-dropdown_button {
-    border: 2px solid ${(props) => props.theme.suomifi.colors.alertBase}
-      ${(props) => (props.$error ? '!important' : '')};
+    ${(props) =>
+      `border: 2px solid ${props.theme.suomifi.colors.alertBase} ${
+        props.$error ? '!important' : ''
+      };`}
   }
 `;
 
