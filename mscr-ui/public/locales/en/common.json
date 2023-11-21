@@ -130,6 +130,8 @@
     "state": "State",
     "version": "Version",
     "version-history": "Version history",
+    "version-label": "Version label",
+    "versions": "Versions",
     "visibility": "Visibility"
   },
   "search": "",
