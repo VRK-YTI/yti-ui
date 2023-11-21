@@ -182,6 +182,7 @@
   "error-prefix-taken": "Tunnus on käytössä",
   "error-unauthenticated": "Kirjautumistietojen varmistuksessa ilmeni ongelma. Kirjaudu palveluun uudestaan.",
   "feedback": "Palaute",
+  "following-external-ns-miss-name": "Seuraavilta ulkoisilta tietomalleilta puuttuu nimi: {{data}}",
   "file-added": "",
   "graph-has-unsaved-changes": "Kaavion muutoksia ei ole tallennettu",
   "identifier": "Tunniste",

@@ -39,12 +39,14 @@ interface LinkedItemProps {
       };
   handleRemove: (id: string) => void;
   languages?: string[];
+  isError?: boolean;
 }
 
 export default function LinkedItem({
   itemData,
   handleRemove,
   languages,
+  isError,
 }: LinkedItemProps) {
   const { t, i18n } = useTranslation('admin');
 
@@ -128,6 +130,7 @@ export default function LinkedItem({
                   onChange={(e) => {
                     itemData.setData({ [lang]: e?.toString() ?? '' });
                   }}
+                  status={isError ? 'error' : 'default'}
                 />
               ))}
           <BasicBlock title={t('prefix-in-this-service')}>

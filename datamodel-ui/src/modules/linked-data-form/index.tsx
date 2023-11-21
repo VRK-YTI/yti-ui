@@ -24,6 +24,8 @@ import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-b
 import { useStoreDispatch } from '@app/store';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
+import getApiError from '@app/common/utils/get-api-errors';
 
 export default function LinkedDataForm({
   hasCodelist,
@@ -42,6 +44,7 @@ export default function LinkedDataForm({
   const [updateModel, result] = useUpdateModelMutation();
   const [headerHeight, setHeaderHeight] = useState(57);
   const [userPosted, setUserPosted] = useState(false);
+  const [extNSWithNoName, setExtNSWithNoName] = useState<string[]>([]);
   const [data, setData] = useState<{
     codeLists: ModelCodeList[];
     externalNamespaces: ExternalNamespace[];
@@ -58,12 +61,25 @@ export default function LinkedDataForm({
     enableConfirmation();
     dispatch(setHasChanges(true));
     setData(value);
+
+    if (extNSWithNoName.length > 0) {
+      validateExternalNS();
+    }
   };
 
   const handleSubmit = () => {
-    setUserPosted(true);
     disableConfirmation();
     dispatch(setHasChanges(false));
+
+    if (!userPosted) {
+      setUserPosted(true);
+    }
+
+    const extNSErrors = validateExternalNS();
+
+    if (extNSErrors) {
+      return;
+    }
 
     const payload = generatePayloadUpdate({
       ...model,
@@ -80,11 +96,47 @@ export default function LinkedDataForm({
     });
   };
 
+  const validateExternalNS = () => {
+    if (data.externalNamespaces.length > 0) {
+      const extNSWithNoName = data.externalNamespaces.filter(
+        (ns) =>
+          Object.keys(ns.name).length < 1 ||
+          Object.values(ns.name).filter((name) => name !== '').length !==
+            Object.keys(ns.name).length
+      );
+
+      if (extNSWithNoName.length > 0) {
+        setExtNSWithNoName(extNSWithNoName.map((ns) => ns.prefix));
+        return true;
+      }
+    }
+
+    setExtNSWithNoName([]);
+    return false;
+  };
+
+  const getErrors = () => {
+    const errorMsgs: string[] = [];
+    if (extNSWithNoName.length > 0) {
+      errorMsgs.push(
+        t('following-external-ns-miss-name', {
+          data: extNSWithNoName.join(', '),
+        })
+      );
+    }
+
+    if (result.isError) {
+      errorMsgs.push(...getApiError(result.error));
+    }
+
+    return errorMsgs;
+  };
+
   useEffect(() => {
     if (ref.current) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref]);
+  }, [ref, extNSWithNoName, result]);
 
   useEffect(() => {
     if (result.isSuccess) {
@@ -92,7 +144,7 @@ export default function LinkedDataForm({
       handleReturn();
       dispatch(setNotification('LINK_EDIT'));
     }
-  }, [result, dispatch, handleReturn]);
+  }, [result, dispatch, handleReturn, disableConfirmation]);
 
   return (
     <>
@@ -107,7 +159,7 @@ export default function LinkedDataForm({
             }}
           >
             <Button onClick={() => handleSubmit()} id="submit-button">
-              {userPosted ? (
+              {userPosted && result.isLoading ? (
                 <div role="alert">
                   <StyledSpinner
                     variant="small"
@@ -131,6 +183,20 @@ export default function LinkedDataForm({
             </Button>
           </div>
         </HeaderRow>
+        {userPosted && (extNSWithNoName.length > 0 || result.isError) ? (
+          <div>
+            <FormFooterAlert
+              labelText={
+                result.isError
+                  ? t('unexpected-error-title')
+                  : t('missing-information-title')
+              }
+              alerts={getErrors()}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
@@ -316,6 +382,7 @@ export default function LinkedDataForm({
                   })
                 }
                 languages={model.languages}
+                isError={extNSWithNoName.includes(n.prefix)}
               />
             ))}
           </div>
