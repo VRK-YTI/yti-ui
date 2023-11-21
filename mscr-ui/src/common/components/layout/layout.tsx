@@ -71,10 +71,8 @@ export default function Layout({
               fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
             />
             <Grid container spacing={2}>
-              <Grid item xs={2}>
-                {user && <SideNavigationPanel user={user}/>}
-              </Grid>
-              <Grid item xs={10}>
+
+              <Grid item xs={12}>
                 <ContentContainer>
                   {alerts && alerts}
                   <MarginContainer $breakpoint={breakpoint}>
