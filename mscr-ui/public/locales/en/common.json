@@ -116,6 +116,22 @@
     "roles": "",
     "terminology-editor": ""
   },
+  "schema": {
+    "created": "",
+    "description": "",
+    "format": "",
+    "metadata": "",
+    "metadata-and-files": "",
+    "modified": "",
+    "name": "",
+    "namespace": "",
+    "organizations": "",
+    "pid": "",
+    "state": "",
+    "version": "",
+    "version-history": "",
+    "visibility": ""
+  },
   "search": "",
   "search-by-keyword": "",
   "search-term": "",
