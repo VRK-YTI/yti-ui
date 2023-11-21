@@ -1,6 +1,7 @@
 export interface VisualizationType {
   identifier: string;
   label: { [key: string]: string };
+  uri: string;
   references: VisualizationReferenceType[];
   position: {
     x: number;
@@ -9,6 +10,7 @@ export interface VisualizationType {
   attributes?: {
     identifier: string;
     label: { [key: string]: string };
+    uri: string;
     dataType?: string;
     minCount?: number;
     maxCount?: number;
@@ -23,6 +25,7 @@ export interface VisualizationType {
 export interface VisualizationReferenceType {
   identifier: string;
   label?: { [key: string]: string };
+  uri: string;
   referenceTarget: string;
   referenceType: ReferenceType;
   minCount?: number;

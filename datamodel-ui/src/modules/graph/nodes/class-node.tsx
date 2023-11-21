@@ -3,6 +3,7 @@
 import {
   resetHighlighted,
   resetHovered,
+  selectClassView,
   selectDisplayLang,
   selectHovered,
   selectModelTools,
@@ -11,13 +12,13 @@ import {
   setHighlighted,
   setHovered,
   setSelected,
+  setUpdateClassData,
+  setUpdateVisualization,
 } from '@app/common/components/model/model.slice';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Handle, Position, useReactFlow } from 'reactflow';
 import {
-  IconChevronDown,
-  IconChevronUp,
   IconOptionsVertical,
   IconRows,
   IconSwapVertical,
@@ -25,7 +26,6 @@ import {
 } from 'suomifi-ui-components';
 import {
   ClassNodeDiv,
-  CollapseButton,
   OptionsButton,
   Resource,
   TooltipWrapper,
@@ -66,16 +66,13 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const [showTooltip, setShowTooltip] = useState(false);
   const [hover, setHover] = useState(false);
   const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
+  const classView = useSelector(selectClassView());
   const { setView } = useSetView();
 
   const handleTitleClick = () => {
     if (globalSelected.id !== id) {
       dispatch(setSelected(id, 'classes', data.modelId));
     }
-  };
-
-  const handleShowAttributesClick = () => {
-    setShowAttributes(!showAttributes);
   };
 
   const handleHover = (hover: boolean) => {
@@ -101,11 +98,17 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
         prefix: data.modelId,
         identifier: data.identifier,
         uri: value.uriData.uri,
-        applicationProfile: true,
+        applicationProfile: data.applicationProfile ?? false,
       });
     } else {
       dispatch(setSelected(id, 'classes', data.modelId));
-      dispatch(initializeResource(value.type, value.uriData, true));
+      dispatch(
+        initializeResource(
+          value.type,
+          value.uriData,
+          data.applicationProfile ?? false
+        )
+      );
       dispatch(setAddResourceRestrictionToClass(true));
     }
   };
@@ -149,10 +152,21 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   }, [selected, showTooltip]);
 
   useEffect(() => {
-    if (addReferenceResult.isSuccess && data.refetch) {
-      data.refetch();
+    if (addReferenceResult.isSuccess) {
+      dispatch(setUpdateVisualization(true));
+      if (classView.info) {
+        dispatch(setUpdateClassData(true));
+      }
     }
-  }, [addReferenceResult, data]);
+  }, [
+    addReferenceResult,
+    classView.info,
+    data.modelId,
+    dispatch,
+    globalSelected.id,
+    globalSelected.type,
+    id,
+  ]);
 
   return (
     <ClassNodeDiv
@@ -172,49 +186,41 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
       <div className="node-title">
         <div onClick={() => handleTitleClick()}>{renderClassLabel()}</div>
 
-        {data.applicationProfile ? (
-          hasPermission ? (
-            <TooltipWrapper>
-              <OptionsButton
-                onClick={() => setShowTooltip(!showTooltip)}
-                id={`${data.identifier}-options`}
-              >
-                <IconOptionsVertical fill="#2a6ebb" />
-              </OptionsButton>
+        {hasPermission && (
+          <TooltipWrapper>
+            <OptionsButton
+              onClick={() => setShowTooltip(!showTooltip)}
+              id={`${data.identifier}-options`}
+            >
+              <IconOptionsVertical fill="#2a6ebb" />
+            </OptionsButton>
 
-              <Tooltip
-                ariaCloseButtonLabelText=""
-                ariaToggleButtonLabelText=""
-                open={showTooltip}
-              >
-                <ResourceModal
-                  modelId={data.modelId}
-                  type={ResourceType.ATTRIBUTE}
-                  handleFollowUp={handleMenuFollowUp}
-                  limitSearchTo={'LIBRARY'}
-                  applicationProfile={data.applicationProfile}
-                  limitToSelect={!data.applicationProfile}
-                  buttonIcon
-                />
-
-                <ResourceModal
-                  modelId={data.modelId}
-                  type={ResourceType.ASSOCIATION}
-                  handleFollowUp={handleMenuFollowUp}
-                  limitSearchTo={'LIBRARY'}
-                  applicationProfile={data.applicationProfile}
-                  limitToSelect={!data.applicationProfile}
-                  buttonIcon
-                />
-              </Tooltip>
-            </TooltipWrapper>
-          ) : (
-            <></>
-          )
-        ) : (
-          <CollapseButton onClick={() => handleShowAttributesClick()}>
-            {showAttributes ? <IconChevronUp /> : <IconChevronDown />}
-          </CollapseButton>
+            <Tooltip
+              ariaCloseButtonLabelText=""
+              ariaToggleButtonLabelText=""
+              open={showTooltip}
+            >
+              {[ResourceType.ATTRIBUTE, ResourceType.ASSOCIATION].map(
+                (type) => {
+                  return (
+                    <ResourceModal
+                      key={`add-${type}-modal`}
+                      modelId={data.modelId}
+                      type={type}
+                      handleFollowUp={handleMenuFollowUp}
+                      limitSearchTo={'LIBRARY'}
+                      applicationProfile={data.applicationProfile}
+                      limitToSelect={!data.applicationProfile}
+                      buttonIcon
+                      hiddenResources={data.resources
+                        .filter((r) => r.type === type)
+                        .map((r) => r.uri)}
+                    />
+                  );
+                }
+              )}
+            </Tooltip>
+          </TooltipWrapper>
         )}
       </div>
 

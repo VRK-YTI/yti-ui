@@ -9,6 +9,7 @@ describe('create-class-node', () => {
           fi: 'label-1-fi',
           en: 'label-1-en',
         },
+        uri: 'uri-1',
         references: [],
         position: {
           x: 0,
@@ -48,6 +49,7 @@ describe('create-class-node', () => {
         label: {
           fi: 'label-1-fi',
         },
+        uri: 'uri-1',
         references: [],
         position: {
           x: 0,
@@ -56,18 +58,21 @@ describe('create-class-node', () => {
         attributes: [
           {
             identifier: 'attr-1',
+            uri: 'uri-attr-1',
             label: {
               fi: 'attr-1-fi',
             },
           },
           {
             identifier: 'attr-2',
+            uri: 'uri-attr-2',
             label: {
               fi: 'attr-2-fi',
             },
           },
           {
             identifier: 'attr-3',
+            uri: 'uri-attr-3',
             label: {
               fi: 'attr-3-fi',
             },
@@ -76,6 +81,7 @@ describe('create-class-node', () => {
         associations: [
           {
             identifier: 'assoc-1',
+            uri: 'uri-assoc-1',
             label: {
               fi: 'assoc-1-fi',
             },
@@ -84,6 +90,7 @@ describe('create-class-node', () => {
           },
           {
             identifier: 'assoc-2',
+            uri: 'uri-assoc-2',
             label: {
               fi: 'assoc-2-fi',
             },
@@ -92,6 +99,7 @@ describe('create-class-node', () => {
           },
           {
             identifier: 'assoc-3',
+            uri: 'uri-assoc-3',
             label: {
               fi: 'assoc-3-fi',
             },

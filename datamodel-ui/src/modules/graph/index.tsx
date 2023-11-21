@@ -288,7 +288,7 @@ const GraphContent = ({
         modelId,
         deleteNodeById,
         applicationProfile,
-        applicationProfile ? refetchNodes : undefined,
+        refetchNodes,
         organizationIds
       )
     );

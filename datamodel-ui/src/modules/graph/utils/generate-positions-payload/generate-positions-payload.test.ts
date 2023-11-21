@@ -17,6 +17,7 @@ describe('generate-positions-payload', () => {
           data: {
             identifier: 'node-1',
             label: {},
+            uri: 'uri-1',
             modelId: 'model-1',
             resources: [],
           },
@@ -29,6 +30,7 @@ describe('generate-positions-payload', () => {
           id: 'node-2',
           data: {
             identifier: 'node-2',
+            uri: 'uri-2',
             label: {},
             modelId: 'model-1',
             resources: [],
@@ -42,6 +44,7 @@ describe('generate-positions-payload', () => {
           id: 'node-3',
           data: {
             identifier: 'node-3',
+            uri: 'uri-3',
             label: {},
             modelId: 'model-1',
             resources: [],

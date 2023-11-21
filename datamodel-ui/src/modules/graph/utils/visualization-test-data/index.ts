@@ -5,6 +5,7 @@ export const libraryData = {
     {
       identifier: 'address',
       label: { fi: 'Osoite' },
+      uri: 'uri-address',
       position: { x: 813, y: -93 },
       type: 'CLASS',
       references: [],
@@ -129,6 +130,7 @@ export const profileData = {
       label: {
         fi: 'Osoite',
       },
+      uri: 'uri-address',
       position: {
         x: 698,
         y: 66,
