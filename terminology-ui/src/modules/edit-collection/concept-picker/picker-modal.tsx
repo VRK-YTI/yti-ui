@@ -230,9 +230,10 @@ export default function PickerModal({
                   <Expander key={`concept-${concept.id}`}>
                     <ExpanderTitle
                       title=""
-                      ariaOpenText={t('open-concept-info')}
-                      ariaCloseText={t('close-concept-info')}
                       toggleButtonAriaDescribedBy={`checkbox-id-${concept.id}`}
+                      toggleButtonAriaLabel={t('additional-information', {
+                        ns: 'admin',
+                      })}
                       className="search-result-expander"
                     >
                       <Checkbox

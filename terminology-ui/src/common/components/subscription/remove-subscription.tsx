@@ -110,7 +110,7 @@ export default function RemoveSubscription({
             {t('subscription-remove-email-notifications')}
           </ModalTitle>
 
-          <Paragraph marginBottomSpacing="m">
+          <Paragraph mb="m">
             <Text>{t('subscription-remove-email-description')}</Text>
           </Paragraph>
 

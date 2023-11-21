@@ -119,7 +119,7 @@ export default function OrganizationSelector({
               {t('content-creator')}
             </Text>
           </Paragraph>
-          <Paragraph marginBottomSpacing="m">
+          <Paragraph mb="m">
             <Text smallScreen>{adminOrgs[0]?.labelText}</Text>
           </Paragraph>
         </>
