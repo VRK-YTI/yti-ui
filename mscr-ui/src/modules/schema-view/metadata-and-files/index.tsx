@@ -2,10 +2,16 @@ import {useTranslation} from 'next-i18next';
 import {useMemo} from 'react';
 import {Schema} from '@app/common/interfaces/schema.interface';
 import router from 'next/router';
+import {
+  DescriptionList,
+  DescriptionListTitle
+} from '@app/modules/schema-view/metadata-and-files/metadata-and-files.styles';
+import {Grid} from '@mui/material';
+import {Heading} from 'suomifi-ui-components';
 
 export default function MetadataAndFiles({ schemaDetails }: { schemaDetails?: Schema }) {
   const { t } = useTranslation('common');
-  const lang = router.query.lang;
+  const lang = router.locale;
 
   // TODO: Only edit with permission, we have util has-permission
   // TODO: Get organization names neatly
@@ -52,40 +58,134 @@ export default function MetadataAndFiles({ schemaDetails }: { schemaDetails?: Sc
 
   return (
     <>
-      <dl>
-        <dt>
-          {t('schema.name')}
-        </dt>
-        <dd>
-          {schemaDisplay.schemaLabel}
-        </dd>
-      </dl>
-      <div className='crosswalk-editor mx-2'>
-        <h2 className='mt-4 mb-3'>Crosswalk details</h2>
-        <div className='row d-flex justify-content-between metadata-and-files-wrap mx-2'>
-          <div className='row bg-light-blue'>
-            <div className='col-6'>
-              <div className='my-3'> Name: <span></span></div>
-              <div className='my-3'> Description: <span>{schemaDisplay.schemaDescription}</span></div>
-              <div className='my-3'> PID: <span>{schemaDisplay.schemaPid}</span></div>
-              <div className='my-3'> Version: <span>{schemaDisplay.schemaVersionLabel}</span></div>
-              <div className='my-3'> Created: <span>{schemaDisplay.schemaCreated}</span></div>
-              <div className='my-3'> Modified: <span>{schemaDisplay.schemaModified}</span></div>
-              <div className='my-3'> State: <span>{schemaDisplay.schemaState}</span></div>
-              <div className='my-3'> Visibility: <span>{schemaDisplay.schemaVisibility}</span></div>
-              <div className='my-3'> Format: <span>{schemaDisplay.schemaFormat}</span></div>
-              <div className='my-3'> Namespace: <span>{schemaDisplay.schemaNamespace}</span></div>
-              <div className='my-3'> Organizations: <span>{schemaDisplay.schemaOrganizations}</span></div>
-            </div>
-          </div>
-        </div>
-        <h2 className='mt-4 mb-3'>Files</h2>
-        <div className='row d-flex justify-content-between metadata-and-files-wrap mx-2'>
-          <br/>
+      <Heading variant='h2'>{t('schema.metadata')}</Heading>
+      <DescriptionList>
+        <Grid container spacing={2}>
 
-          <div>TABLE HERE{/* TODO: Display schema files */}</div>
-        </div>
-      </div>
+          <Grid item xs={1}>
+            <DescriptionListTitle>
+              {t('schema.name')}
+            </DescriptionListTitle>
+          </Grid>
+          <Grid item xs={11}>
+            <dd>
+              {schemaDisplay.schemaLabel}
+            </dd>
+          </Grid>
+
+          <Grid item xs={1}>
+            <DescriptionListTitle>
+              {t('schema.description')}
+            </DescriptionListTitle>
+          </Grid>
+          <Grid item xs={11}>
+            <dd>
+              {schemaDisplay.schemaDescription}
+            </dd>
+          </Grid>
+
+          <Grid item xs={1}>
+            <DescriptionListTitle>
+              {t('schema.pid')}
+            </DescriptionListTitle>
+          </Grid>
+          <Grid item xs={11}>
+            <dd>
+              {schemaDisplay.schemaPid}
+            </dd>
+          </Grid>
+
+          <Grid item xs={1}>
+            <DescriptionListTitle>
+              {t('schema.version')}
+            </DescriptionListTitle>
+          </Grid>
+          <Grid item xs={11}>
+            <dd>
+              {schemaDisplay.schemaVersionLabel}
+            </dd>
+          </Grid>
+
+          <Grid item xs={1}>
+            <DescriptionListTitle>
+              {t('schema.created')}
+            </DescriptionListTitle>
+          </Grid>
+          <Grid item xs={11}>
+            <dd>
+              {schemaDisplay.schemaCreated}
+            </dd>
+          </Grid>
+
+          <Grid item xs={1}>
+            <DescriptionListTitle>
+              {t('schema.modified')}
+            </DescriptionListTitle>
+          </Grid>
+          <Grid item xs={11}>
+            <dd>
+              {schemaDisplay.schemaModified}
+            </dd>
+          </Grid>
+
+          <Grid item xs={1}>
+            <DescriptionListTitle>
+              {t('schema.state')}
+            </DescriptionListTitle>
+          </Grid>
+          <Grid item xs={11}>
+            <dd>
+              {schemaDisplay.schemaState}
+            </dd>
+          </Grid>
+
+          <Grid item xs={1}>
+            <DescriptionListTitle>
+              {t('schema.visibility')}
+            </DescriptionListTitle>
+          </Grid>
+          <Grid item xs={11}>
+            <dd>
+              {schemaDisplay.schemaVisibility}
+            </dd>
+          </Grid>
+
+          <Grid item xs={1}>
+            <DescriptionListTitle>
+              {t('schema.format')}
+            </DescriptionListTitle>
+          </Grid>
+          <Grid item xs={11}>
+            <dd>
+              {schemaDisplay.schemaFormat}
+            </dd>
+          </Grid>
+
+          <Grid item xs={1}>
+            <DescriptionListTitle>
+              {t('schema.namespace')}
+            </DescriptionListTitle>
+          </Grid>
+          <Grid item xs={11}>
+            <dd>
+              {schemaDisplay.schemaNamespace}
+            </dd>
+          </Grid>
+
+          <Grid item xs={1}>
+            <DescriptionListTitle>
+              {t('schema.organizations')}
+            </DescriptionListTitle>
+          </Grid>
+          <Grid item xs={11}>
+            <dd>
+              {schemaDisplay.schemaOrganizations}
+            </dd>
+          </Grid>
+
+        </Grid>
+      </DescriptionList>
+      <div>TABLE HERE{/* TODO: Display schema files */}</div>
     </>
   );
 }
