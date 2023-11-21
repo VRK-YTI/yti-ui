@@ -138,7 +138,17 @@ export function convertToPayload(
       })
   );
 
+  // Remove unnecessary info from payload
+  // these come from GET request of the resource when editing
+  delete ret.contributor;
+  delete ret.creator;
+  delete ret.created;
+  delete ret.modifier;
+  delete ret.modified;
+  delete ret.contact;
+
   if (!data.concept) {
+    delete ret.subject;
     return ret;
   }
 
