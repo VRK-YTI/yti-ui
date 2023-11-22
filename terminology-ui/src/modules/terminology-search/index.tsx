@@ -263,6 +263,7 @@ export default function TerminologySearch() {
                     'terminology-search-results-information-domains'
                   )}
                   noDescriptionText={t('vocabulary-results-no-description')}
+                  noVersion
                   tagsTitle={t('terminology-search-terminologies', {
                     count: data?.totalHitCount ?? 0,
                   })}

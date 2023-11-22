@@ -37,6 +37,7 @@ interface SearchResultsProps {
   partOfText?: string;
   noDescriptionText: string;
   noChip?: boolean;
+  noVersion?: boolean;
   tagsTitle: string;
   tagsHiddenTitle: string;
   withDefaultStatuses?: string[];
@@ -72,6 +73,7 @@ export default function SearchResults({
   partOfText,
   noDescriptionText,
   noChip,
+  noVersion,
   tagsTitle,
   tagsHiddenTitle,
   withDefaultStatuses,
@@ -111,6 +113,7 @@ export default function SearchResults({
               partOfText={partOfText}
               noDescriptionText={noDescriptionText}
               noChip={noChip}
+              noVersion={noVersion}
               extra={
                 extra &&
                 ('expander' in extra

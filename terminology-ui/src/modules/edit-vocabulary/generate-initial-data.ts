@@ -1,12 +1,10 @@
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
-import { TFunction } from 'next-i18next';
 import { LanguageBlockType } from 'yti-common-ui/form/language-selector';
 
 export default function generateInitialData(
   lang: string,
-  t: TFunction,
   data?: VocabularyInfoDTO
 ): NewTerminologyInfo | undefined {
   if (!data) {
@@ -21,9 +19,7 @@ export default function generateInitialData(
       const title =
         data.properties.prefLabel?.find((p) => p.lang === l.value)?.value ?? '';
 
-      const labelText = ['fi', 'sv', 'en'].includes(l.value)
-        ? `${t(`language-label-text-${l.value}`)}`
-        : l.value;
+      const labelText = l.value;
 
       return {
         title,

@@ -23,6 +23,7 @@ interface ResultCardProps {
   icon?: ReactNode;
   noChip?: boolean;
   noDescriptionText: string;
+  noVersion?: boolean;
   partOfText?: string;
   partOf?: string[];
   identifier?: string;
@@ -41,6 +42,7 @@ export default function ResultCard({
   noChip = false,
   noDescriptionText,
   partOf,
+  noVersion,
   version,
   identifier,
   partOfText,
@@ -79,7 +81,9 @@ export default function ResultCard({
             <span style={{ textTransform: 'uppercase' }}>{identifier}</span>
           </>
         )}
-        {version ? (
+        {noVersion ? (
+          <></>
+        ) : version ? (
           <>
             <span aria-hidden={true}>&middot;</span>
             <span style={{ textTransform: 'uppercase' }}>{`${t(
