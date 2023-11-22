@@ -38,12 +38,20 @@ export default function MetadataAndFiles({ schemaDetails }: { schemaDetails?: Sc
         }
       );
     }
-
+    function languageFinder(langTaggedData: { [key:string]: string }) {
+      const primaryOption = Object.entries(langTaggedData).find((t) => t[0] === lang)?.[1];
+      const englishOption = Object.entries(langTaggedData).find((t) => t[0] === 'en')?.[1];
+      return primaryOption ?? englishOption;
+    }
     return (
       {
         schemaPid: schemaDetails?.pid ?? '',
-        schemaLabel: schemaDetails?.label ? Object.entries(schemaDetails.label).find((t) => t[0] === lang)?.[1] ?? '' : '',
-        schemaDescription: schemaDetails?.description ? Object.entries(schemaDetails.description).find((t) => t[0] === lang)?.[1] ?? '' : '',
+        schemaLabel: schemaDetails?.label
+          ? languageFinder(schemaDetails.label) ?? ''
+          : '',
+        schemaDescription: schemaDetails?.description
+          ? languageFinder(schemaDetails.description) ?? ''
+          : '',
         schemaCreated: schemaDetails?.created ?? '',
         schemaModified: schemaDetails?.modified ?? '',
         schemaState: schemaDetails?.state ?? '',
@@ -62,122 +70,122 @@ export default function MetadataAndFiles({ schemaDetails }: { schemaDetails?: Sc
       <DescriptionList>
         <Grid container spacing={2}>
 
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <DescriptionListTitle>
               {t('schema.name')}
             </DescriptionListTitle>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={10}>
             <dd>
               {schemaDisplay.schemaLabel}
             </dd>
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <DescriptionListTitle>
               {t('schema.description')}
             </DescriptionListTitle>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={10}>
             <dd>
               {schemaDisplay.schemaDescription}
             </dd>
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <DescriptionListTitle>
               {t('schema.pid')}
             </DescriptionListTitle>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={10}>
             <dd>
               {schemaDisplay.schemaPid}
             </dd>
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <DescriptionListTitle>
               {t('schema.version')}
             </DescriptionListTitle>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={10}>
             <dd>
               {schemaDisplay.schemaVersionLabel}
             </dd>
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <DescriptionListTitle>
               {t('schema.created')}
             </DescriptionListTitle>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={10}>
             <dd>
               {schemaDisplay.schemaCreated}
             </dd>
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <DescriptionListTitle>
               {t('schema.modified')}
             </DescriptionListTitle>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={10}>
             <dd>
               {schemaDisplay.schemaModified}
             </dd>
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <DescriptionListTitle>
               {t('schema.state')}
             </DescriptionListTitle>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={10}>
             <dd>
               {schemaDisplay.schemaState}
             </dd>
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <DescriptionListTitle>
               {t('schema.visibility')}
             </DescriptionListTitle>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={10}>
             <dd>
               {schemaDisplay.schemaVisibility}
             </dd>
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <DescriptionListTitle>
               {t('schema.format')}
             </DescriptionListTitle>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={10}>
             <dd>
               {schemaDisplay.schemaFormat}
             </dd>
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <DescriptionListTitle>
               {t('schema.namespace')}
             </DescriptionListTitle>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={10}>
             <dd>
               {schemaDisplay.schemaNamespace}
             </dd>
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={2}>
             <DescriptionListTitle>
               {t('schema.organizations')}
             </DescriptionListTitle>
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={10}>
             <dd>
               {schemaDisplay.schemaOrganizations}
             </dd>
