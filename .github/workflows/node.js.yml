@@ -27,6 +27,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - working-directory: ./mscr-ui
-      run: npm ci
-    - working-directory: ./mscr-ui
       run: npm run build && npm install --production --ignore-scripts --prefer-offline    
