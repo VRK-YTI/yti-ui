@@ -24,6 +24,7 @@ import InlineListBlock from '@app/common/components/inline-list-block';
 import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
+import SchemaView from "@app/modules/schema-view";
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -34,7 +35,7 @@ interface IndexPageProps extends CommonContextState {
 export default function SchemaPage(props: IndexPageProps) {
   const { query, asPath } = useRouter();
   const schemaId = (query?.pid ?? '') as string;
-  let items: Schema[] = [];
+  const items: Schema[] = [];
 
   const { data, isLoading, isSuccess, isError, error } =
     useGetSchemaQuery(schemaId);
@@ -87,7 +88,8 @@ export default function SchemaPage(props: IndexPageProps) {
         user={props.user ?? undefined}
         fakeableUsers={props.fakeableUsers}
       >
-        {renderSchema()}
+        {/*{renderSchema()}*/}
+        <SchemaView schemaId={schemaId} />
       </Layout>
     </CommonContextProvider>
   );
