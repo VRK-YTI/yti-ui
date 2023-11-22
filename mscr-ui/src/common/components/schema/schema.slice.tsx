@@ -7,6 +7,7 @@ import isHydrate from '@app/store/isHydrate';
 import {
   Schema,
   SchemaFormType,
+  SchemaWithVersionInfo
 } from '@app/common/interfaces/schema.interface';
 
 export const schemaApi = createApi({
@@ -34,6 +35,12 @@ export const schemaApi = createApi({
         url: `/schema/${pid}`,
         method: 'GET',
       }),
+    }),
+    getSchemaWithRevisions: builder.query<SchemaWithVersionInfo, string>({
+      query: (pid: string) => ({
+        url: `/schema/${pid}?includeVersionInfo=true`,
+        method: 'GET'
+      })
     }),
     postSchema: builder.mutation<
       string,
@@ -67,6 +74,7 @@ export const schemaApi = createApi({
 export const {
   usePutSchemaMutation,
   useGetSchemaQuery,
+  useGetSchemaWithRevisionsQuery,
   usePostSchemaMutation,
   useDeleteSchemaMutation,
   useGetSchemasQuery,
