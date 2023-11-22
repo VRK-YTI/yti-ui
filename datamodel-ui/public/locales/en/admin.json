@@ -182,6 +182,7 @@
   "error-prefix-taken": "Prefix in use",
   "error-unauthenticated": "An error occured with login information verification. Please login to the service again.",
   "feedback": "Feedback",
+  "following-external-ns-miss-name": "Following external namespaces are missing a name: {{data}}",
   "file-added": "",
   "graph-has-unsaved-changes": "Graph has unsaved changes",
   "identifier": "Identifier",
