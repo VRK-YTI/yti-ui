@@ -58,7 +58,6 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   const [getAuthenticatedUser, authenticateUser] =
     useGetAuthenticatedUserMutMutation();
   const [putSchemaFull, resultSchemaFull] = usePutSchemaFullMutation();
-  const [putSchema, resultSchema] = usePutSchemaMutation();
 
   const handleOpen = () => {
     setVisible(true);
@@ -73,37 +72,23 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   }, [schemaFormInitialData]);
 
   useEffect(() => {
-    if ((userPosted && resultSchema.isSuccess) || resultSchema.isSuccess) {
+    if (userPosted && resultSchemaFull.isSuccess) {
       //Get the pid from the result
       handleClose();
-      if (resultSchema && resultSchema.data.pid) {
-        router.push(`/schema/${resultSchema.data.pid}`);
-      }
-      //otherwise schema was created with file
-      else if (resultSchemaFull && resultSchemaFull.data.pid) {
-        router.push(`/schema/${resultSchema.data.pid}`);
+      if (resultSchemaFull && resultSchemaFull.data.pid) {
+        router.push(`/schema/${resultSchemaFull.data.pid}`);
       }
 
       // After post route to  saved schema get by PID
       // Later we should show the created schema in the list
     }
-  }, [
-    resultSchema,
-    resultSchema,
-    refetch,
-    userPosted,
-    handleClose,
-    router,
-    formData,
-  ]);
+  }, [resultSchemaFull, refetch, userPosted, handleClose, router, formData]);
 
   const handleSubmit = () => {
     setUserPosted(true);
     if (!formData) {
       return;
     }
-    console.log(formData);
-
     const errors = validateForm(formData);
     setErrors(errors);
 
@@ -111,18 +96,15 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       return;
     }
 
-    console.log(formData);
     const payload = generatePayload(formData);
 
     const schemaFormData = new FormData();
     schemaFormData.append('metadata', JSON.stringify(payload));
     if (fileData) {
-      console.log(fileData);
       schemaFormData.append('file', fileData);
       putSchemaFull(schemaFormData);
     } else {
-      //Register Schema with no filedata
-      putSchema(payload);
+      return;
     }
   };
 
@@ -166,7 +148,11 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
             errors={userPosted ? errors : undefined}
           />
           <Separator></Separator>
-          <Text>{'Upload a Schema File. You can upload file also later'}</Text>
+          <Text>
+            {
+              'Upload a Schema File. You must upload a schema file to register schema'
+            }
+          </Text>
           <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}
@@ -222,13 +208,8 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       .filter(([_, value]) => value && !Array.isArray(value))
       ?.map(([key, _]) => translateModelFormErrors(key, t));
 
-    if (resultSchema.isError) {
-      const errorMessage = getApiError(resultSchema.error);
-      return [...langsWithError, ...otherErrors, errorMessage];
-    }
-
     if (resultSchemaFull.isError) {
-      const errorMessage = getApiError(resultSchema.error);
+      const errorMessage = getApiError(resultSchemaFull.error);
       return [...langsWithError, ...otherErrors, errorMessage];
     }
 
