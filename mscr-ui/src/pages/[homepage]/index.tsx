@@ -26,7 +26,10 @@ import { User } from 'yti-common-ui/interfaces/user.interface';
 import GroupWorkspace from '../../modules/group-home';
 import PersonalWorkspace from '../../modules/personal-home';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import TreeviewTest from '@app/common/components/treeview-test';
+
+import { Grid } from '@mui/material';
+import SideNavigationPanel from '@app/common/components/side-navigation';
+import CrosswalkEditor from "@app/modules/crosswalk-editor";
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 interface IndexPageProps extends CommonContextState {
@@ -49,10 +52,12 @@ export default function IndexPage(props: IndexPageProps) {
     user?: MscrUser;
   }): React.ReactElement {
     if (slug === 'group-home') {
-      return <GroupWorkspace pid={''} user={user} />;
-    } else if (slug === 'crosswalk-edit') {
-      return <TreeviewTest pid={''} user={user} />;
-    } else {
+      return <GroupWorkspace pid={''} user={user}/>;
+    }
+    else if (slug === 'crosswalk-edit') {
+      return <CrosswalkEditor />;
+    }
+    else {
       console.log(slug);
       return <PersonalWorkspace pid={''} user={user} />;
     }

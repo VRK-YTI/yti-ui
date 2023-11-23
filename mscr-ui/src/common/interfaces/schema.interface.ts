@@ -1,23 +1,26 @@
 export interface Schema {
-  onClick(): void;
-  onMouseEnter: any;
-  onMouseLeave: any;
-  pid: string;
-  format: string;
-  status: string;
-  label: {
+  namespace?: string;
+  pid?: string;
+  format?: string;
+  // TODO: Change all mentions of 'status' into 'state'
+  status?: string;
+  state?: string;
+  label?: {
     [key: string]: string;
   };
   description: {
     [key: string]: string;
   };
-  languages: string[];
+  languages?: string[];
   organizations: Organization[];
-  filedata: File;
-  prefix: string;
-  revision: string;
-  visibilty: string;
-  created: string;
+  filedata?: File;
+  prefix?: string;
+  revision?: string;
+  visibility?: string;
+  created?: string;
+  modified?: string;
+  uri?: string;
+  versionLabel?: string;
 }
 export interface Organization {
   id: string;
