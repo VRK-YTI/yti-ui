@@ -43,8 +43,7 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('mscr-title')}
           description={t('service-description')}
         />
-        <div>{props}</div>
-        <h2>This page is the landing page for {props}</h2>
+        
       </Layout>
     </CommonContextProvider>
   );

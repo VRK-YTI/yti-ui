@@ -29,7 +29,7 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 
 import { Grid } from '@mui/material';
 import SideNavigationPanel from '@app/common/components/side-navigation';
-import CrosswalkEditor from "@app/modules/crosswalk-editor";
+import CrosswalkEditor from '@app/modules/crosswalk-editor';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 interface IndexPageProps extends CommonContextState {
