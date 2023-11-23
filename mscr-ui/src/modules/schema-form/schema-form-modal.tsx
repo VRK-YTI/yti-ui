@@ -58,6 +58,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   const [getAuthenticatedUser, authenticateUser] =
     useGetAuthenticatedUserMutMutation();
   const [putSchemaFull, resultSchemaFull] = usePutSchemaFullMutation();
+ 
 
   const handleOpen = () => {
     setVisible(true);
@@ -82,14 +83,21 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       // After post route to  saved schema get by PID
       // Later we should show the created schema in the list
     }
-  }, [resultSchemaFull, refetch, userPosted, handleClose, router, formData]);
+  }, [
+    resultSchemaFull,
+    refetch,
+    userPosted,
+    handleClose,
+    router,
+    formData,
+  ]);
 
   const handleSubmit = () => {
     setUserPosted(true);
     if (!formData) {
       return;
     }
-    const errors = validateForm(formData);
+    const errors = validateForm(formData,fileData);
     setErrors(errors);
 
     if (Object.values(errors).includes(true)) {
@@ -148,11 +156,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
             errors={userPosted ? errors : undefined}
           />
           <Separator></Separator>
-          <Text>
-            {
-              'Upload a Schema File. You must upload a schema file to register schema'
-            }
-          </Text>
+          <Text>{'Upload a Schema File. You must upload a schema file to register schema'}</Text>
           <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}
@@ -207,6 +211,8 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
     const otherErrors = Object.entries(errors)
       .filter(([_, value]) => value && !Array.isArray(value))
       ?.map(([key, _]) => translateModelFormErrors(key, t));
+
+   
 
     if (resultSchemaFull.isError) {
       const errorMessage = getApiError(resultSchemaFull.error);
