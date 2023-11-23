@@ -43,7 +43,6 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('mscr-title')}
           description={t('service-description')}
         />
-        
       </Layout>
     </CommonContextProvider>
   );

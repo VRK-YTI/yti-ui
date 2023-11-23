@@ -76,7 +76,6 @@ export default function Layout({
               )}
             />
             <Grid container spacing={2}>
-
               <Grid item xs={12}>
                 <ContentContainer>
                   {alerts && alerts}

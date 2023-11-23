@@ -52,12 +52,10 @@ export default function IndexPage(props: IndexPageProps) {
     user?: MscrUser;
   }): React.ReactElement {
     if (slug === 'group-home') {
-      return <GroupWorkspace pid={''} user={user}/>;
-    }
-    else if (slug === 'crosswalk-edit') {
+      return <GroupWorkspace pid={''} user={user} />;
+    } else if (slug === 'crosswalk-edit') {
       return <CrosswalkEditor />;
-    }
-    else {
+    } else {
       console.log(slug);
       return <PersonalWorkspace pid={''} user={user} />;
     }

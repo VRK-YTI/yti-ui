@@ -13,17 +13,18 @@ import { IconClose } from 'suomifi-icons';
 import { useContext } from 'react';
 import { SearchContext } from '@app/common/components/search-context-provider';
 import SearchFilterSet from '@app/common/components/search-filter-set';
-import {Bucket, Facet, Filter} from '@app/common/interfaces/search.interface';
-import {useTranslation} from 'next-i18next';
-import {Grid} from '@mui/material';
+import { Bucket, Facet, Filter } from '@app/common/interfaces/search.interface';
+import { useTranslation } from 'next-i18next';
+import { Grid } from '@mui/material';
 
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
   const { t } = useTranslation('common');
   const { setIsSearchActive } = useContext(SearchContext);
-  const { data: mscrSearchResults } =
-    useGetMscrSearchResultsQuery(urlState);
-  const foundHits = mscrSearchResults ? mscrSearchResults.hits.hits.length !== 0 : false;
+  const { data: mscrSearchResults } = useGetMscrSearchResultsQuery(urlState);
+  const foundHits = mscrSearchResults
+    ? mscrSearchResults.hits.hits.length !== 0
+    : false;
 
   const handleClose = () => {
     setIsSearchActive(false);
@@ -53,7 +54,7 @@ export default function SearchScreen() {
     };
   };
 
-  let filters : Filter[] = [];
+  let filters: Filter[] = [];
   if (mscrSearchResults?.aggregations) {
     Object.keys(mscrSearchResults.aggregations).forEach((key) => {
       const newFilter: Filter = makeFilter(
@@ -70,7 +71,9 @@ export default function SearchScreen() {
         <Grid item xs={2}>
           <FacetsWrapper>
             {/* Groups of facets for different contexts, made with search-filter-set */}
-            {filters.length > 0 && <SearchFilterSet title={t('in-all-mscr')} filters={filters}/>}
+            {filters.length > 0 && (
+              <SearchFilterSet title={t('in-all-mscr')} filters={filters} />
+            )}
           </FacetsWrapper>
         </Grid>
         <Grid item xs={8}>

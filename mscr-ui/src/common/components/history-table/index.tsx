@@ -14,13 +14,23 @@ export interface Revision {
   state: string;
   created: string;
 }
-export default function HistoryTable({ headers, revisions, ariaLabel }: { headers: Array<string>; revisions: Revision[]; ariaLabel: string }) {
+export default function HistoryTable({
+  headers,
+  revisions,
+  ariaLabel,
+}: {
+  headers: Array<string>;
+  revisions: Revision[];
+  ariaLabel: string;
+}) {
   return (
     <TableContainer>
       <Table aria-label={ariaLabel}>
         <TableHead>
           <TableRow>
-            {headers.map((header) => <TableCell key={header}>{header}</TableCell>)}
+            {headers.map((header) => (
+              <TableCell key={header}>{header}</TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
