@@ -5,13 +5,13 @@ import { SyntheticEvent, useState } from 'react';
 import MetadataAndFiles from '@app/modules/schema-view/metadata-and-files';
 import VersionHistory from '@app/modules/schema-view/version-history';
 import {useTranslation} from 'next-i18next';
-import {useGetSchemaQuery} from '@app/common/components/schema/schema.slice';
+import { useGetSchemaWithRevisionsQuery } from '@app/common/components/schema/schema.slice';
 
 export default function SchemaView({ schemaId }: { schemaId: string }) {
   const { t } = useTranslation('common');
 
   const { data: schemaDetails, isLoading, isSuccess, isError, error } =
-    useGetSchemaQuery(schemaId);
+    useGetSchemaWithRevisionsQuery(schemaId);
   const [selectedTab, setSelectedTab] = useState(0);
 
 
