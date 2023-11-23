@@ -3,6 +3,7 @@ import { ExternalLink, Button, Text, IconRemove } from 'suomifi-ui-components';
 import { List, ListItem } from './inline-list.styles';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { UriData } from '@app/common/interfaces/uri.interface';
+import { getEnvParam } from '../uri-info';
 
 export interface InlineListProps {
   items?: UriData[];
@@ -34,7 +35,7 @@ export default function InlineList({
               })}
             </Text>
             <ExternalLink
-              href={item.uri}
+              href={`${item.uri}${getEnvParam(item.uri)}`}
               labelNewWindow={t('link-opens-new-window-external', {
                 ns: 'common',
               })}

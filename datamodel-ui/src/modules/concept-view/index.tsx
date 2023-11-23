@@ -1,3 +1,4 @@
+import { getEnvParam } from '@app/common/components/uri-info';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from '@app/common/utils/translation-helpers';
@@ -51,7 +52,7 @@ export default function ConceptView({
           <Heading variant="h4">{t('concept')}</Heading>
           <Paragraph mb="m">
             <ExternalLink
-              href={data.conceptURI}
+              href={`${data.conceptURI}${getEnvParam(data.conceptURI, true)}`}
               labelNewWindow={t('link-opens-new-window-external')}
             >
               {getLanguageVersion({
@@ -70,7 +71,10 @@ export default function ConceptView({
           <Heading variant="h4">{t('terminology')}</Heading>
           <Paragraph>
             <ExternalLink
-              href={data.terminology?.uri}
+              href={`${data.terminology.uri}${getEnvParam(
+                data.terminology.uri,
+                true
+              )}`}
               labelNewWindow={t('link-opens-new-window-external')}
             >
               {getLanguageVersion({
