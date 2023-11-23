@@ -22,7 +22,7 @@ import { selectDisplayLang } from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 import { useGetAllCodesQuery } from '@app/common/components/code/code.slice';
 import UriList from '@app/common/components/uri-list';
-import UriInfo from '@app/common/components/uri-info';
+import UriInfo, { getEnvParam } from '@app/common/components/uri-info';
 
 export default function CommonViewContent({
   modelId,
@@ -135,7 +135,10 @@ export default function CommonViewContent({
               <BasicBlock title={t('codelist', { ns: 'admin' })}>
                 {data.codeLists && data.codeLists?.length > 0
                   ? data.codeLists.map((codeList) => (
-                      <Link key={codeList} href={codeList}>
+                      <Link
+                        key={codeList}
+                        href={`${codeList}${getEnvParam(codeList, true)}`}
+                      >
                         {codeList.split('/').slice(-2).join(':')}
                       </Link>
                     ))
