@@ -67,7 +67,6 @@ export default function SearchScreen() {
   }
 
   return (
-    
     <SearchContainer>
       <Grid container justifyContent="space-between">
         <Grid item xs={2}>
@@ -93,6 +92,6 @@ export default function SearchScreen() {
           </CloseButton>
         </Grid>
       </Grid>
-    </SearchContainer >  
+    </SearchContainer>
   );
 }

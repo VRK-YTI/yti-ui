@@ -7,7 +7,7 @@ import isHydrate from '@app/store/isHydrate';
 import {
   Schema,
   SchemaFormType,
-  SchemaWithVersionInfo
+  SchemaWithVersionInfo,
 } from '@app/common/interfaces/schema.interface';
 import { AnyNsRecord } from 'dns';
 
@@ -50,8 +50,8 @@ export const schemaApi = createApi({
     getSchemaWithRevisions: builder.query<SchemaWithVersionInfo, string>({
       query: (pid: string) => ({
         url: `/schema/${pid}?includeVersionInfo=true`,
-        method: 'GET'
-      })
+        method: 'GET',
+      }),
     }),
     postSchema: builder.mutation<
       string,

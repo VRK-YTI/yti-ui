@@ -38,7 +38,6 @@ export default function FrontPage() {
     });
   }, [organizationsData, i18n.language]);
 
-
   // Need to decide what data we want to fetch loading the application
   const refetchInfo = () => {
     refetchOrganizationsData();

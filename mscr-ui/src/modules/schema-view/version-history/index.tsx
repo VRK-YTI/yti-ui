@@ -1,8 +1,12 @@
-import {useTranslation} from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
 import HistoryTable from '@app/common/components/history-table';
 
-export default function VersionHistory({ schemaDetails }: {schemaDetails: SchemaWithVersionInfo}) {
+export default function VersionHistory({
+  schemaDetails,
+}: {
+  schemaDetails: SchemaWithVersionInfo;
+}) {
   const { t } = useTranslation('common');
 
   const headers = [
