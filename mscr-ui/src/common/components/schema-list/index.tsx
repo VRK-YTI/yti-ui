@@ -6,7 +6,7 @@ import { Grid, InputLabel } from '@mui/material';
 import router from 'next/router';
 
 export interface SchemaListProps {
-  items: Partial<Schema[]>;
+  items: Partial<Schema>[];
   handleRemoval: (value: string) => void;
   labelRow?: boolean;
   deleteDisabled: string[] | boolean;

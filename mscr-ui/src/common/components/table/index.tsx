@@ -9,7 +9,7 @@ import { Crosswalk } from '@app/common/interfaces/crosswalk.interface';
 export default function BasicTable() {
   const { data: schemaData, isLoading: schemaIsLoading } = useGetPersonalContentQuery('SCHEMA');
   const { data: crosswalkData, isLoading: crosswalkIsLoading } = useGetPersonalContentQuery('CROSSWALK');
-  if (crosswalkIsLoading) return <div> Is Loading</div>;
+  if (schemaIsLoading || crosswalkIsLoading) return <div> Is Loading</div>;
 
   function getVersionLabel(id: string, revisions: Revision[]): string {
     return revisions.find((r) => r.pid == id)?.versionLabel ?? '';

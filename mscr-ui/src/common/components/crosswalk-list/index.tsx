@@ -5,9 +5,10 @@ import { Schema } from '@app/common/interfaces/schema.interface';
 import { Grid } from '@mui/material';
 import TreeviewTest from '../treeview-test';
 import router from 'next/router';
+import { Crosswalk } from '@app/common/interfaces/crosswalk.interface';
 
 export interface CrosswalkListProps {
-  items: Schema[];
+  items: Partial<Crosswalk>[];
   handleRemoval: (value: string) => void;
   labelRow?: boolean;
   deleteDisabled: string[] | boolean;
