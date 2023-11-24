@@ -92,7 +92,7 @@ const functionsMockup: any = [
   },
   {
     name: 'Function to...',
-    uri: `http://uri.suomi.fi/datamodel/ns/mscr#propertiesToArrayFunc`,
+    uri: 'http://uri.suomi.fi/datamodel/ns/mscr#propertiesToArrayFunc',
     description: '',
     parameters: [
       {
@@ -3021,7 +3021,7 @@ export default function MockupSchemaLoader(
       open_access: {
         title: 'Open Access',
         description:
-          "Indicate whether the record's files are publicly accessible or not. In case of restricted access the uploaded files will only be accessible by the record's owner and the community administrators. Please note that the record's metadata is always publicly accessible. ",
+          'Indicate whether the records files are publicly accessible or not. In case of restricted access the uploaded files will only be accessible by the records owner and the community administrators. Please note that the records metadata is always publicly accessible. ',
         type: 'boolean',
       },
       embargo_date: {
