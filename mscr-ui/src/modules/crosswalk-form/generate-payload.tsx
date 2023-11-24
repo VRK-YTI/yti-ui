@@ -7,7 +7,6 @@ import {
 
 export default function generatePayload(data: CrosswalkFormType): Crosswalk {
   return {
-    pid: '',
     format: data.format,
     description: data.languages
       .filter((l) => l.description !== '')

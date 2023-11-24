@@ -68,7 +68,8 @@ export default function SchemaForm({
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
           labelText={'Format'}
-          defaultValue={'JSONSCHEMA'}
+          visualPlaceholder={'Select File Format'}
+          defaultValue={formData.format ?? ''}
           onChange={(e) =>
             setFormData({
               ...formData,
@@ -124,7 +125,8 @@ export default function SchemaForm({
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
           labelText={'Status'}
-          defaultValue={'DRAFT'}
+          visualPlaceholder={'Select Status'}
+          defaultValue={''}
           onChange={(e) =>
             setFormData({
               ...formData,

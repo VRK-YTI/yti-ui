@@ -23,13 +23,9 @@ import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import { useInitialCrosswalkForm } from '@app/common/utils/hooks/use-initial-crosswalk-form';
-import {
-  usePutCrosswalkFullMutation,
-  usePutCrosswalkMutation,
-} from '@app/common/components/crosswalk/crosswalk.slice';
+import { usePutCrosswalkFullMutation } from '@app/common/components/crosswalk/crosswalk.slice';
 import CrosswalkForm from '.';
 import FileDropArea from 'yti-common-ui/file-drop-area';
-const [isValid, setIsValid] = useState(false);
 
 interface CrosswalkFormModalProps {
   refetch: () => void;
@@ -83,12 +79,12 @@ export default function CrosswalkFormModal({
 
     const errors = validateForm(formData);
     setErrors(errors);
-
     if (Object.values(errors).includes(true)) {
       return;
     }
 
     const payload = generatePayload(formData);
+    console.log(formData);
     const crosswalkFormData = new FormData();
     crosswalkFormData.append('metadata', JSON.stringify(payload));
     if (fileData) {
@@ -143,7 +139,7 @@ export default function CrosswalkFormModal({
           <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}
-            validFileTypes={['json', 'xslt', 'pdf']}
+            validFileTypes={['csv', 'xslt', 'pdf']}
             translateFileUploadError={translateFileUploadError}
           />
         </ModalContent>
@@ -155,7 +151,7 @@ export default function CrosswalkFormModal({
           )}
           {userPosted && (
             <FormFooterAlert
-              labelText={t('missing-information-title')}
+              labelText={'Required Fields are missing'}
               alerts={getErrors(errors)}
             />
           )}

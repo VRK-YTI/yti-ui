@@ -1,10 +1,9 @@
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
 import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
 import getOrganizations from '@app/common/utils/get-organizations';
-import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
-import { useMemo, useState } from 'react';
-import { Dropdown, DropdownItem, TextInput } from 'suomifi-ui-components';
+import { useMemo } from 'react';
+import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
 import {
   BlockContainer,
@@ -16,8 +15,6 @@ import { FormErrors } from './validate-form';
 import { Status } from '@app/common/interfaces/status.interface';
 import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import { FormUpdateErrors } from '../schema-form/validate-form-update';
-import { translateFileUploadError } from '@app/common/utils/translation-helpers copy';
-import FileDropArea from 'yti-common-ui/file-drop-area';
 import CrosswalkForm from '../create-crosswalk';
 
 interface RegisterCrosswalkFormProps {
@@ -43,19 +40,6 @@ export default function RegisterCrosswalkForm({
   );
   const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
 
-  const serviceCategories = useMemo(() => {
-    if (!serviceCategoriesData) {
-      return [];
-    }
-
-    return getServiceCategories(serviceCategoriesData, i18n.language)
-      .map((c) => ({
-        labelText: c.label,
-        uniqueItemId: c.id,
-      }))
-      .sort((c1, c2) => (c1.labelText > c2.labelText ? 1 : -1));
-  }, [serviceCategoriesData, i18n.language]);
-
   const organizations = useMemo(() => {
     if (!organizationsData) {
       return [];
@@ -79,10 +63,11 @@ export default function RegisterCrosswalkForm({
       ></CrosswalkForm>
       {renderCrosswalkFormat()}
       {renderLanguages()}
+
+      {renderStaus()}
       <BlockContainer>{!editMode && renderContributors()}</BlockContainer>
       <Separator isLarge />
       {editMode && renderContributors()}
-      {renderStaus()}
     </ModelFormContainer>
   );
 
@@ -92,7 +77,8 @@ export default function RegisterCrosswalkForm({
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
           labelText={'Format'}
-          defaultValue={'CSV'}
+          defaultValue={formData.format ?? ''}
+          visualPlaceholder={'Select Crosswalk File Format'}
           onChange={(e) =>
             setFormData({
               ...formData,
@@ -102,6 +88,7 @@ export default function RegisterCrosswalkForm({
         >
           <DropdownItem value={'XSLT'}>{'XSLT'}</DropdownItem>
           <DropdownItem value={'CSV'}>{'CSV'}</DropdownItem>
+          <DropdownItem value={'PDF'}>{'PDF'}</DropdownItem>
         </Dropdown>
       </div>
     );
@@ -145,26 +132,25 @@ export default function RegisterCrosswalkForm({
   }
 
   function renderStaus() {
-    if (editMode) {
-      return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <Dropdown
-            labelText={'Status'}
-            defaultValue={formData.status ?? ''}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                status: e as Status | undefined,
-              })
-            }
-          >
-            <DropdownItem value={'DRAFT'}>{'DRAFT'}</DropdownItem>
-            <DropdownItem value={'PUBLISHED'}>{'PUBLISHED'}</DropdownItem>
-            <DropdownItem value={'DEPRECATED'}>{'DEPRECATED'}</DropdownItem>
-          </Dropdown>
-        </div>
-      );
-    }
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <Dropdown
+          labelText={'Status'}
+          visualPlaceholder={'Select Status'}
+          defaultValue={formData.status ?? ''}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              status: e as Status | undefined,
+            })
+          }
+        >
+          <DropdownItem value={'DRAFT'}>{'DRAFT'}</DropdownItem>
+          <DropdownItem value={'PUBLISHED'}>{'PUBLISHED'}</DropdownItem>
+          <DropdownItem value={'DEPRECATED'}>{'DEPRECATED'}</DropdownItem>
+        </Dropdown>
+      </div>
+    );
   }
 
   function renderContributors() {

@@ -1,23 +1,19 @@
-import Document, { DocumentContext, DocumentInitialProps } from 'next/document';
+import Document, { DocumentContext } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 
-//Fixing the custom render page error, https://nextjs.org/docs/pages/building-your-application/routing/custom-document
+// https://github.com/msreekm/nextjs-material-ui-styled-components-boilerplate/blob/master/pages/_document.js
 export default class MyDocument extends Document {
-  static async getInitialProps(
-    ctx: DocumentContext
-  ): Promise<DocumentInitialProps> {
+  static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
 
     try {
-      // Run the React rendering logic synchronously
       ctx.renderPage = () =>
         originalRenderPage({
-          // Useful for wrapping the whole react tree
-          enhanceApp: (App) => App,
-          // Useful for wrapping in a per-page basis
-          enhanceComponent: (Component) => Component,
+          enhanceApp: (App) => (props) =>
+            sheet.collectStyles(<App {...props} />),
         });
+
       const initialProps = await ctx.defaultGetInitialProps(ctx);
       return {
         ...initialProps,
