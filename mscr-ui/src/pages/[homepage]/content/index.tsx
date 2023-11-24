@@ -35,9 +35,9 @@ export default function IndexPage(props: IndexPageProps) {
   const router = useRouter();
 
   function DisplayedComponent({
-                                slug,
-                                user,
-                              }: {
+    slug,
+    user,
+  }: {
     slug?: string;
     user?: MscrUser;
   }): React.ReactElement {

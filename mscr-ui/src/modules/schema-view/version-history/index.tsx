@@ -1,16 +1,19 @@
-import {useTranslation} from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
 import HistoryTable from '@app/common/components/history-table';
 
-export default function VersionHistory({ schemaDetails }: {schemaDetails: SchemaWithVersionInfo}) {
+export default function VersionHistory({
+  schemaDetails,
+}: {
+  schemaDetails: SchemaWithVersionInfo;
+}) {
   const { t } = useTranslation('common');
-
 
   const headers = [
     t('schema.version-label'),
     t('schema.pid'),
     t('schema.created'),
-    t('schema.state')
+    t('schema.state'),
   ];
 
   const revisions = schemaDetails.revisions;
@@ -38,6 +41,10 @@ export default function VersionHistory({ schemaDetails }: {schemaDetails: Schema
   //   ];
 
   return (
-    <HistoryTable headers={headers} revisions={revisions} ariaLabel={t('schema.versions')}/>
+    <HistoryTable
+      headers={headers}
+      revisions={revisions}
+      ariaLabel={t('schema.versions')}
+    />
   );
 }

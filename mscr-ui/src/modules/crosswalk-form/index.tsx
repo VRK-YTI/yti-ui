@@ -1,18 +1,9 @@
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
 import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
 import getOrganizations from '@app/common/utils/get-organizations';
-import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
-import { useMemo, useState } from 'react';
-import {
-  Dropdown,
-  DropdownItem,
-  Label,
-  RadioButton,
-  RadioButtonGroup,
-  Text,
-  TextInput,
-} from 'suomifi-ui-components';
+import { useMemo } from 'react';
+import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
 import {
   BlockContainer,
@@ -22,10 +13,8 @@ import {
 import LanguageSelector from 'yti-common-ui/form/language-selector';
 import { FormErrors } from './validate-form';
 import { Status } from '@app/common/interfaces/status.interface';
-import { CrosswalkFormMockupType, CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
+import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import { FormUpdateErrors } from '../schema-form/validate-form-update';
-import { translateFileUploadError } from '@app/common/utils/translation-helpers copy';
-import FileDropArea from 'yti-common-ui/file-drop-area';
 import CrosswalkForm from '../create-crosswalk';
 
 interface RegisterCrosswalkFormProps {
@@ -50,22 +39,6 @@ export default function RegisterCrosswalkForm({
     i18n.language
   );
   const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
-  const [fileData, setFileData] = useState<File | null>();
-  const [fileType, setFileType] = useState<'csv' | 'json' | null>();
-  const [isValid, setIsValid] = useState(false);
-
-  const serviceCategories = useMemo(() => {
-    if (!serviceCategoriesData) {
-      return [];
-    }
-
-    return getServiceCategories(serviceCategoriesData, i18n.language)
-      .map((c) => ({
-        labelText: c.label,
-        uniqueItemId: c.id,
-      }))
-      .sort((c1, c2) => (c1.labelText > c2.labelText ? 1 : -1));
-  }, [serviceCategoriesData, i18n.language]);
 
   const organizations = useMemo(() => {
     if (!organizationsData) {
@@ -82,38 +55,44 @@ export default function RegisterCrosswalkForm({
 
   return (
     <ModelFormContainer>
-  <CrosswalkForm
-            formData={formData}
-            setFormData={setFormData}
-            userPosted={userPosted}
-            errors={userPosted ? errors : undefined}>
-          </CrosswalkForm>
+      <CrosswalkForm
+        formData={formData}
+        setFormData={setFormData}
+        userPosted={userPosted}
+        errors={userPosted ? errors : undefined}
+      ></CrosswalkForm>
       {renderCrosswalkFormat()}
-      
-      <FileDropArea
-        setFileData={setFileData}
-        setIsValid={setIsValid}
-        validFileTypes={['csv', 'json']}
-        translateFileUploadError={translateFileUploadError}
-      />
       {renderLanguages()}
+
+      {renderStaus()}
       <BlockContainer>{!editMode && renderContributors()}</BlockContainer>
       <Separator isLarge />
       {editMode && renderContributors()}
-      {renderStaus()}
     </ModelFormContainer>
   );
 
   function renderCrosswalkFormat() {
     // may be load the formats from an array
     return (
-      <div>
-        <TextInput labelText={'Format'} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <Dropdown
+          labelText={'Format'}
+          defaultValue={formData.format ?? ''}
+          visualPlaceholder={'Select Crosswalk File Format'}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              format: e,
+            })
+          }
+        >
+          <DropdownItem value={'XSLT'}>{'XSLT'}</DropdownItem>
+          <DropdownItem value={'CSV'}>{'CSV'}</DropdownItem>
+          <DropdownItem value={'PDF'}>{'PDF'}</DropdownItem>
+        </Dropdown>
       </div>
     );
   }
-
-  
 
   function renderLanguages() {
     return (
@@ -153,38 +132,25 @@ export default function RegisterCrosswalkForm({
   }
 
   function renderStaus() {
-    if (editMode) {
-      return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <Dropdown
-            labelText={'Status'}
-            defaultValue={formData.status ?? ''}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                status: e as Status | undefined,
-              })
-            }
-          >
-            <DropdownItem value={'DRAFT'}>
-              {t('statuses.draft', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'VALID'}>
-              {t('statuses.valid', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'SUPERSEDED'}>
-              {t('statuses.superseded', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'RETIRED'}>
-              {t('statuses.retired', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'INVALID'}>
-              {t('statuses.invalid', { ns: 'common' })}
-            </DropdownItem>
-          </Dropdown>
-        </div>
-      );
-    }
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <Dropdown
+          labelText={'Status'}
+          visualPlaceholder={'Select Status'}
+          defaultValue={formData.status ?? ''}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              status: e as Status | undefined,
+            })
+          }
+        >
+          <DropdownItem value={'DRAFT'}>{'DRAFT'}</DropdownItem>
+          <DropdownItem value={'PUBLISHED'}>{'PUBLISHED'}</DropdownItem>
+          <DropdownItem value={'DEPRECATED'}>{'DEPRECATED'}</DropdownItem>
+        </Dropdown>
+      </div>
+    );
   }
 
   function renderContributors() {

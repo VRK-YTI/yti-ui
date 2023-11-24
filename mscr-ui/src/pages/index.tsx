@@ -13,7 +13,9 @@ import {
   getServiceCategories,
   getRunningQueriesThunk as getServiceCategoriesRunningQueriesThunk,
 } from '@app/common/components/service-categories/service-categories.slice';
-import useUrlState, { initialUrlState } from '@app/common/utils/hooks/use-url-state';
+import useUrlState, {
+  initialUrlState,
+} from '@app/common/utils/hooks/use-url-state';
 import {
   getCount,
   getRunningQueriesThunk as getCountRunningQueriesThunk,
@@ -37,11 +39,10 @@ export default function IndexPage(props: IndexPageProps) {
         fakeableUsers={props.fakeableUsers}
       >
         <PageHead
-          baseUrl="https://tietomallit.suomi.fi"
+          baseUrl="https://localhost:3000"
           title={t('mscr-title')}
           description={t('service-description')}
         />
-        <h2>This page is the landing page</h2>
       </Layout>
     </CommonContextProvider>
   );
@@ -56,7 +57,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       if (query.q !== undefined) {
         urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
       }
-      console.log("server side props are "+ query);
+      console.log('server side props are ' + query);
 
       if (query.page !== undefined) {
         const pageValue = Array.isArray(query.page)
@@ -72,9 +73,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       }
 
       if (query.type !== undefined) {
-        urlState.type = Array.isArray(query.type)
-          ? query.type
-          : [query.type];
+        urlState.type = Array.isArray(query.type) ? query.type : [query.type];
       }
 
       if (query.organization !== undefined) {

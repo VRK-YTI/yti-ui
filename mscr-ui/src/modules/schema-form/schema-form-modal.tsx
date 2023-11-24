@@ -8,12 +8,13 @@ import {
   ModalFooter,
   ModalTitle,
   Paragraph,
+  Text,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import ModelForm from '.';
 import { FormErrors, validateForm } from './validate-form';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
+  translateFileUploadError,
   translateLanguage,
   translateModelFormErrors,
 } from '@app/common/utils/translation-helpers';
@@ -23,8 +24,11 @@ import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import { useInitialSchemaForm } from '@app/common/utils/hooks/use-initial-schema-form';
-import { usePutSchemaMutation } from '@app/common/components/schema/schema.slice';
+import { usePutSchemaFullMutation } from '@app/common/components/schema/schema.slice';
 import SchemaForm from '.';
+import FileDropArea from 'yti-common-ui/file-drop-area';
+import { TextSnippet } from '@mui/icons-material';
+import Separator from 'yti-common-ui/separator';
 
 interface SchemaFormModalProps {
   refetch: () => void;
@@ -41,13 +45,15 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   const { isSmall } = useBreakpoints();
   const router = useRouter();
   const [visible, setVisible] = useState(false);
+  const [isValid, setIsValid] = useState(false);
   const [schemaFormInitialData] = useState(useInitialSchemaForm());
   const [formData, setFormData] = useState(schemaFormInitialData);
+  const [fileData, setFileData] = useState<File | null>();
   const [errors, setErrors] = useState<FormErrors>();
   const [userPosted, setUserPosted] = useState(false);
   const [getAuthenticatedUser, authenticateUser] =
     useGetAuthenticatedUserMutMutation();
-  const [putSchema, result] = usePutSchemaMutation();
+  const [putSchemaFull, resultSchemaFull] = usePutSchemaFullMutation();
 
   const handleOpen = () => {
     setVisible(true);
@@ -58,26 +64,28 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
     setVisible(false);
     setUserPosted(false);
     setFormData(schemaFormInitialData);
+    setFileData(null);
   }, [schemaFormInitialData]);
 
   useEffect(() => {
-    if (userPosted && result.isSuccess) {
+    if (userPosted && resultSchemaFull.isSuccess) {
       //Get the pid from the result
-      refetch();
       handleClose();
+      if (resultSchemaFull && resultSchemaFull.data.pid) {
+        router.push(`/schema/${resultSchemaFull.data.pid}`);
+      }
+
       // After post route to  saved schema get by PID
       // Later we should show the created schema in the list
-      alert('Schema Creation is Successful');
     }
-  }, [result, refetch, userPosted, handleClose, router, formData]);
+  }, [resultSchemaFull, refetch, userPosted, handleClose, router, formData]);
 
   const handleSubmit = () => {
     setUserPosted(true);
     if (!formData) {
       return;
     }
-
-    const errors = validateForm(formData);
+    const errors = validateForm(formData, fileData);
     setErrors(errors);
 
     if (Object.values(errors).includes(true)) {
@@ -85,16 +93,24 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
     }
 
     const payload = generatePayload(formData);
-    // Here formdata should also contain the file, need modification
-    putSchema(payload);
+
+    const schemaFormData = new FormData();
+    schemaFormData.append('metadata', JSON.stringify(payload));
+    if (fileData) {
+      schemaFormData.append('file', fileData);
+      putSchemaFull(schemaFormData);
+    } else {
+      return;
+    }
   };
 
   useEffect(() => {
     if (!userPosted) {
       return;
     }
-    const errors = validateForm(formData);
+    const errors = validateForm(formData, fileData);
     setErrors(errors);
+    //console.log(errors);
   }, [userPosted, formData]);
 
   // Need to add action type create_schema
@@ -120,11 +136,6 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       >
         <ModalContent>
           <ModalTitle>{t('register-schema')}</ModalTitle>
-          <Paragraph style={{ marginBottom: '30px' }}>
-            {
-              'Provide a URI reference to the content in XSD, SKOS or RDF metadata schema format'
-            }
-          </Paragraph>
           <SchemaForm
             formData={formData}
             setFormData={setFormData}
@@ -132,6 +143,24 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
             disabled={authenticateUser.data && authenticateUser.data.anonymous}
             errors={userPosted ? errors : undefined}
           />
+          <Separator></Separator>
+          <Text>
+            {
+              'Upload a Schema File. You must upload a schema file to register schema'
+            }
+          </Text>
+          <FileDropArea
+            setFileData={setFileData}
+            setIsValid={setIsValid}
+            validFileTypes={['json', 'csv']}
+            translateFileUploadError={translateFileUploadError}
+          />
+          <Separator isLarge></Separator>
+          <Text>
+            {
+              'All Contents will be registered as draft. You can choose to publish content later'
+            }
+          </Text>
         </ModalContent>
         <ModalFooter>
           {authenticateUser.data && authenticateUser.data.anonymous && (
@@ -141,7 +170,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
           )}
           {userPosted && (
             <FormFooterAlert
-              labelText={t('missing-information-title')}
+              labelText={'Something went wrong'}
               alerts={getErrors(errors)}
             />
           )}
@@ -160,6 +189,8 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       return [];
     }
 
+    console.log(errors);
+
     const langsWithError = Object.entries(errors)
       .filter(([_, value]) => Array.isArray(value))
       ?.flatMap(([key, value]) =>
@@ -173,8 +204,8 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       .filter(([_, value]) => value && !Array.isArray(value))
       ?.map(([key, _]) => translateModelFormErrors(key, t));
 
-    if (result.isError) {
-      const errorMessage = getApiError(result.error);
+    if (resultSchemaFull.isError) {
+      const errorMessage = getApiError(resultSchemaFull.error);
       return [...langsWithError, ...otherErrors, errorMessage];
     }
 

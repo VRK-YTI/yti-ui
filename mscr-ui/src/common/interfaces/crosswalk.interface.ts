@@ -4,9 +4,9 @@ import { Status } from './status.interface';
 
 //sample Crosswalk
 export interface Crosswalk {
-  pid: string;
+  pid?: string;
   format: string;
-  status: string;
+  status: string | undefined;
   label: {
     [key: string]: string;
   };
@@ -17,10 +17,11 @@ export interface Crosswalk {
   organizations: string[];
   sourceSchema: string;
   targetSchema: string;
+  state: string | undefined;
 }
 
 export interface CrosswalkFormType {
-  pid: string;
+  pid?: string;
   format: string;
   label: string;
   languages: (LanguageBlockType & { selected: boolean })[];

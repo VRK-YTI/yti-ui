@@ -27,6 +27,17 @@ export const crosswalkApi = createApi({
         data: value,
       }),
     }),
+    //Register Crosswalk with file
+    putCrosswalkFull: builder.mutation<any, FormData>({
+      query: (file) => ({
+        url: '/crosswalkFull',
+        method: 'PUT',
+        data: file,
+        headers: {
+          'content-Type': 'multipart/form-data;',
+        },
+      }),
+    }),
     getCrosswalk: builder.query<Crosswalk, string>({
       query: (pid) => ({
         url: `/crosswalk/${pid}`,
@@ -58,14 +69,20 @@ export const crosswalkApi = createApi({
 
 export const {
   usePutCrosswalkMutation,
+  usePutCrosswalkFullMutation,
   useGetCrosswalkQuery,
   usePostCrosswalkMutation,
   useDeleteCrosswalkMutation,
   util: { getRunningQueriesThunk },
 } = crosswalkApi;
 
-export const { putCrosswalk, getCrosswalk, postCrosswalk, deleteCrosswalk } =
-  crosswalkApi.endpoints;
+export const {
+  putCrosswalk,
+  putCrosswalkFull,
+  getCrosswalk,
+  postCrosswalk,
+  deleteCrosswalk,
+} = crosswalkApi.endpoints;
 
 // Slice setup below
 

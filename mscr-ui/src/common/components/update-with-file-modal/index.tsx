@@ -1,3 +1,4 @@
+/**This will be used if uploading file from detail page */
 import { translateFileUploadError } from '@app/common/utils/translation-helpers';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { useTranslation } from 'next-i18next';
@@ -73,6 +74,7 @@ export default function UpdateWithFileModal({
     if (fileData) {
       const formData = new FormData();
       formData.append('file', fileData);
+      console.log('in file modal' + formData);
       //We need the file upload status to set the progress indication
       //setStartFileUpload(true);
       setUserPosted(true);

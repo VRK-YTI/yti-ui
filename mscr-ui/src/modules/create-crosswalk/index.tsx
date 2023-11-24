@@ -1,29 +1,12 @@
-import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
 import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
-import getOrganizations from '@app/common/utils/get-organizations';
-import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
-import { useMemo, useState } from 'react';
-import {
-  Dropdown,
-  DropdownItem,
-  Label,
-  RadioButton,
-  RadioButtonGroup,
-  Text,
-  Textarea,
-  TextInput,
-} from 'suomifi-ui-components';
+import { Textarea, TextInput } from 'suomifi-ui-components';
 import { ModelFormContainer } from './crosswalk-form.styles';
 import { FormErrors } from './validate-form';
-import {
-  CrosswalkFormMockupType,
-  CrosswalkFormType,
-} from '@app/common/interfaces/crosswalk.interface';
+import { CrosswalkFormMockupType } from '@app/common/interfaces/crosswalk.interface';
 import { FormUpdateErrors } from '../schema-form/validate-form-update';
 import * as React from 'react';
-import { SingleSelect, SingleSelectData } from 'suomifi-ui-components';
-import { MultiSelect } from 'suomifi-ui-components';
+import { SingleSelect } from 'suomifi-ui-components';
 import Box from '@mui/material/Box';
 
 interface CrosswalkFormProps {
@@ -45,7 +28,7 @@ export default function CrosswalkForm({
   errors,
   editMode,
 }: CrosswalkFormProps) {
-  let selectedValues = React.useMemo(
+  const selectedValues = React.useMemo(
     () => allValues.filter((v) => v.selected),
     [allValues]
   );

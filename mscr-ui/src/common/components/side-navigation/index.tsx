@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import {RouterLink} from 'suomifi-ui-components';
+import { RouterLink } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
   NavigationHeading,

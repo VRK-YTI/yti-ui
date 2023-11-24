@@ -13,10 +13,10 @@ export default function Logo() {
       <Link href="/" passHref>
         <SuomiLink href="" aria-label={t('navigate-to-homepage')}>
           <Image
-            src="/logo.svg"
-            width="186"
-            height="32"
-            alt={t('interoperability-logo-title')}
+            src="/supporting_eosc.png"
+            width="180"
+            height="50"
+            alt={'Supporting EOSC'}
           />
         </SuomiLink>
       </Link>

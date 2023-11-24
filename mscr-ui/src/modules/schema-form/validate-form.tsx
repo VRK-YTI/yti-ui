@@ -7,15 +7,21 @@ export interface FormErrors {
   prefix: boolean;
   serviceCategories: boolean;
   organizations: boolean;
+  fileData: boolean;
 }
 
-export function validateForm(data: SchemaFormType) {
+export function validateForm(
+  data: SchemaFormType,
+  fileData: File | null | undefined
+) {
+  console.log(FormData);
   const errors: FormErrors = {
     languageAmount: false,
     titleAmount: [],
     prefix: false,
     serviceCategories: false,
     organizations: false,
+    fileData: false,
   };
 
   const selectedLanguages = data.languages.filter(
@@ -47,6 +53,10 @@ export function validateForm(data: SchemaFormType) {
   // Should have at least one organization set
   if (data.organizations.length < 1) {
     errors.organizations = true;
+  }
+
+  if (!fileData) {
+    errors.fileData = true;
   }
 
   return errors;

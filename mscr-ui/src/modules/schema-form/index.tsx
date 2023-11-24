@@ -2,11 +2,9 @@
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
 import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
 import getOrganizations from '@app/common/utils/get-organizations';
-import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
-import { useMemo, useState } from 'react';
-import { Dropdown, DropdownItem, Label, Text } from 'suomifi-ui-components';
-import Separator from 'yti-common-ui/separator';
+import { useMemo } from 'react';
+import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import {
   BlockContainer,
   ModelFormContainer,
@@ -16,15 +14,7 @@ import LanguageSelector from 'yti-common-ui/form/language-selector';
 import { FormErrors } from './validate-form';
 import { Status } from '@app/common/interfaces/status.interface';
 import { FormUpdateErrors } from './validate-form-update';
-import {
-  Schema,
-  SchemaFormType,
-} from '@app/common/interfaces/schema.interface';
-import { TextInput } from 'suomifi-ui-components';
-import { Paragraph } from 'suomifi-ui-components';
-import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
-import { translateFileUploadError } from '@app/common/utils/translation-helpers copy';
-import FileDropArea from 'yti-common-ui/file-drop-area';
+import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 
 interface SchemaFormProps {
   formData: SchemaFormType;
@@ -48,9 +38,6 @@ export default function SchemaForm({
     i18n.language
   );
   const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
-  const [fileData, setFileData] = useState<File | null>();
-  const [fileType, setFileType] = useState<'csv' | 'json' | null>();
-  const [isValid, setIsValid] = useState(false);
 
   const organizations = useMemo(() => {
     if (!organizationsData) {
@@ -68,22 +55,9 @@ export default function SchemaForm({
   // Creating the actual schema Input form
   return (
     <ModelFormContainer>
-      {renderURI()}
-      <Paragraph style={{ marginBottom: '30px' }}>
-        {'or Upload a document'}
-      </Paragraph>
-      <FileDropArea
-        setFileData={setFileData}
-        setIsValid={setIsValid}
-        validFileTypes={['csv', 'json']}
-        translateFileUploadError={translateFileUploadError}
-      />
       {renderSchemaFormat()}
       {renderLanguages()}
-
       <BlockContainer>{!editMode && renderContributors()}</BlockContainer>
-
-      <Separator isLarge />
       {renderStaus()}
       {editMode && renderContributors()}
     </ModelFormContainer>
@@ -91,16 +65,21 @@ export default function SchemaForm({
 
   function renderSchemaFormat() {
     return (
-      <div>
-        <TextInput labelText={'Format'} />
-      </div>
-    );
-  }
-
-  function renderURI() {
-    return (
-      <div>
-        <TextInput labelText={'Add URI'} />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <Dropdown
+          labelText={'Format'}
+          visualPlaceholder={'Select File Format'}
+          defaultValue={formData.format ?? ''}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              format: e,
+            })
+          }
+        >
+          <DropdownItem value={'JSONSCHEMA'}>{'JSON'}</DropdownItem>
+          <DropdownItem value={'CSV'}>{'CSV'}</DropdownItem>
+        </Dropdown>
       </div>
     );
   }
@@ -110,9 +89,8 @@ export default function SchemaForm({
       <div>
         <LanguageSelector
           items={formData.languages}
-          labelText={t('information-description-languages')}
-          hintText={t('information-description-languages-hint-text')}
-          visualPlaceholder={t('select-information-description-languages')}
+          labelText={'Schema information-description-languages'}
+          visualPlaceholder={'select schema information-description-languages'}
           isWide={true}
           setLanguages={(e) =>
             setFormData({
@@ -122,9 +100,9 @@ export default function SchemaForm({
           }
           userPosted={userPosted}
           translations={{
-            textInput: t('language-input-text'),
-            textDescription: t('description'),
-            optionalText: t('optional'),
+            textInput: 'Name(required)',
+            textDescription: 'Description',
+            optionalText: '',
           }}
           allowItemAddition={false}
           ariaChipActionLabel={''}
@@ -147,7 +125,8 @@ export default function SchemaForm({
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
           labelText={'Status'}
-          defaultValue={formData.status ?? ''}
+          visualPlaceholder={'Select Status'}
+          defaultValue={''}
           onChange={(e) =>
             setFormData({
               ...formData,
@@ -155,21 +134,9 @@ export default function SchemaForm({
             })
           }
         >
-          <DropdownItem value={'DRAFT'}>
-            {t('statuses.draft', { ns: 'common' })}
-          </DropdownItem>
-          <DropdownItem value={'VALID'}>
-            {t('statuses.valid', { ns: 'common' })}
-          </DropdownItem>
-          <DropdownItem value={'RETIRED'}>
-            {t('statuses.retired', { ns: 'common' })}
-          </DropdownItem>
-          <DropdownItem value={'INVALID'}>
-            {t('statuses.invalid', { ns: 'common' })}
-          </DropdownItem>
-          <DropdownItem value={'INCOMPETE'}>
-            {t('statuses.incomplete', { ns: 'common' })}
-          </DropdownItem>
+          <DropdownItem value={'DRAFT'}>{'DRAFT'}</DropdownItem>
+          <DropdownItem value={'PUBLISHED'}>{'PUBLISHED'}</DropdownItem>
+          <DropdownItem value={'DEPRECATED'}>{'DEPRECATED'}</DropdownItem>
         </Dropdown>
       </div>
     );
@@ -179,8 +146,7 @@ export default function SchemaForm({
     return (
       <WideMultiSelect
         chipListVisible={true}
-        labelText={t('contributors')}
-        hintText={t('contributors-hint-text')}
+        labelText={'contributors'}
         visualPlaceholder={t('select-contributors')}
         removeAllButtonLabel={t('clear-all-selections')}
         allowItemAddition={false}

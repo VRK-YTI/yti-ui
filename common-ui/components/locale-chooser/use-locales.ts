@@ -21,9 +21,9 @@ export default function useLocales(): UseLocalesResult {
   }
 
   const locales: { locale: Locale; label: string }[] = [
+    { locale: 'en', label: 'In English (EN)' },
     { locale: 'fi', label: 'Suomeksi (FI)' },
     { locale: 'sv', label: 'På svenska (SV)' },
-    { locale: 'en', label: 'In English (EN)' },
   ];
 
   return {

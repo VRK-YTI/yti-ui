@@ -30,6 +30,7 @@ export interface LocalHandlerParams extends GetServerSidePropsContext {
 
 export type localHandler<T> = (context: LocalHandlerParams) => Promise<T>;
 
+// Some how this is creating problem
 export type CommonServerSideProps = UserProps &
   SSRConfig &
   CommonContextState & {
@@ -79,6 +80,7 @@ export function createCommonGetServerSideProps<
 
         if (process.env.ENV_TYPE !== 'production') {
           store.dispatch(getFakeableUsers.initiate());
+          console.log('getting fake user');
           await Promise.all(store.dispatch(getFakeableRunningQueriesThunk()));
         }
 
@@ -87,8 +89,7 @@ export function createCommonGetServerSideProps<
           reduxKey: 'fakeableUsers',
           functionKey: 'getFakeableUsers',
         });
-
-        // store.dispatch(
+        //store.dispatch(
         //   setAdminControls(process.env.ADMIN_CONTROLS_DISABLED === 'true')
         // );
 

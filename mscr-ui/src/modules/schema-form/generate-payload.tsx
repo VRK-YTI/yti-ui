@@ -3,11 +3,10 @@ import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 
 // here we can create the schema payload
 
-export default function generatePayload(data: SchemaFormType): SchemaFormType {
-  const SUOMI_FI_NAMESPACE = 'http://uri.suomi.fi/datamodel/ns/';
-
+export default function generatePayload(data: SchemaFormType): any {
+  console.log(data.format);
   return {
-    // id will be pid , during post no id
+    namespace: 'http://test.com',
     description: data.languages
       .filter((l: { description: string }) => l.description !== '')
       .reduce(
@@ -32,7 +31,10 @@ export default function generatePayload(data: SchemaFormType): SchemaFormType {
     organizations: data.organizations.map(
       (o: { uniqueItemId: any }) => o.uniqueItemId
     ),
-    status: 'DRAFT',
-    format: 'JSONSCHEMA',
+    status: data.status,
+    format: data.format,
+    uri: data.uri,
+    state: 'DRAFT',
+    versionLabel: '1',
   };
 }

@@ -1,8 +1,8 @@
-import {createApi} from '@reduxjs/toolkit/query/react';
-import {getDatamodelApiBaseQuery} from '@app/store/api-base-query';
-import {HYDRATE} from 'next-redux-wrapper';
-import {MscrSearchResults} from '@app/common/interfaces/search.interface';
-import {UrlState} from '@app/common/utils/hooks/use-url-state';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
+import { HYDRATE } from 'next-redux-wrapper';
+import { MscrSearchResults } from '@app/common/interfaces/search.interface';
+import { UrlState } from '@app/common/utils/hooks/use-url-state';
 
 function createUrl(urlState: UrlState) {
   let baseQuery = '/frontend/mscrSearch?';
@@ -22,10 +22,14 @@ function createUrl(urlState: UrlState) {
     baseQuery = baseQuery.concat(`&format=${urlState.format.join(',')}`);
   }
   if (urlState.sourceType && urlState.sourceType.length > 0) {
-    baseQuery = baseQuery.concat(`&sourceType=${urlState.sourceType.join(',')}`);
+    baseQuery = baseQuery.concat(
+      `&sourceType=${urlState.sourceType.join(',')}`
+    );
   }
   if (urlState.organization && urlState.organization.length > 0) {
-    baseQuery = baseQuery.concat(`&organization=${urlState.organization.join(',')}`);
+    baseQuery = baseQuery.concat(
+      `&organization=${urlState.organization.join(',')}`
+    );
   }
 
   return baseQuery;
@@ -41,22 +45,18 @@ export const mscrSearchApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    getMscrSearchResults: builder.query<
-      MscrSearchResults,
-      UrlState
-    >({
+    getMscrSearchResults: builder.query<MscrSearchResults, UrlState>({
       query: (urlState) => ({
         url: createUrl(urlState),
         method: 'GET',
-      })
-    })
-  })
-
+      }),
+    }),
+  }),
 });
 
 export const { getMscrSearchResults } = mscrSearchApi.endpoints;
 
 export const {
   useGetMscrSearchResultsQuery,
-  util: { getRunningQueriesThunk},
+  util: { getRunningQueriesThunk },
 } = mscrSearchApi;

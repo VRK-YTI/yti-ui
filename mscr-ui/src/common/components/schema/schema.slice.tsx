@@ -7,15 +7,13 @@ import isHydrate from '@app/store/isHydrate';
 import {
   Schema,
   SchemaFormType,
-  SchemaWithVersionInfo
+  SchemaWithVersionInfo,
 } from '@app/common/interfaces/schema.interface';
+import { AnyNsRecord } from 'dns';
 
 export const schemaApi = createApi({
   reducerPath: 'schemaApi',
-  baseQuery: getDatamodelApiBaseQuery((headers) => ({
-    ...headers,
-    'content-type': 'multipart/form-data',
-  })),
+  baseQuery: getDatamodelApiBaseQuery(),
   tagTypes: ['schemaApi'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
@@ -23,11 +21,24 @@ export const schemaApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putSchema: builder.mutation<SchemaFormType, SchemaFormType>({
+    putSchema: builder.mutation<any, any>({
       query: (value) => ({
         url: '/schema',
         method: 'PUT',
         data: value,
+        headers: {
+          'content-Type': 'application/json;',
+        },
+      }),
+    }),
+    putSchemaFull: builder.mutation<any, FormData>({
+      query: (file) => ({
+        url: '/schemaFull',
+        method: 'PUT',
+        data: file,
+        headers: {
+          'content-Type': 'multipart/form-data;',
+        },
       }),
     }),
     getSchema: builder.query<Schema, string>({
@@ -39,8 +50,8 @@ export const schemaApi = createApi({
     getSchemaWithRevisions: builder.query<SchemaWithVersionInfo, string>({
       query: (pid: string) => ({
         url: `/schema/${pid}?includeVersionInfo=true`,
-        method: 'GET'
-      })
+        method: 'GET',
+      }),
     }),
     postSchema: builder.mutation<
       string,
@@ -64,7 +75,7 @@ export const schemaApi = createApi({
     }),
     getSchemas: builder.query<Schema[], string>({
       query: (value) => ({
-        url: `/schemas`,
+        url: '/schemas',
         method: 'GET',
       }),
     }),
@@ -78,10 +89,11 @@ export const {
   usePostSchemaMutation,
   useDeleteSchemaMutation,
   useGetSchemasQuery,
+  usePutSchemaFullMutation,
   util: { getRunningQueriesThunk },
 } = schemaApi;
 
-export const { putSchema, getSchema, postSchema, deleteSchema, getSchemas } =
+export const { putSchema, getSchema, deleteSchema, getSchemas, putSchemaFull } =
   schemaApi.endpoints;
 
 // Slice setup below

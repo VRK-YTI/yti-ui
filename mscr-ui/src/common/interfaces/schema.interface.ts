@@ -18,7 +18,7 @@ export interface Schema {
   revision?: string;
   visibility?: string;
   created?: string;
-  modified?: string;
+  modified: string;
   uri?: string;
   versionLabel?: string;
 }
@@ -44,14 +44,16 @@ export interface Organization {
 }
 
 export interface SchemaFormType {
+  namespace?: string;
   contact?: boolean;
   serviceCategories?: any;
   pid?: string;
-  format: string;
+  format?: string;
   label?: { [key: string]: string };
   languages: any;
   organizations: any;
   filedata?: any;
   description?: any;
   status?: any;
+  uri?: any;
 }

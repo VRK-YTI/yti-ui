@@ -4,16 +4,20 @@ import Tab from '@mui/material/Tab';
 import { SyntheticEvent, useState } from 'react';
 import MetadataAndFiles from '@app/modules/schema-view/metadata-and-files';
 import VersionHistory from '@app/modules/schema-view/version-history';
-import {useTranslation} from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import { useGetSchemaWithRevisionsQuery } from '@app/common/components/schema/schema.slice';
 
 export default function SchemaView({ schemaId }: { schemaId: string }) {
   const { t } = useTranslation('common');
 
-  const { data: schemaDetails, isLoading, isSuccess, isError, error } =
-    useGetSchemaWithRevisionsQuery(schemaId);
+  const {
+    data: schemaDetails,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useGetSchemaWithRevisionsQuery(schemaId);
   const [selectedTab, setSelectedTab] = useState(0);
-
 
   function a11yProps(index: number) {
     return {
@@ -36,24 +40,24 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
   } else if (isSuccess) {
     return (
       <>
-        <Box className='mb-3' sx={{borderBottom: 1, borderColor: 'divider'}}>
-          <Tabs value={selectedTab} onChange={changeTab} aria-label="Category selection">
+        <Box className="mb-3" sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs
+            value={selectedTab}
+            onChange={changeTab}
+            aria-label="Category selection"
+          >
             <Tab label={t('schema.metadata-and-files')} {...a11yProps(0)} />
             <Tab label={t('schema.version-history')} {...a11yProps(1)} />
           </Tabs>
         </Box>
-        {selectedTab === 0 &&
-            <MetadataAndFiles schemaDetails={schemaDetails} />
-        }
-        {selectedTab === 1 &&
-            <VersionHistory schemaDetails={schemaDetails}/>
-        }
+        {selectedTab === 0 && (
+          <MetadataAndFiles schemaDetails={schemaDetails} />
+        )}
+        {selectedTab === 1 && <VersionHistory schemaDetails={schemaDetails} />}
       </>
     );
   }
 
   // TODO: What to return if data fetching returns error?
-  return (
-    <></>
-  );
+  return <></>;
 }

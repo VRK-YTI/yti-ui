@@ -20,11 +20,9 @@ import { useGetSchemaQuery } from '@app/common/components/schema/schema.slice';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 import Separator from 'yti-common-ui/components/separator';
-import InlineListBlock from '@app/common/components/inline-list-block';
 import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
-import FormattedDate from 'yti-common-ui/formatted-date';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
-import SchemaView from "@app/modules/schema-view";
+import SchemaView from '@app/modules/schema-view';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -35,52 +33,6 @@ interface IndexPageProps extends CommonContextState {
 export default function SchemaPage(props: IndexPageProps) {
   const { query, asPath } = useRouter();
   const schemaId = (query?.pid ?? '') as string;
-  const items: Schema[] = [];
-
-  const { data, isLoading, isSuccess, isError, error } =
-    useGetSchemaQuery(schemaId);
-
-  function renderSchema() {
-    let schemaContent;
-    if (isLoading) {
-      schemaContent = (
-        <div className="d-flex justify-content-center">
-          <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      );
-    } else if (isSuccess) {
-      items.push(data);
-      schemaContent = (
-        <div className="col-lg-12 mb-3 ">
-          <div className="card">
-            <div className="card-body">
-              <BasicBlock title={'Schema Name'}>
-                {data.label.additionalProp1}
-              </BasicBlock>
-              <BasicBlock title={'Schema created'}>{data.created}</BasicBlock>
-              <BasicBlock title={'Schema Visibilty'}>
-                {data.visibilty}
-              </BasicBlock>
-              <BasicBlock title={'Schema Status'}>{data.status}</BasicBlock>
-            </div>
-          </div>
-          <Separator />
-          <BasicBlockExtraWrapper>
-            <UpdateWithFileModal
-              pid={schemaId}
-              refetch={function (): void {
-                throw new Error('Function not implemented.');
-              }}
-            />
-          </BasicBlockExtraWrapper>
-        </div>
-      );
-    }
-
-    return schemaContent;
-  }
 
   return (
     <CommonContextProvider value={props}>

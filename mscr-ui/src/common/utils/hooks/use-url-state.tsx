@@ -61,9 +61,18 @@ export default function useUrlState(): UseURLStateResult {
     state: asStringArray(router.query.state, initialUrlState.state),
     type: asStringArray(router.query.type, initialUrlState.type),
     format: asStringArray(router.query.format, initialUrlState.format),
-    sourceType: asStringArray(router.query.sourceType, initialUrlState.sourceType),
-    sourceSchema: asStringArray(router.query.sourceSchema, initialUrlState.sourceSchema),
-    targetSchema: asStringArray(router.query.targetSchema, initialUrlState.targetSchema),
+    sourceType: asStringArray(
+      router.query.sourceType,
+      initialUrlState.sourceType
+    ),
+    sourceSchema: asStringArray(
+      router.query.sourceSchema,
+      initialUrlState.sourceSchema
+    ),
+    targetSchema: asStringArray(
+      router.query.targetSchema,
+      initialUrlState.targetSchema
+    ),
     page: asNumber(router.query.page, initialUrlState.page),
     lang: asString(router.query.lang, initialUrlState.lang),
   };
@@ -122,9 +131,12 @@ function buildUrlStatePatch(urlState: UrlState): Partial<UrlState> {
   if (!isInitial(urlState, 'state')) patch.state = urlState.state;
   if (!isInitial(urlState, 'type')) patch.type = urlState.type;
   if (!isInitial(urlState, 'format')) patch.format = urlState.format;
-  if (!isInitial(urlState, 'sourceType')) patch.sourceType = urlState.sourceType;
-  if (!isInitial(urlState, 'sourceSchema')) patch.sourceSchema = urlState.sourceSchema;
-  if (!isInitial(urlState, 'targetSchema')) patch.targetSchema = urlState.targetSchema;
+  if (!isInitial(urlState, 'sourceType'))
+    patch.sourceType = urlState.sourceType;
+  if (!isInitial(urlState, 'sourceSchema'))
+    patch.sourceSchema = urlState.sourceSchema;
+  if (!isInitial(urlState, 'targetSchema'))
+    patch.targetSchema = urlState.targetSchema;
   if (!isInitial(urlState, 'page')) patch.page = urlState.page;
   if (!isInitial(urlState, 'lang')) patch.lang = urlState.lang;
   return patch;

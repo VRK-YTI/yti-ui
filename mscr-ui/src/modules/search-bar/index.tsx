@@ -1,13 +1,18 @@
-import {SearchInput} from 'suomifi-ui-components';
-import {useTranslation} from 'next-i18next';
-import useUrlState, {initialUrlState} from '@app/common/utils/hooks/use-url-state';
-import {useContext, useEffect, useState} from 'react';
-import {SEARCH_FIELD_PATTERN, TEXT_INPUT_MAX} from 'yti-common-ui/utils/constants';
-import {SearchContext} from '@app/common/components/search-context-provider';
+import { SearchInput } from 'suomifi-ui-components';
+import { useTranslation } from 'next-i18next';
+import useUrlState, {
+  initialUrlState,
+} from '@app/common/utils/hooks/use-url-state';
+import { useContext, useEffect, useState } from 'react';
+import {
+  SEARCH_FIELD_PATTERN,
+  TEXT_INPUT_MAX,
+} from 'yti-common-ui/utils/constants';
+import { SearchContext } from '@app/common/components/search-context-provider';
 
 export default function SearchBar() {
   const { t } = useTranslation('common');
-  const { isSearchActive, setIsSearchActive} = useContext(SearchContext);
+  const { isSearchActive, setIsSearchActive } = useContext(SearchContext);
   const { urlState, patchUrlState } = useUrlState();
   const q = urlState.q;
   const [searchInputValue, setSearchInputValue] = useState<string>(
@@ -30,11 +35,10 @@ export default function SearchBar() {
     }
   }, [q, setSearchInputValue, isSearchActive]);
 
-
   return (
     <>
       <SearchInput
-        labelText=''
+        labelText=""
         clearButtonLabel={t('search.bar.clear-button')}
         searchButtonLabel={t('search.bar.search-button')}
         value={searchInputValue ?? ''}
@@ -48,7 +52,6 @@ export default function SearchBar() {
         maxLength={TEXT_INPUT_MAX}
       />
     </>
-
   );
 
   function search(q?: string) {

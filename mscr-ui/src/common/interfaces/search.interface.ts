@@ -1,14 +1,19 @@
-import {Organization} from '@app/common/interfaces/organizations.interface';
+import { Organization } from '@app/common/interfaces/organizations.interface';
 
 export interface Label {
   [key: string]: string;
 }
 
-export type Status = 'DRAFT' | 'PUBLISHED' | 'INVALID' | 'DEPRECATED' | 'REMOVED'
+export type Status =
+  | 'DRAFT'
+  | 'PUBLISHED'
+  | 'INVALID'
+  | 'DEPRECATED'
+  | 'REMOVED';
 
-export type Visibility = 'PRIVATE' | 'PUBLIC'
+export type Visibility = 'PRIVATE' | 'PUBLIC';
 
-export type Type = 'CROSSWALK' | 'SCHEMA'
+export type Type = 'CROSSWALK' | 'SCHEMA';
 
 export interface ResultInfo {
   id: string;
@@ -32,7 +37,7 @@ export interface MscrSearchResult {
   _source: ResultInfo;
 }
 
-export type Facet = 'state' | 'type' | 'format' | 'organization' | 'sourceType'
+export type Facet = 'state' | 'type' | 'format' | 'organization' | 'sourceType';
 
 export interface Filter {
   label: string;
@@ -71,14 +76,16 @@ export interface MscrSearchResultsX {
     skipped: number;
   };
   hits: {
-    total:{
+    total: {
       relation: string;
       value: number;
     };
-    hits: [                     // ToDo: CrosswalkResult interface extending Crosswalk interface?
-      {                         // ToDo: Update Crosswalk interface?
-        _index: string;          // ToDo: SchemaResult interface extending Schema interface?
-        _id: string;             // ToDo: Update Schema interface?
+    hits: [
+      // ToDo: CrosswalkResult interface extending Crosswalk interface?
+      {
+        // ToDo: Update Crosswalk interface?
+        _index: string; // ToDo: SchemaResult interface extending Schema interface?
+        _id: string; // ToDo: Update Schema interface?
         source: {
           id: string;
           label: {
@@ -92,7 +99,8 @@ export interface MscrSearchResultsX {
           contentModified: Date;
           type: string;
           prefix: string;
-          comment: {            // ToDo: a Comment interface?
+          comment: {
+            // ToDo: a Comment interface?
             [key: string]: string;
           };
           contributor: string[];
@@ -103,7 +111,8 @@ export interface MscrSearchResultsX {
           aggregationKey: string;
           revisionOf: string;
           numberOfRevisions: number;
-          revisions: [                  // ToDo: a Revision interface
+          revisions: [
+            // ToDo: a Revision interface
             {
               pid: string;
               created: number;
@@ -118,7 +127,8 @@ export interface MscrSearchResultsX {
       }
     ];
   };
-  aggregations: {                       // ToDo: an Aggregation interface
+  aggregations: {
+    // ToDo: an Aggregation interface
     [key: string]: {
       buckets: [
         {
