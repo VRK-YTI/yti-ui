@@ -17,6 +17,7 @@ import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { Type } from '@app/common/interfaces/type.interface';
 import { Status as StatusType } from '@app/common/interfaces/status.interface';
 import { StatusChip } from 'yti-common-ui/status-chip';
+import { getEnvParam } from '../uri-info';
 
 export interface ResultType {
   target: {
@@ -150,7 +151,7 @@ export default function ResourceList({
         <div>
           {item.target.label}
           <ExternalLink
-            href={item.target.link}
+            href={`${item.target.link}${getEnvParam(item.target.link)}`}
             labelNewWindow={t('link-opens-new-window-external', {
               ns: 'common',
             })}
@@ -238,7 +239,7 @@ export default function ResourceList({
             {item.concept.link && (
               <>
                 <ExternalLink
-                  href={item.concept.link}
+                  href={`${item.concept.link}${getEnvParam(item.concept.link)}`}
                   labelNewWindow={t('link-opens-new-window-external', {
                     ns: 'common',
                   })}

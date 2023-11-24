@@ -288,7 +288,7 @@ const GraphContent = ({
         modelId,
         deleteNodeById,
         applicationProfile,
-        applicationProfile ? refetchNodes : undefined,
+        refetchNodes,
         organizationIds
       )
     );
@@ -383,11 +383,20 @@ const GraphContent = ({
     if (savePosition && !result.isLoading) {
       const positions = generatePositionsPayload(nodes, edges);
 
-      putPositions({ modelId, data: positions });
+      putPositions({ modelId, version, data: positions });
 
       dispatch(setSavePosition(false));
     }
-  }, [savePosition, edges, modelId, nodes, putPositions, result, dispatch]);
+  }, [
+    savePosition,
+    edges,
+    modelId,
+    version,
+    nodes,
+    putPositions,
+    result,
+    dispatch,
+  ]);
 
   useEffect(() => {
     if (result.isSuccess) {

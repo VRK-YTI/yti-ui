@@ -14,6 +14,7 @@ export default function createAttributeNode(
       identifier: node.identifier,
       modelId: modelId,
       label: node.label,
+      uri: node.uri,
       dataType: node.dataType,
       ...(refetch ? { refetch: refetch } : {}),
     },

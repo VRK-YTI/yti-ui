@@ -307,6 +307,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                       domains={[]}
                       organizations={[]}
                       noChip
+                      noVersion
                     />
                     <Pagination
                       maxPages={Math.ceil(conceptsData.totalHitCount / 50)}
@@ -423,6 +424,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
             data={filteredCollections}
             domains={[]}
             organizations={[]}
+            noVersion
             extra={{
               other: {
                 title: t('vocabulary-filter-concepts'),

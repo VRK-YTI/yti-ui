@@ -4,10 +4,12 @@ export interface ClassNodeDataType {
   applicationProfile?: boolean;
   identifier: string;
   label: { [key: string]: string };
+  uri: string;
   modelId: string;
   resources: {
     identifier: string;
     label?: { [key: string]: string };
+    uri: string;
     type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
     codeLists?: string[];
     dataType?: string | null;
@@ -21,6 +23,7 @@ export interface ClassNodeDataType {
 export interface AttributeNodeType {
   identifier: string;
   label: { [key: string]: string };
+  uri: string;
   modelId: string;
   dataType?: string;
   refetch?: () => void;
