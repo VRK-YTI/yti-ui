@@ -16,11 +16,6 @@ import {
 import { getRunningQueriesThunk as getInternalResourcesRunningQueriesThunk } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { getRunningQueriesThunk as getVisualizationRunningQueriesThunk } from '@app/common/components/visualization/visualization.slice';
 import { useRouter } from 'next/router';
-import { useGetSchemaQuery } from '@app/common/components/schema/schema.slice';
-import { Schema } from '@app/common/interfaces/schema.interface';
-import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
-import Separator from 'yti-common-ui/components/separator';
-import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import SchemaView from '@app/modules/schema-view';
 
@@ -31,7 +26,7 @@ interface IndexPageProps extends CommonContextState {
 }
 
 export default function SchemaPage(props: IndexPageProps) {
-  const { query, asPath } = useRouter();
+  const { query, } = useRouter();
   const schemaId = (query?.pid ?? '') as string;
 
   return (
@@ -40,7 +35,6 @@ export default function SchemaPage(props: IndexPageProps) {
         user={props.user ?? undefined}
         fakeableUsers={props.fakeableUsers}
       >
-        {/*{renderSchema()}*/}
         <SchemaView schemaId={schemaId} />
       </Layout>
     </CommonContextProvider>

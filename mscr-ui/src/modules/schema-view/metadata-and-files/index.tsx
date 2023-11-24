@@ -40,32 +40,27 @@ export default function MetadataAndFiles({
         schemaNamespace: '',
       };
     }
-    function languageFinder(langTaggedData: { [key: string]: string }) {
-      const primaryOption = Object.entries(langTaggedData).find(
-        (t) => t[0] === lang
-      )?.[1];
-      const englishOption = Object.entries(langTaggedData).find(
-        (t) => t[0] === 'en'
-      )?.[1];
-      return primaryOption ?? englishOption;
-    }
-    return {
-      schemaPid: schemaDetails?.pid ?? '',
-      schemaLabel: schemaDetails?.label
-        ? languageFinder(schemaDetails.label) ?? ''
-        : '',
-      schemaDescription: schemaDetails?.description
-        ? languageFinder(schemaDetails.description) ?? ''
-        : '',
-      schemaCreated: schemaDetails?.created ?? '',
-      schemaModified: schemaDetails?.modified ?? '',
-      schemaState: schemaDetails?.state ?? '',
-      schemaOrganizations: schemaDetails?.organizations.toString() ?? '',
-      schemaVisibility: schemaDetails?.visibility ?? '',
-      schemaFormat: schemaDetails?.format ?? '',
-      schemaVersionLabel: schemaDetails?.versionLabel ?? '',
-      schemaNamespace: schemaDetails?.namespace ?? '',
-    };
+    const organizations = getOrganizations(schemaDetails.organizations, lang)
+      .map((org) => org.label).join(', ');
+    return (
+      {
+        schemaPid: schemaDetails?.pid ?? '',
+        schemaLabel: schemaDetails?.label
+          ? getLanguageVersion({ data: schemaDetails.label, lang, appendLocale: true })
+          : '',
+        schemaDescription: schemaDetails?.description
+          ? getLanguageVersion({ data: schemaDetails.description, lang, appendLocale: true  }) ?? ''
+          : '',
+        schemaCreated: schemaDetails?.created ?? '',
+        schemaModified: schemaDetails?.modified ?? '',
+        schemaState: schemaDetails?.state ?? '',
+        schemaOrganizations: organizations,
+        schemaVisibility: schemaDetails?.visibility ?? '',
+        schemaFormat: schemaDetails?.format ?? '',
+        schemaVersionLabel: schemaDetails?.versionLabel ?? '',
+        schemaNamespace: schemaDetails?.namespace ?? ''
+      }
+    );
   }, [schemaDetails, lang]);
 
   return (
