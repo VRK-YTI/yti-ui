@@ -2,10 +2,10 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { SyntheticEvent, useState } from 'react';
-import MetadataAndFiles from '@app/modules/schema-view/metadata-and-files';
 import VersionHistory from '@app/modules/schema-view/version-history';
 import { useTranslation } from 'next-i18next';
 import { useGetSchemaWithRevisionsQuery } from '@app/common/components/schema/schema.slice';
+import MetadataAndFiles from './metadata-and-files';
 
 export default function SchemaView({ schemaId }: { schemaId: string }) {
   const { t } = useTranslation('common');
@@ -14,8 +14,9 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
     data: schemaDetails,
     isLoading,
     isSuccess,
-    isError,
-    error,
+    // Add these in when adding error handling
+    // isError,
+    // error,
   } = useGetSchemaWithRevisionsQuery(schemaId);
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -53,7 +54,9 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
         {selectedTab === 0 && (
           <MetadataAndFiles schemaDetails={schemaDetails} />
         )}
-        {selectedTab === 1 && <VersionHistory schemaDetails={schemaDetails} />}
+        {selectedTab === 1 && (
+          <VersionHistory schemaDetails={schemaDetails} />
+        )}
       </>
     );
   }
