@@ -10,6 +10,8 @@
   "add-disjoint-class": "Add disjoint class",
   "add-file": "",
   "add-link": "Add link",
+  "add-link-to-data-model": "Add link to data model",
+  "add-link-to-data-model-desc": "You can use another data model resources easily in your own model by adding a link to the data model.",
   "add-new-model": "Add new data model",
   "add-new-model-description": "All fields are required unless marked optional",
   "add-or-drag-a-new-file-here": "",
