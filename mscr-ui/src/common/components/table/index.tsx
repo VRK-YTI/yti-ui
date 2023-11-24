@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { useBreakpoints } from 'yti-common-ui/media-query';
 import Separator from 'yti-common-ui/separator';
 import SchemaList from '../schema-list';
 import CrosswalkList from '../crosswalk-list';
 import { useGetPersonalContentQuery } from '@app/common/components/personal/personal.slice';
 import { Revision, Schema } from '@app/common/interfaces/schema.interface';
+import { Crosswalk } from '@app/common/interfaces/crosswalk.interface';
 
 export default function BasicTable() {
-  const { breakpoint } = useBreakpoints();
-  const { data: schemaData, isLoading } = useGetPersonalContentQuery('SCHEMA');
-  if (isLoading) return <div> Is Loading</div>;
+  const { data: schemaData, isLoading: schemaIsLoading } = useGetPersonalContentQuery('SCHEMA');
+  const { data: crosswalkData, isLoading: crosswalkIsLoading } = useGetPersonalContentQuery('CROSSWALK');
+  if (crosswalkIsLoading) return <div> Is Loading</div>;
 
   function getVersionLabel(id: string, revisions: Revision[]): string {
     return revisions.find((r) => r.pid == id)?.versionLabel ?? '';
@@ -17,18 +17,30 @@ export default function BasicTable() {
 
   const schemas = schemaData?.hits.hits.map((result) => {
     const info = result._source;
-    const schema: Schema = {
-      description: info.comment,
+    const schema: Partial<Schema> = {
       label: info.label,
       // TODO: change when namespace in API
       namespace: info.prefix,
-      organizations: info.organizations,
       pid: info.id,
       state: info.state,
       // TODO: change when API changed
       versionLabel: getVersionLabel(info.id, info.revisions)
     };
     return schema;
+  });
+
+  const crosswalks = crosswalkData?.hits.hits.map((result) => {
+    const info = result._source;
+    const crosswalk: Partial<Crosswalk> = {
+      label: info.label,
+      // TODO: change when namespace in API
+      namespace: info.prefix,
+      pid: info.id,
+      state: info.state,
+      // TODO: change when API changed
+      versionLabel: getVersionLabel(info.id, info.revisions)
+    };
+    return crosswalk;
   });
 
   console.log('schemaData: ', schemaData);
@@ -50,7 +62,7 @@ export default function BasicTable() {
       <Separator isLarge />
 
       <CrosswalkList
-        items={[]}
+        items={crosswalks ?? []}
         handleRemoval={function (value: string): void {
           throw new Error('Function not implemented.');
         }}
