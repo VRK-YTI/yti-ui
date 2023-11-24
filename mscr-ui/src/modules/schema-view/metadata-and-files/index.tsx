@@ -8,6 +8,8 @@ import {
 } from '@app/modules/schema-view/metadata-and-files/metadata-and-files.styles';
 import { Grid } from '@mui/material';
 import { Heading } from 'suomifi-ui-components';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import getOrganizations from '@app/common/utils/get-organizations';
 
 export default function MetadataAndFiles({
   schemaDetails,
@@ -15,12 +17,10 @@ export default function MetadataAndFiles({
   schemaDetails?: Schema;
 }) {
   const { t } = useTranslation('common');
-  const lang = router.locale;
+  const lang = router.locale ?? '';
 
-  // TODO: Only edit with permission, we have util has-permission
-  // TODO: Get organization names neatly
-  // Locale: Object.entries(schemaDetails.label).find((t) => t[0] === lang)?.[1] ?? ''
-  // Organization: see datamodel-ui/src/modules/model/model-info-view.tsx
+  // TODO: Editing -> Only edit with permission, we have util has-permission
+
   interface SchemaDisplay {
     [key: string]: string;
   }

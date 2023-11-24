@@ -21,6 +21,21 @@ export interface Schema {
   uri?: string;
   versionLabel?: string;
 }
+
+export interface Revision {
+  pid: string;
+  label: {
+    [key: string]: string;
+  };
+  versionLabel: string;
+  state?: string;
+  created?: string;
+}
+
+export interface SchemaWithVersionInfo extends Schema {
+  revisions: Revision[];
+}
+
 export interface Organization {
   id: string;
   parentOrganization?: string;

@@ -7,6 +7,7 @@ import isHydrate from '@app/store/isHydrate';
 import {
   Schema,
   SchemaFormType,
+  SchemaWithVersionInfo
 } from '@app/common/interfaces/schema.interface';
 import { AnyNsRecord } from 'dns';
 
@@ -46,6 +47,26 @@ export const schemaApi = createApi({
         method: 'GET',
       }),
     }),
+    getSchemaWithRevisions: builder.query<SchemaWithVersionInfo, string>({
+      query: (pid: string) => ({
+        url: `/schema/${pid}?includeVersionInfo=true`,
+        method: 'GET'
+      })
+    }),
+    postSchema: builder.mutation<
+      string,
+      {
+        // Need to check How it works with our api
+        payload: Schema;
+        prefix: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/schema/${value.prefix}`,
+        method: 'POST',
+        data: value.payload,
+      }),
+    }),
     deleteSchema: builder.mutation<string, string>({
       query: (value) => ({
         url: `/schema/${value}`,
@@ -64,6 +85,8 @@ export const schemaApi = createApi({
 export const {
   usePutSchemaMutation,
   useGetSchemaQuery,
+  useGetSchemaWithRevisionsQuery,
+  usePostSchemaMutation,
   useDeleteSchemaMutation,
   useGetSchemasQuery,
   usePutSchemaFullMutation,
