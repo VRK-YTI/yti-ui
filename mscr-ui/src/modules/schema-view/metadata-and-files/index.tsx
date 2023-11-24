@@ -1,22 +1,22 @@
-import {useTranslation} from 'next-i18next';
-import {useMemo} from 'react';
-import {Schema} from '@app/common/interfaces/schema.interface';
+import { useTranslation } from 'next-i18next';
+import { useMemo } from 'react';
+import { Schema } from '@app/common/interfaces/schema.interface';
 import router from 'next/router';
 import {
   DescriptionList,
   DescriptionListTitle
 } from '@app/modules/schema-view/metadata-and-files/metadata-and-files.styles';
-import {Grid} from '@mui/material';
-import {Heading} from 'suomifi-ui-components';
+import { Grid } from '@mui/material';
+import { Heading } from 'suomifi-ui-components';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import getOrganizations from '@app/common/utils/get-organizations';
 
 export default function MetadataAndFiles({ schemaDetails }: { schemaDetails?: Schema }) {
   const { t } = useTranslation('common');
-  const lang = router.locale;
+  const lang = router.locale ?? '';
 
-  // TODO: Only edit with permission, we have util has-permission
-  // TODO: Get organization names neatly
-  // Locale: Object.entries(schemaDetails.label).find((t) => t[0] === lang)?.[1] ?? ''
-  // Organization: see datamodel-ui/src/modules/model/model-info-view.tsx
+  // TODO: Editing -> Only edit with permission, we have util has-permission
+
   interface SchemaDisplay {
     [key:string]: string;
   }
@@ -38,24 +38,21 @@ export default function MetadataAndFiles({ schemaDetails }: { schemaDetails?: Sc
         }
       );
     }
-    function languageFinder(langTaggedData: { [key:string]: string }) {
-      const primaryOption = Object.entries(langTaggedData).find((t) => t[0] === lang)?.[1];
-      const englishOption = Object.entries(langTaggedData).find((t) => t[0] === 'en')?.[1];
-      return primaryOption ?? englishOption;
-    }
+    const organizations = getOrganizations(schemaDetails.organizations, lang)
+      .map((org) => org.label).join(', ');
     return (
       {
         schemaPid: schemaDetails?.pid ?? '',
         schemaLabel: schemaDetails?.label
-          ? languageFinder(schemaDetails.label) ?? ''
+          ? getLanguageVersion({ data: schemaDetails.label, lang, appendLocale: true })
           : '',
         schemaDescription: schemaDetails?.description
-          ? languageFinder(schemaDetails.description) ?? ''
+          ? getLanguageVersion({ data: schemaDetails.description, lang, appendLocale: true  }) ?? ''
           : '',
         schemaCreated: schemaDetails?.created ?? '',
         schemaModified: schemaDetails?.modified ?? '',
         schemaState: schemaDetails?.state ?? '',
-        schemaOrganizations: schemaDetails?.organizations.toString() ?? '',
+        schemaOrganizations: organizations,
         schemaVisibility: schemaDetails?.visibility ?? '',
         schemaFormat: schemaDetails?.format ?? '',
         schemaVersionLabel: schemaDetails?.versionLabel ?? '',
