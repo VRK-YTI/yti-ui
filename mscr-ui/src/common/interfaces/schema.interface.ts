@@ -2,7 +2,9 @@ export interface Schema {
   namespace?: string;
   pid?: string;
   format?: string;
+  // TODO: Change all mentions of 'status' into 'state'
   status?: string;
+  state?: string;
   label?: {
     [key: string]: string;
   };

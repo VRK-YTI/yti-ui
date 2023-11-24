@@ -22,6 +22,7 @@ import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
 import Separator from 'yti-common-ui/components/separator';
 import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
+import SchemaView from '@app/modules/schema-view';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -151,7 +152,8 @@ export default function SchemaPage(props: IndexPageProps) {
         user={props.user ?? undefined}
         fakeableUsers={props.fakeableUsers}
       >
-        {renderSchema()}
+        {/*{renderSchema()}*/}
+        <SchemaView schemaId={schemaId} />
       </Layout>
     </CommonContextProvider>
   );

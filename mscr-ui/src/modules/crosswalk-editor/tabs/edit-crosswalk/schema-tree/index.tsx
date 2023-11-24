@@ -51,6 +51,7 @@ export default function SchemaTree({
       onNodeToggle={handleToggle}
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<ChevronRightIcon />}
+      multiSelect
     >
       <TreeItem
         key={nodes.id}
