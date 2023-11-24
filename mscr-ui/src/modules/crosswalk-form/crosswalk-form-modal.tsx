@@ -13,6 +13,7 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 import { FormErrors, validateForm } from './validate-form';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
+  translateFileUploadError,
   translateLanguage,
   translateModelFormErrors,
 } from '@app/common/utils/translation-helpers';
@@ -22,8 +23,13 @@ import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import { useInitialCrosswalkForm } from '@app/common/utils/hooks/use-initial-crosswalk-form';
-import { usePutCrosswalkMutation } from '@app/common/components/crosswalk/crosswalk.slice';
+import {
+  usePutCrosswalkFullMutation,
+  usePutCrosswalkMutation,
+} from '@app/common/components/crosswalk/crosswalk.slice';
 import CrosswalkForm from '.';
+import FileDropArea from 'yti-common-ui/file-drop-area';
+const [isValid, setIsValid] = useState(false);
 
 interface CrosswalkFormModalProps {
   refetch: () => void;
@@ -44,7 +50,9 @@ export default function CrosswalkFormModal({
   const [userPosted, setUserPosted] = useState(false);
   const [getAuthenticatedUser, authenticateUser] =
     useGetAuthenticatedUserMutMutation();
-  const [putCrosswalk, result] = usePutCrosswalkMutation();
+  const [putCrosswalkFull, result] = usePutCrosswalkFullMutation();
+  const [isValid, setIsValid] = useState(false);
+  const [fileData, setFileData] = useState<File | null>();
 
   const handleOpen = () => {
     setVisible(true);
@@ -55,13 +63,14 @@ export default function CrosswalkFormModal({
     setVisible(false);
     setUserPosted(false);
     setFormData(crosswalkFormInitialData);
+    setFileData(null);
   }, [crosswalkFormInitialData]);
 
   useEffect(() => {
     if (userPosted && result.isSuccess) {
       refetch();
       handleClose();
-      //router.push(`/crosswalk/${result.data.pid}`);
+      router.push(`/crosswalk/${result.data.pid}`);
       alert('Crosswalk created Successfully');
     }
   }, [result, refetch, userPosted, handleClose, router]);
@@ -80,8 +89,14 @@ export default function CrosswalkFormModal({
     }
 
     const payload = generatePayload(formData);
-    console.log(payload);
-    putCrosswalk(payload);
+    const crosswalkFormData = new FormData();
+    crosswalkFormData.append('metadata', JSON.stringify(payload));
+    if (fileData) {
+      crosswalkFormData.append('file', fileData);
+      putCrosswalkFull(crosswalkFormData);
+    } else {
+      return;
+    }
   };
 
   useEffect(() => {
@@ -124,6 +139,12 @@ export default function CrosswalkFormModal({
             userPosted={userPosted}
             disabled={authenticateUser.data && authenticateUser.data.anonymous}
             errors={userPosted ? errors : undefined}
+          />
+          <FileDropArea
+            setFileData={setFileData}
+            setIsValid={setIsValid}
+            validFileTypes={['json', 'xslt', 'pdf']}
+            translateFileUploadError={translateFileUploadError}
           />
         </ModalContent>
         <ModalFooter>

@@ -2,11 +2,9 @@
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
 import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
 import getOrganizations from '@app/common/utils/get-organizations';
-import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
-import { useMemo, useState } from 'react';
-import { Dropdown, DropdownItem, Label, Text } from 'suomifi-ui-components';
-import Separator from 'yti-common-ui/separator';
+import { useMemo } from 'react';
+import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import {
   BlockContainer,
   ModelFormContainer,
@@ -16,18 +14,7 @@ import LanguageSelector from 'yti-common-ui/form/language-selector';
 import { FormErrors } from './validate-form';
 import { Status } from '@app/common/interfaces/status.interface';
 import { FormUpdateErrors } from './validate-form-update';
-import {
-  Schema,
-  SchemaFormType,
-} from '@app/common/interfaces/schema.interface';
-import { TextInput } from 'suomifi-ui-components';
-import { Paragraph } from 'suomifi-ui-components';
-import UpdateWithFileModal from '@app/common/components/update-with-file-modal';
-import { translateFileUploadError } from '@app/common/utils/translation-helpers copy';
-import FileDropArea from 'yti-common-ui/file-drop-area';
-import FileUpload from '@app/common/components/update-with-file-modal/file-upload';
-import { ImportDescriptionBlock } from '@app/common/components/update-with-file-modal/update-with-file-modal.styles';
-import { Format } from '@app/common/interfaces/format.interface';
+import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 
 interface SchemaFormProps {
   formData: SchemaFormType;

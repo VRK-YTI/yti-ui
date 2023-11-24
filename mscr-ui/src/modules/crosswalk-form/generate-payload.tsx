@@ -8,7 +8,7 @@ import {
 export default function generatePayload(data: CrosswalkFormType): Crosswalk {
   return {
     pid: '',
-    format: 'CSV',
+    format: data.format,
     description: data.languages
       .filter((l) => l.description !== '')
       .reduce(
@@ -31,7 +31,8 @@ export default function generatePayload(data: CrosswalkFormType): Crosswalk {
       .filter((l) => l.title !== '')
       .map((l) => l.uniqueItemId),
     organizations: data.organizations.map((o) => o.uniqueItemId),
-    status: 'DRAFT',
+    status: data.status,
+    state: data.status,
     sourceSchema: data.sourceSchema,
     targetSchema: data.targetSchema,
   };

@@ -1,7 +1,5 @@
 import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 
-
-
 // Not yet modified according to mscr validation errors
 export interface FormErrors {
   languageAmount: boolean;
@@ -12,8 +10,10 @@ export interface FormErrors {
   fileData: boolean;
 }
 
-export function validateForm(data: SchemaFormType, fileData: File | null| undefined) {
-  
+export function validateForm(
+  data: SchemaFormType,
+  fileData: File | null | undefined
+) {
   console.log(FormData);
   const errors: FormErrors = {
     languageAmount: false,

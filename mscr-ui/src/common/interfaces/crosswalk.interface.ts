@@ -6,7 +6,7 @@ import { Status } from './status.interface';
 export interface Crosswalk {
   pid: string;
   format: string;
-  status: string;
+  status: string | undefined;
   label: {
     [key: string]: string;
   };
@@ -17,6 +17,7 @@ export interface Crosswalk {
   organizations: string[];
   sourceSchema: string;
   targetSchema: string;
+  state: string | undefined;
 }
 
 export interface CrosswalkFormType {

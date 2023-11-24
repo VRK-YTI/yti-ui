@@ -288,7 +288,6 @@ export function translateFileUploadError(
   t: TFunction
 ) {
   switch (error) {
-  
     case 'upload-error':
       return t('file-upload-error.upload-error', { ns: 'admin' });
     case 'incorrect-file-type':
