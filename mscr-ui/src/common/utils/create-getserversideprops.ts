@@ -89,7 +89,6 @@ export function createCommonGetServerSideProps<
           reduxKey: 'fakeableUsers',
           functionKey: 'getFakeableUsers',
         });
-        console.log(fakeableUsers);
         //store.dispatch(
         //   setAdminControls(process.env.ADMIN_CONTROLS_DISABLED === 'true')
         // );

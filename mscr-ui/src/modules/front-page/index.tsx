@@ -21,8 +21,6 @@ export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
-  const { data: serviceCategoriesData, refetch: refetchServiceCategoriesData } =
-    useGetServiceCategoriesQuery(i18n.language);
   const { data: organizationsData, refetch: refetchOrganizationsData } =
     useGetOrganizationsQuery(i18n.language);
 
@@ -40,21 +38,10 @@ export default function FrontPage() {
     });
   }, [organizationsData, i18n.language]);
 
-  const serviceCategories = useMemo(() => {
-    if (!serviceCategoriesData) {
-      return [];
-    }
-
-    return serviceCategoriesData.map((category) => ({
-      id: category.identifier,
-      label: category.label[i18n.language],
-    }));
-  }, [serviceCategoriesData, i18n.language]);
 
   // Need to decide what data we want to fetch loading the application
   const refetchInfo = () => {
     refetchOrganizationsData();
-    refetchServiceCategoriesData();
   };
 
   return (

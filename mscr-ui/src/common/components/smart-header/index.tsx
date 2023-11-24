@@ -119,8 +119,9 @@ export default function SmartHeader({
         <HeaderContainer>
           <MarginContainer $breakpoint={breakpoint}>
             <HeaderWrapper $breakpoint={breakpoint}>
+              {renderLogo()}
               {renderHeaderSearch()}
-              {renderDesktopLocaleChooser()}
+              {/*renderDesktopLocaleChooser()*/}
               {renderMobileNavigationToggleButton()}
               {renderDesktopAuthenticationPanel()}
             </HeaderWrapper>
@@ -143,7 +144,7 @@ export default function SmartHeader({
             <div
               style={{ display: 'flex', padding: '20px 20px 0 0', gap: '10px' }}
             >
-              {renderDesktopLocaleChooser()}
+              {/*renderDesktopLocaleChooser()*/}
               {renderMobileNavigationToggleButton()}
               {renderDesktopAuthenticationPanel()}
             </div>

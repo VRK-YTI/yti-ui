@@ -16,6 +16,7 @@ import SearchFilterSet from '@app/common/components/search-filter-set';
 import { Bucket, Facet, Filter } from '@app/common/interfaces/search.interface';
 import { useTranslation } from 'next-i18next';
 import { Grid } from '@mui/material';
+import Layout from 'yti-common-ui/layout/layout';
 
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
@@ -66,6 +67,7 @@ export default function SearchScreen() {
   }
 
   return (
+    
     <SearchContainer>
       <Grid container justifyContent="space-between">
         <Grid item xs={2}>
@@ -91,6 +93,6 @@ export default function SearchScreen() {
           </CloseButton>
         </Grid>
       </Grid>
-    </SearchContainer>
+    </SearchContainer >  
   );
 }
