@@ -5,13 +5,13 @@ import {
   LocalHandlerParams,
 } from './create-getserversideprops';
 
-describe.skip('createCommonGetServersideProps', () => {
+describe('createCommonGetServersideProps', () => {
   it('should wrap defaults', async () => {
     const ctx: GetServerSidePropsContext = {
       req: httpMocks.createRequest({ headers: { foo: 'bar' } }),
       res: httpMocks.createResponse(),
       query: {},
-      resolvedUrl: '',
+      resolvedUrl: '/',
       locale: 'en',
     };
 
@@ -48,7 +48,7 @@ describe.skip('createCommonGetServersideProps', () => {
       }),
       res: httpMocks.createResponse(),
       query: {},
-      resolvedUrl: '',
+      resolvedUrl: '/',
       locale: 'en',
     };
 
@@ -72,7 +72,7 @@ describe.skip('createCommonGetServersideProps', () => {
       }),
       res: httpMocks.createResponse(),
       query: {},
-      resolvedUrl: '',
+      resolvedUrl: '/',
       locale: 'en',
     };
 

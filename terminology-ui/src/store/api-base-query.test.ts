@@ -11,7 +11,7 @@ import {
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 
-describe.skip('axios base query', () => {
+describe('axios base query', () => {
   const mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
 
   afterEach(() => {
@@ -28,7 +28,7 @@ describe.skip('axios base query', () => {
       req: httpMocks.createRequest({ headers: { foo: 'bar' } }),
       res: httpMocks.createResponse(),
       query: {},
-      resolvedUrl: '',
+      resolvedUrl: '/',
       locale: 'en',
     };
 
