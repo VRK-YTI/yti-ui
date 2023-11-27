@@ -154,7 +154,7 @@ export default function ResourceInfo({
               >
                 {t('actions')}
               </Button>
-              <TooltipWrapper id="actions-tooltip">
+              <TooltipWrapper id="actions-tooltip" $nonStatic>
                 <Tooltip
                   ariaCloseButtonLabelText=""
                   ariaToggleButtonLabelText=""
