@@ -70,6 +70,18 @@
   "items-to-be-unscribed-from_one": "",
   "items-to-be-unscribed-from_other": "",
   "jump-to-page": "",
+  "landing": {
+    "bullet-1": "",
+    "bullet-2": "",
+    "bullet-3": "",
+    "bullet-4": "",
+    "bullet-5": "",
+    "bullet-6": "",
+    "description": "",
+    "search-placeholder": "",
+    "title": "",
+    "what-can-do": ""
+  },
   "languages": {
     "en": "",
     "fi": "",
@@ -148,9 +160,6 @@
   "show-by-information-domain": "",
   "show-only": "",
   "site-cancel": "",
-  "site-description-1": "",
-  "site-description-2": "",
-  "site-description-3": "",
   "site-frontpage": "",
   "site-information": "",
   "site-login": "",
