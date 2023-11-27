@@ -392,12 +392,14 @@ export default function CommonViewContent({
         </div>
       )}
 
-      {!applicationProfile && renderActions && (
-        <>
-          {renderActions()}
-          <Separator />
-        </>
-      )}
+      {!applicationProfile &&
+        renderActions &&
+        data.type === ResourceType.ASSOCIATION && (
+          <>
+            {renderActions()}
+            <Separator />
+          </>
+        )}
 
       {!applicationProfile &&
         data.type === ResourceType.ASSOCIATION &&
@@ -459,6 +461,10 @@ export default function CommonViewContent({
               appendLocale: true,
             })}
           </BasicBlock>
+          {!applicationProfile &&
+            renderActions &&
+            data.type === ResourceType.ATTRIBUTE &&
+            renderActions()}
         </div>
       )}
 

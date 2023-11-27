@@ -58,15 +58,8 @@ export const TooltipWrapper = styled(Block)<{ $nonStatic?: boolean }>`
     background-color: ${(props) =>
       props.theme.suomifi.colors.whiteBase} !important;
     padding: 2px !important;
-    ${(props) =>
-      props.$nonStatic
-        ? `
-      right: -10px;
-    `
-        : `
-      position: absolute !important;
-      right: 15px;
-    `}
+    position: absolute !important;
+    ${(props) => (props.$nonStatic ? 'left: 19px;' : 'right: 15px;')}
     width: min-content;
     height: min-content;
     z-index: 2;
