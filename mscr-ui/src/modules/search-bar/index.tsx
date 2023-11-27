@@ -38,8 +38,7 @@ export default function SearchBar({ placeholder }: { placeholder?: string }) {
   return (
     <>
       <SearchInput
-        labelText={t('search.bar.label')}
-        labelMode='hidden'
+        labelText={''}
         clearButtonLabel={t('search.bar.clear-button')}
         searchButtonLabel={t('search.bar.search-button')}
         visualPlaceholder={placeholder}
