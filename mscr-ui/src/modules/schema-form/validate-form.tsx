@@ -6,7 +6,6 @@ export interface FormErrors {
   titleAmount: string[];
   prefix: boolean;
   serviceCategories: boolean;
-  organizations: boolean;
   fileData: boolean;
 }
 
@@ -20,7 +19,6 @@ export function validateForm(
     titleAmount: [],
     prefix: false,
     serviceCategories: false,
-    organizations: false,
     fileData: false,
   };
 
@@ -48,11 +46,6 @@ export function validateForm(
       .map((lang: { uniqueItemId: any }) => lang.uniqueItemId);
 
     errors.titleAmount = langsWithError ?? [];
-  }
-
-  // Should have at least one organization set
-  if (data.organizations.length < 1) {
-    errors.organizations = true;
   }
 
   if (!fileData) {
