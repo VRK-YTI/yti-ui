@@ -44,6 +44,7 @@ import { useReactFlow } from 'reactflow';
 import getConnectedElements from '../graph/utils/get-connected-elements';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import ResourceError from '@app/common/components/resource-error';
+import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
 
 interface ResourceViewProps {
   modelId: string;
@@ -115,7 +116,7 @@ export default function ResourceView({
   const { data: inUse, refetch: refetchInUse } = useGetResourceActiveQuery(
     {
       prefix: modelId,
-      uri: `http://uri.suomi.fi/datamodel/ns/${globalSelected.modelId}/${globalSelected.id}`,
+      uri: `${SUOMI_FI_NAMESPACE}${globalSelected.modelId}/${globalSelected.id}`,
       version: version,
     },
     {

@@ -125,9 +125,10 @@ export default function RangeAndDomain({
             label={`${t('target-attribute')} (owl:DatatypeProperty)`}
           />
         )}
-
         <SingleSelect
-          labelText={`${t('range')} (rdfs:datatype)`}
+          labelText={`${t('range')} ${
+            applicationProfile ? '(sh:datatype)' : '(rdfs:range)'
+          }`}
           itemAdditionHelpText=""
           ariaOptionsAvailableText={t('available-ranges') as string}
           defaultSelectedItem={attributeRanges.find(

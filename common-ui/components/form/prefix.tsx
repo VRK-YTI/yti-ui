@@ -49,7 +49,8 @@ export default function Prefix({
   maxLength,
   minLength,
 }: PrefixProps) {
-  const URI = 'http://uri.suomi.fi';
+  const URI =
+    typeInUri === 'model' ? 'https://iri.suomi.fi' : 'http://uri.suomi.fi';
   const [initalPrefix] = useState(prefix);
   const [inputType, setInputType] = useState<'manual' | 'automatic'>(
     noAuto ? 'manual' : 'automatic'

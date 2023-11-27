@@ -61,6 +61,7 @@ import {
   DEFAULT_ATTRIBUTE_SUBPROPERTY,
 } from '@app/common/components/resource/utils';
 import PropertyToggle from './components/property-toggle';
+import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
 
 interface ResourceFormProps {
   modelId: string;
@@ -116,7 +117,7 @@ export default function ResourceForm({
   const { data: inUseResult, isSuccess: isActiveSuccess } =
     useGetResourceActiveQuery({
       prefix: currentModelId,
-      uri: `http://uri.suomi.fi/datamodel/ns/${modelId}/${data.identifier}`,
+      uri: `${SUOMI_FI_NAMESPACE}${modelId}/${data.identifier}`,
     });
 
   useEffect(() => {
@@ -163,7 +164,7 @@ export default function ResourceForm({
     if (inUseResult !== inUse) {
       togglePropertyShape({
         modelId: currentModelId,
-        uri: `http://uri.suomi.fi/datamodel/ns/${modelId}/${data.identifier}`,
+        uri: `${SUOMI_FI_NAMESPACE}${modelId}/${data.identifier}`,
       });
     }
   };

@@ -19,7 +19,6 @@ import {
   ADMIN_EMAIL,
   getIsPartOfWithId,
   getOrganizationsWithId,
-  getUri,
 } from '@app/common/utils/get-value';
 import { LinksWrapper, TooltipWrapper } from './model.styles';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
@@ -262,11 +261,11 @@ export default function ModelInfoView({
         </BasicBlock>
         <BasicBlock title={t('prefix')}>{modelInfo.prefix}</BasicBlock>
         <BasicBlock title={t('model-uri')}>
-          {getUri(modelInfo)}
+          {modelInfo.uri}
           <Button
             icon={<IconCopy />}
             variant="secondary"
-            onClick={() => navigator.clipboard.writeText(getUri(modelInfo))}
+            onClick={() => navigator.clipboard.writeText(modelInfo.uri)}
             style={{ width: 'max-content' }}
             id="copy-uri-button"
           >

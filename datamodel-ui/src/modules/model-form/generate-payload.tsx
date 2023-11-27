@@ -1,12 +1,10 @@
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { NewModel } from '@app/common/interfaces/new-model.interface';
-import { ADMIN_EMAIL } from '@app/common/utils/get-value';
+import { ADMIN_EMAIL, SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
 
 export default function generatePayload(data: ModelFormType): NewModel {
-  const SUOMI_FI_NAMESPACE = 'http://uri.suomi.fi/datamodel/ns/';
-
   return {
-    id: `${SUOMI_FI_NAMESPACE}${data.prefix}`,
+    id: `${SUOMI_FI_NAMESPACE}${data.prefix}/`,
     description: data.languages
       .filter((l) => l.description !== '')
       .reduce(

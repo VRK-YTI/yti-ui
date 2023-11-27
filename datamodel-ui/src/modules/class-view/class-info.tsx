@@ -36,7 +36,7 @@ import {
   setUpdateClassData,
   setUpdateVisualization,
 } from '@app/common/components/model/model.slice';
-import { ADMIN_EMAIL } from '@app/common/utils/get-value';
+import { ADMIN_EMAIL, SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import ResourceModal from './resource-modal';
 import { useAddPropertyReferenceMutation } from '@app/common/components/class/class.slice';
@@ -213,7 +213,7 @@ export default function ClassInfo({
           dispatch(setAddResourceRestrictionToClass(false));
           handleFollowUp({
             uriData: {
-              uri: `http://uri.suomi.fi/datamodel/ns/${modelId}/${identifier}`,
+              uri: `${SUOMI_FI_NAMESPACE}${modelId}/${identifier}`,
               curie: `${modelId}:${identifier}`,
               label: {},
             },

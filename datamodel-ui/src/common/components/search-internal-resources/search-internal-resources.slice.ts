@@ -8,6 +8,7 @@ import {
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Type } from '@app/common/interfaces/type.interface';
 import { inUseStatusList } from '@app/common/utils/status-list';
+import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
 
 export interface InternalResourcesSearchParams {
   query: string;
@@ -70,7 +71,7 @@ function createUrl(obj: InternalResourcesSearchParams): string {
 
   if (obj.limitToDataModel) {
     baseQuery = baseQuery.concat(
-      `&limitToDataModel=http://uri.suomi.fi/datamodel/ns/${obj.limitToDataModel}`
+      `&limitToDataModel=${SUOMI_FI_NAMESPACE}${obj.limitToDataModel}/`
     );
   }
 
@@ -97,7 +98,7 @@ function createUrl(obj: InternalResourcesSearchParams): string {
   if (obj.includeDraftFrom) {
     baseQuery = baseQuery.concat(
       `&includeDraftFrom=${obj.includeDraftFrom
-        .map((modelId) => `http://uri.suomi.fi/datamodel/ns/${modelId}`)
+        .map((modelId) => `${SUOMI_FI_NAMESPACE}${modelId}/`)
         .join(',')}`
     );
   }
