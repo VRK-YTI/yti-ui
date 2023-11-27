@@ -13,8 +13,8 @@ export default function SiteInformationModule() {
       <ul>
         <li>{t('landing.bullet-1')}</li>
         <li>{t('landing.bullet-2')}</li>
-        <li>{t('landing.bullet-3')}</li>
-        <li>{t('landing.bullet-4')}</li>
+        {/*<li>{t('landing.bullet-3')}</li>*/}
+        {/*<li>{t('landing.bullet-4')}</li>*/}
         <li>{t('landing.bullet-5')}</li>
         <li>{t('landing.bullet-6')}</li>
       </ul>
