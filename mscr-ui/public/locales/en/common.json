@@ -78,6 +78,7 @@
     "bullet-5": "Search, browse and view registered schemas and crosswalks, and associated content.",
     "bullet-6": "All of the above can be done in the UI or through an API.",
     "description": "MSCR facilitates the transformation of data from one schema to another via registered crosswalks.",
+    "search-placeholder": "Write here",
     "title": "Metadata Schema and Crosswalk Registry (MSCR)",
     "what-can-do": "What can you do in MSCR?"
   },

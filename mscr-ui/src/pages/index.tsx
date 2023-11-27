@@ -23,6 +23,8 @@ import {
 import PageHead from 'yti-common-ui/page-head';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import SiteInformationModule from '@app/modules/site-information';
+import SearchBar from '@app/modules/search-bar';
+import { Grid } from '@mui/material';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -43,7 +45,18 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('mscr-title')}
           description={t('service-description')}
         />
-        <SiteInformationModule />
+        <Grid container
+              alignItems="center">
+          <Grid item xs={6}>
+            <SiteInformationModule />
+          </Grid>
+          <Grid item xs={6}>
+            <div>
+              <p>Search in MSCR</p>
+              <SearchBar placeholder={t('landing.search-placeholder')} />
+            </div>
+          </Grid>
+        </Grid>
       </Layout>
     </CommonContextProvider>
   );

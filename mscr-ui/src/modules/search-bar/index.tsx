@@ -10,7 +10,7 @@ import {
 } from 'yti-common-ui/utils/constants';
 import { SearchContext } from '@app/common/components/search-context-provider';
 
-export default function SearchBar() {
+export default function SearchBar({ placeholder }: { placeholder?: string }) {
   const { t } = useTranslation('common');
   const { isSearchActive, setIsSearchActive } = useContext(SearchContext);
   const { urlState, patchUrlState } = useUrlState();
@@ -38,9 +38,11 @@ export default function SearchBar() {
   return (
     <>
       <SearchInput
-        labelText=""
+        labelText={t('search.bar.label')}
+        labelMode='hidden'
         clearButtonLabel={t('search.bar.clear-button')}
         searchButtonLabel={t('search.bar.search-button')}
+        visualPlaceholder={placeholder}
         value={searchInputValue ?? ''}
         onSearch={(value) => {
           if (typeof value === 'string') {
