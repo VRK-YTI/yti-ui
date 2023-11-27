@@ -23,23 +23,26 @@ import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 import { useGetAllCodesQuery } from '@app/common/components/code/code.slice';
 import UriList from '@app/common/components/uri-list';
 import UriInfo, { getEnvParam } from '@app/common/components/uri-info';
+import ClassModal from '../class-modal';
+import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
+import { default as NextLink } from 'next/link';
 
 export default function CommonViewContent({
   modelId,
-  hideInUse,
   inUse,
   data,
   displayLabel,
   applicationProfile,
   renderActions,
+  handleChangeTarget,
 }: {
   modelId: string;
-  hideInUse?: boolean;
   inUse?: boolean;
   data: Resource;
   displayLabel?: boolean;
   applicationProfile?: boolean;
   renderActions?: () => void;
+  handleChangeTarget?: (value?: InternalClassInfo) => void;
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
@@ -263,7 +266,7 @@ export default function CommonViewContent({
 
         {data.type === ResourceType.ASSOCIATION && (
           <>
-            <BasicBlock title={t('source-class', { ns: 'admin' })}>
+            <BasicBlock title={t('associations-source', { ns: 'admin' })}>
               <UriInfo
                 uri={data.domain}
                 lang={displayLang}
@@ -271,7 +274,7 @@ export default function CommonViewContent({
               />
             </BasicBlock>
 
-            <BasicBlock title={t('target-class', { ns: 'admin' })}>
+            <BasicBlock title={t('associations-target', { ns: 'admin' })}>
               <UriInfo
                 uri={data.range}
                 lang={displayLang}
@@ -389,6 +392,59 @@ export default function CommonViewContent({
         </div>
       )}
 
+      {!applicationProfile && renderActions && (
+        <>
+          {renderActions()}
+          <Separator />
+        </>
+      )}
+
+      {!applicationProfile &&
+        data.type === ResourceType.ASSOCIATION &&
+        handleChangeTarget && (
+          <>
+            <BasicBlock
+              title={t('association-target-in-this-class', { ns: 'admin' })}
+              largeGap
+              extra={
+                <div
+                  style={{
+                    width: 'max-content',
+                  }}
+                >
+                  <ClassModal
+                    modalButtonLabel={t('choose-association-target', {
+                      ns: 'admin',
+                    })}
+                    mode="select"
+                    handleFollowUp={handleChangeTarget}
+                    modelId={modelId}
+                    applicationProfile={applicationProfile}
+                  />
+                </div>
+              }
+            >
+              {data.range && (
+                <NextLink
+                  href={`${data.range.uri}${getEnvParam(data.range.uri, true)}`}
+                  passHref
+                  legacyBehavior
+                >
+                  <Link href="">
+                    {getLanguageVersion({
+                      data: data.range.label,
+                      lang: displayLang ?? i18n.language,
+                      appendLocale: true,
+                    })}
+                    <br />({data.range.curie})
+                  </Link>
+                </NextLink>
+              )}
+            </BasicBlock>
+            <Separator />
+          </>
+        )}
+
       {displayLabel && (
         <div
           style={{
@@ -403,7 +459,6 @@ export default function CommonViewContent({
               appendLocale: true,
             })}
           </BasicBlock>
-          {!applicationProfile && renderActions && renderActions()}
         </div>
       )}
 

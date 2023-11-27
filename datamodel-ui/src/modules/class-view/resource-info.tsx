@@ -27,7 +27,6 @@ import {
   SecondaryTextWrapper,
 } from './resource-info-styles';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
-import ClassModal from '../class-modal';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { useUpdateClassResrictionTargetMutation } from '@app/common/components/class/class.slice';
@@ -171,18 +170,6 @@ export default function ResourceInfo({
                       {t('edit', { ns: 'admin' })}
                     </Button>
                   )}
-                  {!applicationProfile && !attribute && (
-                    <ClassModal
-                      modalButtonLabel={t('choose-association-target', {
-                        ns: 'admin',
-                      })}
-                      mode="select"
-                      handleFollowUp={handleChangeTarget}
-                      modelId={modelId}
-                      applicationProfile={applicationProfile}
-                      buttonVariant="secondaryNoBorder"
-                    />
-                  )}
                   {(!data.fromShNode || !applicationProfile) && (
                     <RemoveReferenceModal
                       modelId={modelId}
@@ -229,6 +216,7 @@ export default function ResourceInfo({
             inUse={!data.deactivated}
             applicationProfile={applicationProfile}
             renderActions={renderActions}
+            handleChangeTarget={handleChangeTarget}
           />
         )}
       </ExpanderContent>
