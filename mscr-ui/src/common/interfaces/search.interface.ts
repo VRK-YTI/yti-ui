@@ -29,6 +29,8 @@ export interface ResultInfo {
   prefix: string;
   organizations: Organization[];
   revisions: Revision[];
+  versionLabel: string;
+  namespace: string;
 }
 
 export interface PatchedResult extends ResultInfo {
