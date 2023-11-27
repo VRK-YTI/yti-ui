@@ -39,7 +39,7 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
           {getLanguageVersion({ data: displayResult.label, lang, appendLocale: true })}
         </h4>
         <p>{getLanguageVersion({ data: displayResult.description, lang, appendLocale: true })}</p>
-        // TODO: What exactly is supposed to be in the chips?
+        {/*TODO: What exactly is supposed to be in the chips?*/}
         {Object.keys(result.label).map((key) => (
           <ChipWrapper key={key}>
             <StaticChip>{result.label[key]}</StaticChip>
