@@ -78,6 +78,21 @@ module.exports = () => {
         },
       ];
     },
+    async redirects() {
+      return [
+        {
+          source: '/',
+          has: [
+            {
+              type: 'cookie',
+              key: 'user-session-cookie'
+            }
+          ],
+          destination: '/personal/content',
+          permanent: false
+        }
+      ];
+    }
   };
 
   if (process.env.REWRITE_PROFILE === 'local') {
