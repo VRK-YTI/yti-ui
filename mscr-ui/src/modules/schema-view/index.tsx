@@ -4,7 +4,7 @@ import Tab from '@mui/material/Tab';
 import { SyntheticEvent, useState } from 'react';
 import VersionHistory from '@app/modules/schema-view/version-history';
 import { useTranslation } from 'next-i18next';
-import { useGetSchemaWithRevisionsQuery } from '@app/common/components/schema/schema.slice';
+import { useGetSchemaOriginalQuery, useGetSchemaWithRevisionsQuery } from '@app/common/components/schema/schema.slice';
 import MetadataAndFiles from './metadata-and-files';
 
 export default function SchemaView({ schemaId }: { schemaId: string }) {
@@ -18,6 +18,11 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
     // isError,
     // error,
   } = useGetSchemaWithRevisionsQuery(schemaId);
+  // TODO: I can't make sense of the format this returns, and how it would be offered for download
+  const {
+    data: schemaFiles
+  } = useGetSchemaOriginalQuery(schemaId);
+  console.log('the file', schemaFiles);
   const [selectedTab, setSelectedTab] = useState(0);
 
   function a11yProps(index: number) {
@@ -52,7 +57,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
           </Tabs>
         </Box>
         {selectedTab === 0 && (
-          <MetadataAndFiles schemaDetails={schemaDetails} />
+          <MetadataAndFiles schemaDetails={schemaDetails} schemaFiles={schemaFiles} />
         )}
         {selectedTab === 1 && (
           <VersionHistory schemaDetails={schemaDetails} />

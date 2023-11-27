@@ -10,11 +10,20 @@ import { Grid } from '@mui/material';
 import { Heading } from 'suomifi-ui-components';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import getOrganizations from '@app/common/utils/get-organizations';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableBody from '@mui/material/TableBody';
+import TableContainer from '@mui/material/TableContainer';
 
 export default function MetadataAndFiles({
   schemaDetails,
+  schemaFiles
 }: {
   schemaDetails?: Schema;
+  // TODO: When the type is known, put it here
+  schemaFiles?: undefined;
 }) {
   const { t } = useTranslation('common');
   const lang = router.locale ?? '';
@@ -152,7 +161,28 @@ export default function MetadataAndFiles({
           </Grid>
         </Grid>
       </DescriptionList>
-      <div>TABLE HERE{/* TODO: Display schema files */}</div>
+      <TableContainer>
+        <Table aria-label={t('schema.file.label')}>
+          <TableHead>
+            <TableRow>
+              <TableCell>{t('schema.file.name')}</TableCell>
+              <TableCell>{t('schema.file.added')}</TableCell>
+              <TableCell>{t('schema.file.format')}</TableCell>
+              <TableCell>{t('schema.file.actions')}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {/*TODO: Use the below template to create lines for files*/}
+            {/*{schemaFiles.map((file) => (*/}
+            {/*  <TableRow key={file.name}>*/}
+            {/*    <TableCell>{file.added}</TableCell>*/}
+            {/*    <TableCell>{file.format}</TableCell>*/}
+            {/*    <TableCell>{file.actions}</TableCell>*/}
+            {/*  </TableRow>*/}
+            {/*))}*/}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 }
