@@ -11,12 +11,12 @@ export default function SiteInformationModule() {
       <p>{t('landing.description')}</p>
       <Heading variant="h2">{t('landing.what-can-do')}</Heading>
       <ul>
-        <li>{t('site-description-1')}</li>
-        <li>{t('site-description-2')}</li>
-        <li>{t('site-description-3')}</li>
-        <li>{t('site-description-4')}</li>
-        <li>{t('site-description-5')}</li>
-        <li>{t('site-description-6')}</li>
+        <li>{t('landing.bullet-1')}</li>
+        <li>{t('landing.bullet-2')}</li>
+        <li>{t('landing.bullet-3')}</li>
+        <li>{t('landing.bullet-4')}</li>
+        <li>{t('landing.bullet-5')}</li>
+        <li>{t('landing.bullet-6')}</li>
       </ul>
     </>
   );
