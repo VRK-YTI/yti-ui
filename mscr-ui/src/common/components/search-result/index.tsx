@@ -11,8 +11,11 @@ import { useTranslation } from 'next-i18next';
 import router from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import Link from 'next/link';
+import { useContext } from 'react';
+import { SearchContext } from '@app/common/components/search-context-provider';
 
 export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
+  const { setIsSearchActive } = useContext(SearchContext);
   const lang = router.locale ?? '';
 
   const result = hit._source;
@@ -39,7 +42,7 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
       <ResultIconWrapper>{icon}</ResultIconWrapper>
       <ResultTextWrapper>
         <Link href={url}>
-          <RouterLink>
+          <RouterLink onClick={() => setIsSearchActive(false)}>
             <h4>
               {getLanguageVersion({ data: displayResult.label, lang, appendLocale: true })}
             </h4>
