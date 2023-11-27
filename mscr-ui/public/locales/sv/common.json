@@ -131,6 +131,13 @@
   "schema": {
     "created": "",
     "description": "",
+    "file": {
+      "actions": "",
+      "added": "",
+      "format": "",
+      "label": "",
+      "name": ""
+    },
     "format": "",
     "metadata": "",
     "metadata-and-files": "",

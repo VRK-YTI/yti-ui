@@ -22,7 +22,8 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
   const {
     data: schemaFiles
   } = useGetSchemaOriginalQuery(schemaId);
-  console.log('the file', schemaFiles);
+  console.log('the file ', schemaFiles);
+
   const [selectedTab, setSelectedTab] = useState(0);
 
   function a11yProps(index: number) {
