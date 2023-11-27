@@ -59,10 +59,8 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const { getNodes, getEdges } = useReactFlow();
   const globalSelected = useSelector(selectSelected());
   const globalHover = useSelector(selectHovered());
-  const globalShowAttributes = useSelector(selectModelTools()).showAttributes;
   const displayLang = useSelector(selectDisplayLang());
   const tools = useSelector(selectModelTools());
-  const [showAttributes, setShowAttributes] = useState(true);
   const [showTooltip, setShowTooltip] = useState(false);
   const [hover, setHover] = useState(false);
   const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
@@ -140,10 +138,6 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
       );
     }
   };
-
-  useEffect(() => {
-    setShowAttributes(globalShowAttributes);
-  }, [globalShowAttributes]);
 
   useEffect(() => {
     if (showTooltip && !selected) {
@@ -224,8 +218,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
         )}
       </div>
 
-      {showAttributes &&
-        data.resources &&
+      {data.resources &&
         data.resources
           .filter((r) => {
             if (
