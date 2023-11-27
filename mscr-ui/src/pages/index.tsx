@@ -20,9 +20,9 @@ import {
   getCount,
   getRunningQueriesThunk as getCountRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
-import PersonalWorkspace from '@app/modules/personal-home';
 import PageHead from 'yti-common-ui/page-head';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
+import SiteInformationModule from '@app/modules/site-information';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -43,6 +43,7 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('mscr-title')}
           description={t('service-description')}
         />
+        <SiteInformationModule />
       </Layout>
     </CommonContextProvider>
   );
