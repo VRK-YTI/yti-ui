@@ -1,5 +1,5 @@
 import { MscrSearchResult } from '@app/common/interfaces/search.interface';
-import { Block, StaticChip } from 'suomifi-ui-components';
+import { Block, RouterLink, StaticChip } from 'suomifi-ui-components';
 import { IconMerge, IconFileGeneric } from 'suomifi-icons';
 import {
   ResultIconWrapper,
@@ -10,6 +10,7 @@ import { Schema } from '@app/common/interfaces/schema.interface';
 import { useTranslation } from 'next-i18next';
 import router from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import Link from 'next/link';
 
 export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
   const lang = router.locale ?? '';
@@ -24,20 +25,26 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
     description: result.comment
   };
   let icon;
+  let url;
   if (result.type == 'SCHEMA') {
     icon = <IconFileGeneric />;
-
+    url = `/schema/${displayResult.pid}`;
   } else {
     icon = <IconMerge />;
+    url = `/crosswalk/${displayResult.pid}`;
   }
 
   return (
     <Block>
       <ResultIconWrapper>{icon}</ResultIconWrapper>
       <ResultTextWrapper>
-        <h4>
-          {getLanguageVersion({ data: displayResult.label, lang, appendLocale: true })}
-        </h4>
+        <Link href={url}>
+          <RouterLink>
+            <h4>
+              {getLanguageVersion({ data: displayResult.label, lang, appendLocale: true })}
+            </h4>
+          </RouterLink>
+        </Link>
         <p>{getLanguageVersion({ data: displayResult.description, lang, appendLocale: true })}</p>
         {/*TODO: What exactly is supposed to be in the chips?*/}
         {Object.keys(result.label).map((key) => (
