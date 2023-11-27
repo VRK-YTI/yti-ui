@@ -149,6 +149,7 @@ export default function SmartHeader({
           <MarginContainer $breakpoint={breakpoint}>
             <HeaderWrapper $breakpoint={breakpoint}>
               {renderLogo()}
+              {renderDesktopAuthenticationPanel()}
             </HeaderWrapper>
           </MarginContainer>
         </HeaderContainer>
