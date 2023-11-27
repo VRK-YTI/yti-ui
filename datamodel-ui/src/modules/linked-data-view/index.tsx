@@ -18,6 +18,7 @@ import {
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { HeaderRow } from '@app/common/components/header';
 import { useSelector } from 'react-redux';
+import { getEnvParam } from '@app/common/components/uri-info';
 
 export default function LinkedDataView({
   modelId,
@@ -101,7 +102,10 @@ export default function LinkedDataView({
                   <LinkedItem key={`linked-terminology-${idx}`}>
                     <ExternalLink
                       labelNewWindow={t('link-opens-new-window-external')}
-                      href={terminology.uri}
+                      href={`${terminology.uri}${getEnvParam(
+                        terminology.uri,
+                        true
+                      )}`}
                     >
                       {label !== '' ? label : terminology.uri}
                     </ExternalLink>
@@ -129,7 +133,7 @@ export default function LinkedDataView({
                     <LinkedItem key={`linked-codeList-${idx}`}>
                       <ExternalLink
                         labelNewWindow={t('link-opens-new-window-external')}
-                        href={codeList.id}
+                        href={`${codeList.id}${getEnvParam(codeList.id, true)}`}
                       >
                         {label !== '' ? label : codeList.id}
                       </ExternalLink>
@@ -156,7 +160,9 @@ export default function LinkedDataView({
                     <LinkExtraInfo>
                       <ExternalLink
                         labelNewWindow={t('link-opens-new-window-external')}
-                        href={namespace.namespace}
+                        href={`${namespace.namespace}${getEnvParam(
+                          namespace.namespace
+                        )}`}
                       >
                         {getLanguageVersion({
                           data: namespace.name,

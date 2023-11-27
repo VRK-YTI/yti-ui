@@ -1,4 +1,3 @@
-import { Status } from '@app/common/interfaces/status.interface';
 import styled from 'styled-components';
 import { StatusChip as BaseStatusChip } from 'yti-common-ui/status-chip';
 
@@ -29,6 +28,10 @@ export const ResultsTable = styled.table<{ $expandedLastCell?: boolean }>`
 
   td:not(:first-child) {
     width: 25%;
+  }
+
+  td:last-child {
+    width: auto;
   }
 
   ${(props) =>

@@ -10,10 +10,10 @@ interface UriInfoProps {
   showPlainText?: boolean;
 }
 
-export function getEnvParam(uri?: string) {
+export function getEnvParam(uri: string, v1?: boolean) {
   if (
-    !uri ||
-    uri.indexOf('uri.suomi.fi') === -1 ||
+    (uri.indexOf('uri.suomi.fi') === -1 &&
+      uri.indexOf('iri.suomi.fi') === -1) ||
     typeof window === 'undefined'
   ) {
     return '';
@@ -21,11 +21,13 @@ export function getEnvParam(uri?: string) {
 
   const hostname = window.location.hostname;
   if (hostname.indexOf('dev') > -1) {
-    return '?env=awsdev_v2';
+    return v1 ? '?env=awsdev' : '?env=awsdev_v2';
   } else if (hostname.indexOf('test') > -1) {
-    return '?env=awstest_v2';
+    return v1 ? '?env=awstest' : '?env=awstest_v2';
   } else if (hostname.indexOf('local') > -1) {
     return '?env=local';
+  } else if (hostname.indexOf('beta') > -1) {
+    return v1 ? '' : '?env=awsbeta_v2';
   }
   return '';
 }
@@ -37,7 +39,6 @@ export default function UriInfo({
   showPlainText,
 }: UriInfoProps) {
   const { t } = useTranslation('common');
-  const envParam = getEnvParam(uri?.uri);
 
   if (!uri) {
     return <>{notDefinedText ?? t('not-defined')}</>;
@@ -56,7 +57,7 @@ export default function UriInfo({
           (
           <ExternalLink
             key={uri.uri}
-            href={`${uri.uri}${envParam}`}
+            href={`${uri.uri}${getEnvParam(uri.uri)}`}
             labelNewWindow={t('link-opens-new-window-external')}
           >
             {uri.curie}
