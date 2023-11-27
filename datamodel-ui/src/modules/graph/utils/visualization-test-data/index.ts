@@ -293,7 +293,11 @@ export const expectedLibraryEdges = [
     referenceType: 'ASSOCIATION',
     type: 'generalEdge',
     markerEnd: { type: 'arrowclosed', height: 20, width: 20, color: '#212121' },
-    data: { label: { fi: 'onOsoite' }, identifier: 'is-address' },
+    data: {
+      label: { fi: 'onOsoite' },
+      identifier: 'is-address',
+      modelId: 'modelId',
+    },
   },
   {
     source: 'name',
@@ -461,6 +465,7 @@ export function expectedLibraryNodes(handleDeleteFunction: () => void) {
         modelId: 'visu',
         label: { fi: 'Osoite' },
         resources: [],
+        uri: 'uri-address',
       },
       type: 'classNode',
     },
@@ -477,6 +482,7 @@ export function expectedLibraryNodes(handleDeleteFunction: () => void) {
         identifier: 'person',
         modelId: 'visu',
         label: { fi: 'Henkilö' },
+        uri: undefined,
         resources: [
           {
             dataType: 'xsd:integer',
@@ -514,6 +520,7 @@ export function expectedLibraryNodes(handleDeleteFunction: () => void) {
         modelId: 'visu',
         label: { fi: 'Nimi' },
         dataType: 'rdfs:Literal',
+        uri: undefined,
       },
       type: 'attributeNode',
     },
@@ -525,6 +532,7 @@ export function expectedLibraryNodes(handleDeleteFunction: () => void) {
         modelId: 'visu',
         label: { fi: 'Luonnollinen henkilö' },
         resources: [],
+        uri: undefined,
       },
       type: 'classNode',
     },
@@ -564,6 +572,7 @@ export function expectedProfilesNodes(handleDeleteFunction: () => void) {
         identifier: 'address',
         modelId: 'visuprof',
         label: { fi: 'Osoite' },
+        uri: 'uri-address',
         applicationProfile: true,
         resources: [],
       },
@@ -576,6 +585,7 @@ export function expectedProfilesNodes(handleDeleteFunction: () => void) {
         identifier: 'person',
         modelId: 'visuprof',
         label: { fi: 'Henkilö' },
+        uri: undefined,
         applicationProfile: true,
         resources: [
           {
@@ -621,6 +631,7 @@ export function expectedProfilesNodes(handleDeleteFunction: () => void) {
         identifier: 'natural-person',
         modelId: 'visuprof',
         label: { fi: 'Luonnollinen henkilö' },
+        uri: undefined,
         applicationProfile: true,
         resources: [
           {

@@ -36,6 +36,7 @@ describe('create-class-node', () => {
         },
         modelId: 'modelId',
         resources: [],
+        uri: 'uri-1',
       },
       type: 'classNode',
     });
@@ -132,6 +133,7 @@ describe('create-class-node', () => {
               fi: 'attr-1-fi',
             },
             type: 'ATTRIBUTE',
+            uri: 'uri-attr-1',
           },
           {
             identifier: 'attr-2',
@@ -139,6 +141,7 @@ describe('create-class-node', () => {
               fi: 'attr-2-fi',
             },
             type: 'ATTRIBUTE',
+            uri: 'uri-attr-2',
           },
           {
             identifier: 'attr-3',
@@ -146,6 +149,7 @@ describe('create-class-node', () => {
               fi: 'attr-3-fi',
             },
             type: 'ATTRIBUTE',
+            uri: 'uri-attr-3',
           },
           {
             identifier: 'assoc-1',
@@ -154,6 +158,7 @@ describe('create-class-node', () => {
             },
             type: 'ASSOCIATION',
             referenceType: 'ASSOCIATION',
+            uri: 'uri-assoc-1',
           },
           {
             identifier: 'assoc-2',
@@ -162,6 +167,7 @@ describe('create-class-node', () => {
             },
             type: 'ASSOCIATION',
             referenceType: 'ASSOCIATION',
+            uri: 'uri-assoc-2',
           },
           {
             identifier: 'assoc-3',
@@ -170,8 +176,10 @@ describe('create-class-node', () => {
             },
             type: 'ASSOCIATION',
             referenceType: 'ASSOCIATION',
+            uri: 'uri-assoc-3',
           },
         ],
+        uri: 'uri-1',
       },
       type: 'classNode',
     });
