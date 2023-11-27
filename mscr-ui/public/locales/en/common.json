@@ -71,15 +71,15 @@
   "items-to-be-unscribed-from_other": "",
   "jump-to-page": "",
   "landing": {
-    "bullet-1": "",
-    "bullet-2": "",
-    "bullet-3": "",
-    "bullet-4": "",
-    "bullet-5": "",
-    "bullet-6": "",
-    "description": "",
-    "title": "",
-    "what-can-do": ""
+    "bullet-1": "Register metadata schemas and/or crosswalks with varying levels of technical details.",
+    "bullet-2": "Create crosswalks in a purpose-built user interface (UI).",
+    "bullet-3": "Mint resolvable PIDs for registered schemas, mappings and crosswalks.",
+    "bullet-4": "Download crosswalks and use them to implement data conversion in your use case.",
+    "bullet-5": "Search, browse and view registered schemas and crosswalks, and associated content.",
+    "bullet-6": "All of the above can be done in the UI or through an API.",
+    "description": "MSCR facilitates the transformation of data from one schema to another via registered crosswalks.",
+    "title": "Metadata Schema and Crosswalk Registry (MSCR)",
+    "what-can-do": "What can you do in MSCR?"
   },
   "languages": {
     "en": "",
