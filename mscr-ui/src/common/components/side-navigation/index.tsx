@@ -58,13 +58,14 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
               className="personal"
               subLevel={3}
               selected={router.asPath == personalSettingsPath}
-              content={
-                <Link href={personalSettingsPath} passHref>
-                  <RouterLink onClick={() => setOpenGroup('')}>
-                    {t('workspace-navigation-settings')}
-                  </RouterLink>
-                </Link>
-              }
+              content={''}
+              // content={
+              //   <Link href={personalSettingsPath} passHref>
+              //     <RouterLink onClick={() => setOpenGroup('')}>
+              //       {t('workspace-navigation-settings')}
+              //     </RouterLink>
+              //   </Link>
+              // }
             />
           </PersonalNavigationWrapper>
         </MscrSideNavigationLevel1>
@@ -114,13 +115,14 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                 className="group"
                 subLevel={3}
                 selected={router.asPath == '/' + group.id + '/settings'}
-                content={
-                  <Link href={'/' + group.id + '/settings'} passHref>
-                    <RouterLink>
-                      {t('workspace-group-navigation-settings')}
-                    </RouterLink>
-                  </Link>
-                }
+                content={''}
+                // content={
+                //   <Link href={'/' + group.id + '/settings'} passHref>
+                //     <RouterLink>
+                //       {t('workspace-group-navigation-settings')}
+                //     </RouterLink>
+                //   </Link>
+                // }
               />
             </MscrSideNavigationLevel2>
           ))}
