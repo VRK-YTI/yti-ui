@@ -24,6 +24,7 @@ import LoginModalView from 'yti-common-ui/login-modal';
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 import SearchBar from '@app/modules/search-bar';
+import { useRouter } from 'next/router';
 
 export default function SmartHeader({
   user,
@@ -38,6 +39,7 @@ export default function SmartHeader({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLoginExpanded, setIsLoginExpanded] = useState(false);
   const { breakpoint, isSmall } = useBreakpoints();
+  const router = useRouter();
 
   Modal.setAppElement('#__next');
 
@@ -45,6 +47,14 @@ export default function SmartHeader({
     setIsLoginExpanded(true);
     setIsExpanded(false);
   };
+
+  if (user?.anonymous && router.asPath == '/') {
+    return (
+      <>
+        {renderLandingHeader()}
+      </>
+    );
+  }
 
   if (fullScreenElements) {
     return (
@@ -126,6 +136,20 @@ export default function SmartHeader({
               {renderDesktopAuthenticationPanel()}
             </HeaderWrapper>
             {renderUserInfo()}
+          </MarginContainer>
+        </HeaderContainer>
+      </Block>
+    );
+  }
+
+  function renderLandingHeader() {
+    return (
+      <Block variant="header" role="banner" id="top-header">
+        <HeaderContainer>
+          <MarginContainer $breakpoint={breakpoint}>
+            <HeaderWrapper $breakpoint={breakpoint}>
+              {renderLogo()}
+            </HeaderWrapper>
           </MarginContainer>
         </HeaderContainer>
       </Block>
