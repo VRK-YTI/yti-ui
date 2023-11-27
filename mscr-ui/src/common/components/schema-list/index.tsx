@@ -25,7 +25,7 @@ export default function SchemaList({
 
   if (items && items.length < 1) {
     items = []; // initialize empty array
-    return <div>{'There is no Schemas or Crosswalks to show'}</div>;
+    return <div>{'There is no Schemas to show'}</div>;
   }
 
   function handleClick(pid: string): void {
