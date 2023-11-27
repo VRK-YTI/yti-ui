@@ -1,36 +1,34 @@
-import {
-  MscrSearchResult,
-  PatchedResult,
-  ResultInfo,
-} from '@app/common/interfaces/search.interface';
+import { MscrSearchResult } from '@app/common/interfaces/search.interface';
 import { Block, StaticChip } from 'suomifi-ui-components';
-import { schemaApi } from '@app/common/components/schema/schema.slice';
-import { crosswalkApi } from '@app/common/components/crosswalk/crosswalk.slice';
 import { IconMerge, IconFileGeneric } from 'suomifi-icons';
 import {
   ResultIconWrapper,
   ResultTextWrapper,
   ChipWrapper,
 } from '@app/common/components/search-result/search-result.styles';
+import { Schema } from '@app/common/interfaces/schema.interface';
+import { useTranslation } from 'next-i18next';
+import router from 'next/router';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
 export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
+  const lang = router.locale ?? '';
+
   const result = hit._source;
-  let patchedResult: PatchedResult;
+  const displayResult: Partial<Schema> = {
+    label: result.label,
+    namespace: result.namespace,
+    pid: result.id,
+    state: result.state,
+    versionLabel: result.versionLabel,
+    description: result.comment
+  };
   let icon;
   if (result.type == 'SCHEMA') {
     icon = <IconFileGeneric />;
-    const { data: schema } = schemaApi.useGetSchemaQuery(result.id);
-    patchedResult = {
-      ...result,
-      description: schema?.description ?? {},
-    };
+
   } else {
     icon = <IconMerge />;
-    const { data: crosswalk } = crosswalkApi.useGetCrosswalkQuery(result.id);
-    patchedResult = {
-      ...result,
-      description: crosswalk?.description ?? {},
-    };
   }
 
   return (
@@ -38,10 +36,10 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
       <ResultIconWrapper>{icon}</ResultIconWrapper>
       <ResultTextWrapper>
         <h4>
-          This is a search result of type {result.type} with id {result.id}
+          {getLanguageVersion({ data: displayResult.label, lang, appendLocale: true })}
         </h4>
-        <p>Where are names?? Here is a placeholder for a description</p>
-        {/* patchedResult && Object.keys(patchedResult.description).map((key) => <p key={key}>{patchedResult.description[key]}</p>) */}
+        <p>{getLanguageVersion({ data: displayResult.description, lang, appendLocale: true })}</p>
+        {/*TODO: What exactly is supposed to be in the chips?*/}
         {Object.keys(result.label).map((key) => (
           <ChipWrapper key={key}>
             <StaticChip>{result.label[key]}</StaticChip>
