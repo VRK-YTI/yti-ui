@@ -5,9 +5,10 @@ import { Schema } from '@app/common/interfaces/schema.interface';
 import { Grid } from '@mui/material';
 import TreeviewTest from '../treeview-test';
 import router from 'next/router';
+import { Crosswalk } from '@app/common/interfaces/crosswalk.interface';
 
 export interface CrosswalkListProps {
-  items: Schema[];
+  items: Partial<Crosswalk>[];
   handleRemoval: (value: string) => void;
   labelRow?: boolean;
   deleteDisabled: string[] | boolean;
@@ -21,7 +22,7 @@ export default function CrosswalkList({
   const { t } = useTranslation('admin');
 
   if (items && items.length < 1) {
-    return <div>{'There is no Schemas or Crosswalks to show'}</div>;
+    return <div>{'There is no Crosswalks to show'}</div>;
   }
 
   function handleClick(pid: string) {
@@ -70,13 +71,13 @@ export default function CrosswalkList({
                   {item.label}
                 </Grid>
                 <Grid item xs={2}>
-                  {item.prefix}
+                  {item.namespace}
                 </Grid>
                 <Grid item xs={2}>
                   {item.status}
                 </Grid>
                 <Grid item xs={2}>
-                  {item.revision}
+                  {item.versionLabel}
                 </Grid>
                 <Grid item xs={2}>
                   {item.pid}

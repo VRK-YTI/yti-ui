@@ -4,9 +4,10 @@ import { List, ListItem } from './schema-list.styles';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import { Grid, InputLabel } from '@mui/material';
 import router from 'next/router';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
 export interface SchemaListProps {
-  items: Schema[];
+  items: Partial<Schema>[];
   handleRemoval: (value: string) => void;
   labelRow?: boolean;
   deleteDisabled: string[] | boolean;
@@ -20,10 +21,11 @@ export default function SchemaList({
   deleteDisabled,
 }: SchemaListProps) {
   const { t } = useTranslation('admin');
+  const lang = router.locale ?? '';
 
   if (items && items.length < 1) {
     items = []; // initialize empty array
-    return <div>{'There is no Schemas or Crosswalks to show'}</div>;
+    return <div>{'There is no Schemas to show'}</div>;
   }
 
   function handleClick(pid: string): void {
@@ -70,16 +72,16 @@ export default function SchemaList({
             >
               <Grid container spacing={2}>
                 <Grid item xs={2}>
-                  {item.label}
+                  {getLanguageVersion({ data: item.label, lang })}
                 </Grid>
                 <Grid item xs={2}>
-                  {item.prefix}
+                  {item.namespace}
                 </Grid>
                 <Grid item xs={2}>
-                  {item.status}
+                  {item.state}
                 </Grid>
                 <Grid item xs={2}>
-                  {item.revision}
+                  {item.versionLabel}
                 </Grid>
                 <Grid item xs={2}>
                   {item.pid}

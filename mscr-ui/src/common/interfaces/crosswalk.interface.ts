@@ -18,6 +18,8 @@ export interface Crosswalk {
   sourceSchema: string;
   targetSchema: string;
   state: string | undefined;
+  namespace?: string;
+  versionLabel?: string;
 }
 
 export interface CrosswalkFormType {
