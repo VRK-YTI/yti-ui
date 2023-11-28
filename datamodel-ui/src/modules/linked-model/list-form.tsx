@@ -22,6 +22,7 @@ interface ListFormProps {
   modelId: string;
   selected: InternalNamespace[];
   visible: boolean;
+  applicationProfile?: boolean;
   handleClose: () => void;
   handleSubmit: () => void;
   setExternalVisible: () => void;
@@ -33,6 +34,7 @@ export default function ListForm({
   modelId,
   selected,
   visible,
+  applicationProfile,
   handleClose,
   handleSubmit,
   setExternalVisible,
@@ -49,7 +51,7 @@ export default function ListForm({
       query: '',
       resourceTypes: [],
       sortLang: i18n.language,
-      status: ['DRAFT', 'SUGGESTED', 'VALID'],
+      status: ['SUGGESTED', 'VALID'],
     });
 
   const { data: models } = useGetSearchModelsQuery(
@@ -63,7 +65,10 @@ export default function ListForm({
         q: searchParams.query,
         status: searchParams.status ?? [],
         type: '',
-        types: [],
+        types:
+          applicationProfile && searchParams.limitToModelType
+            ? [searchParams.limitToModelType]
+            : ['LIBRARY'],
       },
     },
     { skip: searchParams.query === '' }
@@ -77,7 +82,7 @@ export default function ListForm({
       query: '',
       resourceTypes: [],
       sortLang: i18n.language,
-      status: ['DRAFT', 'SUGGESTED', 'VALID'],
+      status: ['SUGGESTED', 'VALID'],
     });
     setSelected(initialData.internalNamespaces);
     setContentLanguage(i18n.language);
@@ -88,15 +93,16 @@ export default function ListForm({
       return;
     }
 
-    setSelected(
-      models.responseObjects
+    setSelected([
+      ...selected,
+      ...models.responseObjects
         .filter((obj) => ids.includes(obj.id))
         .map((obj) => ({
           name: obj.label,
           namespace: obj.uri,
           prefix: obj.prefix,
-        }))
-    );
+        })),
+    ]);
   };
 
   const handleCloseClick = () => {
@@ -141,7 +147,13 @@ export default function ListForm({
             totalHitCount: models?.totalHitCount ?? 0,
             items:
               models?.responseObjects
-                .filter((obj) => obj.prefix !== modelId)
+                .filter(
+                  (obj) =>
+                    obj.prefix !== modelId &&
+                    !initialData.internalNamespaces.some(
+                      (ns) => ns.namespace === obj.uri
+                    )
+                )
                 .map((obj) => ({
                   target: {
                     identifier: obj.id,
@@ -169,6 +181,7 @@ export default function ListForm({
                     status: obj.status,
                     type: obj.type,
                     uri: obj.uri,
+                    version: obj.version,
                   },
                 })) ?? [],
           }}
@@ -178,7 +191,9 @@ export default function ListForm({
           selectedIds={selected.map((s) => s.namespace)}
           languageVersioned
           noDataModelPicker
+          multiTypeSelection={applicationProfile}
           multiSelect
+          noDraftStatus
           extra={
             <div
               style={{

@@ -326,6 +326,7 @@ export default function LinkedDataForm({
                 }
                 currentModel={model.prefix}
                 languages={model.languages}
+                applicationProfile={hasCodelist}
               />
             </div>
           }

@@ -189,6 +189,7 @@ export default function ResourceList({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '5px',
+                flexWrap: 'wrap',
               }}
             >
               {item.datamodel.type === 'PROFILE' ? (
