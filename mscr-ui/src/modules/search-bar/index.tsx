@@ -1,4 +1,3 @@
-import { SearchInput } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import useUrlState, {
   initialUrlState,
@@ -9,6 +8,7 @@ import {
   TEXT_INPUT_MAX,
 } from 'yti-common-ui/utils/constants';
 import { SearchContext } from '@app/common/components/search-context-provider';
+import { MscrSearchInput } from '@app/modules/search-bar/search-bar.styles';
 
 export default function SearchBar({ placeholder }: { placeholder?: string }) {
   const { t } = useTranslation('common');
@@ -37,8 +37,8 @@ export default function SearchBar({ placeholder }: { placeholder?: string }) {
 
   return (
     <>
-      <SearchInput
-        labelText={''}
+      <MscrSearchInput
+        labelText={'search.bar.label'}
         clearButtonLabel={t('search.bar.clear-button')}
         searchButtonLabel={t('search.bar.search-button')}
         visualPlaceholder={placeholder}
