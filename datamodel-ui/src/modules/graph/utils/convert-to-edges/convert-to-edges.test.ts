@@ -8,7 +8,7 @@ import {
 
 describe('convert-to-edges', () => {
   it('should return an empty array if no associations or parent class references defined', () => {
-    const returned = convertToEdges([], [], (key: string) => key);
+    const returned = convertToEdges([], [], (key: string) => key, 'modelId');
 
     expect(returned).toStrictEqual([]);
   });
@@ -17,7 +17,8 @@ describe('convert-to-edges', () => {
     const returned = convertToEdges(
       libraryData.nodes,
       libraryData.hiddenNodes,
-      (key: string) => key
+      (key: string) => key,
+      'modelId'
     );
     expect(returned).toStrictEqual(expectedLibraryEdges);
   });
@@ -27,6 +28,7 @@ describe('convert-to-edges', () => {
       profileData.nodes,
       profileData.hiddenNodes,
       (key: string) => key,
+      'modelId',
       true
     );
     expect(returned).toStrictEqual(expectedProfileEdges);

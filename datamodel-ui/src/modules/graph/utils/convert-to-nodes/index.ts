@@ -1,5 +1,4 @@
 import {
-  NodeType,
   VisualizationHiddenNode,
   VisualizationType,
 } from '@app/common/interfaces/visualization.interface';

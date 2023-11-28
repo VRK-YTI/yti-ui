@@ -11,7 +11,7 @@ import {
   getRunningQueriesThunk,
 } from '@app/common/components/service-categories/service-categories.slice';
 
-describe.skip('axios base query', () => {
+describe('axios base query', () => {
   const mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
 
   afterEach(() => {
@@ -27,7 +27,7 @@ describe.skip('axios base query', () => {
       req: httpMocks.createRequest({ headers: { foo: 'bar' } }),
       res: httpMocks.createResponse(),
       query: {},
-      resolvedUrl: '',
+      resolvedUrl: '/',
       locale: 'en',
     };
 
