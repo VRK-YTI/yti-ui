@@ -18,6 +18,7 @@ export default function SearchBar({ placeholder }: { placeholder?: string }) {
   const [searchInputValue, setSearchInputValue] = useState<string>(
     isSearchActive ? q : ''
   );
+  const placeholderText = placeholder ?? t('search.bar.placeholder');
 
   const handleChange = (val: string) => {
     if (val.match(SEARCH_FIELD_PATTERN)) {
@@ -41,7 +42,7 @@ export default function SearchBar({ placeholder }: { placeholder?: string }) {
         labelText={t('search.bar.label')}
         clearButtonLabel={t('search.bar.clear-button')}
         searchButtonLabel={t('search.bar.search-button')}
-        visualPlaceholder={placeholder}
+        visualPlaceholder={placeholderText}
         value={searchInputValue ?? ''}
         onSearch={(value) => {
           if (typeof value === 'string') {
