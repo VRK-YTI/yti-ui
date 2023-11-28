@@ -9,7 +9,13 @@ function downloadImg(dataUrl: string, fileName: string) {
   a.click();
 }
 
-export default function DownloadPicture({ modelId }: { modelId: string }) {
+export default function DownloadPicture({
+  modelId,
+  setRef,
+}: {
+  modelId: string;
+  setRef: (value: HTMLButtonElement | null) => void;
+}) {
   const { getNodes } = useReactFlow();
 
   const handleClick = () => {
@@ -44,5 +50,13 @@ export default function DownloadPicture({ modelId }: { modelId: string }) {
     }).then((dataUrl) => downloadImg(dataUrl, modelId));
   };
 
-  return <Button icon={<IconDownload />} onClick={() => handleClick()} />;
+  return (
+    <Button
+      id="graph-tools_download-picture"
+      icon={<IconDownload />}
+      onClick={() => handleClick()}
+      onMouseEnter={(ref) => setRef(ref.currentTarget)}
+      onMouseLeave={() => setRef(null)}
+    />
+  );
 }

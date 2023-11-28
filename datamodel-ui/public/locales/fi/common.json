@@ -120,6 +120,15 @@
   "go-to": "Siirry",
   "graph": "Kaavio",
   "graph-settings": "Kaavion asetukset",
+  "graph-tools": {
+    "zoom-in": "Lähennä",
+    "zoom-out": "Loitonna",
+    "fullscreen": "Koko näyttö",
+    "reset-positions": "Palauta sijainnit",
+    "zoom-to": "Kohdenna",
+    "save-positions": "Tallenna sijainnit",
+    "download-picture": "Lataa kuvana"
+  },
   "highlight-class-association-restrictions": "Korosta luokkien assosiaatiorajoitteet",
   "highlight-class-associations": "Korosta luokkien assosiaatiot",
   "impersonate-user": "Esiinny käyttäjänä",

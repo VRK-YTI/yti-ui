@@ -512,3 +512,31 @@ export function translateNotification(
       return '';
   }
 }
+
+export function translateTooltip(key: string, t: TFunction) {
+  switch (key) {
+    case 'graph-tools_zoom-in':
+      return t('graph-tools.zoom-in', { ns: 'common' });
+      return 'Zoom in';
+    case 'graph-tools_zoom-out':
+      return t('graph-tools.zoom-out', { ns: 'common' });
+      return 'Zoom out';
+    case 'graph-tools_fullscreen':
+      return t('graph-tools.fullscreen', { ns: 'common' });
+      return 'Fullscreen';
+    case 'graph-tools_reset-positions':
+      return t('graph-tools.reset-positions', { ns: 'common' });
+      return 'Reset positions';
+    case 'graph-tools_zoom-to':
+      return t('graph-tools.zoom-to', { ns: 'common' });
+      return 'Zoom to';
+    case 'graph-tools_save-positions':
+      return t('graph-tools.save-positions', { ns: 'common' });
+      return 'Save positions';
+    case 'graph-tools_download-picture':
+      return t('graph-tools.download-picture', { ns: 'common' });
+      return 'Download picture';
+    default:
+      return '';
+  }
+}
