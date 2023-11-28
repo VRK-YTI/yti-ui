@@ -7,7 +7,6 @@ import {
   ChipWrapper,
 } from '@app/common/components/search-result/search-result.styles';
 import { Schema } from '@app/common/interfaces/schema.interface';
-import { useTranslation } from 'next-i18next';
 import router from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import Link from 'next/link';

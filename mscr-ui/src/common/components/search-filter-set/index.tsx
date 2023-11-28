@@ -1,5 +1,5 @@
 import { FacetTitle } from '@app/common/components/search-filter-set/search-filter-set.styles';
-import { Filter, Facet } from '@app/common/interfaces/search.interface';
+import { Filter } from '@app/common/interfaces/search.interface';
 import { Checkbox, CheckboxGroup } from 'suomifi-ui-components';
 import useUrlState, { UrlState } from '@app/common/utils/hooks/use-url-state';
 
