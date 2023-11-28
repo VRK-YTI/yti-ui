@@ -120,6 +120,15 @@
   "go-to": "",
   "graph": "",
   "graph-settings": "",
+  "graph-tools": {
+    "zoom-in": "",
+    "zoom-out": "",
+    "fullscreen": "",
+    "reset-positions": "",
+    "zoom-to": "",
+    "save-positions": "",
+    "download-picture": ""
+  },
   "highlight-class-association-restrictions": "",
   "highlight-class-associations": "",
   "impersonate-user": "",

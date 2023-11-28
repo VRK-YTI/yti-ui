@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useStore, useReactFlow } from 'reactflow';
 import {
   Button,
@@ -15,10 +15,12 @@ import {
   RadioButtonGroup,
   Text,
   ToggleButton,
+  Tooltip,
 } from 'suomifi-ui-components';
 import { ToolsButtonGroup } from 'yti-common-ui/drawer/drawer.styles';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
+  TipTooltipWrapper,
   ToggleButtonGroup,
   ToolsPanel,
   ToolsTooltip,
@@ -35,6 +37,7 @@ import {
 } from '../model/model.slice';
 import HasPermission from '@app/common/utils/has-permission';
 import DownloadPicture from './download-picture';
+import { translateTooltip } from '@app/common/utils/translation-helpers';
 
 export default function ModelTools({
   modelId,
@@ -52,6 +55,8 @@ export default function ModelTools({
   const globalSelected = useSelector(selectSelected());
   const transform = useStore((state) => state.transform);
   const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [ref, setRef] = useState<HTMLButtonElement | null>(null);
+  const [showHover, setShowHover] = useState(false);
 
   const handleResetPosition = () => {
     dispatch(setResetPosition(true));
@@ -77,6 +82,20 @@ export default function ModelTools({
     });
   };
 
+  useEffect(() => {
+    if (ref) {
+      const timer = setTimeout(() => {
+        setShowHover(true);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }
+
+    if (!ref) {
+      setShowHover(false);
+    }
+  }, [ref]);
+
   if (isSmall) {
     return <></>;
   }
@@ -90,6 +109,7 @@ export default function ModelTools({
       >
         <ToolsButtonGroup $isSmall={isSmall}>
           <Button
+            id="graph-tools_zoom-in"
             icon={<IconPlus />}
             onClick={() =>
               setViewport({
@@ -98,8 +118,11 @@ export default function ModelTools({
                 zoom: transform[2] + 0.25,
               })
             }
+            onMouseEnter={(ref) => setRef(ref.currentTarget)}
+            onMouseLeave={() => setRef(null)}
           />
           <Button
+            id="graph-tools_zoom-out"
             icon={<IconMinus />}
             onClick={() =>
               setViewport({
@@ -108,28 +131,42 @@ export default function ModelTools({
                 zoom: transform[2] - 0.25,
               })
             }
+            onMouseEnter={(ref) => setRef(ref.currentTarget)}
+            onMouseLeave={() => setRef(null)}
           />
           <Button
+            id="graph-tools_fullscreen"
             icon={<IconFullscreen />}
             onClick={() => {
               dispatch(setModelTools('fullScreen', !tools.fullScreen));
             }}
+            onMouseEnter={(ref) => setRef(ref.currentTarget)}
+            onMouseLeave={() => setRef(null)}
           />
           <Button
+            id="graph-tools_reset-positions"
             icon={<IconSwapRounded />}
             onClick={() => handleResetPosition()}
+            onMouseEnter={(ref) => setRef(ref.currentTarget)}
+            onMouseLeave={() => setRef(null)}
           />
           <Button
+            id="graph-tools_zoom-to"
             icon={<IconMapMyLocation />}
             onClick={() => handleCenterNode()}
+            onMouseEnter={(ref) => setRef(ref.currentTarget)}
+            onMouseLeave={() => setRef(null)}
           />
 
-          <DownloadPicture modelId={modelId} />
+          <DownloadPicture modelId={modelId} setRef={setRef} />
 
           {hasPermission && (
             <Button
+              id="graph-tools_save-positions"
               icon={<IconSave />}
               onClick={() => dispatch(setSavePosition(true))}
+              onMouseEnter={(ref) => setRef(ref.currentTarget)}
+              onMouseLeave={() => setRef(null)}
             />
           )}
 
@@ -145,6 +182,22 @@ export default function ModelTools({
           </div>
         </ToolsButtonGroup>
       </div>
+
+      {ref && (
+        <TipTooltipWrapper
+          $x={ref && ref.getBoundingClientRect().x}
+          $y={ref && ref.getBoundingClientRect().y}
+        >
+          <Tooltip
+            ariaCloseButtonLabelText=""
+            ariaToggleButtonLabelText=""
+            anchorElement={ref}
+            open={showHover}
+          >
+            {translateTooltip(ref.id, t)}
+          </Tooltip>
+        </TipTooltipWrapper>
+      )}
     </ToolsPanel>
   );
 

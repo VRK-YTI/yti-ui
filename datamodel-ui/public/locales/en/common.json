@@ -120,6 +120,15 @@
   "go-to": "Go to",
   "graph": "Graph",
   "graph-settings": "Graph settings",
+  "graph-tools": {
+    "zoom-in": "Zoom in",
+    "zoom-out": "Zoom out",
+    "fullscreen": "Fullscreen",
+    "reset-positions": "Reset positions",
+    "zoom-to": "Zoom to",
+    "save-positions": "Save positions",
+    "download-picture": "Download picture"
+  },
   "highlight-class-association-restrictions": "Highlight class association restrictions",
   "highlight-class-associations": "Highlight class associations",
   "impersonate-user": "Impersonate user",

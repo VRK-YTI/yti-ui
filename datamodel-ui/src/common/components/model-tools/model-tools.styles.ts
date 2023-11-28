@@ -39,3 +39,23 @@ export const ToggleButtonGroup = styled.div`
     font-size: 16px;
   }
 `;
+
+export const TipTooltipWrapper = styled.div<{
+  $x?: number | null;
+  $y?: number | null;
+}>`
+  position: absolute;
+  right: 50px;
+  top: calc(${(props) => props.$y}px - 146px);
+
+  button {
+    visibility: hidden !important;
+    display: none !important;
+  }
+
+  .fi-tooltip_content {
+    padding: ${(props) =>
+      `${props.theme.suomifi.spacing.xxs} ${props.theme.suomifi.spacing.s}`};
+    white-space: nowrap;
+  }
+`;
