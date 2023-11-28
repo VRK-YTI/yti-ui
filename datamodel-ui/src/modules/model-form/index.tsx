@@ -34,6 +34,7 @@ import { compareLocales } from '@app/common/utils/compare-locals';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
+import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
 
 interface ModelFormProps {
   formData: ModelFormType;
@@ -284,9 +285,7 @@ export default function ModelForm({
           </div>
           <div>
             <Label>{t('namespace')}</Label>
-            <Text
-              smallScreen
-            >{`http://uri.suomi.fi/datamodel/ns/${formData.prefix}`}</Text>
+            <Text smallScreen>{`${SUOMI_FI_NAMESPACE}${formData.prefix}`}</Text>
           </div>
           {oldVersion &&
             (initialStatus.current === 'SUGGESTED' ||
@@ -334,7 +333,7 @@ export default function ModelForm({
             })
           }
           inUseMutation={useGetModelExistsMutation}
-          typeInUri={'datamodel/ns'}
+          typeInUri={'model'}
           error={errorInPrefix()}
           translations={{
             automatic: t('create-prefix-automatically'),

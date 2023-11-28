@@ -2,6 +2,7 @@ import { Status } from './status.interface';
 
 export interface ModelType {
   type: 'LIBRARY' | 'PROFILE';
+  uri: string;
   prefix: string;
   status: Status;
   label: { [key: string]: string };
