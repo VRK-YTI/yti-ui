@@ -38,7 +38,7 @@ export default function SearchBar({ placeholder }: { placeholder?: string }) {
   return (
     <>
       <MscrSearchInput
-        labelText={'search.bar.label'}
+        labelText={t('search.bar.label')}
         clearButtonLabel={t('search.bar.clear-button')}
         searchButtonLabel={t('search.bar.search-button')}
         visualPlaceholder={placeholder}

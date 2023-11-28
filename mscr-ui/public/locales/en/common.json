@@ -66,6 +66,7 @@
   "filter-with-current_other": "",
   "go-to": "",
   "impersonate-user": "",
+  "in-all-mscr": "In all MSCR",
   "interoperability-logo-title": "",
   "items-to-be-unscribed-from_one": "",
   "items-to-be-unscribed-from_other": "",
@@ -146,7 +147,14 @@
     "versions": "Versions",
     "visibility": "Visibility"
   },
-  "search": "",
+  "search": {
+    "bar": {
+      "clear-button": "Clear input and close search",
+      "label": "Search",
+      "search-button": "Search"
+    },
+    "no-match": "No results matching search"
+  },
   "search-by-keyword": "",
   "search-term": "",
   "select-at-least-one-service": "",

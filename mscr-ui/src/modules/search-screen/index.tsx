@@ -82,7 +82,7 @@ export default function SearchScreen() {
             {mscrSearchResults?.hits.hits.map((hit) => (
               <SearchResult key={hit._id} hit={hit} />
             ))}
-            {!foundHits && <p>{t('search-no-match')}</p>}
+            {!foundHits && <p>{t('search.no-match')}</p>}
           </ResultsWrapper>
         </Grid>
         <Grid item xs={1}>
