@@ -49,7 +49,7 @@ export const ModelInfoListWrapper = styled.ul`
   }
 `;
 
-export const TooltipWrapper = styled(Block)`
+export const TooltipWrapper = styled(Block)<{ $nonStatic?: boolean }>`
   > button {
     display: none;
   }
@@ -59,7 +59,7 @@ export const TooltipWrapper = styled(Block)`
       props.theme.suomifi.colors.whiteBase} !important;
     padding: 2px !important;
     position: absolute !important;
-    right: 15px;
+    ${(props) => (props.$nonStatic ? 'left: 19px;' : 'right: 15px;')}
     width: min-content;
     height: min-content;
     z-index: 2;
