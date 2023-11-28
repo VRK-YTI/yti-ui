@@ -134,7 +134,7 @@ export default function ClassModal({
       >
         {modalButtonLabel ? modalButtonLabel : t('add-class')}
       </Button>
-
+      <p>tst</p>
       <LargeModal
         appElementId="__next"
         visible={visible}
