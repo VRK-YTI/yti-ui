@@ -24,7 +24,7 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
     pid: result.id,
     state: result.state,
     versionLabel: result.versionLabel,
-    description: result.comment
+    description: result.comment,
   };
   let icon;
   let url;
@@ -43,11 +43,21 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
         <Link href={url}>
           <RouterLink onClick={() => setIsSearchActive(false)}>
             <h4>
-              {getLanguageVersion({ data: displayResult.label, lang, appendLocale: true })}
+              {getLanguageVersion({
+                data: displayResult.label,
+                lang,
+                appendLocale: true,
+              })}
             </h4>
           </RouterLink>
         </Link>
-        <p>{getLanguageVersion({ data: displayResult.description, lang, appendLocale: true })}</p>
+        <p>
+          {getLanguageVersion({
+            data: displayResult.description,
+            lang,
+            appendLocale: true,
+          })}
+        </p>
         {/*TODO: What exactly is supposed to be in the chips?*/}
         {Object.keys(result.label).map((key) => (
           <ChipWrapper key={key}>

@@ -7,8 +7,10 @@ import { Schema } from '@app/common/interfaces/schema.interface';
 import { Crosswalk } from '@app/common/interfaces/crosswalk.interface';
 
 export default function BasicTable() {
-  const { data: schemaData, isLoading: schemaIsLoading } = useGetPersonalContentQuery('SCHEMA');
-  const { data: crosswalkData, isLoading: crosswalkIsLoading } = useGetPersonalContentQuery('CROSSWALK');
+  const { data: schemaData, isLoading: schemaIsLoading } =
+    useGetPersonalContentQuery('SCHEMA');
+  const { data: crosswalkData, isLoading: crosswalkIsLoading } =
+    useGetPersonalContentQuery('CROSSWALK');
   if (schemaIsLoading || crosswalkIsLoading) return <div> Is Loading</div>;
 
   const schemas = schemaData?.hits.hits.map((result) => {
@@ -18,7 +20,7 @@ export default function BasicTable() {
       namespace: info.namespace,
       pid: info.id,
       state: info.state,
-      versionLabel: info.versionLabel
+      versionLabel: info.versionLabel,
     };
     return schema;
   });
@@ -30,7 +32,7 @@ export default function BasicTable() {
       namespace: info.namespace,
       pid: info.id,
       state: info.state,
-      versionLabel: info.versionLabel
+      versionLabel: info.versionLabel,
     };
     return crosswalk;
   });

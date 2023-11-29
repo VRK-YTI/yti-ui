@@ -55,7 +55,8 @@ export function makeStore(ctx: NextIronContext) {
       [fakeableUsersApi.reducerPath]: fakeableUsersApi.reducer,
       [importApi.reducerPath]: importApi.reducer,
       [mscrSearchApi.reducerPath]: mscrSearchApi.reducer,
-      [mscrSearchPersonalContentApi.reducerPath]: mscrSearchPersonalContentApi.reducer,
+      [mscrSearchPersonalContentApi.reducerPath]:
+        mscrSearchPersonalContentApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>

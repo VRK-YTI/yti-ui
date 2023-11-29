@@ -49,11 +49,7 @@ export default function SmartHeader({
   };
 
   if (user?.anonymous && router.asPath == '/') {
-    return (
-      <>
-        {renderLandingHeader()}
-      </>
-    );
+    return <>{renderLandingHeader()}</>;
   }
 
   if (fullScreenElements) {

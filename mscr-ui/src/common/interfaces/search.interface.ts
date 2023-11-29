@@ -20,7 +20,7 @@ export interface ResultInfo {
   id: string;
   label: Label;
   state: State;
-  comment: {[key:string]: string};
+  comment: { [key: string]: string };
   visibility: Visibility;
   modified: Date;
   created: Date;

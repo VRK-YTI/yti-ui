@@ -13,20 +13,16 @@ export const mscrSearchPersonalContentApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    getPersonalContent: builder.query<
-      MscrSearchResults,
-      string
-    >({
+    getPersonalContent: builder.query<MscrSearchResults, string>({
       query: (type) => ({
         url: `/frontend/mscrSearchPersonalContent?query=&type=${type}`,
         method: 'GET',
-      })
-    })
-  })
-
+      }),
+    }),
+  }),
 });
 
 export const {
   useGetPersonalContentQuery,
-  util: { getRunningQueriesThunk},
+  util: { getRunningQueriesThunk },
 } = mscrSearchPersonalContentApi;
