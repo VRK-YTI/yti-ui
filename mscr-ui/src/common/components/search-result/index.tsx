@@ -7,7 +7,6 @@ import {
   ChipWrapper,
 } from '@app/common/components/search-result/search-result.styles';
 import { Schema } from '@app/common/interfaces/schema.interface';
-import { useTranslation } from 'next-i18next';
 import router from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import Link from 'next/link';
@@ -25,7 +24,7 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
     pid: result.id,
     state: result.state,
     versionLabel: result.versionLabel,
-    description: result.comment
+    description: result.comment,
   };
   let icon;
   let url;
@@ -44,11 +43,21 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
         <Link href={url}>
           <RouterLink onClick={() => setIsSearchActive(false)}>
             <h4>
-              {getLanguageVersion({ data: displayResult.label, lang, appendLocale: true })}
+              {getLanguageVersion({
+                data: displayResult.label,
+                lang,
+                appendLocale: true,
+              })}
             </h4>
           </RouterLink>
         </Link>
-        <p>{getLanguageVersion({ data: displayResult.description, lang, appendLocale: true })}</p>
+        <p>
+          {getLanguageVersion({
+            data: displayResult.description,
+            lang,
+            appendLocale: true,
+          })}
+        </p>
         {/*TODO: What exactly is supposed to be in the chips?*/}
         {Object.keys(result.label).map((key) => (
           <ChipWrapper key={key}>

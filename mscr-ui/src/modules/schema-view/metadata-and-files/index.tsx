@@ -50,26 +50,33 @@ export default function MetadataAndFiles({
       };
     }
     const organizations = getOrganizations(schemaDetails.organizations, lang)
-      .map((org) => org.label).join(', ');
-    return (
-      {
-        schemaPid: schemaDetails?.pid ?? '',
-        schemaLabel: schemaDetails?.label
-          ? getLanguageVersion({ data: schemaDetails.label, lang, appendLocale: true })
-          : '',
-        schemaDescription: schemaDetails?.description
-          ? getLanguageVersion({ data: schemaDetails.description, lang, appendLocale: true  }) ?? ''
-          : '',
-        schemaCreated: schemaDetails?.created ?? '',
-        schemaModified: schemaDetails?.modified ?? '',
-        schemaState: schemaDetails?.state ?? '',
-        schemaOrganizations: organizations,
-        schemaVisibility: schemaDetails?.visibility ?? '',
-        schemaFormat: schemaDetails?.format ?? '',
-        schemaVersionLabel: schemaDetails?.versionLabel ?? '',
-        schemaNamespace: schemaDetails?.namespace ?? ''
-      }
-    );
+      .map((org) => org.label)
+      .join(', ');
+    return {
+      schemaPid: schemaDetails?.pid ?? '',
+      schemaLabel: schemaDetails?.label
+        ? getLanguageVersion({
+            data: schemaDetails.label,
+            lang,
+            appendLocale: true,
+          })
+        : '',
+      schemaDescription: schemaDetails?.description
+        ? getLanguageVersion({
+            data: schemaDetails.description,
+            lang,
+            appendLocale: true,
+          }) ?? ''
+        : '',
+      schemaCreated: schemaDetails?.created ?? '',
+      schemaModified: schemaDetails?.modified ?? '',
+      schemaState: schemaDetails?.state ?? '',
+      schemaOrganizations: organizations,
+      schemaVisibility: schemaDetails?.visibility ?? '',
+      schemaFormat: schemaDetails?.format ?? '',
+      schemaVersionLabel: schemaDetails?.versionLabel ?? '',
+      schemaNamespace: schemaDetails?.namespace ?? '',
+    };
   }, [schemaDetails, lang]);
 
   return (

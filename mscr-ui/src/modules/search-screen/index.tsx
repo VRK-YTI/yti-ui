@@ -16,7 +16,6 @@ import SearchFilterSet from '@app/common/components/search-filter-set';
 import { Bucket, Facet, Filter } from '@app/common/interfaces/search.interface';
 import { useTranslation } from 'next-i18next';
 import { Grid } from '@mui/material';
-import Layout from 'yti-common-ui/layout/layout';
 
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
@@ -83,7 +82,7 @@ export default function SearchScreen() {
             {mscrSearchResults?.hits.hits.map((hit) => (
               <SearchResult key={hit._id} hit={hit} />
             ))}
-            {!foundHits && <p>{t('search-no-match')}</p>}
+            {!foundHits && <p>{t('search.no-match')}</p>}
           </ResultsWrapper>
         </Grid>
         <Grid item xs={1}>

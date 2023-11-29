@@ -60,9 +60,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
         {selectedTab === 0 && (
           <MetadataAndFiles schemaDetails={schemaDetails} schemaFiles={schemaFiles} />
         )}
-        {selectedTab === 1 && (
-          <VersionHistory schemaDetails={schemaDetails} />
-        )}
+        {selectedTab === 1 && <VersionHistory schemaDetails={schemaDetails} />}
       </>
     );
   }

@@ -49,11 +49,7 @@ export default function SmartHeader({
   };
 
   if (user?.anonymous && router.asPath == '/') {
-    return (
-      <>
-        {renderLandingHeader()}
-      </>
-    );
+    return <>{renderLandingHeader()}</>;
   }
 
   if (fullScreenElements) {
@@ -218,6 +214,7 @@ export default function SmartHeader({
   }
 
   function renderDesktopAuthenticationPanel() {
+    console.log(user, fakeableUsers);
     if (!isSmall) {
       return (
         <DesktopAuthenticationPanel user={user} fakeableUsers={fakeableUsers} />
@@ -226,12 +223,15 @@ export default function SmartHeader({
   }
 
   function renderUserInfo() {
+    console.log(user);
     if (isSmall && isExpanded) {
       return <UserInfo breakpoint="small" user={user} />;
     }
   }
 
   function renderLoginModal() {
+    console.log(user);
+
     return isLoginExpanded ? (
       <LoginModalView setVisible={setIsLoginExpanded} />
     ) : (
