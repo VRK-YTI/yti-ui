@@ -71,7 +71,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       if (query.q !== undefined) {
         urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
       }
-      console.log('server side props are ' + query);
+      // console.log('server side props are ' + query);
 
       if (query.page !== undefined) {
         const pageValue = Array.isArray(query.page)
@@ -126,7 +126,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
-    store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
+    store.dispatch(getOrganizations.initiate(locale ?? 'en'));
     store.dispatch(getCount.initiate());
 
     await Promise.all(
