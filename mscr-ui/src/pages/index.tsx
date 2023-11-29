@@ -46,8 +46,7 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('mscr-title')}
           description={t('service-description')}
         />
-        <Grid container
-              alignItems="center">
+        <Grid container alignItems="center">
           <Grid item xs={6}>
             <SiteInformationModule />
           </Grid>

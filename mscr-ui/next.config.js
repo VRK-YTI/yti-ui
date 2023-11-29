@@ -85,14 +85,14 @@ module.exports = () => {
           has: [
             {
               type: 'cookie',
-              key: 'user-session-cookie'
-            }
+              key: 'user-session-cookie',
+            },
           ],
           destination: '/personal/content',
-          permanent: false
-        }
+          permanent: false,
+        },
       ];
-    }
+    },
   };
 
   if (process.env.REWRITE_PROFILE === 'local') {

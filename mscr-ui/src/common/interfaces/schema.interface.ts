@@ -54,7 +54,6 @@ export interface SchemaFormType {
   organizations: any;
   filedata?: any;
   description?: any;
-  status?: any;//Status will be set to schema.state
+  status?: any; //Status will be set to schema.state
   uri?: any;
-  
 }

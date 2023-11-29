@@ -33,7 +33,7 @@ export default function generatePayload(data: SchemaFormType): any {
     status: 'DRAFT',
     format: data.format,
     uri: data.uri,
-    state: data.status,                                                                                                                                                                                                                                                                                                                                                        
+    state: data.status,
     versionLabel: '1',
   };
 }
