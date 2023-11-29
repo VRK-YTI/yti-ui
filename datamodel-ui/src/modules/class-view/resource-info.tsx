@@ -17,7 +17,11 @@ import {
 } from '@app/common/components/resource/resource.slice';
 import CommonViewContent from '@app/modules/common-view-content';
 import { TooltipWrapper } from '../model/model.styles';
-import { setSelected, setView } from '@app/common/components/model/model.slice';
+import {
+  setSelected,
+  setUpdateVisualization,
+  setView,
+} from '@app/common/components/model/model.slice';
 import { useStoreDispatch } from '@app/store';
 import { resourceToResourceFormType } from '../resource/utils';
 import RemoveReferenceModal from './remove-reference-modal';
@@ -100,8 +104,9 @@ export default function ResourceInfo({
   useEffect(() => {
     if (updateResult.isSuccess) {
       handlePropertiesUpdate();
+      dispatch(setUpdateVisualization(true));
     }
-  }, [updateResult, handlePropertiesUpdate]);
+  }, [updateResult, handlePropertiesUpdate, dispatch]);
 
   function renderTitleButtonContent() {
     return (
