@@ -1,16 +1,3 @@
 {
-  "downloading-file": "",
-  "form": {
-    "contributors": "",
-    "contributors-clear-all-selections": "",
-    "contributors-select": "",
-    "description": "",
-    "format-label": "",
-    "format-placeholder": "",
-    "information-description-languages": "",
-    "information-description-languages-hint-text": "",
-    "name": "",
-    "status": "",
-    "status-select": ""
-  }
+  "downloading-file": ""
 }

@@ -33,7 +33,7 @@ export default function SchemaForm({
   errors,
   editMode,
 }: SchemaFormProps) {
-  const { t, i18n } = useTranslation('schema');
+  const { t, i18n } = useTranslation();
   const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
     i18n.language
   );
@@ -67,8 +67,8 @@ export default function SchemaForm({
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
-          labelText={t('form.format-label')}
-          visualPlaceholder={t('form.format-placeholder')}
+          labelText={t('schema-form.format-label')}
+          visualPlaceholder={t('schema-form.format-placeholder')}
           defaultValue={formData.format ?? ''}
           onChange={(e) =>
             setFormData({
@@ -89,8 +89,8 @@ export default function SchemaForm({
       <div>
         <LanguageSelector
           items={formData.languages}
-          labelText={t('form.information-description-languages')}
-          visualPlaceholder={t('form.information-description-languages-hint-text')}
+          labelText={t('schema-form.information-description-languages')}
+          visualPlaceholder={t('schema-form.information-description-languages-hint-text')}
           isWide={true}
           setLanguages={(e) =>
             setFormData({
@@ -100,8 +100,8 @@ export default function SchemaForm({
           }
           userPosted={userPosted}
           translations={{
-            textInput: t('form.name'),
-            textDescription: t('form.description'),
+            textInput: t('schema-form.name'),
+            textDescription: t('schema-form.description'),
             optionalText: '',
           }}
           allowItemAddition={false}
@@ -124,8 +124,8 @@ export default function SchemaForm({
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
-          labelText={t('form.status')}
-          visualPlaceholder={t('form.status-select')}
+          labelText={t('schema-form.status')}
+          visualPlaceholder={t('schema-form.status-select')}
           defaultValue={''}
           onChange={(e) =>
             setFormData({
@@ -146,9 +146,9 @@ export default function SchemaForm({
     return (
       <WideMultiSelect
         chipListVisible={true}
-        labelText={t('form.contributors')}
-        visualPlaceholder={t('form.contributors-select')}
-        removeAllButtonLabel={t('form.contributors-clear-all-selections')}
+        labelText={t('schema-form.contributors')}
+        visualPlaceholder={t('schema-form.contributors-select')}
+        removeAllButtonLabel={t('schema-form.contributors-clear-all-selections')}
         allowItemAddition={false}
         onItemSelectionsChange={(e) =>
           setFormData({
