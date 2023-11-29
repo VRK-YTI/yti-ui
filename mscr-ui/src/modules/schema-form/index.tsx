@@ -157,7 +157,10 @@ export default function SchemaForm({
           })
         }
         items={formData.organizations}
-        status={userPosted && errors?.organizations ? 'error' : 'default'}
+        status={
+          'default'
+          /* Old value below, can it be perma-removed? (leftover from https://github.com/CSCfi/mscr-ui-monorepo/pull/17)
+          {userPosted && errors?.organizations ? 'error' : 'default'}*/}
         ariaChipActionLabel={''}
         ariaSelectedAmountText={''}
         ariaOptionsAvailableText={''}
