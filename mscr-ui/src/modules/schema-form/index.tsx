@@ -67,8 +67,8 @@ export default function SchemaForm({
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
-          labelText={'Format'}
-          visualPlaceholder={'Select File Format'}
+          labelText={t('form.format-label')}
+          visualPlaceholder={t('form.format-placeholder')}
           defaultValue={formData.format ?? ''}
           onChange={(e) =>
             setFormData({
@@ -89,8 +89,8 @@ export default function SchemaForm({
       <div>
         <LanguageSelector
           items={formData.languages}
-          labelText={'Schema information-description-languages'}
-          visualPlaceholder={'select schema information-description-languages'}
+          labelText={t('form.information-description-languages')}
+          visualPlaceholder={t('form.information-description-languages-hint-text')}
           isWide={true}
           setLanguages={(e) =>
             setFormData({
@@ -100,8 +100,8 @@ export default function SchemaForm({
           }
           userPosted={userPosted}
           translations={{
-            textInput: 'Name(required)',
-            textDescription: 'Description',
+            textInput: t('form.name'),
+            textDescription: t('form.description'),
             optionalText: '',
           }}
           allowItemAddition={false}
@@ -124,8 +124,8 @@ export default function SchemaForm({
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
-          labelText={'Status'}
-          visualPlaceholder={'Select Status'}
+          labelText={t('form.status')}
+          visualPlaceholder={t('form.status-select')}
           defaultValue={''}
           onChange={(e) =>
             setFormData({
@@ -146,9 +146,9 @@ export default function SchemaForm({
     return (
       <WideMultiSelect
         chipListVisible={true}
-        labelText={'contributors'}
-        visualPlaceholder={t('select-contributors')}
-        removeAllButtonLabel={t('clear-all-selections')}
+        labelText={t('form.contributors')}
+        visualPlaceholder={t('form.contributors-select')}
+        removeAllButtonLabel={t('form.contributors-clear-all-selections')}
         allowItemAddition={false}
         onItemSelectionsChange={(e) =>
           setFormData({

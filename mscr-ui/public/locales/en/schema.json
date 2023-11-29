@@ -1,5 +1,16 @@
 {
-  "clear-all-selections": "Clear all selections",
-  "downloading-file": "",
-  "select-contributors": "Select contributors"
+  "downloading-file": "Downloading file",
+  "form": {
+    "contributors": "Contributors",
+    "contributors-clear-all-selections": "Clear all selected contributors",
+    "contributors-select": "Select contributors",
+    "description": "Description",
+    "format-label": "Format",
+    "format-placeholder": "Select file format",
+    "information-description-languages": "Languages",
+    "information-description-languages-hint-text": "Select languages in which the content of the schema is described",
+    "name": "Name(required)",
+    "status": "Status",
+    "status-select": "Select status"
+  }
 }
