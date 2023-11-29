@@ -354,7 +354,7 @@ export const expectedLibraryEdges = [
     referenceType: 'ATTRIBUTE_DOMAIN',
     type: 'generalEdge',
     markerEnd: { type: 'arrowclosed', height: 20, width: 20, color: '#212121' },
-    data: { identifier: 'person' },
+    data: { identifier: 'name' },
   },
   {
     source: '#corner-4',
@@ -365,7 +365,7 @@ export const expectedLibraryEdges = [
     referenceType: 'PARENT_CLASS',
     type: 'generalEdge',
     markerEnd: 'clearArrow',
-    data: { identifier: 'person' },
+    data: { identifier: 'name' },
     style: { strokeDasharray: '4 2', stroke: '#235A9A' },
   },
 ];
