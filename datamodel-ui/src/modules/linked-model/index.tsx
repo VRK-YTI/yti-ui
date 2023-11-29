@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, IconPlus } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import {
@@ -14,6 +14,7 @@ export default function LinkedModel({
   setExternalData,
   currentModel,
   languages,
+  applicationProfile,
 }: {
   initialData: {
     internalNamespaces: InternalNamespace[];
@@ -22,6 +23,7 @@ export default function LinkedModel({
   setExternalData: (value: ExternalNamespace) => void;
   currentModel: string;
   languages: string[];
+  applicationProfile?: boolean;
 }) {
   const { t } = useTranslation('admin');
   const [listVisible, setListVisible] = useState(false);
@@ -35,12 +37,10 @@ export default function LinkedModel({
     namespace: '',
     prefix: '',
   });
-  const [selected, setSelected] = useState<InternalNamespace[]>(
-    initialData.internalNamespaces
-  );
+  const [selected, setSelected] = useState<InternalNamespace[]>([]);
 
   const handleClose = () => {
-    setSelected(initialData.internalNamespaces);
+    setSelected([]);
     setData({
       name: {},
       namespace: '',
@@ -66,15 +66,11 @@ export default function LinkedModel({
             : data.namespace,
       });
     } else {
-      setInternalData(selected);
+      setInternalData([...initialData.internalNamespaces, ...selected]);
     }
 
     handleClose();
   };
-
-  useEffect(() => {
-    setSelected(initialData.internalNamespaces);
-  }, [initialData]);
 
   return (
     <>
@@ -99,6 +95,7 @@ export default function LinkedModel({
           setListVisible(false);
         }}
         setSelected={setSelected}
+        applicationProfile={applicationProfile}
       />
 
       <ExternalForm

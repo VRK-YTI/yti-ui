@@ -26,6 +26,10 @@ export const ResultsTable = styled.table<{ $expandedLastCell?: boolean }>`
     padding: 10px 15px;
   }
 
+  td:first-child {
+    min-width: 20%;
+  }
+
   td:not(:first-child) {
     width: 25%;
   }

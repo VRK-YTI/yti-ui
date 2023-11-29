@@ -19,7 +19,9 @@ import { compareLocales } from '@app/common/utils/compare-locals';
 import {
   inUseStatusList,
   notInUseStatusList,
+  usedStatusList,
 } from '@app/common/utils/status-list';
+import { Status } from '@app/common/interfaces/status.interface';
 
 interface MultiColumnSearchProps {
   primaryColumnName: string;
@@ -37,6 +39,7 @@ interface MultiColumnSearchProps {
   languageVersioned?: boolean;
   multiTypeSelection?: boolean;
   noDataModelPicker?: boolean;
+  noDraftStatus?: boolean;
   multiSelect?: boolean;
   extra?: React.ReactFragment;
   modelId: string;
@@ -58,6 +61,7 @@ export default function MultiColumnSearch({
   multiSelect,
   extra,
   noDataModelPicker = false,
+  noDraftStatus = false,
 }: MultiColumnSearchProps) {
   const { t, i18n } = useTranslation('admin');
   const {
@@ -167,12 +171,13 @@ export default function MultiColumnSearch({
     }
 
     if (key === 'status') {
-      const setStatuses =
-        value !== '-1'
-          ? value === 'in-use'
-            ? inUseStatusList
-            : notInUseStatusList
-          : [];
+      let setStatuses: Status[] = [];
+
+      if (value === 'in-use') {
+        setStatuses = noDraftStatus ? usedStatusList : inUseStatusList;
+      } else if (value === 'not-in-use') {
+        setStatuses = notInUseStatusList;
+      }
 
       setSearchParams({
         ...searchParams,
@@ -194,7 +199,7 @@ export default function MultiColumnSearch({
 
   return (
     <div>
-      {multiTypeSelection && (
+      {multiTypeSelection && !noDataModelPicker && (
         <div style={{ marginBottom: '20px' }}>
           <SearchInput
             className="wider"
@@ -211,7 +216,7 @@ export default function MultiColumnSearch({
         </div>
       )}
       <SearchToolsBlock>
-        {!multiTypeSelection && (
+        {(!multiTypeSelection || (multiTypeSelection && noDataModelPicker)) && (
           <SearchInput
             className="wider"
             clearButtonLabel={t('clear-keyword-filter')}
