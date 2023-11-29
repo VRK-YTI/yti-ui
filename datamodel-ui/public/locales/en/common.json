@@ -157,6 +157,7 @@
   "minimum-count": "Minimum count",
   "model-languages": "Model languages",
   "model-uri": "Model URI",
+  "model-versioniri": "Model version IRI",
   "modified-at": "Last modified at",
   "name": "Name",
   "navigate-to-homepage": "Navigate to homepage",

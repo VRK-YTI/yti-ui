@@ -157,6 +157,7 @@
   "minimum-count": "Vähimmäismäärä",
   "model-languages": "Tietomallin kielet",
   "model-uri": "Tietomallin URI",
+  "model-versioniri": "Tietomallin versio IRI",
   "modified-at": "Muokattu viimeksi",
   "name": "Nimi",
   "navigate-to-homepage": "Siirry etusivulle",
