@@ -4,7 +4,6 @@ import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 // here we can create the schema payload
 
 export default function generatePayload(data: SchemaFormType): any {
-  console.log(data.format);
   return {
     namespace: 'http://test.com',
     description: data.languages
@@ -31,10 +30,10 @@ export default function generatePayload(data: SchemaFormType): any {
     organizations: data.organizations.map(
       (o: { uniqueItemId: any }) => o.uniqueItemId
     ),
-    status: data.status,
+    status: 'DRAFT',
     format: data.format,
     uri: data.uri,
-    state: 'DRAFT',
+    state: data.status,                                                                                                                                                                                                                                                                                                                                                        
     versionLabel: '1',
   };
 }

@@ -43,7 +43,7 @@ export default function SchemaForm({
     if (!organizationsData) {
       return [];
     }
-    console.log(organizationsData[0].label);
+    console.log(organizationsData[0].id);
     return getOrganizations(organizationsData, i18n.language)
       .map((o) => ({
         labelText: o.label,
@@ -57,9 +57,9 @@ export default function SchemaForm({
     <ModelFormContainer>
       {renderSchemaFormat()}
       {renderLanguages()}
-      <BlockContainer>{!editMode && renderContributors()}</BlockContainer>
+      {/*!editMode && renderContributors()*/}
       {renderStaus()}
-      {editMode && renderContributors()}
+      {/*editMode && renderContributors()*/}
     </ModelFormContainer>
   );
 
