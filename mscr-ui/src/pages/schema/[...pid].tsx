@@ -35,7 +35,7 @@ export default function SchemaPage(props: IndexPageProps) {
         user={props.user ?? undefined}
         fakeableUsers={props.fakeableUsers}
       >
-        <SchemaView schemaId={schemaId} />
+        <SchemaView schemaId={schemaId} user={props.user} />
       </Layout>
     </CommonContextProvider>
   );
@@ -44,7 +44,7 @@ export default function SchemaPage(props: IndexPageProps) {
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, query, locale }) => {
     store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
-    store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
+    store.dispatch(getOrganizations.initiate(locale ?? 'en'));
 
     await Promise.all(store.dispatch(getServiceQueriesThunk()));
     await Promise.all(store.dispatch(getOrgQueriesThunk()));

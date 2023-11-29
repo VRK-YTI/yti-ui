@@ -1,5 +1,4 @@
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
-import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
 import Title from 'yti-common-ui/title';
 import { useMemo } from 'react';
 import { useTranslation } from 'next-i18next';
