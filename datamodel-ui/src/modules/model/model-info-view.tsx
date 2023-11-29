@@ -272,6 +272,33 @@ export default function ModelInfoView({
             {t('copy-to-clipboard')}
           </Button>
         </BasicBlock>
+        {modelInfo.version ? (
+          <BasicBlock title={t('release-version-number', { ns: 'admin' })}>
+            {modelInfo.version}
+          </BasicBlock>
+        ) : (
+          <></>
+        )}
+        {modelInfo.versionIri ? (
+          <BasicBlock title={t('model-versioniri')}>
+            {modelInfo.versionIri}
+            <Button
+              icon={<IconCopy />}
+              variant="secondary"
+              onClick={() =>
+                modelInfo.versionIri &&
+                navigator.clipboard.writeText(modelInfo.versionIri)
+              }
+              style={{ width: 'max-content' }}
+              id="copy-uri-button"
+            >
+              {t('copy-to-clipboard')}
+            </Button>
+          </BasicBlock>
+        ) : (
+          <></>
+        )}
+
         <BasicBlock title={t('information-domains')}>
           {modelInfo.groups
             .map((group) =>
