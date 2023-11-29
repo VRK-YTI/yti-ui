@@ -1,13 +1,5 @@
 {
   "clear-all-selections": "Clear all selections",
-  "contributors": "Contributors",
-  "contributors-hint-text": "You can only add organizations to which  you have editing permissions",
-  "description": "Description",
   "downloading-file": "",
-  "information-description-languages": "Information description languages",
-  "information-description-languages-hint-text": "Select information description languages in which the content of the schema is described.",
-  "language-input-text": "Data Model name",
-  "optional": "optional",
-  "select-contributors": "Select contributors",
-  "select-information-description-languages": "Select languages for information description"
+  "select-contributors": "Select contributors"
 }

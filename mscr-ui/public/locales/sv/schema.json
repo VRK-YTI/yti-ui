@@ -1,13 +1,5 @@
 {
   "clear-all-selections": "",
-  "contributors": "",
-  "contributors-hint-text": "",
-  "description": "",
   "downloading-file": "",
-  "information-description-languages": "",
-  "information-description-languages-hint-text": "",
-  "language-input-text": "",
-  "optional": "",
-  "select-contributors": "",
-  "select-information-description-languages": ""
+  "select-contributors": ""
 }
