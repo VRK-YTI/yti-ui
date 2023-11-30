@@ -3,7 +3,6 @@ import { useTranslation } from 'next-i18next';
 import { UserInfoWrapper } from './authentication-panel.styles';
 import { Breakpoint } from '../media-query';
 import { User } from '../../interfaces/user.interface';
-import { useRouter } from 'next/router';
 
 export interface UserInfoProps {
   breakpoint: Breakpoint;
@@ -11,8 +10,7 @@ export interface UserInfoProps {
 }
 
 export default function UserInfo({ breakpoint, user }: UserInfoProps) {
-  const { t, i18n } = useTranslation('common');
-  const { asPath } = useRouter();
+  const { t } = useTranslation('common');
 
   if (!user || user.anonymous) {
     return null;
@@ -21,9 +19,7 @@ export default function UserInfo({ breakpoint, user }: UserInfoProps) {
   return (
     <UserInfoWrapper $breakpoint={breakpoint} id="login-information">
       <Text>{`${user?.firstName} ${user?.lastName}`}</Text>
-      <Link href={`/api/auth/logout?target=/${i18n.language ?? 'fi'}${asPath}`}>
-        {t('site-logout')}
-      </Link>
+      <Link href={'/api/auth/logout?target=/'}>{t('site-logout')}</Link>
     </UserInfoWrapper>
   );
 }
