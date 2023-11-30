@@ -7,6 +7,7 @@ export const ResultTextWrapper = styled.div`
 
 export const ResultIconWrapper = styled.div`
   position: absolute;
+  margin-top: 6px;
 `;
 
 export const ChipWrapper = styled.div`

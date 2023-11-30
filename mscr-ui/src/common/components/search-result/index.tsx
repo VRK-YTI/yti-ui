@@ -1,10 +1,9 @@
 import { MscrSearchResult } from '@app/common/interfaces/search.interface';
-import { Block, RouterLink, StaticChip } from 'suomifi-ui-components';
+import { Block, RouterLink } from 'suomifi-ui-components';
 import { IconMerge, IconFileGeneric } from 'suomifi-icons';
 import {
   ResultIconWrapper,
   ResultTextWrapper,
-  ChipWrapper,
 } from '@app/common/components/search-result/search-result.styles';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import router from 'next/router';
@@ -58,12 +57,12 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
             appendLocale: true,
           })}
         </p>
-        {/*TODO: What exactly is supposed to be in the chips?*/}
+        {/*TODO: What exactly is supposed to be in the chips?
         {Object.keys(result.label).map((key) => (
           <ChipWrapper key={key}>
             <StaticChip>{result.label[key]}</StaticChip>
           </ChipWrapper>
-        ))}
+        ))}*/}
       </ResultTextWrapper>
     </Block>
   );
