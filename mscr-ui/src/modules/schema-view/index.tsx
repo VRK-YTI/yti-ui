@@ -6,8 +6,17 @@ import VersionHistory from '@app/modules/schema-view/version-history';
 import { useTranslation } from 'next-i18next';
 import { useGetSchemaOriginalQuery, useGetSchemaWithRevisionsQuery } from '@app/common/components/schema/schema.slice';
 import MetadataAndFiles from './metadata-and-files';
+import SideNavigationPanel from '@app/common/components/side-navigation';
+import { Grid } from '@mui/material';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
-export default function SchemaView({ schemaId }: { schemaId: string }) {
+export default function SchemaView({
+  schemaId,
+  user,
+}: {
+  schemaId: string;
+  user: MscrUser;
+}) {
   const { t } = useTranslation('common');
 
   const {
@@ -47,20 +56,32 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
   } else if (isSuccess) {
     return (
       <>
-        <Box className="mb-3" sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            value={selectedTab}
-            onChange={changeTab}
-            aria-label="Category selection"
-          >
-            <Tab label={t('schema.metadata-and-files')} {...a11yProps(0)} />
-            <Tab label={t('schema.version-history')} {...a11yProps(1)} />
-          </Tabs>
-        </Box>
+        <Grid container spacing={2}>
+          <Grid item xs={2}>
+            <SideNavigationPanel user={user} />
+          </Grid>
+          <Grid item xs={10}>
+            <Box
+              className="mb-3"
+              sx={{ borderBottom: 1, borderColor: 'divider' }}
+            >
+              <Tabs
+                value={selectedTab}
+                onChange={changeTab}
+                aria-label="Category selection"
+              >
+                <Tab label={t('schema.metadata-and-files')} {...a11yProps(0)} />
+                <Tab label={t('schema.version-history')} {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+         
+
         {selectedTab === 0 && (
           <MetadataAndFiles schemaDetails={schemaDetails} schemaFiles={schemaFiles} />
         )}
-        {selectedTab === 1 && <VersionHistory schemaDetails={schemaDetails} />}
+            {selectedTab === 1 && <VersionHistory schemaDetails={schemaDetails} />}
+            </Grid>
+        </Grid>
       </>
     );
   }

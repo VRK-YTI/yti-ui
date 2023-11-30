@@ -9,6 +9,7 @@
   "breadcrumb": "",
   "cancel": "",
   "card-organizations": "",
+  "change-language-selected-language": "",
   "choose-language": "",
   "class": "",
   "clear-language-filter": "",
@@ -74,8 +75,6 @@
   "landing": {
     "bullet-1": "",
     "bullet-2": "",
-    "bullet-3": "",
-    "bullet-4": "",
     "bullet-5": "",
     "bullet-6": "",
     "description": "",
@@ -153,6 +152,19 @@
     "version-label": "",
     "versions": "",
     "visibility": ""
+  },
+  "schema-form": {
+    "contributors": "",
+    "contributors-clear-all-selections": "",
+    "contributors-select": "",
+    "description": "",
+    "format-label": "",
+    "format-placeholder": "",
+    "information-description-languages": "",
+    "information-description-languages-hint-text": "",
+    "name": "",
+    "status": "",
+    "status-select": ""
   },
   "search": {
     "bar": {
@@ -234,6 +246,7 @@
   },
   "try-again": "",
   "value-is-not-allowed": "",
+  "version": "",
   "vocabulary-filter-items": "",
   "vocabulary-filter-show-only": "",
   "vocabulary-info-en": "",
@@ -244,11 +257,10 @@
     "adjective": "",
     "verb": ""
   },
+  "working-version": "",
   "workspace-group": "",
   "workspace-group-navigation-content": "",
-  "workspace-group-navigation-settings": "",
   "workspace-navigation": "",
   "workspace-navigation-content": "",
-  "workspace-navigation-settings": "",
   "workspace-personal": ""
 }

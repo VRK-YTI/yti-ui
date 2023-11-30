@@ -13,18 +13,17 @@ import {
   ModalOverlay,
   ModalContent,
 } from './smart-header.styles';
-import DesktopAuthenticationPanel from 'yti-common-ui/authentication-panel/desktop-authentication-panel';
 import DesktopNavigation from 'yti-common-ui/navigation/desktop-navigation';
 import MobileNavigation from 'yti-common-ui/navigation/mobile-navigation';
 import DesktopLocaleChooser from 'yti-common-ui/locale-chooser/desktop-locale-chooser';
-import UserInfo from 'yti-common-ui/authentication-panel/user-info';
-import HeaderSearch from 'yti-common-ui/header-search';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import LoginModalView from 'yti-common-ui/login-modal';
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 import SearchBar from '@app/modules/search-bar';
 import { useRouter } from 'next/router';
+import UserInfo from '@app/common/components/authentication-panel/user-info';
+import DesktopAuthenticationPanel from '@app/common/components/authentication-panel/desktop-authentication-panel';
 
 export default function SmartHeader({
   user,
@@ -223,14 +222,14 @@ export default function SmartHeader({
   }
 
   function renderUserInfo() {
-    console.log(user);
+    // console.log(user);
     if (isSmall && isExpanded) {
       return <UserInfo breakpoint="small" user={user} />;
     }
   }
 
   function renderLoginModal() {
-    console.log(user);
+    // console.log(user);
 
     return isLoginExpanded ? (
       <LoginModalView setVisible={setIsLoginExpanded} />
