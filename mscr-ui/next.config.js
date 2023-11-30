@@ -91,6 +91,17 @@ module.exports = () => {
           destination: '/personal/content',
           permanent: false,
         },
+        {
+          source: '/401',
+          has: [
+            {
+              type: 'cookie',
+              key: 'user-session-cookie',
+            },
+          ],
+          destination: '/',
+          permanent: false,
+        },
       ];
     },
   };

@@ -131,6 +131,10 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(store.dispatch(getOrganizationsRunningQueriesThunk()));
     await Promise.all(store.dispatch(getCountRunningQueriesThunk()));
 
-    return {};
+    return {
+      props: {
+        requireAuthenticated: true,
+      },
+    };
   }
 );

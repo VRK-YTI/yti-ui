@@ -48,7 +48,7 @@ export default function SmartHeader({
     setIsExpanded(false);
   };
 
-  if (user?.anonymous && router.asPath == '/') {
+  if (user?.anonymous && (router.asPath == '/' || router.asPath == '/401')) {
     return <>{renderLandingHeader()}</>;
   }
 
