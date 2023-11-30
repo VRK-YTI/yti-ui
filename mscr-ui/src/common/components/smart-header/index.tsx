@@ -17,14 +17,13 @@ import DesktopAuthenticationPanel from 'yti-common-ui/authentication-panel/deskt
 import DesktopNavigation from 'yti-common-ui/navigation/desktop-navigation';
 import MobileNavigation from 'yti-common-ui/navigation/mobile-navigation';
 import DesktopLocaleChooser from 'yti-common-ui/locale-chooser/desktop-locale-chooser';
-import UserInfo from 'yti-common-ui/authentication-panel/user-info';
-import HeaderSearch from 'yti-common-ui/header-search';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import LoginModalView from 'yti-common-ui/login-modal';
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 import SearchBar from '@app/modules/search-bar';
 import { useRouter } from 'next/router';
+import UserInfo from '@app/common/components/user-info';
 
 export default function SmartHeader({
   user,
