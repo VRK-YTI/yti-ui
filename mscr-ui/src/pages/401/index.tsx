@@ -1,4 +1,7 @@
-import { CommonContextProvider, CommonContextState } from 'yti-common-ui/components/common-context-provider';
+import {
+  CommonContextProvider,
+  CommonContextState,
+} from 'yti-common-ui/components/common-context-provider';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import PageHead from 'yti-common-ui/components/page-head';
 import Layout from '@app/common/components/layout';
@@ -25,7 +28,6 @@ export default function UnauthorizedPage(props: unauthorizedPageProps) {
         />
         <p>You need to be logged in to view this content</p>
       </Layout>
-
     </CommonContextProvider>
   );
 }
