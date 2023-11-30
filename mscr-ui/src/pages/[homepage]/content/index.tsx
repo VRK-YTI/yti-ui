@@ -34,6 +34,11 @@ export default function IndexPage(props: IndexPageProps) {
   const { t } = useTranslation('common');
   const router = useRouter();
 
+  // TODO: Implement a util function somewhere to validate pids
+  // TODO: Check user is authenticated to see that group
+  function isValidPid(type: string, pid: string | undefined) {
+    return false;
+  }
   function DisplayedComponent({
     slug,
     user,
@@ -43,8 +48,11 @@ export default function IndexPage(props: IndexPageProps) {
   }): React.ReactElement {
     if (slug === 'personal') {
       return <PersonalWorkspace pid={''} user={user} />;
-    } else {
+    } else if (isValidPid('group', slug)) {
       return <GroupWorkspace pid={slug ?? ''} user={user} />;
+    } else {
+      // TODO: Implement some kind of 'Oops, can't find that page' view
+      return <p>{t('site-page-not-found')}</p>;
     }
   }
 
