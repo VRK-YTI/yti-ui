@@ -3,7 +3,6 @@ import { UserInfoWrapper } from 'yti-common-ui/components/authentication-panel/a
 import { Link, Text } from 'suomifi-ui-components';
 import { UserInfoProps } from 'yti-common-ui/components/authentication-panel/user-info';
 
-
 export default function UserInfo({ breakpoint, user }: UserInfoProps) {
   const { t } = useTranslation('common');
 
