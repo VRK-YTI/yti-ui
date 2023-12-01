@@ -15,6 +15,21 @@ const StaticHeaderWrapper = styled.div`
     justify-content: space-between;
     padding: ${(props) => props.theme.suomifi.spacing.s};
     padding-bottom: 0;
+    max-width: inherit;
+  }
+
+  button {
+    flex-shrink: 0 !important;
+    max-height: 42px !important;
+  }
+
+  #submit-button_submitted {
+    flex-shrink: 1 !important;
+    padding: 10px 14px;
+  }
+
+  .fi-loadingSpinner_text {
+    font-weight: 600 !important;
   }
 `;
 

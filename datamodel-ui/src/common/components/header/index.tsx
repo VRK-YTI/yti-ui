@@ -22,4 +22,10 @@ export const HeaderRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  .fi-text--bold:first-child {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
