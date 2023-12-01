@@ -152,7 +152,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
           <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}
-            validFileTypes={['json', 'csv']}
+            validFileTypes={['json', 'csv','pdf']}
             translateFileUploadError={translateFileUploadError}
           />
           <Separator isLarge></Separator>

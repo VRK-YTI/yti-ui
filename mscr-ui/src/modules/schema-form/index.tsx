@@ -79,6 +79,7 @@ export default function SchemaForm({
         >
           <DropdownItem value={'JSONSCHEMA'}>{'JSON'}</DropdownItem>
           <DropdownItem value={'CSV'}>{'CSV'}</DropdownItem>
+          <DropdownItem value={'PDF'}>{'PDF'}</DropdownItem>
         </Dropdown>
       </div>
     );

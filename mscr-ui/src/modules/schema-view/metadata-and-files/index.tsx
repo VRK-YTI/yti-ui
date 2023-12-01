@@ -1,6 +1,10 @@
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
-import { Schema } from '@app/common/interfaces/schema.interface';
+import {
+  Schema,
+  SchemaFileData,
+  SchemaWithVersionInfo,
+} from '@app/common/interfaces/schema.interface';
 import router from 'next/router';
 import {
   DescriptionList,
@@ -21,12 +25,21 @@ export default function MetadataAndFiles({
   schemaDetails,
   schemaFiles
 }: {
-  schemaDetails?: Schema;
-  // TODO: When the type is known, put it here
-  schemaFiles?: undefined;
+    schemaDetails?: SchemaWithVersionInfo;
+    schemaFiles?: SchemaFileData[];
+  
+
+  
 }) {
   const { t } = useTranslation('common');
   const lang = router.locale ?? '';
+
+  if (schemaDetails?.fileMetadata) {
+    console.log(schemaDetails.fileMetadata);
+    schemaFiles = schemaDetails.fileMetadata;
+  } else {
+    schemaFiles = [];
+  }
 
   // TODO: Editing -> Only edit with permission, we have util has-permission
 
@@ -173,20 +186,21 @@ export default function MetadataAndFiles({
           <TableHead>
             <TableRow>
               <TableCell>{t('schema.file.name')}</TableCell>
-              <TableCell>{t('schema.file.added')}</TableCell>
+              <TableCell>{t('schema.file.id')}</TableCell>
               <TableCell>{t('schema.file.format')}</TableCell>
-              <TableCell>{t('schema.file.actions')}</TableCell>
+              <TableCell>{t('schema.file.size')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {/*TODO: Use the below template to create lines for files*/}
-            {/*{schemaFiles.map((file) => (*/}
-            {/*  <TableRow key={file.name}>*/}
-            {/*    <TableCell>{file.added}</TableCell>*/}
-            {/*    <TableCell>{file.format}</TableCell>*/}
-            {/*    <TableCell>{file.actions}</TableCell>*/}
-            {/*  </TableRow>*/}
-            {/*))}*/}
+            {schemaFiles && schemaFiles.map((file) => (
+              <TableRow key={file.id}>
+                <TableCell>{file.fileID}</TableCell>
+                <TableCell>{file.fileID}</TableCell>
+                <TableCell>{file.contentType}</TableCell>
+                <TableCell>{file.size}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

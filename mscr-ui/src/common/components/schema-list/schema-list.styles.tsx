@@ -12,6 +12,9 @@ export const List = styled.div`
   .header-list {
     font-weight: bold;
   }
+  .inline-list{
+    
+  }
 `;
 
 export const ListItem = styled.div`
@@ -32,5 +35,15 @@ export const ListItem = styled.div`
 
   .fi-link--external {
     font-size: 16px;
+  }
+  &:hover {
+    background-color: ${(props) => props.theme.suomifi.colors.highlightBase};
+    color: ${(props) => props.theme.suomifi.colors.whiteBase};
+    border-radius: 2px;
+    cursor: pointer;
+
+    .fi-text {
+      color: ${(props) => props.theme.suomifi.colors.whiteBase};
+    }
   }
 `;

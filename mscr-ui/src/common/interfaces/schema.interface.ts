@@ -1,3 +1,5 @@
+import { ExposureTwoTone } from "@mui/icons-material";
+
 export interface Schema {
   namespace?: string;
   pid?: string;
@@ -35,6 +37,15 @@ export interface Revision {
 
 export interface SchemaWithVersionInfo extends Schema {
   revisions: Revision[];
+  fileMetadata?: SchemaFileData[];
+}
+
+export interface SchemaFileData{
+  id?: string;
+  contentType?: string,
+  size?: number;
+  fileID?: number;
+  name?: string;
 }
 
 export interface Organization {

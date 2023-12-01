@@ -31,7 +31,10 @@ export default function SchemaList({
   function handleClick(pid: string): void {
     console.log(pid);
     // will go the schema detail page
-    router.push(`/schema/${pid}`);
+    if (pid) {
+      router.push(`/schema/${pid}`);
+    }
+    
   }
 
   return (
@@ -63,7 +66,7 @@ export default function SchemaList({
       <List className="inline-list">
         {items &&
           items.map((item) => (
-            <ListItem
+            <ListItem 
               key={item.pid}
               onClick={() => handleClick(item.pid)}
               onMouseEnter={() => item.onMouseEnter && item.onMouseEnter()}
@@ -85,20 +88,6 @@ export default function SchemaList({
                 </Grid>
                 <Grid item xs={2}>
                   {item.pid}
-                </Grid>
-                <Grid item xs={2}>
-                  {Array.isArray(deleteDisabled) &&
-                  deleteDisabled.includes(item.pid) ? (
-                    <></>
-                  ) : (
-                    <Button
-                      variant="secondaryNoBorder"
-                      icon="remove"
-                      onClick={() => handleRemoval(item.pid)}
-                    >
-                      {t('remove')}
-                    </Button>
-                  )}
                 </Grid>
               </Grid>
             </ListItem>

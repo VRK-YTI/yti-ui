@@ -136,7 +136,9 @@
       "added": "Added",
       "format": "Format",
       "label": "Schema files",
-      "name": "Filename"
+      "name": "Filename",
+      "id":"ID",
+      "size":"Size"
     },
     "format": "Format",
     "metadata": "Metadata",
