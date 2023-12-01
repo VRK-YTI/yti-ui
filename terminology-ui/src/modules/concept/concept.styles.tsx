@@ -15,6 +15,7 @@ export const MainContent = styled.main`
   flex-grow: 1;
   padding: ${(props) => props.theme.suomifi.spacing.m};
   padding-bottom: 40px;
+  max-width: 100%;
 `;
 
 export const PropertyList = styled.ul<{ $smBot?: boolean }>`
