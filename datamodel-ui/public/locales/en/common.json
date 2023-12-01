@@ -121,13 +121,13 @@
   "graph": "Graph",
   "graph-settings": "Graph settings",
   "graph-tools": {
-    "zoom-in": "Zoom in",
-    "zoom-out": "Zoom out",
+    "download-picture": "Download picture",
     "fullscreen": "Fullscreen",
     "reset-positions": "Reset positions",
-    "zoom-to": "Zoom to",
     "save-positions": "Save positions",
-    "download-picture": "Download picture"
+    "zoom-in": "Zoom in",
+    "zoom-out": "Zoom out",
+    "zoom-to": "Zoom to"
   },
   "highlight-class-association-restrictions": "Highlight class association restrictions",
   "highlight-class-associations": "Highlight class associations",

@@ -37,16 +37,6 @@ export const ClassNodeDiv = styled.div<{
     font-weight: 600;
     max-width: 100%;
 
-    > div:first-child {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    *:first-child {
-      flex-grow: 1;
-    }
-
     padding: ${(props) => props.theme.suomifi.spacing.xxs};
   }
 

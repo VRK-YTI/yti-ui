@@ -121,13 +121,13 @@
   "graph": "Kaavio",
   "graph-settings": "Kaavion asetukset",
   "graph-tools": {
-    "zoom-in": "Lähennä",
-    "zoom-out": "Loitonna",
+    "download-picture": "Lataa kuvana",
     "fullscreen": "Koko näyttö",
     "reset-positions": "Palauta sijainnit",
-    "zoom-to": "Kohdenna",
     "save-positions": "Tallenna sijainnit",
-    "download-picture": "Lataa kuvana"
+    "zoom-in": "Lähennä",
+    "zoom-out": "Loitonna",
+    "zoom-to": "Kohdenna"
   },
   "highlight-class-association-restrictions": "Korosta luokkien assosiaatiorajoitteet",
   "highlight-class-associations": "Korosta luokkien assosiaatiot",

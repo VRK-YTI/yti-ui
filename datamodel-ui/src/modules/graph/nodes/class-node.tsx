@@ -19,35 +19,37 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Handle, Position, useReactFlow } from 'reactflow';
 import {
-  IconOptionsVertical,
+  ActionMenu,
+  ActionMenuItem,
+  IconPlus,
   IconRows,
   IconSwapVertical,
-  Tooltip,
 } from 'suomifi-ui-components';
-import {
-  ClassNodeDiv,
-  OptionsButton,
-  Resource,
-  TooltipWrapper,
-} from './node.styles';
+import { ClassNodeDiv, Resource } from './node.styles';
 import { useStoreDispatch } from '@app/store';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import HasPermission from '@app/common/utils/has-permission';
 import { useAddPropertyReferenceMutation } from '@app/common/components/class/class.slice';
-import ResourceModal from '@app/modules/class-view/resource-modal';
 import getConnectedElements from '../utils/get-connected-elements';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
 import useSetView from '@app/common/utils/hooks/use-set-view';
 import { initializeResource } from '@app/common/components/resource/resource.slice';
+import styled from 'styled-components';
+import ResourceModal from '@app/modules/class-view/resource-modal';
+import { translateResourceAddition } from '@app/common/utils/translation-helpers';
 
 interface ClassNodeProps {
   id: string;
   data: ClassNodeDataType;
   selected: boolean;
 }
+
+const NodeActionsMenu = styled(ActionMenu)`
+  background: white;
+`;
 
 export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const { t, i18n } = useTranslation('common');
@@ -61,8 +63,9 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const globalHover = useSelector(selectHovered());
   const displayLang = useSelector(selectDisplayLang());
   const tools = useSelector(selectModelTools());
-  const [showTooltip, setShowTooltip] = useState(false);
   const [hover, setHover] = useState(false);
+  const [attributeModalVisible, setAttributeModalVisible] = useState(false);
+  const [associationModalVisible, setAssociationModalVisible] = useState(false);
   const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
   const classView = useSelector(selectClassView());
   const { setView } = useSetView();
@@ -140,12 +143,6 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   };
 
   useEffect(() => {
-    if (showTooltip && !selected) {
-      setShowTooltip(false);
-    }
-  }, [selected, showTooltip]);
-
-  useEffect(() => {
     if (addReferenceResult.isSuccess) {
       dispatch(setUpdateVisualization(true));
       if (classView.info) {
@@ -181,40 +178,56 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
         <div onClick={() => handleTitleClick()}>{renderClassLabel()}</div>
 
         {hasPermission && (
-          <TooltipWrapper>
-            <OptionsButton
-              onClick={() => setShowTooltip(!showTooltip)}
-              id={`${data.identifier}-options`}
-            >
-              <IconOptionsVertical fill="#2a6ebb" />
-            </OptionsButton>
-
-            <Tooltip
-              ariaCloseButtonLabelText=""
-              ariaToggleButtonLabelText=""
-              open={showTooltip}
-            >
-              {[ResourceType.ATTRIBUTE, ResourceType.ASSOCIATION].map(
-                (type) => {
-                  return (
-                    <ResourceModal
-                      key={`add-${type}-modal`}
-                      modelId={data.modelId}
-                      type={type}
-                      handleFollowUp={handleMenuFollowUp}
-                      limitSearchTo={'LIBRARY'}
-                      applicationProfile={data.applicationProfile}
-                      limitToSelect={!data.applicationProfile}
-                      buttonIcon
-                      hiddenResources={data.resources
-                        .filter((r) => r.type === type)
-                        .map((r) => r.uri)}
-                    />
-                  );
-                }
-              )}
-            </Tooltip>
-          </TooltipWrapper>
+          <>
+            <NodeActionsMenu id={`${data.identifier}-options`}>
+              <ActionMenuItem
+                icon={<IconPlus />}
+                onClick={() => setAttributeModalVisible(true)}
+              >
+                {translateResourceAddition(
+                  ResourceType.ATTRIBUTE,
+                  t,
+                  data.applicationProfile
+                )}
+              </ActionMenuItem>
+              <ActionMenuItem
+                icon={<IconPlus />}
+                onClick={() => setAssociationModalVisible(true)}
+              >
+                {translateResourceAddition(
+                  ResourceType.ASSOCIATION,
+                  t,
+                  data.applicationProfile
+                )}
+              </ActionMenuItem>
+            </NodeActionsMenu>
+            <ResourceModal
+              modelId={data.modelId}
+              type={ResourceType.ATTRIBUTE}
+              handleFollowUp={handleMenuFollowUp}
+              limitSearchTo={'LIBRARY'}
+              visible={attributeModalVisible}
+              setVisible={setAttributeModalVisible}
+              applicationProfile={data.applicationProfile}
+              limitToSelect={!data.applicationProfile}
+              hiddenResources={data.resources
+                .filter((r) => r.type === ResourceType.ATTRIBUTE)
+                .map((r) => r.uri)}
+            />
+            <ResourceModal
+              modelId={data.modelId}
+              type={ResourceType.ASSOCIATION}
+              handleFollowUp={handleMenuFollowUp}
+              limitSearchTo={'LIBRARY'}
+              visible={associationModalVisible}
+              setVisible={setAssociationModalVisible}
+              applicationProfile={data.applicationProfile}
+              limitToSelect={!data.applicationProfile}
+              hiddenResources={data.resources
+                .filter((r) => r.type === ResourceType.ASSOCIATION)
+                .map((r) => r.uri)}
+            />
+          </>
         )}
       </div>
 

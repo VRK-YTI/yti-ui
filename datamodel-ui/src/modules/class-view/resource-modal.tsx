@@ -12,7 +12,7 @@ import {
   translateResourceName,
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
   IconPlus,
@@ -32,7 +32,8 @@ interface ResourceModalProps {
     mode: 'create' | 'select';
     type: ResourceType;
   }) => void;
-  buttonIcon?: boolean;
+  visible: boolean;
+  setVisible: (visible: boolean) => void;
   limitSearchTo?: 'LIBRARY' | 'PROFILE';
   limitToSelect?: boolean;
   applicationProfile?: boolean;
@@ -43,7 +44,8 @@ export default function ResourceModal({
   modelId,
   type,
   handleFollowUp,
-  buttonIcon,
+  visible,
+  setVisible,
   limitSearchTo,
   limitToSelect,
   applicationProfile,
@@ -51,7 +53,6 @@ export default function ResourceModal({
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
-  const [visible, setVisible] = useState(false);
   const [selectedId, setSelectedId] = useState('');
   const [contentLanguage, setContentLanguage] = useState<string>();
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
@@ -62,18 +63,22 @@ export default function ResourceModal({
   const [searchInternalResources, result] =
     useGetInternalResourcesInfoMutation();
 
-  const handleSearch = (obj?: InternalResourcesSearchParams) => {
-    if (obj) {
-      setSearchParams(obj);
+  const handleSearch = useCallback(
+    (obj?: InternalResourcesSearchParams) => {
+      if (obj) {
+        setSearchParams(obj);
+      }
+
+      searchInternalResources(obj ?? searchParams);
+    },
+    [searchInternalResources, searchParams]
+  );
+
+  useEffect(() => {
+    if (visible) {
+      handleSearch();
     }
-
-    searchInternalResources(obj ?? searchParams);
-  };
-
-  const handleOpen = () => {
-    setVisible(true);
-    handleSearch();
-  };
+  }, [handleSearch, visible]);
 
   const handleClose = () => {
     setSearchParams(
@@ -123,85 +128,70 @@ export default function ResourceModal({
   }, [result, i18n.language, contentLanguage, t, hiddenResources]);
 
   return (
-    <div>
-      <Button
-        variant="secondary"
-        icon={buttonIcon ? <IconPlus /> : undefined}
-        onClick={() => handleOpen()}
-        id="add-resource-button"
-      >
-        {translateResourceAddition(type, t, applicationProfile)}
-      </Button>
+    <LargeModal
+      appElementId="__next"
+      visible={visible}
+      variant={isSmall ? 'smallScreen' : 'default'}
+      onEscKeyDown={() => setVisible(false)}
+    >
+      <ModalContent>
+        <ModalTitle>
+          {translateResourceAddition(type, t, applicationProfile)}
+        </ModalTitle>
+        <MultiColumnSearch
+          primaryColumnName={translateResourceName(type, t, applicationProfile)}
+          result={{
+            totalHitCount: resultsFormatted.length,
+            items: resultsFormatted,
+          }}
+          selectedId={selectedId}
+          setSelectedId={setSelectedId}
+          searchParams={searchParams}
+          setSearchParams={handleSearch}
+          setContentLanguage={setContentLanguage}
+          multiTypeSelection={applicationProfile}
+          languageVersioned
+          modelId={modelId}
+        />
+      </ModalContent>
 
-      <LargeModal
-        appElementId="__next"
-        visible={visible}
-        variant={isSmall ? 'smallScreen' : 'default'}
-        onEscKeyDown={() => setVisible(false)}
-      >
-        <ModalContent>
-          <ModalTitle>
-            {translateResourceAddition(type, t, applicationProfile)}
-          </ModalTitle>
-          <MultiColumnSearch
-            primaryColumnName={translateResourceName(
-              type,
-              t,
-              applicationProfile
-            )}
-            result={{
-              totalHitCount: resultsFormatted.length,
-              items: resultsFormatted,
-            }}
-            selectedId={selectedId}
-            setSelectedId={setSelectedId}
-            searchParams={searchParams}
-            setSearchParams={handleSearch}
-            setContentLanguage={setContentLanguage}
-            multiTypeSelection={applicationProfile}
-            languageVersioned
-            modelId={modelId}
-          />
-        </ModalContent>
+      <ModalFooter>
+        <Button
+          disabled={
+            (applicationProfile &&
+              searchParams.limitToModelType === 'LIBRARY') ||
+            selectedId === ''
+          }
+          onClick={() => handleSubmit('select')}
+          id="use-selected-button"
+        >
+          {translateResourceAddition(type, t, applicationProfile)}
+        </Button>
 
-        <ModalFooter>
+        {!limitToSelect && (
           <Button
+            variant="secondary"
+            icon={<IconPlus />}
             disabled={
-              (applicationProfile &&
-                searchParams.limitToModelType === 'LIBRARY') ||
-              selectedId === ''
+              searchParams.limitToModelType !== 'LIBRARY' || selectedId === ''
             }
-            onClick={() => handleSubmit('select')}
-            id="use-selected-button"
+            onClick={() => handleSubmit('create')}
+            id="create-new-button"
           >
-            {translateResourceAddition(type, t, applicationProfile)}
+            {type === ResourceType.ASSOCIATION
+              ? t('create-new-association-constraint')
+              : t('create-new-attribute-constraint')}
           </Button>
+        )}
 
-          {!limitToSelect && (
-            <Button
-              variant="secondary"
-              icon={<IconPlus />}
-              disabled={
-                searchParams.limitToModelType !== 'LIBRARY' || selectedId === ''
-              }
-              onClick={() => handleSubmit('create')}
-              id="create-new-button"
-            >
-              {type === ResourceType.ASSOCIATION
-                ? t('create-new-association-constraint')
-                : t('create-new-attribute-constraint')}
-            </Button>
-          )}
-
-          <Button
-            variant="secondaryNoBorder"
-            onClick={() => handleClose()}
-            id="cancel-button"
-          >
-            {t('cancel-variant')}
-          </Button>
-        </ModalFooter>
-      </LargeModal>
-    </div>
+        <Button
+          variant="secondaryNoBorder"
+          onClick={() => handleClose()}
+          id="cancel-button"
+        >
+          {t('cancel-variant')}
+        </Button>
+      </ModalFooter>
+    </LargeModal>
   );
 }
