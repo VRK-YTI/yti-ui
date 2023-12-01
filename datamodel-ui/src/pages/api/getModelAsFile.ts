@@ -39,6 +39,26 @@ export default withIronSessionApiRoute(
       headers['host'] = host;
     }
 
+    const sessionCookies = req.session.cookies ?? {};
+    const requestCookies: { [key: string]: string } = {};
+
+    if (sessionCookies) {
+      Object.entries(sessionCookies).forEach(([key, value]) => {
+        if (key.toLowerCase() === 'jsessionid') {
+          requestCookies['JSESSIONID'] = value;
+        } else if (key.toLowerCase().startsWith('_shibsession')) {
+          requestCookies[key] = value;
+        }
+      });
+    }
+
+    if (Object.keys(requestCookies).length > 0) {
+      const cookiestring = Object.entries(requestCookies)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('; ');
+      headers['Cookie'] = cookiestring;
+    }
+
     const { status, data: response } = await axios.get(
       `${process.env.DATAMODEL_API_URL}/v2/export/${target}${
         version ? `?version=${version}` : ''
