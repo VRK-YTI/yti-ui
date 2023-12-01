@@ -19,21 +19,12 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { IconArrowLeft } from 'suomifi-icons';
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  Text,
-  TextInput,
-  Textarea,
-} from 'suomifi-ui-components';
+import { Button, Text, TextInput, Textarea } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { FormWrapper, LanguageVersionedWrapper } from './resource-form.styles';
 import validateForm from './validate-form';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
-import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
-import { statusList } from '@app/common/utils/status-list';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
   selectHasChanges,
@@ -55,7 +46,6 @@ import { setNotification } from '@app/common/components/notifications/notificati
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import { UriData } from '@app/common/interfaces/uri.interface';
-import { Status } from '@app/common/interfaces/status.interface';
 import {
   DEFAULT_ASSOCIATION_SUBPROPERTY,
   DEFAULT_ATTRIBUTE_SUBPROPERTY,
@@ -89,7 +79,6 @@ export default function ResourceForm({
   const { t } = useTranslation('admin');
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
-  const statuses = statusList;
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const dispatch = useStoreDispatch();
@@ -671,21 +660,6 @@ export default function ResourceForm({
               )}
             </>
           )}
-
-          <div>
-            <Dropdown
-              labelText={t('status')}
-              defaultValue={data.status ?? 'DRAFT'}
-              onChange={(e) => handleUpdate({ ...data, status: e as Status })}
-              id="status-dropdown"
-            >
-              {statuses.map((status) => (
-                <DropdownItem key={`status-${status}`} value={status}>
-                  {translateStatus(status, t)}
-                </DropdownItem>
-              ))}
-            </Dropdown>
-          </div>
 
           <AttributeRestrictions
             data={data}

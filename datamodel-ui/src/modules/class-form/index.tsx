@@ -1,7 +1,5 @@
 import {
   Button,
-  Dropdown,
-  DropdownItem,
   ExpanderGroup,
   IconArrowLeft,
   Text,
@@ -12,16 +10,11 @@ import {
 import Separator from 'yti-common-ui/separator';
 import { LanguageVersionedWrapper } from './class-form.styles';
 import { useTranslation } from 'next-i18next';
-import { Status } from '@app/common/interfaces/status.interface';
 import ConceptBlock from '../concept-block';
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { ClassFormErrors, validateClassForm } from './utils';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
-import { statusList } from '@app/common/utils/status-list';
-import {
-  translateClassFormErrors,
-  translateStatus,
-} from '@app/common/utils/translation-helpers';
+import { translateClassFormErrors } from '@app/common/utils/translation-helpers';
 import { useEffect, useRef, useState } from 'react';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
@@ -668,21 +661,6 @@ export default function ClassForm({
             handleRemoval={(id) => handleClassOfRemoval(id, 'disjointWith')}
           />
         )}
-
-        <div>
-          <Dropdown
-            labelText={t('status')}
-            defaultValue={data.status}
-            onChange={(e) => handleUpdate({ ...data, status: e as Status })}
-            id="status-dropdown"
-          >
-            {statusList.map((status) => (
-              <DropdownItem key={status} value={status}>
-                {translateStatus(status, t)}
-              </DropdownItem>
-            ))}
-          </Dropdown>
-        </div>
 
         <LanguageVersionedWrapper>
           {languages.map((lang) => (

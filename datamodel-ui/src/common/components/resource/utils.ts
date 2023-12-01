@@ -1,6 +1,5 @@
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
-import { Status } from '@app/common/interfaces/status.interface';
 import { UriData } from '@app/common/interfaces/uri.interface';
 
 export interface LibraryResourcePutType {
@@ -14,7 +13,6 @@ export interface LibraryResourcePutType {
     [key: string]: string;
   };
   editorialNote?: string;
-  status: Status;
   subResourceOf?: string[];
   equivalentResource?: string[];
   domain?: string;
@@ -32,7 +30,6 @@ export interface ApplicationProfileResourcePutType {
     [key: string]: string;
   };
   editorialNote?: string;
-  status: Status;
   path?: string;
   classType?: string;
   type?: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
@@ -146,6 +143,7 @@ export function convertToPayload(
   delete ret.modifier;
   delete ret.modified;
   delete ret.contact;
+  delete ret.status;
 
   if (!data.concept) {
     delete ret.subject;

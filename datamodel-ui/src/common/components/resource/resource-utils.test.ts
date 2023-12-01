@@ -21,7 +21,6 @@ describe('resource-utils', () => {
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi' },
-      status: 'DRAFT',
       identifier: 'attr-identifier',
       range: 'http://www.w3.org/2000/01/rdf-schema#Literal',
     };
@@ -34,7 +33,6 @@ describe('resource-utils', () => {
 
     const expected: LibraryResourcePutType = {
       label: { fi: 'label-fi' },
-      status: 'DRAFT',
       identifier: 'assoc-identifier',
     };
 
@@ -48,7 +46,6 @@ describe('resource-utils', () => {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
       editorialNote: 'editorial note',
       subject: 'concept-uri',
-      status: 'VALID',
       identifier: 'attr-identifier',
       equivalentResource: ['eq-1', 'eq-2'],
       subResourceOf: ['sub-1', 'sub-2'],
@@ -67,7 +64,6 @@ describe('resource-utils', () => {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
       editorialNote: 'editorial note',
       subject: 'concept-uri',
-      status: 'VALID',
       identifier: 'assoc-identifier',
       equivalentResource: ['eq-1', 'eq-2'],
       subResourceOf: ['sub-1', 'sub-2'],
@@ -86,7 +82,6 @@ describe('resource-utils', () => {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
       editorialNote: 'editorial note',
       subject: 'concept-uri',
-      status: 'VALID',
       equivalentResource: ['eq-1', 'eq-2'],
       subResourceOf: ['sub-1', 'sub-2'],
       note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
@@ -104,7 +99,6 @@ describe('resource-utils', () => {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
       editorialNote: 'editorial note',
       subject: 'concept-uri',
-      status: 'VALID',
       equivalentResource: ['eq-1', 'eq-2'],
       subResourceOf: ['sub-1', 'sub-2'],
       note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
@@ -120,7 +114,6 @@ describe('resource-utils', () => {
 
     const expected: ApplicationProfileResourcePutType = {
       label: { fi: 'label-fi' },
-      status: 'DRAFT',
       identifier: 'attr-identifier',
       type: ResourceType.ATTRIBUTE,
     };
@@ -136,7 +129,6 @@ describe('resource-utils', () => {
 
     const expected: ApplicationProfileResourcePutType = {
       label: { fi: 'label-fi' },
-      status: 'DRAFT',
       identifier: 'attr-identifier',
       type: ResourceType.ASSOCIATION,
     };
@@ -151,7 +143,6 @@ describe('resource-utils', () => {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
       editorialNote: 'editorial note',
       subject: 'concept-uri',
-      status: 'VALID',
       identifier: 'attr-identifier',
       note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
       path: 'path-uri',
@@ -177,7 +168,6 @@ describe('resource-utils', () => {
       label: { fi: 'label-fi', en: 'label-en', fr: 'label-fr' },
       editorialNote: 'editorial note',
       subject: 'concept-uri',
-      status: 'VALID',
       identifier: 'attr-identifier',
       note: { fi: 'note-fi', en: 'note-en', fr: 'note-fr' },
       path: 'path-uri',
