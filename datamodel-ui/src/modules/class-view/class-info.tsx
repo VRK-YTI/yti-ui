@@ -9,10 +9,11 @@ import {
   ExternalLink,
   IconArrowLeft,
   IconCopy,
-  IconOptionsVertical,
   Text,
-  Tooltip,
   InlineAlert,
+  ActionMenu,
+  ActionMenuItem,
+  ActionMenuDivider,
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
@@ -23,8 +24,6 @@ import Separator from 'yti-common-ui/separator';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import ConceptView from '../concept-view';
 import ResourceInfo from './resource-info';
-import { TooltipWrapper } from '../model/model.styles';
-import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 import HasPermission from '@app/common/utils/has-permission';
 import DeleteModal from '../delete-modal';
 import { useSelector } from 'react-redux';
@@ -48,6 +47,7 @@ import UriInfo from '@app/common/components/uri-info';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { RenameModal } from '../rename-modal';
 import getApiError from '@app/common/utils/get-api-errors';
+import { translateResourceAddition } from '@app/common/utils/translation-helpers';
 
 interface ClassInfoProps {
   data?: ClassType;
@@ -83,16 +83,15 @@ export default function ClassInfo({
   });
   const ref = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(hasPermission ? 57 : 55);
-  const [showTooltip, setShowTooltip] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
   const updateClassData = useSelector(selectUpdateClassData());
   const dispatch = useStoreDispatch();
   const renderResourceForm = useSelector(selectAddResourceRestrictionToClass());
-
+  const [attributeModalVisible, setAttributeModalVisible] = useState(false);
+  const [associationModalVisible, setAssociationModalVisible] = useState(false);
   const displayLang = useSelector(selectDisplayLang());
   const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
-  const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
 
   useEffect(() => {
     if (updateClassData) {
@@ -240,49 +239,18 @@ export default function ClassInfo({
             {t('back')}
           </Button>
           {!disableEdit && hasPermission && data && (
-            <div>
-              <Button
-                variant="secondary"
-                iconRight={<IconOptionsVertical />}
-                onClick={() => setShowTooltip(!showTooltip)}
-                ref={toolTipRef}
-              >
-                {t('actions')}
-              </Button>
-              <TooltipWrapper id="actions-tooltip">
-                <Tooltip
-                  ariaCloseButtonLabelText=""
-                  ariaToggleButtonLabelText=""
-                  open={showTooltip}
-                  onCloseButtonClick={() => setShowTooltip(false)}
-                >
-                  <>
-                    <Button
-                      variant="secondaryNoBorder"
-                      onClick={() => handleEdit()}
-                      id="edit-class-button"
-                    >
-                      {t('edit', { ns: 'admin' })}
-                    </Button>
-                    <Button
-                      variant="secondaryNoBorder"
-                      onClick={() => setShowRenameModal(true)}
-                      id="rename-class-button"
-                    >
-                      {t('rename', { ns: 'admin' })}
-                    </Button>
-                    <Separator />
-                    <Button
-                      variant="secondaryNoBorder"
-                      onClick={() => setShowDeleteModal(true)}
-                      id="delete-class-button"
-                    >
-                      {t('remove', { ns: 'admin' })}
-                    </Button>
-                  </>
-                </Tooltip>
-              </TooltipWrapper>
-            </div>
+            <ActionMenu buttonText={t('actions')} id="actions-menu">
+              <ActionMenuItem onClick={() => handleEdit()}>
+                {t('edit', { ns: 'admin' })}
+              </ActionMenuItem>
+              <ActionMenuItem onClick={() => setShowRenameModal(true)}>
+                {t('rename', { ns: 'admin' })}
+              </ActionMenuItem>
+              <ActionMenuDivider />
+              <ActionMenuItem onClick={() => setShowDeleteModal(true)}>
+                {t('remove', { ns: 'admin' })}
+              </ActionMenuItem>
+            </ActionMenu>
           )}
         </div>
         {data ? (
@@ -386,21 +354,29 @@ export default function ClassInfo({
           </BasicBlock>
 
           {!disableEdit && hasPermission ? (
-            <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
+            <div style={{ marginTop: '10px' }}>
+              <Button
+                variant="secondary"
+                onClick={() => setAttributeModalVisible(true)}
+                id="add-attribute-button"
+              >
+                {translateResourceAddition(
+                  ResourceType.ATTRIBUTE,
+                  t,
+                  applicationProfile
+                )}
+              </Button>
               <ResourceModal
                 modelId={modelId}
                 type={ResourceType.ATTRIBUTE}
                 handleFollowUp={handleFollowUp}
                 limitSearchTo={'LIBRARY'}
+                visible={attributeModalVisible}
+                setVisible={setAttributeModalVisible}
                 applicationProfile={applicationProfile}
                 limitToSelect={!applicationProfile}
                 hiddenResources={data.attribute?.map((attr) => attr.uri)}
               />
-              {!applicationProfile && (
-                <Button variant="secondary" id="order-attributes-button">
-                  {t('order-list', { ns: 'admin' })}
-                </Button>
-              )}
             </div>
           ) : (
             <></>
@@ -437,21 +413,29 @@ export default function ClassInfo({
           </BasicBlock>
 
           {!disableEdit && hasPermission ? (
-            <div style={{ display: 'flex', marginTop: '10px', gap: '10px' }}>
+            <div style={{ marginTop: '10px' }}>
+              <Button
+                variant="secondary"
+                onClick={() => setAssociationModalVisible(true)}
+                id="add-association-button"
+              >
+                {translateResourceAddition(
+                  ResourceType.ASSOCIATION,
+                  t,
+                  applicationProfile
+                )}
+              </Button>
               <ResourceModal
                 modelId={modelId}
                 type={ResourceType.ASSOCIATION}
                 limitSearchTo="LIBRARY"
+                visible={associationModalVisible}
+                setVisible={setAssociationModalVisible}
                 handleFollowUp={handleFollowUp}
                 applicationProfile={applicationProfile}
                 limitToSelect={!applicationProfile}
                 hiddenResources={data.association?.map((assoc) => assoc.uri)}
               />
-              {!applicationProfile && (
-                <Button variant="secondary" id="order-associations-button">
-                  {t('order-list', { ns: 'admin' })}
-                </Button>
-              )}
             </div>
           ) : (
             <></>

@@ -1,14 +1,13 @@
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import {
-  Button,
   Expander,
   ExpanderContent,
   ExpanderTitleButton,
-  Tooltip,
   IconCheckCircle,
   IconDisabled,
-  IconOptionsVertical,
   InlineAlert,
+  ActionMenu,
+  ActionMenuItem,
 } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import {
@@ -16,7 +15,6 @@ import {
   useGetResourceQuery,
 } from '@app/common/components/resource/resource.slice';
 import CommonViewContent from '@app/modules/common-view-content';
-import { TooltipWrapper } from '../model/model.styles';
 import {
   setSelected,
   setUpdateVisualization,
@@ -64,7 +62,6 @@ export default function ResourceInfo({
   const { t, i18n } = useTranslation('common');
   const [open, setOpen] = useState(false);
   const dispatch = useStoreDispatch();
-  const [showTooltip, setShowTooltip] = useState(false);
 
   const {
     data: resourceData,
@@ -98,7 +95,6 @@ export default function ResourceInfo({
       currentTarget: targetInClassRestriction?.uri,
       newTarget: newTarget?.id,
     });
-    setShowTooltip(false);
   };
 
   useEffect(() => {
@@ -151,53 +147,37 @@ export default function ResourceInfo({
         {!disableEdit &&
           hasPermission &&
           (!applicationProfile || modelId === data.modelId) && (
-            <div>
-              <Button
-                variant="secondary"
-                iconRight={<IconOptionsVertical />}
-                onClick={() => setShowTooltip(!showTooltip)}
-              >
-                {t('actions')}
-              </Button>
-              <TooltipWrapper id="actions-tooltip" $nonStatic={!attribute}>
-                <Tooltip
-                  ariaCloseButtonLabelText=""
-                  ariaToggleButtonLabelText=""
-                  open={showTooltip}
-                  onCloseButtonClick={() => setShowTooltip(false)}
-                >
-                  {modelId === data.modelId && (
-                    <Button
-                      variant="secondaryNoBorder"
-                      onClick={handleEdit}
-                      id="edit-reference-button"
-                    >
-                      {t('edit', { ns: 'admin' })}
-                    </Button>
-                  )}
-                  {(!data.fromShNode || !applicationProfile) && (
-                    <RemoveReferenceModal
-                      modelId={modelId}
-                      classId={classId}
-                      uri={data.uri}
-                      handleReturn={handlePropertiesUpdate}
-                      name={getLanguageVersion({
-                        data: data.label,
-                        lang: i18n.language,
-                        appendLocale: true,
-                      })}
-                      applicationProfile={applicationProfile}
-                      resourceType={
-                        attribute
-                          ? ResourceType.ATTRIBUTE
-                          : ResourceType.ASSOCIATION
-                      }
-                      currentTarget={targetInClassRestriction?.uri}
-                    />
-                  )}
-                </Tooltip>
-              </TooltipWrapper>
-            </div>
+            <ActionMenu id="actions-menu" buttonText={t('actions')}>
+              {modelId === data.modelId ? (
+                <ActionMenuItem onClick={handleEdit}>
+                  {t('edit', { ns: 'admin' })}
+                </ActionMenuItem>
+              ) : (
+                <></>
+              )}
+              {!data.fromShNode || !applicationProfile ? (
+                <RemoveReferenceModal
+                  modelId={modelId}
+                  classId={classId}
+                  uri={data.uri}
+                  handleReturn={handlePropertiesUpdate}
+                  name={getLanguageVersion({
+                    data: data.label,
+                    lang: i18n.language,
+                    appendLocale: true,
+                  })}
+                  applicationProfile={applicationProfile}
+                  resourceType={
+                    attribute
+                      ? ResourceType.ATTRIBUTE
+                      : ResourceType.ASSOCIATION
+                  }
+                  currentTarget={targetInClassRestriction?.uri}
+                />
+              ) : (
+                <></>
+              )}
+            </ActionMenu>
           )}
       </>
     );

@@ -7,12 +7,13 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import {
+  ActionMenu,
+  ActionMenuDivider,
+  ActionMenuItem,
   Button,
   ExternalLink,
   IconCopy,
-  IconOptionsVertical,
   Text,
-  Tooltip,
 } from 'suomifi-ui-components';
 import { BasicBlock, MultilingualBlock } from 'yti-common-ui/block';
 import {
@@ -20,7 +21,7 @@ import {
   getIsPartOfWithId,
   getOrganizationsWithId,
 } from '@app/common/utils/get-value';
-import { LinksWrapper, TooltipWrapper } from './model.styles';
+import { LinksWrapper } from './model.styles';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import Separator from 'yti-common-ui/separator';
@@ -36,7 +37,6 @@ import DeleteModal from '../delete-modal';
 import { useStoreDispatch } from '@app/store';
 import { getSlugAsString } from '@app/common/utils/parse-slug';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
-import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 import useSetView from '@app/common/utils/hooks/use-set-view';
 import { v4 } from 'uuid';
 import CreateReleaseModal from '../create-release-modal';
@@ -54,7 +54,6 @@ export default function ModelInfoView({
   const { query } = useRouter();
   const [modelId] = useState(getSlugAsString(query.slug) ?? '');
   const [version] = useState(getSlugAsString(query.ver));
-  const [showTooltip, setShowTooltip] = useState(false);
   const [showEditView, setShowEditView] = useState(false);
   const [formData, setFormData] = useState<ModelFormType | undefined>();
   const [headerHeight, setHeaderHeight] = useState(57);
@@ -70,7 +69,6 @@ export default function ModelInfoView({
     delete: false,
   });
   const ref = useRef<HTMLDivElement>(null);
-  const { ref: toolTipRef } = useGetAwayListener(showTooltip, setShowTooltip);
   const { setView } = useSetView();
   const hasPermission = HasPermission({
     actions: ['EDIT_DATA_MODEL'],
@@ -122,7 +120,6 @@ export default function ModelInfoView({
   const handleEditViewItemClick = (setItem: (value: boolean) => void) => {
     setItem(true);
     setView('info', 'edit');
-    setShowTooltip(false);
   };
 
   const handleModalChange = (key: keyof typeof openModals, value?: boolean) => {
@@ -164,75 +161,51 @@ export default function ModelInfoView({
       <StaticHeader ref={ref}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Text variant="bold">{t('details')}</Text>
-          <div>
-            <Button
-              variant="secondary"
-              onClick={() => setShowTooltip(!showTooltip)}
-              iconRight={<IconOptionsVertical />}
-              ref={toolTipRef}
-              id="actions-button"
-            >
-              {t('actions')}
-            </Button>
-            <TooltipWrapper id="actions-tooltip">
-              <Tooltip
-                ariaCloseButtonLabelText=""
-                ariaToggleButtonLabelText=""
-                open={showTooltip}
-                onCloseButtonClick={() => setShowTooltip(false)}
+          <ActionMenu id="actions-menu" buttonText={t('actions')}>
+            {hasPermission ? (
+              <>
+                <ActionMenuItem
+                  onClick={() => handleEditViewItemClick(setShowEditView)}
+                  disabled={!formData}
+                >
+                  {t('edit', { ns: 'admin' })}
+                </ActionMenuItem>
+                <ActionMenuDivider />
+              </>
+            ) : (
+              <></>
+            )}
+            {hasPermission && !version ? (
+              <ActionMenuItem
+                onClick={() => handleModalChange('createRelease', true)}
+                disabled={!formData}
               >
-                {hasPermission && (
-                  <>
-                    <Button
-                      variant="secondaryNoBorder"
-                      onClick={() => handleEditViewItemClick(setShowEditView)}
-                      disabled={!formData}
-                      id="edit-button"
-                    >
-                      {t('edit', { ns: 'admin' })}
-                    </Button>
-                    {!version && (
-                      <Button
-                        variant="secondaryNoBorder"
-                        onClick={() => handleModalChange('createRelease', true)}
-                        disabled={!formData}
-                        id="create-release-button"
-                      >
-                        {t('create-release', { ns: 'admin' })}
-                      </Button>
-                    )}
-                  </>
-                )}
-                <Button
-                  variant="secondaryNoBorder"
-                  onClick={() => handleModalChange('showAsFile', true)}
-                  id="show-as-file-button"
-                >
-                  {t('show-as-file')}
-                </Button>
-                <Button
-                  variant="secondaryNoBorder"
-                  onClick={() => handleModalChange('downloadAsFile', true)}
-                  id="download-as-file-button"
-                >
-                  {t('download-as-file')}
-                </Button>
-                {!user.anonymous && (
-                  <>
-                    <Button
-                      variant="secondaryNoBorder"
-                      onClick={() =>
-                        handleModalChange('getEmailNotification', true)
-                      }
-                      id="get-email-notification-button"
-                    >
-                      {t('add-email-subscription')}
-                    </Button>
-                  </>
-                )}
-              </Tooltip>
-            </TooltipWrapper>
-          </div>
+                {t('create-release', { ns: 'admin' })}
+              </ActionMenuItem>
+            ) : (
+              <></>
+            )}
+
+            <ActionMenuItem
+              onClick={() => handleModalChange('showAsFile', true)}
+            >
+              {t('show-as-file')}
+            </ActionMenuItem>
+            <ActionMenuItem
+              onClick={() => handleModalChange('downloadAsFile', true)}
+            >
+              {t('download-as-file')}
+            </ActionMenuItem>
+            {!user.anonymous ? (
+              <ActionMenuItem
+                onClick={() => handleModalChange('getEmailNotification', true)}
+              >
+                {t('add-email-subscription')}
+              </ActionMenuItem>
+            ) : (
+              <></>
+            )}
+          </ActionMenu>
         </div>
         {renderModals()}
       </StaticHeader>

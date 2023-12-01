@@ -121,13 +121,13 @@
   "graph": "",
   "graph-settings": "",
   "graph-tools": {
-    "zoom-in": "",
-    "zoom-out": "",
+    "download-picture": "",
     "fullscreen": "",
     "reset-positions": "",
-    "zoom-to": "",
     "save-positions": "",
-    "download-picture": ""
+    "zoom-in": "",
+    "zoom-out": "",
+    "zoom-to": ""
   },
   "highlight-class-association-restrictions": "",
   "highlight-class-associations": "",

@@ -5,7 +5,13 @@ import {
   SimpleModalContent,
 } from '../as-file-modal/as-file-modal.styles';
 import { useEffect, useState } from 'react';
-import { Text, Button, ModalTitle, InlineAlert } from 'suomifi-ui-components';
+import {
+  Text,
+  Button,
+  ModalTitle,
+  InlineAlert,
+  ActionMenuItem,
+} from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import getApiError from '@app/common/utils/get-api-errors';
 import { useDeletePropertyReferenceMutation } from '@app/common/components/class/class.slice';
@@ -69,13 +75,9 @@ export default function RemoveReferenceModal({
 
   return (
     <>
-      <Button
-        variant="secondaryNoBorder"
-        onClick={() => setShowModal(true)}
-        id="remove-reference-button"
-      >
+      <ActionMenuItem onClick={() => setShowModal(true)}>
         {t('remove-reference', { ns: 'admin' })}
-      </Button>
+      </ActionMenuItem>
       <NarrowModal
         appElementId="__next"
         visible={showModal}

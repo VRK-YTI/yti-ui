@@ -8,17 +8,16 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import {
+  ActionMenu,
+  ActionMenuDivider,
+  ActionMenuItem,
   Button,
   IconArrowLeft,
-  IconOptionsVertical,
   InlineAlert,
   Text,
-  Tooltip,
 } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
-import Separator from 'yti-common-ui/separator';
-import { TooltipWrapper } from '@app/modules/model/model.styles';
 import DeleteModal from '@app/modules/delete-modal';
 import CommonViewContent from '@app/modules/common-view-content';
 import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
@@ -119,70 +118,48 @@ export default function ResourceInfo({
           </Button>
           {!disableEdit && hasPermission && data && !externalEdit && (
             <div>
-              <Button
-                variant="secondary"
-                iconRight={<IconOptionsVertical />}
-                style={{ height: 'min-content' }}
-                onClick={() => setShowTooltip(!showTooltip)}
-                id="actions-button"
-              >
-                {t('actions')}
-              </Button>
-              <TooltipWrapper id="actions-tooltip">
-                <Tooltip
-                  ariaCloseButtonLabelText=""
-                  ariaToggleButtonLabelText=""
-                  open={showTooltip}
-                  onCloseButtonClick={() => setShowTooltip(false)}
-                >
-                  {isPartOfCurrentModel ? (
-                    <>
-                      <Button
-                        variant="secondaryNoBorder"
+              <ActionMenu id="action-menu" buttonText={t('actions')}>
+                {isPartOfCurrentModel
+                  ? [
+                      <ActionMenuItem
+                        key="edit-button"
                         onClick={() => handleEdit()}
-                        id="edit-button"
                       >
                         {t('edit', { ns: 'admin' })}
-                      </Button>
-                      <Button
-                        variant="secondaryNoBorder"
+                      </ActionMenuItem>,
+                      <ActionMenuItem
+                        key="rename-button"
                         onClick={() => setRenameVisible(true)}
-                        id="rename-class-button"
                       >
                         {t('rename', { ns: 'admin' })}
-                      </Button>
-                      <Separator />
-                      <Button
-                        variant="secondaryNoBorder"
+                      </ActionMenuItem>,
+                      <ActionMenuDivider key="separator" />,
+                      <ActionMenuItem
+                        key="remove-button"
                         onClick={() => setDeleteVisible(true)}
-                        id="remove-button"
                       >
                         {t('remove', { ns: 'admin' })}
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button
-                        variant="secondaryNoBorder"
+                      </ActionMenuItem>,
+                    ]
+                  : [
+                      <ActionMenuItem
+                        key="external-edit-button"
                         onClick={() => {
                           setExternalActive(inUse);
                           setExternalEdit(true);
                         }}
-                        id="edit-button"
                       >
                         {t('edit', { ns: 'admin' })}
-                      </Button>
-                      <Button
-                        variant="secondaryNoBorder"
+                      </ActionMenuItem>,
+                      <ActionMenuItem
+                        key="create-local-copy-button"
                         onClick={() => setLocalCopyVisible(true)}
-                        id="local-copy-button"
                       >
                         {t('create-local-copy', { ns: 'admin' })}
-                      </Button>
-                    </>
-                  )}
-                </Tooltip>
-              </TooltipWrapper>
+                      </ActionMenuItem>,
+                    ]}
+              </ActionMenu>
+
               <LocalCopyModal
                 visible={localCopyVisible}
                 hide={() => setLocalCopyVisible(false)}
