@@ -2,7 +2,16 @@ import { useTranslation } from 'next-i18next';
 import { ExternalLink, Button, Text, Label } from 'suomifi-ui-components';
 import { List, ListItem } from './schema-list.styles';
 import { Schema } from '@app/common/interfaces/schema.interface';
-import { Grid, InputLabel } from '@mui/material';
+import {
+  Grid,
+  InputLabel,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 import router from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
@@ -13,13 +22,7 @@ export interface SchemaListProps {
   deleteDisabled: string[] | boolean;
 }
 
-export default function SchemaList({
-  items,
-  handleRemoval,
-
-  labelRow,
-  deleteDisabled,
-}: SchemaListProps) {
+export default function SchemaList({ items }: SchemaListProps) {
   const { t } = useTranslation('admin');
   const lang = router.locale ?? '';
 
@@ -29,70 +32,50 @@ export default function SchemaList({
   }
 
   function handleClick(pid: string): void {
-    console.log(pid);
     // will go the schema detail page
     if (pid) {
       router.push(`/schema/${pid}`);
     }
-    
   }
 
   return (
     //Creating Header row
 
     <div>
-      <List className="header-list">
-        <ListItem>
-          <Grid container spacing={2} style={{ fontWeight: 'bold' }}>
-            <Grid item xs={2}>
-              {'Name'}
-            </Grid>
-            <Grid item xs={2}>
-              {'Namespace'}
-            </Grid>
-            <Grid item xs={2}>
-              {'Status'}
-            </Grid>
-            <Grid item xs={2}>
-              {'Revision'}
-            </Grid>
-            <Grid item xs={2}>
-              {'PID'}
-            </Grid>
-            <Grid item xs={2}></Grid>
-          </Grid>
-        </ListItem>
-      </List>
-      <List className="inline-list">
-        {items &&
-          items.map((item) => (
-            <ListItem 
-              key={item.pid}
-              onClick={() => handleClick(item.pid)}
-              onMouseEnter={() => item.onMouseEnter && item.onMouseEnter()}
-              onMouseLeave={() => item.onMouseLeave && item.onMouseLeave()}
-              onKeyDown={(e) => e.key === 'Enter' && item.onClick()}
-            >
-              <Grid container spacing={2}>
-                <Grid item xs={2}>
-                  {getLanguageVersion({ data: item.label, lang })}
-                </Grid>
-                <Grid item xs={2}>
-                  {item.namespace}
-                </Grid>
-                <Grid item xs={2}>
-                  {item.state}
-                </Grid>
-                <Grid item xs={2}>
-                  {item.versionLabel}
-                </Grid>
-                <Grid item xs={2}>
-                  {item.pid}
-                </Grid>
-              </Grid>
-            </ListItem>
-          ))}
-      </List>
+      <TableContainer>
+        <Table aria-label={'Schemas'}>
+          <TableHead>
+            <TableRow>
+              <TableCell> {'Name'}</TableCell>
+              <TableCell>{'Namespace'}</TableCell>
+              <TableCell>{'Status'}</TableCell>
+              <TableCell>{'Revision'}</TableCell>
+              <TableCell>{'PID'}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {/*TODO: Use the below template to create lines for files*/}
+            {items &&
+              items.map((item) => (
+                <TableRow
+                  key={item.pid}
+                  hover={true}
+                  onClick={() => handleClick(item.pid)}
+                  sx={{ cursor: 'pointer' }}
+                >
+                  <TableCell>
+                    {' '}
+                    {getLanguageVersion({ data: item.label, lang })}
+                  </TableCell>
+                  <TableCell>{item.namespace}</TableCell>
+                  <TableCell>{item.state}</TableCell>
+                  <TableCell>{item.versionLabel}</TableCell>
+                  <TableCell>{item.pid}</TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }
