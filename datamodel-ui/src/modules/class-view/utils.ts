@@ -70,7 +70,6 @@ export function classTypeToClassForm(
     uri: data.uri,
     label: data.label,
     note: data.note,
-    status: data.status,
     association: data.association,
     attribute: data.attribute,
     ...(applicationProfile
