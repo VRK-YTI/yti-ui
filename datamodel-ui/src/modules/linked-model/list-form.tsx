@@ -94,12 +94,11 @@ export default function ListForm({
     }
 
     setSelected([
-      ...selected,
       ...models.responseObjects
         .filter((obj) => ids.includes(obj.id))
         .map((obj) => ({
           name: obj.label,
-          namespace: obj.uri,
+          namespace: obj.id,
           prefix: obj.prefix,
         })),
     ]);
@@ -180,7 +179,7 @@ export default function ListForm({
                     }),
                     status: obj.status,
                     type: obj.type,
-                    uri: obj.uri,
+                    uri: obj.id,
                     version: obj.version,
                   },
                 })) ?? [],
