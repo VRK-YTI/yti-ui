@@ -10,10 +10,7 @@ export const SubTitle = styled(Text)`
 export const MainTitleWrapper = styled(Heading)`
   line-height: 52px;
   margin-bottom: 5px;
-
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+  white-space: pre-wrap;
 `;
 
 export const BadgeBarWrapper = styled.div<{
