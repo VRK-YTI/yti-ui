@@ -46,6 +46,7 @@ interface ResourceInfoProps {
   handlePropertiesUpdate: () => void;
   disableEdit?: boolean;
   targetInClassRestriction?: UriData;
+  disableAssocTarget?: boolean;
 }
 
 export default function ResourceInfo({
@@ -58,6 +59,7 @@ export default function ResourceInfo({
   handlePropertiesUpdate,
   disableEdit,
   targetInClassRestriction,
+  disableAssocTarget,
 }: ResourceInfoProps) {
   const { t, i18n } = useTranslation('common');
   const [open, setOpen] = useState(false);
@@ -72,7 +74,7 @@ export default function ResourceInfo({
       modelId: data.modelId,
       resourceIdentifier: data.identifier,
       applicationProfile,
-      version: data.version,
+      // version: data.version,
     },
     { skip: !open }
   );
@@ -200,6 +202,7 @@ export default function ResourceInfo({
             displayLabel
             inUse={!data.deactivated}
             applicationProfile={applicationProfile}
+            disableAssocTarget={disableAssocTarget}
             renderActions={renderActions}
             handleChangeTarget={handleChangeTarget}
           />

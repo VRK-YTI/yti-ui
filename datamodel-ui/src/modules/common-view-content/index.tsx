@@ -33,6 +33,7 @@ export default function CommonViewContent({
   data,
   displayLabel,
   applicationProfile,
+  disableAssocTarget = false,
   renderActions,
   handleChangeTarget,
 }: {
@@ -41,6 +42,7 @@ export default function CommonViewContent({
   data: Resource;
   displayLabel?: boolean;
   applicationProfile?: boolean;
+  disableAssocTarget?: boolean;
   renderActions?: () => void;
   handleChangeTarget?: (value?: InternalClassInfo) => void;
 }) {
@@ -401,7 +403,8 @@ export default function CommonViewContent({
           </>
         )}
 
-      {!applicationProfile &&
+      {!disableAssocTarget &&
+        !applicationProfile &&
         data.type === ResourceType.ASSOCIATION &&
         handleChangeTarget && (
           <>
