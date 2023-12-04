@@ -405,7 +405,14 @@ export default function ClassForm({
           </Button>
 
           <div style={{ display: 'flex', gap: '10px' }}>
-            <Button onClick={() => handleSubmit()} id="submit-button">
+            <Button
+              onClick={() => handleSubmit()}
+              id={
+                updateResult.isLoading || createResult.isLoading
+                  ? 'submit-button_submitted'
+                  : 'submit-button'
+              }
+            >
               {updateResult.isLoading || createResult.isLoading ? (
                 <div role="alert">
                   <StyledSpinner

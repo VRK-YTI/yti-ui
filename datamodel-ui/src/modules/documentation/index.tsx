@@ -316,7 +316,14 @@ export default function Documentation({
                   gap: '15px',
                 }}
               >
-                <Button onClick={() => handleSubmit()} id="submit-button">
+                <Button
+                  onClick={() => handleSubmit()}
+                  id={
+                    result.isLoading || versionedResult.isLoading
+                      ? 'submit-button_submitted'
+                      : 'submit-button'
+                  }
+                >
                   {result.isLoading || versionedResult.isLoading ? (
                     <div role="alert">
                       <StyledSpinner
