@@ -27,6 +27,8 @@ export default function SchemaView({
     // isError,
     // error,
   } = useGetSchemaWithRevisionsQuery(schemaId);
+  // TODO: I can't make sense of the format this returns, and how it would be offered for download
+  
   const [selectedTab, setSelectedTab] = useState(0);
 
   function a11yProps(index: number) {
@@ -71,7 +73,8 @@ export default function SchemaView({
          
 
         {selectedTab === 0 && (
-          <MetadataAndFiles schemaDetails={schemaDetails} />
+              <MetadataAndFiles schemaDetails={schemaDetails} schemaFiles={schemaDetails?.fileMetadata
+              } />
         )}
             {selectedTab === 1 && <VersionHistory schemaDetails={schemaDetails} />}
             </Grid>

@@ -1,6 +1,10 @@
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
-import { Schema } from '@app/common/interfaces/schema.interface';
+import {
+  Schema,
+  SchemaFileData,
+  SchemaWithVersionInfo,
+} from '@app/common/interfaces/schema.interface';
 import router from 'next/router';
 import {
   DescriptionList,
@@ -10,14 +14,32 @@ import { Grid } from '@mui/material';
 import { Heading } from 'suomifi-ui-components';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import getOrganizations from '@app/common/utils/get-organizations';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableBody from '@mui/material/TableBody';
+import TableContainer from '@mui/material/TableContainer';
 
 export default function MetadataAndFiles({
   schemaDetails,
+  schemaFiles
 }: {
-  schemaDetails?: Schema;
+    schemaDetails?: SchemaWithVersionInfo;
+    schemaFiles?: SchemaFileData[];
+  
+
+  
 }) {
   const { t } = useTranslation('common');
   const lang = router.locale ?? '';
+
+  if (schemaDetails?.fileMetadata) {
+    console.log(schemaDetails.fileMetadata);
+    schemaFiles = schemaDetails.fileMetadata;
+  } else {
+    schemaFiles = [];
+  }
 
   // TODO: Editing -> Only edit with permission, we have util has-permission
 
@@ -159,7 +181,29 @@ export default function MetadataAndFiles({
           </Grid>
         </Grid>
       </DescriptionList>
-      <div>TABLE HERE{/* TODO: Display schema files */}</div>
+      <TableContainer>
+        <Table aria-label={t('schema.file.label')}>
+          <TableHead>
+            <TableRow>
+              <TableCell>{t('schema.file.name')}</TableCell>
+              <TableCell>{t('schema.file.id')}</TableCell>
+              <TableCell>{t('schema.file.format')}</TableCell>
+              <TableCell>{t('schema.file.size')}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {/*TODO: Use the below template to create lines for files*/}
+            {schemaFiles && schemaFiles.map((file) => (
+              <TableRow key={file.id}>
+                <TableCell>{file.fileID}</TableCell>
+                <TableCell>{file.fileID}</TableCell>
+                <TableCell>{file.contentType}</TableCell>
+                <TableCell>{file.size}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   );
 }
