@@ -26,8 +26,6 @@ export default function convertToEdges(
     return [];
   }
 
-  console.log('nodes', nodes);
-
   const referenceLabels: {
     targetId: string;
     offsetSource?: number;
@@ -95,7 +93,6 @@ export default function convertToEdges(
         : []),
 
       ...node.references.flatMap((reference) => {
-        console.log('reference', reference);
         let label;
         if (applicationProfile && reference.referenceType === 'PARENT_CLASS') {
           label = t('utilizes');
@@ -105,7 +102,7 @@ export default function convertToEdges(
         ) {
           label = reference.label;
         }
-        console.log('reference', reference);
+
         if (reference.referenceTarget.startsWith('corner-')) {
           referenceLabels.push({
             targetId: getEndEdge(reference.referenceTarget),
