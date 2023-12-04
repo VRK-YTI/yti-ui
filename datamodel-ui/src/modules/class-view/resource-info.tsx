@@ -74,7 +74,7 @@ export default function ResourceInfo({
       modelId: data.modelId,
       resourceIdentifier: data.identifier,
       applicationProfile,
-      // version: data.version,
+      version: data.version,
     },
     { skip: !open }
   );
