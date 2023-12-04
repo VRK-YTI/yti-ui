@@ -26,6 +26,8 @@ export default function convertToEdges(
     return [];
   }
 
+  console.log('nodes', nodes);
+
   const referenceLabels: {
     targetId: string;
     offsetSource?: number;
@@ -93,6 +95,7 @@ export default function convertToEdges(
         : []),
 
       ...node.references.flatMap((reference) => {
+        console.log('reference', reference);
         let label;
         if (applicationProfile && reference.referenceType === 'PARENT_CLASS') {
           label = t('utilizes');
@@ -102,14 +105,15 @@ export default function convertToEdges(
         ) {
           label = reference.label;
         }
-
+        console.log('reference', reference);
         if (reference.referenceTarget.startsWith('corner-')) {
           referenceLabels.push({
             targetId: getEndEdge(reference.referenceTarget),
-            identifier:
-              reference.referenceType === 'ATTRIBUTE_DOMAIN'
-                ? node.identifier
-                : reference.identifier,
+            identifier: ['ATTRIBUTE_DOMAIN', 'PARENT_CLASS'].includes(
+              reference.referenceType
+            )
+              ? node.identifier
+              : reference.identifier,
             label: label,
           });
 
@@ -122,10 +126,11 @@ export default function convertToEdges(
         return createEdge({
           modelId: modelId,
           label: label,
-          identifier:
-            reference.referenceType === 'ATTRIBUTE_DOMAIN'
-              ? node.identifier
-              : reference.identifier,
+          identifier: ['ATTRIBUTE_DOMAIN', 'PARENT_CLASS'].includes(
+            reference.referenceType
+          )
+            ? node.identifier
+            : reference.identifier,
           params: getEdgeParams(node.identifier, reference),
           applicationProfile,
         });
