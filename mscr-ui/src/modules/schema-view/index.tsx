@@ -4,7 +4,7 @@ import Tab from '@mui/material/Tab';
 import { SyntheticEvent, useState } from 'react';
 import VersionHistory from '@app/modules/schema-view/version-history';
 import { useTranslation } from 'next-i18next';
-import { useGetSchemaOriginalQuery, useGetSchemaWithRevisionsQuery } from '@app/common/components/schema/schema.slice';
+import { useGetSchemaWithRevisionsQuery } from '@app/common/components/schema/schema.slice';
 import MetadataAndFiles from './metadata-and-files';
 import SideNavigationPanel from '@app/common/components/side-navigation';
 import { Grid } from '@mui/material';
