@@ -179,7 +179,8 @@ function getPositionAndSize(node: Node, offset?: number) {
   if (offset && offset > 0) {
     return {
       x: node.position.x + 5,
-      y: node.position.y + 5 + 45 + (offset - 1) * 39,
+      // 60 here is the height of the classNode title
+      y: node.position.y + 5 + 60 + (offset - 1) * 39,
       w: node.width ? node.width - 10 : 0,
       h: 30,
     };

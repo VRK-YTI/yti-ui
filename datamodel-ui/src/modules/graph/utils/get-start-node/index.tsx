@@ -4,7 +4,7 @@ export default function getStartNode(
   startElement: Node | Edge,
   nodes: Node[],
   edges: Edge[]
-) {
+): Node | undefined {
   let start: Node | undefined;
 
   if ('source' in startElement) {
@@ -20,7 +20,11 @@ export default function getStartNode(
   return getSource(start, edges, nodes);
 }
 
-function getSource(start: Node, edges: Edge[], nodes: Node[]) {
+function getSource(
+  start: Node,
+  edges: Edge[],
+  nodes: Node[]
+): Node | undefined {
   if (!start) {
     return;
   }
