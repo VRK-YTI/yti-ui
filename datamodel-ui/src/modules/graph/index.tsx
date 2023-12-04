@@ -50,6 +50,7 @@ import { ReferenceType } from '@app/common/interfaces/visualization.interface';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import GraphNotification from './graph-notification';
 import { selectLogin } from '@app/common/components/login/login.slice';
+import toggleAttrNodeVisibility from './utils/toggle-attribute-node-visibility';
 
 interface GraphProps {
   modelId: string;
@@ -446,6 +447,51 @@ const GraphContent = ({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applicationProfile, tools.showAttributeRestrictions, setEdges]);
+
+  useEffect(() => {
+    let cornersToBeToggled: string[] = [];
+    const hide = !tools.showAttributeRestrictions || !tools.showAttributes;
+
+    setNodes((nodes) =>
+      nodes.map((node) => {
+        if (node.type === 'attributeNode') {
+          const betweenIds = toggleAttrNodeVisibility(node, nodes, edges);
+          cornersToBeToggled = betweenIds.filter((id) =>
+            id.startsWith('#corner')
+          );
+
+          setEdges((edges) =>
+            edges.map((edge) => {
+              if (betweenIds.includes(edge.id)) {
+                return { ...edge, hidden: hide };
+              }
+              return edge;
+            })
+          );
+          return { ...node, hidden: hide };
+        }
+        return node;
+      })
+    );
+
+    setNodes((nodes) =>
+      nodes.map((node) => {
+        if (
+          node.type === 'cornerNode' &&
+          cornersToBeToggled.includes(node.id)
+        ) {
+          return { ...node, hidden: hide };
+        }
+        return node;
+      })
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    setNodes,
+    setEdges,
+    tools.showAttributeRestrictions,
+    tools.showAttributes,
+  ]);
 
   useEffect(() => {
     const cleanCorners = () => {

@@ -14,12 +14,15 @@ import {
   EdgeLabelRenderer,
   EdgeProps,
   getStraightPath,
+  useEdges,
+  useNodes,
   useStore,
 } from 'reactflow';
 import getEdgeParams from '../utils/get-edge-params';
 import { EdgeContent, HoveredPath } from './edge.styles';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { EdgeDataType } from '@app/common/interfaces/graph.interface';
+import GetStartNode from '../utils/get-start-node';
 
 export default function DefaultEdge({
   id,
@@ -34,6 +37,8 @@ export default function DefaultEdge({
   const globalSelected = useSelector(selectSelected());
   const displayLang = useSelector(selectDisplayLang());
   const highlighted = useSelector(selectHighlighted());
+  const nodes = useNodes();
+  const edges = useEdges();
   const { showAssociations, showAssociationRestrictions, showById } =
     useSelector(selectModelTools());
   const sourceNode = useStore(
@@ -42,6 +47,16 @@ export default function DefaultEdge({
   const targetNode = useStore(
     useCallback((store) => store.nodeInternals.get(target), [target])
   );
+  const startNodeIsAttribute = useCallback(() => {
+    if (!sourceNode) {
+      return false;
+    }
+
+    return (
+      sourceNode?.type === 'attributeNode' ||
+      GetStartNode(sourceNode, nodes, edges)?.type === 'attributeNode'
+    );
+  }, [sourceNode, nodes, edges]);
 
   const { sx, sy, tx, ty } = getEdgeParams(
     sourceNode,
@@ -65,7 +80,10 @@ export default function DefaultEdge({
     dispatch(resetHovered());
   };
 
-  if (!showAssociations || !showAssociationRestrictions) {
+  if (
+    (!showAssociations || !showAssociationRestrictions) &&
+    !startNodeIsAttribute()
+  ) {
     return <></>;
   }
 
