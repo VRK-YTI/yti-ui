@@ -106,10 +106,11 @@ export default function convertToEdges(
         if (reference.referenceTarget.startsWith('corner-')) {
           referenceLabels.push({
             targetId: getEndEdge(reference.referenceTarget),
-            identifier:
-              reference.referenceType === 'ATTRIBUTE_DOMAIN'
-                ? node.identifier
-                : reference.identifier,
+            identifier: ['ATTRIBUTE_DOMAIN', 'PARENT_CLASS'].includes(
+              reference.referenceType
+            )
+              ? node.identifier
+              : reference.identifier,
             label: label,
           });
 
@@ -122,10 +123,11 @@ export default function convertToEdges(
         return createEdge({
           modelId: modelId,
           label: label,
-          identifier:
-            reference.referenceType === 'ATTRIBUTE_DOMAIN'
-              ? node.identifier
-              : reference.identifier,
+          identifier: ['ATTRIBUTE_DOMAIN', 'PARENT_CLASS'].includes(
+            reference.referenceType
+          )
+            ? node.identifier
+            : reference.identifier,
           params: getEdgeParams(node.identifier, reference),
           applicationProfile,
         });

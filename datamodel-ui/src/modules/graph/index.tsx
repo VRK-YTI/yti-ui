@@ -207,7 +207,13 @@ const GraphContent = ({
   const onEdgeClick = useCallback(
     (e, edge) => {
       if (edge.data.identifier && globalSelected.id !== edge.data.identifier) {
-        dispatch(setSelected(edge.data.identifier, 'associations', modelId));
+        dispatch(
+          setSelected(
+            edge.data.identifier,
+            edge.referenceType === 'PARENT_CLASS' ? 'classes' : 'associations',
+            modelId
+          )
+        );
         return;
       }
 
