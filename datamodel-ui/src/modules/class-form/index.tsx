@@ -761,6 +761,7 @@ export default function ClassForm({
                     classId={data.identifier}
                     applicationProfile={applicationProfile}
                     hasPermission
+                    disableAssocTarget={true}
                     handlePropertiesUpdate={() => {
                       const newAssociations = data.association
                         ? data.association.filter(
