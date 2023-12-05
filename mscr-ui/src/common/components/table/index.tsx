@@ -43,7 +43,6 @@ export default function BasicTable() {
   return (
     <div>
       {'Schemas'}
-      <Separator isLarge />
       <SchemaList
         items={schemas ?? []}
         handleRemoval={function (value: string): void {
@@ -51,7 +50,7 @@ export default function BasicTable() {
         }}
         deleteDisabled={false}
       ></SchemaList>
-      <Separator isLarge />
+      
       {'Crosswalks'}
       <Separator isLarge />
 

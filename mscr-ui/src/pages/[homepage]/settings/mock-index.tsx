@@ -2,7 +2,7 @@ import {
   CommonContextProvider,
   CommonContextState,
 } from 'yti-common-ui/components/common-context-provider';
-import { SSRConfig, useTranslation } from 'next-i18next';
+import { SSRConfig } from 'next-i18next';
 import Layout from '@app/common/components/layout';
 import PageHead from 'yti-common-ui/components/page-head';
 import PersonalSettings from 'src/modules/personal-settings';
@@ -25,8 +25,7 @@ function SettingsByType(settingsType: string): React.ReactElement {
 
 // This is just a mock page. I do not yet understand the proper construction of a page. Replace with real page.
 export default function IndexPage(props: IndexPageProps) {
-  const { t } = useTranslation('common');
-  console.log('settings type: ', props.settingsType);
+  // console.log('settings type: ', props.settingsType);
   return (
     <CommonContextProvider value={props}>
       <Layout
@@ -34,7 +33,7 @@ export default function IndexPage(props: IndexPageProps) {
         fakeableUsers={props.fakeableUsers}
       >
         <PageHead
-          baseUrl="https://tietomallit.suomi.fi"
+          baseUrl="https://mscr-test.rahtiapp.fi/"
           title="Settings testisivu"
           description="Only for testing"
         />
@@ -53,7 +52,6 @@ export const getServerSideProps = createCommonGetServerSideProps(
     if (settingsType === undefined) {
       throw new Error('Invalid parameter for page');
     }
-    console.log(settingsType);
 
     return {
       props: {

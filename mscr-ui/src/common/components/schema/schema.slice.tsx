@@ -53,6 +53,13 @@ export const schemaApi = createApi({
         method: 'GET',
       }),
     }),
+    // TODO: What is the return type?
+    getSchemaOriginal: builder.query<undefined, string>({
+      query: (pid) => ({
+        url: `/schema/${pid}/original`,
+        method: 'GET',
+      }),
+    }),
     postSchema: builder.mutation<
       string,
       {
@@ -86,6 +93,7 @@ export const {
   usePutSchemaMutation,
   useGetSchemaQuery,
   useGetSchemaWithRevisionsQuery,
+  useGetSchemaOriginalQuery,
   usePostSchemaMutation,
   useDeleteSchemaMutation,
   useGetSchemasQuery,

@@ -131,6 +131,15 @@
   "schema": {
     "created": "Created",
     "description": "Description",
+    "file": {
+      "actions": "Actions",
+      "added": "Added",
+      "format": "Format",
+      "label": "Schema files",
+      "name": "Filename",
+      "id":"ID",
+      "size":"Size"
+    },
     "format": "Format",
     "metadata": "Metadata",
     "metadata-and-files": "Metadata and files",
@@ -190,6 +199,7 @@
   "site-logout": "Log out",
   "site-open-link-new-window": "",
   "site-open-new-email": "",
+  "site-page-not-found": "Content not available, check url",
   "site-register": "",
   "site-services": "",
   "site-title": "Metadata Schema and Crosswalk Regisrtry",
