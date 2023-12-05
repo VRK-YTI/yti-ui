@@ -35,10 +35,6 @@ export default function ApplicationProfileFlow({
     }
   }, [visible, selectedTargetClass]);
 
-  const handleClassRestrictionClose = () => {
-    setRestrictionVisible(false);
-  };
-
   const handleClassRestrictionFollowUp = (
     createNew?: boolean,
     existingNodeShape?: InternalClass
@@ -81,7 +77,7 @@ export default function ApplicationProfileFlow({
     <>
       {restrictionVisible && (
         <ClassRestrictionModal
-          hide={() => handleClassRestrictionClose()}
+          hide={() => setRestrictionVisible(false)}
           visible={restrictionVisible}
           selectedTargetClass={selectedTargetClass.targetClass}
           handleFollowUp={(createNew, classRestriction) =>
@@ -94,9 +90,11 @@ export default function ApplicationProfileFlow({
         <ResourcePicker
           visible={resourcePickerVisible}
           selectedNodeShape={{
-            modelId:
-              getPrefixFromURI(selectedTargetClass.targetClass.namespace) ?? '',
-            classId: selectedTargetClass.targetClass.identifier ?? '',
+            modelId: getPrefixFromURI(
+              selectedTargetClass.targetClass.namespace
+            ),
+            version: selectedTargetClass.targetClass.dataModelInfo.version,
+            classId: selectedTargetClass.targetClass.identifier,
             isAppProfile: selectedTargetClass.isAppProfile ?? false,
           }}
           handleFollowUp={(value?: {

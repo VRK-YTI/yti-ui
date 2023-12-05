@@ -9,15 +9,16 @@ import { useEffect, useMemo, useState } from 'react';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import ResourceList, { ResultType } from '@app/common/components/resource-list';
 import { useGetClassQuery } from '@app/common/components/class/class.slice';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import WideModal from '@app/common/components/wide-modal';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
+import { convertSimpleResourceToResultType } from './util';
 
 interface ResourcePickerProps {
   visible: boolean;
   selectedNodeShape: {
     modelId: string;
     classId: string;
+    version?: string;
     isAppProfile: boolean;
   };
   handleFollowUp: (value?: {
@@ -46,6 +47,7 @@ export default function ResourcePicker({
       modelId: selectedNodeShape.modelId,
       classId: selectedNodeShape.classId,
       applicationProfile: selectedNodeShape.isAppProfile,
+      version: selectedNodeShape.version,
     },
     {
       skip: selectedNodeShape.modelId == '' || selectedNodeShape.classId === '',
@@ -58,68 +60,14 @@ export default function ResourcePicker({
   }>(() => {
     if (isSuccess) {
       return {
-        associations:
-          classData.association?.map((assoc) => ({
-            target: {
-              identifier: assoc.identifier,
-              label: `${getLanguageVersion({
-                data: assoc.label,
-                lang: i18n.language,
-              })} ${assoc.range ? `(${assoc.range.curie})` : ''}`,
-              linkLabel: assoc.curie,
-              link: assoc.uri,
-              note: getLanguageVersion({
-                data: assoc.note,
-                lang: i18n.language,
-              }),
-              status: 'VALID',
-              isValid: true,
-            },
-            ...(assoc.concept && {
-              concept: {
-                label: getLanguageVersion({
-                  data: assoc.concept.label,
-                  lang: i18n.language,
-                }),
-                link: assoc.concept.conceptURI,
-                partOf: getLanguageVersion({
-                  data: assoc.concept.terminology.label,
-                  lang: i18n.language,
-                }),
-              },
-            }),
-          })) ?? [],
-        attributes:
-          classData.attribute?.map((attr) => ({
-            target: {
-              identifier: attr.identifier,
-              label: getLanguageVersion({
-                data: attr.label,
-                lang: i18n.language,
-              }),
-              linkLabel: attr.curie,
-              link: attr.uri,
-              note: getLanguageVersion({
-                data: attr.note,
-                lang: i18n.language,
-              }),
-              status: 'VALID',
-              isValid: true,
-            },
-            ...(attr.concept && {
-              concept: {
-                label: getLanguageVersion({
-                  data: attr.concept.label,
-                  lang: i18n.language,
-                }),
-                link: attr.concept.conceptURI,
-                partOf: getLanguageVersion({
-                  data: attr.concept.terminology.label,
-                  lang: i18n.language,
-                }),
-              },
-            }),
-          })) ?? [],
+        associations: convertSimpleResourceToResultType(
+          classData.association ?? [],
+          i18n.language
+        ),
+        attributes: convertSimpleResourceToResultType(
+          classData.attribute ?? [],
+          i18n.language
+        ),
       };
     }
 
