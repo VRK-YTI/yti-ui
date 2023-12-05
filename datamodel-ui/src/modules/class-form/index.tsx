@@ -34,7 +34,10 @@ import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '@app/store';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
 import ClassModal from '../class-modal';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import {
+  InternalClass,
+  InternalClassInfo,
+} from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { BasicBlock } from 'yti-common-ui/block';
 import ResourceInfo from '../class-view/resource-info';
@@ -94,9 +97,12 @@ export default function ClassForm({
   const [showResourcePicker, setShowResourcePicker] = useState(false);
   const [selectedTargetClass, setSelectedTargetClass] = useState<{
     modelId: string;
+    identifier: string;
+    version?: string;
     classInfo: UriData;
   }>({
     modelId: '',
+    identifier: '',
     classInfo: {
       uri: '',
       curie: '',
@@ -185,13 +191,15 @@ export default function ClassForm({
     });
   };
 
-  const handleTargetClassUpdate = (value?: InternalClass) => {
+  const handleTargetClassUpdate = (value?: InternalClassInfo) => {
     if (!value) {
       return;
     }
 
     setSelectedTargetClass({
       modelId: getPrefixFromURI(value.namespace) ?? '',
+      identifier: value.identifier,
+      version: value.dataModelInfo.version,
       classInfo: convertToUriData(value),
     });
     setShowResourcePicker(true);
@@ -594,7 +602,8 @@ export default function ClassForm({
               visible={showResourcePicker}
               selectedNodeShape={{
                 modelId: selectedTargetClass.modelId,
-                classId: selectedTargetClass.classInfo.uri,
+                classId: selectedTargetClass.identifier,
+                version: selectedTargetClass.version,
                 isAppProfile: false,
               }}
               handleFollowUp={handleResourceUpdate}

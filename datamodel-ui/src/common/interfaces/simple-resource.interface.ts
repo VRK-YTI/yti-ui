@@ -12,5 +12,6 @@ export interface SimpleResource {
   deactivated?: boolean;
   fromShNode?: boolean;
   version?: string;
+  versionIri?: string;
   range?: UriData;
 }
