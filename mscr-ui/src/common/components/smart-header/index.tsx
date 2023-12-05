@@ -17,20 +17,20 @@ import DesktopNavigation from 'yti-common-ui/navigation/desktop-navigation';
 import MobileNavigation from 'yti-common-ui/navigation/mobile-navigation';
 import DesktopLocaleChooser from 'yti-common-ui/locale-chooser/desktop-locale-chooser';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import LoginModalView from 'yti-common-ui/login-modal';
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
-import { User } from 'yti-common-ui/interfaces/user.interface';
 import SearchBar from '@app/modules/search-bar';
 import { useRouter } from 'next/router';
 import UserInfo from '@app/common/components/authentication-panel/user-info';
 import DesktopAuthenticationPanel from '@app/common/components/authentication-panel/desktop-authentication-panel';
+import LoginModalView from '@app/common/components/login-modal';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 export default function SmartHeader({
   user,
   fakeableUsers,
   fullScreenElements,
 }: {
-  user?: User;
+  user?: MscrUser;
   fakeableUsers?: FakeableUser[];
   fullScreenElements?: React.ReactNode;
 }) {
