@@ -21,9 +21,11 @@ import generatePayload from './generate-payload';
 import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
-import { useInitialCrosswalkForm } from '@app/common/utils/hooks/use-initial-crosswalk-form';
-import { usePutCrosswalkMutation } from '@app/common/components/crosswalk/crosswalk.slice';
+import { useInitialCrosswalkFormMockup } from '@app/common/utils/hooks/use-initial-crosswalk-form';
+import {useGetCrosswalkQuery, usePutCrosswalkMutation} from '@app/common/components/crosswalk/crosswalk.slice';
 import CrosswalkForm from '.';
+import {CrosswalkFormMockupType} from "@app/common/interfaces/crosswalk.interface";
+import {useGetPublicSchemasQuery, useGetSchemaWithRevisionsQuery} from '@app/common/components/schema/schema.slice';
 
 interface CrosswalkFormModalProps {
   refetch: () => void;
@@ -38,7 +40,7 @@ export default function CrosswalkSelectionModal({
   const { isSmall } = useBreakpoints();
   const router = useRouter();
   const [visible, setVisible] = useState(false);
-  const [crosswalkFormInitialData] = useState(useInitialCrosswalkForm());
+  const [crosswalkFormInitialData] = useState(useInitialCrosswalkFormMockup());
   const [formData, setFormData] = useState(crosswalkFormInitialData);
   const [errors, setErrors] = useState<FormErrors>();
   const [userPosted, setUserPosted] = useState(false);
@@ -58,11 +60,18 @@ export default function CrosswalkSelectionModal({
   }, [crosswalkFormInitialData]);
 
   useEffect(() => {
+    console.log('BACK FROM EFFECT', result, userPosted, router);
+
+    if (result.isSuccess && result?.originalArgs?.format === 'MSCR') {
+      // MSCR = to be edited with crosswalk editor
+      refetch();
+      handleClose();
+      router.push(`/crosswalk/${result.data.pid}`);
+    }
     if (userPosted && result.isSuccess) {
       refetch();
       handleClose();
-      //router.push(`/crosswalk/${result.data.pid}`);
-      alert('Crosswalk created Successfully');
+      router.push(`/crosswalk/${result.data.pid}`);
     }
   }, [result, refetch, userPosted, handleClose, router]);
 
@@ -78,13 +87,10 @@ export default function CrosswalkSelectionModal({
     if (Object.values(errors).includes(true)) {
       return;
     }
-
+    console.log('!!!! formData', formData);
     const payload = generatePayload(formData);
-    console.log('payload', payload);
     handleClose();
-    router.push('/crosswalk-edit');
-    //TODO: implement saving (might include file upload later) and get id from back after success to be sent to edit-crosswalk component
-    //putCrosswalk(payload);
+    putCrosswalk(payload);
   };
 
   useEffect(() => {
