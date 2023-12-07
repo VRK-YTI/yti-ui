@@ -32,7 +32,7 @@ export function PromisesTest() {
       .then((data) => {
         setState(data);
         setResp(false);
-        console.log('data', data);
+        // console.log('data', data);
       })
       .catch((err) => {
         console.error('Error:', err);

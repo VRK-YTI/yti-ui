@@ -53,12 +53,12 @@ export default function CrosswalkForm({
         setDefaultSchemas(defaultSchemas2);
         setDefaultInitValues();
         setDataLoaded(true);
-        console.log('schemas', defaultSchemas);
+        // console.log('schemas', defaultSchemas);
 
     }, [isSuccess]);
 
     useEffect(() => {
-        console.log('!!!!!!!!! formData', formData);
+        // console.log('!!!!!!!!! formData', formData);
     }, [formData]);
 
     function setDefaultInitValues() {
@@ -77,7 +77,7 @@ export default function CrosswalkForm({
                 ...formData,
                 sourceSchema: value.toString(),
             });
-            console.log('SOURCE SET', formData);
+            // console.log('SOURCE SET', formData);
         }
     }
 
@@ -87,7 +87,7 @@ export default function CrosswalkForm({
                 ...formData,
                 targetSchema: value.toString(),
             });
-            console.log('TARGET SET', formData);
+            // console.log('TARGET SET', formData);
         }
     }
 
