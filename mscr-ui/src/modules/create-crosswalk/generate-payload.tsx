@@ -11,9 +11,15 @@ export default function generatePayload(
   data: CrosswalkFormMockupType
 ): CreateCrosswalkMockupType {
   return {
+    format: data.format,
     description: data.description,
-    name: data.name,
+    label: data.label,
+    languages: data.languages,
+    organizations: data.organizations,
+    status: data.status,
+    state: data.status,
     sourceSchema: data.sourceSchema,
     targetSchema: data.targetSchema,
+    versionLabel: data.versionLabel,
   };
 }

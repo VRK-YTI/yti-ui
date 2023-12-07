@@ -13,13 +13,13 @@ import {
 import LanguageSelector from 'yti-common-ui/form/language-selector';
 import { FormErrors } from './validate-form';
 import { Status } from '@app/common/interfaces/status.interface';
-import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
+import {CrosswalkFormMockupType, CrosswalkFormType} from '@app/common/interfaces/crosswalk.interface';
 import { FormUpdateErrors } from '../schema-form/validate-form-update';
 import CrosswalkForm from '../create-crosswalk';
 
 interface RegisterCrosswalkFormProps {
   formData: CrosswalkFormType;
-  setFormData: (value: CrosswalkFormType) => void;
+  setFormData: (value: { targetSchema: string; versionLabel?: string; languages: any; format: any; organizations: any; namespace?: string; description?: any; pid?: string; label: any; state: string; sourceSchema: string; status?: string | undefined }) => void;
   userPosted: boolean;
   disabled?: boolean;
   errors?: FormErrors | FormUpdateErrors;
