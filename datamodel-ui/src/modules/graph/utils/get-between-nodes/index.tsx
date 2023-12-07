@@ -1,15 +1,15 @@
 import { Edge, Node } from 'reactflow';
 
 // Attribute node is expected to have only one outbound edge
-export default function toggleAttrNodeVisibility(
+export default function getBetweenNodes(
   node: Node,
   nodes: Node[],
   edges: Edge[]
 ) {
-  return getBetweenNodes(node.id, edges, nodes, [node.id]);
+  return getNodes(node.id, edges, nodes, [node.id]);
 }
 
-function getBetweenNodes(
+function getNodes(
   nodeId: string,
   edges: Edge[],
   nodes: Node[],
@@ -23,7 +23,7 @@ function getBetweenNodes(
   }
 
   if (targetNode?.type === 'cornerNode') {
-    return getBetweenNodes(targetNode.id, edges, nodes, [
+    return getNodes(targetNode.id, edges, nodes, [
       ...ids,
       targetNode.id,
       sourceEdge.id,

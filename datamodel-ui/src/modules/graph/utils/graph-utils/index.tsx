@@ -3,8 +3,8 @@ import createCornerNode from '../create-corner-node';
 import { SetStateAction } from 'react';
 import createEdge from '../create-edge';
 import { ReferenceType } from '@app/common/interfaces/visualization.interface';
-import toggleAttrNodeVisibility from '../toggle-attribute-node-visibility';
 import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
+import getBetweenNodes from '../get-between-nodes';
 
 export function splitEdgeFn({
   applicationProfile,
@@ -117,7 +117,7 @@ export function toggleShowAttributes({
   setNodes((nodes) =>
     nodes.map((node) => {
       if (node.type === 'attributeNode') {
-        const betweenIds = toggleAttrNodeVisibility(node, nodes, edges);
+        const betweenIds = getBetweenNodes(node, nodes, edges);
         cornersToBeToggled = betweenIds.filter((id) =>
           id.startsWith('#corner')
         );
