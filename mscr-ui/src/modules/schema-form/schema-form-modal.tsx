@@ -152,7 +152,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
           <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}
-            validFileTypes={['json', 'csv','pdf']}
+            validFileTypes={['json', 'csv', 'pdf', 'ttl']}
             translateFileUploadError={translateFileUploadError}
           />
           <Separator isLarge></Separator>
@@ -189,7 +189,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       return [];
     }
 
-    console.log(errors);
+    // console.log(errors);
 
     const langsWithError = Object.entries(errors)
       .filter(([_, value]) => Array.isArray(value))

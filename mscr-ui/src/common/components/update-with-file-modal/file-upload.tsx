@@ -46,7 +46,7 @@ export default function FileUpload({
     if (importResponseData?.jobtoken || importResponseData?.jobToken) {
       const timerId = setTimeout(() => {
         if (importResponseData.jobToken) {
-          console.log(importResponseData.jobToken);
+          // console.log(importResponseData.jobToken);
         }
       }, 1000);
       return () => clearTimeout(timerId);

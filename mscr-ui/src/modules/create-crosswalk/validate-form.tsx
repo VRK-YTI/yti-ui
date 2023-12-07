@@ -29,7 +29,7 @@ export function validateForm(data: CrosswalkFormMockupType) {
   }
 
   // Name should be set
-  if (!data.name || data.name.length < 1) {
+  if (!data.label || data.label.length < 1) {
     errors.name = true;
   }
 

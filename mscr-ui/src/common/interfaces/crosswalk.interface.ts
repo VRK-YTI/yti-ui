@@ -26,6 +26,7 @@ export interface CrosswalkFormType {
   pid?: string;
   format: string;
   label: string;
+  state: string | undefined;
   languages: (LanguageBlockType & { selected: boolean })[];
   organizations: MultiSelectData[];
   status?: Status;
@@ -34,16 +35,36 @@ export interface CrosswalkFormType {
   description?: string;
 }
 
-export interface CrosswalkFormMockupType {
+export interface CreateCrosswalkMockupType {
+  pid?: string;
+  format: string;
+  status: string | undefined;
+  state: string | undefined;
+  label: {
+    [key: string]: string;
+  };
+  description: {
+    [key: string]: string;
+  };
+  languages: string[];
+  organizations: string[];
   sourceSchema: string;
   targetSchema: string;
-  name: string;
-  description: string;
+  namespace?: string;
+  versionLabel?: string;
 }
 
-export interface CreateCrosswalkMockupType {
+export interface CrosswalkFormMockupType {
+  pid?: string;
+  format: string;
+  status?: string | undefined;
+  state: string | undefined;
+  label: any;
+  description?: any;
+  languages: any;
+  organizations: any;
   sourceSchema: string;
   targetSchema: string;
-  name: string;
-  description: string;
+  namespace?: string;
+  versionLabel?: string;
 }
