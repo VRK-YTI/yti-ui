@@ -37,8 +37,8 @@ export default function BasicTable() {
     return crosswalk;
   });
 
-  console.log('schemaData: ', schemaData);
-  console.log('schemas: ', schemas);
+  // console.log('schemaData: ', schemaData);
+  // console.log('schemas: ', schemas);
 
   return (
     <div>
@@ -50,7 +50,7 @@ export default function BasicTable() {
         }}
         deleteDisabled={false}
       ></SchemaList>
-      
+
       {'Crosswalks'}
       <Separator isLarge />
 

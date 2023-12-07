@@ -60,7 +60,7 @@ export default function CrosswalkSelectionModal({
   }, [crosswalkFormInitialData]);
 
   useEffect(() => {
-    console.log('BACK FROM EFFECT', result, userPosted, router);
+    // console.log('BACK FROM EFFECT', result, userPosted, router);
 
     if (result.isSuccess && result?.originalArgs?.format === 'MSCR') {
       // MSCR = to be edited with crosswalk editor
@@ -87,7 +87,7 @@ export default function CrosswalkSelectionModal({
     if (Object.values(errors).includes(true)) {
       return;
     }
-    console.log('!!!! formData', formData);
+    // console.log('!!!! formData', formData);
     const payload = generatePayload(formData);
     handleClose();
     putCrosswalk(payload);

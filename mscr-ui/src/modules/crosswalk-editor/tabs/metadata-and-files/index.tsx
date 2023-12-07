@@ -54,24 +54,24 @@ export default function MetadataAndFiles(props: { crosswalks: CrosswalkConnectio
     const [inputValue, setInputValue] = useState(detailsInit);
 
     useEffect(() => {
-        console.log('INPUT', inputValue);
+        // console.log('INPUT', inputValue);
     }, [inputValue]);
 
     function updateValue(paramName: string, value: any) {
-        console.log('!!! UPDATE CALLED', paramName, value);
+        // console.log('!!! UPDATE CALLED', paramName, value);
         const val = value === undefined ? '' : value.toString();
         const details = {...inputValue};
         details[paramName] = val;
-        console.log('AFTER UPDATE', details)
+        // console.log('AFTER UPDATE', details)
         setInputValue(details);
     };
 
     function updateValuesOnInit(prevDetails: any, paramName: string, value: any) {
-        console.log('!!! UPDATE CALLED', paramName, value);
+        // console.log('!!! UPDATE CALLED', paramName, value);
         const val = value === undefined ? '' : value.toString();
         const details = {...prevDetails};
         details[paramName] = val;
-        console.log('AFTER UPDATE', details)
+        // console.log('AFTER UPDATE', details)
         setInputValue(details);
         return details;
     };

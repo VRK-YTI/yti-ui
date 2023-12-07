@@ -213,7 +213,7 @@ export default function SmartHeader({
   }
 
   function renderDesktopAuthenticationPanel() {
-    console.log(user, fakeableUsers);
+    // console.log(user, fakeableUsers);
     if (!isSmall) {
       return (
         <DesktopAuthenticationPanel user={user} fakeableUsers={fakeableUsers} />

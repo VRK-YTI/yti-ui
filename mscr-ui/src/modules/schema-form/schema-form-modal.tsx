@@ -189,7 +189,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       return [];
     }
 
-    console.log(errors);
+    // console.log(errors);
 
     const langsWithError = Object.entries(errors)
       .filter(([_, value]) => Array.isArray(value))

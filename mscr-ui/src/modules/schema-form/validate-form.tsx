@@ -13,7 +13,7 @@ export function validateForm(
   data: SchemaFormType,
   fileData: File | null | undefined
 ) {
-  console.log(FormData);
+  // console.log(FormData);
   const errors: FormErrors = {
     languageAmount: false,
     titleAmount: [],

@@ -80,7 +80,7 @@ export function createCommonGetServerSideProps<
 
         if (process.env.ENV_TYPE !== 'production') {
           store.dispatch(getFakeableUsers.initiate());
-          console.log('getting fake user');
+          // console.log('getting fake user');
           await Promise.all(store.dispatch(getFakeableRunningQueriesThunk()));
         }
 

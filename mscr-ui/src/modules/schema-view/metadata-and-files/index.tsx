@@ -27,15 +27,15 @@ export default function MetadataAndFiles({
 }: {
     schemaDetails?: SchemaWithVersionInfo;
     schemaFiles?: SchemaFileData[];
-  
 
-  
+
+
 }) {
   const { t } = useTranslation('common');
   const lang = router.locale ?? '';
 
   if (schemaDetails?.fileMetadata) {
-    console.log(schemaDetails.fileMetadata);
+    // console.log(schemaDetails.fileMetadata);
     schemaFiles = schemaDetails.fileMetadata;
   } else {
     schemaFiles = [];

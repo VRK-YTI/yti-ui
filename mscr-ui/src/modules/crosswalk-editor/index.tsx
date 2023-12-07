@@ -474,7 +474,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     };
 
     const selectFromTree = (node: CrosswalkConnectionNew, isTargetTree: boolean) => {
-        console.log('SELECT FROM TREE CALLED', node);
+        // console.log('SELECT FROM TREE CALLED', node);
         const nodeIds: React.SetStateAction<string[]> = [];
         if (isTargetTree) {
             nodeIds.push(node.target.id);
@@ -534,7 +534,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     };
 
     function saveCroswalk() {
-        console.log('save clicked');
+        // console.log('save clicked');
     }
 
     function loadCroswalk() {
@@ -597,7 +597,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         if (isSourceTree) {
             sourceTreeData.forEach(elem => {
                 if (jsonPathReady.includes(elem.elementPath)) {
-                    console.log('final match', elem);
+                    // console.log('final match', elem);
                     pathObjects.push(elem);
                 }
             });
@@ -606,7 +606,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         } else {
             targetTreeData.forEach(elem => {
                 if (jsonPathReady.includes(elem.elementPath)) {
-                    console.log('final match', elem);
+                    // console.log('final match', elem);
                     pathObjects.push(elem);
                 }
             });
@@ -626,7 +626,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     }
 
     function findElementPathsFromTree(tree: RenderTree[], itemToFind: string, results: string[]) {
-        console.log('FINDING FROM TREE', tree, itemToFind);
+        // console.log('FINDING FROM TREE', tree, itemToFind);
         tree.forEach(item => {
             if (item.elementPath && item.elementPath.toLowerCase().includes(itemToFind.toLowerCase())) {
                 results.push(item.elementPath);
@@ -637,7 +637,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                 }
             }
         });
-        console.log('!!!! FIND RESULT', results);
+        // console.log('!!!! FIND RESULT', results);
         return results;
     }
 
@@ -684,7 +684,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         // FOUND MATCHING SUBTREES
         let filteredTreeData: RenderTree[] = [];
 
-        console.log('!!!!!! FILTERED TREE DATA', filteredTreeData);
+        // console.log('!!!!!! FILTERED TREE DATA', filteredTreeData);
         buildNestedFilterTree(filterTreeData(isSourceTree ? sourceTreeData : targetTreeData, Array.from(nodesToProcessUnique), filteredTreeData));
 
         if (treeDataNew && treeDataNew.length > 0) {

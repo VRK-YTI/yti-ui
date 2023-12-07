@@ -16,14 +16,14 @@ export default function NodeInfo(props: { isAnySelectedLinked: boolean; isBothSe
     let sourceSelectionInit = '';
     let targetSelectionInit = '';
 
-    console.log('NODE INFO SOURCE', props.sourceData);
-    console.log('NODE INFO TARGET', props.targetData);
+    // console.log('NODE INFO SOURCE', props.sourceData);
+    // console.log('NODE INFO TARGET', props.targetData);
 
     useEffect(() => {
         if (props.sourceData && props.sourceData.length > 0) {
             sourceSelectionInit = props.sourceData[0].id;
             setSourceDropdownValue(props.sourceData[0].id);
-            console.log('props.sourceData');
+            // console.log('props.sourceData');
         }
         if (props.targetData && props.targetData.length > 0) {
             targetSelectionInit = props.targetData[0].id;

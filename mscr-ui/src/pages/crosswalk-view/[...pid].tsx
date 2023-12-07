@@ -28,7 +28,7 @@ interface IndexPageProps extends CommonContextState {
 }
 
 export default function SchemaPage(props: IndexPageProps) {
-    console.log('PAGE PROPS', props)
+    // console.log('PAGE PROPS', props)
   const { query, asPath } = useRouter();
   const crosswalkId = (query?.pid ?? '') as string;
   let crosswalk: Crosswalk;

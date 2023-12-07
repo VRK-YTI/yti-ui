@@ -59,7 +59,7 @@ export default function SchemaTree({
     const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
         performTreeAction(isSourceTree, 'treeToggle', event, nodeIds);
     };
-    console.log('TREEVIEW DATA', nodes, treeSelectedArray);
+    // console.log('TREEVIEW DATA', nodes, treeSelectedArray);
     return (
         <TreeView
             aria-label="controlled"
