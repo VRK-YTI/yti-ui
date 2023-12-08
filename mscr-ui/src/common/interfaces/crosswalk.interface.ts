@@ -17,7 +17,7 @@ export interface Crosswalk {
   organizations: string[];
   sourceSchema: string;
   targetSchema: string;
-  state: string | undefined;
+  state?: string;
   namespace?: string;
   versionLabel?: string;
 }
@@ -26,13 +26,14 @@ export interface CrosswalkFormType {
   pid?: string;
   format: string;
   label: string;
-  state: string | undefined;
+  state?: string;
   languages: (LanguageBlockType & { selected: boolean })[];
   organizations: MultiSelectData[];
   status?: Status;
   sourceSchema: string;
   targetSchema: string;
   description?: string;
+  versionLabel?: string;
 }
 
 export interface CreateCrosswalkMockupType {

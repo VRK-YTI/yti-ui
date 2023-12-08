@@ -35,9 +35,7 @@ export default function RegisterCrosswalkForm({
   editMode,
 }: RegisterCrosswalkFormProps) {
   const { t, i18n } = useTranslation('admin');
-  const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
-    i18n.language
-  );
+  
   const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
 
   const organizations = useMemo(() => {

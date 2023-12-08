@@ -67,7 +67,6 @@ export default function CrosswalkFormModal({
       refetch();
       handleClose();
       router.push(`/crosswalk/${result.data.pid}`);
-      alert('Crosswalk created Successfully');
     }
   }, [result, refetch, userPosted, handleClose, router]);
 
@@ -84,7 +83,7 @@ export default function CrosswalkFormModal({
     }
 
     const payload = generatePayload(formData);
-    // console.log(formData);
+    console.log(formData);
     const crosswalkFormData = new FormData();
     crosswalkFormData.append('metadata', JSON.stringify(payload));
     if (fileData) {

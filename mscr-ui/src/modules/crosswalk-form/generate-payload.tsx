@@ -30,9 +30,10 @@ export default function generatePayload(data: CrosswalkFormType): Crosswalk {
       .filter((l) => l.title !== '')
       .map((l) => l.uniqueItemId),
     organizations: data.organizations.map((o) => o.uniqueItemId),
-    status: data.status,
+    status: 'DRAFT',
     state: data.status,
     sourceSchema: data.sourceSchema,
     targetSchema: data.targetSchema,
+    versionLabel: "1"
   };
 }
