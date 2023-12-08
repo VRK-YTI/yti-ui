@@ -74,17 +74,17 @@ export default function UpdateWithFileModal({
     if (fileData) {
       const formData = new FormData();
       formData.append('file', fileData);
-      console.log('in file modal' + formData);
+      // console.log('in file modal' + formData);
       //We need the file upload status to set the progress indication
       //setStartFileUpload(true);
       setUserPosted(true);
       if (fileData.name.includes('.json')) {
         setFileType('json');
-        console.log('start posting');
+        // console.log('start posting');
         postSchemaFile({ pid: pid, file: formData });
       } else if (fileData.name.includes('.csv')) {
         setFileType('csv');
-        console.log('start posting');
+        // console.log('start posting');
         postCrosswalkFile({ pid: pid, file: formData });
       }
     }

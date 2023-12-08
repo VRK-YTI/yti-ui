@@ -1,9 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { Button } from 'suomifi-ui-components';
 import { List, ListItem } from './crosswalk-list.styles';
-import { Schema } from '@app/common/interfaces/schema.interface';
 import { Grid } from '@mui/material';
-import TreeviewTest from '../treeview-test';
 import router from 'next/router';
 import { Crosswalk } from '@app/common/interfaces/crosswalk.interface';
 
@@ -26,9 +24,8 @@ export default function CrosswalkList({
   }
 
   function handleClick(pid: string) {
-    console.log('crosswalklist');
     // will go the crosswalk detail page
-    router.push('/crosswalk-edit');
+    router.push('/crosswalk');
   }
 
   return (

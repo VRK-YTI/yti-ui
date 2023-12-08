@@ -1,16 +1,16 @@
-import { User } from 'yti-common-ui/interfaces/user.interface';
 import { FakeableUser } from 'yti-common-ui/interfaces/fakeable-user.interface';
 import { DesktopAuthenticationPanelWrapper } from 'yti-common-ui/components/authentication-panel/authentication-panel.styles';
 import DesktopImpersonateWrapper from 'yti-common-ui/components/impersonate/desktop-impersonate-wrapper';
-import LoginButtons from 'yti-common-ui/components/authentication-panel/login-buttons';
 import React from 'react';
 import UserInfo from '@app/common/components/authentication-panel/user-info';
+import LoginButtons from '@app/common/components/authentication-panel/login-buttons';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 export default function DesktopAuthenticationPanel({
   user,
   fakeableUsers,
 }: {
-  user?: User;
+  user?: MscrUser;
   fakeableUsers?: FakeableUser[];
 }) {
   return (
