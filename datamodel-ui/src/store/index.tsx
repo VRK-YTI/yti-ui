@@ -32,6 +32,7 @@ import { namespacesApi } from '@app/common/components/namespaces/namespaces.slic
 import { notificationsSlice } from '@app/common/components/notifications/notifications.slice';
 import { requestApi } from '@app/common/components/requests/requests.slice';
 import { subscriptionApi } from '@app/common/components/subscription/subscription.slice';
+import { tagInvalidatorMiddleware } from './tag-invalidator-middleware';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -76,6 +77,7 @@ export const makeStore: MakeStore<any> = ({
     reducer,
     middleware: (getDefaultMiddleware) => [
       ...getDefaultMiddleware({ thunk: { extraArgument: context } }),
+      tagInvalidatorMiddleware.middleware,
       loginApi.middleware,
       serviceCategoriesApi.middleware,
       organizationsApi.middleware,

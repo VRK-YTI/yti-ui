@@ -109,7 +109,7 @@ function createUrl(obj: InternalResourcesSearchParams): string {
 export const searchInternalResourcesApi = createApi({
   reducerPath: 'searchInternalResourcesApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['internalResources'],
+  tagTypes: ['InternalResources'],
   endpoints: (builder) => ({
     getInternalResources: builder.mutation<
       SearchInternalClasses,
@@ -128,6 +128,7 @@ export const searchInternalResourcesApi = createApi({
         url: createUrl(object),
         method: 'GET',
       }),
+      providesTags: ['InternalResources'],
     }),
     getInternalResourcesInfo: builder.mutation<
       SearchInternalClassesInfo,

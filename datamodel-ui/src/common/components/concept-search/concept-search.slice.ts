@@ -5,7 +5,6 @@ import { Concept } from '@app/common/interfaces/concept';
 export const conceptSearchApi = createApi({
   reducerPath: 'conceptSearchApi',
   baseQuery: getTerminologyBaseQuery(),
-  tagTypes: ['conceptSearchA'],
   endpoints: (builder) => ({
     getConcepts: builder.query<
       {

@@ -93,7 +93,7 @@ export default function Documentation({
     end: 0,
   });
 
-  const { data: modelData, refetch } = useGetModelQuery({
+  const { data: modelData } = useGetModelQuery({
     modelId: modelId,
     version: version,
   });
@@ -280,10 +280,9 @@ export default function Documentation({
     if (result.isSuccess || versionedResult.isSuccess) {
       setIsEdit(false);
       disableConfirmation();
-      refetch();
       dispatch(setNotification('DOCUMENTATION_EDIT'));
     }
-  }, [result, versionedResult, refetch, disableConfirmation, dispatch]);
+  }, [result, versionedResult, disableConfirmation, dispatch]);
 
   useEffect(() => {
     if (!textAreaRef.current) {

@@ -15,7 +15,7 @@ export interface TerminologySearchParams {
 export const searchTerminologyApi = createApi({
   reducerPath: 'searchTerminologyApi',
   baseQuery: getTerminologyBaseQuery(),
-  tagTypes: ['searchTerminology'],
+  tagTypes: ['SearchTerminology'],
   endpoints: (builder) => ({
     getTerminologies: builder.mutation<
       SearchTerminology,

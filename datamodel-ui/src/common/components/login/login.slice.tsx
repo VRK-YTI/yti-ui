@@ -41,7 +41,7 @@ export const loginSlice = createSlice({
 export const loginApi = createApi({
   reducerPath: 'loginApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['login'],
+  tagTypes: ['Login'],
   endpoints: (builder) => ({
     getAuthenticatedUser: builder.query<User, void>({
       query: () => ({

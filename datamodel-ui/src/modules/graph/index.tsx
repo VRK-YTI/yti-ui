@@ -83,7 +83,6 @@ const GraphContent = ({
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
-  const [fetching, setFetching] = useState(true);
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
@@ -106,7 +105,6 @@ const GraphContent = ({
   const [putPositions, result] = usePutPositionsMutation();
 
   const refetchNodes = useCallback(() => {
-    setFetching(true);
     refetch();
     setHasChanges(false);
   }, [refetch]);
@@ -337,10 +335,9 @@ const GraphContent = ({
   );
 
   useEffect(() => {
-    if (fetching && isSuccess && !isFetching) {
-      setFetching(false);
+    if (isSuccess && !isFetching) {
       if (updateVisualization) {
-        setNodes(
+        setNodes((nodes) =>
           updateNodes(
             nodes,
             data.nodes,
@@ -367,7 +364,6 @@ const GraphContent = ({
       }
     }
   }, [
-    fetching,
     isSuccess,
     setNodePositions,
     applicationProfile,
@@ -375,7 +371,6 @@ const GraphContent = ({
     deleteNodeById,
     dispatch,
     modelId,
-    nodes,
     organizationIds,
     refetchNodes,
     resetPosition,

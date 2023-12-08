@@ -42,7 +42,7 @@ function generateUrl({
 export const codeApi = createApi({
   reducerPath: 'codeApi',
   baseQuery: getCodeListApiBaseQuery(),
-  tagTypes: ['codeApi'],
+  tagTypes: ['CodeApi'],
   endpoints: (builder) => ({
     getCodes: builder.query<
       {

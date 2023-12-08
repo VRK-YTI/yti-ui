@@ -33,7 +33,6 @@ import {
   selectUpdateClassData,
   setAddResourceRestrictionToClass,
   setUpdateClassData,
-  setUpdateVisualization,
 } from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL, SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
@@ -57,7 +56,6 @@ interface ClassInfoProps {
   terminologies: string[];
   handleReturn: () => void;
   handleEdit: () => void;
-  handleRefetch: () => void;
   handleShowClass: (classId: string) => void;
   disableEdit?: boolean;
   organizationIds?: string[];
@@ -71,7 +69,6 @@ export default function ClassInfo({
   terminologies,
   handleReturn,
   handleEdit,
-  handleRefetch,
   handleShowClass,
   disableEdit,
   organizationIds,
@@ -95,10 +92,9 @@ export default function ClassInfo({
 
   useEffect(() => {
     if (updateClassData) {
-      handleRefetch();
       dispatch(setUpdateClassData(false));
     }
-  }, [dispatch, handleRefetch, updateClassData]);
+  }, [dispatch, updateClassData]);
 
   const handleFollowUp = (value: {
     uriData: UriData;
@@ -121,13 +117,6 @@ export default function ClassInfo({
       dispatch(setAddResourceRestrictionToClass(true));
     }
   };
-
-  useEffect(() => {
-    if (addReferenceResult.isSuccess) {
-      handleRefetch();
-      dispatch(setUpdateVisualization(true));
-    }
-  }, [addReferenceResult, handleRefetch, dispatch]);
 
   useEffect(() => {
     if (ref.current) {
@@ -342,7 +331,6 @@ export default function ClassInfo({
                     classId={data.identifier}
                     hasPermission={hasPermission}
                     applicationProfile={applicationProfile}
-                    handlePropertiesUpdate={handleRefetch}
                     attribute
                     disableEdit={disableEdit}
                   />
@@ -400,7 +388,6 @@ export default function ClassInfo({
                     modelId={modelId}
                     classId={data.identifier}
                     hasPermission={hasPermission}
-                    handlePropertiesUpdate={handleRefetch}
                     applicationProfile={applicationProfile}
                     disableEdit={disableEdit}
                     targetInClassRestriction={assoc.range}

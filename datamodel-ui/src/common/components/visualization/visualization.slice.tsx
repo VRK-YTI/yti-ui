@@ -8,7 +8,7 @@ import {
 export const visualizationApi = createApi({
   reducerPath: 'visualizationApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['visualization'],
+  tagTypes: ['Visualization'],
   endpoints: (builder) => ({
     getVisualization: builder.query<
       VisualizationResult,
@@ -23,6 +23,7 @@ export const visualizationApi = createApi({
         },
         method: 'GET',
       }),
+      providesTags: ['Visualization'],
     }),
     putPositions: builder.mutation<
       null,
@@ -39,6 +40,7 @@ export const visualizationApi = createApi({
         method: 'PUT',
         data: value.data,
       }),
+      invalidatesTags: ['Visualization'],
     }),
   }),
 });

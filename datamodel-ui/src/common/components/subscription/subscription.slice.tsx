@@ -22,6 +22,7 @@ export const subscriptionApi = createApi({
           uri: url,
         },
       }),
+      providesTags: ['Subscription'],
     }),
     getSubscriptions: builder.query<Subscriptions, void>({
       query: () => ({
@@ -31,6 +32,7 @@ export const subscriptionApi = createApi({
             : '/user',
         method: 'GET',
       }),
+      providesTags: ['Subscription'],
     }),
     toggleSubscription: builder.mutation<
       Subscription,

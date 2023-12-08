@@ -15,11 +15,7 @@ import {
   useGetResourceQuery,
 } from '@app/common/components/resource/resource.slice';
 import CommonViewContent from '@app/modules/common-view-content';
-import {
-  setSelected,
-  setUpdateVisualization,
-  setView,
-} from '@app/common/components/model/model.slice';
+import { setSelected, setView } from '@app/common/components/model/model.slice';
 import { useStoreDispatch } from '@app/store';
 import { resourceToResourceFormType } from '../resource/utils';
 import RemoveReferenceModal from './remove-reference-modal';
@@ -33,7 +29,7 @@ import { InternalClassInfo } from '@app/common/interfaces/internal-class.interfa
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { useUpdateClassResrictionTargetMutation } from '@app/common/components/class/class.slice';
 import getApiError from '@app/common/utils/get-api-errors';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import ResourceError from '@app/common/components/resource-error';
 
 interface ResourceInfoProps {
@@ -43,7 +39,6 @@ interface ResourceInfoProps {
   hasPermission: boolean;
   applicationProfile?: boolean;
   attribute?: boolean;
-  handlePropertiesUpdate: () => void;
   disableEdit?: boolean;
   targetInClassRestriction?: UriData;
   disableAssocTarget?: boolean;
@@ -56,7 +51,6 @@ export default function ResourceInfo({
   attribute,
   classId,
   hasPermission,
-  handlePropertiesUpdate,
   disableEdit,
   targetInClassRestriction,
   disableAssocTarget,
@@ -98,13 +92,6 @@ export default function ResourceInfo({
       newTarget: newTarget?.id,
     });
   };
-
-  useEffect(() => {
-    if (updateResult.isSuccess) {
-      handlePropertiesUpdate();
-      dispatch(setUpdateVisualization(true));
-    }
-  }, [updateResult, handlePropertiesUpdate, dispatch]);
 
   function renderTitleButtonContent() {
     return (
@@ -162,7 +149,6 @@ export default function ResourceInfo({
                   modelId={modelId}
                   classId={classId}
                   uri={data.uri}
-                  handleReturn={handlePropertiesUpdate}
                   name={getLanguageVersion({
                     data: data.label,
                     lang: i18n.language,
