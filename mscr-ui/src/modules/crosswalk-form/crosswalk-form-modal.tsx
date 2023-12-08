@@ -83,7 +83,7 @@ export default function CrosswalkFormModal({
     }
 
     const payload = generatePayload(formData);
-    console.log(formData);
+    // console.log(formData);
     const crosswalkFormData = new FormData();
     crosswalkFormData.append('metadata', JSON.stringify(payload));
     if (fileData) {
