@@ -67,7 +67,6 @@ export default function CrosswalkFormModal({
       refetch();
       handleClose();
       router.push(`/crosswalk/${result.data.pid}`);
-      alert('Crosswalk created Successfully');
     }
   }, [result, refetch, userPosted, handleClose, router]);
 
