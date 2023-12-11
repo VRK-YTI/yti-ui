@@ -41,7 +41,7 @@ export default function SearchScreen() {
     type: t('search.facets.type'),
     format: t('search.facets.format'),
     organization: t('search.facets.organization'),
-    isReferenced: t('search.facets.isReferenced')
+    isReferenced: t('search.facets.isReferenced'),
   };
 
   const makeFilter = (key: string, buckets: Bucket[]): Filter => {

@@ -44,7 +44,12 @@ export interface MscrSearchResult {
   _source: ResultInfo;
 }
 
-export type Facet = 'state' | 'type' | 'format' | 'organization' | 'isReferenced';
+export type Facet =
+  | 'state'
+  | 'type'
+  | 'format'
+  | 'organization'
+  | 'isReferenced';
 
 export interface Filter {
   label: string;
