@@ -1,5 +1,10 @@
+import { codeApi } from '@app/common/components/code/code.slice';
+import { countApi } from '@app/common/components/counts/counts.slice';
 import { modelApi } from '@app/common/components/model/model.slice';
+import { organizationsApi } from '@app/common/components/organizations/organizations.slice';
 import { searchInternalResourcesApi } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
+import { searchModelsApi } from '@app/common/components/search-models/search-models.slice';
+import { serviceCategoriesApi } from '@app/common/components/service-categories/service-categories.slice';
 import { visualizationApi } from '@app/common/components/visualization/visualization.slice';
 import { AnyAction, createListenerMiddleware } from '@reduxjs/toolkit';
 
@@ -12,56 +17,12 @@ function mutationIsFulfilled(action: AnyAction) {
   );
 }
 
-// When model and internal resources should be invalidated
+// Invalidate data used in front page when new model is created
 tagInvalidatorMiddleware.startListening({
   predicate: (action) => {
     if (
       mutationIsFulfilled(action) &&
-      action.meta?.arg?.endpointName === 'createClass'
-    ) {
-      return true;
-    }
-
-    return false;
-  },
-  effect: async (action, listenerApi) => {
-    listenerApi.dispatch(modelApi.util.invalidateTags(['Model']));
-    listenerApi.dispatch(
-      searchInternalResourcesApi.util.invalidateTags(['InternalResources'])
-    );
-  },
-});
-
-// When visualization data should be invalidated
-tagInvalidatorMiddleware.startListening({
-  predicate: (action) => {
-    if (
-      mutationIsFulfilled(action) &&
-      [
-        'addPropertyReference',
-        'Class',
-        'deletePropertyReference',
-        'Resource',
-      ].some((name) => action.meta?.arg?.endpointName.includes(name))
-    ) {
-      return true;
-    }
-
-    return false;
-  },
-  effect: async (action, listenerApi) => {
-    listenerApi.dispatch(
-      visualizationApi.util.invalidateTags(['Visualization'])
-    );
-  },
-});
-
-// When search internal resources should be invalidated
-tagInvalidatorMiddleware.startListening({
-  predicate: (action) => {
-    if (
-      mutationIsFulfilled(action) &&
-      ['deleteClass', 'createClass'].some((name) =>
+      ['createModel'].some((name) =>
         action.meta?.arg?.endpointName.includes(name)
       )
     ) {
@@ -71,8 +32,74 @@ tagInvalidatorMiddleware.startListening({
     return false;
   },
   effect: async (action, listenerApi) => {
+    console.log('In model creation invalidator');
+    listenerApi.dispatch(
+      organizationsApi.util.invalidateTags(['Organizations'])
+    );
+    listenerApi.dispatch(
+      serviceCategoriesApi.util.invalidateTags(['ServiceCategories'])
+    );
+    listenerApi.dispatch(codeApi.util.invalidateTags(['Languages']));
+    listenerApi.dispatch(countApi.util.invalidateTags(['Count']));
+    listenerApi.dispatch(searchModelsApi.util.invalidateTags(['SearchModels']));
+  },
+});
+
+// When model should be invalidated
+tagInvalidatorMiddleware.startListening({
+  predicate: (action) => {
+    return (
+      mutationIsFulfilled(action) &&
+      ['createClass', 'updateClass'].some((name) =>
+        action.meta?.arg?.endpointName.includes(name)
+      )
+    );
+  },
+  effect: async (action, listenerApi) => {
+    listenerApi.dispatch(modelApi.util.invalidateTags(['Model']));
+  },
+});
+
+// When internal resources should be invalidated
+tagInvalidatorMiddleware.startListening({
+  predicate: (action) => {
+    return (
+      mutationIsFulfilled(action) &&
+      [
+        'createClass',
+        'createResource',
+        'deleteClass',
+        'deleteResource',
+        'renameResource',
+        'renameClass',
+        'updateClass',
+        'updateResource',
+      ].some((name) => action.meta?.arg?.endpointName.includes(name))
+    );
+  },
+  effect: async (action, listenerApi) => {
     listenerApi.dispatch(
       searchInternalResourcesApi.util.invalidateTags(['InternalResources'])
+    );
+  },
+});
+
+// When visualization data should be invalidated
+tagInvalidatorMiddleware.startListening({
+  predicate: (action) => {
+    return (
+      mutationIsFulfilled(action) &&
+      [
+        'addPropertyReference',
+        'Class',
+        'deletePropertyReference',
+        'Resource',
+      ].some((name) => action.meta?.arg?.endpointName.includes(name))
+    );
+  },
+  effect: async (action, listenerApi) => {
+    listenerApi.dispatch(
+      visualizationApi.util.invalidateTags(['Visualization'])
     );
   },
 });

@@ -42,7 +42,7 @@ function generateUrl({
 export const codeApi = createApi({
   reducerPath: 'codeApi',
   baseQuery: getCodeListApiBaseQuery(),
-  tagTypes: ['CodeApi'],
+  tagTypes: ['CodeApi', 'Languages'],
   endpoints: (builder) => ({
     getCodes: builder.query<
       {
@@ -130,6 +130,7 @@ export const codeApi = createApi({
         url: '/coderegistries/interoperabilityplatform/codeschemes/languagecodes/codes',
         method: 'GET',
       }),
+      providesTags: ['Languages'],
     }),
   }),
 });

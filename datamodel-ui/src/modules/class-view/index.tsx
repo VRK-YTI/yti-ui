@@ -99,7 +99,6 @@ export default function ClassView({
     data: classData,
     isSuccess,
     isError: classIsError,
-    // refetch: refetchData,
   } = useGetClassQuery(
     {
       modelId: modelId,

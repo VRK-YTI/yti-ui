@@ -40,19 +40,16 @@ export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
-  const { data: serviceCategoriesData, refetch: refetchServiceCategoriesData } =
-    useGetServiceCategoriesQuery(i18n.language);
-  const { data: organizationsData, refetch: refetchOrganizationsData } =
-    useGetOrganizationsQuery(i18n.language);
-  const { data: languagesData, refetch: refetchLanguageData } =
-    useGetLanguagesQuery();
-  const { data: counts, refetch: refetchCountsData } =
-    useGetCountQuery(initialUrlState);
-  const { data: searchModels, refetch: refetchSearchModels } =
-    useGetSearchModelsQuery({
-      urlState,
-      lang: i18n.language,
-    });
+  const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
+    i18n.language
+  );
+  const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
+  const { data: languagesData } = useGetLanguagesQuery();
+  const { data: counts } = useGetCountQuery(initialUrlState);
+  const { data: searchModels } = useGetSearchModelsQuery({
+    urlState,
+    lang: i18n.language,
+  });
   const [showModal, setShowModal] = useState(false);
 
   const organizations = useMemo(() => {
@@ -166,20 +163,12 @@ export default function FrontPage() {
     t,
   ]);
 
-  const refetchInfo = () => {
-    refetchOrganizationsData();
-    refetchServiceCategoriesData();
-    refetchLanguageData();
-    refetchCountsData();
-    refetchSearchModels();
-  };
-
   return (
     <main id="main">
       <Title
         title={t('data-vocabularies')}
         noBreadcrumbs={true}
-        editButton={<ModelFormModal refetch={refetchInfo} />}
+        editButton={<ModelFormModal />}
         extra={
           <TitleDescriptionWrapper $isSmall={isSmall}>
             <Description id="page-description">

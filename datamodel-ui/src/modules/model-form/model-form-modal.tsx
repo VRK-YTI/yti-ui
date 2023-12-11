@@ -28,11 +28,7 @@ import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import { FooterBlock } from './model-form.styles';
 
-interface ModelFormModalProps {
-  refetch: () => void;
-}
-
-export default function ModelFormModal({ refetch }: ModelFormModalProps) {
+export default function ModelFormModal() {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
@@ -58,11 +54,10 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
 
   useEffect(() => {
     if (userPosted && result.isSuccess) {
-      refetch();
-      handleClose();
       router.push(`/model/${formData.prefix}?new=true`);
+      handleClose();
     }
-  }, [result, refetch, userPosted, handleClose, router, formData.prefix]);
+  }, [result, userPosted, handleClose, router, formData.prefix]);
 
   const handleSubmit = () => {
     setUserPosted(true);
