@@ -52,7 +52,6 @@ export default function BasicTable() {
       ></SchemaList>
 
       {'Crosswalks'}
-      <Separator isLarge />
 
       <CrosswalkList
         items={crosswalks ?? []}

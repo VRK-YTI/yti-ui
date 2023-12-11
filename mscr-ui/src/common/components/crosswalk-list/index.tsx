@@ -1,9 +1,10 @@
 import { useTranslation } from 'next-i18next';
 import { Button } from 'suomifi-ui-components';
 import { List, ListItem } from './crosswalk-list.styles';
-import { Grid } from '@mui/material';
+import { Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import router from 'next/router';
 import { Crosswalk } from '@app/common/interfaces/crosswalk.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
 export interface CrosswalkListProps {
   items: Partial<Crosswalk>[];
@@ -13,90 +14,58 @@ export interface CrosswalkListProps {
 }
 
 export default function CrosswalkList({
-  items,
-  handleRemoval,
-  deleteDisabled,
+  items
 }: CrosswalkListProps) {
   const { t } = useTranslation('admin');
 
   if (items && items.length < 1) {
+    items = [];
     return <div>{'There is no Crosswalks to show'}</div>;
   }
 
   function handleClick(pid: string) {
     // will go the crosswalk detail page
-    router.push('/crosswalk');
+    router.push(`/crosswalk/${pid}`);
   }
 
   return (
     //Creating Header row
     <div>
-      <List className="header-list">
-        <ListItem>
-          <Grid container spacing={2} style={{ fontWeight: 'bold' }}>
-            <Grid item xs={2}>
-              {'Name'}
-            </Grid>
-            <Grid item xs={2}>
-              {'Namespace'}
-            </Grid>
-            <Grid item xs={2}>
-              {'Status'}
-            </Grid>
-            <Grid item xs={2}>
-              {'Revision'}
-            </Grid>
-            <Grid item xs={2}>
-              {'PID'}
-            </Grid>
-            <Grid item xs={2}></Grid>
-          </Grid>
-        </ListItem>
-      </List>
-      <List className="inline-list">
-        {items &&
-          items.map((item) => (
-            <ListItem
-              key={item.pid}
-              onClick={() => handleClick(item.pid)}
-              onMouseEnter={() => item.onMouseEnter && item.onMouseEnter()}
-              onMouseLeave={() => item.onMouseLeave && item.onMouseLeave()}
-              onKeyDown={(e) => e.key === 'Enter' && item.onClick()}
-            >
-              <Grid container spacing={2}>
-                <Grid item xs={2}>
-                  {item.label}
-                </Grid>
-                <Grid item xs={2}>
-                  {item.namespace}
-                </Grid>
-                <Grid item xs={2}>
-                  {item.status}
-                </Grid>
-                <Grid item xs={2}>
-                  {item.versionLabel}
-                </Grid>
-                <Grid item xs={2}>
-                  {item.pid}
-                </Grid>
-                <Grid item xs={2}>
-                  {Array.isArray(deleteDisabled) &&
-                  deleteDisabled.includes(item.pid) ? (
-                    <></>
-                  ) : (
-                    <Button
-                      variant="secondaryNoBorder"
-                      icon="remove"
-                      onClick={() => handleRemoval(item.pid)}
-                    >
-                      {t('remove')}
-                    </Button>
-                  )}
-                </Grid>
-              </Grid>
-            </ListItem>
-          ))}
-      </List>
+      <TableContainer>
+        <Table aria-label={'Schemas'}>
+          <TableHead>
+            <TableRow>
+              <TableCell> {'Name'}</TableCell>
+              <TableCell>{'Namespace'}</TableCell>
+              <TableCell>{'Status'}</TableCell>
+              <TableCell>{'Revision'}</TableCell>
+              <TableCell>{'PID'}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {/*TODO: Use the below template to create lines for files*/}
+            {items &&
+              items.map((item) => (
+                <TableRow
+                  key={item.pid}
+                  hover={true}
+                  onClick={() => handleClick(item.pid)}
+                  sx={{ cursor: 'pointer' }}
+                >
+                  <TableCell>
+                    {item.label?.en}
+                    {/*getLanguageVersion({ data: item.label, lang })*/}
+                  </TableCell>
+                  <TableCell>{item.namespace}</TableCell>
+                  <TableCell>{item.state}</TableCell>
+                  <TableCell>{item.versionLabel}</TableCell>
+                  <TableCell>{item.pid}</TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
+
   );
 }
