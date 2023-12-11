@@ -173,6 +173,13 @@
       "placeholder": "",
       "search-button": ""
     },
+    "facets": {
+      "format": "",
+      "isReferenced": "",
+      "organization": "",
+      "state": "",
+      "type": ""
+    },
     "no-match": ""
   },
   "search-by-keyword": "",

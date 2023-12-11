@@ -13,7 +13,7 @@ export interface UrlState {
   state: string[];
   type: string[];
   format: string[];
-  sourceType: string[];
+  isReferenced: string[];
   sourceSchema: string[];
   targetSchema: string[];
   page: number;
@@ -27,7 +27,7 @@ export const initialUrlState: UrlState = {
   state: [],
   type: [],
   format: [],
-  sourceType: [],
+  isReferenced: [],
   sourceSchema: [],
   targetSchema: [],
   page: 1,
@@ -61,9 +61,9 @@ export default function useUrlState(): UseURLStateResult {
     state: asStringArray(router.query.state, initialUrlState.state),
     type: asStringArray(router.query.type, initialUrlState.type),
     format: asStringArray(router.query.format, initialUrlState.format),
-    sourceType: asStringArray(
-      router.query.sourceType,
-      initialUrlState.sourceType
+    isReferenced: asStringArray(
+      router.query.isReferenced,
+      initialUrlState.isReferenced
     ),
     sourceSchema: asStringArray(
       router.query.sourceSchema,
@@ -94,7 +94,7 @@ function updateURLState(router: NextRouter, urlState?: UrlState): void {
     state,
     type,
     format,
-    sourceType,
+    isReferenced,
     sourceSchema,
     targetSchema,
     page,
@@ -131,8 +131,8 @@ function buildUrlStatePatch(urlState: UrlState): Partial<UrlState> {
   if (!isInitial(urlState, 'state')) patch.state = urlState.state;
   if (!isInitial(urlState, 'type')) patch.type = urlState.type;
   if (!isInitial(urlState, 'format')) patch.format = urlState.format;
-  if (!isInitial(urlState, 'sourceType'))
-    patch.sourceType = urlState.sourceType;
+  if (!isInitial(urlState, 'isReferenced'))
+    patch.isReferenced = urlState.isReferenced;
   if (!isInitial(urlState, 'sourceSchema'))
     patch.sourceSchema = urlState.sourceSchema;
   if (!isInitial(urlState, 'targetSchema'))

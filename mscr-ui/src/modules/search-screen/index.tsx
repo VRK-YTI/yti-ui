@@ -36,13 +36,21 @@ export default function SearchScreen() {
   };
 
   // Constructing filters
+  const facetTranslations = {
+    state: t('search.facets.state'),
+    type: t('search.facets.type'),
+    format: t('search.facets.format'),
+    organization: t('search.facets.organization'),
+    isReferenced: t('search.facets.isReferenced')
+  };
 
   const makeFilter = (key: string, buckets: Bucket[]): Filter => {
     const filterKey: Facet = key.substring(7) as Facet;
-    const filterLabel = t(filterKey);
+    const filterLabel = facetTranslations[filterKey];
     const options = buckets.map((bucket) => {
       return {
-        label: bucket.label,
+        // The keys work as labels for now, might change when we have organizations working
+        label: bucket.key,
         key: bucket.key,
         count: bucket.doc_count,
       };

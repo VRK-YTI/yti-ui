@@ -175,6 +175,13 @@
       "placeholder": "Search for...",
       "search-button": "Search"
     },
+    "facets": {
+      "format": "Format",
+      "isReferenced": "Source type",
+      "organization": "Organization",
+      "state": "State",
+      "type": "Type"
+    },
     "no-match": "No results matching search"
   },
   "search-by-keyword": "",
