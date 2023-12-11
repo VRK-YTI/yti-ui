@@ -26,6 +26,7 @@ import UriInfo, { getEnvParam } from '@app/common/components/uri-info';
 import ClassModal from '../class-modal';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import { default as NextLink } from 'next/link';
+import { UriData } from '@app/common/interfaces/uri.interface';
 
 export default function CommonViewContent({
   modelId,
@@ -36,6 +37,7 @@ export default function CommonViewContent({
   disableAssocTarget = false,
   renderActions,
   handleChangeTarget,
+  targetInClassRestriction,
 }: {
   modelId: string;
   inUse?: boolean;
@@ -45,6 +47,7 @@ export default function CommonViewContent({
   disableAssocTarget?: boolean;
   renderActions?: () => void;
   handleChangeTarget?: (value?: InternalClassInfo) => void;
+  targetInClassRestriction?: UriData;
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
@@ -429,19 +432,22 @@ export default function CommonViewContent({
                 </div>
               }
             >
-              {data.range && (
+              {targetInClassRestriction && (
                 <NextLink
-                  href={`${data.range.uri}${getEnvParam(data.range.uri, true)}`}
+                  href={`${targetInClassRestriction.uri}${getEnvParam(
+                    targetInClassRestriction.uri,
+                    true
+                  )}`}
                   passHref
                   legacyBehavior
                 >
                   <Link href="">
                     {getLanguageVersion({
-                      data: data.range.label,
+                      data: targetInClassRestriction.label,
                       lang: displayLang ?? i18n.language,
                       appendLocale: true,
                     })}
-                    <br />({data.range.curie})
+                    <br />({targetInClassRestriction.curie})
                   </Link>
                 </NextLink>
               )}

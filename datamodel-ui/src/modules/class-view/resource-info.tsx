@@ -205,6 +205,7 @@ export default function ResourceInfo({
             disableAssocTarget={disableAssocTarget}
             renderActions={renderActions}
             handleChangeTarget={handleChangeTarget}
+            targetInClassRestriction={targetInClassRestriction}
           />
         )}
       </ExpanderContent>
