@@ -5,11 +5,6 @@ export const ResultTextWrapper = styled.div`
   border-bottom: 1px solid ${(props) => props.theme.suomifi.colors.depthDark2};
 `;
 
-export const ResultIconWrapper = styled.div`
-  position: absolute;
-  margin-top: 6px;
-`;
-
 export const ChipWrapper = styled.div`
   display: inline;
   margin: 3px;

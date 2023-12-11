@@ -1,8 +1,6 @@
 import { MscrSearchResult } from '@app/common/interfaces/search.interface';
 import { Block, RouterLink } from 'suomifi-ui-components';
-import { IconMerge, IconFileGeneric } from 'suomifi-icons';
 import {
-  ResultIconWrapper,
   ResultTextWrapper,
 } from '@app/common/components/search-result/search-result.styles';
 import { Schema } from '@app/common/interfaces/schema.interface';
@@ -25,19 +23,15 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
     versionLabel: result.versionLabel,
     description: result.comment,
   };
-  let icon;
   let url;
   if (result.type == 'SCHEMA') {
-    icon = <IconFileGeneric />;
     url = `/schema/${displayResult.pid}`;
   } else {
-    icon = <IconMerge />;
     url = `/crosswalk/${displayResult.pid}`;
   }
 
   return (
     <Block>
-      <ResultIconWrapper>{icon}</ResultIconWrapper>
       <ResultTextWrapper>
         <Link href={url}>
           <RouterLink onClick={() => setIsSearchActive(false)}>
