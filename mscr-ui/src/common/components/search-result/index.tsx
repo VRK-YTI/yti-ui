@@ -1,7 +1,9 @@
 import { MscrSearchResult } from '@app/common/interfaces/search.interface';
 import { Block, RouterLink } from 'suomifi-ui-components';
 import {
+  ChipWrapper,
   ResultTextWrapper,
+  TypeChip,
 } from '@app/common/components/search-result/search-result.styles';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import router from 'next/router';
@@ -44,6 +46,14 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
             </h4>
           </RouterLink>
         </Link>
+        <ChipWrapper>
+          {result.type == 'SCHEMA' && (
+            <TypeChip $isSchema>{result.type}</TypeChip>
+          )}
+          {result.type != 'SCHEMA' && (
+            <TypeChip>{result.type}</TypeChip>
+          )}
+        </ChipWrapper>
         <p>
           {getLanguageVersion({
             data: displayResult.description,
