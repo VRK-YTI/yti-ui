@@ -83,7 +83,6 @@ export const resourceApi = createApi({
         }/${value.resourceId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Resource'],
     }),
     getResourceExists: builder.query<
       boolean,

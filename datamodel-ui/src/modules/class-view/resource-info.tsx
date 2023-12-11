@@ -29,7 +29,7 @@ import { InternalClassInfo } from '@app/common/interfaces/internal-class.interfa
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { useUpdateClassResrictionTargetMutation } from '@app/common/components/class/class.slice';
 import getApiError from '@app/common/utils/get-api-errors';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ResourceError from '@app/common/components/resource-error';
 
 interface ResourceInfoProps {
@@ -39,6 +39,7 @@ interface ResourceInfoProps {
   hasPermission: boolean;
   applicationProfile?: boolean;
   attribute?: boolean;
+  handlePropertiesUpdate?: () => void;
   disableEdit?: boolean;
   targetInClassRestriction?: UriData;
   disableAssocTarget?: boolean;
@@ -51,6 +52,7 @@ export default function ResourceInfo({
   attribute,
   classId,
   hasPermission,
+  handlePropertiesUpdate,
   disableEdit,
   targetInClassRestriction,
   disableAssocTarget,
@@ -92,6 +94,12 @@ export default function ResourceInfo({
       newTarget: newTarget?.id,
     });
   };
+
+  useEffect(() => {
+    if (handlePropertiesUpdate && updateResult.isSuccess) {
+      handlePropertiesUpdate();
+    }
+  }, [updateResult, handlePropertiesUpdate]);
 
   function renderTitleButtonContent() {
     return (

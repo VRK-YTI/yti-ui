@@ -90,7 +90,6 @@ export const classApi = createApi({
         }/${value.classId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Class'],
     }),
     getClassExists: builder.query<
       boolean,

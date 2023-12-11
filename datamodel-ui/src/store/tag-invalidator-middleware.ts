@@ -20,19 +20,14 @@ function mutationIsFulfilled(action: AnyAction) {
 // Invalidate data used in front page when new model is created
 tagInvalidatorMiddleware.startListening({
   predicate: (action) => {
-    if (
+    return (
       mutationIsFulfilled(action) &&
       ['createModel'].some((name) =>
         action.meta?.arg?.endpointName.includes(name)
       )
-    ) {
-      return true;
-    }
-
-    return false;
+    );
   },
   effect: async (action, listenerApi) => {
-    console.log('In model creation invalidator');
     listenerApi.dispatch(
       organizationsApi.util.invalidateTags(['Organizations'])
     );
@@ -68,18 +63,24 @@ tagInvalidatorMiddleware.startListening({
       [
         'createClass',
         'createResource',
-        'deleteClass',
-        'deleteResource',
-        'renameResource',
         'renameClass',
+        'renameResource',
         'updateClass',
         'updateResource',
       ].some((name) => action.meta?.arg?.endpointName.includes(name))
     );
   },
   effect: async (action, listenerApi) => {
+    const id = action.meta?.arg?.originalArgs?.data.type ?? 'CLASS';
     listenerApi.dispatch(
-      searchInternalResourcesApi.util.invalidateTags(['InternalResources'])
+      searchInternalResourcesApi.util.invalidateTags([
+        { type: 'InternalResources', id },
+      ])
+    );
+    listenerApi.dispatch(
+      searchInternalResourcesApi.util.invalidateTags([
+        { type: 'InternalResources', id: 'ALL' },
+      ])
     );
   },
 });

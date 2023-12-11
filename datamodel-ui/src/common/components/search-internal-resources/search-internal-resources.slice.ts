@@ -128,7 +128,17 @@ export const searchInternalResourcesApi = createApi({
         url: createUrl(object),
         method: 'GET',
       }),
-      providesTags: ['InternalResources'],
+      providesTags: (results, error, args) => {
+        return args.resourceTypes
+          ? [
+              {
+                type: 'InternalResources' as const,
+                id:
+                  args.resourceTypes.length > 0 ? args.resourceTypes[0] : 'ALL',
+              },
+            ]
+          : ['InternalResources'];
+      },
     }),
     getInternalResourcesInfo: builder.mutation<
       SearchInternalClassesInfo,
