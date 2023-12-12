@@ -83,32 +83,18 @@ function getPoints(
     // If one of the nodes is a corner node, we prefer to use the x value
     // of that node for both of the sourceX and targetX.
     // In other cases, we use middle point of the overlapping area of the
-    // two nodes.
+    // two nodes. And if one of the nodes is smaller in width, we use
+    // the middle point of the smaller node when it is inside the larger
+    // node.
     if (source.type === 'cornerNode' || target.type === 'cornerNode') {
       const sourceIsCorner = source.type === 'cornerNode';
-      const x = sourceIsCorner ? sx + 20 : tx + 20;
-
-      if (!sourceIsCorner && offsetSource) {
-        sourceX = tx > sx + sw / 2 ? sx + sw : sx;
-      } else {
-        sourceX = sourceIsCorner ? x : getValueInsideRange(x, sx, sx + sw);
-      }
-
-      if (sourceIsCorner && offsetTarget) {
-        targetX = sx > tx + tw / 2 ? tx + tw : tx;
-      } else {
-        targetX = sourceIsCorner ? getValueInsideRange(x, tx, tx + tw) : x;
-      }
+      const x = sourceIsCorner ? sx + sw : tx + tw;
+      sourceX = sourceIsCorner ? x : getValueInsideRange(x, sx, sx + sw);
+      targetX = sourceIsCorner ? getValueInsideRange(x, tx, tx + tw) : x;
     } else {
-      if (sx >= tx) {
-        const x = sx + (tx + tw - sx) / 2;
-        sourceX = offsetSource ? sx : getValueInsideRange(x, sx, sx + sw);
-        targetX = offsetTarget ? tx + tw : getValueInsideRange(x, tx, tx + tw);
-      } else {
-        const x = tx + (sx + sw - tx) / 2;
-        sourceX = offsetSource ? sx + sw : getValueInsideRange(x, sx, sx + sw);
-        targetX = offsetTarget ? tx : getValueInsideRange(x, tx, tx + tw);
-      }
+      const value = getMidpointBySmaller(sx, sw, tx, tw);
+      sourceX = value[0];
+      targetX = value[1];
     }
   }
 
@@ -140,31 +126,9 @@ function getPoints(
       sourceY = sourceIsCorner ? y : getValueInsideRange(y, sy, sy + sh);
       targetY = sourceIsCorner ? getValueInsideRange(y, ty, ty + th) : y;
     } else {
-      if (sh === th) {
-        sourceY = sy + sh / 2;
-        targetY = ty + th / 2;
-      } else {
-        const sourceSmaller = sh < th;
-        const smy = sourceSmaller ? sy : ty;
-        const smh = sourceSmaller ? sh : th;
-        const ly = sourceSmaller ? ty : sy;
-        const lh = sourceSmaller ? th : sh;
-
-        const sMid = smy + smh / 2;
-
-        if (smy >= ly && smy + smh <= ly + lh) {
-          sourceY = sMid;
-          targetY = sMid;
-        } else if (smy < ly && smy + smh < ly + lh) {
-          const newY = ly + (smy + smh - ly) / 2;
-          sourceY = newY;
-          targetY = newY;
-        } else {
-          const newY = smy + (ly + lh - smy) / 2;
-          sourceY = newY;
-          targetY = newY;
-        }
-      }
+      const value = getMidpointBySmaller(sy, sh, ty, th);
+      sourceY = value[0];
+      targetY = value[1];
     }
   }
 
@@ -172,7 +136,7 @@ function getPoints(
     source:
       source.type === 'cornerNode'
         ? {
-            x: source.position.x + (source.width ?? 0),
+            x: source.position.x + 20,
             y: source.position.y,
           }
         : {
@@ -182,7 +146,7 @@ function getPoints(
     target:
       target.type === 'cornerNode'
         ? {
-            x: target.position.x + (target.width ?? 0),
+            x: target.position.x + 20,
             y: target.position.y,
           }
         : {
@@ -190,6 +154,36 @@ function getPoints(
             y: targetY,
           },
   };
+}
+
+function getMidpointBySmaller(
+  sourcePoint: number,
+  sourceSize: number,
+  targetPoint: number,
+  targetSize: number
+): [number, number] {
+  const sourceSmaller = sourceSize < targetSize;
+  const smallPoint = sourceSmaller ? sourcePoint : targetPoint;
+  const smallSize = sourceSmaller ? sourceSize : targetSize;
+  const largePoint = sourceSmaller ? targetPoint : sourcePoint;
+  const largeSize = sourceSmaller ? targetSize : sourceSize;
+
+  if (
+    smallPoint >= largePoint &&
+    smallPoint + smallSize <= largePoint + largeSize
+  ) {
+    const point = smallPoint + smallSize / 2;
+    return [point, point];
+  } else if (
+    smallPoint < largePoint &&
+    smallPoint + smallSize < largePoint + largeSize
+  ) {
+    const point = largePoint + (smallPoint + smallSize - largePoint) / 2;
+    return [point, point];
+  } else {
+    const point = smallPoint + (largePoint + largeSize - smallPoint) / 2;
+    return [point, point];
+  }
 }
 
 function getValueInsideRange(value: number, min: number, max: number) {
