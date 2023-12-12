@@ -42,5 +42,5 @@ function cleanCornerIdentifier(identifier: string): string {
     return identifier.replace('#corner', 'corner');
   }
 
-  return identifier.toString();
+  return identifier;
 }

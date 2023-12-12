@@ -34,6 +34,8 @@ function getPoints(
   source: XYPosition;
   target: XYPosition;
 } {
+  // If we are connecting an edge between two cornerNodes, we can
+  // just add 20 to the x position of the source and target
   if (source.type === 'cornerNode' && target.type === 'cornerNode') {
     return {
       source: {
@@ -62,13 +64,26 @@ function getPoints(
     h: th,
   } = getPositionAndSize(target, offsetTarget);
 
+  // X-VALUE SETUP
+
+  // If sx is greater (further right), then sourceX is the left
+  // side of source node and targetX is the right side of target node
   if (sx > tx + tw) {
     sourceX = sx;
     targetX = tx + tw;
+
+    // If sx is smaller (further left), then sourceX is the right
+    // side node of source and targetX is the left side of target node
   } else if (sx + sw < tx) {
     sourceX = sx + sw;
     targetX = tx;
   } else {
+    // Handling the cases if the nodes are overlapping on the x-axis.
+    //
+    // If one of the nodes is a corner node, we prefer to use the x value
+    // of that node for both of the sourceX and targetX.
+    // In other cases, we use middle point of the overlapping area of the
+    // two nodes.
     if (source.type === 'cornerNode' || target.type === 'cornerNode') {
       const sourceIsCorner = source.type === 'cornerNode';
       const x = sourceIsCorner ? sx + 20 : tx + 20;
@@ -97,13 +112,28 @@ function getPoints(
     }
   }
 
+  // Y-VALUE SETUP
+
+  // If sy is greater (further down), then sourceX is the top
+  // side of source node and targetY is the bottom side of target node
   if (sy > ty + th) {
     sourceY = sy;
     targetY = ty + th;
+
+    // If sy is smaller (further up), then sourceY is the bottom
+    // side node of source and targetY is the top side of target node
   } else if (sy + sh < ty) {
     sourceY = sy + sh;
     targetY = ty;
   } else {
+    // Handling the cases if the nodes are overlapping on the y-axis.
+    //
+    // If one of the nodes is a corner node, we prefer to use the x value
+    // of that node for both of the sourceX and targetX.
+    // In other cases, we use middle point of the overlapping area of the
+    // two nodes. And if one of the nodes is smaller in height, we use
+    // the middle point of the smaller node when it is inside the larger
+    // node.
     if (source.type === 'cornerNode' || target.type === 'cornerNode') {
       const sourceIsCorner = source.type === 'cornerNode';
       const y = sourceIsCorner ? sy : ty;
@@ -176,10 +206,14 @@ function getPositionAndSize(node: Node, offset?: number) {
     };
   }
 
+  // If an offset is provided, we need take the class node
+  // title height into account. The offset is the index of
+  // resource inside the class node
   if (offset && offset > 0) {
     return {
       x: node.position.x + 5,
-      y: node.position.y + 5 + 45 + (offset - 1) * 39,
+      // 60 here is the height of the classNode title
+      y: node.position.y + 5 + 60 + (offset - 1) * 39,
       w: node.width ? node.width - 10 : 0,
       h: 30,
     };

@@ -26,16 +26,14 @@ export default function createClassNode(
           ...a,
           type: ResourceType.ATTRIBUTE as ResourceType.ATTRIBUTE,
         })),
-        ...(node.associations
-          ? node.associations.map((a) => {
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const { referenceTarget, ...rest } = a;
-              return {
-                ...rest,
-                type: ResourceType.ASSOCIATION as ResourceType.ASSOCIATION,
-              };
-            })
-          : []),
+        ...(node.associations ?? []).map((a) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { referenceTarget, ...rest } = a;
+          return {
+            ...rest,
+            type: ResourceType.ASSOCIATION as ResourceType.ASSOCIATION,
+          };
+        }),
       ],
       ...(typeof organizationIds !== 'undefined'
         ? { organizationIds: organizationIds }

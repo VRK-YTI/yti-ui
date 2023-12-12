@@ -5,7 +5,7 @@ export default function getConnectedElements(
   nodes: Node[],
   edges: Edge[]
 ): string[] {
-  if (!start || !nodes || !edges) {
+  if (!start || !nodes || !edges || edges.length < 1) {
     return [];
   }
 
@@ -23,7 +23,7 @@ export default function getConnectedElements(
     if (
       node &&
       node.type === 'classNode' &&
-      (!edges.find(
+      (!edges.some(
         (e) =>
           e[direction === 'target' ? 'source' : 'target'] === begin[direction]
       ) ||
@@ -42,10 +42,6 @@ export default function getConnectedElements(
     }
 
     return [begin.id, begin[direction], ...getConnected(newNode, direction)];
-  }
-
-  if (edges.length < 1) {
-    return [];
   }
 
   if (start.type === 'cornerNode') {

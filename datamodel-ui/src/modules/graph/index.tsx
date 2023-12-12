@@ -34,23 +34,24 @@ import { v4 } from 'uuid';
 import { useTranslation } from 'next-i18next';
 import { ClearArrow } from './marker-ends';
 import convertToNodes, { updateNodes } from './utils/convert-to-nodes';
-import createCornerNode from './utils/create-corner-node';
 import convertToEdges from './utils/convert-to-edges';
 import generatePositionsPayload from './utils/generate-positions-payload';
 import getUnusedCornerIds from './utils/get-unused-corner-ids';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import DefaultEdge from './edges/edge';
-import createEdge from './utils/create-edge';
 import getConnectedElements, {
   getClassConnectedElements,
 } from './utils/get-connected-elements';
 import handleCornerNodeDelete from './utils/handle-corner-node-delete';
-import { ClassNodeDataType } from '@app/common/interfaces/graph.interface';
 import { ReferenceType } from '@app/common/interfaces/visualization.interface';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import GraphNotification from './graph-notification';
 import { selectLogin } from '@app/common/components/login/login.slice';
-import toggleAttrNodeVisibility from './utils/toggle-attribute-node-visibility';
+import {
+  recalculateOffset,
+  splitEdgeFn,
+  toggleShowAttributes,
+} from './utils/graph-utils';
 
 interface GraphProps {
   modelId: string;
@@ -132,74 +133,18 @@ const GraphContent = ({
       const uuid = v4().split('-')[0];
       const newCornerId = `#corner-${uuid}`;
 
-      setNodes((nodes) => [
-        ...nodes,
-        createCornerNode(
-          {
-            identifier: newCornerId,
-            position: project({ x: x - left - 20 * getZoom(), y: y - top }),
-            referenceTarget: target,
-            referenceType: referenceType,
-          },
-          deleteNodeById,
-          applicationProfile
-        ),
-      ]);
-
-      const newEdges = [
-        createEdge({
-          params: {
-            source: source,
-            sourceHandle: source,
-            target: newCornerId,
-            targetHandle: newCornerId,
-            id: `reactflow__edge-${source}-${newCornerId}`,
-          },
-          isCorner: true,
-          applicationProfile,
-        }),
-      ];
-
-      if (target.includes('corner')) {
-        newEdges.push(
-          createEdge({
-            params: {
-              source: newCornerId,
-              sourceHandle: newCornerId,
-              target: target,
-              targetHandle: target,
-              id: `reactflow__edge-${newCornerId}-${newCornerId}`,
-            },
-            isCorner: true,
-            applicationProfile,
-          })
-        );
-      }
-
-      setEdges((edges) => [
-        ...edges
-          .map((edge) => {
-            if (
-              edge.target === target &&
-              edge.source === source &&
-              !target.includes('corner') &&
-              !edge.target.includes('corner')
-            ) {
-              return {
-                ...edge,
-                id: `reactflow__edge-${newCornerId}-${edge.target}`,
-                source: newCornerId,
-                sourceHandle: newCornerId,
-              };
-            }
-
-            return edge;
-          })
-          .filter(
-            (edge) => !(edge.source === source && edge.target === target)
-          ),
-        ...newEdges,
-      ]);
+      splitEdgeFn({
+        applicationProfile,
+        newCornerId,
+        // project() is used here to position the corner node correctly according to where the user clicked
+        position: project({ x: x - left - 20 * getZoom(), y: y - top }),
+        referenceType,
+        source,
+        target,
+        deleteNodeById,
+        setEdges,
+        setNodes,
+      });
     },
     [setEdges, setNodes, project, deleteNodeById, getZoom, applicationProfile]
   );
@@ -418,79 +363,23 @@ const GraphContent = ({
 
   useEffect(() => {
     if (applicationProfile) {
-      setEdges((edges) =>
-        edges.map((edge) => {
-          const sourceNode: Node<ClassNodeDataType> | undefined = nodes.find(
-            (n) => n.id === edge.source
-          );
-
-          if (
-            !sourceNode ||
-            sourceNode.id.startsWith('#corner') ||
-            sourceNode.data.resources.length === 0 ||
-            sourceNode.data.resources.filter((r) => r.type !== 'ATTRIBUTE')
-              .length === 0
-          ) {
-            return edge;
-          }
-
-          const attributeCount = sourceNode.data.resources.filter(
-            (r) => r.type === 'ATTRIBUTE'
-          ).length;
-
-          return {
-            ...edge,
-            data: {
-              ...edge.data,
-              offsetSource: tools.showAttributeRestrictions
-                ? edge.data.offsetSource + attributeCount
-                : edge.data.offsetSource - attributeCount,
-            },
-          };
-        })
-      );
+      recalculateOffset({
+        nodes,
+        showAttributeRestrictions: tools.showAttributeRestrictions,
+        setEdges,
+      });
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applicationProfile, tools.showAttributeRestrictions, setEdges]);
 
   useEffect(() => {
-    let cornersToBeToggled: string[] = [];
-    const hide = !tools.showAttributeRestrictions || !tools.showAttributes;
-
-    setNodes((nodes) =>
-      nodes.map((node) => {
-        if (node.type === 'attributeNode') {
-          const betweenIds = toggleAttrNodeVisibility(node, nodes, edges);
-          cornersToBeToggled = betweenIds.filter((id) =>
-            id.startsWith('#corner')
-          );
-
-          setEdges((edges) =>
-            edges.map((edge) => {
-              if (betweenIds.includes(edge.id)) {
-                return { ...edge, hidden: hide };
-              }
-              return edge;
-            })
-          );
-          return { ...node, hidden: hide };
-        }
-        return node;
-      })
-    );
-
-    setNodes((nodes) =>
-      nodes.map((node) => {
-        if (
-          node.type === 'cornerNode' &&
-          cornersToBeToggled.includes(node.id)
-        ) {
-          return { ...node, hidden: hide };
-        }
-        return node;
-      })
-    );
+    toggleShowAttributes({
+      edges,
+      showAttributes: tools.showAttributes,
+      showAttributeRestrictions: tools.showAttributeRestrictions,
+      setEdges,
+      setNodes,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     setNodes,
@@ -542,6 +431,9 @@ const GraphContent = ({
         onEdgeMouseLeave={onEdgeMouseLeave}
         onNodeDragStop={nodeDragStop}
         fitView
+        // Initial zoom level options
+        // Min zoom could be set to smaller to fit the view
+        // for larger data models
         fitViewOptions={{
           maxZoom: 1.2,
           minZoom: 1,
@@ -556,6 +448,7 @@ const GraphContent = ({
   );
 };
 
+// This is just a wrapper component to make useReactFlow() available
 export default function Graph({
   modelId,
   version,
