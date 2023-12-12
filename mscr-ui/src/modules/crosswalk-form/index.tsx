@@ -61,11 +61,7 @@ export default function RegisterCrosswalkForm({
       ></CrosswalkForm>
       {renderCrosswalkFormat()}
       {renderLanguages()}
-
       {renderStaus()}
-      <BlockContainer>{!editMode && renderContributors()}</BlockContainer>
-      <Separator isLarge />
-      {editMode && renderContributors()}
     </ModelFormContainer>
   );
 
@@ -151,6 +147,7 @@ export default function RegisterCrosswalkForm({
     );
   }
 
+  //Currently Hidden from the form
   function renderContributors() {
     return (
       <WideMultiSelect

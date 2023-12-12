@@ -39,10 +39,7 @@ export function validateForm(data: CrosswalkFormType) {
     errors.titleAmount = langsWithError ?? [];
   }
 
-  // Should have at least one organization set
-  if (data.organizations.length < 1) {
-    errors.organizations = true;
-  }
-
+  // Currently crosswalk is valif withou any organization also
+  
   return errors;
 }

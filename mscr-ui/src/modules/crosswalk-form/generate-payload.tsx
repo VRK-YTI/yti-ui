@@ -29,7 +29,6 @@ export default function generatePayload(data: CrosswalkFormType): Crosswalk {
     languages: data.languages
       .filter((l) => l.title !== '')
       .map((l) => l.uniqueItemId),
-    organizations: data.organizations.map((o) => o.uniqueItemId),
     status: 'DRAFT',
     state: data.status,
     sourceSchema: data.sourceSchema,
