@@ -35,7 +35,7 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
   return (
     <Block>
       <ResultTextWrapper>
-        <Link href={url}>
+        <Link href={url} passHref>
           <RouterLink onClick={() => setIsSearchActive(false)}>
             <h4>
               {getLanguageVersion({

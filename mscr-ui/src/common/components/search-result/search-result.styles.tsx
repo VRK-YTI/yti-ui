@@ -2,13 +2,25 @@ import styled from 'styled-components';
 import { StaticChip } from 'suomifi-ui-components';
 
 export const ResultTextWrapper = styled.div`
-  padding-left: 30px;
+  padding: 30px;
   border-bottom: 1px solid ${(props) => props.theme.suomifi.colors.depthDark2};
+  && .fi-link--router {
+    color: ${(props) => props.theme.suomifi.colors.blackBase};
+    text-decoration: underline;
+    display: inline-block;
+    margin-right: 20px;
+    :hover {
+      color: ${(props) => props.theme.suomifi.colors.highlightBase};
+    }
+  }
 `;
 
 export const ChipWrapper = styled.div`
   display: inline;
   margin: 3px;
+  span {
+    font-size: 13px;
+  }
 `;
 
 export const TypeChip = styled(StaticChip)<{ $isSchema?: boolean }>`
