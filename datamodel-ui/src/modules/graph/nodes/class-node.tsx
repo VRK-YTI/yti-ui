@@ -40,6 +40,8 @@ import { initializeResource } from '@app/common/components/resource/resource.sli
 import styled from 'styled-components';
 import ResourceModal from '@app/modules/class-view/resource-modal';
 import { translateResourceAddition } from '@app/common/utils/translation-helpers';
+import { getSlugAsString } from '@app/common/utils/parse-slug';
+import { useRouter } from 'next/router';
 
 interface ClassNodeProps {
   id: string;
@@ -69,6 +71,8 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
   const classView = useSelector(selectClassView());
   const { setView } = useSetView();
+  const { query } = useRouter();
+  const [version] = useState(getSlugAsString(query.ver));
 
   const handleTitleClick = () => {
     if (globalSelected.id !== id) {
@@ -177,7 +181,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
       <div className="node-title">
         <div onClick={() => handleTitleClick()}>{renderClassLabel()}</div>
 
-        {hasPermission && (
+        {hasPermission && !version && (
           <>
             <NodeActionsMenu id={`${data.identifier}-options`}>
               <ActionMenuItem
