@@ -67,7 +67,6 @@
   "filter-with-current_other": "",
   "go-to": "",
   "impersonate-user": "Impersonate user",
-  "in-all-mscr": "In all MSCR",
   "interoperability-logo-title": "",
   "items-to-be-unscribed-from_one": "",
   "items-to-be-unscribed-from_other": "",
@@ -176,6 +175,7 @@
       "search-button": "Search"
     },
     "facets": {
+      "filter-by": "Filter results by",
       "format": "Format",
       "isReferenced": "Source type",
       "organization": "Organization",

@@ -31,6 +31,7 @@ export interface ResultInfo {
   revisions: Revision[];
   versionLabel: string;
   namespace: string;
+  format?: string;
 }
 
 export interface PatchedResult extends ResultInfo {

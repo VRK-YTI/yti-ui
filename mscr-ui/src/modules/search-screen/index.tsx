@@ -69,6 +69,7 @@ export default function SearchScreen() {
         key,
         mscrSearchResults.aggregations[key].buckets
       );
+      if (newFilter.facet == 'organization' || newFilter.facet == 'isReferenced') return;
       filters = filters.concat(newFilter);
     });
   }
@@ -80,7 +81,7 @@ export default function SearchScreen() {
           <FacetsWrapper>
             {/* Groups of facets for different contexts, made with search-filter-set */}
             {filters.length > 0 && (
-              <SearchFilterSet title={t('in-all-mscr')} filters={filters} />
+              <SearchFilterSet title={t('search.facets.filter-by')} filters={filters} />
             )}
           </FacetsWrapper>
         </Grid>
