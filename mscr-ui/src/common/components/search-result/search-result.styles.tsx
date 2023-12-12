@@ -38,3 +38,10 @@ export const TypeChip = styled(StaticChip)<{ $isSchema?: boolean }>`
         : props.theme.suomifi.colors.blackBase};;
   }
 `;
+
+export const MetadataChip = styled(StaticChip)`
+  &&.fi-chip {
+    background-color: #69D8D7;
+    color: ${(props) => props.theme.suomifi.colors.blackBase};
+  }
+`;

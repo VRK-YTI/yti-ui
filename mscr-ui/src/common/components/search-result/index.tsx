@@ -1,9 +1,9 @@
 import { MscrSearchResult } from '@app/common/interfaces/search.interface';
-import { Block, RouterLink, StaticChip } from 'suomifi-ui-components';
+import { Block, RouterLink } from 'suomifi-ui-components';
 import {
-  ChipWrapper,
+  ChipWrapper, MetadataChip,
   ResultTextWrapper,
-  TypeChip,
+  TypeChip
 } from '@app/common/components/search-result/search-result.styles';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import router from 'next/router';
@@ -24,6 +24,7 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
     state: result.state,
     versionLabel: result.versionLabel,
     description: result.comment,
+    format: result.format,
   };
   let url;
   if (result.type == 'SCHEMA') {
@@ -31,7 +32,10 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
   } else {
     url = `/crosswalk/${displayResult.pid}`;
   }
-  const chips : string[] = [result.state];
+  let chips : string[] = [result.state];
+  if (result.format) {
+    chips = chips.concat(result.format);
+  }
 
   return (
     <Block>
@@ -64,7 +68,7 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
         </p>
         {chips.map((chip) => (
           <ChipWrapper key={chip}>
-            <StaticChip>{chip}</StaticChip>
+            <MetadataChip>{chip}</MetadataChip>
           </ChipWrapper>
         ))}
       </ResultTextWrapper>
