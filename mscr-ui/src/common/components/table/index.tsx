@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Separator from 'yti-common-ui/separator';
 import SchemaList from '../schema-list';
 import CrosswalkList from '../crosswalk-list';
 import { useGetPersonalContentQuery } from '@app/common/components/personal/personal.slice';
@@ -42,7 +41,6 @@ export default function BasicTable() {
 
   return (
     <div>
-      {'Schemas'}
       <SchemaList
         items={schemas ?? []}
         handleRemoval={function (value: string): void {
@@ -50,8 +48,6 @@ export default function BasicTable() {
         }}
         deleteDisabled={false}
       ></SchemaList>
-
-      {'Crosswalks'}
 
       <CrosswalkList
         items={crosswalks ?? []}

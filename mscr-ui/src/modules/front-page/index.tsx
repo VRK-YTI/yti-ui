@@ -65,7 +65,6 @@ export default function FrontPage() {
       </ButtonBlock>
       <Separator isLarge />
       <BasicTable></BasicTable>
-      <Separator isLarge />
     </main>
   );
 }

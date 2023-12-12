@@ -6,15 +6,15 @@ import { Status } from './status.interface';
 export interface Crosswalk {
   pid?: string;
   format: string;
-  status: string | undefined;
+  status?: string | undefined;
   label: {
     [key: string]: string;
   };
   description: {
     [key: string]: string;
   };
-  languages: string[];
-  organizations: string[];
+  languages?: string[];
+  organizations?: string[];
   sourceSchema: string;
   targetSchema: string;
   state?: string;
@@ -28,7 +28,7 @@ export interface CrosswalkFormType {
   label: string;
   state?: string;
   languages: (LanguageBlockType & { selected: boolean })[];
-  organizations: MultiSelectData[];
+  organizations?: MultiSelectData[];
   status?: Status;
   sourceSchema: string;
   targetSchema: string;

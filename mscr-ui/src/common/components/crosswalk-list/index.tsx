@@ -1,10 +1,7 @@
 import { useTranslation } from 'next-i18next';
-import { Button } from 'suomifi-ui-components';
-import { List, ListItem } from './crosswalk-list.styles';
-import { Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import router from 'next/router';
 import { Crosswalk } from '@app/common/interfaces/crosswalk.interface';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
 export interface CrosswalkListProps {
   items: Partial<Crosswalk>[];
@@ -31,7 +28,10 @@ export default function CrosswalkList({
   return (
     //Creating Header row
     <div>
-      <TableContainer>
+      <Typography marginTop={5}>
+        {'Crosswalks'}
+      </Typography>
+      <TableContainer >
         <Table aria-label={'Schemas'}>
           <TableHead>
             <TableRow>
