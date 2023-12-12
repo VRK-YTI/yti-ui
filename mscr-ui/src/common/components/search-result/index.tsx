@@ -1,5 +1,5 @@
 import { MscrSearchResult } from '@app/common/interfaces/search.interface';
-import { Block, RouterLink } from 'suomifi-ui-components';
+import { Block, RouterLink, StaticChip } from 'suomifi-ui-components';
 import {
   ChipWrapper,
   ResultTextWrapper,
@@ -31,6 +31,7 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
   } else {
     url = `/crosswalk/${displayResult.pid}`;
   }
+  const chips : string[] = [result.state];
 
   return (
     <Block>
@@ -61,12 +62,11 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
             appendLocale: true,
           })}
         </p>
-        {/*TODO: What exactly is supposed to be in the chips?
-        {Object.keys(result.label).map((key) => (
-          <ChipWrapper key={key}>
-            <StaticChip>{result.label[key]}</StaticChip>
+        {chips.map((chip) => (
+          <ChipWrapper key={chip}>
+            <StaticChip>{chip}</StaticChip>
           </ChipWrapper>
-        ))}*/}
+        ))}
       </ResultTextWrapper>
     </Block>
   );

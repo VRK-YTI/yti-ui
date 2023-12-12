@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { StaticChip } from 'suomifi-ui-components';
 
 export const ResultTextWrapper = styled.div`
-  padding: 30px;
+  padding: 10px 30px;
   border-bottom: 1px solid ${(props) => props.theme.suomifi.colors.depthDark2};
   && .fi-link--router {
     color: ${(props) => props.theme.suomifi.colors.blackBase};
