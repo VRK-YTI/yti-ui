@@ -33,6 +33,6 @@ export default function generatePayload(data: CrosswalkFormType): Crosswalk {
     state: data.status,
     sourceSchema: data.sourceSchema,
     targetSchema: data.targetSchema,
-    versionLabel: "1"
+    versionLabel: '1',
   };
 }

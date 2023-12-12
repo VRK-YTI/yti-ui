@@ -41,7 +41,6 @@ export default function BasicTable() {
 
   return (
     <div>
-     
       <SchemaList
         items={schemas ?? []}
         handleRemoval={function (value: string): void {
@@ -49,8 +48,7 @@ export default function BasicTable() {
         }}
         deleteDisabled={false}
       ></SchemaList>
-      
-      
+
       <CrosswalkList
         items={crosswalks ?? []}
         handleRemoval={function (value: string): void {
