@@ -2,6 +2,7 @@ import { FacetTitle } from '@app/common/components/search-filter-set/search-filt
 import { Filter } from '@app/common/interfaces/search.interface';
 import { Checkbox, CheckboxGroup } from 'suomifi-ui-components';
 import useUrlState, { UrlState } from '@app/common/utils/hooks/use-url-state';
+import { useTranslation } from 'next-i18next';
 
 interface SearchFilterProps {
   title: string;
