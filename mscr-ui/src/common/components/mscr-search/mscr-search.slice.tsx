@@ -21,9 +21,9 @@ function createUrl(urlState: UrlState) {
   if (urlState.format && urlState.format.length > 0) {
     baseQuery = baseQuery.concat(`&format=${urlState.format.join(',')}`);
   }
-  if (urlState.sourceType && urlState.sourceType.length > 0) {
+  if (urlState.isReferenced && urlState.isReferenced.length > 0) {
     baseQuery = baseQuery.concat(
-      `&sourceType=${urlState.sourceType.join(',')}`
+      `&sourceType=${urlState.isReferenced.join(',')}`
     );
   }
   if (urlState.organization && urlState.organization.length > 0) {
@@ -32,7 +32,7 @@ function createUrl(urlState: UrlState) {
     );
   }
 
-  return baseQuery;
+  return baseQuery.concat('&includeFacets=true');
 }
 
 export const mscrSearchApi = createApi({

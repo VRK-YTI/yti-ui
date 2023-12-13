@@ -11,6 +11,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material';
 import router from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
@@ -42,6 +43,9 @@ export default function SchemaList({ items }: SchemaListProps) {
     //Creating Header row
 
     <div>
+      <Typography marginTop={5}>
+        {'Schemas'}
+      </Typography>
       <TableContainer>
         <Table aria-label={'Schemas'}>
           <TableHead>

@@ -1,9 +1,9 @@
 import { MscrSearchResult } from '@app/common/interfaces/search.interface';
 import { Block, RouterLink } from 'suomifi-ui-components';
-import { IconMerge, IconFileGeneric } from 'suomifi-icons';
 import {
-  ResultIconWrapper,
+  ChipWrapper, MetadataChip,
   ResultTextWrapper,
+  TypeChip
 } from '@app/common/components/search-result/search-result.styles';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import router from 'next/router';
@@ -24,22 +24,23 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
     state: result.state,
     versionLabel: result.versionLabel,
     description: result.comment,
+    format: result.format,
   };
-  let icon;
   let url;
   if (result.type == 'SCHEMA') {
-    icon = <IconFileGeneric />;
     url = `/schema/${displayResult.pid}`;
   } else {
-    icon = <IconMerge />;
     url = `/crosswalk/${displayResult.pid}`;
+  }
+  let chips : string[] = [result.state];
+  if (result.format) {
+    chips = chips.concat(result.format);
   }
 
   return (
     <Block>
-      <ResultIconWrapper>{icon}</ResultIconWrapper>
       <ResultTextWrapper>
-        <Link href={url}>
+        <Link href={url} passHref>
           <RouterLink onClick={() => setIsSearchActive(false)}>
             <h4>
               {getLanguageVersion({
@@ -50,6 +51,14 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
             </h4>
           </RouterLink>
         </Link>
+        <ChipWrapper>
+          {result.type == 'SCHEMA' && (
+            <TypeChip $isSchema>{result.type}</TypeChip>
+          )}
+          {result.type != 'SCHEMA' && (
+            <TypeChip>{result.type}</TypeChip>
+          )}
+        </ChipWrapper>
         <p>
           {getLanguageVersion({
             data: displayResult.description,
@@ -57,12 +66,11 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
             appendLocale: true,
           })}
         </p>
-        {/*TODO: What exactly is supposed to be in the chips?
-        {Object.keys(result.label).map((key) => (
-          <ChipWrapper key={key}>
-            <StaticChip>{result.label[key]}</StaticChip>
+        {chips.map((chip) => (
+          <ChipWrapper key={chip}>
+            <MetadataChip>{chip}</MetadataChip>
           </ChipWrapper>
-        ))}*/}
+        ))}
       </ResultTextWrapper>
     </Block>
   );

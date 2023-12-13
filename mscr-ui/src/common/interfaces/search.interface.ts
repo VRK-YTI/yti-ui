@@ -31,6 +31,7 @@ export interface ResultInfo {
   revisions: Revision[];
   versionLabel: string;
   namespace: string;
+  format?: string;
 }
 
 export interface PatchedResult extends ResultInfo {
@@ -44,13 +45,18 @@ export interface MscrSearchResult {
   _source: ResultInfo;
 }
 
-export type Facet = 'state' | 'type' | 'format' | 'organization' | 'sourceType';
+export type Facet =
+  | 'state'
+  | 'type'
+  | 'format'
+  | 'organization'
+  | 'isReferenced';
 
 export interface Filter {
   label: string;
   facet: Facet;
   options: Array<{
-    label: string;
+    label?: string;
     key: string;
     count: number;
   }>;
@@ -58,7 +64,7 @@ export interface Filter {
 
 export interface Bucket {
   key: string;
-  label: string;
+  label?: string;
   doc_count: number;
 }
 
