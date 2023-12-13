@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 const { i18n } = require('./next-i18next.config');
 
 module.exports = () => {
@@ -98,11 +99,12 @@ module.exports = () => {
           {
             source: '/terminology-api/:path*',
             destination:
-              'https://yhteentoimiva.test.yti.cloud.dvv.fi/terminology-api/:path*',
+              'https://sanastot.dev.yti.cloud.dvv.fi/terminology-api/:path*',
           },
           {
             source: '/codelist-api/:path*',
-            destination: 'https://koodistot.suomi.fi/codelist-api/:path*',
+            destination:
+              'https://koodistot.dev.yti.cloud.dvv.fi/codelist-api/:path*',
           },
           {
             source: '/messaging-api/:path*',

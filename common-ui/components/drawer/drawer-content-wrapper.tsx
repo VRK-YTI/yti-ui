@@ -8,7 +8,7 @@ const DrawerContentWrapper = styled.div<{ $height?: number }>`
   height: calc(100% - ${(props) => (props.$height ?? 0) + 30}px);
 
   padding: 15px;
-  padding-top: ${(props) => (props.$height ?? 0) + 15}px;
+  margin-top: ${(props) => props.$height ?? 0}px;
 
   .fullwidth {
     width: 100%;
@@ -33,8 +33,6 @@ const DrawerContentWrapper = styled.div<{ $height?: number }>`
   ::-webkit-scrollbar-thumb:hover {
     background: #6e6e6e;
   }
-
-  -webkit-transform: translate3d(0, 0, 0);
 `;
 
 interface DrawerContentProps {
