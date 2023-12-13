@@ -7,7 +7,7 @@ export const namespacesApi = createApi({
     ...headers,
     accept: 'application/json',
   })),
-  tagTypes: ['namespaces'],
+  tagTypes: ['Namespaces'],
   endpoints: (builder) => ({
     getNamespaces: builder.query<string[], void>({
       query: () => ({

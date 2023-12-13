@@ -5,7 +5,7 @@ import { Organization } from '@app/common/interfaces/organizations.interface';
 export const organizationsApi = createApi({
   reducerPath: 'organizationsApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['organizations'],
+  tagTypes: ['Organizations'],
   endpoints: (builder) => ({
     getOrganizations: builder.query<Organization[], string>({
       query: (value) => ({

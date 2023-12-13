@@ -99,7 +99,6 @@ export default function ClassView({
     data: classData,
     isSuccess,
     isError: classIsError,
-    refetch: refetchData,
   } = useGetClassQuery(
     {
       modelId: modelId,
@@ -359,7 +358,6 @@ export default function ClassView({
         applicationProfile={applicationProfile}
         handleReturn={handleReturn}
         handleEdit={handleEdit}
-        handleRefetch={refetchData}
         disableEdit={version ? true : false}
         handleShowClass={handleShowClass}
         organizationIds={organizationIds}

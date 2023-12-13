@@ -5,7 +5,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 export const fakeableUsersApi = createApi({
   reducerPath: 'fakeableUsers',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['fakeableUsers'],
+  tagTypes: ['FakeableUsers'],
   endpoints: (builder) => ({
     getFakeableUsers: builder.query<FakeableUser[], void>({
       query: () => ({

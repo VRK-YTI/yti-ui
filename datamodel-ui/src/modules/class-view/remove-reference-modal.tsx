@@ -17,7 +17,6 @@ import getApiError from '@app/common/utils/get-api-errors';
 import { useDeletePropertyReferenceMutation } from '@app/common/components/class/class.slice';
 import { translateDeleteReferenceModalDescription } from '@app/common/utils/translation-helpers';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
-import { setUpdateVisualization } from '@app/common/components/model/model.slice';
 import { useStoreDispatch } from '@app/store';
 
 interface RemoveReferenceModalProps {
@@ -26,7 +25,6 @@ interface RemoveReferenceModalProps {
   modelId: string;
   classId: string;
   uri: string;
-  handleReturn: () => void;
   applicationProfile?: boolean;
   currentTarget?: string;
 }
@@ -37,7 +35,6 @@ export default function RemoveReferenceModal({
   modelId,
   classId,
   uri,
-  handleReturn,
   applicationProfile,
   currentTarget,
 }: RemoveReferenceModalProps) {
@@ -66,12 +63,10 @@ export default function RemoveReferenceModal({
   useEffect(() => {
     if (result.isSuccess) {
       handleClose();
-      handleReturn();
-      dispatch(setUpdateVisualization(true));
     } else if (result.isError) {
       setError(true);
     }
-  }, [result, handleReturn, dispatch]);
+  }, [result, dispatch]);
 
   return (
     <>

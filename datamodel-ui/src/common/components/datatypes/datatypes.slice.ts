@@ -8,7 +8,7 @@ export const datatypesApi = createApi({
     ...headers,
     accept: 'application/json',
   })),
-  tagTypes: ['datatypes'],
+  tagTypes: ['Datatypes'],
   endpoints: (builder) => ({
     getDatatypes: builder.query<UriData[], void>({
       query: () => ({

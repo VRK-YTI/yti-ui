@@ -40,7 +40,7 @@ export default function LinkedDataView({
   });
   const [headerHeight, setHeaderHeight] = useState(hasPermission ? 57 : 42);
   const [renderForm, setRenderForm] = useState(false);
-  const { data, refetch } = useGetModelQuery({
+  const { data } = useGetModelQuery({
     modelId: modelId,
     version: version,
   });
@@ -51,7 +51,6 @@ export default function LinkedDataView({
 
   const handleFormReturn = () => {
     setRenderForm(false);
-    refetch();
   };
 
   useEffect(() => {

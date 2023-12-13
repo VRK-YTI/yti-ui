@@ -36,7 +36,7 @@ function getUrl(urlState: UrlState) {
 export const countApi = createApi({
   reducerPath: 'count',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['count'],
+  tagTypes: ['Count'],
   endpoints: (builder) => ({
     getCount: builder.query<
       {

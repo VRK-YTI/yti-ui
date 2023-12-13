@@ -46,7 +46,6 @@ import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-b
 import {
   selectHasChanges,
   setHasChanges,
-  setUpdateVisualization,
 } from '@app/common/components/model/model.slice';
 import ResourcePicker from '../resource-picker-modal';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
@@ -333,7 +332,6 @@ export default function ClassForm({
       dispatch(
         setNotification(updateResult.isSuccess ? 'CLASS_EDIT' : 'CLASS_ADD')
       );
-      dispatch(setUpdateVisualization(true));
     }
 
     let backendErrorFields: string[] = [];

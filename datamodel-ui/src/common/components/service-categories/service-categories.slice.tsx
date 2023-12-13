@@ -8,7 +8,7 @@ export const serviceCategoriesApi = createApi({
     ...headers,
     accept: 'application/json',
   })),
-  tagTypes: ['serviceCategories'],
+  tagTypes: ['ServiceCategories'],
   endpoints: (builder) => ({
     getServiceCategories: builder.query<ServiceCategory[], string>({
       query: (value) => ({

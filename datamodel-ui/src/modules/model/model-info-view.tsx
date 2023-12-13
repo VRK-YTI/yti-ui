@@ -74,7 +74,7 @@ export default function ModelInfoView({
     actions: ['EDIT_DATA_MODEL'],
     targetOrganization: organizationIds,
   });
-  const { data: modelInfo, refetch } = useGetModelQuery({
+  const { data: modelInfo } = useGetModelQuery({
     modelId: modelId,
     version: version,
   });
@@ -113,7 +113,6 @@ export default function ModelInfoView({
   }, [modelInfo, t, i18n.language]);
 
   const handleSuccess = () => {
-    refetch();
     setShowEditView(false);
   };
 

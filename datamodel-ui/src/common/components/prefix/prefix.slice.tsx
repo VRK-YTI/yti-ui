@@ -4,7 +4,7 @@ import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 export const prefixApi = createApi({
   reducerPath: 'prefixApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['prefix'],
+  tagTypes: ['Prefix'],
   endpoints: (builder) => ({
     getModelExists: builder.mutation<boolean, string>({
       query: (prefix) => ({

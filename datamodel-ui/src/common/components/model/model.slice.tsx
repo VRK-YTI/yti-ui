@@ -12,7 +12,7 @@ import { AppState, AppThunk } from '@app/store';
 export const modelApi = createApi({
   reducerPath: 'modelApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['modelApi'],
+  tagTypes: ['Model'],
   endpoints: (builder) => ({
     createModel: builder.mutation<string, NewModel>({
       query: (value) => ({
@@ -31,6 +31,7 @@ export const modelApi = createApi({
         },
         method: 'GET',
       }),
+      providesTags: ['Model'],
     }),
     updateModel: builder.mutation<
       string,
@@ -47,6 +48,7 @@ export const modelApi = createApi({
         method: 'PUT',
         data: value.payload,
       }),
+      invalidatesTags: ['Model'],
     }),
     deleteModel: builder.mutation<string, string>({
       query: (value) => ({

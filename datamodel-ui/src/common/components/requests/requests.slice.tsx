@@ -36,6 +36,7 @@ export const requestApi = createApi({
         url: '/requests',
         method: 'GET',
       }),
+      providesTags: ['Request'],
     }),
     postRequest: builder.mutation<
       null,
@@ -48,6 +49,7 @@ export const requestApi = createApi({
         url: generateUri(values.organizationId, values.services),
         method: 'POST',
       }),
+      invalidatesTags: ['Request'],
     }),
   }),
 });

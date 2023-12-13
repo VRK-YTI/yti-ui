@@ -15,11 +15,7 @@ import {
   useGetResourceQuery,
 } from '@app/common/components/resource/resource.slice';
 import CommonViewContent from '@app/modules/common-view-content';
-import {
-  setSelected,
-  setUpdateVisualization,
-  setView,
-} from '@app/common/components/model/model.slice';
+import { setSelected, setView } from '@app/common/components/model/model.slice';
 import { useStoreDispatch } from '@app/store';
 import { resourceToResourceFormType } from '../resource/utils';
 import RemoveReferenceModal from './remove-reference-modal';
@@ -43,7 +39,7 @@ interface ResourceInfoProps {
   hasPermission: boolean;
   applicationProfile?: boolean;
   attribute?: boolean;
-  handlePropertiesUpdate: () => void;
+  handlePropertiesUpdate?: () => void;
   disableEdit?: boolean;
   targetInClassRestriction?: UriData;
   disableAssocTarget?: boolean;
@@ -100,11 +96,10 @@ export default function ResourceInfo({
   };
 
   useEffect(() => {
-    if (updateResult.isSuccess) {
+    if (handlePropertiesUpdate && updateResult.isSuccess) {
       handlePropertiesUpdate();
-      dispatch(setUpdateVisualization(true));
     }
-  }, [updateResult, handlePropertiesUpdate, dispatch]);
+  }, [updateResult, handlePropertiesUpdate]);
 
   function renderTitleButtonContent() {
     return (
@@ -162,7 +157,6 @@ export default function ResourceInfo({
                   modelId={modelId}
                   classId={classId}
                   uri={data.uri}
-                  handleReturn={handlePropertiesUpdate}
                   name={getLanguageVersion({
                     data: data.label,
                     lang: i18n.language,
