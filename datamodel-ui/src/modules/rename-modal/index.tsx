@@ -82,6 +82,10 @@ export function RenameModal({
     }
   }, [renameResourceResult]);
 
+  useEffect(() => {
+    setNewIdentifier(resourceId);
+  }, [resourceId]);
+
   return (
     <NarrowModal
       appElementId="__next"
