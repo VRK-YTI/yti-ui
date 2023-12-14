@@ -1,4 +1,4 @@
-import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
+import { StatusChip } from 'yti-common-ui/components/status-chip';
 import { ClassType } from '@app/common/interfaces/class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
@@ -240,7 +240,7 @@ export default function ClassInfo({
           )}
         </div>
         {data ? (
-          <>
+          <div>
             <DeleteModal
               modelId={modelId}
               resourceId={data.identifier}
@@ -261,9 +261,7 @@ export default function ClassInfo({
               hide={() => setShowRenameModal(false)}
               handleReturn={handleShowClass}
             />
-            <div
-              style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}
-            >
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               <Text variant="bold">
                 {getLanguageVersion({
                   data: data.label,
@@ -274,7 +272,7 @@ export default function ClassInfo({
                 {translateStatus(data.status, t)}
               </StatusChip>
             </div>
-          </>
+          </div>
         ) : (
           <></>
         )}

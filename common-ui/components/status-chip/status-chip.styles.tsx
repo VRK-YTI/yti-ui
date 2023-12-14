@@ -27,6 +27,10 @@ export const StatusChip = styled(StaticChip)<{ status?: string }>`
   font-size: 12px;
   line-height: 0;
   padding: 0px 10px !important;
-  text-transform: uppercase;
+  text-transform: lowercase;
   vertical-align: bottom;
+
+  ::first-letter {
+    text-transform: capitalize;
+  }
 `;
