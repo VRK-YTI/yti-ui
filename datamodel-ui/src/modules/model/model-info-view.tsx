@@ -53,7 +53,7 @@ export default function ModelInfoView({
   const dispatch = useStoreDispatch();
   const { query } = useRouter();
   const [modelId] = useState(getSlugAsString(query.slug) ?? '');
-  const [version] = useState(getSlugAsString(query.ver));
+  const [version, setVersion] = useState(getSlugAsString(query.ver));
   const [showEditView, setShowEditView] = useState(false);
   const [formData, setFormData] = useState<ModelFormType | undefined>();
   const [headerHeight, setHeaderHeight] = useState(57);
@@ -137,6 +137,12 @@ export default function ModelInfoView({
       setHeaderHeight(ref.current.clientHeight);
     }
   }, [ref]);
+
+  useEffect(() => {
+    if (version !== getSlugAsString(query.ver)) {
+      setVersion(getSlugAsString(query.ver));
+    }
+  }, [query.ver, version]);
 
   if (!modelInfo) {
     return <DrawerContent />;
