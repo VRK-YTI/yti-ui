@@ -7,7 +7,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalTitle,
-  Paragraph,
   Text,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
@@ -27,7 +26,6 @@ import { useInitialSchemaForm } from '@app/common/utils/hooks/use-initial-schema
 import { usePutSchemaFullMutation } from '@app/common/components/schema/schema.slice';
 import SchemaForm from '.';
 import FileDropArea from 'yti-common-ui/file-drop-area';
-import { TextSnippet } from '@mui/icons-material';
 import Separator from 'yti-common-ui/separator';
 
 interface SchemaFormModalProps {
@@ -152,7 +150,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
           <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}
-            validFileTypes={['json', 'csv', 'pdf', 'ttl']}
+            validFileTypes={['json', 'csv', 'pdf', 'ttl','xml','xsd']}
             translateFileUploadError={translateFileUploadError}
           />
           <Separator isLarge></Separator>
