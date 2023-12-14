@@ -22,7 +22,10 @@ import {
 } from './documentation.styles';
 import { useTranslation } from 'next-i18next';
 import {
+  selectDisplayGraphHasChanges,
   selectDisplayLang,
+  selectGraphHasChanges,
+  setDisplayGraphHasChanges,
   setHasChanges,
   useGetModelQuery,
   useUpdateModelMutation,
@@ -55,6 +58,7 @@ import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import Image from 'next/image';
 import { IconBold, IconItalics, IconQuotes } from 'suomifi-icons';
 import HasPermission from '@app/common/utils/has-permission';
+import UnsavedAlertModal from '../unsaved-alert-modal';
 
 export default function Documentation({
   modelId,
@@ -78,6 +82,8 @@ export default function Documentation({
   const dispatch = useStoreDispatch();
   const textAreaRef = createRef<HTMLTextAreaElement>();
   const displayLang = useSelector(selectDisplayLang());
+  const displayGraphHasChanges = useSelector(selectDisplayGraphHasChanges());
+  const graphHasChanges = useSelector(selectGraphHasChanges());
   const [headerHeight, setHeaderHeight] = useState(hasPermission ? 57 : 42);
   const [value, setValue] = useState<{ [key: string]: string }>({});
   const [isEdit, setIsEdit] = useState(false);
@@ -248,6 +254,15 @@ export default function Documentation({
     }
   };
 
+  const handleIsEdit = () => {
+    if (graphHasChanges) {
+      dispatch(setDisplayGraphHasChanges(true));
+      return;
+    }
+
+    setIsEdit(true);
+  };
+
   useEffect(() => {
     if (ref.current) {
       setHeaderHeight(ref.current.clientHeight);
@@ -346,7 +361,7 @@ export default function Documentation({
             ) : (
               <Button
                 variant="secondary"
-                onClick={() => setIsEdit(true)}
+                onClick={() => handleIsEdit()}
                 id="edit-button"
               >
                 {t('edit')}
@@ -355,6 +370,10 @@ export default function Documentation({
         </HeaderRow>
       </StaticHeader>
 
+      <UnsavedAlertModal
+        visible={displayGraphHasChanges}
+        handleFollowUp={() => setIsEdit(true)}
+      />
       {renderView()}
       {renderEdit()}
     </>

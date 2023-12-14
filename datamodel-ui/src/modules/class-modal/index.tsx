@@ -19,6 +19,14 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { ResultType } from '@app/common/components/resource-list';
 import { mapInternalClassInfoToResultType } from '../class-restriction-modal/utils';
 import LargeModal from '@app/common/components/large-modal';
+import UnsavedAlertModal from '../unsaved-alert-modal';
+import { useStoreDispatch } from '@app/store';
+import { useSelector } from 'react-redux';
+import {
+  selectDisplayGraphHasChanges,
+  selectGraphHasChanges,
+  setDisplayGraphHasChanges,
+} from '@app/common/components/model/model.slice';
 
 export interface ClassModalProps {
   modelId: string;
@@ -50,6 +58,9 @@ export default function ClassModal({
 }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
+  const dispatch = useStoreDispatch();
+  const displayGraphHasChanges = useSelector(selectDisplayGraphHasChanges());
+  const graphHasChanges = useSelector(selectGraphHasChanges());
   const [visible, setVisible] = useState(false);
   const [selectedId, setSelectedId] = useState(initialSelected ?? '');
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
@@ -73,6 +84,15 @@ export default function ClassModal({
     if (initialSelected && initialSelected !== 'selectedId') {
       setSelectedId(initialSelected);
     }
+  };
+
+  const handleOpenClick = () => {
+    if (graphHasChanges) {
+      dispatch(setDisplayGraphHasChanges(true));
+      return;
+    }
+
+    handleOpen();
   };
 
   const handleClose = () => {
@@ -129,11 +149,16 @@ export default function ClassModal({
       <Button
         variant={buttonVariant ?? 'secondary'}
         icon={modalButtonLabel && !plusIcon ? undefined : <IconPlus />}
-        onClick={() => handleOpen()}
+        onClick={() => handleOpenClick()}
         id="add-class-button"
       >
         {modalButtonLabel ? modalButtonLabel : t('add-class')}
       </Button>
+
+      <UnsavedAlertModal
+        visible={displayGraphHasChanges}
+        handleFollowUp={() => handleOpen()}
+      />
 
       <LargeModal
         appElementId="__next"

@@ -17,11 +17,13 @@ import {
 import { useStoreDispatch } from '@app/store';
 import {
   resetHighlighted,
+  selectGraphHasChanges,
   selectModelTools,
   selectResetPosition,
   selectSavePosition,
   selectSelected,
   selectUpdateVisualization,
+  setGraphHasChanges,
   setHighlighted,
   setResetPosition,
   setSavePosition,
@@ -80,10 +82,10 @@ const GraphContent = ({
   const updateVisualization = useSelector(selectUpdateVisualization());
   const tools = useSelector(selectModelTools());
   const user = useSelector(selectLogin());
+  const graphHasChanges = useSelector(selectGraphHasChanges());
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
-  const [hasChanges, setHasChanges] = useState(false);
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
@@ -107,8 +109,8 @@ const GraphContent = ({
 
   const refetchNodes = useCallback(() => {
     refetch();
-    setHasChanges(false);
-  }, [refetch]);
+    dispatch(setGraphHasChanges(false));
+  }, [refetch, dispatch]);
 
   const deleteNodeById = useCallback(
     (id: string) => {
@@ -167,7 +169,7 @@ const GraphContent = ({
         e.clientY,
         edge.referenceType
       );
-      setHasChanges(true);
+      dispatch(setGraphHasChanges(true));
     },
     [dispatch, globalSelected.id, modelId, splitEdge]
   );
@@ -254,7 +256,7 @@ const GraphContent = ({
 
     if (resetPosition) {
       dispatch(setResetPosition(false));
-      setHasChanges(false);
+      dispatch(setGraphHasChanges(false));
     }
   }, [
     applicationProfile,
@@ -273,10 +275,10 @@ const GraphContent = ({
   const nodeDragStop = useCallback(
     (_: React.MouseEvent, node: Node) => {
       if (!user.anonymous && node.dragging) {
-        setHasChanges(true);
+        dispatch(setGraphHasChanges(true));
       }
     },
-    [user]
+    [user, dispatch]
   );
 
   useEffect(() => {
@@ -349,8 +351,8 @@ const GraphContent = ({
     if (result.isSuccess) {
       dispatch(setNotification('POSITION_SAVE'));
 
-      if (hasChanges) {
-        setHasChanges(false);
+      if (graphHasChanges) {
+        dispatch(setGraphHasChanges(false));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -436,7 +438,7 @@ const GraphContent = ({
         maxZoom={5}
         minZoom={0.2}
       >
-        <GraphNotification hasChanges={hasChanges} />
+        <GraphNotification hasChanges={graphHasChanges} />
         {children}
       </ModelFlow>
     </FlowWrapper>

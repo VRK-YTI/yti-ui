@@ -1,5 +1,8 @@
 import {
+  selectDisplayGraphHasChanges,
   selectDisplayLang,
+  selectGraphHasChanges,
+  setDisplayGraphHasChanges,
   setHasChanges,
   useGetModelQuery,
 } from '@app/common/components/model/model.slice';
@@ -43,6 +46,7 @@ import CreateReleaseModal from '../create-release-modal';
 import PriorVersions from './prior-versions';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
+import UnsavedAlertModal from '../unsaved-alert-modal';
 
 export default function ModelInfoView({
   organizationIds,
@@ -59,6 +63,8 @@ export default function ModelInfoView({
   const [headerHeight, setHeaderHeight] = useState(57);
   const displayLang = useSelector(selectDisplayLang());
   const user = useSelector(selectLogin());
+  const displayGraphHasChanges = useSelector(selectDisplayGraphHasChanges());
+  const graphHasChanges = useSelector(selectGraphHasChanges());
   const [openModals, setOpenModals] = useState({
     showAsFile: false,
     downloadAsFile: false,
@@ -132,6 +138,15 @@ export default function ModelInfoView({
     setOpenModals(newOpenModals);
   };
 
+  const handleShowEdit = () => {
+    if (graphHasChanges) {
+      dispatch(setDisplayGraphHasChanges(true));
+      return;
+    }
+
+    handleEditViewItemClick(setShowEditView);
+  };
+
   useEffect(() => {
     if (ref.current) {
       setHeaderHeight(ref.current.clientHeight);
@@ -164,7 +179,8 @@ export default function ModelInfoView({
             {hasPermission ? (
               <>
                 <ActionMenuItem
-                  onClick={() => handleEditViewItemClick(setShowEditView)}
+                  // onClick={() => handleEditViewItemClick(setShowEditView)}
+                  onClick={() => handleShowEdit()}
                   disabled={!formData}
                 >
                   {t('edit', { ns: 'admin' })}
@@ -416,6 +432,10 @@ export default function ModelInfoView({
             />
           </>
         )}
+        <UnsavedAlertModal
+          visible={displayGraphHasChanges}
+          handleFollowUp={() => handleEditViewItemClick(setShowEditView)}
+        />
       </>
     );
   }

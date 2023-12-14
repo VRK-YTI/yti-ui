@@ -29,9 +29,12 @@ import DeleteModal from '../delete-modal';
 import { useSelector } from 'react-redux';
 import {
   selectAddResourceRestrictionToClass,
+  selectDisplayGraphHasChanges,
   selectDisplayLang,
+  selectGraphHasChanges,
   selectUpdateClassData,
   setAddResourceRestrictionToClass,
+  setDisplayGraphHasChanges,
   setUpdateClassData,
 } from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL, SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
@@ -47,6 +50,7 @@ import { UriData } from '@app/common/interfaces/uri.interface';
 import { RenameModal } from '../rename-modal';
 import getApiError from '@app/common/utils/get-api-errors';
 import { translateResourceAddition } from '@app/common/utils/translation-helpers';
+import UnsavedAlertModal from '../unsaved-alert-modal';
 
 interface ClassInfoProps {
   data?: ClassType;
@@ -82,8 +86,10 @@ export default function ClassInfo({
   const [headerHeight, setHeaderHeight] = useState(hasPermission ? 57 : 55);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
-  const updateClassData = useSelector(selectUpdateClassData());
   const dispatch = useStoreDispatch();
+  const updateClassData = useSelector(selectUpdateClassData());
+  const displayGraphHasChanges = useSelector(selectDisplayGraphHasChanges());
+  const graphHasChanges = useSelector(selectGraphHasChanges());
   const renderResourceForm = useSelector(selectAddResourceRestrictionToClass());
   const [attributeModalVisible, setAttributeModalVisible] = useState(false);
   const [associationModalVisible, setAssociationModalVisible] = useState(false);
@@ -116,6 +122,15 @@ export default function ClassInfo({
       dispatch(initializeResource(value.type, value.uriData, true));
       dispatch(setAddResourceRestrictionToClass(true));
     }
+  };
+
+  const handleIsEdit = () => {
+    if (graphHasChanges) {
+      dispatch(setDisplayGraphHasChanges(true));
+      return;
+    }
+
+    handleEdit();
   };
 
   useEffect(() => {
@@ -229,7 +244,7 @@ export default function ClassInfo({
           </Button>
           {!disableEdit && hasPermission && data && (
             <ActionMenu buttonText={t('actions')} id="actions-menu">
-              <ActionMenuItem onClick={() => handleEdit()}>
+              <ActionMenuItem onClick={() => handleIsEdit()}>
                 {t('edit', { ns: 'admin' })}
               </ActionMenuItem>
               <ActionMenuItem onClick={() => setShowRenameModal(true)}>
@@ -268,6 +283,11 @@ export default function ClassInfo({
         ) : (
           <></>
         )}
+
+        <UnsavedAlertModal
+          visible={displayGraphHasChanges}
+          handleFollowUp={() => handleEdit()}
+        />
       </StaticHeader>
 
       {data && (

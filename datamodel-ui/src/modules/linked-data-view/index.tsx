@@ -12,13 +12,18 @@ import {
 import LinkedDataForm from '../linked-data-form';
 import HasPermission from '@app/common/utils/has-permission';
 import {
+  selectDisplayGraphHasChanges,
   selectDisplayLang,
+  selectGraphHasChanges,
+  setDisplayGraphHasChanges,
   useGetModelQuery,
 } from '@app/common/components/model/model.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { HeaderRow } from '@app/common/components/header';
 import { useSelector } from 'react-redux';
 import { getEnvParam } from '@app/common/components/uri-info';
+import { useStoreDispatch } from '@app/store';
+import UnsavedAlertModal from '../unsaved-alert-modal';
 
 export default function LinkedDataView({
   modelId,
@@ -32,7 +37,10 @@ export default function LinkedDataView({
   organizationIds?: string[];
 }) {
   const { t, i18n } = useTranslation('common');
+  const dispatch = useStoreDispatch();
   const displayLang = useSelector(selectDisplayLang());
+  const displayGraphHasChanges = useSelector(selectDisplayGraphHasChanges());
+  const graphHasChanges = useSelector(selectGraphHasChanges());
   const ref = useRef<HTMLDivElement>(null);
   const hasPermission = HasPermission({
     actions: ['EDIT_DATA_MODEL'],
@@ -45,12 +53,17 @@ export default function LinkedDataView({
     version: version,
   });
 
-  const handleShowForm = () => {
-    setRenderForm(true);
-  };
-
   const handleFormReturn = () => {
     setRenderForm(false);
+  };
+
+  const handleShowForm = () => {
+    if (graphHasChanges) {
+      dispatch(setDisplayGraphHasChanges(true));
+      return;
+    }
+
+    setRenderForm(true);
   };
 
   useEffect(() => {
@@ -84,6 +97,11 @@ export default function LinkedDataView({
             </Button>
           )}
         </HeaderRow>
+
+        <UnsavedAlertModal
+          visible={displayGraphHasChanges}
+          handleFollowUp={() => setRenderForm(true)}
+        />
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
