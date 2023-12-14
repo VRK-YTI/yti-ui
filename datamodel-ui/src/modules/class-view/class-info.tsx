@@ -2,7 +2,7 @@ import { StatusChip } from '@app/common/components/resource-list/resource-list.s
 import { ClassType } from '@app/common/interfaces/class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Button,
   ExpanderGroup,
@@ -82,7 +82,6 @@ export default function ClassInfo({
     actions: ['EDIT_CLASS'],
     targetOrganization: organizationIds,
   });
-  const ref = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(hasPermission ? 57 : 55);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
@@ -132,12 +131,6 @@ export default function ClassInfo({
 
     handleEdit();
   };
-
-  useEffect(() => {
-    if (ref.current) {
-      setHeaderHeight(ref.current.clientHeight);
-    }
-  }, [data]);
 
   function renderTopInfoByType() {
     if (!data) {
@@ -232,7 +225,11 @@ export default function ClassInfo({
 
   return (
     <>
-      <StaticHeader ref={ref}>
+      <StaticHeader
+        ref={(node) => {
+          setHeaderHeight(node?.clientHeight ?? 50);
+        }}
+      >
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Button
             variant="secondaryNoBorder"
@@ -279,6 +276,19 @@ export default function ClassInfo({
               hide={() => setShowRenameModal(false)}
               handleReturn={handleShowClass}
             />
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}
+            >
+              <Text variant="bold">
+                {getLanguageVersion({
+                  data: data.label,
+                  lang: displayLang ?? i18n.language,
+                })}
+              </Text>
+              <StatusChip status={data.status}>
+                {translateStatus(data.status, t)}
+              </StatusChip>
+            </div>
           </>
         ) : (
           <></>
@@ -299,18 +309,6 @@ export default function ClassInfo({
           ) : (
             <></>
           )}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <Text variant="bold">
-              {getLanguageVersion({
-                data: data.label,
-                lang: displayLang ?? i18n.language,
-              })}
-            </Text>
-            <StatusChip status={data.status}>
-              {translateStatus(data.status, t)}
-            </StatusChip>
-          </div>
-
           <BasicBlock title={t('class-identifier')}>{data.curie}</BasicBlock>
 
           <BasicBlock title={t('uri')}>

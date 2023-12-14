@@ -6,7 +6,7 @@ import {
   translateStatus,
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ActionMenu,
   ActionMenuDivider,
@@ -67,7 +67,6 @@ export default function ResourceInfo({
   organizationIds,
 }: CommonViewProps) {
   const { t, i18n } = useTranslation('common');
-  const ref = useRef<HTMLDivElement>(null);
   const displayLang = useSelector(selectDisplayLang());
   const hasPermission = HasPermission({
     actions: ['EDIT_ASSOCIATION', 'EDIT_ATTRIBUTE'],
@@ -115,15 +114,13 @@ export default function ResourceInfo({
     }
   }, [toggleResult, handleRefetch]);
 
-  useEffect(() => {
-    if (ref.current) {
-      setHeaderHeight(ref.current.clientHeight);
-    }
-  }, [ref]);
-
   return (
     <>
-      <StaticHeader ref={ref}>
+      <StaticHeader
+        ref={(node) => {
+          setHeaderHeight(node?.clientHeight ?? 50);
+        }}
+      >
         <div>
           <Button
             variant="secondaryNoBorder"
