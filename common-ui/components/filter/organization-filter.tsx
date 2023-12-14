@@ -21,17 +21,15 @@ export default function OrganizationFilter({
     return null;
   }
 
-  const selectedItem = organizations.find(
-    (org) => org.uniqueItemId === urlState.organization
-  );
-
   return (
     <DropdownWrapper>
       <SingleSelect
         labelText={title}
         clearButtonLabel={t('terminology-search-filter-clear-organization')}
         items={organizations}
-        selectedItem={selectedItem}
+        defaultSelectedItem={organizations.find(
+          (org) => org.uniqueItemId === urlState.organization
+        )}
         visualPlaceholder={visualPlaceholder}
         ariaOptionsAvailableText={
           'terminology-search-filter-organizations-available'
