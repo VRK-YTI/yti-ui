@@ -81,6 +81,8 @@ export default function SchemaForm({
                     <DropdownItem value={'CSV'}>{'CSV'}</DropdownItem>
                     <DropdownItem value={'PDF'}>{'PDF'}</DropdownItem>
                     <DropdownItem value={'SKOSRDF'}>{'SKOSRDF'}</DropdownItem>
+                    <DropdownItem value={'XSD'}>{'XSD'}</DropdownItem>
+                    <DropdownItem value={'XML'}>{'XML'}</DropdownItem>
                 </Dropdown>
             </div>
         );
