@@ -38,6 +38,12 @@ export const ClassNodeDiv = styled.div<{
     max-width: 100%;
 
     padding: ${(props) => props.theme.suomifi.spacing.xxs};
+
+    div:first-child {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   .react-flow__handle {
