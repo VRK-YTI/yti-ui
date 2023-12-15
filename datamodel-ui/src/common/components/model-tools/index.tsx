@@ -42,13 +42,18 @@ import { translateTooltip } from '@app/common/utils/translation-helpers';
 export default function ModelTools({
   modelId,
   applicationProfile,
+  organisations,
 }: {
   modelId: string;
   applicationProfile: boolean;
+  organisations: string[];
 }) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
-  const hasPermission = HasPermission({ actions: 'ADMIN_DATA_MODEL' });
+  const hasPermission = HasPermission({
+    actions: 'ADMIN_DATA_MODEL',
+    targetOrganization: organisations,
+  });
   const { setViewport, setCenter, getNode } = useReactFlow();
   const dispatch = useStoreDispatch();
   const tools = useSelector(selectModelTools());
