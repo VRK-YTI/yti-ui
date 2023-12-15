@@ -191,8 +191,6 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
       dispatch(setNotification('MODEL_ADD'));
       router.replace(`/model/${modelId}`, undefined, { shallow: true });
     }
-
-    // setVersion(getSlugAsString(router.query.ver));
   }, [router, dispatch, modelId]);
 
   return (
