@@ -1,3 +1,7 @@
+.fi-dropdown_popover {
+  margin-top: 0px !important;
+}
+
 /* EDIT MAPPING MODAL */
 .edit-mapping-modal {
   width: 1000px !important;
@@ -114,7 +118,14 @@
     .node-info-texts {
       padding: 5px;
     }
+    .node-info-dropdown {
+      ul {
+        max-width: 265px !important;
+      }
+    }
   }
+
+  // Tree
   .MuiTreeItem-label {
     font-size: 17px !important;
   }
@@ -161,9 +172,6 @@
     border-radius: 5px;
   }
 
-  .node-info-dropdown {
-  }
-
   .node-info-box {
     min-height: 175px;
     font-size: 0.95rem;
@@ -193,10 +201,28 @@
     font-size: 2.1rem;
   }
 
+  // Accordion
   .joint-listing-accordion-wrap {
     thead {
       border-bottom: 3px solid #d8e3f4;
       outline: none;
+    }
+    .MuiPaper-root {
+      box-shadow: none;
+    }
+
+    .MuiSvgIcon-root {
+      color: #3D6CB4;
+    }
+
+    .MuiTableCell-root {
+      border: none;
+    }
+    .MuiTableRow-root:not(.accordion-row) {
+      box-shadow: none;
+      border-left-width: 0;
+      proder-right-width: 0;
+      border-bottom: 3px solid #d8e3f4;
     }
   }
 

@@ -52,12 +52,20 @@ import filter from "../../../../common-ui/components/filter";
 import {useRouter} from 'next/router';
 import {useGetCrosswalkQuery} from "@app/common/components/crosswalk/crosswalk.slice";
 import {useGetFrontendSchemaQuery} from "@app/common/components/schema/schema.slice";
+import {useGetCrosswalkMappingFunctionsQuery} from "@app/common/components/crosswalk-functions/crosswalk-functions.slice";
+
 
 export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) {
     interface simpleNode {
         name: string | undefined;
         id: string;
     }
+
+    const { data: mappingFunctions, isLoading: mappingFunctionsIsLoading } =
+        useGetCrosswalkMappingFunctionsQuery('');
+
+    const { data: mappingFilters, isLoading: mappingFiltersIsLoading } =
+        useGetCrosswalkMappingFunctionsQuery('FILTERS');
 
     const {
         data: getCrosswalkData,
@@ -175,7 +183,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
 
     const [connectedCrosswalksNew, setConnectedCrosswalksNew] = React.useState<CrosswalkConnectionNew[]>([]);
     const [jointToBeEdited, setJointToBeEdited] = React.useState<CrosswalkConnectionNew | undefined>(crosswalkConnectionNewInit);
-    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
 
     const [connectedCrosswalksNew2, setConnectedCrosswalksNew2] = React.useState<CrosswalkConnectionsNew[] | []>([]);
 
@@ -185,14 +192,10 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     const [selectedTab, setSelectedTab] = React.useState(1);
     const [nodeMappingsModalOpen, setNodeMappingsModalOpen] = React.useState<boolean>(false);
 
-    const [filterFunctions, setFilterFunctions] = React.useState<any[]>([]);
 
     const [crosswalksList, setCrosswalkList] = React.useState<string[]>([]);
 
     const [isEditModeActive, setEditModeActive] = React.useState<boolean>(true);
-
-    useEffect(() => {
-    }, [filterFunctions]);
 
     useEffect(() => {
         setNodeMappingsModalOpen(true);
@@ -206,6 +209,12 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
             setTargetSchemaUrn(getCrosswalkData.targetSchema);
         }
     }, [getCrosswalkDataIsSuccess]);
+
+    useEffect(() => {
+    }, [!mappingFunctionsIsLoading]);
+
+    useEffect(() => {
+    }, [!mappingFiltersIsLoading]);
 
     // RESET EDITED JOINT VALUE IF MODAL NEEDS TO BE RE OPENED
     useEffect(() => {
@@ -378,6 +387,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
             cw.id === nodeId ? cw.isSelected = true : cw.isSelected = false;
             newCons.push(cw);
         });
+        console.log('NEW CONS', newCons);
         setConnectedCrosswalksNew(() => [...newCons]);
     }
 
@@ -756,6 +766,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         }
         if (action === 'save') {
             setNodeMappingsModalOpen(false);
+
             setConnectedCrosswalksNew(crosswalkMappings => {
                 return [jointToBeEdited, ...crosswalkMappings];
             });
@@ -987,7 +998,8 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                     {jointToBeEdited && <>
                         <NodeMappingsModal selectedCrosswalk={jointToBeEdited}
                                            performNodeInfoAction={performCallbackFromMappingModal}
-                                           filterFunctions={filterFunctions}
+                                           mappingFilters={mappingFilters}
+                                           mappingFunctions={mappingFunctions}
                                            modalOpen={nodeMappingsModalOpen}
                                            isFirstAdd={false}></NodeMappingsModal>
                     </>
