@@ -116,34 +116,38 @@ export default function OwnInformation({
           id="organizations-and-roles"
         >
           <OrgsAndRolesWrapper>
-            {Object.entries(user.rolesInOrganizations).map((data) => (
-              <div key={data[0]}>
-                <BasicBlock title={t('organization')}>
-                  {organizations
-                    ? getLanguageVersion({
-                        data: organizations.find((org) => org.id === data[0])
-                          ?.label,
-                        lang: i18n.language,
-                        appendLocale: true,
-                      })
-                    : null}
-                </BasicBlock>
+            {Object.entries(user.rolesInOrganizations)
+              .filter((data) =>
+                organizations?.some((org) => org.id === data[0])
+              )
+              .map((data) => (
+                <div key={data[0]}>
+                  <BasicBlock title={t('organization')}>
+                    {organizations
+                      ? getLanguageVersion({
+                          data: organizations.find((org) => org.id === data[0])
+                            ?.label,
+                          lang: i18n.language,
+                          appendLocale: true,
+                        })
+                      : null}
+                  </BasicBlock>
 
-                <BasicBlock title={t('roles.roles')}>
-                  <OrgsAndRolesUl>
-                    {data[1].map((role) => (
-                      <li key={`${data[0]}-role-${role}`}>
-                        {translateRole(role, t)}
-                      </li>
-                    ))}
-                  </OrgsAndRolesUl>
-                </BasicBlock>
+                  <BasicBlock title={t('roles.roles')}>
+                    <OrgsAndRolesUl>
+                      {data[1].map((role) => (
+                        <li key={`${data[0]}-role-${role}`}>
+                          {translateRole(role, t)}
+                        </li>
+                      ))}
+                    </OrgsAndRolesUl>
+                  </BasicBlock>
 
-                {hasRequestPending(data[0]) && (
-                  <InlineAlert>{t('access-request-sent')}</InlineAlert>
-                )}
-              </div>
-            ))}
+                  {hasRequestPending(data[0]) && (
+                    <InlineAlert>{t('access-request-sent')}</InlineAlert>
+                  )}
+                </div>
+              ))}
           </OrgsAndRolesWrapper>
         </BasicBlock>
 

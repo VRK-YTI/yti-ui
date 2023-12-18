@@ -20,7 +20,10 @@ import PermissionModal from 'yti-common-ui/modules/own-information/permission-mo
 export default function OwnInformation() {
   const user = useSelector(selectLogin());
   const { i18n } = useTranslation('common');
-  const { data: organizations } = useGetOrganizationsQuery(i18n.language);
+  const { data: organizations } = useGetOrganizationsQuery({
+    sortLang: i18n.language,
+    includeChildOrganizations: true,
+  });
   const { data: subscriptions, refetch: refetchSubscriptions } =
     useGetSubscriptionsQuery();
   const { data: requests, refetch: refetchRequests } = useGetRequestsQuery();
