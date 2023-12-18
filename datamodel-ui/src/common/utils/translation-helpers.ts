@@ -517,25 +517,103 @@ export function translateTooltip(key: string, t: TFunction) {
   switch (key) {
     case 'graph-tools_zoom-in':
       return t('graph-tools.zoom-in', { ns: 'common' });
-      return 'Zoom in';
     case 'graph-tools_zoom-out':
       return t('graph-tools.zoom-out', { ns: 'common' });
-      return 'Zoom out';
     case 'graph-tools_fullscreen':
       return t('graph-tools.fullscreen', { ns: 'common' });
-      return 'Fullscreen';
     case 'graph-tools_reset-positions':
       return t('graph-tools.reset-positions', { ns: 'common' });
-      return 'Reset positions';
     case 'graph-tools_zoom-to':
       return t('graph-tools.zoom-to', { ns: 'common' });
-      return 'Zoom to';
     case 'graph-tools_save-positions':
       return t('graph-tools.save-positions', { ns: 'common' });
-      return 'Save positions';
     case 'graph-tools_download-picture':
       return t('graph-tools.download-picture', { ns: 'common' });
-      return 'Download picture';
+    default:
+      return '';
+  }
+}
+
+export function translatePageTitle(
+  key: string,
+  type: ResourceType,
+  t: TFunction,
+  applicationProfile?: boolean
+) {
+  switch (key) {
+    case 'return-to-list':
+      switch (type) {
+        case 'CLASS':
+          return t('return-to-class-list', { ns: 'common' });
+        case 'ASSOCIATION':
+          return t('return-to-association-list', { ns: 'common' });
+        case 'ATTRIBUTE':
+          return t('return-to-attribute-list', { ns: 'common' });
+        default:
+          return '';
+      }
+    case 'return-to-resource':
+      switch (type) {
+        case 'CLASS':
+          return applicationProfile
+            ? t('return-to-class-restriction', { ns: 'admin' })
+            : t('return-to-class', { ns: 'admin' });
+        case 'ASSOCIATION':
+          return applicationProfile
+            ? t('return-to-association-restriction', { ns: 'admin' })
+            : t('return-to-association', { ns: 'admin' });
+        case 'ATTRIBUTE':
+          return applicationProfile
+            ? t('return-to-attribute-restriction', { ns: 'admin' })
+            : t('return-to-attribute', { ns: 'admin' });
+        default:
+          return '';
+      }
+    case 'edit':
+      switch (type) {
+        case 'CLASS':
+          return applicationProfile
+            ? t('edit-class-restriction', { ns: 'admin' })
+            : t('edit-class', { ns: 'admin' });
+        case 'ASSOCIATION':
+          return applicationProfile
+            ? t('edit-association-restriction', { ns: 'admin' })
+            : t('edit-association', { ns: 'admin' });
+        case 'ATTRIBUTE':
+          return applicationProfile
+            ? t('edit-attribute-restriction', { ns: 'admin' })
+            : t('edit-attribute', { ns: 'admin' });
+        default:
+          return '';
+      }
+    case 'create':
+      switch (type) {
+        case 'CLASS':
+          return applicationProfile
+            ? t('create-class-restriction', { ns: 'admin' })
+            : t('create-class', { ns: 'admin' });
+        case 'ASSOCIATION':
+          return applicationProfile
+            ? t('create-association-restriction', { ns: 'admin' })
+            : t('create-association', { ns: 'admin' });
+        case 'ATTRIBUTE':
+          return applicationProfile
+            ? t('create-attribute-restriction', { ns: 'admin' })
+            : t('create-attribute', { ns: 'admin' });
+        default:
+          return '';
+      }
+    case 'create-sub':
+      switch (type) {
+        case 'CLASS':
+          return t('create-subclass', { ns: 'admin' });
+        case 'ASSOCIATION':
+          return t('create-sub-assocation', { ns: 'admin' });
+        case 'ATTRIBUTE':
+          return t('create-sub-attribute', { ns: 'admin' });
+        default:
+          return '';
+      }
     default:
       return '';
   }

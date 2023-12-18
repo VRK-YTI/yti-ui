@@ -150,7 +150,7 @@ export default function LinkedDataForm({
     <>
       <StaticHeader ref={ref}>
         <HeaderRow>
-          <Text variant="bold">{t('links', { ns: 'common' })}</Text>
+          <Text variant="bold">{t('edit-links')}</Text>
 
           <div
             style={{
