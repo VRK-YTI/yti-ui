@@ -27,7 +27,7 @@ export const ResultsTable = styled.table<{ $expandedLastCell?: boolean }>`
   }
 
   td:first-child {
-    min-width: 20%;
+    min-width: 25%;
   }
 
   td:not(:first-child) {

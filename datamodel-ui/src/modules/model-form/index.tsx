@@ -35,6 +35,7 @@ import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
+import { checkPermission } from '@app/common/utils/has-permission';
 
 interface ModelFormProps {
   formData: ModelFormType;
@@ -60,7 +61,9 @@ export default function ModelForm({
   const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
     i18n.language
   );
-  const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
+  const { data: organizationsData } = useGetOrganizationsQuery({
+    sortLang: i18n.language,
+  });
   const { data: languages, isSuccess } = useGetLanguagesQuery();
   const [languageList, setLanguageList] = useState<LanguageBlockType[]>([]);
 
@@ -97,7 +100,11 @@ export default function ModelForm({
         uniqueItemId: o.id,
       }))
       .filter((o) =>
-        Object.keys(user.rolesInOrganizations).includes(o.uniqueItemId)
+        checkPermission({
+          user: user,
+          actions: ['CREATE_DATA_MODEL'],
+          targetOrganizations: [o.uniqueItemId],
+        })
       )
       .sort((o1, o2) => (o1.labelText > o2.labelText ? 1 : -1));
   }, [organizationsData, user, i18n.language]);

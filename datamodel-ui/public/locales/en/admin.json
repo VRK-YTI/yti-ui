@@ -315,6 +315,7 @@
   "terminology": "Terminology",
   "terminology-counts_one": "{{count}} terminology",
   "terminology-counts_other": "{{count}} terminologies",
+  "to-draft": "Go to draft version",
   "try-again": "Try again",
   "undo-changes": "Undo changes",
   "unexpected-error-title": "Unexpected error",

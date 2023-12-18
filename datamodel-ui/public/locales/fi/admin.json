@@ -315,6 +315,7 @@
   "terminology": "Sanasto",
   "terminology-counts_one": "{{count}} sanasto",
   "terminology-counts_other": "{{count}} sanastoa",
+  "to-draft": "Siirry luonnosversioon",
   "try-again": "Yritä uudelleen",
   "undo-changes": "Hylkää muutokset",
   "unexpected-error-title": "Odottamaton virhe",

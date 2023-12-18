@@ -83,6 +83,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
             <ModelTools
               modelId={modelId}
               applicationProfile={modelInfo?.type === 'PROFILE'}
+              organisations={organizationIds}
             />
           </Graph>
         ),
@@ -210,6 +211,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
           <ModelTools
             modelId={modelId}
             applicationProfile={modelInfo?.type === 'PROFILE'}
+            organisations={organizationIds}
           />
         </Graph>
       </ContentWrapper>

@@ -98,7 +98,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
-    store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
+    store.dispatch(getOrganizations.initiate({ sortLang: locale ?? 'fi' }));
     store.dispatch(
       getSearchModels.initiate({ urlState, lang: locale ?? 'fi' })
     );

@@ -15,10 +15,6 @@ export default function LanguageFilter({
   const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
 
-  const currLang = languages.find(
-    (lang) => lang.uniqueItemId === urlState.lang
-  );
-
   return (
     <DropdownWrapper>
       <SingleSelect
@@ -28,7 +24,9 @@ export default function LanguageFilter({
         labelText={labelText}
         visualPlaceholder={t('choose-language')}
         itemAdditionHelpText={''}
-        selectedItem={currLang}
+        defaultSelectedItem={languages.find(
+          (lang) => lang.uniqueItemId === urlState.lang
+        )}
         onItemSelect={(lang) =>
           patchUrlState({
             lang: lang ? lang : '',

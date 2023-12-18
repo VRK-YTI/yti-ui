@@ -54,6 +54,7 @@ import {
   splitEdgeFn,
   toggleShowAttributes,
 } from './utils/graph-utils';
+import { checkPermission } from '@app/common/utils/has-permission';
 
 interface GraphProps {
   modelId: string;
@@ -274,11 +275,18 @@ const GraphContent = ({
 
   const nodeDragStop = useCallback(
     (_: React.MouseEvent, node: Node) => {
-      if (!user.anonymous && node.dragging) {
+      if (
+        checkPermission({
+          user: user,
+          actions: ['ADMIN_DATA_MODEL'],
+          targetOrganizations: organizationIds,
+        }) &&
+        node.dragging
+      ) {
         dispatch(setGraphHasChanges(true));
       }
     },
-    [user, dispatch]
+    [organizationIds, user, dispatch]
   );
 
   useEffect(() => {

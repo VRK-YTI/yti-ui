@@ -20,7 +20,7 @@ import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DeleteModal from '@app/modules/delete-modal';
 import CommonViewContent from '@app/modules/common-view-content';
-import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
+import { StatusChip } from 'yti-common-ui/components/status-chip';
 import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 import LocalCopyModal from '@app/modules/local-copy-modal';
 import { useSelector } from 'react-redux';

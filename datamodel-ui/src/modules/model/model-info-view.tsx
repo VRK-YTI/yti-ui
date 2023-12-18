@@ -54,6 +54,7 @@ export default function ModelInfoView({
   organizationIds?: string[];
 }) {
   const { t, i18n } = useTranslation('common');
+  const router = useRouter();
   const dispatch = useStoreDispatch();
   const { query } = useRouter();
   const [modelId] = useState(getSlugAsString(query.slug) ?? '');
@@ -182,31 +183,35 @@ export default function ModelInfoView({
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Text variant="bold">{t('details')}</Text>
           <ActionMenu id="actions-menu" buttonText={t('actions')}>
-            {hasPermission ? (
-              <>
-                <ActionMenuItem
-                  // onClick={() => handleEditViewItemClick(setShowEditView)}
-                  onClick={() => handleShowEdit()}
-                  disabled={!formData}
-                >
-                  {t('edit', { ns: 'admin' })}
-                </ActionMenuItem>
-                <ActionMenuDivider />
-              </>
-            ) : (
-              <></>
-            )}
             {hasPermission && !version ? (
               <ActionMenuItem
-                onClick={() => handleModalChange('createRelease', true)}
+                onClick={() => handleShowEdit()}
                 disabled={!formData}
               >
-                {t('create-release', { ns: 'admin' })}
+                {t('edit', { ns: 'admin' })}
               </ActionMenuItem>
             ) : (
               <></>
             )}
-
+            {hasPermission ? (
+              version ? (
+                <ActionMenuItem
+                  onClick={() => router.push(`/model/${modelId}`)}
+                >
+                  {t('to-draft', { ns: 'admin' })}
+                </ActionMenuItem>
+              ) : (
+                <ActionMenuItem
+                  onClick={() => handleModalChange('createRelease', true)}
+                  disabled={!formData}
+                >
+                  {t('create-release', { ns: 'admin' })}
+                </ActionMenuItem>
+              )
+            ) : (
+              <></>
+            )}
+            {hasPermission ? <ActionMenuDivider /> : <></>}
             <ActionMenuItem
               onClick={() => handleModalChange('showAsFile', true)}
             >
