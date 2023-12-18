@@ -63,15 +63,25 @@ export default function DesktopNavigation({
             <NavigationDropdownWrapper id="top-navigation-dropdown">
               <NavigationDropdownList>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink href="/">{t('terminology-title')}</SuomiFiLink>
+                  <SuomiFiLink
+                    href={`https://sanastot.suomi.fi/${router.locale ?? 'fi'}`}
+                  >
+                    {t('terminology-title')}
+                  </SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink href="https://koodistot.suomi.fi/">
+                  <SuomiFiLink
+                    href={`https://koodistot.suomi.fi/${router.locale ?? 'fi'}`}
+                  >
                     {t('codelist-title')}
                   </SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink href="https://tietomallit.suomi.fi/">
+                  <SuomiFiLink
+                    href={`https://tietomallit.suomi.fi/${
+                      router.locale ?? 'fi'
+                    }`}
+                  >
                     {t('datamodel-title')}
                   </SuomiFiLink>
                 </NavigationDropdownItem>
