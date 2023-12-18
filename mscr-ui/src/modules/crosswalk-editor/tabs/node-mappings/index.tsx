@@ -20,49 +20,19 @@ import {
 import CrosswalkForm from '@app/modules/crosswalk-form';
 import FormFooterAlert from '../../../../../../common-ui/components/form-footer-alert';
 
-export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnectionNew; performNodeInfoAction: any; filterFunctions: any; modalOpen: boolean; isFirstAdd: boolean }) {
+export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnectionNew; performNodeInfoAction: any; mappingFilters: any; mappingFunctions: any; modalOpen: boolean; isFirstAdd: boolean }) {
     let sourceSelectionInit = '';
     let targetSelectionInit = '';
-    console.log('SOURCE DATA', props?.selectedCrosswalk?.source);
-    console.log('TARGET DATA', props?.selectedCrosswalk?.target);
-    console.log('SELECTED', props?.selectedCrosswalk);
 
-    const operationValues = [
+    const predicateValues = [
         {
-            name: 'Operation 1',
+            name: 'Exact match',
             id: 1,
         },
-        {
-            name: 'Operation 2',
-            id: 2,
-        }
     ];
-
-    const filterValues = [
-        {
-            name: 'Filter 1',
-            id: 1,
-        },
-        {
-            name: 'Filter 2',
-            id: 2,
-        }
-    ];
-
-    const filterOperations = [
-        {
-            name: 'Filter operation 1',
-            id: 1,
-        },
-        {
-            name: 'Filter operation 2',
-            id: 2,
-        }
-    ];
-    const operationSelectInit = 'Operation 1';
 
     const filterTargetSelectInit = '';
-    const filterOperationsSelectInit = 'Filter operation 1';
+    const filterOperationsSelectInit = '';
 
     useEffect(() => {
         if (props?.selectedCrosswalk?.source) {
@@ -78,9 +48,10 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
     }, [props]);
 
     const [sourceInputValue, setSourceInputValue] = useState(sourceSelectionInit);
-    const [operation1Value, setOperation1Value] = useState(operationSelectInit);
+    const [sourceOperationValue, setSourceOperationValue] = useState('');
+    const [targetOperationValue, setTargetOperationValue] = useState('');
     const [mappingOperationValue, setMappingOperationValue] = useState('');
-    const [operation3Value, setOperation3Value] = useState(operationSelectInit);
+    const [predicateValue, setPredicateValue] = useState('');
 
     const [filterTarget, setFilterTarget] = useState(filterTargetSelectInit);
     const [filterOperation, setFilterOperation] = useState(filterOperationsSelectInit);
@@ -103,7 +74,38 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
     };
 
     function setSourceFilterValue(value: any) {
-        console.log('setting source fitler value', value);
+    }
+
+    function generatePropertiesDropdownItems(input: any) {
+        let keys = [];
+        for (let key in input) {
+            keys.push({'name': key});
+        }
+        return keys;
+    }
+
+    function generateMappingOperationTextboxes(input: string) {
+        let mappingInputFields = [];
+        let ret = [];
+        let ret2 = [];
+        props.mappingFunctions.filter(item => {
+            return (item.uri === input);
+        }).map(match => {
+            mappingInputFields.push(match);
+        });
+        if (mappingInputFields.length > 0) {
+            ret = mappingInputFields[0]['parameters'].map(item => {
+                return {name: item.name, datatype: item.datatype};
+            });
+        }
+        ret.forEach(item => {
+            ret2.push(<TextInput
+                onChange={(value) => null}
+                visualPlaceholder="Operation value"
+            />);
+        });
+
+        console.log('RET', ret);
     }
 
     function save() {
@@ -114,9 +116,9 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
     // CLEAR FIELDS WHEN MODAL OPENED
     useEffect(() => {
         setSourceInputValue(sourceSelectionInit);
-        setOperation1Value(operationSelectInit);
+        setSourceOperationValue('');
+        setTargetOperationValue('');
         setMappingOperationValue('');
-        setOperation3Value(operationSelectInit);
         setFilterTarget(filterTargetSelectInit);
         setFilterOperation(filterOperationsSelectInit);
         setMappingPayload(props.selectedCrosswalk);
@@ -124,8 +126,10 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
 
     // VALIDATE MAPPING
     useEffect(() => {
+        generatePropertiesDropdownItems(props.selectedCrosswalk.source.properties);
         setValidationErrors(validateMapping(props.selectedCrosswalk));
-    }, [setOperation1Value, setMappingOperationValue, setOperation3Value, setFilterTarget, setFilterOperation]);
+        generateMappingOperationTextboxes(mappingOperationValue);
+    }, [sourceOperationValue, targetOperationValue, mappingOperationValue, filterTarget, filterOperation, predicateValue, mappingOperationValue]);
 
     return (<>
         <Modal
@@ -144,9 +148,11 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                         <div className='col-4'>
                             <div className='bg-light-blue p-2'>
                                 <p><span className='fw-bold'>Source: </span>{props.selectedCrosswalk.source.name}</p>
-                                <p><span className='fw-bold'>Type: </span>{props.selectedCrosswalk.source.type}</p>
                                 <p><span
-                                    className='fw-bold'>Description: </span>{props.selectedCrosswalk.source?.description ? props.selectedCrosswalk.source?.description : 'N/A'}
+                                    className='fw-bold'>Type: </span>{props.selectedCrosswalk.source.properties.type}
+                                </p>
+                                <p><span
+                                    className='fw-bold'>Description: </span>{props.selectedCrosswalk.source.properties.description ? props.selectedCrosswalk.source.properties.description : 'N/A'}
                                 </p>
 
                                 <span hidden={filterDetailsVisible}>
@@ -167,36 +173,39 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                                               value={filterTarget}
                                               onChange={(newValue) => setFilterTarget(newValue)}
                                     >
-                                        {filterValues.map((rt) => (
+                                        {generatePropertiesDropdownItems(props.selectedCrosswalk.source.properties).map((rt) => (
                                             <DropdownItem key={rt.id} value={rt.name}>
                                                 {rt.name}
                                             </DropdownItem>
                                         ))}
                                     </Dropdown>
-                                    <div><Dropdown className='mt-2 node-info-dropdown'
-                                                   visualPlaceholder="Filter function not selected"
-                                                   value={filterOperation}
-                                                   onChange={(newValue) => setFilterOperation(newValue)}
-                                    >
-                                        {filterOperations.map((rt) => (
-                                            <DropdownItem key={rt.id} value={rt.name}>
-                                                {rt.name}
-                                            </DropdownItem>
-                                        ))}
-                                    </Dropdown></div>
+                                    <div>
+                                        <Dropdown className='mt-2 node-info-dropdown'
+                                                  visualPlaceholder="Filter function not selected"
+                                                  value={filterOperation}
+                                                  onChange={(newValue) => setFilterOperation(newValue)}
+                                        >
+                                            {props.mappingFilters.map((rt) => (
+                                                <DropdownItem key={rt.id} value={rt.name}>
+                                                    {rt.name}
+                                                </DropdownItem>
+                                            ))}
+                                        </Dropdown>
+                                    </div>
                                     <TextInput
                                         onChange={(value) => setSourceFilterValue('uri', value)}
                                         visualPlaceholder="Value"
                                     />
                                 </div>
+                                <br/>
                                 <div><Dropdown className='mt-2 node-info-dropdown'
                                                labelText="Source operation"
                                                visualPlaceholder="Operation not selected"
-                                               value={operation1Value}
-                                               onChange={(newValue) => setOperation1Value(newValue)}
+                                               value={sourceOperationValue}
+                                               onChange={(newValue) => setSourceOperationValue(newValue)}
                                 >
-                                    {operationValues.map((rt) => (
-                                        <DropdownItem key={rt.id} value={rt.name}>
+                                    {props?.mappingFunctions.map((rt) => (
+                                        <DropdownItem key={rt.uri} value={rt.name}>
                                             {rt.name}
                                         </DropdownItem>
                                     ))}
@@ -206,18 +215,39 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
 
                         {/* MID COLUMN */}
                         <div className='col-4 d-flex flex-column justify-content-between'>
-                            <div><Dropdown className='mt-2 node-info-dropdown'
-                                           labelText="Mapping operation"
-                                           visualPlaceholder="Operation not selected"
-                                           value={mappingOperationValue}
-                                           onChange={(newValue) => setMappingOperationValue(newValue)}
-                            >
-                                {props?.filterFunctions.map((rt) => (
-                                    <DropdownItem key={rt.uri} value={rt.name}>
-                                        {rt.name}
-                                    </DropdownItem>
-                                ))}
-                            </Dropdown></div>
+                            <div>
+                                <div><Dropdown className='mt-2 node-info-dropdown'
+                                               labelText="Mapping operation"
+                                               visualPlaceholder="Operation not selected"
+                                               value={mappingOperationValue}
+                                               onChange={(newValue) => setMappingOperationValue(newValue)}
+                                >
+                                    {props?.mappingFunctions.map((rt) => (
+                                        <DropdownItem key={rt.uri} value={rt.uri}>
+                                            {rt.name}
+                                        </DropdownItem>
+                                    ))}
+                                </Dropdown></div>
+                                <div><TextInput
+                                    onChange={(value) => setSourceFilterValue('uri', value)}
+                                    visualPlaceholder="Operation value"
+                                /></div>
+                                <div><br/>
+                                    <Dropdown className='mt-2 node-info-dropdown'
+                                              labelText="Predicate"
+                                              visualPlaceholder="Exact match"
+                                              value={predicateValue}
+                                              defaultValue={'Exact match'}
+                                              onChange={(newValue) => setPredicateValue(newValue)}
+                                    >
+                                        {predicateValues.map((rt) => (
+                                            <DropdownItem key={rt.id} value={rt.name}>
+                                                {rt.name}
+                                            </DropdownItem>
+                                        ))}
+                                    </Dropdown></div>
+
+                            </div>
                             <Textarea
                                 onChange={(event) => setNotesValue(event.target.value)}
                                 labelText="Notes:"
@@ -230,19 +260,21 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                         <div className='col-4'>
                             <div className='bg-light-blue p-2'>
                                 <p><span className='fw-bold'>Target: </span>{props.selectedCrosswalk.target.name}</p>
-                                <p><span className='fw-bold'>Type: </span>{props.selectedCrosswalk.target.type}</p>
+                                <p><span
+                                    className='fw-bold'>Type: </span>{props.selectedCrosswalk.target.properties.type}
+                                </p>
                                 <p className='mb-1'><span
-                                    className='fw-bold'>Description: </span>{props.selectedCrosswalk.target?.description ? props.selectedCrosswalk.target?.description : 'N/A'}
+                                    className='fw-bold'>Description: </span>{props.selectedCrosswalk.target.properties.description ? props.selectedCrosswalk.target.properties.description : 'N/A'}
                                 </p>
                                 <br/>
                                 <div><Dropdown className='mt-2 node-info-dropdown'
                                                labelText="Target operation"
                                                visualPlaceholder="Operation not selected"
-                                               value={operation3Value}
-                                               onChange={(newValue) => setOperation3Value(newValue)}
+                                               value={targetOperationValue}
+                                               onChange={(newValue) => setTargetOperationValue(newValue)}
                                 >
-                                    {operationValues.map((rt) => (
-                                        <DropdownItem key={rt.id} value={rt.name}>
+                                    {props?.mappingFunctions.map((rt) => (
+                                        <DropdownItem key={rt.uri} value={rt.name}>
                                             {rt.name}
                                         </DropdownItem>
                                     ))}

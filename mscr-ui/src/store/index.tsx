@@ -27,6 +27,7 @@ import {
 } from '@app/common/components/crosswalk/crosswalk.slice';
 import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
 import { mscrSearchPersonalContentApi } from '@app/common/components/personal/personal.slice';
+import {crosswalkMappingFunctionsApi} from "@app/common/components/crosswalk-functions/crosswalk-functions.slice";
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -54,6 +55,7 @@ export function makeStore(ctx: NextIronContext) {
       [activeSlice.name]: activeSlice.reducer,
       [fakeableUsersApi.reducerPath]: fakeableUsersApi.reducer,
       [importApi.reducerPath]: importApi.reducer,
+      [crosswalkMappingFunctionsApi.reducerPath]: crosswalkMappingFunctionsApi.reducer,
       [mscrSearchApi.reducerPath]: mscrSearchApi.reducer,
       [mscrSearchPersonalContentApi.reducerPath]:
         mscrSearchPersonalContentApi.reducer,
@@ -74,6 +76,7 @@ export function makeStore(ctx: NextIronContext) {
         visualizationApi.middleware,
         fakeableUsersApi.middleware,
         importApi.middleware,
+          crosswalkMappingFunctionsApi.middleware,
         mscrSearchApi.middleware,
         mscrSearchPersonalContentApi.middleware
       ),
