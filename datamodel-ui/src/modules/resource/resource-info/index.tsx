@@ -24,11 +24,18 @@ import { StatusChip } from 'yti-common-ui/components/status-chip';
 import { useGetAwayListener } from '@app/common/utils/hooks/use-get-away-listener';
 import LocalCopyModal from '@app/modules/local-copy-modal';
 import { useSelector } from 'react-redux';
-import { selectDisplayLang } from '@app/common/components/model/model.slice';
+import {
+  selectDisplayGraphHasChanges,
+  selectDisplayLang,
+  selectGraphHasChanges,
+  setDisplayGraphHasChanges,
+} from '@app/common/components/model/model.slice';
 import ApplicationProfileTop from '../resource-form/components/application-profile-top';
 import { useTogglePropertyShapeMutation } from '@app/common/components/resource/resource.slice';
 import getApiError from '@app/common/utils/get-api-errors';
 import { RenameModal } from '@app/modules/rename-modal';
+import { useStoreDispatch } from '@app/store';
+import UnsavedAlertModal from '@app/modules/unsaved-alert-modal';
 
 interface CommonViewProps {
   data?: Resource;
@@ -65,6 +72,9 @@ export default function ResourceInfo({
     actions: ['EDIT_ASSOCIATION', 'EDIT_ATTRIBUTE'],
     targetOrganization: organizationIds,
   });
+  const dispatch = useStoreDispatch();
+  const displayGraphHasChanges = useSelector(selectDisplayGraphHasChanges());
+  const graphHasChanges = useSelector(selectGraphHasChanges());
   const [headerHeight, setHeaderHeight] = useState(hasPermission ? 117 : 55);
   const [showTooltip, setShowTooltip] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
@@ -82,6 +92,15 @@ export default function ResourceInfo({
         uri: data?.uri ?? '',
       });
     }
+  };
+
+  const handleIsEdit = () => {
+    if (graphHasChanges) {
+      dispatch(setDisplayGraphHasChanges(true));
+      return;
+    }
+
+    handleEdit();
   };
 
   useEffect(() => {
@@ -120,7 +139,7 @@ export default function ResourceInfo({
                   ? [
                       <ActionMenuItem
                         key="edit-button"
-                        onClick={() => handleEdit()}
+                        onClick={() => handleIsEdit()}
                       >
                         {t('edit', { ns: 'admin' })}
                       </ActionMenuItem>,
@@ -183,6 +202,10 @@ export default function ResourceInfo({
                 visible={renameVisible}
                 hide={() => setRenameVisible(false)}
                 handleReturn={handleShowResource}
+              />
+              <UnsavedAlertModal
+                visible={displayGraphHasChanges}
+                handleFollowUp={() => handleEdit()}
               />
             </div>
           )}

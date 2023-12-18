@@ -193,6 +193,8 @@ const initialState = {
   highlighted: [] as string[],
   view: initialView,
   hasChanges: false,
+  graphHasChanges: false,
+  displayGraphHasChanges: false,
   displayWarning: false,
   displayLang: 'fi',
   addResourceRestrictionToClass: false,
@@ -349,6 +351,18 @@ export const modelSlice = createSlice({
           ...state.tools,
           [action.payload.key]: action.payload.value,
         },
+      };
+    },
+    setGraphHasChanges(state, action) {
+      return {
+        ...state,
+        graphHasChanges: action.payload,
+      };
+    },
+    setDisplayGraphHasChanges(state, action) {
+      return {
+        ...state,
+        displayGraphHasChanges: action.payload,
       };
     },
   },
@@ -512,4 +526,21 @@ export function setUpdateClassData(value: boolean): AppThunk {
 
 export function selectUpdateClassData() {
   return (state: AppState): boolean => state.model.updateClassData;
+}
+
+export function setGraphHasChanges(value: boolean): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setGraphHasChanges(value));
+}
+
+export function selectGraphHasChanges() {
+  return (state: AppState): boolean => state.model.graphHasChanges;
+}
+
+export function setDisplayGraphHasChanges(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setDisplayGraphHasChanges(value));
+}
+
+export function selectDisplayGraphHasChanges() {
+  return (state: AppState): boolean => state.model.displayGraphHasChanges;
 }
