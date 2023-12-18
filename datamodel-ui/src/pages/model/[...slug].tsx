@@ -113,7 +113,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getAuthenticatedUser.initiate());
     store.dispatch(getModel.initiate({ modelId: modelId, version: version }));
     store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
-    store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
+    store.dispatch(getOrganizations.initiate({ sortLang: locale ?? 'fi' }));
     store.dispatch(
       queryInternalResources.initiate({
         query: '',

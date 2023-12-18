@@ -43,7 +43,9 @@ export default function FrontPage() {
   const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
     i18n.language
   );
-  const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
+  const { data: organizationsData } = useGetOrganizationsQuery({
+    sortLang: i18n.language,
+  });
   const { data: languagesData } = useGetLanguagesQuery();
   const { data: counts } = useGetCountQuery(initialUrlState);
   const { data: searchModels } = useGetSearchModelsQuery({

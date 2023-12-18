@@ -7,9 +7,16 @@ export const organizationsApi = createApi({
   baseQuery: getDatamodelApiBaseQuery(),
   tagTypes: ['Organizations'],
   endpoints: (builder) => ({
-    getOrganizations: builder.query<Organization[], string>({
+    getOrganizations: builder.query<
+      Organization[],
+      { sortLang: string; includeChildOrganizations?: boolean }
+    >({
       query: (value) => ({
-        url: `/frontend/organizations?sortLang=${value}`,
+        url: `/frontend/organizations?sortLang=${value.sortLang}${
+          value.includeChildOrganizations
+            ? '&includeChildOrganizations=true'
+            : ''
+        }`,
         method: 'GET',
       }),
     }),
