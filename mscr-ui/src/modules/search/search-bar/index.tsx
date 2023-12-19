@@ -65,6 +65,11 @@ export default function SearchBar({ placeholder }: { placeholder?: string }) {
     } else {
       patchUrlState({
         q: initialUrlState.q,
+        type: initialUrlState.type,
+        state: initialUrlState.state,
+        format: initialUrlState.format,
+        organization: initialUrlState.organization,
+        isReferenced: initialUrlState.isReferenced,
         page: initialUrlState.page,
       });
     }

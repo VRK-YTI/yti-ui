@@ -7,17 +7,12 @@ interface SearchFacetProps {
   facetKey: Facet;
   buckets: Bucket[];
 }
-export default function SearchFacet({facetKey, buckets}: SearchFacetProps) {
+export default function SearchFacet({ facetKey, buckets }: SearchFacetProps) {
   const { urlState, patchUrlState } = useUrlState();
   const { t } = useTranslation('common');
 
-  if (
-    facetKey == 'organization' ||
-    facetKey == 'isReferenced'
-  )
-    return (
-      <>{/* These don't work yet, so don't show */}</>
-    );
+  if (facetKey == 'organization' || facetKey == 'isReferenced')
+    return <>{/* These don't work yet, so don't show */}</>;
 
   const facetTranslations = {
     state: t('search.facets.state'),
@@ -52,7 +47,11 @@ export default function SearchFacet({facetKey, buckets}: SearchFacetProps) {
   return (
     <CheckboxGroup labelText={facetTranslations[facetKey]}>
       {options.map((option) => (
-        <Checkbox key={option.key} onClick={() => handleClick(option.key)}>
+        <Checkbox
+          key={option.key}
+          onClick={() => handleClick(option.key)}
+          checked={urlState[facetKey].includes(option.key)}
+        >
           {option.label} ({option.count})
         </Checkbox>
       ))}
