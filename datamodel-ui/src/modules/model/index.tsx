@@ -5,7 +5,7 @@ import SearchView from './search-view';
 import ClassView from '../class-view';
 import { useTranslation } from 'next-i18next';
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import Graph from '../graph';
 import LinkedDataView from '../linked-data-view';
 import { compareLocales } from '@app/common/utils/compare-locals';
@@ -39,7 +39,10 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const [version] = useState(getSlugAsString(router.query.ver));
+  const version = useMemo(
+    () => getSlugAsString(router.query.ver),
+    [router.query.ver]
+  );
   const { data: modelInfo } = useGetModelQuery({
     modelId: modelId,
     version: version,
