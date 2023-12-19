@@ -7,26 +7,24 @@ interface SearchFilterProps {
   aggregations?: Aggregations;
 }
 
-export default function SearchFilterSet({ title, aggregations }: SearchFilterProps) {
-
+export default function SearchFilterSet({
+  title,
+  aggregations,
+}: SearchFilterProps) {
   if (!aggregations) {
-    return (
-      <></>
-    );
+    return <></>;
   }
 
   return (
     <>
       <FacetTitle variant="h2">{title}</FacetTitle>
       {Object.keys(aggregations).map((key) => (
-          <SearchFacet
-            key={key}
-            facetKey={key.substring(7) as Facet}
-            buckets={aggregations[key].buckets}
-          />
-        )
-      )}
+        <SearchFacet
+          key={key}
+          facetKey={key.substring(7) as Facet}
+          buckets={aggregations[key].buckets}
+        />
+      ))}
     </>
   );
 }
-

@@ -23,7 +23,7 @@ export default function SearchScreen() {
   const { setIsSearchActive } = useContext(SearchContext);
   const { data: mscrSearchResults } = useGetMscrSearchResultsQuery(urlState);
   const { query, pathname } = useRouter();
-  const [ currentPath, ] = useState(pathname);
+  const [currentPath] = useState(pathname);
 
   const handleClose = () => {
     setIsSearchActive(false);
