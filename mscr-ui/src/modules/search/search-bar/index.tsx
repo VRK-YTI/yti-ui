@@ -8,7 +8,7 @@ import {
   TEXT_INPUT_MAX,
 } from 'yti-common-ui/utils/constants';
 import { SearchContext } from '@app/common/components/search-context-provider';
-import { MscrSearchInput } from '@app/modules/search-bar/search-bar.styles';
+import { MscrSearchInput } from '@app/modules/search/search-bar/search-bar.styles';
 
 export default function SearchBar({ placeholder }: { placeholder?: string }) {
   const { t } = useTranslation('common');

@@ -16,6 +16,16 @@ export type Visibility = 'PRIVATE' | 'PUBLIC';
 
 export type Type = 'CROSSWALK' | 'SCHEMA';
 
+export type Format =
+  | 'JSONSCHEMA'
+  | 'CSV'
+  | 'SKOSRDF'
+  | 'PDF'
+  | 'XSD'
+  | 'XML'
+  | 'XLST'
+  | 'MSCR';
+
 export interface ResultInfo {
   id: string;
   label: Label;
@@ -68,13 +78,15 @@ export interface Bucket {
   doc_count: number;
 }
 
+export interface Aggregations {
+  [key: string]: {
+    buckets: Bucket[];
+  };
+}
+
 export interface MscrSearchResults {
   hits: {
     hits: MscrSearchResult[];
   };
-  aggregations: {
-    [key: string]: {
-      buckets: Bucket[];
-    };
-  };
+  aggregations: Aggregations;
 }

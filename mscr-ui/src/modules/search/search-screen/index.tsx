@@ -3,76 +3,48 @@ import {
   ResultsWrapper,
   SearchContainer,
   CloseButton,
-} from '@app/modules/search-screen/search-screen.styles';
-import SearchResult from '@app/common/components/search-result';
+} from '@app/modules/search/search-screen/search-screen.styles';
+import SearchResult from 'src/modules/search/search-result';
 import { useGetMscrSearchResultsQuery } from '@app/common/components/mscr-search/mscr-search.slice';
 import useUrlState, {
   initialUrlState,
 } from '@app/common/utils/hooks/use-url-state';
 import { IconClose } from 'suomifi-icons';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SearchContext } from '@app/common/components/search-context-provider';
-import SearchFilterSet from '@app/common/components/search-filter-set';
-import { Bucket, Facet, Filter } from '@app/common/interfaces/search.interface';
+import SearchFilterSet from 'src/modules/search/search-filter-set';
 import { useTranslation } from 'next-i18next';
 import { Grid } from '@mui/material';
+import { useRouter } from 'next/router';
 
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
   const { t } = useTranslation('common');
   const { setIsSearchActive } = useContext(SearchContext);
   const { data: mscrSearchResults } = useGetMscrSearchResultsQuery(urlState);
-  const foundHits = mscrSearchResults
-    ? mscrSearchResults.hits.hits.length !== 0
-    : false;
+  const { query, pathname } = useRouter();
+  const [ currentPath, ] = useState(pathname);
 
   const handleClose = () => {
     setIsSearchActive(false);
     patchUrlState({
       q: initialUrlState.q,
       type: initialUrlState.type,
+      state: initialUrlState.state,
+      format: initialUrlState.format,
+      organization: initialUrlState.organization,
+      isReferenced: initialUrlState.isReferenced,
       page: initialUrlState.page,
     });
   };
 
-  // Constructing filters
-  const facetTranslations = {
-    state: t('search.facets.state'),
-    type: t('search.facets.type'),
-    format: t('search.facets.format'),
-    organization: t('search.facets.organization'),
-    isReferenced: t('search.facets.isReferenced'),
-  };
+  // if (!mscrSearchResults) {
+  //   // TODO: Some kind of error message?
+  // }
 
-  const makeFilter = (key: string, buckets: Bucket[]): Filter => {
-    const filterKey: Facet = key.substring(7) as Facet;
-    const filterLabel = facetTranslations[filterKey];
-    const options = buckets.map((bucket) => {
-      return {
-        // The keys work as labels for now, might change when we have organizations working
-        label: bucket.key,
-        key: bucket.key,
-        count: bucket.doc_count,
-      };
-    });
-    return {
-      label: filterLabel,
-      facet: filterKey,
-      options: options,
-    };
-  };
-
-  let filters: Filter[] = [];
-  if (mscrSearchResults?.aggregations) {
-    Object.keys(mscrSearchResults.aggregations).forEach((key) => {
-      const newFilter: Filter = makeFilter(
-        key,
-        mscrSearchResults.aggregations[key].buckets
-      );
-      if (newFilter.facet == 'organization' || newFilter.facet == 'isReferenced') return;
-      filters = filters.concat(newFilter);
-    });
-  }
+  const foundHits = mscrSearchResults
+    ? mscrSearchResults.hits.hits.length !== 0
+    : false;
 
   return (
     <SearchContainer>
@@ -80,9 +52,10 @@ export default function SearchScreen() {
         <Grid item xs={2}>
           <FacetsWrapper>
             {/* Groups of facets for different contexts, made with search-filter-set */}
-            {filters.length > 0 && (
-              <SearchFilterSet title={t('search.facets.filter-by')} filters={filters} />
-            )}
+            <SearchFilterSet
+              title={t('search.facets.filter-by')}
+              aggregations={mscrSearchResults?.aggregations}
+            />
           </FacetsWrapper>
         </Grid>
         <Grid item xs={8}>

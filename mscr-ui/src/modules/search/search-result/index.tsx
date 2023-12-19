@@ -4,7 +4,7 @@ import {
   ChipWrapper, MetadataChip,
   ResultTextWrapper,
   TypeChip
-} from '@app/common/components/search-result/search-result.styles';
+} from '@app/modules/search/search-result/search-result.styles';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import router from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';

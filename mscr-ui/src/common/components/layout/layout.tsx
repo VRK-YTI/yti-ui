@@ -15,7 +15,7 @@ import generateFakeableUsers from 'yti-common-ui/utils/generate-impersonate';
 import SideNavigationPanel from '../side-navigation';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import { SearchContext } from '@app/common/components/search-context-provider';
-import SearchScreen from '@app/modules/search-screen';
+import SearchScreen from 'src/modules/search/search-screen';
 import { Grid } from '@mui/material';
 
 export default function Layout({

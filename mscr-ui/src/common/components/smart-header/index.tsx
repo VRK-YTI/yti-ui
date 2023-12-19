@@ -18,7 +18,7 @@ import MobileNavigation from 'yti-common-ui/navigation/mobile-navigation';
 import DesktopLocaleChooser from 'yti-common-ui/locale-chooser/desktop-locale-chooser';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
-import SearchBar from '@app/modules/search-bar';
+import SearchBar from 'src/modules/search/search-bar';
 import { useRouter } from 'next/router';
 import UserInfo from '@app/common/components/authentication-panel/user-info';
 import DesktopAuthenticationPanel from '@app/common/components/authentication-panel/desktop-authentication-panel';
