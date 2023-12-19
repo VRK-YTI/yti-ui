@@ -14,7 +14,10 @@ import ConceptBlock from '../concept-block';
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { ClassFormErrors, validateClassForm } from './utils';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
-import { translateClassFormErrors } from '@app/common/utils/translation-helpers';
+import {
+  translateClassFormErrors,
+  translatePageTitle,
+} from '@app/common/utils/translation-helpers';
 import { useEffect, useRef, useState } from 'react';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
@@ -38,7 +41,6 @@ import {
   InternalClass,
   InternalClassInfo,
 } from '@app/common/interfaces/internal-class.interface';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { BasicBlock } from 'yti-common-ui/block';
 import ResourceInfo from '../class-view/resource-info';
 import getApiError from '@app/common/utils/get-api-errors';
@@ -59,6 +61,7 @@ import {
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import { DEFAULT_SUBCLASS_OF } from '../class-view/utils';
 import { UriData } from '@app/common/interfaces/uri.interface';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -81,7 +84,7 @@ export default function ClassForm({
   applicationProfile,
   basedOnNodeShape,
 }: ClassFormProps) {
-  const { t, i18n } = useTranslation('admin');
+  const { t } = useTranslation('admin');
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
   const [headerHeight, setHeaderHeight] = useState(99);
@@ -90,6 +93,11 @@ export default function ClassForm({
   const data = useSelector(selectClass());
   const hasChanges = useSelector(selectHasChanges());
   const [userPosted, setUserPosted] = useState(false);
+  const [isSubClass] = useState(
+    data.subClassOf &&
+      data.subClassOf.length > 0 &&
+      data.subClassOf[0].uri !== 'owl:Thing'
+  );
   const [errors, setErrors] = useState<ClassFormErrors>(
     validateClassForm(data)
   );
@@ -400,7 +408,9 @@ export default function ClassForm({
             style={{ textTransform: 'uppercase' }}
             id="back-button"
           >
-            {t('back', { ns: 'common' })}
+            {isEdit
+              ? t('return-to-class')
+              : t('return-to-class-list', { ns: 'common' })}
           </Button>
 
           <div style={{ display: 'flex', gap: '10px' }}>
@@ -439,19 +449,19 @@ export default function ClassForm({
 
         <HeaderRow>
           <Text variant="bold">
-            {Object.values(data.label).filter(
-              (l) => l !== '' && typeof l !== 'undefined'
-            ).length > 0
-              ? getLanguageVersion({
-                  data: Object.fromEntries(
-                    Object.entries(data.label).filter(
-                      (l) => l[1] !== '' && typeof l[1] !== 'undefined'
-                    )
-                  ),
-                  lang: i18n.language,
-                  appendLocale: true,
-                })
-              : t('class-name')}
+            {isEdit
+              ? translatePageTitle(
+                  'edit',
+                  ResourceType.CLASS,
+                  t,
+                  applicationProfile
+                )
+              : translatePageTitle(
+                  isSubClass ? 'create-sub' : 'create',
+                  ResourceType.CLASS,
+                  t,
+                  applicationProfile
+                )}
           </Text>
         </HeaderRow>
 

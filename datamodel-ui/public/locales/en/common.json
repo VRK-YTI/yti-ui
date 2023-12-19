@@ -209,6 +209,9 @@
   "restrictions": "Restrictions",
   "results-with-current_one": "{{count}} Data Vocabulary with following filters",
   "results-with-current_other": "{{count}} Data Vocabularies with following filters",
+  "return-to-association-list": "To association list",
+  "return-to-attribute-list": "To attribute list",
+  "return-to-class-list": "To class list",
   "roles": {
     "admin": "Admin",
     "code-list-editor": "Code list editor",

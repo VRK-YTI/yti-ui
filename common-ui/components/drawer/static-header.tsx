@@ -31,6 +31,13 @@ const StaticHeaderWrapper = styled.div`
   .fi-loadingSpinner_text {
     font-weight: 600 !important;
   }
+
+  .long-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 5 !important;
+  }
 `;
 
 const Blur = styled.div`

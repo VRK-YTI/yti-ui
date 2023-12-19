@@ -165,7 +165,7 @@ export default function ModelEditView({
     <>
       <StaticHeader ref={ref}>
         <HeaderRow>
-          <Text variant="bold">{t('details', { ns: 'common' })}</Text>
+          <Text variant="bold">{t('edit-data-model')}</Text>
           <HeaderRow>
             <Button onClick={() => handleSubmit()}>
               {result.isLoading || versionedResult.isLoading ? (

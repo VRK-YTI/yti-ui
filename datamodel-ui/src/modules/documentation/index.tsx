@@ -320,7 +320,9 @@ export default function Documentation({
     <>
       <StaticHeader ref={ref}>
         <HeaderRow>
-          <Text variant="bold">{t('documentation')}</Text>
+          <Text variant="bold">
+            {!isEdit ? t('documentation') : t('edit-documentation')}
+          </Text>
 
           {hasPermission &&
             (isEdit ? (

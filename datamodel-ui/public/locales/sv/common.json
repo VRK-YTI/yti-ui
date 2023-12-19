@@ -209,6 +209,9 @@
   "restrictions": "",
   "results-with-current_one": "",
   "results-with-current_other": "",
+  "return-to-association-list": "",
+  "return-to-attribute-list": "",
+  "return-to-class-list": "",
   "roles": {
     "admin": "",
     "code-list-editor": "",

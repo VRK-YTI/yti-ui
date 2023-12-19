@@ -49,7 +49,10 @@ import UriInfo from '@app/common/components/uri-info';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { RenameModal } from '../rename-modal';
 import getApiError from '@app/common/utils/get-api-errors';
-import { translateResourceAddition } from '@app/common/utils/translation-helpers';
+import {
+  translatePageTitle,
+  translateResourceAddition,
+} from '@app/common/utils/translation-helpers';
 import UnsavedAlertModal from '../unsaved-alert-modal';
 
 interface ClassInfoProps {
@@ -237,7 +240,12 @@ export default function ClassInfo({
             onClick={() => handleReturn()}
             style={{ textTransform: 'uppercase' }}
           >
-            {t('back')}
+            {translatePageTitle(
+              'return-to-list',
+              ResourceType.CLASS,
+              t,
+              applicationProfile
+            )}
           </Button>
           {!disableEdit && hasPermission && data && (
             <ActionMenu buttonText={t('actions')} id="actions-menu">

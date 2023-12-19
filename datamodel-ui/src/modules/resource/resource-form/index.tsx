@@ -12,6 +12,7 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import {
   translateCommonForm,
   translateCommonFormErrors,
+  translatePageTitle,
 } from '@app/common/utils/translation-helpers';
 import ConceptBlock from '@app/modules/concept-block';
 import { useStoreDispatch } from '@app/store';
@@ -84,6 +85,13 @@ export default function ResourceForm({
   const dispatch = useStoreDispatch();
   const data = useSelector(selectResource());
   const [inUse, setInUse] = useState(true);
+  const [isSubResource] = useState(
+    !applicationProfile &&
+      data.subResourceOf &&
+      data.subResourceOf.length > 0 &&
+      data.subResourceOf[0].curie !== 'owl:topDataProperty' &&
+      data.subResourceOf[0].curie !== 'owl:topObjectProperty'
+  );
   const hasChanges = useSelector(selectHasChanges());
   const { setView } = useSetView();
   const [userPosted, setUserPosted] = useState(false);
@@ -353,9 +361,22 @@ export default function ResourceForm({
               }
             }}
             style={{ textTransform: 'uppercase' }}
+            className="long-text"
             id="back-button"
           >
-            {t('back', { ns: 'common' })}
+            {isEdit
+              ? translatePageTitle(
+                  'return-to-resource',
+                  data.type,
+                  t,
+                  applicationProfile
+                )
+              : translatePageTitle(
+                  'return-to-list',
+                  data.type,
+                  t,
+                  applicationProfile
+                )}
           </Button>
 
           <div style={{ display: 'flex', gap: '10px' }}>
@@ -394,8 +415,14 @@ export default function ResourceForm({
 
         <HeaderRow>
           <Text variant="bold">
-            {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
-              translateCommonForm('name', data.type, t)}
+            {isEdit
+              ? translatePageTitle('edit', data.type, t, applicationProfile)
+              : translatePageTitle(
+                  isSubResource ? 'create-sub' : 'create',
+                  data.type,
+                  t,
+                  applicationProfile
+                )}
           </Text>
         </HeaderRow>
 

@@ -209,6 +209,9 @@
   "restrictions": "Rajoitteet",
   "results-with-current_one": "Tietomalleja {{count}} kpl seuraavilla rajauksilla",
   "results-with-current_other": "Tietomalleja {{count}} kpl seuraavilla rajauksilla",
+  "return-to-association-list": "Assosiaatio-listaan",
+  "return-to-attribute-list": "Attribuutti-listaan",
+  "return-to-class-list": "Luokka-listaan",
   "roles": {
     "admin": "Ylläpitäjä",
     "code-list-editor": "Koodistotyöntekijä",
