@@ -61,7 +61,9 @@ export default function ModelForm({
   const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
     i18n.language
   );
-  const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
+  const { data: organizationsData } = useGetOrganizationsQuery({
+    sortLang: i18n.language,
+  });
   const { data: languages, isSuccess } = useGetLanguagesQuery();
   const [languageList, setLanguageList] = useState<LanguageBlockType[]>([]);
 

@@ -1,4 +1,4 @@
-import { StatusChip } from '@app/common/components/resource-list/resource-list.styles';
+import { StatusChip } from 'yti-common-ui/components/status-chip';
 import { ClassType } from '@app/common/interfaces/class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
@@ -29,9 +29,12 @@ import DeleteModal from '../delete-modal';
 import { useSelector } from 'react-redux';
 import {
   selectAddResourceRestrictionToClass,
+  selectDisplayGraphHasChanges,
   selectDisplayLang,
+  selectGraphHasChanges,
   selectUpdateClassData,
   setAddResourceRestrictionToClass,
+  setDisplayGraphHasChanges,
   setUpdateClassData,
 } from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL, SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
@@ -50,6 +53,7 @@ import {
   translatePageTitle,
   translateResourceAddition,
 } from '@app/common/utils/translation-helpers';
+import UnsavedAlertModal from '../unsaved-alert-modal';
 
 interface ClassInfoProps {
   data?: ClassType;
@@ -84,8 +88,10 @@ export default function ClassInfo({
   const [headerHeight, setHeaderHeight] = useState(hasPermission ? 57 : 55);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
-  const updateClassData = useSelector(selectUpdateClassData());
   const dispatch = useStoreDispatch();
+  const updateClassData = useSelector(selectUpdateClassData());
+  const displayGraphHasChanges = useSelector(selectDisplayGraphHasChanges());
+  const graphHasChanges = useSelector(selectGraphHasChanges());
   const renderResourceForm = useSelector(selectAddResourceRestrictionToClass());
   const [attributeModalVisible, setAttributeModalVisible] = useState(false);
   const [associationModalVisible, setAssociationModalVisible] = useState(false);
@@ -118,6 +124,15 @@ export default function ClassInfo({
       dispatch(initializeResource(value.type, value.uriData, true));
       dispatch(setAddResourceRestrictionToClass(true));
     }
+  };
+
+  const handleIsEdit = () => {
+    if (graphHasChanges) {
+      dispatch(setDisplayGraphHasChanges(true));
+      return;
+    }
+
+    handleEdit();
   };
 
   function renderTopInfoByType() {
@@ -234,7 +249,7 @@ export default function ClassInfo({
           </Button>
           {!disableEdit && hasPermission && data && (
             <ActionMenu buttonText={t('actions')} id="actions-menu">
-              <ActionMenuItem onClick={() => handleEdit()}>
+              <ActionMenuItem onClick={() => handleIsEdit()}>
                 {t('edit', { ns: 'admin' })}
               </ActionMenuItem>
               <ActionMenuItem onClick={() => setShowRenameModal(true)}>
@@ -248,7 +263,7 @@ export default function ClassInfo({
           )}
         </div>
         {data ? (
-          <>
+          <div>
             <DeleteModal
               modelId={modelId}
               resourceId={data.identifier}
@@ -269,9 +284,7 @@ export default function ClassInfo({
               hide={() => setShowRenameModal(false)}
               handleReturn={handleShowClass}
             />
-            <div
-              style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}
-            >
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               <Text variant="bold">
                 {getLanguageVersion({
                   data: data.label,
@@ -282,10 +295,15 @@ export default function ClassInfo({
                 {translateStatus(data.status, t)}
               </StatusChip>
             </div>
-          </>
+          </div>
         ) : (
           <></>
         )}
+
+        <UnsavedAlertModal
+          visible={displayGraphHasChanges}
+          handleFollowUp={() => handleEdit()}
+        />
       </StaticHeader>
 
       {data && (

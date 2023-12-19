@@ -21,7 +21,11 @@ export default function UserInfo({ breakpoint, user }: UserInfoProps) {
   return (
     <UserInfoWrapper $breakpoint={breakpoint} id="login-information">
       <Text>{`${user?.firstName} ${user?.lastName}`}</Text>
-      <Link href={`/api/auth/logout?target=/${i18n.language ?? 'fi'}${asPath}`}>
+      <Link
+        href={`/api/auth/logout?target=/${
+          i18n.language ?? 'fi'
+        }${encodeURIComponent(asPath)}`}
+      >
         {t('site-logout')}
       </Link>
     </UserInfoWrapper>
