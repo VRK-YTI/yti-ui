@@ -9,6 +9,7 @@ import {
   IconAttachment,
   IconImage,
   Text,
+  Tooltip,
 } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
@@ -19,6 +20,7 @@ import {
   FullWidthTextarea,
   LanguageSelectorBtn,
   LanguageSelectorWrapper,
+  TipTooltipWrapper,
 } from './documentation.styles';
 import { useTranslation } from 'next-i18next';
 import {
@@ -35,7 +37,10 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import generatePayloadUpdate, {
   generatePayloadVersionedUpdate,
 } from '../model/generate-payload';
-import { translateLanguage } from '@app/common/utils/translation-helpers';
+import {
+  translateDocumentationTooltip,
+  translateLanguage,
+} from '@app/common/utils/translation-helpers';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import {
@@ -59,6 +64,7 @@ import Image from 'next/image';
 import { IconBold, IconItalics, IconQuotes } from 'suomifi-icons';
 import HasPermission from '@app/common/utils/has-permission';
 import UnsavedAlertModal from '../unsaved-alert-modal';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 
 export default function Documentation({
   modelId,
@@ -72,6 +78,7 @@ export default function Documentation({
   organizationIds?: string[];
 }) {
   const { t, i18n } = useTranslation('admin');
+  const { breakpoint } = useBreakpoints();
   const hasPermission = HasPermission({
     actions: 'EDIT_DATA_MODEL',
     targetOrganization: organizationIds,
@@ -87,6 +94,15 @@ export default function Documentation({
   const [headerHeight, setHeaderHeight] = useState(hasPermission ? 57 : 42);
   const [value, setValue] = useState<{ [key: string]: string }>({});
   const [isEdit, setIsEdit] = useState(false);
+  const [updateSelectionPosition, setUpdateSelectionPosition] = useState<{
+    update: boolean;
+    offset: number;
+  }>({
+    update: false,
+    offset: 0,
+  });
+  const [hoverRef, setHoverRef] = useState<HTMLButtonElement | null>(null);
+  const [showHover, setShowHover] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(
     languages.sort((a, b) => compareLocales(a, b))[0]
   );
@@ -194,7 +210,7 @@ export default function Documentation({
 
   const handleButtonClick = (key: string) => {
     const addNewLine = getAddNewLine(value[currentLanguage], selection.start);
-    const elem = getSpecialCharacters(key, addNewLine);
+    const elem = getSpecialCharacters(key, addNewLine, t);
 
     handleUpdate({
       ...value,
@@ -204,6 +220,42 @@ export default function Documentation({
         elem
       ),
     });
+
+    console.log('key', key);
+
+    textAreaRef.current?.focus();
+
+    if (selection.start === selection.end) {
+      setUpdateSelectionPosition({
+        update: true,
+        offset: 0,
+      });
+    } else {
+      let offset: number;
+      switch (key) {
+        case 'bold':
+        case 'listNumbered':
+          offset = 4;
+          break;
+        case 'italic':
+          offset = 2;
+          break;
+        case 'quote':
+          offset = 1;
+          break;
+        case 'listBulleted':
+          offset = 3;
+          break;
+        default:
+          offset = 0;
+          break;
+      }
+
+      setUpdateSelectionPosition({
+        update: true,
+        offset: offset,
+      });
+    }
   };
 
   const handleEnterClick = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -315,6 +367,33 @@ export default function Documentation({
       setRealignCursor({ ...realignCursor, align: 0 });
     }
   }, [realignCursor, selection.start, textAreaRef]);
+
+  useEffect(() => {
+    if (updateSelectionPosition.update && textAreaRef.current) {
+      textAreaRef.current.setSelectionRange(
+        selection.start,
+        selection.end + updateSelectionPosition.offset
+      );
+      setUpdateSelectionPosition({
+        update: false,
+        offset: 0,
+      });
+    }
+  }, [updateSelectionPosition, textAreaRef, selection.start, selection.end]);
+
+  useEffect(() => {
+    if (hoverRef) {
+      const timer = setTimeout(() => {
+        setShowHover(true);
+      }, 750);
+
+      return () => clearTimeout(timer);
+    }
+
+    if (!hoverRef) {
+      setShowHover(false);
+    }
+  }, [hoverRef]);
 
   return (
     <>
@@ -452,48 +531,79 @@ export default function Documentation({
                   onClick={() => handleButtonClick('bold')}
                   id="bold-button"
                   icon={<IconBold />}
+                  onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
+                  onMouseLeave={() => setHoverRef(null)}
                 />
                 <ControlButton
                   variant="secondary"
                   onClick={() => handleButtonClick('italic')}
                   id="italic-button"
                   icon={<IconItalics />}
+                  onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
+                  onMouseLeave={() => setHoverRef(null)}
                 />
                 <ControlButton
                   variant="secondary"
                   onClick={() => handleButtonClick('quote')}
                   id="quote-button"
                   icon={<IconQuotes />}
+                  onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
+                  onMouseLeave={() => setHoverRef(null)}
                 />
                 <ControlButton
                   variant="secondary"
                   onClick={() => handleButtonClick('listBulleted')}
                   id="list-bulleted-button"
                   icon={<IconListBulleted />}
+                  onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
+                  onMouseLeave={() => setHoverRef(null)}
                 />
                 <ControlButton
                   variant="secondary"
                   onClick={() => handleButtonClick('listNumbered')}
                   id="list-numbered-button"
                   icon={<IconListNumbered />}
+                  onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
+                  onMouseLeave={() => setHoverRef(null)}
                 />
                 <ControlButton
                   variant="secondary"
                   onClick={() => handleButtonClick('link')}
                   id="link-button"
                   icon={<IconAttachment />}
+                  onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
+                  onMouseLeave={() => setHoverRef(null)}
                 />
                 <ControlButton
                   variant="secondary"
                   onClick={() => handleButtonClick('image')}
                   id="image-button"
                   icon={<IconImage />}
+                  onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
+                  onMouseLeave={() => setHoverRef(null)}
                 />
               </div>
               <HintText>
                 {value[currentLanguage]?.length ?? 0} / 5000 {t('characters')}
               </HintText>
             </ControlsRow>
+
+            {hoverRef && (
+              <TipTooltipWrapper
+                $x={hoverRef && hoverRef.getBoundingClientRect().x}
+                $y={hoverRef && hoverRef.getBoundingClientRect().y}
+                breakpoint$={breakpoint}
+              >
+                <Tooltip
+                  ariaCloseButtonLabelText=""
+                  ariaToggleButtonLabelText=""
+                  anchorElement={hoverRef}
+                  open={showHover}
+                >
+                  {translateDocumentationTooltip(hoverRef.id, t)}
+                </Tooltip>
+              </TipTooltipWrapper>
+            )}
 
             <FullWidthTextarea
               ref={textAreaRef}

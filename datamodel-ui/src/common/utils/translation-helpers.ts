@@ -540,3 +540,35 @@ export function translateTooltip(key: string, t: TFunction) {
       return '';
   }
 }
+
+export function translateLinkPlaceholder(key: string, t: TFunction) {
+  switch (key) {
+    case 'link':
+      return t('link-title-placeholder', { ns: 'admin' });
+    case 'image':
+      return t('image-title-placeholder', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateDocumentationTooltip(key: string, t: TFunction) {
+  switch (key) {
+    case 'bold-button':
+      return t('bold-button-tooltip', { ns: 'admin' });
+    case 'italic-button':
+      return t('italic-button-tooltip', { ns: 'admin' });
+    case 'quote-button':
+      return t('quote-button-tooltip', { ns: 'admin' });
+    case 'list-bulleted-button':
+      return t('list-bulleted-button-tooltip', { ns: 'admin' });
+    case 'list-numbered-button':
+      return t('list-numbered-button-tooltip', { ns: 'admin' });
+    case 'link-button':
+      return t('link-button-tooltip', { ns: 'admin' });
+    case 'image-button':
+      return t('image-button-tooltip', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
