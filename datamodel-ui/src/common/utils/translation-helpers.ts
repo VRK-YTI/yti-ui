@@ -683,3 +683,16 @@ export function translateDocumentationTooltip(key: string, t: TFunction) {
       return '';
   }
 }
+
+export function translateResultType(key: string, t: TFunction) {
+  switch (key) {
+    case 'class':
+      return t('classes', { ns: 'common' });
+    case 'attribute':
+      return t('attributes', { ns: 'common' });
+    case 'association':
+      return t('associations', { ns: 'common' });
+    default:
+      return '';
+  }
+}

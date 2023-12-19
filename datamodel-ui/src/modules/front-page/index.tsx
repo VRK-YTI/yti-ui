@@ -239,6 +239,42 @@ export default function FrontPage() {
               count: searchModels?.totalHitCount ?? 0,
             })}
             withDefaultStatuses={inUseStatusList}
+            extra={{
+              typedExpander: {
+                buttonLabel: 'Button label',
+                typeLabels: {
+                  attribute: t('attributes'),
+                  class: t('classes'),
+                  association: t('associations'),
+                },
+                deepHits: {
+                  'https://iri.suomi.fi/model/all_models/1.0.0/': [
+                    {
+                      type: 'class',
+                      label: 'test',
+                      id: 'id',
+                      uri: 'testuri',
+                    },
+                    {
+                      type: 'class',
+                      label: 'test 2',
+                      id: 'id-2',
+                      uri: 'testuri',
+                    },
+                    {
+                      type: 'attribute',
+                      label: 'test 3',
+                      id: 'id-3',
+                    },
+                    {
+                      type: 'attribute',
+                      label: 'test 4',
+                      id: 'id-4',
+                    },
+                  ],
+                },
+              },
+            }}
           />
           <Pagination
             maxPages={Math.ceil((searchModels?.totalHitCount ?? 1) / 50)}
