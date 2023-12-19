@@ -221,8 +221,6 @@ export default function Documentation({
       ),
     });
 
-    console.log('key', key);
-
     textAreaRef.current?.focus();
 
     if (selection.start === selection.end) {
