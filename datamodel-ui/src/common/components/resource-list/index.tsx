@@ -120,7 +120,9 @@ export default function ResourceList({
         return (
           <div
             onMouseDown={() => handleClick(id)}
-            onKeyDown={(e) => e.key === 'Enter' && handleClick(id)}
+            onKeyDown={(e) =>
+              (e.code === 'Enter' || e.code === 'Space') && handleClick(id)
+            }
             id="select-single-radio-button"
           >
             <RadioButton value={id} checked={checkChecked(id)} />
@@ -131,6 +133,7 @@ export default function ResourceList({
         return (
           <Checkbox
             onClick={() => handleClick(id)}
+            onKeyPress={(e) => e.key === 'Enter' && handleClick(id)}
             checked={checkChecked(id)}
             id={`select-multiple-checkbox-${id}`}
           />

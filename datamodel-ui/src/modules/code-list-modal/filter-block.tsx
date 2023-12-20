@@ -102,13 +102,15 @@ export default function FilterBlock({
           }}
           id="status-dropdown"
         >
-          {['VALID', 'DRAFT', 'SUPERSEDED', 'RETIRED'].map((status) => (
-            <DropdownItem key={`status-${status}`} value={status}>
-              {status !== 'all-statuses'
-                ? translateStatus(status, t)
-                : t('status-all')}
-            </DropdownItem>
-          ))}
+          {['all-statuses', 'VALID', 'DRAFT', 'SUPERSEDED', 'RETIRED'].map(
+            (status) => (
+              <DropdownItem key={`status-${status}`} value={status}>
+                {status !== 'all-statuses'
+                  ? translateStatus(status, t)
+                  : t('status-all')}
+              </DropdownItem>
+            )
+          )}
         </Dropdown>
       </div>
     </FilterBlockWrapper>
