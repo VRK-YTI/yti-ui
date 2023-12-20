@@ -493,7 +493,7 @@ export default function Documentation({
                 />
               </div>
               <HintText>
-                {value[currentLanguage]?.length ?? 0} / 5000 {t('characters')}
+                {value[currentLanguage]?.length ?? 0} / 50000 {t('characters')}
               </HintText>
             </ControlsRow>
 
