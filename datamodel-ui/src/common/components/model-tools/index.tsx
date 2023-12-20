@@ -245,19 +245,6 @@ export default function ModelTools({
               >
                 {t('show-associations')}
               </ToggleButton>
-              {/*
-              <ToggleButton
-                checked={tools.showDomainRange}
-                onClick={() =>
-                  dispatch(
-                    setModelTools('showDomainRange', !tools.showDomainRange)
-                  )
-                }
-              >
-                {t('show-domain-range-references')}
-              </ToggleButton>
-              */}
-
               <ToggleButton
                 checked={tools.showClassHighlights}
                 onClick={() =>
