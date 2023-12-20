@@ -28,7 +28,7 @@ export default function SchemaView({
     // error,
   } = useGetSchemaWithRevisionsQuery(schemaId);
   // TODO: I can't make sense of the format this returns, and how it would be offered for download
-  
+
   const [selectedTab, setSelectedTab] = useState(0);
 
   function a11yProps(index: number) {
@@ -52,33 +52,24 @@ export default function SchemaView({
   } else if (isSuccess) {
     return (
       <>
-        <Grid container spacing={2}>
-          <Grid item xs={2}>
-            <SideNavigationPanel user={user} />
-          </Grid>
-          <Grid item xs={10}>
-            <Box
-              className="mb-3"
-              sx={{ borderBottom: 1, borderColor: 'divider' }}
-            >
-              <Tabs
-                value={selectedTab}
-                onChange={changeTab}
-                aria-label="Category selection"
-              >
-                <Tab label={t('schema.metadata-and-files')} {...a11yProps(0)} />
-                <Tab label={t('schema.version-history')} {...a11yProps(1)} />
-              </Tabs>
-            </Box>
-         
+        <Box className="mb-3" sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs
+            value={selectedTab}
+            onChange={changeTab}
+            aria-label="Category selection"
+          >
+            <Tab label={t('schema.metadata-and-files')} {...a11yProps(0)} />
+            <Tab label={t('schema.version-history')} {...a11yProps(1)} />
+          </Tabs>
+        </Box>
 
         {selectedTab === 0 && (
-              <MetadataAndFiles schemaDetails={schemaDetails} schemaFiles={schemaDetails?.fileMetadata
-              } />
+          <MetadataAndFiles
+            schemaDetails={schemaDetails}
+            schemaFiles={schemaDetails?.fileMetadata}
+          />
         )}
-            {selectedTab === 1 && <VersionHistory schemaDetails={schemaDetails} />}
-            </Grid>
-        </Grid>
+        {selectedTab === 1 && <VersionHistory schemaDetails={schemaDetails} />}
       </>
     );
   }

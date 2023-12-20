@@ -20,6 +20,7 @@ import { Grid } from '@mui/material';
 
 export default function Layout({
   children,
+  sideNavigationHidden,
   feedbackSubject,
   user,
   fakeableUsers,
@@ -28,6 +29,7 @@ export default function Layout({
   fullScreenElements,
 }: {
   children: React.ReactNode;
+  sideNavigationHidden: boolean;
   feedbackSubject?: string;
   user?: MscrUser;
   fakeableUsers?: FakeableUser[] | null;
@@ -75,17 +77,34 @@ export default function Layout({
                 fakeableUsers
               )}
             />
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <ContentContainer>
-                  {alerts && alerts}
-                  <MarginContainer $breakpoint={breakpoint}>
-                    {isSearchActive && <SearchScreen />}
-                    {children}
-                  </MarginContainer>
-                </ContentContainer>
+            {!sideNavigationHidden && user && !user.anonymous ? (
+              <Grid container spacing={2}>
+                <Grid item xs={2}>
+                  <SideNavigationPanel />
+                </Grid>
+                <Grid item xs={10}>
+                  <ContentContainer>
+                    {alerts && alerts}
+                    <MarginContainer $breakpoint={breakpoint}>
+                      {isSearchActive && <SearchScreen />}
+                      {children}
+                    </MarginContainer>
+                  </ContentContainer>
+                </Grid>
               </Grid>
-            </Grid>
+            ) : (
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <ContentContainer>
+                    {alerts && alerts}
+                    <MarginContainer $breakpoint={breakpoint}>
+                      {isSearchActive && <SearchScreen />}
+                      {children}
+                    </MarginContainer>
+                  </ContentContainer>
+                </Grid>
+              </Grid>
+            )}
           </SiteContainer>
         )}
       </SearchContext.Provider>
