@@ -4,7 +4,7 @@ import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 interface LayoutProps {
   user?: MscrUser | null;
-  crosswalk?: boolean;
+  sideNavigationHidden?: boolean;
   fakeableUsers?: FakeableUser[] | null;
   feedbackSubject?: string;
   children: React.ReactNode;
@@ -12,7 +12,7 @@ interface LayoutProps {
 
 export default function Layout({
   user,
-  crosswalk,
+  sideNavigationHidden,
   fakeableUsers,
   feedbackSubject,
   children,
@@ -20,7 +20,7 @@ export default function Layout({
   return (
     <CommonLayout
       user={user ?? undefined}
-      crosswalk={crosswalk ?? false}
+      sideNavigationHidden={sideNavigationHidden ?? false}
       fakeableUsers={fakeableUsers ?? []}
       feedbackSubject={feedbackSubject}
     >

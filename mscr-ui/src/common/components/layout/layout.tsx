@@ -20,7 +20,7 @@ import { Grid } from '@mui/material';
 
 export default function Layout({
   children,
-  crosswalk,
+  sideNavigationHidden,
   feedbackSubject,
   user,
   fakeableUsers,
@@ -29,7 +29,7 @@ export default function Layout({
   fullScreenElements,
 }: {
   children: React.ReactNode;
-  crosswalk: boolean;
+  sideNavigationHidden: boolean;
   feedbackSubject?: string;
   user?: MscrUser;
   fakeableUsers?: FakeableUser[] | null;
@@ -77,7 +77,7 @@ export default function Layout({
                 fakeableUsers
               )}
             />
-            {!crosswalk && user && !user.anonymous ? (
+            {!sideNavigationHidden && user && !user.anonymous ? (
               <Grid container spacing={2}>
                 <Grid item xs={2}>
                   <SideNavigationPanel />
