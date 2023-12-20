@@ -34,6 +34,7 @@ export default function SchemaPage(props: IndexPageProps) {
     <CommonContextProvider value={props}>
       <Layout
         user={props.user ?? undefined}
+        crosswalk={true}
         fakeableUsers={props.fakeableUsers}
       >
         <CrosswalkEditor crosswalkId={crosswalkId} />
