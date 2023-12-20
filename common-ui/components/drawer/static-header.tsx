@@ -43,15 +43,12 @@ const StaticHeaderWrapper = styled.div`
 const Blur = styled.div`
   width: inherit;
   max-width: inherit;
-  height: 20px;
+  height: 30px;
   content: '';
-  background: linear-gradient(
-    to top,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 1)
-  );
+  background: linear-gradient(to bottom, hsl(0, 0%, 100%), rgba(0, 0, 0, 0));
   position: fixed;
   padding: 0 !important;
+  pointer-events: none;
 `;
 
 interface StaticHeaderProps {
