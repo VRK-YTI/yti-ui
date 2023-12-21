@@ -1,3 +1,6 @@
+import { translateLinkPlaceholder } from '@app/common/utils/translation-helpers';
+import { TFunction } from 'i18next';
+
 export function getRows(data: string): string[] {
   return data.split('\n');
 }
@@ -14,7 +17,8 @@ export function getAddNewLine(data: string, position: number): boolean {
 
 export function getSpecialCharacters(
   key: string,
-  addNewLine: boolean
+  addNewLine: boolean,
+  t: TFunction
 ): [string, string] {
   switch (key) {
     case 'bold':
@@ -28,9 +32,15 @@ export function getSpecialCharacters(
     case 'listNumbered':
       return [addNewLine ? '\n1. ' : '1. ', ''];
     case 'link':
-      return ['[](http://)', ''];
+      return [`[${translateLinkPlaceholder('link', t)}]https://)`, ''];
     case 'image':
-      return ['![]()', ''];
+      return [
+        `![${translateLinkPlaceholder(
+          'image',
+          t
+        )} width:200px height:200px](https://)`,
+        '',
+      ];
     default:
       return ['', ''];
   }

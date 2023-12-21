@@ -5,8 +5,8 @@ import {
   InfoBlock,
   ResultBlock,
   ResultsAndInfoBlockWrapper,
-  StatusChip,
 } from './code-list-modal.styles';
+import { StatusChip } from 'yti-common-ui/status-chip';
 import { Checkbox, ExternalLink, Paragraph, Text } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
@@ -86,6 +86,22 @@ export default function ResultsAndInfoBlock({
                           ]
                     )
                   }
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      setSelected(
+                        selected.map((s) => s.id).includes(code.uri)
+                          ? selected.filter((s) => s.id !== code.uri)
+                          : [
+                              ...selected,
+                              {
+                                id: code.uri,
+                                prefLabel: code.prefLabel,
+                                status: code.status,
+                              },
+                            ]
+                      );
+                    }
+                  }}
                   checked={selected.map((s) => s.id).includes(code.uri)}
                   id={`code-list-checkbox_${code.uri}`}
                 >

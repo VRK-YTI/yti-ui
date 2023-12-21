@@ -183,7 +183,7 @@ export default function ModelInfoView({
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Text variant="bold">{t('details')}</Text>
           <ActionMenu id="actions-menu" buttonText={t('actions')}>
-            {hasPermission && !version ? (
+            {hasPermission ? (
               <ActionMenuItem
                 onClick={() => handleShowEdit()}
                 disabled={!formData}

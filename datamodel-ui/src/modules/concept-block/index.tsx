@@ -228,6 +228,16 @@ export default function ConceptBlock({
                             terminology: c.terminology,
                           })
                         }
+                        onKeyPress={(e) =>
+                          e.key === 'Enter' &&
+                          handleRadioButtonClick({
+                            label: c.label,
+                            conceptURI: c.uri,
+                            definition: c.definition,
+                            status: c.status,
+                            terminology: c.terminology,
+                          })
+                        }
                         id={`concept-radio-button-${c.uri}`}
                       />
                       <div>
