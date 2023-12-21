@@ -1,4 +1,3 @@
-import FrontPage from '../../front-page';
 import { useGetPersonalContentQuery } from '@app/common/components/personal/personal.slice';
 import { Type } from '@app/common/interfaces/search.interface';
 import WorkspaceTable, {
@@ -6,7 +5,7 @@ import WorkspaceTable, {
 } from 'src/modules/workspace/workspace-table';
 import { useTranslation } from 'next-i18next';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import Title from 'yti-common-ui/components/title';
 import {
   Description,
@@ -15,9 +14,6 @@ import {
 import Separator from 'yti-common-ui/components/separator';
 import { ButtonBlock } from '@app/modules/front-page/front-page.styles';
 import SchemaFormModal from '@app/modules/schema-form/schema-form-modal';
-import CrosswalkFormModal from '@app/modules/crosswalk-form/crosswalk-form-modal';
-import CrosswalkSelectionModal from '@app/modules/create-crosswalk/crosswalk-selection-modal';
-import BasicTable from '@app/common/components/table';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
 import { Typography } from '@mui/material';
@@ -104,9 +100,8 @@ export default function PersonalWorkspace({
     }),
   };
 
-  if (contentType == undefined) {
-    console.log('content type undefined');
-    return <FrontPage></FrontPage>;
+  if (isLoading) {
+    return <div> Is Loading </div>; //ToDo: A loading circle or somesuch
   } else {
     return (
       <main id="main">
