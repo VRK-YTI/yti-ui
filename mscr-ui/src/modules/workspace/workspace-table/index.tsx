@@ -4,6 +4,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
+import Link from 'next/link';
 
 export interface TableContent {
   ariaLabel: string;
@@ -12,6 +13,7 @@ export interface TableContent {
     text: string;
   }[];
   rows?: {
+    linkUrl: string;
     rowKey: string;
     rowContent: {
       cellKey: string;
@@ -33,11 +35,17 @@ export default function WorkspaceTable({ content }: { content: TableContent }) {
         </TableHead>
         <TableBody>
           {content.rows?.map((row) => (
-            <TableRow key={row.rowKey}>
-              {row.rowContent.map((cell) => (
-                <TableCell key={cell.cellKey}>{cell.cellContent}</TableCell>
-              ))}
-            </TableRow>
+            <Link key={row.rowKey} href={row.linkUrl} passHref>
+              <TableRow
+                component={'a'}
+                hover
+                sx={{ cursor: 'pointer', textDecoration: 'none'}}
+              >
+                {row.rowContent.map((cell) => (
+                  <TableCell key={cell.cellKey}>{cell.cellContent}</TableCell>
+                ))}
+              </TableRow>
+            </Link>
           ))}
         </TableBody>
       </Table>

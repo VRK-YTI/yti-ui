@@ -91,6 +91,10 @@ export default function PersonalWorkspace({
     })),
     rows: items?.map((item) => {
       return {
+        linkUrl:
+          contentType == 'SCHEMA'
+            ? router.basePath + '/schema/' + item.pid
+            : router.basePath + '/crosswalk/' + item.pid,
         rowKey: item.pid,
         rowContent: keysWithTranslations.map((key) => ({
           cellKey: key.key,
