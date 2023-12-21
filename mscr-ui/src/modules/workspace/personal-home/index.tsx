@@ -17,6 +17,8 @@ import SchemaFormModal from '@app/modules/schema-form/schema-form-modal';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
 import { Typography } from '@mui/material';
+import CrosswalkFormModal from '@app/modules/crosswalk-form/crosswalk-form-modal';
+import CrosswalkSelectionModal from '@app/modules/create-crosswalk/crosswalk-selection-modal';
 
 export default function PersonalWorkspace({
   contentType,
@@ -118,7 +120,16 @@ export default function PersonalWorkspace({
         />
         <Separator isLarge />
         <ButtonBlock>
-          <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>
+          {contentType == 'SCHEMA' ? (
+            <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>
+          ) : (
+            <>
+              <CrosswalkFormModal refetch={refetchInfo}></CrosswalkFormModal>
+              <CrosswalkSelectionModal
+                refetch={refetchInfo}
+              ></CrosswalkSelectionModal>
+            </>
+          )}
         </ButtonBlock>
         <Separator isLarge />
         {items && items.length < 1 ? (
