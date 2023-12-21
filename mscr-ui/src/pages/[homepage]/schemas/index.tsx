@@ -33,7 +33,7 @@ export default function SchemasPage(props: SchemasPageProps) {
           description={t('service-description')}
         />
         {contentOwner == 'personal' ? (
-          <PersonalWorkspace />
+          <PersonalWorkspace contentType={'SCHEMA'} />
         ) : (
           <GroupWorkspace pid={contentOwner} />
         )}
