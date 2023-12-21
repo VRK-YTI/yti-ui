@@ -32,7 +32,7 @@ export function getSpecialCharacters(
     case 'listNumbered':
       return [addNewLine ? '\n1. ' : '1. ', ''];
     case 'link':
-      return [`[${translateLinkPlaceholder('link', t)}]https://)`, ''];
+      return [`[${translateLinkPlaceholder('link', t)}](https://)`, ''];
     case 'image':
       return [
         `![${translateLinkPlaceholder(
