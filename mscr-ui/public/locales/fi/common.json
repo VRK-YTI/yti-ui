@@ -266,6 +266,15 @@
     "verb": ""
   },
   "working-version": "",
+  "workspace": {
+    "crosswalks": "",
+    "label": "",
+    "namespace": "",
+    "numberOfRevisions": "",
+    "pid": "",
+    "schemas": "",
+    "state": ""
+  },
   "workspace-group": "",
   "workspace-group-navigation-content": "",
   "workspace-navigation": "",

@@ -1,4 +1,4 @@
-import FrontPage from '../front-page';
+import FrontPage from '../../front-page';
 import { useGetPersonalContentQuery } from '@app/common/components/personal/personal.slice';
 import { Type } from '@app/common/interfaces/search.interface';
 import WorkspaceTable, { TableContent } from '@app/common/components/workspace-table';
