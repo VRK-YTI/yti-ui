@@ -96,10 +96,12 @@ export default function Documentation({
   const [isEdit, setIsEdit] = useState(false);
   const [updateSelectionPosition, setUpdateSelectionPosition] = useState<{
     update: boolean;
-    offset: number;
+    startOffset: number;
+    endOffset: number;
   }>({
     update: false,
-    offset: 0,
+    startOffset: 0,
+    endOffset: 0,
   });
   const [hoverRef, setHoverRef] = useState<HTMLButtonElement | null>(null);
   const [showHover, setShowHover] = useState(false);
@@ -142,11 +144,14 @@ export default function Documentation({
       ?.match(/width:[0-9]+px/g)?.[0]
       ?.split(':')?.[1]
       ?.replace('px', '');
+    const altText = props.alt
+      ? props.alt.replaceAll(/(width|height):[0-9]*px/g, '').trim()
+      : 'Image alt text';
 
     return (
       <Image
         src={src.startsWith('https://') ? src : ''}
-        alt={'Markdown image'}
+        alt={altText}
         width={width ? parseInt(width) : 350}
         height={height ? parseInt(height) : 190}
       />
@@ -210,50 +215,53 @@ export default function Documentation({
 
   const handleButtonClick = (key: string) => {
     const addNewLine = getAddNewLine(value[currentLanguage], selection.start);
-    const elem = getSpecialCharacters(key, addNewLine, t);
+    const selectionData =
+      ['link', 'image'].includes(key) && selection.start !== selection.end
+        ? value[currentLanguage].substring(selection.start, selection.end)
+        : undefined;
+    const elem = getSpecialCharacters(key, addNewLine, t, selectionData);
 
     handleUpdate({
       ...value,
       [currentLanguage]: injectSpecialCharacters(
         value[currentLanguage],
         selection,
-        elem
+        elem,
+        selectionData ? true : false
       ),
     });
 
     textAreaRef.current?.focus();
 
-    if (selection.start === selection.end) {
-      setUpdateSelectionPosition({
-        update: true,
-        offset: 0,
-      });
-    } else {
-      let offset: number;
-      switch (key) {
-        case 'bold':
-        case 'listNumbered':
-          offset = 4;
-          break;
-        case 'italic':
-          offset = 2;
-          break;
-        case 'quote':
-          offset = 1;
-          break;
-        case 'listBulleted':
-          offset = 3;
-          break;
-        default:
-          offset = 0;
-          break;
-      }
+    let startOffset = 0;
+    let endOffset = 0;
 
-      setUpdateSelectionPosition({
-        update: true,
-        offset: offset,
-      });
+    switch (key) {
+      case 'italic':
+      case 'link':
+        startOffset = 1;
+        endOffset = 1;
+        break;
+      case 'bold':
+      case 'listBulleted':
+      case 'quote':
+      case 'image':
+        startOffset = 2;
+        endOffset = 2;
+        break;
+      case 'listNumbered':
+        startOffset = 3;
+        endOffset = 3;
+        break;
+      default:
+        break;
     }
+
+    setUpdateSelectionPosition({
+      update: true,
+      startOffset: startOffset,
+      endOffset: endOffset,
+    });
   };
 
   const handleEnterClick = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -369,12 +377,13 @@ export default function Documentation({
   useEffect(() => {
     if (updateSelectionPosition.update && textAreaRef.current) {
       textAreaRef.current.setSelectionRange(
-        selection.start,
-        selection.end + updateSelectionPosition.offset
+        selection.start + updateSelectionPosition.startOffset,
+        selection.end + updateSelectionPosition.endOffset
       );
       setUpdateSelectionPosition({
         update: false,
-        offset: 0,
+        startOffset: 0,
+        endOffset: 0,
       });
     }
   }, [updateSelectionPosition, textAreaRef, selection.start, selection.end]);

@@ -18,7 +18,8 @@ export function getAddNewLine(data: string, position: number): boolean {
 export function getSpecialCharacters(
   key: string,
   addNewLine: boolean,
-  t: TFunction
+  t: TFunction,
+  selectionData?: string
 ): [string, string] {
   switch (key) {
     case 'bold':
@@ -26,19 +27,21 @@ export function getSpecialCharacters(
     case 'italic':
       return ['*', '*'];
     case 'quote':
-      return ['>', ''];
+      return ['> ', ''];
     case 'listBulleted':
       return [addNewLine ? '\n- ' : '- ', ''];
     case 'listNumbered':
       return [addNewLine ? '\n1. ' : '1. ', ''];
     case 'link':
-      return [`[${translateLinkPlaceholder('link', t)}](https://)`, ''];
+      return [
+        `[${selectionData ?? translateLinkPlaceholder('link', t)}](https://)`,
+        '',
+      ];
     case 'image':
       return [
-        `![${translateLinkPlaceholder(
-          'image',
-          t
-        )} width:200px height:200px](https://)`,
+        `![${
+          selectionData ?? translateLinkPlaceholder('image', t)
+        } width:200px height:200px](https://)`,
         '',
       ];
     default:
@@ -52,8 +55,15 @@ export function injectSpecialCharacters(
     start: number;
     end: number;
   },
-  elem: [string, string]
+  elem: [string, string],
+  removeInitial?: boolean
 ): string {
+  if (removeInitial) {
+    return `${data.slice(0, selection.start)}${elem[0]}${data.slice(
+      selection.end
+    )}${elem[1]}`;
+  }
+
   return `${data.slice(0, selection.start)}${elem[0]}${data.slice(
     selection.start,
     selection.end
