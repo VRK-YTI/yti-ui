@@ -270,6 +270,8 @@
     "crosswalks": "",
     "label": "",
     "namespace": "",
+    "no-crosswalks": "",
+    "no-schemas": "",
     "numberOfRevisions": "",
     "pid": "",
     "schemas": "",

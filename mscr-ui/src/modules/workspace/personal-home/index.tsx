@@ -1,7 +1,9 @@
 import FrontPage from '../../front-page';
 import { useGetPersonalContentQuery } from '@app/common/components/personal/personal.slice';
 import { Type } from '@app/common/interfaces/search.interface';
-import WorkspaceTable, { TableContent } from 'src/modules/workspace/workspace-table';
+import WorkspaceTable, {
+  TableContent,
+} from 'src/modules/workspace/workspace-table';
 import { useTranslation } from 'next-i18next';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import router, { useRouter } from 'next/router';
@@ -25,13 +27,14 @@ export default function PersonalWorkspace({
 }: {
   contentType: Type;
 }) {
-  const { t, i18n} = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
   const lang = router.locale ?? '';
   const { data, isLoading } = useGetPersonalContentQuery(contentType);
-  const { refetch: refetchOrganizationsData } =
-    useGetOrganizationsQuery(i18n.language);
+  const { refetch: refetchOrganizationsData } = useGetOrganizationsQuery(
+    i18n.language
+  );
 
   // Need to decide what data we want to fetch loading the application
   const refetchInfo = () => {
@@ -119,10 +122,14 @@ export default function PersonalWorkspace({
           <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>
         </ButtonBlock>
         <Separator isLarge />
-        <Typography marginTop={5}>
-          {tableContent.ariaLabel}
-        </Typography>
-        <WorkspaceTable content={tableContent}></WorkspaceTable>
+        {items && items.length < 1 ? (
+          <div>{contentType =='SCHEMA' ? t('workspace.no-schemas') : t('workspace.no-crosswalks')}</div>
+        ) : (
+          <>
+            <Typography marginTop={5}>{tableContent.ariaLabel}</Typography>
+            <WorkspaceTable content={tableContent} />
+          </>
+        )}
       </main>
     );
   }

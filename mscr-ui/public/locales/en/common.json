@@ -272,6 +272,8 @@
     "crosswalks": "Crosswalks",
     "label": "Name",
     "namespace": "Namespace",
+    "no-crosswalks": "There are no crosswalks to show yet",
+    "no-schemas": "There are no schemas to show yet",
     "numberOfRevisions": "Revisions",
     "pid": "PID",
     "schemas": "Schemas",
