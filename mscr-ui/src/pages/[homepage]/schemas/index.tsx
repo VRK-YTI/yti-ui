@@ -7,7 +7,7 @@ import { SSRConfig, useTranslation } from 'next-i18next';
 import Layout from '@app/common/components/layout';
 import PageHead from 'yti-common-ui/components/page-head';
 import { useRouter } from 'next/router';
-import PersonalWorkspace from '@app/modules/personal-home';
+import PersonalWorkspace from 'src/modules/workspace/personal-home';
 import GroupWorkspace from '@app/modules/group-home';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 

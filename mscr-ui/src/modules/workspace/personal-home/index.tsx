@@ -1,7 +1,7 @@
 import FrontPage from '../../front-page';
 import { useGetPersonalContentQuery } from '@app/common/components/personal/personal.slice';
 import { Type } from '@app/common/interfaces/search.interface';
-import WorkspaceTable, { TableContent } from '@app/common/components/workspace-table';
+import WorkspaceTable, { TableContent } from 'src/modules/workspace/workspace-table';
 import { useTranslation } from 'next-i18next';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import router, { useRouter } from 'next/router';
