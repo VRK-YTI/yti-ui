@@ -70,18 +70,12 @@ export default function DesktopNavigation({
                   </SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink
-                    href={`https://koodistot.suomi.fi/${router.locale ?? 'fi'}`}
-                  >
+                  <SuomiFiLink href="https://koodistot.suomi.fi/">
                     {t('codelist-title')}
                   </SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink
-                    href={`https://tietomallit.suomi.fi/${
-                      router.locale ?? 'fi'
-                    }`}
-                  >
+                  <SuomiFiLink href="https://tietomallit.suomi.fi/">
                     {t('datamodel-title')}
                   </SuomiFiLink>
                 </NavigationDropdownItem>
