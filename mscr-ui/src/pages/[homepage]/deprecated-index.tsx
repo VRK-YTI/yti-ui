@@ -22,7 +22,7 @@ import {
 
 import { useRouter } from 'next/router';
 import GroupWorkspace from '../../modules/group-home';
-import PersonalWorkspace from '../../modules/personal-home';
+import PersonalWorkspace from '../../modules/workspace/personal-home';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 
 import CrosswalkEditor from '@app/modules/crosswalk-editor';

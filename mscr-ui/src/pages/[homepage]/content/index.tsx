@@ -22,7 +22,7 @@ import {
 
 import { useRouter } from 'next/router';
 import GroupWorkspace from '../../../modules/group-home';
-import PersonalWorkspace from '../../../modules/personal-home';
+import PersonalWorkspace from '../../../modules/workspace/personal-home';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 interface IndexPageProps extends CommonContextState {
@@ -47,7 +47,7 @@ export default function IndexPage(props: IndexPageProps) {
     user?: MscrUser;
   }): React.ReactElement {
     if (slug === 'personal') {
-      return <PersonalWorkspace pid={''} user={user} />;
+      return <PersonalWorkspace />;
     } else if (isValidPid('group', slug)) {
       return <GroupWorkspace pid={slug ?? ''} user={user} />;
     } else {

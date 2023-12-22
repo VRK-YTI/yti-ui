@@ -39,6 +39,7 @@ export interface ResultInfo {
   prefix: string;
   organizations: Organization[];
   revisions: Revision[];
+  numberOfRevisions: number;
   versionLabel: string;
   namespace: string;
   format?: string;

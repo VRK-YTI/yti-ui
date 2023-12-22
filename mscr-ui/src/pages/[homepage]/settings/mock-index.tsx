@@ -5,9 +5,9 @@ import {
 import { SSRConfig } from 'next-i18next';
 import Layout from '@app/common/components/layout';
 import PageHead from 'yti-common-ui/components/page-head';
-import PersonalSettings from 'src/modules/personal-settings';
+import PersonalSettings from 'src/modules/workspace/personal-settings';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
-import GroupSettings from '@app/modules/group-settings';
+import GroupSettings from 'src/modules/workspace/group-settings';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 interface IndexPageProps extends CommonContextState {
