@@ -133,7 +133,11 @@ export default function PersonalWorkspace({
         </ButtonBlock>
         <Separator isLarge />
         {items && items.length < 1 ? (
-          <div>{contentType =='SCHEMA' ? t('workspace.no-schemas') : t('workspace.no-crosswalks')}</div>
+          <div>
+            {contentType == 'SCHEMA'
+              ? t('workspace.no-schemas')
+              : t('workspace.no-crosswalks')}
+          </div>
         ) : (
           <>
             <Typography marginTop={5}>{tableContent.ariaLabel}</Typography>

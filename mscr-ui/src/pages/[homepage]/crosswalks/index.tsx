@@ -42,12 +42,10 @@ export default function CrosswalksPage(props: CrosswalksPageProps) {
   );
 }
 
-export const getServerSideProps = createCommonGetServerSideProps(
-  async () => {
-    return {
-      props: {
-        requireAuthenticated: true,
-      },
-    };
-  }
-);
+export const getServerSideProps = createCommonGetServerSideProps(async () => {
+  return {
+    props: {
+      requireAuthenticated: true,
+    },
+  };
+});

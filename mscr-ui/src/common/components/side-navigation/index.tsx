@@ -27,7 +27,6 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const personalSchemasPath = '/personal/schemas';
   const personalCrosswalksPath = '/personal/crosswalks';
   const personalSettingsPath = '/personal/settings';
-  const groupContentPath = '/group-home';
   // Group settings path is form '/' + group.id + '/settings'
 
   return (
@@ -118,9 +117,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                 selected={router.asPath == '/' + group.id + '/schemas'}
                 content={
                   <Link href={'/' + group.id + '/schemas'} passHref>
-                    <RouterLink>
-                      {t('workspace.schemas')}
-                    </RouterLink>
+                    <RouterLink>{t('workspace.schemas')}</RouterLink>
                   </Link>
                 }
               />
@@ -130,9 +127,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                 selected={router.asPath == '/' + group.id + '/crosswalks'}
                 content={
                   <Link href={'/' + group.id + '/crosswalks'} passHref>
-                    <RouterLink>
-                      {t('workspace.crosswalks')}
-                    </RouterLink>
+                    <RouterLink>{t('workspace.crosswalks')}</RouterLink>
                   </Link>
                 }
               />

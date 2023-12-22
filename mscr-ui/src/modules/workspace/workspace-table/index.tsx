@@ -39,7 +39,7 @@ export default function WorkspaceTable({ content }: { content: TableContent }) {
               <TableRow
                 component={'a'}
                 hover
-                sx={{ cursor: 'pointer', textDecoration: 'none'}}
+                sx={{ cursor: 'pointer', textDecoration: 'none' }}
               >
                 {row.rowContent.map((cell) => (
                   <TableCell key={cell.cellKey}>{cell.cellContent}</TableCell>
