@@ -40,6 +40,7 @@ export default function GroupWorkspace({ user, pid, contentType }: GroupHomeProp
           }
         />
         <Separator isLarge />
+        {/* ToDo: From these buttons you should create content with this org as owner */}
         {/*<ButtonBlock>*/}
         {/*  {contentType == 'SCHEMA' ? (*/}
         {/*    <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>*/}
