@@ -5,6 +5,7 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import Link from 'next/link';
+import { LabelLink } from '@app/modules/workspace/workspace-table/workspace-table-styles';
 
 export interface TableContent {
   ariaLabel: string;
@@ -35,15 +36,26 @@ export default function WorkspaceTable({ content }: { content: TableContent }) {
         </TableHead>
         <TableBody>
           {content.rows?.map((row) => (
-            <Link key={row.rowKey} href={row.linkUrl} passHref>
+            <Link key={row.rowKey} href={row.linkUrl} passHref tabIndex={0}>
               <TableRow
-                component={'a'}
                 hover
                 sx={{ cursor: 'pointer', textDecoration: 'none' }}
               >
-                {row.rowContent.map((cell) => (
-                  <TableCell key={cell.cellKey}>{cell.cellContent}</TableCell>
-                ))}
+                {row.rowContent.map((cell) => {
+                  if (cell.cellKey == 'label') {
+                    return (
+                      <TableCell key={cell.cellKey}>
+                        <LabelLink href={row.linkUrl}>{cell.cellContent}</LabelLink>
+                      </TableCell>
+                    );
+                  } else {
+                    return (
+                      <TableCell key={cell.cellKey}>
+                        {cell.cellContent}
+                      </TableCell>
+                    );
+                  }
+                })}
               </TableRow>
             </Link>
           ))}

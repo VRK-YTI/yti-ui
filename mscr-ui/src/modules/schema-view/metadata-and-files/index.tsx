@@ -1,7 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 import {
-  Schema,
   SchemaFileData,
   SchemaWithVersionInfo,
 } from '@app/common/interfaces/schema.interface';
@@ -194,7 +193,7 @@ export default function MetadataAndFiles({
           <TableBody>
             {/*TODO: Use the below template to create lines for files*/}
             {schemaFiles && schemaFiles.map((file) => (
-              <TableRow key={file.id}>
+              <TableRow key={file.fileID}>
                 <TableCell>{file.fileID}</TableCell>
                 <TableCell>{file.fileID}</TableCell>
                 <TableCell>{file.contentType}</TableCell>

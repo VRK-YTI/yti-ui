@@ -54,7 +54,6 @@ export default function PersonalWorkspace({
       return itemDisplay;
     }
   );
-  console.log('items: ', items);
   const keysWithTranslations = [
     {
       key: 'label',
