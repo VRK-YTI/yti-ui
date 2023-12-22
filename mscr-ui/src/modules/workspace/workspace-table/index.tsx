@@ -45,7 +45,9 @@ export default function WorkspaceTable({ content }: { content: TableContent }) {
                   if (cell.cellKey == 'label') {
                     return (
                       <TableCell key={cell.cellKey}>
-                        <LabelLink href={row.linkUrl}>{cell.cellContent}</LabelLink>
+                        <LabelLink href={row.linkUrl}>
+                          {cell.cellContent}
+                        </LabelLink>
                       </TableCell>
                     );
                   } else {
