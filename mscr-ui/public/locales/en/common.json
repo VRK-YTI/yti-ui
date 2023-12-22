@@ -270,18 +270,16 @@
   "working-version": "",
   "workspace": {
     "crosswalks": "Crosswalks",
+    "group": "Group workspaces",
     "label": "Name",
     "namespace": "Namespace",
+    "navigation": "Workspaces",
     "no-crosswalks": "There are no crosswalks to show yet",
     "no-schemas": "There are no schemas to show yet",
     "numberOfRevisions": "Revisions",
+    "personal": "Personal workspace",
     "pid": "PID",
     "schemas": "Schemas",
     "state": "State"
-  },
-  "workspace-group": "Group workspaces",
-  "workspace-group-navigation-content": "Group content",
-  "workspace-navigation": "Workspaces",
-  "workspace-navigation-content": "Workspace content",
-  "workspace-personal": "Personal workspace"
+  }
 }
