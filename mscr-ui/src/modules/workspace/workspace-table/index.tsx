@@ -36,7 +36,7 @@ export default function WorkspaceTable({ content }: { content: TableContent }) {
         </TableHead>
         <TableBody>
           {content.rows?.map((row) => (
-            <Link key={row.rowKey} href={row.linkUrl} passHref tabIndex={0}>
+            <Link key={row.rowKey} href={row.linkUrl} passHref>
               <TableRow
                 hover
                 sx={{ cursor: 'pointer', textDecoration: 'none' }}
