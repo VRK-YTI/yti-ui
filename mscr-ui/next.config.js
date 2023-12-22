@@ -88,7 +88,7 @@ module.exports = () => {
               key: 'user-session-cookie',
             },
           ],
-          destination: '/personal/content',
+          destination: '/personal/crosswalks',
           permanent: false,
         },
       ];
