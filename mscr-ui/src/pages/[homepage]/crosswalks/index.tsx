@@ -35,7 +35,7 @@ export default function CrosswalksPage(props: CrosswalksPageProps) {
         {contentOwner == 'personal' ? (
           <PersonalWorkspace contentType={'CROSSWALK'} />
         ) : (
-          <GroupWorkspace pid={contentOwner} />
+          <GroupWorkspace user={props.user} pid={contentOwner} contentType={'CROSSWALK'} />
         )}
       </Layout>
     </CommonContextProvider>

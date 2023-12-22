@@ -35,7 +35,7 @@ export default function SchemasPage(props: SchemasPageProps) {
         {contentOwner == 'personal' ? (
           <PersonalWorkspace contentType={'SCHEMA'} />
         ) : (
-          <GroupWorkspace pid={contentOwner} />
+          <GroupWorkspace user={props.user} pid={contentOwner} contentType={'SCHEMA'} />
         )}
       </Layout>
     </CommonContextProvider>
