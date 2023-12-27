@@ -234,8 +234,18 @@ const GraphContent = ({
     if (!data) {
       return;
     }
-    setNodes(
-      convertToNodes(
+
+    const { edges, loopNodes } = convertToEdges(
+      data.nodes,
+      data.hiddenNodes,
+      t,
+      modelId,
+      deleteNodeById,
+      applicationProfile
+    );
+
+    setNodes([
+      ...convertToNodes(
         data.nodes,
         data.hiddenNodes,
         modelId,
@@ -243,17 +253,10 @@ const GraphContent = ({
         applicationProfile,
         refetchNodes,
         organizationIds
-      )
-    );
-    setEdges(
-      convertToEdges(
-        data.nodes,
-        data.hiddenNodes,
-        t,
-        modelId,
-        applicationProfile
-      )
-    );
+      ),
+      ...(loopNodes ? loopNodes : []),
+    ]);
+    setEdges(edges);
 
     if (resetPosition) {
       dispatch(setResetPosition(false));
@@ -292,8 +295,17 @@ const GraphContent = ({
   useEffect(() => {
     if (isSuccess && !isFetching) {
       if (updateVisualization) {
-        setNodes((nodes) =>
-          updateNodes(
+        const { edges, loopNodes } = convertToEdges(
+          data.nodes,
+          data.hiddenNodes,
+          t,
+          modelId,
+          deleteNodeById,
+          applicationProfile
+        );
+
+        setNodes((nodes) => [
+          ...updateNodes(
             nodes,
             data.nodes,
             data.hiddenNodes,
@@ -302,17 +314,10 @@ const GraphContent = ({
             applicationProfile,
             refetchNodes,
             organizationIds
-          )
-        );
-        setEdges(
-          convertToEdges(
-            data.nodes,
-            data.hiddenNodes,
-            t,
-            modelId,
-            applicationProfile
-          )
-        );
+          ),
+          ...(loopNodes ? loopNodes : []),
+        ]);
+        setEdges(edges);
         dispatch(setUpdateVisualization(false));
       } else {
         setNodePositions();

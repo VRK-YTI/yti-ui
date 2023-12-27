@@ -3,17 +3,23 @@ import {
   VisualizationReferenceType,
   VisualizationType,
 } from '@app/common/interfaces/visualization.interface';
-import { Edge } from 'reactflow';
+import { Edge, Node } from 'reactflow';
 import createEdge from '../create-edge';
 import { TFunction } from 'next-i18next';
+import createCornerNode from '../create-corner-node';
+import { v4 } from 'uuid';
 
 export default function convertToEdges(
   nodes: VisualizationType[],
   hiddenNodes: VisualizationHiddenNode[],
   t: TFunction,
   modelId: string,
+  deleteNodeById: (value: string) => void,
   applicationProfile?: boolean
-): Edge[] {
+): {
+  edges: Edge[];
+  loopNodes?: Node[];
+} {
   if (
     !nodes ||
     nodes.length < 1 ||
@@ -23,7 +29,9 @@ export default function convertToEdges(
         node.references.length > 0
     ).length < 1
   ) {
-    return [];
+    return {
+      edges: [],
+    };
   }
 
   const referenceLabels: {
@@ -32,6 +40,9 @@ export default function convertToEdges(
     identifier: string;
     label?: { [key: string]: string } | string;
   }[] = [];
+
+  const loopEdges: Edge[] = [];
+  const loopNodes: Node[] = [];
 
   const getEdgeParams = (
     source: string,
@@ -120,6 +131,93 @@ export default function convertToEdges(
           });
         }
 
+        // If referenceTarget is the class node that association is part of,
+        // create a corner node so that association is visible for user
+        if (reference.referenceTarget === node.identifier) {
+          const firstCornerNodeId = `#corner-${v4().split('-')[0]}`;
+          const secondCornerNodeId = `#corner-${v4().split('-')[0]}`;
+
+          loopNodes.push(
+            createCornerNode(
+              {
+                identifier: firstCornerNodeId,
+                position: {
+                  x: node.position.x - 150,
+                  y: node.position.y + 32,
+                },
+                referenceTarget: secondCornerNodeId,
+                referenceType: reference.referenceType,
+              },
+              deleteNodeById,
+              applicationProfile
+            ),
+            createCornerNode(
+              {
+                identifier: secondCornerNodeId,
+                position: {
+                  x: node.position.x - 150,
+                  y: node.position.y + 82,
+                },
+                referenceTarget: node.identifier,
+                referenceType: reference.referenceType,
+              },
+              deleteNodeById,
+              applicationProfile
+            )
+          );
+
+          loopEdges.push(
+            createEdge({
+              modelId: modelId,
+              identifier: ['ATTRIBUTE_DOMAIN', 'PARENT_CLASS'].includes(
+                reference.referenceType
+              )
+                ? node.identifier
+                : reference.identifier,
+              params: {
+                source: secondCornerNodeId,
+                sourceHandle: secondCornerNodeId,
+                target: firstCornerNodeId,
+                targetHandle: firstCornerNodeId,
+                id: `reactflow__edge-${secondCornerNodeId}-${firstCornerNodeId}`,
+                referenceType: reference.referenceType,
+              },
+              applicationProfile,
+              isCorner: true,
+            }),
+            createEdge({
+              modelId: modelId,
+              identifier: ['ATTRIBUTE_DOMAIN', 'PARENT_CLASS'].includes(
+                reference.referenceType
+              )
+                ? node.identifier
+                : reference.identifier,
+              params: {
+                source: node.identifier,
+                sourceHandle: node.identifier,
+                target: secondCornerNodeId,
+                targetHandle: secondCornerNodeId,
+                id: `reactflow__edge-${node.identifier}-${secondCornerNodeId}`,
+                referenceType: reference.referenceType,
+              },
+              applicationProfile,
+              isCorner: true,
+            })
+          );
+
+          return createEdge({
+            modelId: modelId,
+            label: label,
+            identifier: ['ATTRIBUTE_DOMAIN', 'PARENT_CLASS'].includes(
+              reference.referenceType
+            )
+              ? node.identifier
+              : reference.identifier,
+            params: getEdgeParams(firstCornerNodeId, reference),
+            applicationProfile,
+          });
+        }
+
         return createEdge({
           modelId: modelId,
           label: label,
@@ -135,7 +233,10 @@ export default function convertToEdges(
     ]);
 
   if (!hiddenNodes || hiddenNodes.length < 1) {
-    return edges;
+    return {
+      edges: [...edges, ...loopEdges],
+      loopNodes: loopNodes,
+    };
   }
 
   const splitEdges = hiddenNodes.map((node) => {
@@ -170,7 +271,13 @@ export default function convertToEdges(
     });
   });
 
-  return [...edges, ...(splitEdges.filter((edge) => edge !== null) as Edge[])];
+  return {
+    edges: [
+      ...edges,
+      ...(splitEdges.filter((edge) => edge !== null) as Edge[]),
+    ],
+    loopNodes: loopNodes,
+  };
 
   function getEndEdge(id: string): string {
     const targetNode = hiddenNodes.find((n) => n.identifier === id);
