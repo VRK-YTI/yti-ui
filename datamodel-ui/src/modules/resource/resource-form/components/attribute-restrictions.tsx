@@ -434,6 +434,11 @@ export default function AttributeRestrictions({
         <TextInput
           labelText={`${t('larger-or-as-large-as')} (sh:minInclusive)`}
           optionalText={t('optional')}
+          tooltipComponent={
+            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+              {t('tooltip.larger-or-as-large-as', { ns: 'common' })}
+            </Tooltip>
+          }
           visualPlaceholder={t('input-value')}
           defaultValue={data.minInclusive}
           onChange={(e) => handleUpdate('minInclusive', e?.toString() ?? '')}
@@ -444,6 +449,11 @@ export default function AttributeRestrictions({
         <TextInput
           labelText={`${t('smaller-or-as-small-as')} (sh:maxInclusive)`}
           optionalText={t('optional')}
+          tooltipComponent={
+            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+              {t('tooltip.smaller-or-as-small-as', { ns: 'common' })}
+            </Tooltip>
+          }
           visualPlaceholder={t('input-value')}
           defaultValue={data.maxInclusive}
           onChange={(e) => handleUpdate('maxInclusive', e?.toString() ?? '')}
@@ -454,6 +464,11 @@ export default function AttributeRestrictions({
         <TextInput
           labelText={`${t('larger-than')} (sh:minExclusive)`}
           optionalText={t('optional')}
+          tooltipComponent={
+            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+              {t('tooltip.larger-than', { ns: 'common' })}
+            </Tooltip>
+          }
           visualPlaceholder={t('input-value')}
           defaultValue={data.minExclusive}
           onChange={(e) => handleUpdate('minExclusive', e?.toString() ?? '')}
@@ -464,6 +479,11 @@ export default function AttributeRestrictions({
         <TextInput
           labelText={`${t('smaller-than')} (sh:maxExclusive)`}
           optionalText={t('optional')}
+          tooltipComponent={
+            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+              {t('tooltip.smaller-than', { ns: 'common' })}
+            </Tooltip>
+          }
           visualPlaceholder={t('input-value')}
           defaultValue={data.maxExclusive}
           onChange={(e) => handleUpdate('maxExclusive', e?.toString() ?? '')}

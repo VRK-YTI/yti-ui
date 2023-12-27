@@ -272,19 +272,47 @@ export default function CommonViewContent({
                 {data.maxCount ?? t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock title={t('larger-or-as-large-as', { ns: 'admin' })}>
+              <BasicBlock
+                title={t('larger-or-as-large-as', { ns: 'admin' })}
+                tooltip={{
+                  text: t('tooltip.larger-or-as-large-as', { ns: 'common' }),
+                  ariaCloseButtonLabelText: '',
+                  ariaToggleButtonLabelText: '',
+                }}
+              >
                 {data.minInclusive ?? t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock title={t('smaller-or-as-small-as', { ns: 'admin' })}>
+              <BasicBlock
+                title={t('smaller-or-as-small-as', { ns: 'admin' })}
+                tooltip={{
+                  text: t('tooltip.smaller-or-as-small-as', { ns: 'common' }),
+                  ariaCloseButtonLabelText: '',
+                  ariaToggleButtonLabelText: '',
+                }}
+              >
                 {data.maxInclusive ?? t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock title={t('larger-than', { ns: 'admin' })}>
+              <BasicBlock
+                title={t('larger-than', { ns: 'admin' })}
+                tooltip={{
+                  text: t('tooltip.larger-than', { ns: 'common' }),
+                  ariaCloseButtonLabelText: '',
+                  ariaToggleButtonLabelText: '',
+                }}
+              >
                 {data.minExclusive ?? t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock title={t('smaller-than', { ns: 'admin' })}>
+              <BasicBlock
+                title={t('smaller-than', { ns: 'admin' })}
+                tooltip={{
+                  text: t('tooltip.smaller-than', { ns: 'common' }),
+                  ariaCloseButtonLabelText: '',
+                  ariaToggleButtonLabelText: '',
+                }}
+              >
                 {data.maxExclusive ?? t('not-defined')}
               </BasicBlock>
 
