@@ -143,11 +143,25 @@ export default function ClassInfo({
     if (applicationProfile) {
       return (
         <>
-          <BasicBlock title={t('targets-library-class')}>
+          <BasicBlock
+            title={t('targets-library-class')}
+            tooltip={{
+              text: t('tooltip.target-class-profile'),
+              ariaCloseButtonLabelText: '',
+              ariaToggleButtonLabelText: '',
+            }}
+          >
             <UriInfo uri={data.targetClass} lang={displayLang} />
           </BasicBlock>
 
-          <BasicBlock title={t('utilizes-class-restriction')}>
+          <BasicBlock
+            title={t('utilizes-class-restriction')}
+            tooltip={{
+              text: t('tooltip.utilizes-class-restriction'),
+              ariaCloseButtonLabelText: '',
+              ariaToggleButtonLabelText: '',
+            }}
+          >
             <UriInfo uri={data.targetNode} lang={displayLang} />
           </BasicBlock>
         </>
@@ -156,7 +170,14 @@ export default function ClassInfo({
 
     return (
       <>
-        <BasicBlock title={t('upper-class')}>
+        <BasicBlock
+          title={t('upper-class')}
+          tooltip={{
+            text: t('tooltip.upper-classes'),
+            ariaCloseButtonLabelText: '',
+            ariaToggleButtonLabelText: '',
+          }}
+        >
           {!data.subClassOf || data.subClassOf.length === 0 ? (
             <> {t('no-upper-classes')}</>
           ) : (
@@ -164,7 +185,14 @@ export default function ClassInfo({
           )}
         </BasicBlock>
 
-        <BasicBlock title={t('equivalent-classes')}>
+        <BasicBlock
+          title={t('equivalent-classes')}
+          tooltip={{
+            text: t('tooltip.equivalent-classes'),
+            ariaCloseButtonLabelText: '',
+            ariaToggleButtonLabelText: '',
+          }}
+        >
           {!data.equivalentClass || data.equivalentClass.length === 0 ? (
             <> {t('no-equivalent-classes')}</>
           ) : (
@@ -172,29 +200,18 @@ export default function ClassInfo({
           )}
         </BasicBlock>
 
-        <BasicBlock title={t('disjoint-classes')}>
+        <BasicBlock
+          title={t('disjoint-classes')}
+          tooltip={{
+            text: t('tooltip.disjoint-classes'),
+            ariaCloseButtonLabelText: '',
+            ariaToggleButtonLabelText: '',
+          }}
+        >
           {!data.disjointWith || data.disjointWith.length === 0 ? (
             <>{t('no-disjoint-classes')}</>
           ) : (
             <UriList items={data.disjointWith} lang={displayLang} />
-          )}
-        </BasicBlock>
-
-        <BasicBlock title={t('technical-description')}>
-          {getLanguageVersion({
-            data: data.note,
-            lang: displayLang ?? i18n.language,
-            appendLocale: true,
-          }) !== '' ? (
-            <SanitizedTextContent
-              text={getLanguageVersion({
-                data: data.note,
-                lang: displayLang ?? i18n.language,
-                appendLocale: true,
-              })}
-            />
-          ) : (
-            t('no-note')
           )}
         </BasicBlock>
       </>
@@ -315,7 +332,16 @@ export default function ClassInfo({
           ) : (
             <></>
           )}
-          <BasicBlock title={t('class-identifier')}>{data.curie}</BasicBlock>
+          <BasicBlock
+            title={t('class-identifier')}
+            tooltip={{
+              text: t('tooltip.class-identifier'),
+              ariaCloseButtonLabelText: '',
+              ariaToggleButtonLabelText: '',
+            }}
+          >
+            {data.curie}
+          </BasicBlock>
 
           <BasicBlock title={t('uri')}>
             {data.uri}
@@ -335,6 +361,31 @@ export default function ClassInfo({
           </BasicBlock>
 
           {renderTopInfoByType()}
+
+          <BasicBlock
+            title={t('technical-description')}
+            tooltip={{
+              text: t('tooltip.technical-description'),
+              ariaCloseButtonLabelText: '',
+              ariaToggleButtonLabelText: '',
+            }}
+          >
+            {getLanguageVersion({
+              data: data.note,
+              lang: displayLang ?? i18n.language,
+              appendLocale: true,
+            }) !== '' ? (
+              <SanitizedTextContent
+                text={getLanguageVersion({
+                  data: data.note,
+                  lang: displayLang ?? i18n.language,
+                  appendLocale: true,
+                })}
+              />
+            ) : (
+              t('no-note')
+            )}
+          </BasicBlock>
 
           <Separator />
 

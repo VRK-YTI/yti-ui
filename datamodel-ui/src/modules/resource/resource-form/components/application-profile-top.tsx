@@ -2,7 +2,13 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { translateApplicationProfileTopDescription } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
-import { InlineAlert, Text, ToggleButton, Button } from 'suomifi-ui-components';
+import {
+  InlineAlert,
+  Text,
+  ToggleButton,
+  Button,
+  Tooltip,
+} from 'suomifi-ui-components';
 
 const Wrapper = styled.div`
   display: flex;
@@ -59,6 +65,9 @@ export default function ApplicationProfileTop({
           <Text variant="bold" smallScreen>
             {t('in-use-in-this-model')}
           </Text>
+          <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+            {t('tooltip.in-use-in-this-model', { ns: 'common' })}
+          </Tooltip>
         </div>
         <ToggleButton
           checked={inUse}

@@ -1,9 +1,15 @@
 import React from 'react';
 import { useBreakpoints } from '../media-query';
 import { BasicBlockHeader, BasicBlockWrapper } from './block.styles';
+import { Tooltip, Text } from 'suomifi-ui-components';
 
 export interface BasicBlockProps {
   title?: React.ReactNode;
+  tooltip?: {
+    text: string;
+    ariaToggleButtonLabelText: string;
+    ariaCloseButtonLabelText: string;
+  };
   children?: React.ReactNode;
   extra?: React.ReactNode;
   largeGap?: boolean;
@@ -13,6 +19,7 @@ export interface BasicBlockProps {
 
 export default function BasicBlock({
   title,
+  tooltip,
   children,
   extra,
   largeGap,
@@ -28,7 +35,19 @@ export default function BasicBlock({
       $isSmall={isSmall}
       id={id ?? 'basic-block'}
     >
-      {title && <BasicBlockHeader>{title}</BasicBlockHeader>}
+      {title && (
+        <BasicBlockHeader>
+          {title}
+          {tooltip && (
+            <Tooltip
+              ariaToggleButtonLabelText={tooltip.ariaToggleButtonLabelText}
+              ariaCloseButtonLabelText={tooltip.ariaCloseButtonLabelText}
+            >
+              <Text>{tooltip.text}</Text>
+            </Tooltip>
+          )}
+        </BasicBlockHeader>
+      )}
       {children && children}
       {extra}
     </BasicBlockWrapper>

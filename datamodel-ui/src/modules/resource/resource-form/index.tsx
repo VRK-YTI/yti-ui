@@ -13,6 +13,7 @@ import {
   translateCommonForm,
   translateCommonFormErrors,
   translatePageTitle,
+  translateCommonTooltips,
 } from '@app/common/utils/translation-helpers';
 import ConceptBlock from '@app/modules/concept-block';
 import { useStoreDispatch } from '@app/store';
@@ -20,7 +21,13 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { IconArrowLeft } from 'suomifi-icons';
-import { Button, Text, TextInput, Textarea } from 'suomifi-ui-components';
+import {
+  Button,
+  Text,
+  TextInput,
+  Textarea,
+  Tooltip,
+} from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { FormWrapper, LanguageVersionedWrapper } from './resource-form.styles';
@@ -511,6 +518,11 @@ export default function ResourceForm({
               data.type,
               t
             )} (dcterms:identifier)`}
+            tooltipComponent={
+              <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+                {translateCommonTooltips('identifier', data.type, t)}
+              </Tooltip>
+            }
             defaultValue={data.identifier}
             onChange={(e) =>
               handleUpdate({
@@ -552,6 +564,11 @@ export default function ResourceForm({
                   data.type,
                   t
                 )} (rdfs:subPropertyOf)`}
+                tooltip={{
+                  text: translateCommonTooltips('upper', data.type, t),
+                  ariaCloseButtonLabelText: '',
+                  ariaToggleButtonLabelText: '',
+                }}
                 items={data.subResourceOf}
                 addNewComponent={
                   <ResourceModal
@@ -595,6 +612,11 @@ export default function ResourceForm({
                   data.type,
                   t
                 )} (owl:equivalentProperty)`}
+                tooltip={{
+                  text: translateCommonTooltips('equivalent', data.type, t),
+                  ariaCloseButtonLabelText: '',
+                  ariaToggleButtonLabelText: '',
+                }}
                 items={data.equivalentResource}
                 addNewComponent={
                   <ResourceModal
@@ -646,6 +668,11 @@ export default function ResourceForm({
                   data.type,
                   t
                 )} (owl:FunctionalProperty)`}
+                tooltip={{
+                  text: translateCommonTooltips('functional', data.type, t),
+                  ariaCloseButtonLabelText: '',
+                  ariaToggleButtonLabelText: '',
+                }}
                 handleUpdate={(value) =>
                   handleUpdate({
                     ...data,
@@ -664,6 +691,11 @@ export default function ResourceForm({
                       data.type,
                       t
                     )} (owl:TransitiveProperty)`}
+                    tooltip={{
+                      text: translateCommonTooltips('transitive', data.type, t),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
                     handleUpdate={(value) =>
                       handleUpdate({
                         ...data,
@@ -680,6 +712,11 @@ export default function ResourceForm({
                       data.type,
                       t
                     )} (owl:ReflexiveProperty)`}
+                    tooltip={{
+                      text: translateCommonTooltips('reflexive', data.type, t),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
                     handleUpdate={(value) =>
                       handleUpdate({
                         ...data,
@@ -712,6 +749,14 @@ export default function ResourceForm({
                   data.type,
                   t
                 )}, ${lang} (rdfs:comment)`}
+                tooltipComponent={
+                  <Tooltip
+                    ariaCloseButtonLabelText=""
+                    ariaToggleButtonLabelText=""
+                  >
+                    {t('tooltip.technical-description', { ns: 'common' })}
+                  </Tooltip>
+                }
                 defaultValue={data.note?.[lang] ?? ''}
                 onChange={(e) =>
                   handleUpdate({

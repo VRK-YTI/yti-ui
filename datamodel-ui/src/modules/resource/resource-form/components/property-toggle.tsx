@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { Block, Label, ToggleInput } from 'suomifi-ui-components';
+import { Block, Label, ToggleInput, Tooltip } from 'suomifi-ui-components';
 
 const PropertyToggle = ({
   value,
@@ -7,17 +7,36 @@ const PropertyToggle = ({
   optionalText,
   id,
   label,
+  tooltip,
 }: {
   value?: boolean;
   handleUpdate: (value: boolean) => void;
   optionalText?: string;
   id: string;
   label: string;
+  tooltip?: {
+    text: string;
+    ariaCloseButtonLabelText: string;
+    ariaToggleButtonLabelText: string;
+  };
 }) => {
   const { t } = useTranslation('common');
   return (
     <Block>
-      <Label optionalText={optionalText} htmlFor={id}>
+      <Label
+        optionalText={optionalText}
+        htmlFor={id}
+        tooltipComponent={
+          tooltip && (
+            <Tooltip
+              ariaCloseButtonLabelText={tooltip.ariaCloseButtonLabelText}
+              ariaToggleButtonLabelText={tooltip.ariaToggleButtonLabelText}
+            >
+              {tooltip.text}
+            </Tooltip>
+          )
+        }
+      >
         {label}
       </Label>
       <ToggleInput

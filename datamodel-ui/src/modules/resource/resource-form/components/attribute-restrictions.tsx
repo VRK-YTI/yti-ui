@@ -17,6 +17,7 @@ import {
   SingleSelect,
   Text,
   TextInput,
+  Tooltip,
 } from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
 import { CommonFormErrors } from '../validate-form';
@@ -183,6 +184,14 @@ export default function AttributeRestrictions({
           <>
             <MultiSelect
               labelText={`${t('allowed-values')} (sh:in)`}
+              tooltipComponent={
+                <Tooltip
+                  ariaCloseButtonLabelText=""
+                  ariaToggleButtonLabelText=""
+                >
+                  {t('tooltip.allowed-values', { ns: 'common' })}
+                </Tooltip>
+              }
               ariaOptionsAvailableText=""
               ariaOptionChipRemovedTextFunction={() => ''}
               ariaSelectedAmountTextFunction={() => ''}
@@ -213,6 +222,14 @@ export default function AttributeRestrictions({
 
             <SingleSelect
               labelText={`${t('default-value')} (sh:defaultValue)`}
+              tooltipComponent={
+                <Tooltip
+                  ariaCloseButtonLabelText=""
+                  ariaToggleButtonLabelText=""
+                >
+                  {t('tooltip.default-value', { ns: 'common' })}
+                </Tooltip>
+              }
               clearButtonLabel=""
               ariaOptionsAvailableText=""
               items={codes}
@@ -232,6 +249,14 @@ export default function AttributeRestrictions({
 
             <SingleSelect
               labelText={`${t('required-value')} (sh:hasValue)`}
+              tooltipComponent={
+                <Tooltip
+                  ariaCloseButtonLabelText=""
+                  ariaToggleButtonLabelText=""
+                >
+                  {t('tooltip.required-value', { ns: 'common' })}
+                </Tooltip>
+              }
               clearButtonLabel=""
               ariaOptionsAvailableText=""
               items={codes}
@@ -249,7 +274,14 @@ export default function AttributeRestrictions({
           </>
         ) : (
           <>
-            <BasicBlock title={`${t('allowed-values')} (sh:in)`}>
+            <BasicBlock
+              title={`${t('allowed-values')} (sh:in)`}
+              tooltip={{
+                text: t('tooltip.allowed-values', { ns: 'common' }),
+                ariaCloseButtonLabelText: '',
+                ariaToggleButtonLabelText: '',
+              }}
+            >
               {data.allowedValues && (
                 <>
                   {data.allowedValues.map((value) => {
@@ -306,6 +338,14 @@ export default function AttributeRestrictions({
             </BasicBlock>
             <TextInput
               labelText={`${t('default-value')} (sh:defaultValue)`}
+              tooltipComponent={
+                <Tooltip
+                  ariaCloseButtonLabelText=""
+                  ariaToggleButtonLabelText=""
+                >
+                  {t('tooltip.default-value', { ns: 'common' })}
+                </Tooltip>
+              }
               optionalText={t('optional')}
               visualPlaceholder={t('input-value')}
               defaultValue={data.defaultValue}
@@ -314,6 +354,14 @@ export default function AttributeRestrictions({
             />
             <TextInput
               labelText={`${t('required-value')} (sh:hasValue)`}
+              tooltipComponent={
+                <Tooltip
+                  ariaCloseButtonLabelText=""
+                  ariaToggleButtonLabelText=""
+                >
+                  {t('tooltip.required-value', { ns: 'common' })}
+                </Tooltip>
+              }
               optionalText={t('optional')}
               visualPlaceholder={t('input-value')}
               defaultValue={data.hasValue}
@@ -326,6 +374,11 @@ export default function AttributeRestrictions({
         <TextInput
           labelText={`${t('minimum-length')} (sh:minLength)`}
           optionalText={t('optional')}
+          tooltipComponent={
+            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+              {t('tooltip.minimum-length', { ns: 'common' })}
+            </Tooltip>
+          }
           visualPlaceholder={t('input-value')}
           defaultValue={data.minLength}
           onChange={(e) => handleUpdate('minLength', e?.toString() ?? '')}
@@ -336,6 +389,11 @@ export default function AttributeRestrictions({
         <TextInput
           labelText={`${t('maximum-length')} (sh:maxLength)`}
           optionalText={t('optional')}
+          tooltipComponent={
+            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+              {t('tooltip.maximum-length', { ns: 'common' })}
+            </Tooltip>
+          }
           visualPlaceholder={t('input-value')}
           defaultValue={data.maxLength}
           onChange={(e) => handleUpdate('maxLength', e?.toString() ?? '')}
@@ -346,6 +404,11 @@ export default function AttributeRestrictions({
         <TextInput
           labelText={`${t('minimum-amount')} (sh:minCount)`}
           optionalText={t('optional')}
+          tooltipComponent={
+            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+              {t('tooltip.minimum-amount', { ns: 'common' })}
+            </Tooltip>
+          }
           visualPlaceholder={t('input-value')}
           defaultValue={data.minCount}
           onChange={(e) => handleUpdate('minCount', e?.toString() ?? '')}
@@ -356,6 +419,11 @@ export default function AttributeRestrictions({
         <TextInput
           labelText={`${t('maximum-amount')} (sh:maxCount)`}
           optionalText={t('optional')}
+          tooltipComponent={
+            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+              {t('tooltip.maximum-amount', { ns: 'common' })}
+            </Tooltip>
+          }
           visualPlaceholder={t('input-value')}
           defaultValue={data.maxCount}
           onChange={(e) => handleUpdate('maxCount', e?.toString() ?? '')}
@@ -406,6 +474,11 @@ export default function AttributeRestrictions({
         <TextInput
           labelText={`${t('string-attribute-format')} (sh:pattern)`}
           optionalText={t('optional')}
+          tooltipComponent={
+            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+              {t('tooltip.string-attribute-format', { ns: 'common' })}
+            </Tooltip>
+          }
           visualPlaceholder={t('input-value')}
           defaultValue={data.pattern}
           onChange={(e) => handleUpdate('pattern', e?.toString() ?? '')}
@@ -416,6 +489,11 @@ export default function AttributeRestrictions({
           labelText={`${t('string-attribute-languages')} (sh:languageIn)`}
           visualPlaceholder={t('select-languages')}
           optionalText={t('optional')}
+          tooltipComponent={
+            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+              {t('tooltip.string-attribute-languages', { ns: 'common' })}
+            </Tooltip>
+          }
           allowItemAddition={false}
           ariaChipActionLabel={''}
           ariaSelectedAmountText={''}
