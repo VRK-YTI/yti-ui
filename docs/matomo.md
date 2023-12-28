@@ -13,7 +13,7 @@ protected so you can't corrupt its analytics accidentally.
 # Matomo settings
 MATOMO_ENABLED=true
 MATOMO_URL=https://suomi.matomo.cloud
-MATOMO_SITE_ID=25
+MATOMO_SITE_ID=<id>
 ```
 
 ## Servers

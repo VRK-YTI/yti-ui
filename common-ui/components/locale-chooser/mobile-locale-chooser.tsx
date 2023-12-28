@@ -6,8 +6,8 @@ import {
 } from './locale-chooser.styles';
 import useLocales from './use-locales';
 
-export default function MobileLocaleChooser() {
-  const { locales } = useLocales();
+export default function MobileLocaleChooser({ hideSv }: { hideSv?: boolean }) {
+  const { locales } = useLocales(hideSv);
 
   return (
     <MobileMenuLanguageSection>

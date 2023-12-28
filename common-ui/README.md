@@ -5,7 +5,7 @@ YTI Common components library
 ## Getting started
 
 To use common-ui you will need to install its node modules. You can do this by
-running `npm i` inside the [yti-terminology-ui] root folder. `package.json` should
+running `npm i` inside the [yti-ui] root folder. `package.json` should
 be present in this folder.
 
 ### tsconfig
@@ -25,12 +25,11 @@ Open the `tsconfig.json` file of your project and add make sure this line is add
 ### Next.js transpiling
 
 The common library will need to be transpiled so it can run.
-This is done by adding the dependency `next-transpile-modules` to your package.json.
+This is done by adding the following to `next.config.js`.
 
-In `next.config.js` you will need to add the common library to the transpiling options with
-`const withTM = require("next-transpile-modules")(["../common-ui"]);`
-
-and `const nextConfig = withTM({...})`
+```json
+  "transpilePackages": ["common-ui"]
+```
 
 ### Done
 

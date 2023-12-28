@@ -29,11 +29,13 @@ export default function SmartHeader({
   fakeableUsers,
   fullScreenElements,
   langPickerHidden,
+  hideSv,
 }: {
   user?: User;
   fakeableUsers?: FakeableUser[];
   fullScreenElements?: React.ReactNode;
   langPickerHidden?: boolean;
+  hideSv?: boolean;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -94,6 +96,7 @@ export default function SmartHeader({
             handleLoginModalClick={handleLoginModalClick}
             isLoggedIn={!user?.anonymous ?? false}
             fakeableUsers={fakeableUsers}
+            hideSv={hideSv}
           />
         </NavigationContainer>
       </Block>
@@ -176,6 +179,7 @@ export default function SmartHeader({
       return (
         <DesktopLocaleChooser
           noFlex={typeof fullScreenElements !== 'undefined'}
+          hideSv={hideSv}
         />
       );
     }

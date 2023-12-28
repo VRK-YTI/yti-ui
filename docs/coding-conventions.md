@@ -17,7 +17,7 @@ src/              #
     interfaces/   #
     hooks/        #
   layouts/        # Layout components
-  modules/        # Alternative place for components, interfaces, and hooks
+  modules/        # Place for complex components, interfaces, and hooks
     moduleX/      #
       components/ #
       interfaces/ #

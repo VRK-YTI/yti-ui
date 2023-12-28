@@ -27,6 +27,7 @@ export default function Layout({
   fullScreenElements,
   headerHidden,
   langPickerHidden,
+  hideSv,
 }: {
   children: React.ReactNode;
   feedbackSubject?: string;
@@ -37,6 +38,7 @@ export default function Layout({
   fullScreenElements?: React.ReactNode;
   headerHidden?: boolean;
   langPickerHidden?: boolean;
+  hideSv?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
@@ -63,6 +65,7 @@ export default function Layout({
             fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
             fullScreenElements={fullScreenElements}
             langPickerHidden={langPickerHidden}
+            hideSv={hideSv}
           />
 
           <ContentContainer
@@ -76,6 +79,7 @@ export default function Layout({
           <SmartHeader
             user={user}
             fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
+            hideSv={hideSv}
           />
 
           <ContentContainer>
