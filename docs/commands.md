@@ -6,6 +6,7 @@
 - `npm run format` Formats the code
 - `npm run i18n` Handles many i18n related things automatically
 - `npm test` Runs tests
+- `npm start` Starts the production server from previous build
 
 ## Before pushing commits to GitHub
 

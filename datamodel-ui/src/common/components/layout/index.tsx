@@ -30,6 +30,7 @@ export default function Layout({
       fullScreenElements={fullScreenElements}
       headerHidden={headerHidden}
       langPickerHidden={langPickerHidden}
+      hideSv={true}
     >
       {children}
     </CommonLayout>

@@ -4,8 +4,14 @@ import { DesktopLocaleChooserWrapper } from './locale-chooser.styles';
 import useLocales from './use-locales';
 import { useTranslation } from 'next-i18next';
 
-export default function DesktopLocaleChooser({ noFlex }: { noFlex?: boolean }) {
-  const { locales, currentLocale } = useLocales();
+export default function DesktopLocaleChooser({
+  noFlex,
+  hideSv,
+}: {
+  noFlex?: boolean;
+  hideSv?: boolean;
+}) {
+  const { locales, currentLocale } = useLocales(hideSv);
   const { t } = useTranslation('common');
 
   return (

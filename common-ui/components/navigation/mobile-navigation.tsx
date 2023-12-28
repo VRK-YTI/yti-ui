@@ -11,12 +11,14 @@ import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 interface MobileNavigationProps {
   isLoggedIn: boolean;
   fakeableUsers?: FakeableUser[];
+  hideSv?: boolean;
   handleLoginModalClick?: () => void;
 }
 
 export default function MobileNavigation({
   isLoggedIn,
   fakeableUsers,
+  hideSv,
   handleLoginModalClick,
 }: MobileNavigationProps) {
   const { t } = useTranslation('common');
@@ -57,7 +59,7 @@ export default function MobileNavigation({
         )}
       </MobileMenuSection>
 
-      <MobileLocaleChooser />
+      <MobileLocaleChooser hideSv={hideSv} />
       <MobileImpersonateWrapper fakeableUsers={fakeableUsers} />
     </>
   );

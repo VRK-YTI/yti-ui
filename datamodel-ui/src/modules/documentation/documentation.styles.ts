@@ -82,9 +82,9 @@ export const TipTooltipWrapper = styled.div<{
           case 'small':
             return '0';
           case 'medium':
-            return '52';
+            return '65';
           default:
-            return '102';
+            return '115';
         }
       }}px
   );
@@ -100,7 +100,7 @@ export const TipTooltipWrapper = styled.div<{
 
   .fi-tooltip_content {
     padding: ${(props) =>
-      `${props.theme.suomifi.spacing.xxs} ${props.theme.suomifi.spacing.s}`};
+      `${props.theme.suomifi.spacing.xxs} ${props.theme.suomifi.spacing.xs}`};
     white-space: nowrap;
   }
 `;
