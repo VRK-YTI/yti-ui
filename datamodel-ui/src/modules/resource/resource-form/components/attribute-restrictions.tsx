@@ -135,7 +135,7 @@ export default function AttributeRestrictions({
       <Separator />
 
       <div style={{ marginBottom: '10px' }}>
-        <Text variant="bold">{t('restrictions')}</Text>
+        <Text variant="bold">{t('restrictions', { ns: 'common' })}</Text>
       </div>
 
       <RestrictionWrapper>
@@ -402,7 +402,7 @@ export default function AttributeRestrictions({
         />
 
         <TextInput
-          labelText={`${t('minimum-amount')} (sh:minCount)`}
+          labelText={`${t('minimum-count', { ns: 'common' })} (sh:minCount)`}
           optionalText={t('optional')}
           tooltipComponent={
             <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
@@ -417,7 +417,7 @@ export default function AttributeRestrictions({
         />
 
         <TextInput
-          labelText={`${t('maximum-amount')} (sh:maxCount)`}
+          labelText={`${t('maximum-count', { ns: 'common' })} (sh:maxCount)`}
           optionalText={t('optional')}
           tooltipComponent={
             <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">

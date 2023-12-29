@@ -17,11 +17,11 @@ export function translateModelType(type: Type, t: TFunction) {
 export function translateResourceType(type: ResourceType, t: TFunction) {
   switch (type) {
     case ResourceType.ASSOCIATION:
-      return t('association');
+      return t('association', { ns: 'common' });
     case ResourceType.ATTRIBUTE:
-      return t('attribute');
+      return t('attribute', { ns: 'common' });
     default:
-      return t('class');
+      return t('class', { ns: 'common' });
   }
 }
 
@@ -445,9 +445,11 @@ export function translateDrawerButton(
     case 'associations':
       return applicationProfile
         ? t('association-restrictions')
-        : t('associations');
+        : t('associations', { ns: 'common' });
     case 'attributes':
-      return applicationProfile ? t('attribute-restrictions') : t('attributes');
+      return applicationProfile
+        ? t('attribute-restrictions')
+        : t('attributes', { ns: 'common' });
     default:
       return '';
   }

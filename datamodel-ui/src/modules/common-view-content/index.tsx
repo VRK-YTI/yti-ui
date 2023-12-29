@@ -156,7 +156,7 @@ export default function CommonViewContent({
               <BasicBlock
                 title={t('data-type')}
                 tooltip={{
-                  text: t('tooltip.range'),
+                  text: t('tooltip.data-type'),
                   ariaCloseButtonLabelText: '',
                   ariaToggleButtonLabelText: '',
                 }}
@@ -251,7 +251,7 @@ export default function CommonViewContent({
               </BasicBlock>
 
               <BasicBlock
-                title={t('minimum-amount', { ns: 'admin' })}
+                title={t('minimum-count')}
                 tooltip={{
                   text: t('tooltip.minimum-amount'),
                   ariaCloseButtonLabelText: '',
@@ -262,7 +262,7 @@ export default function CommonViewContent({
               </BasicBlock>
 
               <BasicBlock
-                title={t('maximum-amount', { ns: 'admin' })}
+                title={t('maximum-count')}
                 tooltip={{
                   text: t('tooltip.maximum-amount'),
                   ariaCloseButtonLabelText: '',
@@ -352,9 +352,9 @@ export default function CommonViewContent({
         {data.type === ResourceType.ATTRIBUTE && (
           <>
             <BasicBlock
-              title={t('range', { ns: 'admin' })}
+              title={t('data-type')}
               tooltip={{
-                text: t('tooltip.range'),
+                text: t('tooltip.data-type'),
                 ariaCloseButtonLabelText: '',
                 ariaToggleButtonLabelText: '',
               }}
@@ -368,7 +368,7 @@ export default function CommonViewContent({
             </BasicBlock>
 
             <BasicBlock
-              title={`${t('class', { ns: 'admin' })} (rdfs:domain)`}
+              title={`${t('class')} (rdfs:domain)`}
               tooltip={{
                 text: t('tooltip.class'),
                 ariaCloseButtonLabelText: '',

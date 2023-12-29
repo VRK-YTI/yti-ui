@@ -122,7 +122,10 @@ export default function ConceptBlock({
 
   return (
     <>
-      <BasicBlock largeGap title={`${t('concept')} (dcterms:subject)`}>
+      <BasicBlock
+        largeGap
+        title={`${t('concept', { ns: 'common' })} (dcterms:subject)`}
+      >
         {!concept ? (
           <InlineAlert>{t('choose-concept-from-terminology')}</InlineAlert>
         ) : (
@@ -175,11 +178,9 @@ export default function ConceptBlock({
               />
               <SingleSelect
                 clearButtonLabel={t('clear-selection')}
-                labelText={t('terminology')}
-                noItemsText={t('no-terminologies-available') as string}
-                ariaOptionsAvailableText={
-                  t('terminologies-available') as string
-                }
+                labelText={t('terminology', { ns: 'common' })}
+                noItemsText={t('no-terminologies-available')}
+                ariaOptionsAvailableText={t('terminologies-available')}
                 allowItemAddition={false}
                 selectedItem={selectedOption}
                 items={terminologyOptions}
@@ -189,7 +190,7 @@ export default function ConceptBlock({
             </SearchBlock>
 
             {!hasTerminologies ? (
-              <Text>{t('no-terminologies-linked-to-data-model')}</Text>
+              <Text>{t('no-linked-terminologies', { ns: 'common' })}</Text>
             ) : !data || data.totalHitCount < 1 ? (
               <Text>{t('search-concept-by-keyword')}</Text>
             ) : (

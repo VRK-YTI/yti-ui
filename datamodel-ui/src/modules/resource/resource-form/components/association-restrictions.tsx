@@ -115,7 +115,7 @@ export default function AssociationRestrictions({
 
         <TextInputWrapper>
           <TextInput
-            labelText={`${t('minimum-amount')} (sh:minCount)`}
+            labelText={`${t('minimum-count', { ns: 'common' })} (sh:minCount)`}
             optionalText={t('optional')}
             tooltipComponent={
               <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
@@ -128,7 +128,7 @@ export default function AssociationRestrictions({
           />
 
           <TextInput
-            labelText={`${t('maximum-amount')} (sh:maxCount)`}
+            labelText={`${t('maximum-count', { ns: 'common' })} (sh:maxCount)`}
             optionalText={t('optional')}
             tooltipComponent={
               <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">

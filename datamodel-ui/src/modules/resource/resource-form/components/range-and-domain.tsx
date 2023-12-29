@@ -131,12 +131,12 @@ export default function RangeAndDomain({
           />
         )}
         <SingleSelect
-          labelText={`${t('range')} ${
+          labelText={`${t('data-type', { ns: 'common' })} ${
             applicationProfile ? '(sh:datatype)' : '(rdfs:range)'
           }`}
           tooltipComponent={
             <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
-              {t('tooltip.range', { ns: 'common' })}
+              {t('tooltip.data-type', { ns: 'common' })}
             </Tooltip>
           }
           itemAdditionHelpText=""
@@ -184,7 +184,7 @@ export default function RangeAndDomain({
             }}
             handleRemoval={() => handleDomainOrRangeRemoval('domain')}
             items={data.domain ? [data.domain] : []}
-            label={`${t('class')} (rdfs:domain)`}
+            label={`${t('class', { ns: 'common' })} (rdfs:domain)`}
             optionalText={t('optional')}
           />
         )}
