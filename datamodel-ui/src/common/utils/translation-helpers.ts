@@ -170,6 +170,37 @@ export function translateCommonForm(
   }
 }
 
+export function translateCommonTooltips(
+  tooltip: string,
+  type: ResourceType,
+  t: TFunction
+) {
+  switch (tooltip) {
+    case 'identifier':
+      return type === ResourceType.ASSOCIATION
+        ? t('tooltip.associations-identifier', { ns: 'common' })
+        : t('tooltip.attributes-identifier', { ns: 'common' });
+    case 'upper':
+      return type === ResourceType.ASSOCIATION
+        ? t('tooltip.upper-associations', { ns: 'common' })
+        : t('tooltip.upper-attributes', { ns: 'common' });
+    case 'equivalent':
+      return type === ResourceType.ASSOCIATION
+        ? t('tooltip.equivalent-associations', { ns: 'common' })
+        : t('tooltip.equivalent-attributes', { ns: 'common' });
+    case 'functional':
+      return type === ResourceType.ASSOCIATION
+        ? t('tooltip.associations-functional', { ns: 'common' })
+        : t('tooltip.attributes-functional', { ns: 'common' });
+    case 'transitive':
+      return t('tooltip.transitive', { ns: 'common' });
+    case 'reflexive':
+      return t('tooltip.reflexive', { ns: 'common' });
+    default:
+      return '';
+  }
+}
+
 export function translateCommonFormErrors(
   error: string,
   type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE,

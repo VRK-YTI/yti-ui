@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Label } from 'suomifi-ui-components';
+import { Label, Tooltip } from 'suomifi-ui-components';
 import InlineList from '../inline-list';
 import { UriData } from '@app/common/interfaces/uri.interface';
 
@@ -14,6 +14,11 @@ const InlineListBlockWrapper = styled.div`
 interface InlineListBlockProps {
   label: string;
   optionalText?: string;
+  tooltip?: {
+    text: string;
+    ariaToggleButtonLabelText: string;
+    ariaCloseButtonLabelText: string;
+  };
   items?: UriData[];
   addNewComponent: React.ReactElement;
   labelRow?: boolean;
@@ -24,6 +29,7 @@ interface InlineListBlockProps {
 export default function InlineListBlock({
   label,
   optionalText,
+  tooltip,
   items,
   addNewComponent,
   deleteDisabled = false,
@@ -31,7 +37,21 @@ export default function InlineListBlock({
 }: InlineListBlockProps) {
   return (
     <InlineListBlockWrapper>
-      <Label optionalText={optionalText}>{label}</Label>
+      <Label
+        optionalText={optionalText}
+        tooltipComponent={
+          tooltip && (
+            <Tooltip
+              ariaToggleButtonLabelText={tooltip.ariaToggleButtonLabelText}
+              ariaCloseButtonLabelText={tooltip.ariaCloseButtonLabelText}
+            >
+              {tooltip.text}
+            </Tooltip>
+          )
+        }
+      >
+        {label}
+      </Label>
       <InlineList
         handleRemoval={handleRemoval}
         items={items}

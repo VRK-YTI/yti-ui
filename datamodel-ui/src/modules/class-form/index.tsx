@@ -551,7 +551,7 @@ export default function ClassForm({
               ariaToggleButtonLabelText={''}
               ariaCloseButtonLabelText={''}
             >
-              <Text>Tooltip sisältö</Text>
+              <Text>{t('tooltip.class-identifier', { ns: 'common' })}</Text>
             </Tooltip>
           }
           id="prefix-input"
@@ -576,6 +576,11 @@ export default function ClassForm({
             }
             items={data.subClassOf}
             label={`${t('upper-classes')} (rdfs:subClassOf)`}
+            tooltip={{
+              text: t('tooltip.upper-classes', { ns: 'common' }),
+              ariaCloseButtonLabelText: '',
+              ariaToggleButtonLabelText: '',
+            }}
             handleRemoval={(id: string) =>
               handleClassOfRemoval(id, 'subClassOf')
             }
@@ -601,6 +606,11 @@ export default function ClassForm({
               }
               items={data.targetClass ? [data.targetClass] : []}
               label={`${t('target-class-profile')} (sh:targetClass)`}
+              tooltip={{
+                text: t('tooltip.target-class-profile', { ns: 'common' }),
+                ariaCloseButtonLabelText: '',
+                ariaToggleButtonLabelText: '',
+              }}
               handleRemoval={() =>
                 handleUpdate({ ...data, targetClass: undefined })
               }
@@ -635,6 +645,11 @@ export default function ClassForm({
             }
             items={data.equivalentClass}
             label={`${t('corresponding-classes')} (owl:equivalentClass)`}
+            tooltip={{
+              text: t('tooltip.equivalent-classes', { ns: 'common' }),
+              ariaCloseButtonLabelText: '',
+              ariaToggleButtonLabelText: '',
+            }}
             handleRemoval={(id: string) =>
               handleClassOfRemoval(id, 'equivalentClass')
             }
@@ -645,7 +660,14 @@ export default function ClassForm({
           <>
             {data.node?.curie}
             <InlineListBlock
-              label={`${t('utilizes-class-restriction')} (sh:node)`}
+              label={`${t('utilizes-class-restriction', {
+                ns: 'common',
+              })} (sh:node)`}
+              tooltip={{
+                text: t('tooltip.utilizes-class-restriction', { ns: 'common' }),
+                ariaCloseButtonLabelText: '',
+                ariaToggleButtonLabelText: '',
+              }}
               addNewComponent={
                 <ClassModal
                   modelId={modelId}
@@ -681,6 +703,11 @@ export default function ClassForm({
                 ]}
               />
             }
+            tooltip={{
+              text: t('tooltip.disjoint-classes', { ns: 'common' }),
+              ariaCloseButtonLabelText: '',
+              ariaToggleButtonLabelText: '',
+            }}
             items={data.disjointWith}
             handleRemoval={(id) => handleClassOfRemoval(id, 'disjointWith')}
           />
@@ -693,6 +720,14 @@ export default function ClassForm({
               labelText={`${t('technical-description')}, ${lang} ${
                 applicationProfile ? '(sh:description)' : '(rdfs:comment)'
               }`}
+              tooltipComponent={
+                <Tooltip
+                  ariaCloseButtonLabelText=""
+                  ariaToggleButtonLabelText=""
+                >
+                  {t('tooltip.technical-description', { ns: 'common' })}
+                </Tooltip>
+              }
               optionalText={t('optional')}
               defaultValue={data.note[lang as keyof typeof data.note]}
               onChange={(e) =>
