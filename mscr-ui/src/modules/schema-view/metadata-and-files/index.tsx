@@ -1,7 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 import {
-  Schema,
   SchemaFileData,
   SchemaWithVersionInfo,
 } from '@app/common/interfaces/schema.interface';
@@ -23,13 +22,10 @@ import TableContainer from '@mui/material/TableContainer';
 
 export default function MetadataAndFiles({
   schemaDetails,
-  schemaFiles
+  schemaFiles,
 }: {
-    schemaDetails?: SchemaWithVersionInfo;
-    schemaFiles?: SchemaFileData[];
-
-
-
+  schemaDetails?: SchemaWithVersionInfo;
+  schemaFiles?: SchemaFileData[];
 }) {
   const { t } = useTranslation('common');
   const lang = router.locale ?? '';
@@ -193,14 +189,15 @@ export default function MetadataAndFiles({
           </TableHead>
           <TableBody>
             {/*TODO: Use the below template to create lines for files*/}
-            {schemaFiles && schemaFiles.map((file) => (
-              <TableRow key={file.id}>
-                <TableCell>{file.fileID}</TableCell>
-                <TableCell>{file.fileID}</TableCell>
-                <TableCell>{file.contentType}</TableCell>
-                <TableCell>{file.size}</TableCell>
-              </TableRow>
-            ))}
+            {schemaFiles &&
+              schemaFiles.map((file) => (
+                <TableRow key={file.fileID}>
+                  <TableCell>{file.fileID}</TableCell>
+                  <TableCell>{file.fileID}</TableCell>
+                  <TableCell>{file.contentType}</TableCell>
+                  <TableCell>{file.size}</TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
