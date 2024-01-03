@@ -7,7 +7,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalTitle,
-  Paragraph,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { FormErrors, validateForm } from './validate-form';
@@ -22,16 +21,8 @@ import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import { useInitialCrosswalkFormMockup } from '@app/common/utils/hooks/use-initial-crosswalk-form';
-import {
-  useGetCrosswalkQuery,
-  usePutCrosswalkMutation,
-} from '@app/common/components/crosswalk/crosswalk.slice';
+import { usePutCrosswalkMutation } from '@app/common/components/crosswalk/crosswalk.slice';
 import CrosswalkForm from '.';
-import { CrosswalkFormMockupType } from '@app/common/interfaces/crosswalk.interface';
-import {
-  useGetPublicSchemasQuery,
-  useGetSchemaWithRevisionsQuery,
-} from '@app/common/components/schema/schema.slice';
 
 interface CrosswalkFormModalProps {
   refetch: () => void;

@@ -6,7 +6,6 @@ import {useTranslation} from 'next-i18next';
 import {useMemo} from 'react';
 import {Dropdown, DropdownItem} from 'suomifi-ui-components';
 import {
-    BlockContainer,
     ModelFormContainer,
     WideMultiSelect,
 } from './schema-form.styles';

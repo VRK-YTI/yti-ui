@@ -1,22 +1,13 @@
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
-import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
 import getOrganizations from '@app/common/utils/get-organizations';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
-import Separator from 'yti-common-ui/separator';
-import {
-  BlockContainer,
-  ModelFormContainer,
-  WideMultiSelect,
-} from './crosswalk-form.styles';
+import { ModelFormContainer, WideMultiSelect } from './crosswalk-form.styles';
 import LanguageSelector from 'yti-common-ui/form/language-selector';
 import { FormErrors } from './validate-form';
 import { Status } from '@app/common/interfaces/status.interface';
-import {
-  CrosswalkFormMockupType,
-  CrosswalkFormType,
-} from '@app/common/interfaces/crosswalk.interface';
+import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import { FormUpdateErrors } from '../schema-form/validate-form-update';
 import CrosswalkForm from '../create-crosswalk';
 

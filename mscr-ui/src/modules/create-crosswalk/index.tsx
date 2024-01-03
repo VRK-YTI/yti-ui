@@ -1,15 +1,11 @@
 import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
 import { useTranslation } from 'next-i18next';
-import { Textarea, TextInput } from 'suomifi-ui-components';
+import { Textarea, TextInput, SingleSelect } from 'suomifi-ui-components';
 import { ModelFormContainer } from './crosswalk-form.styles';
 import { FormErrors } from './validate-form';
-import {
-  CrosswalkFormMockupType,
-  CrosswalkFormType,
-} from '@app/common/interfaces/crosswalk.interface';
+import { CrosswalkFormMockupType } from '@app/common/interfaces/crosswalk.interface';
 import { FormUpdateErrors } from '../schema-form/validate-form-update';
 import * as React from 'react';
-import { SingleSelect } from 'suomifi-ui-components';
 import Box from '@mui/material/Box';
 import { useGetPublicSchemasQuery } from '@app/common/components/schema/schema.slice';
 import { useEffect, useState } from 'react';
