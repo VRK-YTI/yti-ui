@@ -14,30 +14,32 @@ import {
 } from './side-navigation.styles';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
+import getOrganizations from '@app/common/utils/get-organizations';
 
 export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
-  const groups = user?.organizations;
   const { breakpoint } = useBreakpoints();
   const { t } = useTranslation('common');
   const [openGroup, setOpenGroup] = useState('');
   const router = useRouter();
+  const lang = router.locale ?? '';
   // Paths for now
-  const personalContentPath = '/personal/content';
+  const personalSchemasPath = '/personal/schemas';
+  const personalCrosswalksPath = '/personal/crosswalks';
   const personalSettingsPath = '/personal/settings';
-  const groupContentPath = '/group-home';
   // Group settings path is form '/' + group.id + '/settings'
+  const organizations = getOrganizations(user?.organizations, lang);
 
   return (
     <SideNavigationWrapper $breakpoint={breakpoint} id="sidebar">
-      <MscrSideNavigation heading="" aria-label={t('workspace-navigation')}>
+      <MscrSideNavigation heading="" aria-label={t('workspace.navigation')}>
         <MscrSideNavigationLevel1
           subLevel={1}
           expanded
           content={
             <NavigationHeading variant="h2">
-              {t('workspace-personal')}
+              {t('workspace.personal')}
             </NavigationHeading>
           }
         >
@@ -45,11 +47,23 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
             <MscrSideNavigationLevel3
               className="personal"
               subLevel={3}
-              selected={router.asPath == personalContentPath}
+              selected={router.asPath == personalSchemasPath}
               content={
-                <Link href={personalContentPath} passHref>
+                <Link href={personalSchemasPath} passHref>
                   <RouterLink onClick={() => setOpenGroup('')}>
-                    {t('workspace-navigation-content')}
+                    {t('workspace.schemas')}
+                  </RouterLink>
+                </Link>
+              }
+            />
+            <MscrSideNavigationLevel3
+              className="personal"
+              subLevel={3}
+              selected={router.asPath == personalCrosswalksPath}
+              content={
+                <Link href={personalCrosswalksPath} passHref>
+                  <RouterLink onClick={() => setOpenGroup('')}>
+                    {t('workspace.crosswalks')}
                   </RouterLink>
                 </Link>
               }
@@ -74,11 +88,11 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
           expanded
           content={
             <NavigationHeading variant="h2">
-              {t('workspace-group')}
+              {t('workspace.group')}
             </NavigationHeading>
           }
         >
-          {groups?.map((group) => (
+          {organizations?.map((group) => (
             <MscrSideNavigationLevel2
               key={group.id}
               subLevel={2}
@@ -95,19 +109,27 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                     setOpenGroup(group.id);
                   }}
                 >
-                  <GroupHeading variant="h3">{group.name}</GroupHeading>
+                  <GroupHeading variant="h3">{group.label}</GroupHeading>
                 </RouterLink>
               }
             >
               <MscrSideNavigationLevel3
                 className="group"
                 subLevel={3}
-                selected={router.asPath == '/' + group.id + '/content'}
+                selected={router.asPath == '/' + group.id + '/schemas'}
                 content={
-                  <Link href={'/' + group.id + '/content'} passHref>
-                    <RouterLink>
-                      {t('workspace-group-navigation-content')}
-                    </RouterLink>
+                  <Link href={'/' + group.id + '/schemas'} passHref>
+                    <RouterLink>{t('workspace.schemas')}</RouterLink>
+                  </Link>
+                }
+              />
+              <MscrSideNavigationLevel3
+                className="group"
+                subLevel={3}
+                selected={router.asPath == '/' + group.id + '/crosswalks'}
+                content={
+                  <Link href={'/' + group.id + '/crosswalks'} passHref>
+                    <RouterLink>{t('workspace.crosswalks')}</RouterLink>
                   </Link>
                 }
               />

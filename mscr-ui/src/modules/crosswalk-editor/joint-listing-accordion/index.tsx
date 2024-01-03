@@ -62,7 +62,7 @@ function Row(props: { row: CrosswalkConnectionNew; viewOnlyMode: boolean; isEdit
     return (
         <React.Fragment>
             <StyledTableRow className='accordion-row'>
-                <StyledTableCell className='col-5 ps-4'>
+                <StyledTableCell className='col-5 ps-2'>
                     <Button className='ms-2 py-0' style={{textTransform: 'none'}}
                             title='Select linked node from source tree'
                             onClick={(e) => {
@@ -78,7 +78,7 @@ function Row(props: { row: CrosswalkConnectionNew; viewOnlyMode: boolean; isEdit
                     </IconButton>
                 </StyledTableCell>*/}
 
-                <StyledTableCell className='col-4 ps-4'>
+                <StyledTableCell className='col-4 ps-3'>
                     <Button className='me-2 py-0' style={{textTransform: 'none'}}
                             title='Select linked node from target tree'
                             onClick={(e) => {
@@ -124,6 +124,9 @@ function Row(props: { row: CrosswalkConnectionNew; viewOnlyMode: boolean; isEdit
                                         className='fw-normal'>exact match</span></div>
                                     <br/>
                                 </Box>*/}
+                                <div className='fw-bold mt-3 mb-2' style={{fontSize: '0.9em'}}>Mapping type: <span
+                                    className='fw-normal'>exact match</span></div>
+                                <br/>
                             </div>
                             <div className='col-2 mt-4 d-flex flex-column action-buttons'>
                                 <Sbutton
@@ -184,9 +187,11 @@ export default function JointListingAccordion(props: any) {
                     {crosswalkJointsInput?.length < 1 &&
                         <TableBody>
                             <TableRow className=''>
+                                <td>
                                 <div className='empty-mappings-table'><span className='info-icon'><InfoIcon></InfoIcon></span>No
                                     elements have been mapped yet. Mappings will appear in this table.
                                 </div>
+                                </td>
                             </TableRow>
                         </TableBody>
                     }
