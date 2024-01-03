@@ -13,13 +13,29 @@ import {
 import LanguageSelector from 'yti-common-ui/form/language-selector';
 import { FormErrors } from './validate-form';
 import { Status } from '@app/common/interfaces/status.interface';
-import {CrosswalkFormMockupType, CrosswalkFormType} from '@app/common/interfaces/crosswalk.interface';
+import {
+  CrosswalkFormMockupType,
+  CrosswalkFormType,
+} from '@app/common/interfaces/crosswalk.interface';
 import { FormUpdateErrors } from '../schema-form/validate-form-update';
 import CrosswalkForm from '../create-crosswalk';
 
 interface RegisterCrosswalkFormProps {
   formData: CrosswalkFormType;
-  setFormData: (value: { targetSchema: string; versionLabel?: string; languages: any; format: any; organizations: any; namespace?: string; description?: any; pid?: string; label: any; state: string; sourceSchema: string; status?: string | undefined }) => void;
+  setFormData: (value: {
+    targetSchema: string;
+    versionLabel?: string;
+    languages: any;
+    format: any;
+    organizations: any;
+    namespace?: string;
+    description?: any;
+    pid?: string;
+    label: any;
+    state: string;
+    sourceSchema: string;
+    status?: string | undefined;
+  }) => void;
   userPosted: boolean;
   disabled?: boolean;
   errors?: FormErrors | FormUpdateErrors;
@@ -35,7 +51,7 @@ export default function RegisterCrosswalkForm({
   editMode,
 }: RegisterCrosswalkFormProps) {
   const { t, i18n } = useTranslation('admin');
-  
+
   const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
 
   const organizations = useMemo(() => {
