@@ -8,7 +8,7 @@ import Layout from '@app/common/components/layout';
 import PageHead from 'yti-common-ui/components/page-head';
 import { useRouter } from 'next/router';
 import PersonalWorkspace from 'src/modules/workspace/personal-home';
-import GroupWorkspace from '@app/modules/group-home';
+import GroupWorkspace from 'src/modules/workspace/group-home';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 
 interface CrosswalksPageProps extends CommonContextState {
@@ -35,7 +35,7 @@ export default function CrosswalksPage(props: CrosswalksPageProps) {
         {contentOwner == 'personal' ? (
           <PersonalWorkspace contentType={'CROSSWALK'} />
         ) : (
-          <GroupWorkspace pid={contentOwner} />
+          <GroupWorkspace user={props.user} pid={contentOwner} contentType={'CROSSWALK'} />
         )}
       </Layout>
     </CommonContextProvider>

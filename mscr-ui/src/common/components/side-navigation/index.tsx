@@ -14,20 +14,22 @@ import {
 } from './side-navigation.styles';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
+import getOrganizations from '@app/common/utils/get-organizations';
 
 export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
-  const groups = user?.organizations;
   const { breakpoint } = useBreakpoints();
   const { t } = useTranslation('common');
   const [openGroup, setOpenGroup] = useState('');
   const router = useRouter();
+  const lang = router.locale ?? '';
   // Paths for now
   const personalSchemasPath = '/personal/schemas';
   const personalCrosswalksPath = '/personal/crosswalks';
   const personalSettingsPath = '/personal/settings';
   // Group settings path is form '/' + group.id + '/settings'
+  const organizations = getOrganizations(user?.organizations, lang);
 
   return (
     <SideNavigationWrapper $breakpoint={breakpoint} id="sidebar">
@@ -90,7 +92,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
             </NavigationHeading>
           }
         >
-          {groups?.map((group) => (
+          {organizations?.map((group) => (
             <MscrSideNavigationLevel2
               key={group.id}
               subLevel={2}
@@ -107,7 +109,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                     setOpenGroup(group.id);
                   }}
                 >
-                  <GroupHeading variant="h3">{group.name}</GroupHeading>
+                  <GroupHeading variant="h3">{group.label}</GroupHeading>
                 </RouterLink>
               }
             >

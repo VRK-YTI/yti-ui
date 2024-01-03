@@ -8,7 +8,7 @@ import Layout from '@app/common/components/layout';
 import PageHead from 'yti-common-ui/components/page-head';
 import { useRouter } from 'next/router';
 import PersonalWorkspace from 'src/modules/workspace/personal-home';
-import GroupWorkspace from '@app/modules/group-home';
+import GroupWorkspace from 'src/modules/workspace/group-home';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 
 interface SchemasPageProps extends CommonContextState {
@@ -35,7 +35,7 @@ export default function SchemasPage(props: SchemasPageProps) {
         {contentOwner == 'personal' ? (
           <PersonalWorkspace contentType={'SCHEMA'} />
         ) : (
-          <GroupWorkspace pid={contentOwner} />
+          <GroupWorkspace user={props.user} pid={contentOwner} contentType={'SCHEMA'} />
         )}
       </Layout>
     </CommonContextProvider>

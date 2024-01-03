@@ -80,7 +80,7 @@ export default function Layout({
             {!sideNavigationHidden && user && !user.anonymous ? (
               <Grid container spacing={2}>
                 <Grid item xs={2}>
-                  <SideNavigationPanel />
+                  <SideNavigationPanel user={user} />
                 </Grid>
                 <Grid item xs={10}>
                   <ContentContainer>
