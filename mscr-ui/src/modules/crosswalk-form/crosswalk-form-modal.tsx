@@ -47,7 +47,7 @@ export default function CrosswalkFormModal({
   const [getAuthenticatedUser, authenticateUser] =
     useGetAuthenticatedUserMutMutation();
   const [putCrosswalkFull, result] = usePutCrosswalkFullMutation();
-  const [isValid, setIsValid] = useState(false);
+  const [, setIsValid] = useState(false);
   const [fileData, setFileData] = useState<File | null>();
 
   const handleOpen = () => {

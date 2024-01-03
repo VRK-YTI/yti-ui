@@ -41,22 +41,8 @@ export default function RegisterCrosswalkForm({
   errors,
   editMode,
 }: RegisterCrosswalkFormProps) {
-  const { t, i18n } = useTranslation('admin');
+  const { t } = useTranslation('admin');
 
-  const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
-
-  const organizations = useMemo(() => {
-    if (!organizationsData) {
-      return [];
-    }
-
-    return getOrganizations(organizationsData, i18n.language)
-      .map((o) => ({
-        labelText: o.label,
-        uniqueItemId: o.id,
-      }))
-      .sort((o1, o2) => (o1.labelText > o2.labelText ? 1 : -1));
-  }, [organizationsData, i18n.language]);
 
   return (
     <ModelFormContainer>

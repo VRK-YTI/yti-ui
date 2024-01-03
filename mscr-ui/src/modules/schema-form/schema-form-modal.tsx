@@ -32,9 +32,6 @@ interface SchemaFormModalProps {
   refetch: () => void;
 }
 
-interface SchemaProps {
-  pid: string;
-}
 
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
@@ -43,7 +40,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   const { isSmall } = useBreakpoints();
   const router = useRouter();
   const [visible, setVisible] = useState(false);
-  const [isValid, setIsValid] = useState(false);
+  const [, setIsValid] = useState(false);
   const [schemaFormInitialData] = useState(useInitialSchemaForm());
   const [formData, setFormData] = useState(schemaFormInitialData);
   const [fileData, setFileData] = useState<File | null>();

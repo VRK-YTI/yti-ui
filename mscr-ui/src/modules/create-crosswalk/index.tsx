@@ -1,5 +1,3 @@
-import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
-import { useTranslation } from 'next-i18next';
 import { Textarea, TextInput, SingleSelect } from 'suomifi-ui-components';
 import { ModelFormContainer } from './crosswalk-form.styles';
 import { FormErrors } from './validate-form';
@@ -32,8 +30,6 @@ interface CrosswalkFormProps {
   editMode?: boolean;
 }
 
-const allValues: any = [];
-
 export default function CrosswalkForm({
   formData,
   setFormData,
@@ -42,11 +38,7 @@ export default function CrosswalkForm({
   errors,
   editMode,
 }: CrosswalkFormProps) {
-  const { t, i18n } = useTranslation('admin');
-  const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
-    i18n.language
-  );
-  const { data, isLoading, isSuccess, isError, error } =
+  const { data, isSuccess } =
     useGetPublicSchemasQuery('');
 
   const defaultSchemasInit: { labelText: any; uniqueItemId: any }[] = [];

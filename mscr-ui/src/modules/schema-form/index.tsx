@@ -1,9 +1,5 @@
 /* eslint-disable */
-import {useGetOrganizationsQuery} from '@app/common/components/organizations/organizations.slice';
-import {useGetServiceCategoriesQuery} from '@app/common/components/service-categories/service-categories.slice';
-import getOrganizations from '@app/common/utils/get-organizations';
 import {useTranslation} from 'next-i18next';
-import {useMemo} from 'react';
 import {Dropdown, DropdownItem} from 'suomifi-ui-components';
 import {
     ModelFormContainer,
@@ -32,24 +28,7 @@ export default function SchemaForm({
                                        errors,
                                        editMode,
                                    }: SchemaFormProps) {
-    const {t, i18n} = useTranslation();
-    const {data: serviceCategoriesData} = useGetServiceCategoriesQuery(
-        i18n.language
-    );
-    const {data: organizationsData} = useGetOrganizationsQuery(i18n.language);
-
-    const organizations = useMemo(() => {
-        if (!organizationsData) {
-            return [];
-        }
-        // console.log(organizationsData[0].id);
-        return getOrganizations(organizationsData, i18n.language)
-            .map((o) => ({
-                labelText: o.label,
-                uniqueItemId: o.id,
-            }))
-            .sort((o1, o2) => (o1.labelText > o2.labelText ? 1 : -1));
-    }, [organizationsData, i18n.language]);
+    const { t } = useTranslation();
 
     // Creating the actual schema Input form
     return (
