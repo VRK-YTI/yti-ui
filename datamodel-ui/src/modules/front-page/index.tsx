@@ -176,7 +176,7 @@ export default function FrontPage() {
       [key: string]: { type: string; label: string; id: string; uri: string }[];
     } = {};
     searchModels.responseObjects.forEach((object) => {
-      extra[object.id] = object.matchingResources.map((resource) => {
+      const resources = object.matchingResources.map((resource) => {
         const label = getLanguageVersion({
           data: resource.label,
           lang: i18n.language,
@@ -189,6 +189,9 @@ export default function FrontPage() {
           uri: resource.uri,
         };
       });
+      if (resources.length > 0) {
+        extra[object.id] = resources;
+      }
     });
 
     return [modelResults, extra];
