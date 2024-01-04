@@ -38,8 +38,7 @@ export default function CrosswalkForm({
   errors,
   editMode,
 }: CrosswalkFormProps) {
-  const { data, isSuccess } =
-    useGetPublicSchemasQuery('');
+  const { data, isSuccess } = useGetPublicSchemasQuery('');
 
   const defaultSchemasInit: { labelText: any; uniqueItemId: any }[] = [];
   const defaultSchemas2: { labelText: any; uniqueItemId: any }[] = [];

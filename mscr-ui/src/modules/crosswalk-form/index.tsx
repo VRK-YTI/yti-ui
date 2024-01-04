@@ -43,7 +43,6 @@ export default function RegisterCrosswalkForm({
 }: RegisterCrosswalkFormProps) {
   const { t } = useTranslation('admin');
 
-
   return (
     <ModelFormContainer>
       <CrosswalkForm

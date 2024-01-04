@@ -32,7 +32,6 @@ interface SchemaFormModalProps {
   refetch: () => void;
 }
 
-
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
 export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
@@ -147,7 +146,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
           <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}
-            validFileTypes={['json', 'csv', 'pdf', 'ttl','xml','xsd']}
+            validFileTypes={['json', 'csv', 'pdf', 'ttl', 'xml', 'xsd']}
             translateFileUploadError={translateFileUploadError}
           />
           <Separator isLarge></Separator>
