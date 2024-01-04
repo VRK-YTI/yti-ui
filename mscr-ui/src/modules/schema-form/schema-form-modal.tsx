@@ -40,17 +40,20 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
   const [, setIsValid] = useState(false);
+  // Why is this next one a state and not just a variable?
   const [schemaFormInitialData] = useState(useInitialSchemaForm());
   const [formData, setFormData] = useState(schemaFormInitialData);
   const [fileData, setFileData] = useState<File | null>();
   const [errors, setErrors] = useState<FormErrors>();
   const [userPosted, setUserPosted] = useState(false);
+  // Why are we using a mutation here? Why is that even implemented as a mutation, when the method is GET?
   const [getAuthenticatedUser, authenticateUser] =
     useGetAuthenticatedUserMutMutation();
   const [putSchemaFull, resultSchemaFull] = usePutSchemaFullMutation();
 
   const handleOpen = () => {
     setVisible(true);
+    // What is this for? Why are we getting the user?
     getAuthenticatedUser();
   };
 
@@ -149,12 +152,6 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
             validFileTypes={['json', 'csv', 'pdf', 'ttl', 'xml', 'xsd']}
             translateFileUploadError={translateFileUploadError}
           />
-          <Separator isLarge></Separator>
-          <Text>
-            {
-              'All Contents will be registered as draft. You can choose to publish content later'
-            }
-          </Text>
         </ModalContent>
         <ModalFooter>
           {authenticateUser.data && authenticateUser.data.anonymous && (
