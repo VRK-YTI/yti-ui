@@ -137,6 +137,7 @@
   "optional": "",
   "reference-data-in-use": "",
   "register-schema": "",
+  "register-schema-file-required": "",
   "remove": "",
   "remove-modal": {
     "collection-confirmation": "",

@@ -137,6 +137,7 @@
   "optional": "valinnainen",
   "reference-data-in-use": "Käytetyt koodistot",
   "register-schema": "",
+  "register-schema-file-required": "",
   "remove": "Poista",
   "remove-modal": {
     "collection-confirmation": "",

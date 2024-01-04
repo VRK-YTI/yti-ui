@@ -141,11 +141,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
             errors={userPosted ? errors : undefined}
           />
           <Separator></Separator>
-          <Text>
-            {
-              'Upload a Schema File. You must upload a schema file to register schema'
-            }
-          </Text>
+          <Text>{t('register-schema-file-required')}</Text>
           <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}
