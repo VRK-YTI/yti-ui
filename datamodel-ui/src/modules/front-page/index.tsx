@@ -112,12 +112,22 @@ export default function FrontPage() {
     return [...promoted, ...otherLanguages];
   }, [languagesData, counts]);
 
-  const data: SearchResultData[] = useMemo(() => {
+  const [data, extra]: [
+    SearchResultData[],
+    {
+      [key: string]: {
+        type: string;
+        label: string;
+        id: string;
+        uri: string;
+      }[];
+    }
+  ] = useMemo(() => {
     if (!searchModels || !organizationsData || !serviceCategoriesData) {
       return [];
     }
 
-    return searchModels.responseObjects.map((object) => {
+    const modelResults = searchModels.responseObjects.map((object) => {
       const contributors: string[] = object.contributor
         .map((c) =>
           getLanguageVersion({
@@ -161,6 +171,27 @@ export default function FrontPage() {
         type: translateModelType(object.type, t),
       };
     });
+
+    const extra: {
+      [key: string]: { type: string; label: string; id: string; uri: string }[];
+    } = {};
+    searchModels.responseObjects.forEach((object) => {
+      extra[object.id] = object.matchingResources.map((resource) => {
+        const label = getLanguageVersion({
+          data: resource.label,
+          lang: i18n.language,
+          appendLocale: true,
+        });
+        return {
+          type: resource.resourceType,
+          label: label,
+          id: resource.id,
+          uri: resource.uri,
+        };
+      });
+    });
+
+    return [modelResults, extra];
   }, [
     searchModels,
     serviceCategoriesData,
@@ -247,34 +278,7 @@ export default function FrontPage() {
               typedExpander: {
                 translateResultType: translateResourceType,
                 translateGroupType: translateResultType,
-                deepHits: {
-                  'https://iri.suomi.fi/model/all_models/1.0.0/': [
-                    {
-                      type: 'class',
-                      label: 'test',
-                      id: 'id',
-                      uri: 'testuri',
-                    },
-                    {
-                      type: 'class',
-                      label: 'test 2',
-                      id: 'id-2',
-                      uri: 'testuri',
-                    },
-                    {
-                      type: 'attribute',
-                      label: 'test 3',
-                      id: 'id-3',
-                      uri: 'testuri',
-                    },
-                    {
-                      type: 'attribute',
-                      label: 'test 4',
-                      id: 'id-4',
-                      uri: 'testuri',
-                    },
-                  ],
-                },
+                deepHits: extra,
               },
             }}
           />
