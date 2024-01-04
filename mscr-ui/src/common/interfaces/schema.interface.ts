@@ -1,5 +1,3 @@
-import { ExposureTwoTone } from "@mui/icons-material";
-
 export interface Schema {
   namespace?: string;
   pid?: string;
@@ -42,7 +40,7 @@ export interface SchemaWithVersionInfo extends Schema {
 
 export interface SchemaFileData{
   id?: string;
-  contentType?: string,
+  contentType?: string;
   size?: number;
   fileID?: number;
   name?: string;
@@ -54,6 +52,7 @@ export interface Organization {
   label: { [key: string]: string };
 }
 
+// ToDo: Proper typing
 export interface SchemaFormType {
   namespace?: string;
   contact?: boolean;

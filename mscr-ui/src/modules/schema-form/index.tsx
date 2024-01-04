@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useTranslation } from 'next-i18next';
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
-import { ModelFormContainer, WideMultiSelect } from './schema-form.styles';
+import { ModelFormContainer } from './schema-form.styles';
 import LanguageSelector from 'yti-common-ui/form/language-selector';
 import { FormErrors } from './validate-form';
 import { Status } from '@app/common/interfaces/status.interface';
@@ -23,7 +23,7 @@ export default function SchemaForm({
   userPosted,
   disabled,
   errors,
-  editMode,
+  // editMode,
 }: SchemaFormProps) {
   const { t } = useTranslation();
 
@@ -123,34 +123,34 @@ export default function SchemaForm({
     );
   }
 
-  function renderContributors() {
-    return (
-      <WideMultiSelect
-        chipListVisible={true}
-        labelText={t('schema-form.contributors')}
-        visualPlaceholder={t('schema-form.contributors-select')}
-        removeAllButtonLabel={t(
-          'schema-form.contributors-clear-all-selections'
-        )}
-        allowItemAddition={false}
-        onItemSelectionsChange={(e) =>
-          setFormData({
-            ...formData,
-            organizations: e,
-          })
-        }
-        items={formData.organizations}
-        status={
-          'default'
-          /* Old value below, can it be perma-removed? (leftover from https://github.com/CSCfi/mscr-ui-monorepo/pull/17)
-                    {userPosted && errors?.organizations ? 'error' : 'default'}*/
-        }
-        ariaChipActionLabel={''}
-        ariaSelectedAmountText={''}
-        ariaOptionsAvailableText={''}
-        ariaOptionChipRemovedText={''}
-        noItemsText={''}
-      />
-    );
-  }
+  // function renderContributors() {
+  //   return (
+  //     <WideMultiSelect
+  //       chipListVisible={true}
+  //       labelText={t('schema-form.contributors')}
+  //       visualPlaceholder={t('schema-form.contributors-select')}
+  //       removeAllButtonLabel={t(
+  //         'schema-form.contributors-clear-all-selections'
+  //       )}
+  //       allowItemAddition={false}
+  //       onItemSelectionsChange={(e) =>
+  //         setFormData({
+  //           ...formData,
+  //           organizations: e,
+  //         })
+  //       }
+  //       items={formData.organizations}
+  //       status={
+  //         'default'
+  //         /* Old value below, can it be perma-removed? (leftover from https://github.com/CSCfi/mscr-ui-monorepo/pull/17)
+  //                   {userPosted && errors?.organizations ? 'error' : 'default'}*/
+  //       }
+  //       ariaChipActionLabel={''}
+  //       ariaSelectedAmountText={''}
+  //       ariaOptionsAvailableText={''}
+  //       ariaOptionChipRemovedText={''}
+  //       noItemsText={''}
+  //     />
+  //   );
+  // }
 }
