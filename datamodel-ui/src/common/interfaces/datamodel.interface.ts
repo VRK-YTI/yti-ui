@@ -31,6 +31,9 @@ export interface DataModel {
       [key: string]: string;
     };
     resourceType: string;
+    highlights: {
+      [key: string]: string[];
+    };
     [key: string]: unknown;
   }[];
 }

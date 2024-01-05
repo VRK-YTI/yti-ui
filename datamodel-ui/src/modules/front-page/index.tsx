@@ -184,7 +184,10 @@ export default function FrontPage() {
         });
         return {
           type: resource.resourceType,
-          label: label,
+          label:
+            resource.highlights['label.fi.keyword']?.[0] ||
+            resource.highlights['label.fi']?.[0] ||
+            label,
           id: resource.id,
           uri: resource.uri,
         };
