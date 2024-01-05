@@ -55,6 +55,9 @@
   "contributors-hint-text": "You can only add organizations to which  you have editing permissions",
   "create-new-class": "Create new class",
   "create-subclass-for-selected": "Create subclass for selected",
+  "crosswalk-form": {
+    "register": "Register Crosswalk"
+  },
   "data-model": "Data model",
   "data-models-added-to-this-model": "Data models added to this model",
   "data-models-in-use": "Data models in use",

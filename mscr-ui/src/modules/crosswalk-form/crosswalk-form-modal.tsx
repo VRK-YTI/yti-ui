@@ -114,7 +114,7 @@ export default function CrosswalkFormModal({
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}
       >
-        {'Register Crosswalk'}
+        {t('crosswalk-form.register')}
       </Button>
 
       <Modal
@@ -125,9 +125,9 @@ export default function CrosswalkFormModal({
       >
         <ModalContent>
           <ModalTitle>{'Add New Crosswalk'}</ModalTitle>
-          <Paragraph style={{ marginBottom: '30px' }}>
-            {'Add New Crosswalk Description'}
-          </Paragraph>
+          {/*<Paragraph style={{ marginBottom: '30px' }}>*/}
+          {/*  {'Add New Crosswalk Description'}*/}
+          {/*</Paragraph>*/}
           <CrosswalkForm
             formData={formData}
             setFormData={setFormData}

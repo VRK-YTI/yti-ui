@@ -55,6 +55,9 @@
   "contributors-hint-text": "Voit lisätä vain organisaation, joka on antanut sinulle muokkausoikeudet",
   "create-new-class": "Luo uusi luokka",
   "create-subclass-for-selected": "Luo valitulle alaluokka",
+  "crosswalk-form": {
+    "register": ""
+  },
   "data-model": "Tietomalli",
   "data-models-added-to-this-model": "Tähän tietomalliin lisätyt tietomallit",
   "data-models-in-use": "Käytetyt tietomallit",

@@ -9,6 +9,7 @@ import { useGetPublicSchemasQuery } from '@app/common/components/schema/schema.s
 import { useEffect, useState } from 'react';
 
 interface CrosswalkFormProps {
+  // Why Mockup?
   formData: CrosswalkFormMockupType;
   setFormData: (value: {
     targetSchema: string;
@@ -39,7 +40,7 @@ export default function CrosswalkForm({
   editMode,
 }: CrosswalkFormProps) {
   const { data, isSuccess } = useGetPublicSchemasQuery('');
-
+  // Why any?
   const defaultSchemasInit: { labelText: any; uniqueItemId: any }[] = [];
   const defaultSchemas2: { labelText: any; uniqueItemId: any }[] = [];
   //defaultSchemas.push({ labelText: 'test', uniqueItemId: 'test'});
@@ -48,6 +49,7 @@ export default function CrosswalkForm({
 
   useEffect(() => {
     data?.hits.hits.forEach(
+      // ToDo: Use utils/get-language-version.ts here
       (item: { _source: { label: { [x: string]: any }; id: any } }) => {
         const label = item._source.label['fi']
           ? item._source.label['fi']
@@ -55,6 +57,7 @@ export default function CrosswalkForm({
           ? item._source.label['en']
           : '';
         const schema = { labelText: label, uniqueItemId: item._source.id };
+        // Would not local variable be better? Not possible in useEffect?
         defaultSchemas2.push(schema);
       }
     );

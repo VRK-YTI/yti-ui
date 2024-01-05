@@ -55,6 +55,9 @@
   "contributors-hint-text": "",
   "create-new-class": "",
   "create-subclass-for-selected": "",
+  "crosswalk-form": {
+    "register": ""
+  },
   "data-model": "",
   "data-models-added-to-this-model": "",
   "data-models-in-use": "",
