@@ -3,10 +3,7 @@ export interface VisualizationType {
   label: { [key: string]: string };
   uri: string;
   references: VisualizationReferenceType[];
-  position: {
-    x: number;
-    y: number;
-  };
+  position: Position;
   attributes?: {
     identifier: string;
     label: { [key: string]: string };
@@ -30,6 +27,11 @@ export interface VisualizationReferenceType {
   referenceType: ReferenceType;
   minCount?: number;
   maxCount?: number;
+}
+
+export interface Position {
+  x: number;
+  y: number;
 }
 
 export type NodeType = 'CLASS' | 'EXTERNAL_CLASS' | 'ATTRIBUTE';

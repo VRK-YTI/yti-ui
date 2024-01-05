@@ -8,9 +8,16 @@ import {
 
 describe('convert-to-edges', () => {
   it('should return an empty array if no associations or parent class references defined', () => {
-    const returned = convertToEdges([], [], (key: string) => key, 'modelId');
+    const returned = convertToEdges(
+      [],
+      [],
+      (key: string) => key,
+      'modelId',
+      (value: string) => value,
+      false
+    );
 
-    expect(returned).toStrictEqual([]);
+    expect(returned).toStrictEqual({ edges: [] });
   });
 
   it('should return edges for library', () => {
@@ -18,7 +25,9 @@ describe('convert-to-edges', () => {
       libraryData.nodes,
       libraryData.hiddenNodes,
       (key: string) => key,
-      'modelId'
+      'modelId',
+      (value: string) => value,
+      false
     );
     expect(returned).toStrictEqual(expectedLibraryEdges);
   });
@@ -29,6 +38,7 @@ describe('convert-to-edges', () => {
       profileData.hiddenNodes,
       (key: string) => key,
       'modelId',
+      (value: string) => value,
       true
     );
     expect(returned).toStrictEqual(expectedProfileEdges);
