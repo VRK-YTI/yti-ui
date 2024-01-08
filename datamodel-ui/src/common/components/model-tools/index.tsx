@@ -51,7 +51,7 @@ export default function ModelTools({
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const hasPermission = HasPermission({
-    actions: 'ADMIN_DATA_MODEL',
+    actions: 'EDIT_DATA_MODEL',
     targetOrganization: organisations,
   });
   const { setViewport, setCenter, getNode } = useReactFlow();
