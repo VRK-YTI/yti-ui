@@ -211,6 +211,7 @@
   "return-to-association-list": "Assosiaatio-listaan",
   "return-to-attribute-list": "Attribuutti-listaan",
   "return-to-class-list": "Luokka-listaan",
+  "results-with-query": "Tuloksia hakusanalla",
   "roles": {
     "admin": "Ylläpitäjä",
     "code-list-editor": "Koodistotyöntekijä",

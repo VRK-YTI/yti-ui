@@ -1,4 +1,4 @@
-import { useTranslation } from 'next-i18next';
+import { TFunction, useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import {
   Expander,
@@ -13,6 +13,7 @@ import {
   HitsWrapper,
 } from './result-card-expander.styles';
 import styled from 'styled-components';
+import { groupBy } from 'lodash';
 
 const TypedExpanderWrapper = styled.div`
   display: flex;
@@ -24,24 +25,24 @@ interface ResultCardTypedExpanderProps {
     type: string;
     label: string;
     id: string;
-    uri?: string;
+    uri: string;
   }[];
-  typeLabels: { [key: string]: string };
-  buttonLabel: string;
+  translateResultType: (type: string, t: TFunction) => string;
+  translateGroupType: (type: string, t: TFunction) => string;
 }
 
 export default function ResultCardTypedExpander({
   deepHits,
-  buttonLabel,
-  typeLabels,
+  translateResultType,
+  translateGroupType,
 }: ResultCardTypedExpanderProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const suffix = deepHits.length > 3 ? true : false;
 
   return (
     <Expander id="search-result-expander">
       <ExpanderTitleButton>
-        Tuloksia hakusanalla
+        {t('results-with-query')}
         <ExpanderTitleHits>
           {suffix ? renderHitsWithSuffix() : renderHits()}
         </ExpanderTitleHits>
@@ -60,7 +61,9 @@ export default function ResultCardTypedExpander({
 
       return (
         <span key={`${hit.id}-${idx}`}>
-          <SanitizedTextContent text={`${hit.label} (${hit.type})`} />
+          <SanitizedTextContent
+            text={`${hit.label} (${translateResultType(hit.type, t)})`}
+          />
           {comma}
         </span>
       );
@@ -78,7 +81,9 @@ export default function ResultCardTypedExpander({
 
         return (
           <span key={`${hit.id}-${idx}`}>
-            <SanitizedTextContent text={`${hit.label} (${hit.type})`} />
+            <SanitizedTextContent
+              text={`${hit.label} (${translateResultType(hit.type, t)})`}
+            />
             {comma}
           </span>
         );
@@ -88,42 +93,22 @@ export default function ResultCardTypedExpander({
   function renderHitsInContent() {
     return (
       <TypedExpanderWrapper>
-        {Object.keys(typeLabels)
-          .filter((type) => deepHits.some((hit) => hit.type === type))
-          .map((type) => (
-            <div key="type">
-              <ExpanderContentTitle variant="h4">
-                {typeLabels[type]}
-              </ExpanderContentTitle>
-              <div style={{ display: 'flex', gap: '15px' }}>
-                {deepHits
-                  .filter((hit) => hit.type == type)
-                  .map((hit, idx) => {
-                    if (hit.uri) {
-                      return (
-                        <Link
-                          key={`${hit.id}-${idx}`}
-                          href={hit.uri}
-                          passHref
-                          legacyBehavior
-                        >
-                          <SuomiFiLink href="">
-                            <SanitizedTextContent text={hit.label} />
-                          </SuomiFiLink>
-                        </Link>
-                      );
-                    } else {
-                      return (
-                        <SanitizedTextContent
-                          text={hit.label}
-                          key={`${hit.id}-${idx}`}
-                        />
-                      );
-                    }
-                  })}
-              </div>
+        {Object.entries(groupBy(deepHits, 'type')).map(([type, values]) => (
+          <div key={type}>
+            <ExpanderContentTitle variant="h4">
+              {translateGroupType(type, t)}
+            </ExpanderContentTitle>
+            <div style={{ display: 'flex', gap: '15px' }}>
+              {values.map((hit) => (
+                <Link key={hit.id} href={hit.uri} passHref legacyBehavior>
+                  <SuomiFiLink href="">
+                    <SanitizedTextContent text={hit.label} />
+                  </SuomiFiLink>
+                </Link>
+              ))}
             </div>
-          ))}
+          </div>
+        ))}
       </TypedExpanderWrapper>
     );
   }

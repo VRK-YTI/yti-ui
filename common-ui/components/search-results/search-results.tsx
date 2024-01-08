@@ -6,6 +6,7 @@ import ResultCardExpander from './result-card-expander';
 import SanitizedTextContent from '../sanitized-text-content';
 import { ReactNode } from 'react';
 import ResultCardTypedExpander from './result-card-typed-expander';
+import { TFunction } from 'next-i18next';
 
 export interface SearchResultData {
   id: string;
@@ -66,14 +67,14 @@ interface SearchResultsProps {
       }
     | {
         typedExpander: {
-          buttonLabel: string;
-          typeLabels: { [key: string]: string };
+          translateResultType: (type: string, t: TFunction) => string;
+          translateGroupType: (type: string, t: TFunction) => string;
           deepHits: {
             [key: string]: {
               type: string;
               label: string;
               id: string;
-              uri?: string;
+              uri: string;
             }[];
           };
         };
@@ -116,9 +117,9 @@ export default function SearchResults({
     } else if ('typedExpander' in extra && extra.typedExpander.deepHits[id]) {
       return (
         <ResultCardTypedExpander
-          buttonLabel={extra.typedExpander.buttonLabel}
+          translateGroupType={extra.typedExpander.translateGroupType}
+          translateResultType={extra.typedExpander.translateResultType}
           deepHits={extra.typedExpander.deepHits[id]}
-          typeLabels={extra.typedExpander.typeLabels}
         />
       );
     } else if ('other' in extra) {

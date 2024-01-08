@@ -30,7 +30,11 @@ import {
   TitleDescriptionWrapper,
 } from 'yti-common-ui/title/title.styles';
 import Pagination from 'yti-common-ui/pagination';
-import { translateModelType } from '@app/common/utils/translation-helpers';
+import {
+  translateModelType,
+  translateResourceType,
+  translateResultType,
+} from '@app/common/utils/translation-helpers';
 import ModelFormModal from '../model-form/model-form-modal';
 import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
 import { useGetCountQuery } from '@app/common/components/counts/counts.slice';
@@ -241,12 +245,8 @@ export default function FrontPage() {
             withDefaultStatuses={inUseStatusList}
             extra={{
               typedExpander: {
-                buttonLabel: 'Button label',
-                typeLabels: {
-                  attribute: t('attributes'),
-                  class: t('classes'),
-                  association: t('associations'),
-                },
+                translateResultType: translateResourceType,
+                translateGroupType: translateResultType,
                 deepHits: {
                   'https://iri.suomi.fi/model/all_models/1.0.0/': [
                     {
@@ -265,11 +265,13 @@ export default function FrontPage() {
                       type: 'attribute',
                       label: 'test 3',
                       id: 'id-3',
+                      uri: 'testuri',
                     },
                     {
                       type: 'attribute',
                       label: 'test 4',
                       id: 'id-4',
+                      uri: 'testuri',
                     },
                   ],
                 },
