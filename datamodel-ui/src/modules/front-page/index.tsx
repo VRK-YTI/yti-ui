@@ -124,7 +124,7 @@ export default function FrontPage() {
     }
   ] = useMemo(() => {
     if (!searchModels || !organizationsData || !serviceCategoriesData) {
-      return [];
+      return [[], {}];
     }
 
     const modelResults = searchModels.responseObjects.map((object) => {
