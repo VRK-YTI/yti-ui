@@ -525,7 +525,9 @@ export default function ClassForm({
         </LanguageVersionedWrapper>
 
         <TextInput
-          labelText={`${t('class-identifier')} (dcterms:identifier)`}
+          labelText={`${t('class-identifier', {
+            ns: 'common',
+          })} (dcterms:identifier)`}
           visualPlaceholder={t('input-class-identifier')}
           defaultValue={data.identifier}
           status={
@@ -644,7 +646,9 @@ export default function ClassForm({
               />
             }
             items={data.equivalentClass}
-            label={`${t('corresponding-classes')} (owl:equivalentClass)`}
+            label={`${t('equivalent-classes', {
+              ns: 'common',
+            })} (owl:equivalentClass)`}
             tooltip={{
               text: t('tooltip.equivalent-classes', { ns: 'common' }),
               ariaCloseButtonLabelText: '',
@@ -717,7 +721,9 @@ export default function ClassForm({
           {languages.map((lang) => (
             <Textarea
               key={`comment-${lang}`}
-              labelText={`${t('technical-description')}, ${lang} ${
+              labelText={`${t('technical-description', {
+                ns: 'common',
+              })}, ${lang} ${
                 applicationProfile ? '(sh:description)' : '(rdfs:comment)'
               }`}
               tooltipComponent={
@@ -748,8 +754,8 @@ export default function ClassForm({
         <BasicBlock
           title={
             applicationProfile
-              ? `${t('attributes')} (sh:PropertyShape)`
-              : t('attributes')
+              ? `${t('attributes', { ns: 'common' })} (sh:PropertyShape)`
+              : t('attributes', { ns: 'common' })
           }
         >
           {(!applicationProfile && !isEdit) ||
@@ -791,8 +797,8 @@ export default function ClassForm({
         <BasicBlock
           title={
             applicationProfile
-              ? `${t('associations')} (sh:PropertyShape)`
-              : t('associations')
+              ? `${t('associations', { ns: 'common' })} (sh:PropertyShape)`
+              : t('associations', { ns: 'common' })
           }
         >
           {(!applicationProfile && !isEdit) ||

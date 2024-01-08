@@ -138,7 +138,9 @@ export default function ExternalForm({
             {t('namespace-missing-info')}{' '}
             <ExternalLink
               href={`mailto:${ADMIN_EMAIL}`}
-              labelNewWindow={t('link-opens-new-window-external')}
+              labelNewWindow={t('link-opens-new-window-external', {
+                ns: 'common',
+              })}
             >
               {ADMIN_EMAIL}
             </ExternalLink>

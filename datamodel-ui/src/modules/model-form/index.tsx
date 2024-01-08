@@ -263,7 +263,7 @@ export default function ModelForm({
           userPosted={userPosted}
           translations={{
             textInput: t('language-input-text'),
-            textDescription: t('description'),
+            textDescription: t('description', { ns: 'common' }),
             optionalText: t('optional'),
           }}
           allowItemAddition={false}
@@ -287,7 +287,7 @@ export default function ModelForm({
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
-            <Label>{t('prefix')}</Label>
+            <Label>{t('prefix', { ns: 'common' })}</Label>
             <Text smallScreen>{formData.prefix}</Text>
           </div>
           <div>
@@ -347,10 +347,10 @@ export default function ModelForm({
             errorInvalid: t('error-prefix-invalid'),
             errorTaken: t('error-prefix-taken'),
             hintText: t('prefix-input-hint-text'),
-            label: t('prefix'),
+            label: t('prefix', { ns: 'common' }),
             manual: t('input-prefix-manually'),
             textInputHint: t('input-prefix'),
-            textInputLabel: t('prefix'),
+            textInputLabel: t('prefix', { ns: 'common' }),
             uriPreview: t('uri-preview'),
           }}
           disabled={disabled}
@@ -368,7 +368,7 @@ export default function ModelForm({
     return (
       <WideMultiSelect
         chipListVisible={true}
-        labelText={t('information-domains')}
+        labelText={t('information-domains', { ns: 'common' })}
         hintText={t('information-domains-hint-text')}
         visualPlaceholder={t('select-information-domains-for-data-model')}
         removeAllButtonLabel={t('clear-all-selections')}
@@ -397,7 +397,7 @@ export default function ModelForm({
     return (
       <WideMultiSelect
         chipListVisible={true}
-        labelText={t('contributors')}
+        labelText={t('contributors', { ns: 'common' })}
         hintText={t('contributors-hint-text')}
         visualPlaceholder={t('select-contributors')}
         removeAllButtonLabel={t('clear-all-selections')}
@@ -469,7 +469,7 @@ export default function ModelForm({
           inputLabel: t('contact-input-label'),
           inputOptionLabel: t('contact-input-type-label'),
           inputPlaceholder: t('contact-input-placeholder'),
-          label: t('feedback'),
+          label: t('feedback', { ns: 'common' }),
           labelHint: t('contact-input-hint'),
           optional: t('optional'),
           undefined: t('still-unknown'),

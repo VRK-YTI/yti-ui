@@ -286,12 +286,14 @@ export default function ResourceList({
           {type !== 'multiple-without-global' && (
             <>
               <td>
-                <Text variant="bold">{t('concept')}</Text>
+                <Text variant="bold">{t('concept', { ns: 'common' })}</Text>
               </td>
             </>
           )}
           <td>
-            <Text variant="bold">{t('technical-description')}</Text>
+            <Text variant="bold">
+              {t('technical-description', { ns: 'common' })}
+            </Text>
           </td>
         </tr>
       </thead>

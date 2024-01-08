@@ -104,7 +104,9 @@ export default function LinkBlock({
                       />
                       <Textarea
                         key={`link-description-${lang.uniqueItemId}`}
-                        labelText={`${t('description')}, ${lang.uniqueItemId}`}
+                        labelText={`${t('description', { ns: 'common' })}, ${
+                          lang.uniqueItemId
+                        }`}
                         optionalText={t('optional')}
                         defaultValue={link.description[lang.uniqueItemId]}
                         onBlur={(e) =>
