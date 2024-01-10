@@ -104,7 +104,7 @@ export default function ResourceView({
       modelId: globalSelected.modelId ?? modelId,
       resourceIdentifier: globalSelected.id ?? '',
       applicationProfile,
-      version: version,
+      version: globalSelected.version ?? version,
     },
     {
       skip:
@@ -120,7 +120,8 @@ export default function ResourceView({
       version: version,
     },
     {
-      skip: !globalSelected.id || !globalSelected.modelId,
+      skip:
+        !globalSelected.id || !globalSelected.modelId || !applicationProfile,
     }
   );
 

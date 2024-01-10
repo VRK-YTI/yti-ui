@@ -76,6 +76,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
 
   const handleTitleClick = () => {
     if (globalSelected.id !== id) {
+      setView('classes', 'info', id);
       dispatch(setSelected(id, 'classes', data.modelId));
     }
   };
@@ -120,12 +121,32 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
 
   const handleResourceClick = (
     id: string,
-    type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE
+    type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE,
+    uri: string
   ) => {
     const resourceType =
       type === ResourceType.ASSOCIATION ? 'associations' : 'attributes';
+
+    let version;
+    let modelId = data.modelId;
+    let resourceId = id;
+
+    const parts = id.split(':');
+    if (parts.length === 2) {
+      modelId = parts[0];
+      resourceId = parts[1];
+      version = uri.match(/\/(\d\.\d\.\d)\//);
+    }
+
     setView(resourceType, 'info', id);
-    dispatch(setSelected(id, resourceType, data.modelId));
+    dispatch(
+      setSelected(
+        resourceId,
+        resourceType,
+        modelId,
+        version ? version[1] : undefined
+      )
+    );
   };
 
   const handleResourceHover = (
@@ -260,7 +281,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
             <Resource
               key={`${id}-child-${r.identifier}`}
               className="node-resource"
-              onClick={() => handleResourceClick(r.identifier, r.type)}
+              onClick={() => handleResourceClick(r.identifier, r.type, r.uri)}
               $highlight={getResourceHighlighted(r.identifier, r.type)}
               onMouseEnter={() => handleResourceHover(r.identifier, r.type)}
               onMouseLeave={() =>
@@ -293,7 +314,9 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
     }
 
     if (
-      (globalHover.id === id || globalSelected.id === id) &&
+      (globalHover.id === id ||
+        globalSelected.id === id ||
+        `${globalSelected.modelId}:${globalSelected.id}` === id) &&
       type === ResourceType.ATTRIBUTE &&
       (globalHover.type === 'attributes' ||
         globalSelected.type === 'attributes')

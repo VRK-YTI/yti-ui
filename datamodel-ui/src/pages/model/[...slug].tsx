@@ -254,20 +254,30 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
         let resourceModelId = modelId;
         let identifier = resourceId;
+        let version;
 
         const resourceParts = resourceId.split(':');
         if (resourceParts.length === 2) {
           resourceModelId = resourceParts[0];
           identifier = resourceParts[1];
+          const ns = model.internalNamespaces.find(
+            (ns) => ns.prefix === resourceModelId
+          );
+
+          if (ns) {
+            const match = ns.namespace.match(/\/(\d\.\d\.\d)\//);
+            version = match ? match[1] : undefined;
+          }
         }
         store.dispatch(setView(view, 'info'));
-        store.dispatch(setSelected(identifier, view, resourceModelId));
+        store.dispatch(setSelected(identifier, view, resourceModelId, version));
 
         store.dispatch(
           getResource.initiate({
             modelId: resourceModelId,
             resourceIdentifier: identifier,
             applicationProfile: modelType === 'PROFILE',
+            version,
           })
         );
 

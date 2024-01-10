@@ -235,6 +235,7 @@ export const modelSlice = createSlice({
           id: action.payload.id,
           type: action.payload.type,
           modelId: action.payload.modelId,
+          version: action.payload.version,
         },
         view: {
           ...initialView,
@@ -375,10 +376,11 @@ export function selectSelected() {
 export function setSelected(
   id: string,
   type: keyof typeof initialView,
-  modelId: string
+  modelId: string,
+  version?: string
 ): AppThunk {
   return (dispatch) =>
-    dispatch(modelSlice.actions.setSelected({ id, type, modelId }));
+    dispatch(modelSlice.actions.setSelected({ id, type, modelId, version }));
 }
 
 export function resetSelected(): AppThunk {
