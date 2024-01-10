@@ -9,6 +9,8 @@ import {
   Crosswalk,
   CrosswalkFormType,
 } from '@app/common/interfaces/crosswalk.interface';
+import {Mapping} from "classnames";
+import {NodeMapping} from "@app/common/interfaces/crosswalk-connection.interface";
 
 export const crosswalkApi = createApi({
   reducerPath: 'crosswalkApi',
@@ -20,7 +22,7 @@ export const crosswalkApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putCrosswalk: builder.mutation<Crosswalk, Crosswalk>({
+    putCrosswalk: builder.mutation<any, any>({
       query: (value) => ({
         url: '/crosswalk',
         method: 'PUT',
@@ -38,26 +40,64 @@ export const crosswalkApi = createApi({
         },
       }),
     }),
+
     getCrosswalk: builder.query<Crosswalk, string>({
       query: (pid) => ({
         url: `/crosswalk/${pid}`,
         method: 'GET',
       }),
     }),
-    postCrosswalk: builder.mutation<
-      string,
+
+    getMappings: builder.query<any, any>({
+      query: (pid) => ({
+        url: `/crosswalk/${pid}/mapping`,
+        method: 'GET',
+      }),
+    }),
+
+    putMapping: builder.mutation<any,
       {
-        // Need to check How it works with our api
-        payload: Crosswalk;
+      payload: any;
+      pid: string;
+      }>({
+      query: (value) => ({
+        url: `/crosswalk/${value.pid}/mapping`,
+        method: 'PUT',
+        data: value.payload,
+      }),
+    }),
+
+    patchMapping: builder.mutation<any, {
+      payload: any;
+      pid: string;
+    }>({
+      query: (value) => ({
+        url: `/crosswalk/${value.pid}`,
+        method: 'PUT',
+        data: value.payload,
+      }),
+    }),
+
+    deleteMapping: builder.mutation<string, string>({
+      query: (value) => ({
+        url: `/crosswalk/${value}`,
+        method: 'DELETE',
+      }),
+    }),
+
+    patchCrosswalk: builder.mutation<any,
+      {
+        payload: any;
         pid: string;
       }
     >({
       query: (value) => ({
-        url: `/crosswalk/${value.payload.pid}`,
-        method: 'POST',
+        url: `/crosswalk/${value.pid}`,
+        method: 'PATCH',
         data: value.payload,
       }),
     }),
+
     deleteCrosswalk: builder.mutation<string, string>({
       query: (value) => ({
         url: `/crosswalk/${value}`,
@@ -71,7 +111,11 @@ export const {
   usePutCrosswalkMutation,
   usePutCrosswalkFullMutation,
   useGetCrosswalkQuery,
-  usePostCrosswalkMutation,
+  useGetMappingsQuery,
+  usePutMappingMutation,
+  usePatchMappingMutation,
+  useDeleteMappingMutation,
+  usePatchCrosswalkMutation,
   useDeleteCrosswalkMutation,
   util: { getRunningQueriesThunk },
 } = crosswalkApi;
@@ -80,7 +124,7 @@ export const {
   putCrosswalk,
   putCrosswalkFull,
   getCrosswalk,
-  postCrosswalk,
+  patchCrosswalk,
   deleteCrosswalk,
 } = crosswalkApi.endpoints;
 
