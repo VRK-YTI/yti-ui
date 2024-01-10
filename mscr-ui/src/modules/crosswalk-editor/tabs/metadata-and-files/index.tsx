@@ -99,7 +99,6 @@ export default function MetadataAndFiles(props: { crosswalks: CrosswalkConnectio
 
     function setValuesFromData() {
         let prevDetails = {...detailsInit};
-        console.log('LANG', lang);
         prevDetails = updateValuesOnInit(prevDetails, 'crosswalkName', props.data?.label[lang]);
         prevDetails = updateValuesOnInit(prevDetails,'created', props.data?.created);
         prevDetails = updateValuesOnInit(prevDetails,'modified', props.data?.modified);

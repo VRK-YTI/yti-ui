@@ -75,7 +75,6 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
         mappings.source.push({ id: props.selectedCrosswalk.source.id, label:props.selectedCrosswalk.source.name});
         mappings.target.push({ id: props.selectedCrosswalk.target.id, label:props.selectedCrosswalk.target.name});
         mappings.predicate = predicateValue ? predicateValue : '0';
-        console.log('generated payload', props.selectedCrosswalk);
         return mappings;
     }
 
@@ -114,8 +113,6 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                 visualPlaceholder="Operation value"
             />);
         });
-
-        console.log('RET', ret);
     }
 
     function save() {
@@ -138,7 +135,6 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
 
     // VALIDATE MAPPING
     useEffect(() => {
-        console.log('effect');
         generatePropertiesDropdownItems(props.selectedCrosswalk.source.properties);
         setValidationErrors(validateMapping(props.selectedCrosswalk));
         generateMappingOperationTextboxes(mappingOperationValue);

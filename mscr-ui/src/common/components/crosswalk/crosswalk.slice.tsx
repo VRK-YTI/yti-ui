@@ -1,15 +1,12 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
-import { NewModel } from '@app/common/interfaces/new-model.interface';
 import { createSlice } from '@reduxjs/toolkit';
-import { AppState, AppThunk } from '@app/store';
+import { AppThunk } from '@app/store';
 import isHydrate from '@app/store/isHydrate';
 import {
   Crosswalk,
-  CrosswalkFormType,
 } from '@app/common/interfaces/crosswalk.interface';
-import {Mapping} from "classnames";
 import {NodeMapping} from "@app/common/interfaces/crosswalk-connection.interface";
 
 export const crosswalkApi = createApi({
@@ -48,14 +45,14 @@ export const crosswalkApi = createApi({
       }),
     }),
 
-    getMappings: builder.query<any, any>({
+    getMappings: builder.query<NodeMapping[], any>({
       query: (pid) => ({
         url: `/crosswalk/${pid}/mapping`,
         method: 'GET',
       }),
     }),
 
-    putMapping: builder.mutation<any,
+    putMapping: builder.mutation<NodeMapping,
       {
       payload: any;
       pid: string;
@@ -67,7 +64,7 @@ export const crosswalkApi = createApi({
       }),
     }),
 
-    patchMapping: builder.mutation<any, {
+    patchMapping: builder.mutation<NodeMapping, {
       payload: any;
       pid: string;
     }>({

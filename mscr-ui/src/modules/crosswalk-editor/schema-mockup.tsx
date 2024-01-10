@@ -211,7 +211,6 @@ let treeIndex = 0;
 function createRenderTree(input: any, elementPath: string, definitions: any) {
     let retArray: RenderTree[] = [];
     for (let obj in input) {
-        //console.log('obj', obj);
         treeIndex += 1;
         let newNode: RenderTree = {
             name: definitions[obj].title,

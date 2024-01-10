@@ -1,14 +1,11 @@
-import { useTranslation } from 'next-i18next';
 import { Button, ModalFooter, Paragraph, Text } from 'suomifi-ui-components';
-import {KeyboardEvent, MouseEvent, useEffect, useState} from 'react';
-import { useRouter } from 'next/router';
+import {useEffect, useState} from 'react';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
 import {
   ModalContentSmPadding,
   ModalStyled,
   ModalTitleH1,
 } from 'yti-common-ui/components/login-modal/login-modal.styles';
-import {CrosswalkConnectionNew} from "@app/common/interfaces/crosswalk-connection.interface";
 
 export default function ConfirmModal(props: { isVisible: boolean; heading: string, text1: string, text2?:string, actionName: string, actionText: string, cancelText: string, performConfirmModalAction: any}) {
   const { isSmall } = useBreakpoints();
@@ -16,7 +13,6 @@ export default function ConfirmModal(props: { isVisible: boolean; heading: strin
 
   useEffect(() => {
     setVisible(props.isVisible);
-    console.log('effect', props)
   }, [props.isVisible]);
 
   function performAction(isCloseAction: boolean) {
@@ -50,7 +46,7 @@ export default function ConfirmModal(props: { isVisible: boolean; heading: strin
         </ModalContentSmPadding>
 
         <ModalFooter>
-          <Button onClick={(e) => performAction(false)} id="to-login-button">
+          <Button onClick={(e) => performAction(false)}>
             {props.actionText}
           </Button>
           <Button

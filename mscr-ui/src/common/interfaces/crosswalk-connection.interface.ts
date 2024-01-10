@@ -40,21 +40,6 @@ export interface RenderTree {
     children: RenderTree[];
 }
 
-export interface CrosswalkConnectionOld {
-    source: RenderTreeOld;
-    target: RenderTreeOld;
-    id: string;
-    description: string | undefined;
-    isSelected: boolean;
-    isDraft: boolean;
-    sourceJsonPath: string | undefined;
-    targetJsonPath: string | undefined;
-    sourcePredicate: string | undefined;
-    sourceProcessing: string | undefined;
-    targetPredicate: string | undefined;
-    targetProcessing: string | undefined;
-}
-
 export interface CrosswalkConnectionNew {
     source: RenderTree;
     target: RenderTree;

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
@@ -24,11 +23,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 
-import {
-    CrosswalkConnection,
-    CrosswalkConnectionNew, NodeMapping,
-    RenderTreeOld
-} from '@app/common/interfaces/crosswalk-connection.interface';
+import {NodeMapping} from '@app/common/interfaces/crosswalk-connection.interface';
 import {InfoIcon} from '@app/common/components/shared-icons';
 
 const crosswalkConnectionInit = {
@@ -53,10 +48,8 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
     },
 }));
 
-function Row(props: { row: NodeMapping; viewOnlyMode: boolean; isEditModeActive: boolean; cbf: any }) {
+function Row(props: { row: NodeMapping; viewOnlyMode: boolean; isEditModeActive: boolean; callBackFunction: any }) {
     const [open, setOpen] = React.useState(false);
-    const [changedNotes, setChangedNotes] = React.useState<string>('');
-    const addNotes = 'addNotes';
 
     return (
         <React.Fragment>
@@ -65,7 +58,7 @@ function Row(props: { row: NodeMapping; viewOnlyMode: boolean; isEditModeActive:
                     <Button className='ms-2 py-0' style={{textTransform: 'none'}}
                             title='Select linked node from source tree'
                             onClick={(e) => {
-                                props.cbf.performAccordionAction(props.row, 'selectFromSourceTree');
+                                props.callBackFunction.performAccordionAction(props.row, 'selectFromSourceTree');
                                 e.stopPropagation();
                             }}>{props.row.source[0].label}</Button>
                 </StyledTableCell>
@@ -81,7 +74,7 @@ function Row(props: { row: NodeMapping; viewOnlyMode: boolean; isEditModeActive:
                     <Button className='me-2 py-0' style={{textTransform: 'none'}}
                             title='Select linked node from target tree'
                             onClick={(e) => {
-                                props.cbf.performAccordionAction(props.row, 'selectFromTargetTree');
+                                props.callBackFunction.performAccordionAction(props.row, 'selectFromTargetTree');
                                 e.stopPropagation();
                             }}>{props.row.target[0].label}</Button>
                 </StyledTableCell>
@@ -131,12 +124,12 @@ function Row(props: { row: NodeMapping; viewOnlyMode: boolean; isEditModeActive:
                                 <Sbutton
                                     hidden={!props.isEditModeActive}
                                     onClick={(e) => {
-                                        props.cbf.performAccordionAction(props.row, 'openJointDetails');
+                                        props.callBackFunction.performAccordionAction(props.row, 'openJointDetails');
                                     }}>Edit</Sbutton>
                                 <Sbutton className='mt-2'
                                          hidden={!props.isEditModeActive}
                                          onClick={(e) => {
-                                             props.cbf.performAccordionAction(props.row, 'removeJoint');
+                                             props.callBackFunction.performAccordionAction(props.row, 'removeJoint');
                                          }}>Delete</Sbutton>
                             </div>
                         </div>
@@ -168,7 +161,7 @@ export default function JointListingAccordion(props: any) {
                         <TableBody>
                             {nodeMappingsInput.map((row: NodeMapping) => {
                                 return (<Row key={row.pid} row={row} viewOnlyMode={props.viewOnlyMode}
-                                             isEditModeActive={props.isEditModeActive} cbf={props}/>);
+                                             isEditModeActive={props.isEditModeActive} callBackFunction={props}/>);
                             })}
                         </TableBody>
                     }
