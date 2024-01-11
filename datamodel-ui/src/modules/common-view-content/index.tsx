@@ -53,7 +53,7 @@ export default function CommonViewContent({
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
-    actions: ['ADMIN_ASSOCIATION', 'ADMIN_ATTRIBUTE'],
+    actions: ['EDIT_ASSOCIATION', 'EDIT_ATTRIBUTE'],
   });
   const displayLang = useSelector(selectDisplayLang());
   const { data: codesResult } = useGetAllCodesQuery(

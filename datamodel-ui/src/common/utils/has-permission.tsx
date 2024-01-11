@@ -100,11 +100,6 @@ export function checkPermission({
     return true;
   }
 
-  // Return true if target organization is undefined and user has admin role
-  if (rolesInOrganizations.includes('ADMIN') && !targetOrganizations) {
-    return true;
-  }
-
   // Return true if user has admin role in target organization
   if (
     rolesInOrganizations.includes('ADMIN') &&
@@ -113,10 +108,13 @@ export function checkPermission({
     return true;
   }
 
+  // Actions not related to any organization
   if (
     (!targetOrganizations || targetOrganizations.length === 0) &&
-    rolesInOrganizations.includes('DATA_MODEL_EDITOR') &&
-    !actions.some((action) => action.includes('ADMIN'))
+    rolesInOrganizations.some((role) =>
+      ['DATA_MODEL_EDITOR', 'ADMIN'].includes(role)
+    ) &&
+    actions.includes('CREATE_DATA_MODEL')
   ) {
     return true;
   }
