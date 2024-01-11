@@ -52,26 +52,23 @@ export default function MetadataAndFiles(props: { crosswalks: CrosswalkConnectio
     };
 
     const [inputValue, setInputValue] = useState(detailsInit);
+    const [lang, setLanguage] = useState('en');
 
     useEffect(() => {
         // console.log('INPUT', inputValue);
     }, [inputValue]);
 
     function updateValue(paramName: string, value: any) {
-        // console.log('!!! UPDATE CALLED', paramName, value);
         const val = value === undefined ? '' : value.toString();
         const details = {...inputValue};
         details[paramName] = val;
-        // console.log('AFTER UPDATE', details)
         setInputValue(details);
     };
 
     function updateValuesOnInit(prevDetails: any, paramName: string, value: any) {
-        // console.log('!!! UPDATE CALLED', paramName, value);
         const val = value === undefined ? '' : value.toString();
         const details = {...prevDetails};
         details[paramName] = val;
-        // console.log('AFTER UPDATE', details)
         setInputValue(details);
         return details;
     };
@@ -97,14 +94,21 @@ export default function MetadataAndFiles(props: { crosswalks: CrosswalkConnectio
 
     useEffect(() => {
         setValuesFromData();
+        detectLanguage();
     }, [props.data]);
 
     function setValuesFromData() {
         let prevDetails = {...detailsInit};
-        prevDetails = updateValuesOnInit(prevDetails, 'crosswalkName', props.data?.label['fi']);
+        prevDetails = updateValuesOnInit(prevDetails, 'crosswalkName', props.data?.label[lang]);
         prevDetails = updateValuesOnInit(prevDetails,'created', props.data?.created);
         prevDetails = updateValuesOnInit(prevDetails,'modified', props.data?.modified);
-        prevDetails = updateValuesOnInit(prevDetails,'description', props.data?.description['fi']);
+        prevDetails = updateValuesOnInit(prevDetails,'description', props.data?.description[lang]);
+    }
+
+    function detectLanguage() {
+        if (props.data?.label['fi']) {
+            setLanguage('fi');
+        }
     }
 
     return (<>
