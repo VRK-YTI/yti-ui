@@ -20,7 +20,7 @@ import {
 import CrosswalkForm from '@app/modules/crosswalk-form';
 import FormFooterAlert from '../../../../../../common-ui/components/form-footer-alert';
 
-export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnectionNew; performMappingsModalAction: any; mappingFilters: any; mappingFunctions: any; modalOpen: boolean; isJointPatchOperation: boolean, patchPid: string }) {
+export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnectionNew; performMappingsModalAction: any; mappingFilters: any; mappingFunctions: any; modalOpen: boolean; isJointPatchOperation: boolean }) {
     let sourceSelectionInit = '';
     let targetSelectionInit = '';
 

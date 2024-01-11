@@ -84,10 +84,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     const [deleteMapping, deleteMappingResponse] = useDeleteMappingMutation();
     const [patchMapping, patchMappingResponse] = usePatchMappingMutation();
 
-    if (crosswalkPatchResponse.isSuccess) {
-        //alert('Crosswalk succesfully updated');
-    }
-
     const emptyTreeSelectionOld: RenderTreeOld = {
         idNumeric: 0,
         id: '',
@@ -213,12 +209,28 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     const [isEditModeActive, setEditModeActive] = React.useState<boolean>(true);
     const [isJointPatchOperation, setJointPatchOperation] = React.useState<boolean>(true);
 
-    const [crosswalkPublished, setCrosswalkPublished] = React.useState<boolean>(false);
+    const [crosswalkPublished, setCrosswalkPublished] = React.useState<boolean>(true);
     const [publishNotificationVisible, setPublishNotificationVisible] = React.useState<boolean>(false);
     const [saveNotificationVisible, setSaveNotificationVisible] = React.useState<boolean>(false);
+    const [lastPatchCrosswalkId, setLastPatchCrosswalkId] = React.useState<string>('');
     const [lastPutMappingPid, setLastPutMappingPid] = React.useState<string>('');
     const [lastPatchMappingPid, setLastPatchMappingPid] = React.useState<string>('');
     const [lastDeleteMappingPid, setLastDeleteMappingPid] = React.useState<string>('');
+
+    if (crosswalkPatchResponse.isSuccess) {
+        if (!crosswalkPublished && crosswalkPatchResponse?.originalArgs?.payload?.state === 'PUBLISHED') {
+            setCrosswalkPublished(true);
+            setPublishNotificationVisible(true);
+            setEditModeActive(false);
+            setSelectedTab(0);
+            setLastPatchCrosswalkId(crosswalkPatchResponse.requestId);
+        } else if(!saveNotificationVisible && (lastPatchCrosswalkId !== crosswalkPatchResponse.requestId)) {
+            // Operation is regular patch without publishing (save)
+            setLastPatchCrosswalkId(crosswalkPatchResponse.requestId);
+            setSaveNotificationVisible(true);
+        }
+    }
+
 
     useEffect(() => {
         //setConfirmModalOpen(true);
@@ -232,7 +244,11 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         if (getCrosswalkData?.targetSchema) {
             setTargetSchemaUrn(getCrosswalkData.targetSchema);
         }
-    }, [getCrosswalkDataIsSuccess]);
+        if (getCrosswalkData && getCrosswalkData?.state !== 'PUBLISHED') {
+            setCrosswalkPublished(false);
+        }
+    }, [!getCrosswalkDataIsLoading]);
+
 
     useEffect(() => {
     }, [!mappingFunctionsIsLoading]);
@@ -245,8 +261,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
 
     // RESET EDITED JOINT VALUE IF MODAL NEEDS TO BE RE OPENED
     useEffect(() => {
-        //TODO: this needs to be handled somehow
-        //setJointToBeEdited(undefined);
     }, [isNodeMappingsModalOpen]);
 
     // EXPAND TREES WHEN DATA LOADED
@@ -389,9 +403,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
             targetSchema: targetSchemaUrn,
         }
         patchCrosswalk({ payload: testPayload, pid: crosswalkId[0] });
-
-        // TODO: check if success
-        setSaveNotificationVisible(true);
     }
 
     function publishCrosswalk() {
@@ -399,15 +410,9 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
             state: 'PUBLISHED'
         }
         patchCrosswalk({ payload: publishPayload, pid: crosswalkId[0] });
-
-        // TODO: check if success
-        setCrosswalkPublished(true);
-        setPublishNotificationVisible(true);
-        setEditModeActive(false);
-        setSelectedTab(0);
     }
 
-    function addOrEditJointButtonClick(add: boolean, mappingToBeEdited: NodeMapping) {
+    function addOrEditJointButtonClick(add: boolean, mappingToBeEdited: NodeMapping | undefined) {
         if ((add)) {
             const jointsToBeAdded: CrosswalkConnectionNew[] = [];
             selectedSourceNodes.forEach(sourceNode => {
@@ -432,13 +437,18 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
             setJointToBeEdited(jointsToBeAdded[jointsToBeAdded.length - 1]);
         } else {
             let sourceNodeIds: string[] = [];
-            mappingToBeEdited.source.forEach(item => {
-                sourceNodeIds.push(item.id);
-            })
+            if (mappingToBeEdited) {
+                mappingToBeEdited.source.forEach(item => {
+                    sourceNodeIds.push(item.id);
+                });
+            }
+
             let targetNodeIds: string[] = [];
-            mappingToBeEdited.target.forEach(item => {
-                targetNodeIds.push(item.id);
-            })
+            if (mappingToBeEdited) {
+                mappingToBeEdited.target.forEach(item => {
+                    targetNodeIds.push(item.id);
+                });
+            }
 
             let sourceNodes = getTreeNodesByIds(sourceNodeIds, true);
             let targetNodes = getTreeNodesByIds(targetNodeIds, false);
@@ -448,7 +458,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                 const joint: CrosswalkConnectionNew = {
                     source: sourceNode,
                     target: targetNodes[0],
-                    id: mappingToBeEdited.pid ? mappingToBeEdited.pid : '',
+                    id: mappingToBeEdited?.pid ? mappingToBeEdited.pid : '',
                     description: '',
                     isSelected: true,
                     isDraft: true,
@@ -1079,11 +1089,13 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
 
                                 {/*  MID BUTTONS */}
                                 <div className='col-2 px-4 mid-buttons'>
-                                    <Sbutton className='link-button' disabled={(linkingError.length > 1)}
-                                             title={(linkingError.length > 1 ? linkingError : 'Link selected nodes')}
-                                             onClick={() => {
-                                                 addOrEditJointButtonClick(!isBothSelectedLinked, undefined);
-                                             }}><LinkIcon></LinkIcon></Sbutton>
+                                    {!crosswalkPublished &&
+                                      <Sbutton className='link-button' disabled={(linkingError.length > 1)}
+                                               title={(linkingError.length > 1 ? linkingError : 'Link selected nodes')}
+                                               onClick={() => {
+                                                   addOrEditJointButtonClick(!isBothSelectedLinked, undefined);
+                                               }}><LinkIcon></LinkIcon></Sbutton>
+                                    }
                                 </div>
 
                                 {/*  TARGET TREE */}
@@ -1172,7 +1184,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                             <Box className='mb-4' sx={{height: 640, flexGrow: 1, overflowY: 'auto'}}>
                                 <JointListingAccordion nodeMappings = {nodeMappings}
                                                        viewOnlyMode={false}
-                                                       isEditModeActive={isEditModeActive}
+                                                       isEditModeActive={isEditModeActive && !crosswalkPublished}
                                                        performAccordionAction={performCallbackFromAccordionAction}></JointListingAccordion>
                             </Box>
                         </div>
