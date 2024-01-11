@@ -1,14 +1,13 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
-import { NewModel } from '@app/common/interfaces/new-model.interface';
 import { createSlice } from '@reduxjs/toolkit';
-import { AppState, AppThunk } from '@app/store';
+import { AppThunk } from '@app/store';
 import isHydrate from '@app/store/isHydrate';
 import {
   Crosswalk,
-  CrosswalkFormType,
 } from '@app/common/interfaces/crosswalk.interface';
+import {NodeMapping} from "@app/common/interfaces/crosswalk-connection.interface";
 
 export const crosswalkApi = createApi({
   reducerPath: 'crosswalkApi',
@@ -20,7 +19,7 @@ export const crosswalkApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putCrosswalk: builder.mutation<Crosswalk, Crosswalk>({
+    putCrosswalk: builder.mutation<any, any>({
       query: (value) => ({
         url: '/crosswalk',
         method: 'PUT',
@@ -38,26 +37,64 @@ export const crosswalkApi = createApi({
         },
       }),
     }),
+
     getCrosswalk: builder.query<Crosswalk, string>({
       query: (pid) => ({
         url: `/crosswalk/${pid}`,
         method: 'GET',
       }),
     }),
-    postCrosswalk: builder.mutation<
-      string,
+
+    getMappings: builder.query<NodeMapping[], any>({
+      query: (pid) => ({
+        url: `/crosswalk/${pid}/mapping`,
+        method: 'GET',
+      }),
+    }),
+
+    putMapping: builder.mutation<NodeMapping,
       {
-        // Need to check How it works with our api
-        payload: Crosswalk;
+      payload: any;
+      pid: string;
+      }>({
+      query: (value) => ({
+        url: `/crosswalk/${value.pid}/mapping`,
+        method: 'PUT',
+        data: value.payload,
+      }),
+    }),
+
+    patchMapping: builder.mutation<NodeMapping, {
+      payload: any;
+      pid: string;
+    }>({
+      query: (value) => ({
+        url: `/crosswalk/${value.pid}`,
+        method: 'PUT',
+        data: value.payload,
+      }),
+    }),
+
+    deleteMapping: builder.mutation<string, string>({
+      query: (value) => ({
+        url: `/crosswalk/${value}`,
+        method: 'DELETE',
+      }),
+    }),
+
+    patchCrosswalk: builder.mutation<any,
+      {
+        payload: any;
         pid: string;
       }
     >({
       query: (value) => ({
-        url: `/crosswalk/${value.payload.pid}`,
-        method: 'POST',
+        url: `/crosswalk/${value.pid}`,
+        method: 'PATCH',
         data: value.payload,
       }),
     }),
+
     deleteCrosswalk: builder.mutation<string, string>({
       query: (value) => ({
         url: `/crosswalk/${value}`,
@@ -71,7 +108,11 @@ export const {
   usePutCrosswalkMutation,
   usePutCrosswalkFullMutation,
   useGetCrosswalkQuery,
-  usePostCrosswalkMutation,
+  useGetMappingsQuery,
+  usePutMappingMutation,
+  usePatchMappingMutation,
+  useDeleteMappingMutation,
+  usePatchCrosswalkMutation,
   useDeleteCrosswalkMutation,
   util: { getRunningQueriesThunk },
 } = crosswalkApi;
@@ -80,7 +121,7 @@ export const {
   putCrosswalk,
   putCrosswalkFull,
   getCrosswalk,
-  postCrosswalk,
+  patchCrosswalk,
   deleteCrosswalk,
 } = crosswalkApi.endpoints;
 

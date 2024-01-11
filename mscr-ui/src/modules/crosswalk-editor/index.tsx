@@ -19,8 +19,9 @@ import Typography from '@mui/material/Typography';
 import JointListingAccordion from '@app/modules/crosswalk-editor/joint-listing-accordion';
 import MetadataAndFiles from '@app/modules/crosswalk-editor/tabs/metadata-and-files';
 import NodeInfo from '@app/modules/crosswalk-editor/tabs/crosswalk-info/node-info';
-import {SearchInput} from 'suomifi-ui-components';
+import {SearchInput, Notification} from 'suomifi-ui-components';
 import SchemaTree from '@app/modules/crosswalk-editor/tabs/edit-crosswalk/schema-tree';
+import ConfirmModal from '@app/common/components/confirmation-modal';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import {SSRConfig, useTranslation} from 'next-i18next';
 import {
@@ -44,18 +45,20 @@ import {
     RenderTreeOld,
     CrosswalkConnection,
     CrosswalkConnectionNew,
-    CrosswalkConnectionsNew, RenderTree
+    CrosswalkConnectionsNew, RenderTree, NodeMapping
 } from '@app/common/interfaces/crosswalk-connection.interface';
 import NodeMappingsModal from './tabs/node-mappings';
 import LinkIcon from '@app/common/components/shared-icons';
 import filter from "../../../../common-ui/components/filter";
 import {useRouter} from 'next/router';
-import {useGetCrosswalkQuery} from "@app/common/components/crosswalk/crosswalk.slice";
+import {useGetCrosswalkQuery, usePatchCrosswalkMutation, usePutCrosswalkMutation, usePutMappingMutation, useDeleteMappingMutation, usePatchMappingMutation, useGetMappingsQuery} from "@app/common/components/crosswalk/crosswalk.slice";
 import {useGetFrontendSchemaQuery} from "@app/common/components/schema/schema.slice";
 import {useGetCrosswalkMappingFunctionsQuery} from "@app/common/components/crosswalk-functions/crosswalk-functions.slice";
-
+import {usePostSchemaFileMutation} from "@app/common/components/import/import.slice";
+import LoginModalView from "@app/common/components/login-modal";
 
 export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) {
+
     interface simpleNode {
         name: string | undefined;
         id: string;
@@ -76,6 +79,14 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     } =
         useGetCrosswalkQuery(crosswalkId);
 
+    const [patchCrosswalk,crosswalkPatchResponse] = usePatchCrosswalkMutation();
+    const [putMapping, putMappingResponse] = usePutMappingMutation();
+    const [deleteMapping, deleteMappingResponse] = useDeleteMappingMutation();
+    const [patchMapping, patchMappingResponse] = usePatchMappingMutation();
+
+    if (crosswalkPatchResponse.isSuccess) {
+        //alert('Crosswalk succesfully updated');
+    }
 
     const emptyTreeSelectionOld: RenderTreeOld = {
         idNumeric: 0,
@@ -98,6 +109,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         parentElementPath: undefined,
         name: '',
         id: '',
+        visualTreeId: '',
         properties: undefined,
         children: []
     };
@@ -165,8 +177,8 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     const [isSourceDataFetched, setSourceDataFetched] = React.useState<boolean>(false);
     const [isTargetDataFetched, setTargetDataFetched] = React.useState<boolean>(false);
 
-    const [sourceSchemaUrn, setSourceSchemaUrn] = React.useState<string>('urn:IAMNOTAPID:37cbc73b-6446-4fdd-8e92-95f6a3db4208');
-    const [targetSchemaUrn, setTargetSchemaUrn] = React.useState<string>('urn:IAMNOTAPID:37cbc73b-6446-4fdd-8e92-95f6a3db4208');
+    const [sourceSchemaUrn, setSourceSchemaUrn] = React.useState<string>('');
+    const [targetSchemaUrn, setTargetSchemaUrn] = React.useState<string>('');
 
     const [sourceTreeDataOriginal, setSourceDataOriginal] = React.useState<RenderTree[]>(inputData);
     const [sourceTreeData, setSourceData] = React.useState<RenderTree[]>(inputData);
@@ -182,22 +194,34 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     const [selectedTargetNodes, setSelectedTargetNodes] = React.useState<RenderTree[]>([emptyTreeSelection]);
 
     const [connectedCrosswalksNew, setConnectedCrosswalksNew] = React.useState<CrosswalkConnectionNew[]>([]);
-    const [jointToBeEdited, setJointToBeEdited] = React.useState<CrosswalkConnectionNew | undefined>(crosswalkConnectionNewInit);
+    const [nodeMappings, setNodeMappings] = React.useState<NodeMapping[]>([]);
+    const [mappingToBeEdited, setMappingToBeEdited] = React.useState<NodeMapping | undefined>(undefined);
 
-    const [connectedCrosswalksNew2, setConnectedCrosswalksNew2] = React.useState<CrosswalkConnectionsNew[] | []>([]);
+    const [jointToBeEdited, setJointToBeEdited] = React.useState<CrosswalkConnectionNew | undefined>(undefined);
+
 
     const [isAnySelectedLinked, setAnySelectedLinkedState] = React.useState<boolean>(false);
     const [isBothSelectedLinked, setBothSelectedLinkedState] = React.useState<boolean>(false);
     const [linkingError, setLinkingError] = React.useState<string>('');
     const [selectedTab, setSelectedTab] = React.useState(1);
-    const [nodeMappingsModalOpen, setNodeMappingsModalOpen] = React.useState<boolean>(false);
-
+    const [isNodeMappingsModalOpen, setNodeMappingsModalOpen] = React.useState<boolean>(false);
+    const [isSaveConfirmModalOpen, setSaveConfirmModalOpen] = React.useState<boolean>(false);
+    const [isPublishConfirmModalOpen, setPublishConfirmModalOpen] = React.useState<boolean>(false);
 
     const [crosswalksList, setCrosswalkList] = React.useState<string[]>([]);
 
     const [isEditModeActive, setEditModeActive] = React.useState<boolean>(true);
+    const [isJointPatchOperation, setJointPatchOperation] = React.useState<boolean>(true);
+
+    const [crosswalkPublished, setCrosswalkPublished] = React.useState<boolean>(false);
+    const [publishNotificationVisible, setPublishNotificationVisible] = React.useState<boolean>(false);
+    const [saveNotificationVisible, setSaveNotificationVisible] = React.useState<boolean>(false);
+    const [lastPutMappingPid, setLastPutMappingPid] = React.useState<string>('');
+    const [lastPatchMappingPid, setLastPatchMappingPid] = React.useState<string>('');
+    const [lastDeleteMappingPid, setLastDeleteMappingPid] = React.useState<string>('');
 
     useEffect(() => {
+        //setConfirmModalOpen(true);
         setNodeMappingsModalOpen(true);
     }, [jointToBeEdited]);
 
@@ -216,10 +240,14 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     useEffect(() => {
     }, [!mappingFiltersIsLoading]);
 
+    useEffect(() => {
+    }, [!isSaveConfirmModalOpen, !isPublishConfirmModalOpen]);
+
     // RESET EDITED JOINT VALUE IF MODAL NEEDS TO BE RE OPENED
     useEffect(() => {
-        setJointToBeEdited(undefined);
-    }, [nodeMappingsModalOpen]);
+        //TODO: this needs to be handled somehow
+        //setJointToBeEdited(undefined);
+    }, [isNodeMappingsModalOpen]);
 
     // EXPAND TREES WHEN DATA LOADED
     useEffect(() => {
@@ -232,10 +260,10 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
 
     useEffect(() => {
         // USED BY NODE INFO BOX SOURCE
-        setSelectedSourceNodes(getNodesForNodeInfo(sourceTreeSelectedArray, true));
+        setSelectedSourceNodes(getTreeNodesByIds(sourceTreeSelectedArray, true));
 
         // USED BY NODE INFO BOX TARGET
-        setSelectedTargetNodes(getNodesForNodeInfo(targetTreeSelectedArray, false));
+        setSelectedTargetNodes(getTreeNodesByIds(targetTreeSelectedArray, false));
 
         //updateIsLinkedStatus(sourceNode, targetNode);
         //setSelectedSourceNodes(sourceNode);
@@ -265,6 +293,15 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     } =
         useGetFrontendSchemaQuery(targetSchemaUrn);
 
+    const {
+        data: mappingsFromBackend,
+        isLoading: getMappingsDataIsLoading,
+        isSuccess: getMappingsDataIsSuccesss,
+        isError: getMappingsIsError,
+        error: getMappingsError
+    } =
+      useGetMappingsQuery(crosswalkId[0]);
+
     useEffect(() => {
         if (getSourceSchemaData?.content) {
             generateTreeFromJson(getSourceSchemaData).then(res => {
@@ -289,17 +326,95 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         }
     }, [getTargetSchemaDataIsSuccess]);
 
-    function addJoint(add: boolean) {
+    useEffect(() => {
+        if (mappingsFromBackend) {
+            let nodeMappings = mappingsFromBackend as NodeMapping[];
+            setNodeMappings(nodeMappings);
+        }
+    }, [getTargetSchemaDataIsSuccess]);
+
+    // Add mapping to accordion
+    if (putMappingResponse.isSuccess) {
+        if (lastPutMappingPid !== putMappingResponse.data.pid) {
+            addMappingToAccordion(putMappingResponse, true);
+        } else {
+            //TODO: add error notification
+        }
+    }
+
+    if (patchMappingResponse.isSuccess) {
+        if (lastPatchMappingPid !== patchMappingResponse.data.pid) {
+        } else {
+            //TODO: add error notification
+        }
+    }
+
+    if (deleteMappingResponse.isSuccess) {
+        if (deleteMappingResponse.isSuccess && (deleteMappingResponse.originalArgs !== lastDeleteMappingPid)) {
+            const newMappings = [...nodeMappings.filter(item => {
+                return (item.pid !== deleteMappingResponse.originalArgs);
+            })];
+            if (deleteMappingResponse.originalArgs){
+                setLastDeleteMappingPid(deleteMappingResponse.originalArgs);
+            }
+            setNodeMappings(() => [...newMappings]);
+            //
+        }
+    }
+
+    function addMappingToAccordion(response: any, isPutOperation: boolean) {
+            if (jointToBeEdited) {
+                jointToBeEdited.id = response.data.pid;
+
+                if (isPutOperation) {
+                    let newMapping = response.data as NodeMapping;
+                        setNodeMappings(mappings => {
+                            return [newMapping, ...mappings];
+                        });
+
+                    setLastPutMappingPid(response.data.pid);
+                    setConnectedCrosswalksNew(crosswalkMappings => {
+                        return [jointToBeEdited, ...crosswalkMappings];
+                    });
+                }
+                else {
+                    setLastPatchMappingPid(response.data.pid);
+                }
+            }
+    }
+
+    function saveCrosswalk() {
+        let testPayload = {
+            sourceSchema: sourceSchemaUrn,
+            targetSchema: targetSchemaUrn,
+        }
+        patchCrosswalk({ payload: testPayload, pid: crosswalkId[0] });
+
+        // TODO: check if success
+        setSaveNotificationVisible(true);
+    }
+
+    function publishCrosswalk() {
+        let publishPayload = {
+            state: 'PUBLISHED'
+        }
+        patchCrosswalk({ payload: publishPayload, pid: crosswalkId[0] });
+
+        // TODO: check if success
+        setCrosswalkPublished(true);
+        setPublishNotificationVisible(true);
+        setEditModeActive(false);
+        setSelectedTab(0);
+    }
+
+    function addOrEditJointButtonClick(add: boolean, mappingToBeEdited: NodeMapping) {
         if ((add)) {
-            //TODO: check already linked
             const jointsToBeAdded: CrosswalkConnectionNew[] = [];
-            let lastJointId = '';
             selectedSourceNodes.forEach(sourceNode => {
-                lastJointId = sourceNode.id + '.' + selectedTargetNodes[0].id;
                 const joint: CrosswalkConnectionNew = {
                     source: sourceNode,
                     target: selectedTargetNodes[0],
-                    id: lastJointId,
+                    id: '',
                     description: '',
                     isSelected: true,
                     isDraft: true,
@@ -313,15 +428,46 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                 jointsToBeAdded.push(joint);
             });
             //setConnectedCrosswalksNew(crosswalkMappings => [...jointsToBeAdded, ...crosswalkMappings]);
+            setJointPatchOperation(false);
             setJointToBeEdited(jointsToBeAdded[jointsToBeAdded.length - 1]);
+        } else {
+            let sourceNodeIds: string[] = [];
+            mappingToBeEdited.source.forEach(item => {
+                sourceNodeIds.push(item.id);
+            })
+            let targetNodeIds: string[] = [];
+            mappingToBeEdited.target.forEach(item => {
+                targetNodeIds.push(item.id);
+            })
+
+            let sourceNodes = getTreeNodesByIds(sourceNodeIds, true);
+            let targetNodes = getTreeNodesByIds(targetNodeIds, false);
+
+            const jointsToBeEdited: CrosswalkConnectionNew[] = [];
+            sourceNodes.forEach(sourceNode => {
+                const joint: CrosswalkConnectionNew = {
+                    source: sourceNode,
+                    target: targetNodes[0],
+                    id: mappingToBeEdited.pid ? mappingToBeEdited.pid : '',
+                    description: '',
+                    isSelected: true,
+                    isDraft: true,
+                    sourceJsonPath: undefined,
+                    targetJsonPath: undefined,
+                    sourcePredicate: undefined,
+                    sourceProcessing: undefined,
+                    targetPredicate: undefined,
+                    targetProcessing: undefined
+                };
+                jointsToBeEdited.push(joint);
+            });
+            setJointPatchOperation(true);
+            setJointToBeEdited(jointsToBeEdited[jointsToBeEdited.length - 1]);
         }
     };
 
-    function removeJoint(cc: any) {
-        const newCrosswalks = [...connectedCrosswalksNew.filter(item => {
-            return (item.id !== cc);
-        })];
-        setConnectedCrosswalksNew(() => [...newCrosswalks]);
+    function removeJoint(jointPid: any) {
+        deleteMapping(jointPid);
     }
 
     function updateIsLinkedStatus(source: CrosswalkConnection, target: CrosswalkConnection) {
@@ -353,7 +499,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         }
     }
 
-    function getNodesForNodeInfo(nodeIds: string[], isSourceTree: boolean) {
+    function getTreeNodesByIds(nodeIds: string[], isSourceTree: boolean) {
         let nodeIdsArr: string[] = [];
         if (typeof nodeIds === 'string') {
             nodeIdsArr.push(nodeIds);
@@ -387,7 +533,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
             cw.id === nodeId ? cw.isSelected = true : cw.isSelected = false;
             newCons.push(cw);
         });
-        console.log('NEW CONS', newCons);
         setConnectedCrosswalksNew(() => [...newCons]);
     }
 
@@ -397,12 +542,12 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         });
     }
 
-    function getJointSelected(id: string | undefined) {
+    function getJointSelected(pid: string | undefined) {
         let ret = undefined;
-        if (id) {
-            connectedCrosswalksNew.filter(cw => {
-                if (cw.id === id) {
-                    ret = cw;
+        if (pid) {
+            nodeMappings.filter(node => {
+                if (node.pid === pid) {
+                    ret = node;
                 }
             });
         }
@@ -483,15 +628,14 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         }
     };
 
-    const selectFromTree = (node: CrosswalkConnectionNew, isTargetTree: boolean) => {
-        // console.log('SELECT FROM TREE CALLED', node);
+    const selectFromTree = (node: NodeMapping, isTargetTree: boolean) => {
         const nodeIds: React.SetStateAction<string[]> = [];
         if (isTargetTree) {
-            nodeIds.push(node.target.id);
+            node.target.forEach(node => nodeIds.push(node.id));
             selectFromTargetTreeByIds(nodeIds);
             //setTargetSelection(node.target)
         } else {
-            nodeIds.push(node.source.id);
+            node.source.forEach(node => nodeIds.push(node.id));
             selectFromSourceTreeByIds(nodeIds);
             //setSourceSelection(node.source)
         }
@@ -542,22 +686,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
             });
         }
     };
-
-    function saveCroswalk() {
-        // console.log('save clicked');
-    }
-
-    function loadCroswalk() {
-        fetchCrosswalkData('organizations').then(data => {
-            setTargetData(inputData);
-            setSourceData(inputData);
-
-            setExpanded(true);
-            setExpanded(false);
-            setConnectedCrosswalksNew([]);
-            clearSelections();
-        });
-    }
 
     function filterTreeData(treeData: RenderTree[], keywords: string[], results: RenderTree[]) {
         treeData.forEach(item => {
@@ -729,12 +857,13 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         selectFromTargetTreeByIds([]);
     }
 
-    const performCallbackFromAccordionAction = (joint: any, action: string, value: string) => {
+    const performCallbackFromAccordionAction = (joint: NodeMapping, action: string, value: string) => {
         if (action === 'remove') {
             removeJoint(joint);
         } else if (action === 'addNotes') {
-            joint.notes = value;
-            updateJointData(joint);
+            // TODO: implement add notes from accordion if needed?
+            //joint.notes = value;
+            //updateJointData(joint);
         } else if (action === 'selectFromSourceTree') {
             //handleExpandClick(true);
             clearTreeSearch(true);
@@ -744,11 +873,9 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
             clearTreeSearch(false);
             selectFromTree(joint, true);
         } else if (action === 'openJointDetails') {
-            setJointSelected(joint.id);
-            setJointToBeEdited(getJointSelected(joint.id));
-            //scrollToTop();
+            addOrEditJointButtonClick(false, joint);
         } else if (action === 'removeJoint') {
-            removeJoint(joint.id);
+            removeJoint(joint.pid);
         }
     };
 
@@ -760,17 +887,34 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         }
     };
 
-    const performCallbackFromMappingModal = (action: any, event: any, crosswalkConnection: any) => {
+    const performCallbackFromMappingsModal = (action: any, mappingPayload: any, patchPid: string) => {
         if (action === 'closeModal') {
             setNodeMappingsModalOpen(false);
         }
+        if (action === 'addJoint') {
+            setNodeMappingsModalOpen(false);
+            putMapping({payload: mappingPayload, pid: crosswalkId[0]});
+        }
         if (action === 'save') {
             setNodeMappingsModalOpen(false);
-
-            setConnectedCrosswalksNew(crosswalkMappings => {
-                return [jointToBeEdited, ...crosswalkMappings];
-            });
+            patchMapping({payload: mappingPayload, pid: patchPid});
         }
+    };
+
+    const performConfirmModalAction = (actionName: string) => {
+            if (actionName === 'save') {
+                setSaveConfirmModalOpen(false);
+                //setEditModeActive(false);
+                saveCrosswalk();
+            } else if (actionName === 'publish') {
+                setPublishConfirmModalOpen(false);
+                publishCrosswalk();
+            } else if (actionName === 'removeMapping') {
+            } else {
+                // This is needed for modal close logic
+                setSaveConfirmModalOpen(false);
+                setPublishConfirmModalOpen(false);
+            }
     };
 
     const performMetadataAndFilesAction = (action: any, event: any, crosswalkConnection: any) => {
@@ -850,6 +994,20 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
             <CustomTabPanel value={selectedTab} index={2}>
             </CustomTabPanel>*/}
             <div className='row d-flex justify-content-between mt-4 crosswalk-editor'>
+                {crosswalkPublished && publishNotificationVisible && (<Notification
+                    closeText="Close"
+                    headingText="Crosswalk published successfully"
+                    smallScreen
+                    onCloseButtonClick={() => setPublishNotificationVisible(false)}
+                >
+                </Notification>)}
+                {saveNotificationVisible && (<Notification
+                  closeText="Close"
+                  headingText="Crosswalk saved successfully"
+                  smallScreen
+                  onCloseButtonClick={() => setSaveNotificationVisible(false)}
+                >
+                </Notification>)}
                 {/*  LEFT COLUMN */}
                 <div className={(isEditModeActive && selectedTab === 1) ? 'col-12' : 'd-none'}>
                     {isSourceDataFetched && isTargetDataFetched &&
@@ -924,7 +1082,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                                     <Sbutton className='link-button' disabled={(linkingError.length > 1)}
                                              title={(linkingError.length > 1 ? linkingError : 'Link selected nodes')}
                                              onClick={() => {
-                                                 addJoint(!isBothSelectedLinked);
+                                                 addOrEditJointButtonClick(!isBothSelectedLinked, undefined);
                                              }}><LinkIcon></LinkIcon></Sbutton>
                                 </div>
 
@@ -997,22 +1155,23 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                     }
                     {jointToBeEdited && <>
                         <NodeMappingsModal selectedCrosswalk={jointToBeEdited}
-                                           performNodeInfoAction={performCallbackFromMappingModal}
+                                           performMappingsModalAction={performCallbackFromMappingsModal}
                                            mappingFilters={mappingFilters}
                                            mappingFunctions={mappingFunctions}
-                                           modalOpen={nodeMappingsModalOpen}
-                                           isFirstAdd={false}></NodeMappingsModal>
+                                           modalOpen={isNodeMappingsModalOpen}
+                                           isJointPatchOperation={isJointPatchOperation}></NodeMappingsModal>
                     </>
                     }
                 </div>
-
                 {/*  BOTTOM COLUMN */}
                 {selectedTab === 1 && <>
+
                     <div className='col-12 px-4 mt-4'>
                         <h2>Mappings</h2>
                         <div className='joint-listing-accordion-wrap my-3'>
                             <Box className='mb-4' sx={{height: 640, flexGrow: 1, overflowY: 'auto'}}>
-                                <JointListingAccordion crosswalkJoints={connectedCrosswalksNew} viewOnlyMode={false}
+                                <JointListingAccordion nodeMappings = {nodeMappings}
+                                                       viewOnlyMode={false}
                                                        isEditModeActive={isEditModeActive}
                                                        performAccordionAction={performCallbackFromAccordionAction}></JointListingAccordion>
                             </Box>
@@ -1020,19 +1179,23 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                     </div>
                 </>}
             </div>
+            <ConfirmModal isVisible={isSaveConfirmModalOpen} actionName={'save'} actionText={'Save'} cancelText={'Cancel'} performConfirmModalAction={performConfirmModalAction} heading={'Confirmation'} text1={'Do you want to save changes.'}/>
+            <ConfirmModal isVisible={isPublishConfirmModalOpen} actionName={'publish'} actionText={'Publish'} cancelText={'Cancel'} performConfirmModalAction={performConfirmModalAction} heading={'Confirmation'} text1={'Do you want to publish the crosswalk.'} text2={'After publishing, you cannot make changes to mappings in crosswalk.'}/>
             <div className='fixed-footer'>
                 <div className='row'>
                     <div className='col-10'>
                     </div>
                     <div className='col-2 d-flex flex-row justify-content-end'>
-                        <Sbutton hidden={isEditModeActive} onClick={() => {
+                        <Sbutton hidden={isEditModeActive || (crosswalkPublished && selectedTab !== 0)} onClick={() => {
                             setEditModeActive(true);
                         }}>Edit</Sbutton>
-                        <Sbutton hidden={!isEditModeActive} variant="secondary" onClick={() => {
-                            setEditModeActive(false);
+
+                        <Sbutton hidden={!isEditModeActive || crosswalkPublished} variant="secondary" onClick={() => {
+                            setPublishConfirmModalOpen(true);
                         }}>Publish</Sbutton>
-                        <Sbutton hidden={!isEditModeActive} onClick={() => {
-                            setEditModeActive(false);
+
+                        <Sbutton hidden={!isEditModeActive || (crosswalkPublished && selectedTab !== 0)} onClick={() => {
+                            setSaveConfirmModalOpen(true);
                         }}>Save</Sbutton>
                     </div>
                 </div>

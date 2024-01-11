@@ -1,6 +1,6 @@
 import {
     CrosswalkConnection, CrosswalkConnectionNew,
-    CrosswalkConnectionsNew,
+    CrosswalkConnectionsNew, NodeMapping,
     RenderTreeOld
 } from '@app/common/interfaces/crosswalk-connection.interface';
 import validateMapping from '@app/modules/crosswalk-editor/mapping-validator';
@@ -20,7 +20,7 @@ import {
 import CrosswalkForm from '@app/modules/crosswalk-form';
 import FormFooterAlert from '../../../../../../common-ui/components/form-footer-alert';
 
-export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnectionNew; performNodeInfoAction: any; mappingFilters: any; mappingFunctions: any; modalOpen: boolean; isFirstAdd: boolean }) {
+export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnectionNew; performMappingsModalAction: any; mappingFilters: any; mappingFunctions: any; modalOpen: boolean; isJointPatchOperation: boolean, patchPid: string }) {
     let sourceSelectionInit = '';
     let targetSelectionInit = '';
 
@@ -51,7 +51,7 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
     const [sourceOperationValue, setSourceOperationValue] = useState('');
     const [targetOperationValue, setTargetOperationValue] = useState('');
     const [mappingOperationValue, setMappingOperationValue] = useState('');
-    const [predicateValue, setPredicateValue] = useState('');
+    const [predicateValue, setPredicateValue] = useState<string>('http://www.w3.org/2004/02/skos/core#exactMatch');
 
     const [filterTarget, setFilterTarget] = useState(filterTargetSelectInit);
     const [filterOperation, setFilterOperation] = useState(filterOperationsSelectInit);
@@ -66,11 +66,20 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
     const [notesValue, setNotesValue] = useState<string>('');
-    const [mappingPayload, setMappingPayload] = useState<CrosswalkConnectionNew>(props.selectedCrosswalk);
+    const mappingPayloadInit: NodeMapping = {predicate: '', source: [], target: []};
 
+
+    function generateMappingPayload() {
+        //TODO: add rest of the attributes and fix dropdowns
+        let mappings = mappingPayloadInit;
+        mappings.source.push({ id: props.selectedCrosswalk.source.id, label:props.selectedCrosswalk.source.name});
+        mappings.target.push({ id: props.selectedCrosswalk.target.id, label:props.selectedCrosswalk.target.name});
+        mappings.predicate = predicateValue ? predicateValue : '0';
+        return mappings;
+    }
 
     function closeModal() {
-        props.performNodeInfoAction('closeModal', null, null);
+        props.performMappingsModalAction('closeModal', null, null);
     };
 
     function setSourceFilterValue(value: any) {
@@ -104,13 +113,14 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                 visualPlaceholder="Operation value"
             />);
         });
-
-        console.log('RET', ret);
     }
 
     function save() {
-        console.log('validation errors', validationErrors);
-        props.performNodeInfoAction('save', mappingPayload, null);
+        if (props.isJointPatchOperation) {
+            props.performMappingsModalAction('save', generateMappingPayload(), props.selectedCrosswalk.id);
+        } else {
+            props.performMappingsModalAction('addJoint', generateMappingPayload());
+        }
     };
 
     // CLEAR FIELDS WHEN MODAL OPENED
@@ -121,7 +131,6 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
         setMappingOperationValue('');
         setFilterTarget(filterTargetSelectInit);
         setFilterOperation(filterOperationsSelectInit);
-        setMappingPayload(props.selectedCrosswalk);
     }, [visible]);
 
     // VALIDATE MAPPING
