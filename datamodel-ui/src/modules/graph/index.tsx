@@ -281,7 +281,7 @@ const GraphContent = ({
       if (
         checkPermission({
           user: user,
-          actions: ['ADMIN_DATA_MODEL'],
+          actions: ['EDIT_DATA_MODEL'],
           targetOrganizations: organizationIds,
         }) &&
         node.dragging

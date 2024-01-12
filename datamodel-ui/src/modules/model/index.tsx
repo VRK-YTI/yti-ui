@@ -65,6 +65,9 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
   }, [modelInfo]);
 
   const views: ViewType[] = useMemo(() => {
+    if (!modelInfo) {
+      return [];
+    }
     return [
       {
         id: 'search',
