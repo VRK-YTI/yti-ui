@@ -109,7 +109,6 @@ export default function ResourceInfo({
 
   useEffect(() => {
     if (toggleResult.isSuccess) {
-      setExternalEdit(false);
       handleRefetch();
     }
   }, [toggleResult, handleRefetch]);
@@ -157,7 +156,8 @@ export default function ResourceInfo({
                         {t('remove', { ns: 'admin' })}
                       </ActionMenuItem>,
                     ]
-                  : [
+                  : applicationProfile
+                  ? [
                       <ActionMenuItem
                         key="external-edit-button"
                         onClick={() => {
@@ -173,7 +173,8 @@ export default function ResourceInfo({
                       >
                         {t('create-local-copy', { ns: 'admin' })}
                       </ActionMenuItem>,
-                    ]}
+                    ]
+                  : []}
               </ActionMenu>
 
               <LocalCopyModal

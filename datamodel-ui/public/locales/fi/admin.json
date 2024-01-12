@@ -255,7 +255,7 @@
   "optional": "valinnainen",
   "position-saved": "Sijainnit tallennettu",
   "prefix-in-this-service": "Etuliite (tunnus tässä palvelussa)",
-  "prefix-input-hint-text": "Tietomallin yksilöivä tunnus, jota ei voi muuttaa sanaston luonnin jälkeen. Tunnuksen tulee alkaa pienellä kirjaimella ja sen pitää olla 2-32 merkkiä pitkä. Sallitut merkit ovat a-z, 0-9, \"_\" ja \"-\".",
+  "prefix-input-hint-text": "Tietomallin yksilöivä tunnus, jota ei voi muuttaa tietomallin luonnin jälkeen. Tunnuksen tulee alkaa pienellä kirjaimella ja sen pitää olla 2-32 merkkiä pitkä. Sallitut merkit ovat a-z, 0-9, \"_\" ja \"-\".",
   "prefix-invalid-initial-character": "Tietomallin yksilöivä tunnus ei voi alkaa numerolla",
   "prefix-invalid-length": "Tietomallin yksilöivän tunnuksen pituus ei täytä vaatimuksia (2-32 merkkiä)",
   "preview": "Esikatselu",
