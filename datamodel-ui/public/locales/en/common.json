@@ -211,6 +211,7 @@
   "return-to-association-list": "To association list",
   "return-to-attribute-list": "To attribute list",
   "return-to-class-list": "To class list",
+  "results-with-query": "Results with query",
   "roles": {
     "admin": "Admin",
     "code-list-editor": "Code list editor",

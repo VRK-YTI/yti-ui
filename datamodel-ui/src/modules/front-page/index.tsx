@@ -30,7 +30,11 @@ import {
   TitleDescriptionWrapper,
 } from 'yti-common-ui/title/title.styles';
 import Pagination from 'yti-common-ui/pagination';
-import { translateModelType } from '@app/common/utils/translation-helpers';
+import {
+  translateModelType,
+  translateResourceType,
+  translateResultType,
+} from '@app/common/utils/translation-helpers';
 import ModelFormModal from '../model-form/model-form-modal';
 import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
 import { useGetCountQuery } from '@app/common/components/counts/counts.slice';
@@ -108,12 +112,22 @@ export default function FrontPage() {
     return [...promoted, ...otherLanguages];
   }, [languagesData, counts]);
 
-  const data: SearchResultData[] = useMemo(() => {
+  const [data, extra]: [
+    SearchResultData[],
+    {
+      [key: string]: {
+        type: string;
+        label: string;
+        id: string;
+        uri: string;
+      }[];
+    }
+  ] = useMemo(() => {
     if (!searchModels || !organizationsData || !serviceCategoriesData) {
-      return [];
+      return [[], {}];
     }
 
-    return searchModels.responseObjects.map((object) => {
+    const modelResults = searchModels.responseObjects.map((object) => {
       const contributors: string[] = object.contributor
         .map((c) =>
           getLanguageVersion({
@@ -157,6 +171,33 @@ export default function FrontPage() {
         type: translateModelType(object.type, t),
       };
     });
+
+    const extra: {
+      [key: string]: { type: string; label: string; id: string; uri: string }[];
+    } = {};
+    searchModels.responseObjects.forEach((object) => {
+      const resources = object.matchingResources.map((resource) => {
+        const label = getLanguageVersion({
+          data: resource.label,
+          lang: i18n.language,
+          appendLocale: true,
+        });
+        return {
+          type: resource.resourceType,
+          label:
+            resource.highlights['label.fi.keyword']?.[0] ||
+            resource.highlights['label.fi']?.[0] ||
+            label,
+          id: resource.id,
+          uri: resource.uri,
+        };
+      });
+      if (resources.length > 0) {
+        extra[object.id] = resources;
+      }
+    });
+
+    return [modelResults, extra];
   }, [
     searchModels,
     serviceCategoriesData,
@@ -239,6 +280,13 @@ export default function FrontPage() {
               count: searchModels?.totalHitCount ?? 0,
             })}
             withDefaultStatuses={inUseStatusList}
+            extra={{
+              typedExpander: {
+                translateResultType: translateResourceType,
+                translateGroupType: translateResultType,
+                deepHits: extra,
+              },
+            }}
           />
           <Pagination
             maxPages={Math.ceil((searchModels?.totalHitCount ?? 1) / 50)}

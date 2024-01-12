@@ -14,12 +14,17 @@ export function translateModelType(type: Type, t: TFunction) {
   }
 }
 
-export function translateResourceType(type: ResourceType, t: TFunction) {
+export function translateResourceType(
+  type: ResourceType | string,
+  t: TFunction
+) {
   switch (type) {
     case ResourceType.ASSOCIATION:
-      return t('association', { ns: 'common' });
+    case 'association':
+      return t('association');
     case ResourceType.ATTRIBUTE:
-      return t('attribute', { ns: 'common' });
+    case 'attribute':
+      return t('attribute');
     default:
       return t('class', { ns: 'common' });
   }
@@ -679,6 +684,19 @@ export function translateDocumentationTooltip(key: string, t: TFunction) {
       return t('link-button-tooltip', { ns: 'admin' });
     case 'image-button':
       return t('image-button-tooltip', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateResultType(key: string, t: TFunction) {
+  switch (key) {
+    case 'class':
+      return t('classes', { ns: 'common' });
+    case 'attribute':
+      return t('attributes', { ns: 'common' });
+    case 'association':
+      return t('associations', { ns: 'common' });
     default:
       return '';
   }

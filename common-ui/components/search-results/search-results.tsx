@@ -5,6 +5,8 @@ import ResultCard from './result-card';
 import ResultCardExpander from './result-card-expander';
 import SanitizedTextContent from '../sanitized-text-content';
 import { ReactNode } from 'react';
+import ResultCardTypedExpander from './result-card-typed-expander';
+import { TFunction } from 'next-i18next';
 
 export interface SearchResultData {
   id: string;
@@ -62,6 +64,20 @@ interface SearchResultsProps {
             [key: string]: string;
           };
         };
+      }
+    | {
+        typedExpander: {
+          translateResultType: (type: string, t: TFunction) => string;
+          translateGroupType: (type: string, t: TFunction) => string;
+          deepHits: {
+            [key: string]: {
+              type: string;
+              label: string;
+              id: string;
+              uri: string;
+            }[];
+          };
+        };
       };
 }
 
@@ -83,6 +99,38 @@ export default function SearchResults({
 
   if (!data) {
     return null;
+  }
+
+  function renderExtra(id: string) {
+    if (!extra || !id) {
+      return;
+    }
+
+    if ('expander' in extra && extra.expander.deepHits[id]) {
+      return (
+        <ResultCardExpander
+          buttonLabel={extra.expander.buttonLabel}
+          contentLabel={extra.expander.contentLabel}
+          deepHits={extra.expander.deepHits[id]}
+        />
+      );
+    } else if ('typedExpander' in extra && extra.typedExpander.deepHits[id]) {
+      return (
+        <ResultCardTypedExpander
+          translateGroupType={extra.typedExpander.translateGroupType}
+          translateResultType={extra.typedExpander.translateResultType}
+          deepHits={extra.typedExpander.deepHits[id]}
+        />
+      );
+    } else if ('other' in extra) {
+      return (
+        <>
+          <CardConcepts value={extra.other.title}>
+            <SanitizedTextContent text={extra.other.items[id]} />
+          </CardConcepts>
+        </>
+      );
+    }
   }
 
   return (
@@ -114,26 +162,7 @@ export default function SearchResults({
               noDescriptionText={noDescriptionText}
               noChip={noChip}
               noVersion={noVersion}
-              extra={
-                extra &&
-                ('expander' in extra
-                  ? extra.expander.deepHits[d.id] && (
-                      <ResultCardExpander
-                        buttonLabel={extra.expander.buttonLabel}
-                        contentLabel={extra.expander.contentLabel}
-                        deepHits={extra.expander.deepHits[d.id]}
-                      />
-                    )
-                  : extra.other.items[d.id] && (
-                      <>
-                        <CardConcepts value={extra.other.title}>
-                          <SanitizedTextContent
-                            text={extra.other.items[d.id]}
-                          />
-                        </CardConcepts>
-                      </>
-                    ))
-              }
+              extra={renderExtra(d.id)}
             />
           );
         })}

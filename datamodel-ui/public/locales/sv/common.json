@@ -211,6 +211,7 @@
   "return-to-association-list": "",
   "return-to-attribute-list": "",
   "return-to-class-list": "",
+  "results-with-query": "",
   "roles": {
     "admin": "",
     "code-list-editor": "",
