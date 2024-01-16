@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
@@ -24,11 +23,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 
-import {
-    CrosswalkConnection,
-    CrosswalkConnectionNew,
-    RenderTreeOld
-} from '@app/common/interfaces/crosswalk-connection.interface';
+import {NodeMapping} from '@app/common/interfaces/crosswalk-connection.interface';
 import {InfoIcon} from '@app/common/components/shared-icons';
 
 const crosswalkConnectionInit = {
@@ -53,11 +48,8 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
     },
 }));
 
-function Row(props: { row: CrosswalkConnectionNew; viewOnlyMode: boolean; isEditModeActive: boolean; cbf: any }) {
-    const {row} = props;
-    const [open, setOpen] = React.useState(row.isSelected);
-    const [changedNotes, setChangedNotes] = React.useState<string>('');
-    const addNotes = 'addNotes';
+function Row(props: { row: NodeMapping; viewOnlyMode: boolean; isEditModeActive: boolean; callBackFunction: any }) {
+    const [open, setOpen] = React.useState(false);
 
     return (
         <React.Fragment>
@@ -66,9 +58,9 @@ function Row(props: { row: CrosswalkConnectionNew; viewOnlyMode: boolean; isEdit
                     <Button className='ms-2 py-0' style={{textTransform: 'none'}}
                             title='Select linked node from source tree'
                             onClick={(e) => {
-                                props.cbf.performAccordionAction(row, 'selectFromSourceTree');
+                                props.callBackFunction.performAccordionAction(props.row, 'selectFromSourceTree');
                                 e.stopPropagation();
-                            }}>{row.source.name}</Button>
+                            }}>{props.row.source[0].label}</Button>
                 </StyledTableCell>
 
                 {/*                <StyledTableCell className='fw-bold' style={{width: '10%'}}>
@@ -82,9 +74,9 @@ function Row(props: { row: CrosswalkConnectionNew; viewOnlyMode: boolean; isEdit
                     <Button className='me-2 py-0' style={{textTransform: 'none'}}
                             title='Select linked node from target tree'
                             onClick={(e) => {
-                                props.cbf.performAccordionAction(row, 'selectFromTargetTree');
+                                props.callBackFunction.performAccordionAction(props.row, 'selectFromTargetTree');
                                 e.stopPropagation();
-                            }}>{row.target.name}</Button>
+                            }}>{props.row.target[0].label}</Button>
                 </StyledTableCell>
 
                 <StyledTableCell className='col-1'>
@@ -132,12 +124,12 @@ function Row(props: { row: CrosswalkConnectionNew; viewOnlyMode: boolean; isEdit
                                 <Sbutton
                                     hidden={!props.isEditModeActive}
                                     onClick={(e) => {
-                                        props.cbf.performAccordionAction(row, 'openJointDetails');
+                                        props.callBackFunction.performAccordionAction(props.row, 'openJointDetails');
                                     }}>Edit</Sbutton>
                                 <Sbutton className='mt-2'
                                          hidden={!props.isEditModeActive}
                                          onClick={(e) => {
-                                             props.cbf.performAccordionAction(row, 'removeJoint');
+                                             props.callBackFunction.performAccordionAction(props.row, 'removeJoint');
                                          }}>Delete</Sbutton>
                             </div>
                         </div>
@@ -148,19 +140,8 @@ function Row(props: { row: CrosswalkConnectionNew; viewOnlyMode: boolean; isEdit
     );
 }
 
-let rows = [{...crosswalkConnectionInit}];
-
-function createCrosswalkAccorionData(crosswalkInput: any) {
-    rows = [{...crosswalkInput}];
-}
-
 export default function JointListingAccordion(props: any) {
-    if (props.crosswalkJoints.length > 0) {
-        createCrosswalkAccorionData(props.crosswalkJoints);
-        // return LinkedNodesTable(props.crosswalkJoints);
-    }
-
-    const crosswalkJointsInput = props.crosswalkJoints;
+    const nodeMappingsInput = props.nodeMappings;
 
     return (<>
             <TableContainer component={Paper} className='gx-0'>
@@ -176,15 +157,15 @@ export default function JointListingAccordion(props: any) {
                         </TableRow>
                     </TableHead>
 
-                    {crosswalkJointsInput?.length > 0 &&
+                    {nodeMappingsInput?.length > 0 &&
                         <TableBody>
-                            {crosswalkJointsInput.map((row: CrosswalkConnectionNew) => {
-                                return (<Row key={row.id} row={row} viewOnlyMode={props.viewOnlyMode}
-                                             isEditModeActive={props.isEditModeActive} cbf={props}/>);
+                            {nodeMappingsInput.map((row: NodeMapping) => {
+                                return (<Row key={row.pid} row={row} viewOnlyMode={props.viewOnlyMode}
+                                             isEditModeActive={props.isEditModeActive} callBackFunction={props}/>);
                             })}
                         </TableBody>
                     }
-                    {crosswalkJointsInput?.length < 1 &&
+                    {nodeMappingsInput?.length < 1 &&
                         <TableBody>
                             <TableRow className=''>
                                 <td>

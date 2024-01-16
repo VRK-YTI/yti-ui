@@ -62,7 +62,7 @@ export const schemaApi = createApi({
     }),
     getPublicSchemas: builder.query<any, any>({
       query: () => ({
-        url: `/frontend/mscrSearch?type=SCHEMA`,
+        url: `/frontend/mscrSearch?type=SCHEMA&pageSize=100`,
         method: 'GET',
       }),
     }),

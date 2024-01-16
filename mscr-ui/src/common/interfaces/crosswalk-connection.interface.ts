@@ -32,26 +32,12 @@ export interface RenderTreeOld {
 
 export interface RenderTree {
     name: string;
+    visualTreeId: string;
     id: string;
     properties: any;
     elementPath: string;
     parentElementPath: string | undefined;
     children: RenderTree[];
-}
-
-export interface CrosswalkConnectionOld {
-    source: RenderTreeOld;
-    target: RenderTreeOld;
-    id: string;
-    description: string | undefined;
-    isSelected: boolean;
-    isDraft: boolean;
-    sourceJsonPath: string | undefined;
-    targetJsonPath: string | undefined;
-    sourcePredicate: string | undefined;
-    sourceProcessing: string | undefined;
-    targetPredicate: string | undefined;
-    targetProcessing: string | undefined;
 }
 
 export interface CrosswalkConnectionNew {
@@ -76,15 +62,20 @@ export interface CrosswalkConnectionsNew {
     description: string | undefined;
 }
 
-export interface CrosswalkPayloadPrelim {
-    sourceName: string;
-    targetName: string;
-    sourceJsonPath: string;
-    targetJsonPath: string;
-    id: string;
-    description: string | undefined;
-    filterFunction: string | undefined;
-    sourceProcessing: string | undefined;
-    targetProcessing: string | undefined;
+export interface NodeMapping {
+    isPartOf?: string;
+    id?: string;
+    depends_on?: string[];
+    source: { processing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } }; id: string; label: string }[];
+    sourceType?: string;
+    sourceDescription?: string;
+    predicate: string;
+    filter?: { path: string; distinctValues: boolean; value: {}; operator: string };
+    target: { processing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } }; id: string; label: string }[];
+    targetType?: string;
+    targetDescription?: string;
+    processing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } };
+    oneOf?: { filter: { path: string; distinctValues: boolean; value: {}; operator: string } }[];
+    pid?: string;
 }
 

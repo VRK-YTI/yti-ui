@@ -214,7 +214,8 @@ function createRenderTree(input: any, elementPath: string, definitions: any) {
         treeIndex += 1;
         let newNode: RenderTree = {
             name: definitions[obj].title,
-            id: treeIndex.toString(),
+            visualTreeId: treeIndex.toString(),
+            id: obj.toString(),
             properties: definitions[obj],
             elementPath: elementPath + '.' + (definitions[obj].title).toString(),
             parentElementPath: elementPath,
@@ -239,13 +240,15 @@ export function generateTreeFromJson(jsonInput: any) {
         let retTree: RenderTree[] = [];
         let treeRoot = {
             name: 'ROOT',
-            id: '0',
+            visualTreeId: '0',
+            id: 'ROOT',
             properties: undefined,
             elementPath: 'ROOT',
             parentElementPath: undefined,
             children: renderedTree,
         }
         retTree.push(treeRoot);
+        console.log('renderedTree', renderedTree);
         resolve(retTree);
     });
 }
