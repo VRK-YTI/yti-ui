@@ -65,10 +65,10 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     }
 
     const { data: mappingFunctions, isLoading: mappingFunctionsIsLoading } =
-        useGetCrosswalkMappingFunctionsQuery('');
+      useGetCrosswalkMappingFunctionsQuery('');
 
     const { data: mappingFilters, isLoading: mappingFiltersIsLoading } =
-        useGetCrosswalkMappingFunctionsQuery('FILTERS');
+      useGetCrosswalkMappingFunctionsQuery('FILTERS');
 
     const {
         data: getCrosswalkData,
@@ -77,7 +77,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         isError: getCrosswalkDataIsError,
         error: getCrosswalkDataError
     } =
-        useGetCrosswalkQuery(crosswalkId);
+      useGetCrosswalkQuery(crosswalkId);
 
     const [patchCrosswalk,crosswalkPatchResponse] = usePatchCrosswalkMutation();
     const [putMapping, putMappingResponse] = usePutMappingMutation();
@@ -157,15 +157,15 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     }];
 
     const fromTree = (nodes: any) => (
-        <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name} className='linked-tree-item'>
-            {Array.isArray(nodes.children)
-                ? nodes.children.map((node: any) => fromTree(node))
-                : null}
-        </TreeItem>
+      <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name} className='linked-tree-item'>
+          {Array.isArray(nodes.children)
+            ? nodes.children.map((node: any) => fromTree(node))
+            : null}
+      </TreeItem>
     );
 
     const emptyTreeTest = () => (
-        <TreeItem key="0" nodeId="0" label="test"></TreeItem>
+      <TreeItem key="0" nodeId="0" label="test"></TreeItem>
     );
 
     // STATE VARIABLES
@@ -296,7 +296,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         isError: getSourceSchemaDataIsError,
         error: getSourceSchemaDataError
     } =
-        useGetFrontendSchemaQuery(sourceSchemaUrn);
+      useGetFrontendSchemaQuery(sourceSchemaUrn);
 
     const {
         data: getTargetSchemaData,
@@ -305,7 +305,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         isError: getTargetSchemaDataIsError,
         error: getTargetSchemaDataError
     } =
-        useGetFrontendSchemaQuery(targetSchemaUrn);
+      useGetFrontendSchemaQuery(targetSchemaUrn);
 
     const {
         data: mappingsFromBackend,
@@ -377,24 +377,24 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     }
 
     function addMappingToAccordion(response: any, isPutOperation: boolean) {
-            if (jointToBeEdited) {
-                jointToBeEdited.id = response.data.pid;
+        if (jointToBeEdited) {
+            jointToBeEdited.id = response.data.pid;
 
-                if (isPutOperation) {
-                    let newMapping = response.data as NodeMapping;
-                        setNodeMappings(mappings => {
-                            return [newMapping, ...mappings];
-                        });
+            if (isPutOperation) {
+                let newMapping = response.data as NodeMapping;
+                setNodeMappings(mappings => {
+                    return [newMapping, ...mappings];
+                });
 
-                    setLastPutMappingPid(response.data.pid);
-                    setConnectedCrosswalksNew(crosswalkMappings => {
-                        return [jointToBeEdited, ...crosswalkMappings];
-                    });
-                }
-                else {
-                    setLastPatchMappingPid(response.data.pid);
-                }
+                setLastPutMappingPid(response.data.pid);
+                setConnectedCrosswalksNew(crosswalkMappings => {
+                    return [jointToBeEdited, ...crosswalkMappings];
+                });
             }
+            else {
+                setLastPatchMappingPid(response.data.pid);
+            }
+        }
     }
 
     function saveCrosswalk() {
@@ -912,19 +912,19 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     };
 
     const performConfirmModalAction = (actionName: string) => {
-            if (actionName === 'save') {
-                setSaveConfirmModalOpen(false);
-                //setEditModeActive(false);
-                saveCrosswalk();
-            } else if (actionName === 'publish') {
-                setPublishConfirmModalOpen(false);
-                publishCrosswalk();
-            } else if (actionName === 'removeMapping') {
-            } else {
-                // This is needed for modal close logic
-                setSaveConfirmModalOpen(false);
-                setPublishConfirmModalOpen(false);
-            }
+        if (actionName === 'save') {
+            setSaveConfirmModalOpen(false);
+            //setEditModeActive(false);
+            saveCrosswalk();
+        } else if (actionName === 'publish') {
+            setPublishConfirmModalOpen(false);
+            publishCrosswalk();
+        } else if (actionName === 'removeMapping') {
+        } else {
+            // This is needed for modal close logic
+            setSaveConfirmModalOpen(false);
+            setPublishConfirmModalOpen(false);
+        }
     };
 
     const performMetadataAndFilesAction = (action: any, event: any, crosswalkConnection: any) => {
@@ -942,19 +942,19 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         const {children, value, index, ...other} = props;
 
         return (
-            <div
-                role="tabpanel"
-                hidden={value !== index}
-                id={`simple-tabpanel-${index}`}
-                aria-labelledby={`simple-tab-${index}`}
-                {...other}
-            >
-                {value === index && (
-                    <Box sx={{p: 3}}>
-                        <Typography>{children}</Typography>
-                    </Box>
-                )}
-            </div>
+          <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+          >
+              {value === index && (
+                <Box sx={{p: 3}}>
+                    <Typography>{children}</Typography>
+                </Box>
+              )}
+          </div>
         );
     }
 
@@ -982,237 +982,237 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
 
 
     return (
-        <>{getCrosswalkDataIsSuccess && <>
-            <Box className='mb-3' sx={{borderBottom: 1, borderColor: 'divider'}}>
-                <Tabs value={selectedTab} onChange={changeTab} aria-label="Category selection">
-                    <Tab label="Metadata & files" {...a11yProps(0)} />
-                    <Tab label="Crosswalks" {...a11yProps(1)} />
-                    <Tab label="Version history" {...a11yProps(2)} />
-                </Tabs>
-            </Box>
+      <>{getCrosswalkDataIsSuccess && <>
+          <Box className='mb-3' sx={{borderBottom: 1, borderColor: 'divider'}}>
+              <Tabs value={selectedTab} onChange={changeTab} aria-label="Category selection">
+                  <Tab label="Metadata & files" {...a11yProps(0)} />
+                  <Tab label="Crosswalks" {...a11yProps(1)} />
+                  <Tab label="Version history" {...a11yProps(2)} />
+              </Tabs>
+          </Box>
 
-            {selectedTab === 0 && isSourceDataFetched && isTargetDataFetched && getCrosswalkData &&
-                <>
-                    <MetadataAndFiles crosswalks={connectedCrosswalksNew} data={getCrosswalkData}
-                                      performMetadataAndFilesAction={performMetadataAndFilesAction}/>
-                </>
-            }
-            {/*            <CustomTabPanel value={selectedTab} index={0}>
+          {selectedTab === 0 && isSourceDataFetched && isTargetDataFetched && getCrosswalkData &&
+            <>
+                <MetadataAndFiles crosswalks={connectedCrosswalksNew} data={getCrosswalkData}
+                                  performMetadataAndFilesAction={performMetadataAndFilesAction}/>
+            </>
+          }
+          {/*            <CustomTabPanel value={selectedTab} index={0}>
             </CustomTabPanel>
             <CustomTabPanel value={selectedTab} index={1}>
             </CustomTabPanel>
             <CustomTabPanel value={selectedTab} index={2}>
             </CustomTabPanel>*/}
-            <div className='row d-flex justify-content-between mt-4 crosswalk-editor'>
-                {crosswalkPublished && publishNotificationVisible && (<Notification
-                    closeText="Close"
-                    headingText="Crosswalk published successfully"
-                    smallScreen
-                    onCloseButtonClick={() => setPublishNotificationVisible(false)}
-                >
-                </Notification>)}
-                {saveNotificationVisible && (<Notification
-                  closeText="Close"
-                  headingText="Crosswalk saved successfully"
-                  smallScreen
-                  onCloseButtonClick={() => setSaveNotificationVisible(false)}
-                >
-                </Notification>)}
-                {/*  LEFT COLUMN */}
-                <div className={(isEditModeActive && selectedTab === 1) ? 'col-12' : 'd-none'}>
-                    {isSourceDataFetched && isTargetDataFetched &&
-                        <>
-                            <div className='row gx-0'>
-                            </div>
-                            <div className='row gx-0'>
-                                {/*  SOURCE TREE */}
-                                <div className='col-5 ps-4'>
-                                    <div>
-                                        <div className="row content-box">
-                                            <div className="col-7 px-0">
-                                                <div className="d-flex justify-content-between mb-2 ps-3 pe-2">
-                                                    <div className='w-100'>
-                                                        <SearchInput
-                                                            className="py-2"
-                                                            labelText="Filter from source schema"
-                                                            searchButtonLabel="Search"
-                                                            clearButtonLabel="Clear"
-                                                            visualPlaceholder="Find an attribute..."
-                                                            onSearch={(value) => {
-                                                                searchFromTree(value, true);
-                                                            }}
-                                                            onChange={(value) => {
-                                                                if (!value) {
-                                                                    clearTreeSearch(true);
-                                                                }
-                                                            }}
-                                                        />
-                                                    </div>
-                                                    <div className="expand-button-wrap">
-                                                        <IconButton onClick={() => handleExpandClick(true)}
-                                                                    aria-label="unlink"
-                                                                    color="primary" size="large">
-                                                            {sourceTreeExpanded.length === 0 ? <ExpandMoreIcon/> :
-                                                                <ExpandLessIcon/>}
-                                                        </IconButton>
-                                                    </div>
-                                                </div>
-                                                <div className="mx-2">
-                                                    <Box sx={{
-                                                        height: 400,
-                                                        flexGrow: 1,
-                                                        maxWidth: 700,
-                                                        overflowY: 'auto'
-                                                    }}>
-
-                                                        <SchemaTree nodes={sourceTreeData[0]}
-                                                                    isSourceTree={true}
-                                                                    treeSelectedArray={sourceTreeSelectedArray}
-                                                                    treeExpanded={sourceTreeExpanded}
-                                                                    performTreeAction={performCallbackFromTreeAction}
-                                                        />
-
-                                                    </Box>
-                                                </div>
-                                            </div>
-                                            <div className="col-5 px-0 node-info-wrap">
-                                                <NodeInfo isAnySelectedLinked={isAnySelectedLinked}
-                                                          isBothSelectedLinked={isBothSelectedLinked}
-                                                          sourceData={selectedSourceNodes}
-                                                          isSourceTree={true}
-                                                          targetData={selectedTargetNodes}
-                                                          performNodeInfoAction={performNodeInfoAction}></NodeInfo>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/*  MID BUTTONS */}
-                                <div className='col-2 px-4 mid-buttons'>
-                                    {!crosswalkPublished &&
-                                      <Sbutton className='link-button' disabled={(linkingError.length > 1)}
-                                               title={(linkingError.length > 1 ? linkingError : 'Link selected nodes')}
-                                               onClick={() => {
-                                                   addOrEditJointButtonClick(!isBothSelectedLinked, undefined);
-                                               }}><LinkIcon></LinkIcon></Sbutton>
-                                    }
-                                </div>
-
-                                {/*  TARGET TREE */}
-                                <div className='col-5 pe-4'>
-                                    <div>
-                                        <div className="row content-box">
-                                            <div className="col-7 px-0">
-                                                <div className="d-flex justify-content-between mb-2 ps-3 pe-2">
-                                                    <div className='w-100'>
-                                                        <SearchInput
-                                                            className="py-2"
-                                                            labelText="Filter from target schema"
-                                                            searchButtonLabel="Search"
-                                                            clearButtonLabel="Clear"
-                                                            onSearch={(value) => {
-                                                                searchFromTree(value, false);
-                                                            }}
-                                                            visualPlaceholder="Find an attribute..."
-                                                            onChange={(value) => {
-                                                                if (!value) {
-                                                                    clearTreeSearch(false);
-                                                                }
-                                                            }}
-                                                        />
-
-                                                    </div>
-                                                    <div className="expand-button-wrap">
-                                                        <IconButton onClick={() => handleExpandClick(false)}
-                                                                    aria-label="unlink"
-                                                                    color="primary" size="large">
-                                                            {targetTreeExpanded.length === 0 ? <ExpandMoreIcon/> :
-                                                                <ExpandLessIcon/>}
-                                                        </IconButton>
-                                                    </div>
-                                                </div>
-                                                <div className="mx-2">
-                                                    <Box sx={{
-                                                        height: 400,
-                                                        flexGrow: 1,
-                                                        maxWidth: 700,
-                                                        overflowY: 'auto'
-                                                    }}>
-                                                        <SchemaTree
-                                                            nodes={targetTreeData[0]}
-                                                            isSourceTree={false}
-                                                            treeSelectedArray={targetTreeSelectedArray}
-                                                            treeExpanded={targetTreeExpanded}
-                                                            performTreeAction={performCallbackFromTreeAction}
-                                                        />
-
-                                                    </Box>
-                                                </div>
-                                            </div>
-                                            <div className="col-5 px-0 node-info-wrap">
-
-                                                <NodeInfo isAnySelectedLinked={isAnySelectedLinked}
-                                                          isBothSelectedLinked={isBothSelectedLinked}
-                                                          sourceData={selectedSourceNodes}
-                                                          isSourceTree={false}
-                                                          targetData={selectedTargetNodes}
-                                                          performNodeInfoAction={performNodeInfoAction}></NodeInfo>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </>
-                    }
-                    {jointToBeEdited && <>
-                        <NodeMappingsModal selectedCrosswalk={jointToBeEdited}
-                                           performMappingsModalAction={performCallbackFromMappingsModal}
-                                           mappingFilters={mappingFilters}
-                                           mappingFunctions={mappingFunctions}
-                                           modalOpen={isNodeMappingsModalOpen}
-                                           isJointPatchOperation={isJointPatchOperation}></NodeMappingsModal>
-                    </>
-                    }
-                </div>
-                {/*  BOTTOM COLUMN */}
-                {selectedTab === 1 && <>
-
-                    <div className='col-12 px-4 mt-4'>
-                        <h2>Mappings</h2>
-                        <div className='joint-listing-accordion-wrap my-3'>
-                            <Box className='mb-4' sx={{height: 640, flexGrow: 1, overflowY: 'auto'}}>
-                                <JointListingAccordion nodeMappings = {nodeMappings}
-                                                       viewOnlyMode={false}
-                                                       isEditModeActive={isEditModeActive && !crosswalkPublished}
-                                                       performAccordionAction={performCallbackFromAccordionAction}></JointListingAccordion>
-                            </Box>
+          <div className='row d-flex justify-content-between mt-4 crosswalk-editor'>
+              {crosswalkPublished && publishNotificationVisible && (<Notification
+                closeText="Close"
+                headingText="Crosswalk published successfully"
+                smallScreen
+                onCloseButtonClick={() => setPublishNotificationVisible(false)}
+              >
+              </Notification>)}
+              {saveNotificationVisible && (<Notification
+                closeText="Close"
+                headingText="Crosswalk saved successfully"
+                smallScreen
+                onCloseButtonClick={() => setSaveNotificationVisible(false)}
+              >
+              </Notification>)}
+              {/*  LEFT COLUMN */}
+              <div className={(isEditModeActive && selectedTab === 1) ? 'col-12' : 'd-none'}>
+                  {isSourceDataFetched && isTargetDataFetched &&
+                    <>
+                        <div className='row gx-0'>
                         </div>
-                    </div>
-                </>}
-            </div>
-            <ConfirmModal isVisible={isSaveConfirmModalOpen} actionName={'save'} actionText={'Save'} cancelText={'Cancel'} performConfirmModalAction={performConfirmModalAction} heading={'Confirmation'} text1={'Do you want to save changes.'}/>
-            <ConfirmModal isVisible={isPublishConfirmModalOpen} actionName={'publish'} actionText={'Publish'} cancelText={'Cancel'} performConfirmModalAction={performConfirmModalAction} heading={'Confirmation'} text1={'Do you want to publish the crosswalk.'} text2={'After publishing, you cannot make changes to mappings in crosswalk.'}/>
-            <div className='fixed-footer'>
-                <div className='row'>
-                    <div className='col-10'>
-                    </div>
-                    <div className='col-2 d-flex flex-row justify-content-end'>
-                        <Sbutton hidden={isEditModeActive || (crosswalkPublished && selectedTab !== 0)} onClick={() => {
-                            setEditModeActive(true);
-                        }}>Edit</Sbutton>
+                        <div className='row gx-0'>
+                            {/*  SOURCE TREE */}
+                            <div className='col-5 ps-4'>
+                                <div>
+                                    <div className="row content-box">
+                                        <div className="col-7 px-0">
+                                            <div className="d-flex justify-content-between mb-2 ps-3 pe-2">
+                                                <div className='w-100'>
+                                                    <SearchInput
+                                                      className="py-2"
+                                                      labelText="Filter from source schema"
+                                                      searchButtonLabel="Search"
+                                                      clearButtonLabel="Clear"
+                                                      visualPlaceholder="Find an attribute..."
+                                                      onSearch={(value) => {
+                                                          searchFromTree(value, true);
+                                                      }}
+                                                      onChange={(value) => {
+                                                          if (!value) {
+                                                              clearTreeSearch(true);
+                                                          }
+                                                      }}
+                                                    />
+                                                </div>
+                                                <div className="expand-button-wrap">
+                                                    <IconButton onClick={() => handleExpandClick(true)}
+                                                                aria-label="unlink"
+                                                                color="primary" size="large">
+                                                        {sourceTreeExpanded.length === 0 ? <ExpandMoreIcon/> :
+                                                          <ExpandLessIcon/>}
+                                                    </IconButton>
+                                                </div>
+                                            </div>
+                                            <div className="mx-2">
+                                                <Box sx={{
+                                                    height: 400,
+                                                    flexGrow: 1,
+                                                    maxWidth: 700,
+                                                    overflowY: 'auto'
+                                                }}>
 
-                        <Sbutton hidden={!isEditModeActive || crosswalkPublished} variant="secondary" onClick={() => {
-                            setPublishConfirmModalOpen(true);
-                        }}>Publish</Sbutton>
+                                                    <SchemaTree nodes={sourceTreeData[0]}
+                                                                isSourceTree={true}
+                                                                treeSelectedArray={sourceTreeSelectedArray}
+                                                                treeExpanded={sourceTreeExpanded}
+                                                                performTreeAction={performCallbackFromTreeAction}
+                                                    />
 
-                        <Sbutton hidden={!isEditModeActive || (crosswalkPublished && selectedTab !== 0)} onClick={() => {
-                            setSaveConfirmModalOpen(true);
-                        }}>Save</Sbutton>
-                    </div>
-                </div>
-            </div>
-        </>}
-        </>
+                                                </Box>
+                                            </div>
+                                        </div>
+                                        <div className="col-5 px-0 node-info-wrap">
+                                            <NodeInfo isAnySelectedLinked={isAnySelectedLinked}
+                                                      isBothSelectedLinked={isBothSelectedLinked}
+                                                      sourceData={selectedSourceNodes}
+                                                      isSourceTree={true}
+                                                      targetData={selectedTargetNodes}
+                                                      performNodeInfoAction={performNodeInfoAction}></NodeInfo>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/*  MID BUTTONS */}
+                            <div className='col-2 px-4 mid-buttons'>
+                                {!crosswalkPublished &&
+                                  <Sbutton className='link-button' disabled={(linkingError.length > 1)}
+                                           title={(linkingError.length > 1 ? linkingError : 'Link selected nodes')}
+                                           onClick={() => {
+                                               addOrEditJointButtonClick(!isBothSelectedLinked, undefined);
+                                           }}><LinkIcon></LinkIcon></Sbutton>
+                                }
+                            </div>
+
+                            {/*  TARGET TREE */}
+                            <div className='col-5 pe-4'>
+                                <div>
+                                    <div className="row content-box">
+                                        <div className="col-7 px-0">
+                                            <div className="d-flex justify-content-between mb-2 ps-3 pe-2">
+                                                <div className='w-100'>
+                                                    <SearchInput
+                                                      className="py-2"
+                                                      labelText="Filter from target schema"
+                                                      searchButtonLabel="Search"
+                                                      clearButtonLabel="Clear"
+                                                      onSearch={(value) => {
+                                                          searchFromTree(value, false);
+                                                      }}
+                                                      visualPlaceholder="Find an attribute..."
+                                                      onChange={(value) => {
+                                                          if (!value) {
+                                                              clearTreeSearch(false);
+                                                          }
+                                                      }}
+                                                    />
+
+                                                </div>
+                                                <div className="expand-button-wrap">
+                                                    <IconButton onClick={() => handleExpandClick(false)}
+                                                                aria-label="unlink"
+                                                                color="primary" size="large">
+                                                        {targetTreeExpanded.length === 0 ? <ExpandMoreIcon/> :
+                                                          <ExpandLessIcon/>}
+                                                    </IconButton>
+                                                </div>
+                                            </div>
+                                            <div className="mx-2">
+                                                <Box sx={{
+                                                    height: 400,
+                                                    flexGrow: 1,
+                                                    maxWidth: 700,
+                                                    overflowY: 'auto'
+                                                }}>
+                                                    <SchemaTree
+                                                      nodes={targetTreeData[0]}
+                                                      isSourceTree={false}
+                                                      treeSelectedArray={targetTreeSelectedArray}
+                                                      treeExpanded={targetTreeExpanded}
+                                                      performTreeAction={performCallbackFromTreeAction}
+                                                    />
+
+                                                </Box>
+                                            </div>
+                                        </div>
+                                        <div className="col-5 px-0 node-info-wrap">
+
+                                            <NodeInfo isAnySelectedLinked={isAnySelectedLinked}
+                                                      isBothSelectedLinked={isBothSelectedLinked}
+                                                      sourceData={selectedSourceNodes}
+                                                      isSourceTree={false}
+                                                      targetData={selectedTargetNodes}
+                                                      performNodeInfoAction={performNodeInfoAction}></NodeInfo>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                  }
+                  {jointToBeEdited && <>
+                      <NodeMappingsModal selectedCrosswalk={jointToBeEdited}
+                                         performMappingsModalAction={performCallbackFromMappingsModal}
+                                         mappingFilters={mappingFilters}
+                                         mappingFunctions={mappingFunctions}
+                                         modalOpen={isNodeMappingsModalOpen}
+                                         isJointPatchOperation={isJointPatchOperation}></NodeMappingsModal>
+                  </>
+                  }
+              </div>
+              {/*  BOTTOM COLUMN */}
+              {selectedTab === 1 && <>
+
+                  <div className='col-12 px-4 mt-4'>
+                      <h2>Mappings</h2>
+                      <div className='joint-listing-accordion-wrap my-3'>
+                          <Box className='mb-4' sx={{height: 640, flexGrow: 1, overflowY: 'auto'}}>
+                              <JointListingAccordion nodeMappings = {nodeMappings}
+                                                     viewOnlyMode={false}
+                                                     isEditModeActive={isEditModeActive && !crosswalkPublished}
+                                                     performAccordionAction={performCallbackFromAccordionAction}></JointListingAccordion>
+                          </Box>
+                      </div>
+                  </div>
+              </>}
+          </div>
+          <ConfirmModal isVisible={isSaveConfirmModalOpen} actionName={'save'} actionText={'Save'} cancelText={'Cancel'} performConfirmModalAction={performConfirmModalAction} heading={'Confirmation'} text1={'Do you want to save changes.'}/>
+          <ConfirmModal isVisible={isPublishConfirmModalOpen} actionName={'publish'} actionText={'Publish'} cancelText={'Cancel'} performConfirmModalAction={performConfirmModalAction} heading={'Confirmation'} text1={'Do you want to publish the crosswalk.'} text2={'After publishing, you cannot make changes to mappings in crosswalk.'}/>
+          <div className='fixed-footer'>
+              <div className='row'>
+                  <div className='col-10'>
+                  </div>
+                  <div className='col-2 d-flex flex-row justify-content-end'>
+                      <Sbutton hidden={isEditModeActive || (crosswalkPublished && selectedTab !== 0)} onClick={() => {
+                          setEditModeActive(true);
+                      }}>Edit</Sbutton>
+
+                      <Sbutton hidden={!isEditModeActive || crosswalkPublished} variant="secondary" onClick={() => {
+                          setPublishConfirmModalOpen(true);
+                      }}>Publish</Sbutton>
+
+                      <Sbutton hidden={!isEditModeActive || (crosswalkPublished && selectedTab !== 0)} onClick={() => {
+                          setSaveConfirmModalOpen(true);
+                      }}>Save</Sbutton>
+                  </div>
+              </div>
+          </div>
+      </>}
+      </>
     );
 }
