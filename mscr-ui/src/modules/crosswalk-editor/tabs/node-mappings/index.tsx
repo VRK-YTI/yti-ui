@@ -109,8 +109,8 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
         }
         ret.forEach(item => {
             ret2.push(<TextInput
-                onChange={(value) => null}
-                visualPlaceholder="Operation value"
+              onChange={(value) => null}
+              visualPlaceholder="Operation value"
             />);
         });
     }
@@ -142,10 +142,10 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
 
     return (<>
         <Modal
-            appElementId="__next"
-            visible={visible}
-            onEscKeyDown={() => closeModal()}
-            className='row bg-white edit-mapping-modal'
+          appElementId="__next"
+          visible={visible}
+          onEscKeyDown={() => closeModal()}
+          className='row bg-white edit-mapping-modal'
         >
             <ModalContent className='edit-mapping-modal-content'>
                 <ModalTitle>{'Edit mapping'}</ModalTitle>
@@ -158,18 +158,18 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                             <div className='bg-light-blue p-2'>
                                 <p><span className='fw-bold'>Source: </span>{props.selectedCrosswalk.source.name}</p>
                                 <p><span
-                                    className='fw-bold'>Type: </span>{props.selectedCrosswalk.source.properties.type}
+                                  className='fw-bold'>Type: </span>{props.selectedCrosswalk.source.properties.type}
                                 </p>
                                 <p><span
-                                    className='fw-bold'>Description: </span>{props.selectedCrosswalk.source.properties.description ? props.selectedCrosswalk.source.properties.description : 'N/A'}
+                                  className='fw-bold'>Description: </span>{props.selectedCrosswalk.source.properties.description ? props.selectedCrosswalk.source.properties.description : 'N/A'}
                                 </p>
 
                                 <span hidden={filterDetailsVisible}>
                                 <Button
-                                    icon="plus"
-                                    style={{height: 'min-content'}}
-                                    onClick={() => setFilterDetailsVisible(true)}
-                                    variant="secondaryNoBorder"
+                                  icon="plus"
+                                  style={{height: 'min-content'}}
+                                  onClick={() => setFilterDetailsVisible(true)}
+                                  variant="secondaryNoBorder"
                                 >
                                     {'Add filter'}
                                 </Button>
@@ -183,9 +183,9 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                                               onChange={(newValue) => setFilterTarget(newValue)}
                                     >
                                         {generatePropertiesDropdownItems(props.selectedCrosswalk.source.properties).map((rt) => (
-                                            <DropdownItem key={rt.id} value={rt.name}>
-                                                {rt.name}
-                                            </DropdownItem>
+                                          <DropdownItem key={rt.id} value={rt.name}>
+                                              {rt.name}
+                                          </DropdownItem>
                                         ))}
                                     </Dropdown>
                                     <div>
@@ -195,15 +195,15 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                                                   onChange={(newValue) => setFilterOperation(newValue)}
                                         >
                                             {props.mappingFilters.map((rt) => (
-                                                <DropdownItem key={rt.id} value={rt.name}>
-                                                    {rt.name}
-                                                </DropdownItem>
+                                              <DropdownItem key={rt.id} value={rt.name}>
+                                                  {rt.name}
+                                              </DropdownItem>
                                             ))}
                                         </Dropdown>
                                     </div>
                                     <TextInput
-                                        onChange={(value) => setSourceFilterValue('uri', value)}
-                                        visualPlaceholder="Value"
+                                      onChange={(value) => setSourceFilterValue('uri', value)}
+                                      visualPlaceholder="Value"
                                     />
                                 </div>
                                 <br/>
@@ -214,9 +214,9 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                                                onChange={(newValue) => setSourceOperationValue(newValue)}
                                 >
                                     {props?.mappingFunctions.map((rt) => (
-                                        <DropdownItem key={rt.uri} value={rt.name}>
-                                            {rt.name}
-                                        </DropdownItem>
+                                      <DropdownItem key={rt.uri} value={rt.name}>
+                                          {rt.name}
+                                      </DropdownItem>
                                     ))}
                                 </Dropdown></div>
                             </div>
@@ -232,14 +232,14 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                                                onChange={(newValue) => setMappingOperationValue(newValue)}
                                 >
                                     {props?.mappingFunctions.map((rt) => (
-                                        <DropdownItem key={rt.uri} value={rt.uri}>
-                                            {rt.name}
-                                        </DropdownItem>
+                                      <DropdownItem key={rt.uri} value={rt.uri}>
+                                          {rt.name}
+                                      </DropdownItem>
                                     ))}
                                 </Dropdown></div>
                                 <div><TextInput
-                                    onChange={(value) => setSourceFilterValue('uri', value)}
-                                    visualPlaceholder="Operation value"
+                                  onChange={(value) => setSourceFilterValue('uri', value)}
+                                  visualPlaceholder="Operation value"
                                 /></div>
                                 <div><br/>
                                     <Dropdown className='mt-2 node-info-dropdown'
@@ -250,18 +250,18 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                                               onChange={(newValue) => setPredicateValue(newValue)}
                                     >
                                         {predicateValues.map((rt) => (
-                                            <DropdownItem key={rt.id} value={rt.name}>
-                                                {rt.name}
-                                            </DropdownItem>
+                                          <DropdownItem key={rt.id} value={rt.name}>
+                                              {rt.name}
+                                          </DropdownItem>
                                         ))}
                                     </Dropdown></div>
 
                             </div>
                             <Textarea
-                                onChange={(event) => setNotesValue(event.target.value)}
-                                labelText="Notes:"
-                                visualPlaceholder="No notes set. Add free form notes here."
-                                value={notesValue}
+                              onChange={(event) => setNotesValue(event.target.value)}
+                              labelText="Notes:"
+                              visualPlaceholder="No notes set. Add free form notes here."
+                              value={notesValue}
                             />
                         </div>
 
@@ -270,10 +270,10 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                             <div className='bg-light-blue p-2'>
                                 <p><span className='fw-bold'>Target: </span>{props.selectedCrosswalk.target.name}</p>
                                 <p><span
-                                    className='fw-bold'>Type: </span>{props.selectedCrosswalk.target.properties.type}
+                                  className='fw-bold'>Type: </span>{props.selectedCrosswalk.target.properties.type}
                                 </p>
                                 <p className='mb-1'><span
-                                    className='fw-bold'>Description: </span>{props.selectedCrosswalk.target.properties.description ? props.selectedCrosswalk.target.properties.description : 'N/A'}
+                                  className='fw-bold'>Description: </span>{props.selectedCrosswalk.target.properties.description ? props.selectedCrosswalk.target.properties.description : 'N/A'}
                                 </p>
                                 <br/>
                                 <div><Dropdown className='mt-2 node-info-dropdown'
@@ -283,9 +283,9 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                                                onChange={(newValue) => setTargetOperationValue(newValue)}
                                 >
                                     {props?.mappingFunctions.map((rt) => (
-                                        <DropdownItem key={rt.uri} value={rt.name}>
-                                            {rt.name}
-                                        </DropdownItem>
+                                      <DropdownItem key={rt.uri} value={rt.name}>
+                                          {rt.name}
+                                      </DropdownItem>
                                     ))}
                                 </Dropdown></div>
                             </div>
@@ -295,15 +295,15 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
             </ModalContent>
             <ModalFooter>
                 <Button
-                    style={{height: 'min-content'}}
-                    onClick={() => save()}
+                  style={{height: 'min-content'}}
+                  onClick={() => save()}
                 >
                     {'Save'}
                 </Button>
                 <Button
-                    style={{height: 'min-content'}}
-                    variant="secondary"
-                    onClick={() => closeModal()}
+                  style={{height: 'min-content'}}
+                  variant="secondary"
+                  onClick={() => closeModal()}
                 >
                     {'Cancel'}
                 </Button>
@@ -311,25 +311,3 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
         </Modal>
     </>);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
