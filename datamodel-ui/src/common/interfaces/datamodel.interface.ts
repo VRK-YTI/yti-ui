@@ -34,6 +34,7 @@ export interface DataModel {
     highlights: {
       [key: string]: string[];
     };
+    curie: string;
     [key: string]: unknown;
   }[];
 }
