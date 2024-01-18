@@ -182,6 +182,20 @@ export default function FrontPage() {
           lang: i18n.language,
           appendLocale: true,
         });
+
+        const modelId = resource.curie.split(':')[0];
+        const versionPart = resource.fromVersion
+          ? `?ver=${resource.fromVersion}`
+          : '';
+        const resourceType =
+          resource.resourceType == 'ATTRIBUTE'
+            ? 'attribute'
+            : resource.resourceType == 'ASSOCIATION'
+            ? 'association'
+            : 'class';
+
+        const uri = `/model/${modelId}/${resourceType}/${resource.identifier}${versionPart}`;
+
         return {
           type: resource.resourceType,
           label:
@@ -189,7 +203,7 @@ export default function FrontPage() {
             resource.highlights['label.fi']?.[0] ||
             label,
           id: resource.id,
-          uri: resource.uri,
+          uri: uri,
         };
       });
       if (resources.length > 0) {
