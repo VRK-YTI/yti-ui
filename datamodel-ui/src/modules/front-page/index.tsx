@@ -188,7 +188,12 @@ export default function FrontPage() {
           ? `?ver=${resource.fromVersion}`
           : '';
         const resourceType =
-          resource.resourceType === 'ATTRIBUTE' ? 'attribute' : 'class';
+          resource.resourceType == 'ATTRIBUTE'
+            ? 'attribute'
+            : resource.resourceType == 'ASSOCIATION'
+            ? 'association'
+            : 'class';
+
         const uri = `/model/${modelId}/${resourceType}/${resource.identifier}${versionPart}`;
 
         return {
