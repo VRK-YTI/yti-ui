@@ -29,6 +29,8 @@ import ClassModal from '../class-modal';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import { default as NextLink } from 'next/link';
 import { UriData } from '@app/common/interfaces/uri.interface';
+import { getSlugAsString } from '@app/common/utils/parse-slug';
+import { useRouter } from 'next/router';
 
 export default function CommonViewContent({
   modelId,
@@ -63,6 +65,7 @@ export default function CommonViewContent({
         !applicationProfile || !data.codeLists || data.codeLists.length === 0,
     }
   );
+  const router = useRouter();
 
   function getCodeListLabel(uri: string) {
     if (!codesResult) {
@@ -545,7 +548,7 @@ export default function CommonViewContent({
                     })}
                     mode="select"
                     handleFollowUp={handleChangeTarget}
-                    modelId={modelId}
+                    modelId={getSlugAsString(router.query.slug) ?? modelId}
                     applicationProfile={applicationProfile}
                   />
                 </div>
