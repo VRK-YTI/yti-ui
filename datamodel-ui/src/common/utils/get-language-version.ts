@@ -19,6 +19,8 @@ export function getLanguageVersion({
 
   if (data.fi) {
     return appendLocale ? `${data.fi} (fi)` : data.fi;
+  } else if (data.en) {
+    return appendLocale ? `${data.en} (en)` : data.en;
   }
 
   if (Object.keys(data).length > 0) {
