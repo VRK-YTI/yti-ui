@@ -68,7 +68,8 @@ export default function AssociationRestrictions({
               hiddenResources={[data.uri]}
             />
           }
-          handleRemoval={() => handleUpdate('path', undefined)}
+          deleteDisabled={true}
+          handleRemoval={() => null}
           items={data.path ? [data.path] : []}
           label={`${t('target-association')} (sh:path)`}
           tooltip={{
