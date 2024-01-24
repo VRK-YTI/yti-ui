@@ -5,11 +5,13 @@ import { useMemo } from 'react';
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import { ModelFormContainer, WideMultiSelect } from './crosswalk-form.styles';
 import LanguageSelector from 'yti-common-ui/form/language-selector';
-import { FormErrors } from './validate-form';
+import { FormErrors } from '../form/validate-crosswalk-form';
 import { Status } from '@app/common/interfaces/status.interface';
 import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
-import { FormUpdateErrors } from '../schema-form/validate-form-update';
+// ToDo: Do something about the import below if it's still from old-schema-form
+import { FormUpdateErrors } from '@app/modules/old-schema-form/validate-form-update';
 import CrosswalkForm from '../create-crosswalk';
+import { State } from '@app/common/interfaces/state.interface';
 
 interface RegisterCrosswalkFormProps {
   formData: CrosswalkFormType;
@@ -127,7 +129,7 @@ export default function RegisterCrosswalkForm({
           onChange={(e) =>
             setFormData({
               ...formData,
-              status: e as Status | undefined,
+              state: e as State,
             })
           }
         >

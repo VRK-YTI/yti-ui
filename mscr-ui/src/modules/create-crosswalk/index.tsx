@@ -2,7 +2,8 @@ import { Textarea, TextInput, SingleSelect } from 'suomifi-ui-components';
 import { ModelFormContainer } from './crosswalk-form.styles';
 import { FormErrors } from './validate-form';
 import { CrosswalkFormMockupType } from '@app/common/interfaces/crosswalk.interface';
-import { FormUpdateErrors } from '../schema-form/validate-form-update';
+// ToDo: Do something about the import below if it's still from old-schema-form
+import { FormUpdateErrors } from '@app/modules/old-schema-form/validate-form-update';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useGetPublicSchemasQuery } from '@app/common/components/schema/schema.slice';

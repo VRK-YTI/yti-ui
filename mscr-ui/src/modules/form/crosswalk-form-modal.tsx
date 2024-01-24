@@ -1,4 +1,7 @@
-import { useGetAuthenticatedUserMutMutation } from '@app/common/components/login/login.slice';
+import {
+  useGetAuthenticatedUserMutMutation,
+  useGetAuthenticatedUserQuery
+} from '@app/common/components/login/login.slice';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
@@ -9,23 +12,24 @@ import {
   ModalTitle,
   Paragraph,
 } from 'suomifi-ui-components';
-import { useBreakpoints } from 'yti-common-ui/media-query';
-import { FormErrors, validateForm } from './validate-form';
-import FormFooterAlert from 'yti-common-ui/form-footer-alert';
+import { useBreakpoints } from 'yti-common-ui/components/media-query';
+import { FormErrors, validateCrosswalkForm } from './validate-crosswalk-form';
+import FormFooterAlert from 'yti-common-ui/components/form-footer-alert';
 import {
   translateFileUploadError,
   translateLanguage,
   translateModelFormErrors,
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import generatePayload from './generate-payload';
+import generateCrosswalkPayload from './generate-crosswalk-payload';
 import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import { useInitialCrosswalkForm } from '@app/common/utils/hooks/use-initial-crosswalk-form';
 import { usePutCrosswalkFullMutation } from '@app/common/components/crosswalk/crosswalk.slice';
-import CrosswalkForm from '.';
-import FileDropArea from 'yti-common-ui/file-drop-area';
+import CrosswalkForm from '../crosswalk-form';
+import FileDropArea from 'yti-common-ui/components/file-drop-area';
+import getErrors from '@app/common/utils/get-errors';
 
 interface CrosswalkFormModalProps {
   refetch: () => void;
@@ -44,19 +48,20 @@ export default function CrosswalkFormModal({
   const [formData, setFormData] = useState(crosswalkFormInitialData);
   const [errors, setErrors] = useState<FormErrors>();
   const [userPosted, setUserPosted] = useState(false);
-  const [getAuthenticatedUser, authenticateUser] =
-    useGetAuthenticatedUserMutMutation();
+  const [skip, setSkip] = useState(true);
+  const { data: authenticatedUser } = useGetAuthenticatedUserQuery(undefined,{ skip });
   const [putCrosswalkFull, result] = usePutCrosswalkFullMutation();
   const [, setIsValid] = useState(false);
   const [fileData, setFileData] = useState<File | null>();
 
   const handleOpen = () => {
+    setSkip(false);
     setVisible(true);
-    getAuthenticatedUser();
   };
 
   const handleClose = useCallback(() => {
     setVisible(false);
+    setSkip(true);
     setUserPosted(false);
     setFormData(crosswalkFormInitialData);
     setFileData(null);
@@ -76,13 +81,13 @@ export default function CrosswalkFormModal({
       return;
     }
 
-    const errors = validateForm(formData);
+    const errors = validateCrosswalkForm(formData);
     setErrors(errors);
     if (Object.values(errors).includes(true)) {
       return;
     }
 
-    const payload = generatePayload(formData);
+    const payload = generateCrosswalkPayload(formData);
     // console.log(formData);
     const crosswalkFormData = new FormData();
     crosswalkFormData.append('metadata', JSON.stringify(payload));
@@ -99,7 +104,7 @@ export default function CrosswalkFormModal({
       return;
     }
 
-    const errors = validateForm(formData);
+    const errors = validateCrosswalkForm(formData);
     setErrors(errors);
   }, [userPosted, formData]);
 
@@ -107,9 +112,19 @@ export default function CrosswalkFormModal({
     return null;
   }
 
+  function gatherErrorMessages() {
+    const inputErrors = getErrors(t, errors);
+    if (result.isError) {
+      const errorMessage = getApiError(result.error);
+      return [...inputErrors, errorMessage];
+    }
+    return inputErrors;
+  }
+
   return (
     <>
       <Button
+        variant='secondary'
         icon="plus"
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}
@@ -132,7 +147,7 @@ export default function CrosswalkFormModal({
             formData={formData}
             setFormData={setFormData}
             userPosted={userPosted}
-            disabled={authenticateUser.data && authenticateUser.data.anonymous}
+            disabled={authenticatedUser && authenticatedUser.anonymous}
             errors={userPosted ? errors : undefined}
           />
           <FileDropArea
@@ -143,7 +158,7 @@ export default function CrosswalkFormModal({
           />
         </ModalContent>
         <ModalFooter>
-          {authenticateUser.data && authenticateUser.data.anonymous && (
+          {authenticatedUser && authenticatedUser.anonymous && (
             <InlineAlert status="error" role="alert" id="unauthenticated-alert">
               {t('error-unauthenticated')}
             </InlineAlert>
@@ -151,7 +166,7 @@ export default function CrosswalkFormModal({
           {userPosted && (
             <FormFooterAlert
               labelText={'Required Fields are missing'}
-              alerts={getErrors(errors)}
+              alerts={gatherErrorMessages()}
             />
           )}
 
@@ -163,30 +178,4 @@ export default function CrosswalkFormModal({
       </Modal>
     </>
   );
-
-  function getErrors(errors?: FormErrors): string[] | undefined {
-    if (!errors) {
-      return [];
-    }
-
-    const langsWithError = Object.entries(errors)
-      .filter(([_, value]) => Array.isArray(value))
-      ?.flatMap(([key, value]) =>
-        (value as string[]).map(
-          (lang) =>
-            `${translateModelFormErrors(key, t)} ${translateLanguage(lang, t)}`
-        )
-      );
-
-    const otherErrors = Object.entries(errors)
-      .filter(([_, value]) => value && !Array.isArray(value))
-      ?.map(([key, _]) => translateModelFormErrors(key, t));
-
-    if (result.isError) {
-      const errorMessage = getApiError(result.error);
-      return [...langsWithError, ...otherErrors, errorMessage];
-    }
-
-    return [...langsWithError, ...otherErrors];
-  }
 }

@@ -10,8 +10,8 @@ import {
   TitleDescriptionWrapper,
 } from 'yti-common-ui/title/title.styles';
 import Separator from 'yti-common-ui/separator';
-import SchemaFormModal from '../schema-form/schema-form-modal';
-import CrosswalkFormModal from '../crosswalk-form/crosswalk-form-modal';
+import SchemaFormModal from '../form/schema-form-modal';
+import CrosswalkFormModal from '../form/crosswalk-form-modal';
 import { ButtonBlock } from './front-page.styles';
 import BasicTable from '@app/common/components/table';
 import CrosswalkSelectionModal from '@app/modules/create-crosswalk/crosswalk-selection-modal';

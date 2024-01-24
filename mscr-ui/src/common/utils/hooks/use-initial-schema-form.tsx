@@ -6,12 +6,7 @@ export function useInitialSchemaForm(): SchemaFormType {
   const { t } = useTranslation('admin');
 
   return {
-    pid: '',
-    format: '',
-    label: {
-      key: '',
-    },
-    description: '',
+    format: 'CSV',
     languages: [
       {
         labelText: t('language-finnish-with-suffix'),
@@ -36,9 +31,6 @@ export function useInitialSchemaForm(): SchemaFormType {
       },
     ],
     organizations: [],
-    filedata: '',
-    serviceCategories: '',
-    contact: true,
-    status: 'DRAFT',
+    state: 'DRAFT',
   };
 }

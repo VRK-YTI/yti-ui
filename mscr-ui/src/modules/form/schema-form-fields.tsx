@@ -1,12 +1,13 @@
 /* eslint-disable */
 import { useTranslation } from 'next-i18next';
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
-import { ModelFormContainer } from './schema-form.styles';
-import LanguageSelector from 'yti-common-ui/form/language-selector';
-import { FormErrors } from './validate-form';
-import { Status } from '@app/common/interfaces/status.interface';
-import { FormUpdateErrors } from './validate-form-update';
+import { ModelFormContainer } from './form.styles';
+import LanguageSelector from 'yti-common-ui/components/form/language-selector';
+import { FormErrors } from './validate-schema-form';
+import { FormUpdateErrors } from '@app/modules/old-schema-form/validate-form-update';
 import { SchemaFormType } from '@app/common/interfaces/schema.interface';
+import { Format } from '@app/common/interfaces/format.interface';
+import { State } from '@app/common/interfaces/state.interface';
 
 interface SchemaFormProps {
   formData: SchemaFormType;
@@ -17,7 +18,7 @@ interface SchemaFormProps {
   editMode?: boolean;
 }
 
-export default function SchemaForm({
+export default function SchemaFormFields({
   formData,
   setFormData,
   userPosted,
@@ -45,7 +46,7 @@ export default function SchemaForm({
           labelText={t('schema-form.format-label')}
           visualPlaceholder={t('schema-form.format-placeholder')}
           defaultValue={formData.format ?? ''}
-          onChange={(e) =>
+          onChange={(e: Format) =>
             setFormData({
               ...formData,
               format: e,
@@ -111,7 +112,7 @@ export default function SchemaForm({
           onChange={(e) =>
             setFormData({
               ...formData,
-              status: e as Status | undefined,
+              state: e as State,
             })
           }
         >

@@ -1,30 +1,15 @@
 import { Organization } from '@app/common/interfaces/organizations.interface';
 import { Revision } from '@app/common/interfaces/schema.interface';
+import { State } from '@app/common/interfaces/state.interface';
+import { Format } from '@app/common/interfaces/format.interface';
 
 export interface Label {
   [key: string]: string;
 }
 
-export type State =
-  | 'DRAFT'
-  | 'PUBLISHED'
-  | 'INVALID'
-  | 'DEPRECATED'
-  | 'REMOVED';
-
 export type Visibility = 'PRIVATE' | 'PUBLIC';
 
 export type Type = 'CROSSWALK' | 'SCHEMA';
-
-export type Format =
-  | 'JSONSCHEMA'
-  | 'CSV'
-  | 'SKOSRDF'
-  | 'PDF'
-  | 'XSD'
-  | 'XML'
-  | 'XLST'
-  | 'MSCR';
 
 export interface ResultInfo {
   id: string;
@@ -42,7 +27,7 @@ export interface ResultInfo {
   numberOfRevisions: number;
   versionLabel: string;
   namespace: string;
-  format?: string;
+  format?: Format;
 }
 
 export interface PatchedResult extends ResultInfo {

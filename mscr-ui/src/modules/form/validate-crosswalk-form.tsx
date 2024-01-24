@@ -5,10 +5,11 @@ export interface FormErrors {
   titleAmount: string[];
   prefix: boolean;
   serviceCategories: boolean;
-  organizations: boolean;
+  organizations?: boolean;
+  fileData?: boolean;
 }
 
-export function validateForm(data: CrosswalkFormType) {
+export function validateCrosswalkForm(data: CrosswalkFormType) {
   const errors: FormErrors = {
     languageAmount: false,
     titleAmount: [],
@@ -40,6 +41,6 @@ export function validateForm(data: CrosswalkFormType) {
   }
 
   // Currently crosswalk is valif withou any organization also
-  
+
   return errors;
 }

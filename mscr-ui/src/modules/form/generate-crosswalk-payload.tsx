@@ -5,7 +5,7 @@ import {
 
 // here we are creating crosswalk payload by converting the form data to crosswalk type
 
-export default function generatePayload(data: CrosswalkFormType): Crosswalk {
+export default function generateCrosswalkPayload(data: CrosswalkFormType): Crosswalk {
   return {
     format: data.format,
     description: data.languages
