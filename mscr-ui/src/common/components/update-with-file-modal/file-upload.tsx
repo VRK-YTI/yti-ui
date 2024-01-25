@@ -3,7 +3,6 @@ import {
   ExcelErrorDetailBlock,
 } from '@app/common/components/import/excel.error';
 import { ImportResponse } from '@app/common/interfaces/import.interface';
-import { ButtonBlock } from '@app/modules/front-page/front-page.styles';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
@@ -12,7 +11,7 @@ import {
   InlineAlert,
   Paragraph,
 } from 'suomifi-ui-components';
-import { DownloadIndicator } from './update-with-file-modal.styles';
+import { ButtonBlock, DownloadIndicator } from './update-with-file-modal.styles';
 import { translateExcelParseError } from '@app/common/utils/translation-helpers copy';
 
 interface FileUploadProps {

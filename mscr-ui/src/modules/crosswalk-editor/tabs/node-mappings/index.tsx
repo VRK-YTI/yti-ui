@@ -17,7 +17,7 @@ import {
     ModalTitle,
     Paragraph,
 } from 'suomifi-ui-components';
-import CrosswalkForm from '@app/modules/crosswalk-form';
+import CrosswalkForm from '@app/modules/form/crosswalk-form/crosswalk-form-fields';
 import FormFooterAlert from '../../../../../../common-ui/components/form-footer-alert';
 
 export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnectionNew; performNodeInfoAction: any; mappingFilters: any; mappingFunctions: any; modalOpen: boolean; isFirstAdd: boolean }) {

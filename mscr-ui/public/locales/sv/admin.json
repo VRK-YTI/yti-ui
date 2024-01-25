@@ -56,7 +56,10 @@
   "create-new-class": "",
   "create-subclass-for-selected": "",
   "crosswalk-form": {
-    "register": ""
+    "create": "",
+    "createTitle": "",
+    "register": "",
+    "registerTitle": ""
   },
   "data-model": "",
   "data-models-added-to-this-model": "",

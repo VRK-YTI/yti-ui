@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useTranslation } from 'next-i18next';
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
-import { ModelFormContainer } from './form.styles';
+import { ModelFormContainer } from '../form.styles';
 import LanguageSelector from 'yti-common-ui/components/form/language-selector';
 import { FormErrors } from './validate-schema-form';
 import { FormUpdateErrors } from '@app/modules/old-schema-form/validate-form-update';

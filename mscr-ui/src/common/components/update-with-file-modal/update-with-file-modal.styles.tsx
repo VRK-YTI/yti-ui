@@ -69,3 +69,8 @@ export const ImportDescriptionBlock = styled(Block)`
   flex-direction: column;
   gap: 12px;
 `;
+
+export const ButtonBlock = styled(Block)`
+  display: flex;
+  gap: 20px;
+`;

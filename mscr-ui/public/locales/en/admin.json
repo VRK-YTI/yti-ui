@@ -56,7 +56,10 @@
   "create-new-class": "Create new class",
   "create-subclass-for-selected": "Create subclass for selected",
   "crosswalk-form": {
-    "register": "Register Crosswalk"
+    "create": "Create Crosswalk",
+    "createTitle": "Create and register new crosswalk",
+    "register": "Register Crosswalk",
+    "registerTitle": "Register existing crosswalk"
   },
   "data-model": "Data model",
   "data-models-added-to-this-model": "Data models added to this model",

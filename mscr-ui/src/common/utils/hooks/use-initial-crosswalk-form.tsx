@@ -7,9 +7,9 @@ export function useInitialCrosswalkForm(): CrosswalkFormType {
 
   return {
     pid: '',
-    format: '',
+    format: 'MSCR',
     label: '',
-    state: '',
+    state: 'DRAFT',
     languages: [
       {
         labelText: t('language-finnish-with-suffix'),

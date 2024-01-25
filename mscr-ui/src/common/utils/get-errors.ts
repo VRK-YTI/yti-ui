@@ -1,4 +1,4 @@
-import { FormErrors } from '@app/modules/form/validate-crosswalk-form';
+import { FormErrors } from '@app/modules/form/crosswalk-form/validate-crosswalk-form';
 import { translateLanguage, translateModelFormErrors } from '@app/common/utils/translation-helpers';
 import { TFunction } from 'next-i18next';
 

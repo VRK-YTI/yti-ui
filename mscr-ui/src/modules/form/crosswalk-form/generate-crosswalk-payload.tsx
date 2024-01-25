@@ -29,8 +29,8 @@ export default function generateCrosswalkPayload(data: CrosswalkFormType): Cross
     languages: data.languages
       .filter((l) => l.title !== '')
       .map((l) => l.uniqueItemId),
-    status: 'DRAFT',
-    state: data.status,
+    status: 'VALID',
+    state: data.state,
     sourceSchema: data.sourceSchema,
     targetSchema: data.targetSchema,
     versionLabel: '1',

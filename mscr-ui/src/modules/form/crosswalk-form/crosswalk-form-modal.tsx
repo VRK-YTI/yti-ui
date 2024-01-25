@@ -1,7 +1,4 @@
-import {
-  useGetAuthenticatedUserMutMutation,
-  useGetAuthenticatedUserQuery
-} from '@app/common/components/login/login.slice';
+import { useGetAuthenticatedUserQuery } from '@app/common/components/login/login.slice';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
@@ -10,35 +7,35 @@ import {
   ModalContent,
   ModalFooter,
   ModalTitle,
-  Paragraph,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
 import { FormErrors, validateCrosswalkForm } from './validate-crosswalk-form';
 import FormFooterAlert from 'yti-common-ui/components/form-footer-alert';
-import {
-  translateFileUploadError,
-  translateLanguage,
-  translateModelFormErrors,
-} from '@app/common/utils/translation-helpers';
+import { translateFileUploadError } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import generateCrosswalkPayload from './generate-crosswalk-payload';
 import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import { useInitialCrosswalkForm } from '@app/common/utils/hooks/use-initial-crosswalk-form';
-import { usePutCrosswalkFullMutation } from '@app/common/components/crosswalk/crosswalk.slice';
-import CrosswalkForm from '../crosswalk-form';
+import {
+  usePutCrosswalkFullMutation,
+  usePutCrosswalkMutation,
+} from '@app/common/components/crosswalk/crosswalk.slice';
+import CrosswalkForm from './crosswalk-form-fields';
 import FileDropArea from 'yti-common-ui/components/file-drop-area';
 import getErrors from '@app/common/utils/get-errors';
 
 interface CrosswalkFormModalProps {
   refetch: () => void;
+  createNew?: boolean;
 }
 
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
 export default function CrosswalkFormModal({
   refetch,
+  createNew = false,
 }: CrosswalkFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -49,8 +46,12 @@ export default function CrosswalkFormModal({
   const [errors, setErrors] = useState<FormErrors>();
   const [userPosted, setUserPosted] = useState(false);
   const [skip, setSkip] = useState(true);
-  const { data: authenticatedUser } = useGetAuthenticatedUserQuery(undefined,{ skip });
-  const [putCrosswalkFull, result] = usePutCrosswalkFullMutation();
+  const { data: authenticatedUser } = useGetAuthenticatedUserQuery(undefined, {
+    skip,
+  });
+  const [putCrosswalkFull, registerCrosswalkResult] =
+    usePutCrosswalkFullMutation();
+  const [putCrosswalk, newCrosswalkResult] = usePutCrosswalkMutation();
   const [, setIsValid] = useState(false);
   const [fileData, setFileData] = useState<File | null>();
 
@@ -68,12 +69,21 @@ export default function CrosswalkFormModal({
   }, [crosswalkFormInitialData]);
 
   useEffect(() => {
+    const result = createNew ? newCrosswalkResult : registerCrosswalkResult;
     if (userPosted && result.isSuccess) {
       refetch();
       handleClose();
       router.push(`/crosswalk/${result.data.pid}`);
     }
-  }, [result, refetch, userPosted, handleClose, router]);
+  }, [
+    registerCrosswalkResult,
+    refetch,
+    userPosted,
+    handleClose,
+    router,
+    createNew,
+    newCrosswalkResult,
+  ]);
 
   const handleSubmit = () => {
     setUserPosted(true);
@@ -88,12 +98,15 @@ export default function CrosswalkFormModal({
     }
 
     const payload = generateCrosswalkPayload(formData);
-    // console.log(formData);
-    const crosswalkFormData = new FormData();
-    crosswalkFormData.append('metadata', JSON.stringify(payload));
-    if (fileData) {
+    console.log('payload: ', payload);
+    if (!createNew && fileData) {
+      const crosswalkFormData = new FormData();
+      crosswalkFormData.append('metadata', JSON.stringify(payload));
       crosswalkFormData.append('file', fileData);
+      console.log(crosswalkFormData);
       putCrosswalkFull(crosswalkFormData);
+    } else if (createNew) {
+      putCrosswalk(payload);
     } else {
       return;
     }
@@ -114,6 +127,7 @@ export default function CrosswalkFormModal({
 
   function gatherErrorMessages() {
     const inputErrors = getErrors(t, errors);
+    const result = createNew ? newCrosswalkResult : registerCrosswalkResult;
     if (result.isError) {
       const errorMessage = getApiError(result.error);
       return [...inputErrors, errorMessage];
@@ -124,12 +138,12 @@ export default function CrosswalkFormModal({
   return (
     <>
       <Button
-        variant='secondary'
+        variant="secondary"
         icon="plus"
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}
       >
-        {t('crosswalk-form.register')}
+        {createNew ? t('crosswalk-form.create') : t('crosswalk-form.register')}
       </Button>
 
       <Modal
@@ -139,23 +153,32 @@ export default function CrosswalkFormModal({
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
-          <ModalTitle>{'Add New Crosswalk'}</ModalTitle>
+          <ModalTitle>
+            {
+              createNew
+                ? t('crosswalk-form.createTitle')
+                : t('crosswalk-form.registerTitle') /*'Add New Crosswalk'*/
+            }
+          </ModalTitle>
           {/*<Paragraph style={{ marginBottom: '30px' }}>*/}
           {/*  {'Add New Crosswalk Description'}*/}
           {/*</Paragraph>*/}
           <CrosswalkForm
             formData={formData}
             setFormData={setFormData}
+            createNew={createNew}
             userPosted={userPosted}
             disabled={authenticatedUser && authenticatedUser.anonymous}
             errors={userPosted ? errors : undefined}
           />
-          <FileDropArea
-            setFileData={setFileData}
-            setIsValid={setIsValid}
-            validFileTypes={['csv', 'xslt', 'pdf']}
-            translateFileUploadError={translateFileUploadError}
-          />
+          {!createNew && (
+            <FileDropArea
+              setFileData={setFileData}
+              setIsValid={setIsValid}
+              validFileTypes={['csv', 'xslt', 'pdf']}
+              translateFileUploadError={translateFileUploadError}
+            />
+          )}
         </ModalContent>
         <ModalFooter>
           {authenticatedUser && authenticatedUser.anonymous && (
@@ -170,7 +193,7 @@ export default function CrosswalkFormModal({
             />
           )}
 
-          <Button onClick={() => handleSubmit()}>{'Create Crosswalk'}</Button>
+          <Button onClick={() => handleSubmit()}>{createNew ? t('crosswalk-form.create') : t('crosswalk-form.register')}{/*'Create Crosswalk'*/}</Button>
           <Button variant="secondary" onClick={() => handleClose()}>
             {t('cancel')}
           </Button>

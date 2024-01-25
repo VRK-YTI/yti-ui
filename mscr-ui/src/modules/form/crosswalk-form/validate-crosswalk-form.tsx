@@ -7,6 +7,8 @@ export interface FormErrors {
   serviceCategories: boolean;
   organizations?: boolean;
   fileData?: boolean;
+  sourceSchema: boolean;
+  targetSchema: boolean;
 }
 
 export function validateCrosswalkForm(data: CrosswalkFormType) {
@@ -16,6 +18,8 @@ export function validateCrosswalkForm(data: CrosswalkFormType) {
     prefix: false,
     serviceCategories: false,
     organizations: false,
+    sourceSchema: false,
+    targetSchema: false,
   };
 
   const selectedLanguages = data.languages.filter((lang) => lang.selected);
@@ -38,6 +42,16 @@ export function validateCrosswalkForm(data: CrosswalkFormType) {
       .map((lang) => lang.uniqueItemId);
 
     errors.titleAmount = langsWithError ?? [];
+  }
+
+  // Source schema should be selected
+  if (!data.sourceSchema || data.sourceSchema.length < 1) {
+    errors.sourceSchema = true;
+  }
+
+  // Target schema should be selected
+  if (!data.targetSchema || data.targetSchema.length < 1) {
+    errors.targetSchema = true;
   }
 
   // Currently crosswalk is valif withou any organization also

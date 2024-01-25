@@ -56,7 +56,10 @@
   "create-new-class": "Luo uusi luokka",
   "create-subclass-for-selected": "Luo valitulle alaluokka",
   "crosswalk-form": {
-    "register": ""
+    "create": "",
+    "createTitle": "",
+    "register": "",
+    "registerTitle": ""
   },
   "data-model": "Tietomalli",
   "data-models-added-to-this-model": "Tähän tietomalliin lisätyt tietomallit",

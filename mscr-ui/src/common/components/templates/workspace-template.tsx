@@ -5,7 +5,6 @@ import {
 import Layout from '@app/common/components/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
-import FrontPage from '@app/modules/front-page';
 import {
   getOrganizations,
   getRunningQueriesThunk as getOrganizationsRunningQueriesThunk,
@@ -42,7 +41,7 @@ export default function IndexPage(props: IndexPageProps) {
           description={t('service-description')}
         />
         props.children
-        <FrontPage />
+        {/*<FrontPage />*/}
       </Layout>
     </CommonContextProvider>
   );
