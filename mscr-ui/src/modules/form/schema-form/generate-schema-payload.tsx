@@ -27,9 +27,7 @@ export default function generateSchemaPayload(data: SchemaFormType): any {
     languages: data.languages
       .filter((l: { title: string }) => l.title !== '')
       .map((l: { uniqueItemId: any }) => l.uniqueItemId),
-    organizations: data.organizations.map(
-      (o: { id: any }) => o.id
-    ),
+    organizations: data.organizations.map((o: { id: any }) => o.id),
     status: 'DRAFT',
     format: data.format,
     state: data.state,

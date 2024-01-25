@@ -7,8 +7,8 @@ export interface FormErrors {
   serviceCategories: boolean;
   organizations?: boolean;
   fileData?: boolean;
-  sourceSchema: boolean;
-  targetSchema: boolean;
+  sourceSchema?: boolean;
+  targetSchema?: boolean;
 }
 
 export function validateCrosswalkForm(data: CrosswalkFormType) {

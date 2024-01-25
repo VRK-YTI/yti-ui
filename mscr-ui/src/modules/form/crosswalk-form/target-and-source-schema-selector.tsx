@@ -21,27 +21,27 @@ interface SelectableSchema {
 
 export default function TargetAndSourceSchemaSelector({
   formData,
-  setFormData
+  setFormData,
 }: CrosswalkFormProps) {
   const { data, isSuccess } = useGetPublicSchemasQuery('');
   //defaultSchemas.push({ labelText: 'test', uniqueItemId: 'test'});
   const [dataLoaded, setDataLoaded] = useState(false);
-  const [defaultSchemas, setDefaultSchemas] = useState(Array<SelectableSchema>());
+  const [defaultSchemas, setDefaultSchemas] = useState(
+    Array<SelectableSchema>()
+  );
   const router = useRouter();
   const lang = router.locale ?? '';
 
   useEffect(() => {
     const fetchedSchemas: { labelText: string; uniqueItemId: string }[] = [];
-    data?.hits.hits.forEach(
-      (item: MscrSearchResult) => {
-        const label = getLanguageVersion({
-          data: item._source.label,
-          lang
-        });
-        const schema = { labelText: label, uniqueItemId: item._source.id };
-        fetchedSchemas.push(schema);
-      }
-    );
+    data?.hits.hits.forEach((item: MscrSearchResult) => {
+      const label = getLanguageVersion({
+        data: item._source.label,
+        lang,
+      });
+      const schema = { labelText: label, uniqueItemId: item._source.id };
+      fetchedSchemas.push(schema);
+    });
     setDefaultSchemas(fetchedSchemas);
     setDataLoaded(true);
     // console.log('schemas', defaultSchemas);

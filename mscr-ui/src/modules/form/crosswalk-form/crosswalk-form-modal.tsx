@@ -193,7 +193,12 @@ export default function CrosswalkFormModal({
             />
           )}
 
-          <Button onClick={() => handleSubmit()}>{createNew ? t('crosswalk-form.create') : t('crosswalk-form.register')}{/*'Create Crosswalk'*/}</Button>
+          <Button onClick={() => handleSubmit()}>
+            {createNew
+              ? t('crosswalk-form.create')
+              : t('crosswalk-form.register')}
+            {/*'Create Crosswalk'*/}
+          </Button>
           <Button variant="secondary" onClick={() => handleClose()}>
             {t('cancel')}
           </Button>

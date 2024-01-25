@@ -37,10 +37,10 @@ export function validateSchemaForm(
     (lang: { title: string | undefined }) =>
       !lang.title || lang.title === '' || lang.title.length < 1
   );
-  if (
-    titleless.length > 0
-  ) {
-    const langsWithError = titleless.map((lang: { uniqueItemId: string }) => lang.uniqueItemId);
+  if (titleless.length > 0) {
+    const langsWithError = titleless.map(
+      (lang: { uniqueItemId: string }) => lang.uniqueItemId
+    );
 
     errors.titleAmount = langsWithError ?? [];
   }

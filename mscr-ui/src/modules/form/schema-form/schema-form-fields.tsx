@@ -4,7 +4,6 @@ import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import { ModelFormContainer } from '../form.styles';
 import LanguageSelector from 'yti-common-ui/components/form/language-selector';
 import { FormErrors } from './validate-schema-form';
-import { FormUpdateErrors } from '@app/modules/old-schema-form/validate-form-update';
 import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 import { Format } from '@app/common/interfaces/format.interface';
 import { State } from '@app/common/interfaces/state.interface';
@@ -14,7 +13,7 @@ interface SchemaFormProps {
   setFormData: (value: SchemaFormType) => void;
   userPosted: boolean;
   disabled?: boolean;
-  errors?: FormErrors | FormUpdateErrors;
+  errors?: FormErrors;
   editMode?: boolean;
 }
 
@@ -24,8 +23,8 @@ export default function SchemaFormFields({
   userPosted,
   disabled,
   errors,
-  // editMode,
-}: SchemaFormProps) {
+}: // editMode,
+SchemaFormProps) {
   const { t } = useTranslation();
 
   // Creating the actual schema Input form

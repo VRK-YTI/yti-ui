@@ -1,4 +1,4 @@
-import {  useGetAuthenticatedUserQuery } from '@app/common/components/login/login.slice';
+import { useGetAuthenticatedUserQuery } from '@app/common/components/login/login.slice';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
@@ -42,7 +42,9 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   const [fileData, setFileData] = useState<File | null>();
   const [errors, setErrors] = useState<FormErrors>();
   const [skip, setSkip] = useState(true);
-  const { data: authenticatedUser } = useGetAuthenticatedUserQuery(undefined,{ skip });
+  const { data: authenticatedUser } = useGetAuthenticatedUserQuery(undefined, {
+    skip,
+  });
   const [userPosted, setUserPosted] = useState(false);
   // Why are we using a mutation here? Why is that even implemented as a mutation, when the method is GET?
   const [putSchemaFull, resultSchemaFull] = usePutSchemaFullMutation();
@@ -123,7 +125,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   return (
     <>
       <Button
-        variant='secondary'
+        variant="secondary"
         icon="plus"
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}

@@ -1,8 +1,15 @@
-import { FormErrors } from '@app/modules/form/crosswalk-form/validate-crosswalk-form';
-import { translateLanguage, translateModelFormErrors } from '@app/common/utils/translation-helpers';
+import { FormErrors as CrosswalkFormErrors } from '@app/modules/form/crosswalk-form/validate-crosswalk-form';
+import { FormErrors as SchemaFormErrors } from '@app/modules/form/schema-form/validate-schema-form';
+import {
+  translateLanguage,
+  translateModelFormErrors,
+} from '@app/common/utils/translation-helpers';
 import { TFunction } from 'next-i18next';
 
-export default function getErrors(t: TFunction, errors?: FormErrors): string[] {
+export default function getErrors(
+  t: TFunction,
+  errors?: CrosswalkFormErrors | SchemaFormErrors
+): string[] {
   if (!errors) {
     return [];
   }

@@ -1,16 +1,17 @@
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
 import getOrganizations from '@app/common/utils/get-organizations';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useMemo } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import LanguageSelector from 'yti-common-ui/components/form/language-selector';
 import { FormErrors } from './validate-crosswalk-form';
 import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
-// ToDo: Do something about the import below if it's still from old-schema-form
-import { FormUpdateErrors } from '@app/modules/old-schema-form/validate-form-update';
 import TargetAndSourceSchemaSelector from './target-and-source-schema-selector';
 import { State } from '@app/common/interfaces/state.interface';
-import { ModelFormContainer, WideMultiSelect } from '@app/modules/form/form.styles';
+import {
+  ModelFormContainer,
+  WideMultiSelect,
+} from '@app/modules/form/form.styles';
 
 interface RegisterCrosswalkFormProps {
   formData: CrosswalkFormType;
@@ -18,7 +19,7 @@ interface RegisterCrosswalkFormProps {
   createNew: boolean;
   userPosted: boolean;
   disabled?: boolean;
-  errors?: FormErrors | FormUpdateErrors;
+  errors?: FormErrors;
   editMode?: boolean;
 }
 
