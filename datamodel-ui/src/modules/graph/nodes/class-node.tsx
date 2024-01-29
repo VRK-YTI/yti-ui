@@ -277,9 +277,9 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
 
             return false;
           })
-          .map((r) => (
+          .map((r, idx) => (
             <Resource
-              key={`${id}-child-${r.identifier}`}
+              key={`${id}-child-${r.identifier}-${idx}`}
               className="node-resource"
               onClick={() => handleResourceClick(r.identifier, r.type, r.uri)}
               $highlight={getResourceHighlighted(r.identifier, r.type)}

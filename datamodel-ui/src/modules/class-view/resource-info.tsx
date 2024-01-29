@@ -31,6 +31,8 @@ import { useUpdateClassResrictionTargetMutation } from '@app/common/components/c
 import getApiError from '@app/common/utils/get-api-errors';
 import { useEffect, useState } from 'react';
 import ResourceError from '@app/common/components/resource-error';
+import { useRouter } from 'next/router';
+import { getSlugAsString } from '@app/common/utils/parse-slug';
 
 interface ResourceInfoProps {
   data: SimpleResource;
@@ -60,6 +62,7 @@ export default function ResourceInfo({
   const { t, i18n } = useTranslation('common');
   const [open, setOpen] = useState(false);
   const dispatch = useStoreDispatch();
+  const router = useRouter();
 
   const {
     data: resourceData,
@@ -87,7 +90,7 @@ export default function ResourceInfo({
 
   const handleChangeTarget = (newTarget?: InternalClassInfo) => {
     updateTarget({
-      prefix: data.modelId,
+      prefix: getSlugAsString(router.query.slug) ?? data.modelId,
       identifier: classId,
       uri: data.uri,
       currentTarget: targetInClassRestriction?.uri,
