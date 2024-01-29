@@ -78,7 +78,7 @@ export function splitEdgeFn({
 
   setEdges((edges) => [
     ...edges
-      .map((edge) => {
+      .map((edge, idx) => {
         if (
           edge.target === target &&
           edge.source === source &&
@@ -87,7 +87,7 @@ export function splitEdgeFn({
         ) {
           return {
             ...edge,
-            id: `reactflow__edge-${newCornerId}-${edge.target}`,
+            id: `reactflow__edge-${idx}-${newCornerId}-${edge.target}`,
             source: newCornerId,
             sourceHandle: newCornerId,
           };

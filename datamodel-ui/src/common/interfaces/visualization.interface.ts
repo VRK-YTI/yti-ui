@@ -53,6 +53,7 @@ export interface VisualizationHiddenNode {
   };
   referenceTarget: string;
   referenceType: ReferenceType;
+  origin?: string;
 }
 
 export interface VisualizationResult {

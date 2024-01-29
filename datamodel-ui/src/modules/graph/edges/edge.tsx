@@ -72,8 +72,8 @@ export default function DefaultEdge({
   });
 
   const handleHover = (value?: boolean) => {
-    if (value && data?.identifier) {
-      dispatch(setHovered(data.identifier, 'associations'));
+    if (value && data?.origin) {
+      dispatch(setHovered(data.origin, 'associations'));
       return;
     }
 

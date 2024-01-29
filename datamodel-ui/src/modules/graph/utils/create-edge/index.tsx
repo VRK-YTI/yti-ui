@@ -17,6 +17,7 @@ interface CreateEdgeProps {
   label?: { [key: string]: string } | string;
   offsetSource?: number;
   modelId?: string;
+  origin?: string;
 }
 
 export default function createEdge({
@@ -27,6 +28,7 @@ export default function createEdge({
   label,
   offsetSource,
   modelId,
+  origin,
 }: CreateEdgeProps): Edge<EdgeDataType> {
   return {
     ...params,
@@ -38,6 +40,7 @@ export default function createEdge({
       ...(identifier ? { identifier: identifier } : {}),
       ...(offsetSource ? { offsetSource: offsetSource } : {}),
       ...(applicationProfile ? { applicationProfile: true } : {}),
+      ...(origin ? { origin: origin } : {}),
     },
     ...getAdditionalStyles(params.referenceType),
   };

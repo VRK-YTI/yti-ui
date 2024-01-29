@@ -41,4 +41,5 @@ export interface EdgeDataType {
   applicationProfile?: boolean;
   offsetSource?: number;
   offsetTarget?: number;
+  origin?: string;
 }
