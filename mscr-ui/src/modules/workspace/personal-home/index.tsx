@@ -8,12 +8,11 @@ import {
   TitleDescriptionWrapper,
 } from 'yti-common-ui/components/title/title.styles';
 import Separator from 'yti-common-ui/components/separator';
-import { ButtonBlock } from '@app/modules/front-page/front-page.styles';
-import SchemaFormModal from '@app/modules/schema-form/schema-form-modal';
+import SchemaFormModal from '@app/modules/form/schema-form/schema-form-modal';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
-import CrosswalkFormModal from '@app/modules/crosswalk-form/crosswalk-form-modal';
-import CrosswalkSelectionModal from '@app/modules/create-crosswalk/crosswalk-selection-modal';
+import CrosswalkFormModal from '@app/modules/form/crosswalk-form/crosswalk-form-modal';
+import { ButtonBlock } from '@app/modules/workspace/workspace.styles';
 
 export default function PersonalWorkspace({
   contentType,
@@ -51,13 +50,13 @@ export default function PersonalWorkspace({
         <Separator isLarge />
         <ButtonBlock>
           {contentType == 'SCHEMA' ? (
-            <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>
+            <>
+              <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>
+            </>
           ) : (
             <>
               <CrosswalkFormModal refetch={refetchInfo}></CrosswalkFormModal>
-              <CrosswalkSelectionModal
-                refetch={refetchInfo}
-              ></CrosswalkSelectionModal>
+              <CrosswalkFormModal refetch={refetchInfo} createNew={true}></CrosswalkFormModal>
             </>
           )}
         </ButtonBlock>
