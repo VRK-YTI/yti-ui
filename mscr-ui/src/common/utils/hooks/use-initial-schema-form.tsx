@@ -8,26 +8,27 @@ export function useInitialSchemaForm(): SchemaFormType {
   return {
     format: 'CSV',
     languages: [
-      {
-        labelText: t('language-finnish-with-suffix'),
-        uniqueItemId: 'fi',
-        title: '',
-        description: '',
-        selected: false,
-      },
-      {
-        labelText: t('language-swedish-with-suffix'),
-        uniqueItemId: 'sv',
-        title: '',
-        description: '',
-        selected: false,
-      },
+      // Hiding Finnish and Swedish for now
+      // {
+      //   labelText: t('language-finnish-with-suffix'),
+      //   uniqueItemId: 'fi',
+      //   title: '',
+      //   description: '',
+      //   selected: false,
+      // },
+      // {
+      //   labelText: t('language-swedish-with-suffix'),
+      //   uniqueItemId: 'sv',
+      //   title: '',
+      //   description: '',
+      //   selected: false,
+      // },
       {
         labelText: t('language-english-with-suffix'),
         uniqueItemId: 'en',
         title: '',
         description: '',
-        selected: false,
+        selected: true,
       },
     ],
     organizations: [],

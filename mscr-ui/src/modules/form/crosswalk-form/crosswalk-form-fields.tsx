@@ -70,6 +70,8 @@ export default function CrosswalkFormFields({
   }
 
   function renderLanguages() {
+    // Languages that are available and that are selected by default are defined in
+    // mscr-ui/src/common/utils/hooks/use-initial-crosswalk-form.tsx
     return (
       <div>
         <LanguageSelector

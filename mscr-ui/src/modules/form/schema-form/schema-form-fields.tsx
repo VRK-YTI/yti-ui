@@ -64,6 +64,8 @@ SchemaFormProps) {
   }
 
   function renderLanguages() {
+    // Languages that are available and that are selected by default are defined in
+    // mscr-ui/src/common/utils/hooks/use-initial-schema-form.tsx
     return (
       <div>
         <LanguageSelector
