@@ -1,4 +1,6 @@
-import { ExposureTwoTone } from "@mui/icons-material";
+import { State } from '@app/common/interfaces/state.interface';
+import { Format } from '@app/common/interfaces/format.interface';
+import { LanguageBlockType } from 'yti-common-ui/components/form/language-selector';
 
 export interface Schema {
   namespace?: string;
@@ -42,7 +44,7 @@ export interface SchemaWithVersionInfo extends Schema {
 
 export interface SchemaFileData{
   id?: string;
-  contentType?: string,
+  contentType?: string;
   size?: number;
   fileID?: number;
   name?: string;
@@ -54,17 +56,13 @@ export interface Organization {
   label: { [key: string]: string };
 }
 
+// ToDo: Proper typing
 export interface SchemaFormType {
   namespace?: string;
-  contact?: boolean;
-  serviceCategories?: any;
   pid?: string;
-  format?: string;
-  label?: { [key: string]: string };
-  languages: any;
-  organizations: any;
+  format: Format;
+  languages: (LanguageBlockType & { selected: boolean })[];
+  organizations: Organization[];
   filedata?: any;
-  description?: any;
-  status?: any; //Status will be set to schema.state
-  uri?: any;
+  state: State;
 }

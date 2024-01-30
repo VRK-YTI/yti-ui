@@ -1,6 +1,6 @@
 import { MultiSelectData } from 'suomifi-ui-components';
 import { LanguageBlockType } from 'yti-common-ui/form/language-selector';
-import { Status } from './status.interface';
+import { State } from '@app/common/interfaces/state.interface';
 
 //sample Crosswalk
 export interface Crosswalk {
@@ -17,7 +17,7 @@ export interface Crosswalk {
   organizations?: string[];
   sourceSchema: string;
   targetSchema: string;
-  state?: string;
+  state?: State;
   namespace?: string;
   versionLabel?: string;
 }
@@ -26,10 +26,9 @@ export interface CrosswalkFormType {
   pid?: string;
   format: string;
   label: string;
-  state?: string;
+  state: State;
   languages: (LanguageBlockType & { selected: boolean })[];
   organizations?: MultiSelectData[];
-  status?: Status;
   sourceSchema: string;
   targetSchema: string;
   description?: string;

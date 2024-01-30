@@ -1,67 +1,48 @@
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
-import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
 import getOrganizations from '@app/common/utils/get-organizations';
 import { useTranslation } from 'next-i18next';
-import { useMemo } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
-import Separator from 'yti-common-ui/separator';
+import LanguageSelector from 'yti-common-ui/components/form/language-selector';
+import { FormErrors } from './validate-crosswalk-form';
+import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
+import TargetAndSourceSchemaSelector from './target-and-source-schema-selector';
+import { State } from '@app/common/interfaces/state.interface';
 import {
-  BlockContainer,
   ModelFormContainer,
   WideMultiSelect,
-} from './crosswalk-form.styles';
-import LanguageSelector from 'yti-common-ui/form/language-selector';
-import { FormErrors } from './validate-form';
-import { Status } from '@app/common/interfaces/status.interface';
-import {CrosswalkFormMockupType, CrosswalkFormType} from '@app/common/interfaces/crosswalk.interface';
-import { FormUpdateErrors } from '../schema-form/validate-form-update';
-import CrosswalkForm from '../create-crosswalk';
+} from '@app/modules/form/form.styles';
 
 interface RegisterCrosswalkFormProps {
   formData: CrosswalkFormType;
-  setFormData: (value: { targetSchema: string; versionLabel?: string; languages: any; format: any; organizations: any; namespace?: string; description?: any; pid?: string; label: any; state: string; sourceSchema: string; status?: string | undefined }) => void;
+  setFormData: Dispatch<SetStateAction<CrosswalkFormType>>;
+  createNew: boolean;
   userPosted: boolean;
   disabled?: boolean;
-  errors?: FormErrors | FormUpdateErrors;
+  errors?: FormErrors;
   editMode?: boolean;
 }
 
-export default function RegisterCrosswalkForm({
+export default function CrosswalkFormFields({
   formData,
   setFormData,
+  createNew,
   userPosted,
   disabled,
   errors,
   editMode,
 }: RegisterCrosswalkFormProps) {
-  const { t, i18n } = useTranslation('admin');
-  
-  const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
-
-  const organizations = useMemo(() => {
-    if (!organizationsData) {
-      return [];
-    }
-
-    return getOrganizations(organizationsData, i18n.language)
-      .map((o) => ({
-        labelText: o.label,
-        uniqueItemId: o.id,
-      }))
-      .sort((o1, o2) => (o1.labelText > o2.labelText ? 1 : -1));
-  }, [organizationsData, i18n.language]);
+  const { t } = useTranslation('admin');
 
   return (
     <ModelFormContainer>
-      <CrosswalkForm
+      <TargetAndSourceSchemaSelector
         formData={formData}
         setFormData={setFormData}
-        userPosted={userPosted}
-        errors={userPosted ? errors : undefined}
-      ></CrosswalkForm>
-      {renderCrosswalkFormat()}
+      ></TargetAndSourceSchemaSelector>
+      {!createNew && renderCrosswalkFormat()}
       {renderLanguages()}
-      {renderStaus()}
+      {!createNew && renderState()}
     </ModelFormContainer>
   );
 
@@ -89,6 +70,8 @@ export default function RegisterCrosswalkForm({
   }
 
   function renderLanguages() {
+    // Languages that are available and that are selected by default are defined in
+    // mscr-ui/src/common/utils/hooks/use-initial-crosswalk-form.tsx
     return (
       <div>
         <LanguageSelector
@@ -125,17 +108,17 @@ export default function RegisterCrosswalkForm({
     );
   }
 
-  function renderStaus() {
+  function renderState() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
-          labelText={'Status'}
-          visualPlaceholder={'Select Status'}
-          defaultValue={formData.status ?? ''}
+          labelText={'State'}
+          visualPlaceholder={'Select state'}
+          defaultValue={formData.state ?? ''}
           onChange={(e) =>
             setFormData({
               ...formData,
-              status: e as Status | undefined,
+              state: e as State,
             })
           }
         >
@@ -148,29 +131,29 @@ export default function RegisterCrosswalkForm({
   }
 
   //Currently Hidden from the form
-  function renderContributors() {
-    return (
-      <WideMultiSelect
-        chipListVisible={true}
-        labelText={t('contributors')}
-        hintText={t('contributors-hint-text')}
-        visualPlaceholder={t('select-contributors')}
-        removeAllButtonLabel={t('clear-all-selections')}
-        allowItemAddition={false}
-        onItemSelectionsChange={(e) =>
-          setFormData({
-            ...formData,
-            organizations: e,
-          })
-        }
-        items={formData.organizations}
-        status={userPosted && errors?.organizations ? 'error' : 'default'}
-        ariaChipActionLabel={''}
-        ariaSelectedAmountText={''}
-        ariaOptionsAvailableText={''}
-        ariaOptionChipRemovedText={''}
-        noItemsText={''}
-      />
-    );
-  }
+  // function renderContributors() {
+  //   return (
+  //     <WideMultiSelect
+  //       chipListVisible={true}
+  //       labelText={t('contributors')}
+  //       hintText={t('contributors-hint-text')}
+  //       visualPlaceholder={t('select-contributors')}
+  //       removeAllButtonLabel={t('clear-all-selections')}
+  //       allowItemAddition={false}
+  //       onItemSelectionsChange={(e) =>
+  //         setFormData({
+  //           ...formData,
+  //           organizations: e,
+  //         })
+  //       }
+  //       items={formData.organizations}
+  //       status={userPosted && errors?.organizations ? 'error' : 'default'}
+  //       ariaChipActionLabel={''}
+  //       ariaSelectedAmountText={''}
+  //       ariaOptionsAvailableText={''}
+  //       ariaOptionChipRemovedText={''}
+  //       noItemsText={''}
+  //     />
+  //   );
+  // }
 }

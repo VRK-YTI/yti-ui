@@ -55,6 +55,12 @@
   "contributors-hint-text": "",
   "create-new-class": "",
   "create-subclass-for-selected": "",
+  "crosswalk-form": {
+    "create": "",
+    "createTitle": "",
+    "register": "",
+    "registerTitle": ""
+  },
   "data-model": "",
   "data-models-added-to-this-model": "",
   "data-models-in-use": "",
@@ -137,6 +143,7 @@
   "optional": "",
   "reference-data-in-use": "",
   "register-schema": "",
+  "register-schema-file-required": "",
   "remove": "",
   "remove-modal": {
     "collection-confirmation": "",

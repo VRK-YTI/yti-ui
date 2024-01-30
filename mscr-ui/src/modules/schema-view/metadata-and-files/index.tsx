@@ -4,7 +4,7 @@ import {
   SchemaFileData,
   SchemaWithVersionInfo,
 } from '@app/common/interfaces/schema.interface';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 import {
   DescriptionList,
   DescriptionListTitle,
@@ -28,6 +28,7 @@ export default function MetadataAndFiles({
   schemaFiles?: SchemaFileData[];
 }) {
   const { t } = useTranslation('common');
+  const router = useRouter();
   const lang = router.locale ?? '';
 
   if (schemaDetails?.fileMetadata) {
