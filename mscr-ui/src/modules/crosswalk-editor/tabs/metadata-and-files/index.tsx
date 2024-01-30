@@ -48,6 +48,7 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
     const [lang, setLanguage] = useState('en');
     const [isEditModeActive, setEditModeActive] = useState<boolean>(false);
     const [isPublished, setIsPublished] = useState<boolean>(true);
+    const [visibilityState, setVisibilityState] = useState<string>('PRIVATE');
 
     function saveChanges() {
         props.performMetadataAndFilesAction(formatPatchValuesForSave(false), 'saveChanges');
@@ -57,6 +58,11 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
     function publish() {
         props.performMetadataAndFilesAction(formatPatchValuesForSave(true), 'saveChanges');
         setEditModeActive(false);
+    }
+
+    function updateVisibilityState(state: string) {
+        setVisibilityState(state);
+        updatePatchValue('visibility', state);
     }
 
     function updatePatchValue(attributeName: string, value: any) {
@@ -226,8 +232,8 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
                                 {isEditModeActive &&
                                   <Dropdown
                                     labelText=""
-                                    value={props.crosswalkData?.visibility}
-                                    onChange={(value) => updatePatchValue('visibility', value)}
+                                    value={visibilityState}
+                                    onChange={(value) => updateVisibilityState(value)}
                                   >
                                       {visibilityStates.map((state) => (
                                         <DropdownItem key={state.key} value={state.key}>

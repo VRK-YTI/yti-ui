@@ -249,6 +249,13 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
 
 
     useEffect(() => {
+        // Reset initial state when tab changed.
+        if (selectedTab === 1) {
+            setEditModeActive(false);
+        }
+    }, [selectedTab]);
+
+    useEffect(() => {
         //setConfirmModalOpen(true);
         setNodeMappingsModalOpen(true);
     }, [jointToBeEdited]);

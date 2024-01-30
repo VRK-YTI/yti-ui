@@ -122,16 +122,19 @@ function Row(props: { row: NodeMapping; viewOnlyMode: boolean; isEditModeActive:
                                 <br/>
                             </div>
                             <div className='col-2 mt-4 d-flex flex-column action-buttons'>
-                                <Sbutton
-                                    hidden={!props.isEditModeActive}
-                                    onClick={(e) => {
+                              {props.isEditModeActive &&
+                                  <>
+                                  <Sbutton
+                                      onClick={(e) => {
                                         props.callBackFunction.performAccordionAction(props.row, 'openJointDetails');
-                                    }}>Edit</Sbutton>
+                                      }}>Edit</Sbutton>
                                 <Sbutton className='mt-2'
-                                         hidden={!props.isEditModeActive}
-                                         onClick={(e) => {
-                                             props.callBackFunction.performAccordionAction(props.row, 'removeJoint');
-                                         }}>Delete</Sbutton>
+
+                                onClick={(e) => {
+                                props.callBackFunction.performAccordionAction(props.row, 'removeJoint');
+                              }}>Delete</Sbutton>
+                                  </>
+                              }
                             </div>
                         </div>
                     </Collapse>

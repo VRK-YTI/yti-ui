@@ -61,7 +61,7 @@ export default function FixedButtonFooter(props: { performFooterActionCallback?:
             }}>Save</Sbutton>
         }
 
-        {isEditModeActive && props.footerType === FooterTypes.CROSSWALK_EDITOR && !props.isPublished &&
+        {(isEditModeActive && props.footerType === FooterTypes.CROSSWALK_EDITOR) && !props.isPublished &&
             <Sbutton variant='secondary' onClick={() => {
               performFooterAction('finishEditing');
             }}>Finish editing</Sbutton>
