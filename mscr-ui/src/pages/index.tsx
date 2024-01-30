@@ -24,7 +24,7 @@ import PageHead from 'yti-common-ui/page-head';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import SiteInformationModule from '@app/modules/site-information';
 import SearchBar from 'src/modules/search/search-bar';
-import {createTheme, Grid, ThemeProvider} from '@mui/material';
+import {Grid} from '@mui/material';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -33,18 +33,8 @@ interface IndexPageProps extends CommonContextState {
 
 export default function IndexPage(props: IndexPageProps) {
   const { t } = useTranslation('common');
-  const theme = createTheme({
-    typography: {
-      fontFamily: [
-        'Source Sans Pro',
-        'Helvetica Neue',
-        'Arial',
-        'sans-serif',
-      ].join(','),
-    },});
 
   return (
-    <ThemeProvider theme={theme}>
     <CommonContextProvider value={props}>
       <Layout
         user={props.user ?? undefined}
@@ -68,7 +58,6 @@ export default function IndexPage(props: IndexPageProps) {
         </Grid>
       </Layout>
     </CommonContextProvider>
-    </ThemeProvider>
   );
 }
 
