@@ -54,7 +54,8 @@ export default function FixedButtonFooter(props: { performFooterActionCallback?:
             }}>Publish</Sbutton>
         }
 
-        {isEditModeActive && !props.isPublished && props.footerType === (FooterTypes.CROSSWALK_METADATA || FooterTypes.SCHEMA_METADATA) &&
+        {/* Save is always available for metadata regardless is the crosswalk published or not */}
+        {isEditModeActive && ((props.footerType === FooterTypes.SCHEMA_METADATA) || (props.footerType === FooterTypes.CROSSWALK_METADATA)) &&
             <Sbutton hidden={!isEditModeActive || props.isPublished} onClick={() => {
               setSaveConfirmModalOpen(true);
             }}>Save</Sbutton>
@@ -65,7 +66,7 @@ export default function FixedButtonFooter(props: { performFooterActionCallback?:
               performFooterAction('finishEditing');
             }}>Finish editing</Sbutton>
         }
-        {!isEditModeActive && !props.isPublished &&
+        {((props.footerType === FooterTypes.CROSSWALK_EDITOR && !isEditModeActive && !props.isPublished) || (props.footerType === FooterTypes.CROSSWALK_METADATA && !isEditModeActive)) &&
             <Sbutton onClick={() => {
               performFooterAction('setEditModeActive');
             }}>Edit</Sbutton>

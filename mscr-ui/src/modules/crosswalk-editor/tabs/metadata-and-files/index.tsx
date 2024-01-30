@@ -13,7 +13,7 @@ interface patchPayload {
     [key: string]: string | string[];
 }
 
-export default function MetadataAndFiles(props: { crosswalkData: any; performMetadataAndFilesAction: any; nodeMappings: NodeMapping[], crosswalkId: string, isEditModeActive?: boolean}) {
+export default function MetadataAndFiles(props: { crosswalkData: any; performMetadataAndFilesAction: any; nodeMappings: NodeMapping[]; crosswalkId: string; isEditModeActive?: boolean}) {
     const patchPayloadInit: patchPayload = {
         label: '',
         description: '',
@@ -29,7 +29,7 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
         contact: false,
         versionLabel: false,
         visibility: false,
-        };
+    };
 
     const localizedValueKeys = ['label', 'description'];
 
@@ -47,9 +47,15 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
     const [unformattedPayload, setUnformattedPayload] = useState(patchPayloadInit);
     const [lang, setLanguage] = useState('en');
     const [isEditModeActive, setEditModeActive] = useState<boolean>(false);
+    const [isPublished, setIsPublished] = useState<boolean>(true);
 
     function saveChanges() {
-        props.performMetadataAndFilesAction(formatPatchValuesForSave(), 'saveChanges');
+        props.performMetadataAndFilesAction(formatPatchValuesForSave(false), 'saveChanges');
+        setEditModeActive(false);
+    }
+
+    function publish() {
+        props.performMetadataAndFilesAction(formatPatchValuesForSave(true), 'saveChanges');
         setEditModeActive(false);
     }
 
@@ -72,6 +78,9 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
         if (action === 'save') {
             saveChanges();
         }
+        if (action === 'publish') {
+            publish();
+        }
         if (action === 'setEditModeActive') {
             setEditModeActive(true);
         }
@@ -93,6 +102,7 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
     useEffect(() => {
         detectLanguage();
         setInitialPatchValuesFromData();
+        setIsPublished(props.crosswalkData.state === 'PUBLISHED');
     }, [props.crosswalkData]);
 
     function setInitialPatchValuesFromData() {
@@ -109,22 +119,27 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
         setUnformattedPayload(newPayload);
     }
 
-  function formatPatchValuesForSave() {
+    function formatPatchValuesForSave(isPublishAction: boolean) {
         const formattedPatchPayload = [];
-    if (props.crosswalkData) {
-      for (const [key, value] of Object.entries(unformattedPayload)) {
-          if (localizedValueKeys.includes(key)) {
-              const locObj = {[key]: {[lang]: value}};
-              formattedPatchPayload.push(locObj);
-          }
-          else {
-              const obj = {[key]: value};
-              formattedPatchPayload.push(obj);
-          }
-      }
-      return formattedPatchPayload;
+        if (props.crosswalkData) {
+            for (const [key, value] of Object.entries(unformattedPayload)) {
+                if (localizedValueKeys.includes(key)) {
+                    const locObj = {[key]: {[lang]: value}};
+                    formattedPatchPayload.push(locObj);
+                }
+                else {
+                    const obj = {[key]: value};
+                    formattedPatchPayload.push(obj);
+                }
+            }
+            if (isPublishAction){
+                formattedPatchPayload.push({
+                    state: 'PUBLISHED'
+                });
+            }
+            return formattedPatchPayload;
+        }
     }
-  }
 
     return (<>
         <div className='crosswalk-editor node-mappings mx-2'>
@@ -231,14 +246,14 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
                         <div className='mt-2'>
                             <div className='row-heading'>Description:</div>
                             {isEditModeActive &&
-                            <Textarea
-                              labelText=""
-                              hintText=""
-                              resize="vertical"
-                              onChange={(event) => updatePatchValue('description', event.target.value)}
-                              value={unformattedPayload.description}
-                            >
-                            </Textarea>}
+                              <Textarea
+                                labelText=""
+                                hintText=""
+                                resize="vertical"
+                                onChange={(event) => updatePatchValue('description', event.target.value)}
+                                value={unformattedPayload.description}
+                              >
+                              </Textarea>}
                             {!isEditModeActive && <div>{unformattedPayload.description}</div>
                             }
                         </div>
@@ -269,6 +284,6 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
             </div>*/}
 
         </div>
-        <FixedButtonFooter footerType={FooterTypes.CROSSWALK_METADATA} isEditModeActive={true} performFooterActionCallback={performFooterActionCallback}></FixedButtonFooter>
+        <FixedButtonFooter footerType={FooterTypes.CROSSWALK_METADATA} isEditModeActive={true} performFooterActionCallback={performFooterActionCallback} isPublished={isPublished}></FixedButtonFooter>
     </>);
 }
