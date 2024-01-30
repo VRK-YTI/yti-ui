@@ -58,8 +58,10 @@ export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`
 `;
 
 export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
+  && {
+    margin-right: ${(props) => props.theme.suomifi.spacing.m};
+  }
   // Remove arrow icon from group buttons
-  margin-right: ${(props) => props.theme.suomifi.spacing.m + '!important'};
   .fi-icon {
     display: none;
   }
