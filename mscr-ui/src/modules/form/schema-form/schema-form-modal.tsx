@@ -1,40 +1,33 @@
-import { useGetAuthenticatedUserMutMutation } from '@app/common/components/login/login.slice';
+import { useGetAuthenticatedUserQuery } from '@app/common/components/login/login.slice';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
-  InlineAlert,
   IconPlus,
+  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
   ModalTitle,
   Text,
 } from 'suomifi-ui-components';
-import { useBreakpoints } from 'yti-common-ui/media-query';
-import { FormErrors, validateForm } from './validate-form';
-import FormFooterAlert from 'yti-common-ui/form-footer-alert';
-import {
-  translateFileUploadError,
-  translateLanguage,
-  translateModelFormErrors,
-} from '@app/common/utils/translation-helpers';
+import { useBreakpoints } from 'yti-common-ui/components/media-query';
+import { FormErrors, validateSchemaForm } from './validate-schema-form';
+import FormFooterAlert from 'yti-common-ui/components/form-footer-alert';
+import { translateFileUploadError } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import generatePayload from './generate-payload';
+import generateSchemaPayload from './generate-schema-payload';
 import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import { useInitialSchemaForm } from '@app/common/utils/hooks/use-initial-schema-form';
 import { usePutSchemaFullMutation } from '@app/common/components/schema/schema.slice';
-import SchemaForm from '.';
-import FileDropArea from 'yti-common-ui/file-drop-area';
-import Separator from 'yti-common-ui/separator';
+import SchemaFormFields from './schema-form-fields';
+import FileDropArea from 'yti-common-ui/components/file-drop-area';
+import Separator from 'yti-common-ui/components/separator';
+import getErrors from '@app/common/utils/get-errors';
 
 interface SchemaFormModalProps {
   refetch: () => void;
-}
-
-interface SchemaProps {
-  pid: string;
 }
 
 // For the time being, using as schema metadata form, Need to update the props accordingly
@@ -44,23 +37,27 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   const { isSmall } = useBreakpoints();
   const router = useRouter();
   const [visible, setVisible] = useState(false);
-  const [isValid, setIsValid] = useState(false);
+  const [, setIsValid] = useState(false);
   const [schemaFormInitialData] = useState(useInitialSchemaForm());
   const [formData, setFormData] = useState(schemaFormInitialData);
   const [fileData, setFileData] = useState<File | null>();
   const [errors, setErrors] = useState<FormErrors>();
+  const [skip, setSkip] = useState(true);
+  const { data: authenticatedUser } = useGetAuthenticatedUserQuery(undefined, {
+    skip,
+  });
   const [userPosted, setUserPosted] = useState(false);
-  const [getAuthenticatedUser, authenticateUser] =
-    useGetAuthenticatedUserMutMutation();
+  // Why are we using a mutation here? Why is that even implemented as a mutation, when the method is GET?
   const [putSchemaFull, resultSchemaFull] = usePutSchemaFullMutation();
 
   const handleOpen = () => {
+    setSkip(false);
     setVisible(true);
-    getAuthenticatedUser();
   };
 
   const handleClose = useCallback(() => {
     setVisible(false);
+    setSkip(true);
     setUserPosted(false);
     setFormData(schemaFormInitialData);
     setFileData(null);
@@ -84,14 +81,14 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
     if (!formData) {
       return;
     }
-    const errors = validateForm(formData, fileData);
+    const errors = validateSchemaForm(formData, fileData);
     setErrors(errors);
 
     if (Object.values(errors).includes(true)) {
       return;
     }
 
-    const payload = generatePayload(formData);
+    const payload = generateSchemaPayload(formData);
 
     const schemaFormData = new FormData();
     schemaFormData.append('metadata', JSON.stringify(payload));
@@ -107,19 +104,29 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
     if (!userPosted) {
       return;
     }
-    const errors = validateForm(formData, fileData);
+    const errors = validateSchemaForm(formData, fileData);
     setErrors(errors);
     //console.log(errors);
-  }, [userPosted, formData]);
+  }, [userPosted, formData, fileData]);
 
   // Need to add action type create_schema
   if (!HasPermission({ actions: ['CREATE_SCHEMA'] })) {
     return null;
   }
 
+  function gatherErrorMessages() {
+    const inputErrors = getErrors(t, errors);
+    if (resultSchemaFull.isError) {
+      const errorMessage = getApiError(resultSchemaFull.error);
+      return [...inputErrors, errorMessage];
+    }
+    return inputErrors;
+  }
+
   return (
     <>
       <Button
+        variant="secondary"
         icon={<IconPlus />}
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}
@@ -135,34 +142,24 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       >
         <ModalContent>
           <ModalTitle>{t('register-schema')}</ModalTitle>
-          <SchemaForm
+          <SchemaFormFields
             formData={formData}
             setFormData={setFormData}
             userPosted={userPosted}
-            disabled={authenticateUser.data && authenticateUser.data.anonymous}
+            disabled={authenticatedUser && authenticatedUser.anonymous}
             errors={userPosted ? errors : undefined}
           />
           <Separator></Separator>
-          <Text>
-            {
-              'Upload a Schema File. You must upload a schema file to register schema'
-            }
-          </Text>
+          <Text>{t('register-schema-file-required')}</Text>
           <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}
-            validFileTypes={['json', 'csv', 'pdf', 'ttl','xml','xsd']}
+            validFileTypes={['json', 'csv', 'pdf', 'ttl', 'xml', 'xsd']}
             translateFileUploadError={translateFileUploadError}
           />
-          <Separator isLarge></Separator>
-          <Text>
-            {
-              'All Contents will be registered as draft. You can choose to publish content later'
-            }
-          </Text>
         </ModalContent>
         <ModalFooter>
-          {authenticateUser.data && authenticateUser.data.anonymous && (
+          {authenticatedUser && authenticatedUser.anonymous && (
             <InlineAlert status="error" role="alert" id="unauthenticated-alert">
               {t('error-unauthenticated')}
             </InlineAlert>
@@ -170,7 +167,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
           {userPosted && (
             <FormFooterAlert
               labelText={'Something went wrong'}
-              alerts={getErrors(errors)}
+              alerts={gatherErrorMessages()}
             />
           )}
 
@@ -182,32 +179,4 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       </Modal>
     </>
   );
-
-  function getErrors(errors?: FormErrors): string[] | undefined {
-    if (!errors) {
-      return [];
-    }
-
-    // console.log(errors);
-
-    const langsWithError = Object.entries(errors)
-      .filter(([_, value]) => Array.isArray(value))
-      ?.flatMap(([key, value]) =>
-        (value as string[]).map(
-          (lang) =>
-            `${translateModelFormErrors(key, t)} ${translateLanguage(lang, t)}`
-        )
-      );
-
-    const otherErrors = Object.entries(errors)
-      .filter(([_, value]) => value && !Array.isArray(value))
-      ?.map(([key, _]) => translateModelFormErrors(key, t));
-
-    if (resultSchemaFull.isError) {
-      const errorMessage = getApiError(resultSchemaFull.error);
-      return [...langsWithError, ...otherErrors, errorMessage];
-    }
-
-    return [...langsWithError, ...otherErrors];
-  }
 }

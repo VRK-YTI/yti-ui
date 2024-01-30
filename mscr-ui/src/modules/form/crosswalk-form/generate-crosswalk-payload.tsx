@@ -5,7 +5,9 @@ import {
 
 // here we are creating crosswalk payload by converting the form data to crosswalk type
 
-export default function generatePayload(data: CrosswalkFormType): Crosswalk {
+export default function generateCrosswalkPayload(
+  data: CrosswalkFormType
+): Crosswalk {
   return {
     format: data.format,
     description: data.languages
@@ -29,8 +31,8 @@ export default function generatePayload(data: CrosswalkFormType): Crosswalk {
     languages: data.languages
       .filter((l) => l.title !== '')
       .map((l) => l.uniqueItemId),
-    status: 'DRAFT',
-    state: data.status,
+    status: 'VALID',
+    state: data.state,
     sourceSchema: data.sourceSchema,
     targetSchema: data.targetSchema,
     versionLabel: '1',

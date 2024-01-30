@@ -55,6 +55,12 @@
   "contributors-hint-text": "Voit lisätä vain organisaation, joka on antanut sinulle muokkausoikeudet",
   "create-new-class": "Luo uusi luokka",
   "create-subclass-for-selected": "Luo valitulle alaluokka",
+  "crosswalk-form": {
+    "create": "",
+    "createTitle": "",
+    "register": "",
+    "registerTitle": ""
+  },
   "data-model": "Tietomalli",
   "data-models-added-to-this-model": "Tähän tietomalliin lisätyt tietomallit",
   "data-models-in-use": "Käytetyt tietomallit",
@@ -137,6 +143,7 @@
   "optional": "valinnainen",
   "reference-data-in-use": "Käytetyt koodistot",
   "register-schema": "",
+  "register-schema-file-required": "",
   "remove": "Poista",
   "remove-modal": {
     "collection-confirmation": "",

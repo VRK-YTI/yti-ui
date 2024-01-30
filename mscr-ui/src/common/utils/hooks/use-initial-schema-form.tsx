@@ -6,39 +6,32 @@ export function useInitialSchemaForm(): SchemaFormType {
   const { t } = useTranslation('admin');
 
   return {
-    pid: '',
-    format: '',
-    label: {
-      key: '',
-    },
-    description: '',
+    format: 'CSV',
     languages: [
-      {
-        labelText: t('language-finnish-with-suffix'),
-        uniqueItemId: 'fi',
-        title: '',
-        description: '',
-        selected: false,
-      },
-      {
-        labelText: t('language-swedish-with-suffix'),
-        uniqueItemId: 'sv',
-        title: '',
-        description: '',
-        selected: false,
-      },
+      // Hiding Finnish and Swedish for now
+      // {
+      //   labelText: t('language-finnish-with-suffix'),
+      //   uniqueItemId: 'fi',
+      //   title: '',
+      //   description: '',
+      //   selected: false,
+      // },
+      // {
+      //   labelText: t('language-swedish-with-suffix'),
+      //   uniqueItemId: 'sv',
+      //   title: '',
+      //   description: '',
+      //   selected: false,
+      // },
       {
         labelText: t('language-english-with-suffix'),
         uniqueItemId: 'en',
         title: '',
         description: '',
-        selected: false,
+        selected: true,
       },
     ],
     organizations: [],
-    filedata: '',
-    serviceCategories: '',
-    contact: true,
-    status: 'DRAFT',
+    state: 'DRAFT',
   };
 }

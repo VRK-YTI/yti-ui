@@ -3,9 +3,9 @@
   "add-data-model": "Add Schema File",
   "add-file": "Add File",
   "add-new-link": "Add new link",
-  "add-or-drag-a-new-file-here": "",
+  "add-or-drag-a-new-file-here": "Add or drag a file here",
   "add-reference-data": "Add reference data",
-  "allowed-file-formats": "",
+  "allowed-file-formats": "Allowed file formats:",
   "association-missing-general": "Association is missing information",
   "association-missing-identifier": "Association identifier is missing",
   "association-missing-label": "Association name is missing",
@@ -55,6 +55,12 @@
   "contributors-hint-text": "You can only add organizations to which  you have editing permissions",
   "create-new-class": "Create new class",
   "create-subclass-for-selected": "Create subclass for selected",
+  "crosswalk-form": {
+    "create": "Create Crosswalk",
+    "createTitle": "Create and register new crosswalk",
+    "register": "Register Crosswalk",
+    "registerTitle": "Register existing crosswalk"
+  },
   "data-model": "Data model",
   "data-models-added-to-this-model": "Data models added to this model",
   "data-models-in-use": "Data models in use",
@@ -137,6 +143,7 @@
   "optional": "optional",
   "reference-data-in-use": "Reference data in use",
   "register-schema": "Register Schema",
+  "register-schema-file-required": "Upload a Schema File. You must upload a schema file to register schema",
   "remove": "Remove",
   "remove-modal": {
     "collection-confirmation": "",

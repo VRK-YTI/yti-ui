@@ -5,16 +5,21 @@ export interface FormErrors {
   titleAmount: string[];
   prefix: boolean;
   serviceCategories: boolean;
-  organizations: boolean;
+  organizations?: boolean;
+  fileData?: boolean;
+  sourceSchema?: boolean;
+  targetSchema?: boolean;
 }
 
-export function validateForm(data: CrosswalkFormType) {
+export function validateCrosswalkForm(data: CrosswalkFormType) {
   const errors: FormErrors = {
     languageAmount: false,
     titleAmount: [],
     prefix: false,
     serviceCategories: false,
     organizations: false,
+    sourceSchema: false,
+    targetSchema: false,
   };
 
   const selectedLanguages = data.languages.filter((lang) => lang.selected);
@@ -39,7 +44,17 @@ export function validateForm(data: CrosswalkFormType) {
     errors.titleAmount = langsWithError ?? [];
   }
 
+  // Source schema should be selected
+  if (!data.sourceSchema || data.sourceSchema.length < 1) {
+    errors.sourceSchema = true;
+  }
+
+  // Target schema should be selected
+  if (!data.targetSchema || data.targetSchema.length < 1) {
+    errors.targetSchema = true;
+  }
+
   // Currently crosswalk is valif withou any organization also
-  
+
   return errors;
 }
