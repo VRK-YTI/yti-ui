@@ -3,12 +3,13 @@ import type { AppProps } from 'next/app';
 import '@fontsource/source-sans-pro/300.css';
 import '@fontsource/source-sans-pro/400.css';
 import '@fontsource/source-sans-pro/600.css';
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap-grid.css';
 import { SWRConfig } from 'swr';
 import axios from 'axios';
 import { wrapper } from '@app/store';
 import { appWithTranslation } from 'next-i18next';
 import './mscr-style-customizations.scss';
+
 
 function App({ Component, pageProps }: AppProps) {
   return (

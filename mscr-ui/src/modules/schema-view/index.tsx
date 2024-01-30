@@ -7,7 +7,7 @@ import { useTranslation } from 'next-i18next';
 import { useGetSchemaWithRevisionsQuery } from '@app/common/components/schema/schema.slice';
 import MetadataAndFiles from './metadata-and-files';
 import SideNavigationPanel from '@app/common/components/side-navigation';
-import { Grid } from '@mui/material';
+import {createTheme, ThemeProvider, Grid} from '@mui/material';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 export default function SchemaView({
@@ -28,6 +28,16 @@ export default function SchemaView({
     // error,
   } = useGetSchemaWithRevisionsQuery(schemaId);
   // TODO: I can't make sense of the format this returns, and how it would be offered for download
+
+  const theme = createTheme({
+    typography: {
+      fontFamily: [
+        'Source Sans Pro',
+        'Helvetica Neue',
+        'Arial',
+        'sans-serif',
+      ].join(','),
+    },});
 
   const [selectedTab, setSelectedTab] = useState(0);
 
@@ -51,6 +61,7 @@ export default function SchemaView({
     );
   } else if (isSuccess) {
     return (
+      <ThemeProvider theme={theme}>
       <>
         <Box className="mb-3" sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs
@@ -71,6 +82,7 @@ export default function SchemaView({
         )}
         {selectedTab === 1 && <VersionHistory schemaDetails={schemaDetails} />}
       </>
+      </ThemeProvider>
     );
   }
 

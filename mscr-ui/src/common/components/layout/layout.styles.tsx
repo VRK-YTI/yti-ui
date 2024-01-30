@@ -42,14 +42,15 @@ export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`
 // content layout
 
 export const ContentContainer = styled.div<{ $fullScreen?: boolean }>`
+  margin-left: 10px;
   background-color: ${(props) =>
     props.$fullScreen
       ? props.theme.suomifi.colors.whiteBase
       : props.theme.suomifi.colors.depthLight3};
 
-  border-bottom: ${(props) =>
+/*  border-bottom: ${(props) =>
     !props.$fullScreen &&
-    `1px solid ${props.theme.suomifi.colors.depthLight1}`};
+    `1px solid ${props.theme.suomifi.colors.depthLight1}`};*/
   flex-grow: 1;
 
   ${(props) =>

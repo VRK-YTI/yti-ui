@@ -5,7 +5,7 @@ import {
 } from '@app/common/interfaces/crosswalk-connection.interface';
 import validateMapping from '@app/modules/crosswalk-editor/mapping-validator';
 import EastIcon from '@mui/icons-material/East';
-import {Dropdown, Textarea, TextInput} from 'suomifi-ui-components';
+import {Dropdown, IconPlus, Textarea, TextInput} from 'suomifi-ui-components';
 import {DropdownItem} from 'suomifi-ui-components';
 import {useCallback, useEffect, useState} from 'react';
 import {
@@ -164,9 +164,9 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                                   className='fw-bold'>Description: </span>{props.selectedCrosswalk.source.properties.description ? props.selectedCrosswalk.source.properties.description : 'N/A'}
                                 </p>
 
-                                <span hidden={filterDetailsVisible}>
+{/*                                <span hidden={filterDetailsVisible}>
                                 <Button
-                                  icon="plus"
+                                  icon={<IconPlus />}
                                   style={{height: 'min-content'}}
                                   onClick={() => setFilterDetailsVisible(true)}
                                   variant="secondaryNoBorder"
@@ -218,14 +218,14 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                                           {rt.name}
                                       </DropdownItem>
                                     ))}
-                                </Dropdown></div>
+                                </Dropdown></div>*/}
                             </div>
                         </div>
 
                         {/* MID COLUMN */}
                         <div className='col-4 d-flex flex-column justify-content-between'>
                             <div>
-                                <div><Dropdown className='mt-2 node-info-dropdown'
+{/*                                <div><Dropdown className='mt-2 node-info-dropdown'
                                                labelText="Mapping operation"
                                                visualPlaceholder="Operation not selected"
                                                value={mappingOperationValue}
@@ -240,7 +240,7 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                                 <div><TextInput
                                   onChange={(value) => setSourceFilterValue('uri', value)}
                                   visualPlaceholder="Operation value"
-                                /></div>
+                                /></div>*/}
                                 <div><br/>
                                     <Dropdown className='mt-2 node-info-dropdown'
                                               labelText="Predicate"
@@ -257,12 +257,17 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                                     </Dropdown></div>
 
                             </div>
+
+
+
+{/*                         //TODO: fix notes saving
                             <Textarea
                               onChange={(event) => setNotesValue(event.target.value)}
                               labelText="Notes:"
                               visualPlaceholder="No notes set. Add free form notes here."
                               value={notesValue}
-                            />
+                            />*/}
+                            <br/>
                         </div>
 
                         {/* TARGET OPERATIONS */}
@@ -276,7 +281,7 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                                   className='fw-bold'>Description: </span>{props.selectedCrosswalk.target.properties.description ? props.selectedCrosswalk.target.properties.description : 'N/A'}
                                 </p>
                                 <br/>
-                                <div><Dropdown className='mt-2 node-info-dropdown'
+{/*                                <div><Dropdown className='mt-2 node-info-dropdown'
                                                labelText="Target operation"
                                                visualPlaceholder="Operation not selected"
                                                value={targetOperationValue}
@@ -287,7 +292,7 @@ export default function NodeMappings(props: { selectedCrosswalk: CrosswalkConnec
                                           {rt.name}
                                       </DropdownItem>
                                     ))}
-                                </Dropdown></div>
+                                </Dropdown></div>*/}
                             </div>
                         </div>
                     </div>

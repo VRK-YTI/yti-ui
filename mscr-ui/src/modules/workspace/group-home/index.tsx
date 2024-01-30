@@ -53,7 +53,7 @@ export default function GroupWorkspace({ user, pid, contentType }: GroupHomeProp
         {/*    </>*/}
         {/*  )}*/}
         {/*</ButtonBlock>*/}
-        <Separator isLarge />
+
         {data?.hits.hits && data?.hits.hits.length < 1 ? (
           <div>
             {contentType == 'SCHEMA'
