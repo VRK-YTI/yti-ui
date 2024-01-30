@@ -36,7 +36,8 @@ const crosswalkConnectionInit = {
     title: '',
 };
 
-const StyledTableCell = styled(TableCell)(({theme}) => ({}));
+const StyledTableCell = styled(TableCell)(({theme}) => ({
+}));
 
 const StyledTableRow = styled(TableRow)(({theme}) => ({
     '&:nth-of-type(odd)': {
@@ -53,9 +54,9 @@ function Row(props: { row: NodeMapping; viewOnlyMode: boolean; isEditModeActive:
 
     return (
         <React.Fragment>
-            <StyledTableRow className='accordion-row'>
-                <StyledTableCell className='col-5 ps-2'>
-                    <Button className='ms-2 py-0' style={{textTransform: 'none'}}
+            <StyledTableRow className='accordion-row row'>
+                <StyledTableCell className='col-5'>
+                    <Button className='px-3 py-0' style={{textTransform: 'none'}}
                             title='Select linked node from source tree'
                             onClick={(e) => {
                                 props.callBackFunction.performAccordionAction(props.row, 'selectFromSourceTree');
@@ -70,8 +71,8 @@ function Row(props: { row: NodeMapping; viewOnlyMode: boolean; isEditModeActive:
                     </IconButton>
                 </StyledTableCell>*/}
 
-                <StyledTableCell className='col-4 ps-3'>
-                    <Button className='me-2 py-0' style={{textTransform: 'none'}}
+                <StyledTableCell className='col-4'>
+                    <Button className='px-3 py-0' style={{textTransform: 'none'}}
                             title='Select linked node from target tree'
                             onClick={(e) => {
                                 props.callBackFunction.performAccordionAction(props.row, 'selectFromTargetTree');
@@ -121,16 +122,19 @@ function Row(props: { row: NodeMapping; viewOnlyMode: boolean; isEditModeActive:
                                 <br/>
                             </div>
                             <div className='col-2 mt-4 d-flex flex-column action-buttons'>
-                                <Sbutton
-                                    hidden={!props.isEditModeActive}
-                                    onClick={(e) => {
+                              {props.isEditModeActive &&
+                                  <>
+                                  <Sbutton
+                                      onClick={(e) => {
                                         props.callBackFunction.performAccordionAction(props.row, 'openJointDetails');
-                                    }}>Edit</Sbutton>
+                                      }}>Edit</Sbutton>
                                 <Sbutton className='mt-2'
-                                         hidden={!props.isEditModeActive}
-                                         onClick={(e) => {
-                                             props.callBackFunction.performAccordionAction(props.row, 'removeJoint');
-                                         }}>Delete</Sbutton>
+
+                                onClick={(e) => {
+                                props.callBackFunction.performAccordionAction(props.row, 'removeJoint');
+                              }}>Delete</Sbutton>
+                                  </>
+                              }
                             </div>
                         </div>
                     </Collapse>

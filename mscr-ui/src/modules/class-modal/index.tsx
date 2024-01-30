@@ -3,7 +3,7 @@ import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
-  Button,
+  Button, IconPlus,
   ModalContent,
   ModalFooter,
   ModalTitle,
@@ -171,7 +171,7 @@ export default function ClassModal({
                   : t('create-subclass-for-selected')}
               </Button>
               <Button
-                icon="plus"
+                icon={<IconPlus />}
                 disabled={selectedId !== ''}
                 onClick={() => handleSubmit()}
               >

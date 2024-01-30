@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
   InlineAlert,
+  IconPlus,
   Modal,
   ModalContent,
   ModalFooter,
@@ -119,7 +120,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
   return (
     <>
       <Button
-        icon="plus"
+        icon={<IconPlus />}
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}
       >

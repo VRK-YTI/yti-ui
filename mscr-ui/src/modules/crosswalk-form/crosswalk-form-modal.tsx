@@ -1,7 +1,7 @@
 import { useGetAuthenticatedUserMutMutation } from '@app/common/components/login/login.slice';
 import { useCallback, useEffect, useState } from 'react';
 import {
-  Button,
+  Button, IconPlus,
   InlineAlert,
   Modal,
   ModalContent,
@@ -110,7 +110,7 @@ export default function CrosswalkFormModal({
   return (
     <>
       <Button
-        icon="plus"
+        icon={<IconPlus />}
         style={{ height: 'min-content' }}
         onClick={() => handleOpen()}
       >
