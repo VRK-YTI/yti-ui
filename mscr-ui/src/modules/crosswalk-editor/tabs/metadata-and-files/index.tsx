@@ -109,6 +109,7 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
         detectLanguage();
         setInitialPatchValuesFromData();
         setIsPublished(props.crosswalkData.state === 'PUBLISHED');
+        setVisibilityState(props.crosswalkData.visibility);
     }, [props.crosswalkData]);
 
     function setInitialPatchValuesFromData() {
