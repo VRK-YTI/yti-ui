@@ -15,7 +15,10 @@ export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
   left: 0;
   top: 76px;
   background-color: white;
-  padding: ${(props) => props.theme.suomifi.spacing.m};
+  padding-left: ${(props) => props.theme.suomifi.spacing.m};
+  padding-top: ${(props) => props.theme.suomifi.spacing.m};
+  padding-bottom: ${(props) => props.theme.suomifi.spacing.m};
+  margin-right: ${(props) => props.theme.suomifi.spacing.m};
 `;
 
 // Modify the style of an existing suomifi component
@@ -56,6 +59,7 @@ export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`
 
 export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
   // Remove arrow icon from group buttons
+  margin-right: ${(props) => props.theme.suomifi.spacing.m + '!important'};
   .fi-icon {
     display: none;
   }
@@ -97,7 +101,8 @@ export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
 `;
 
 export const PersonalNavigationWrapper = styled.div`
-  margin-left: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
 `;
 
 export const GroupOpenButton = styled.button`

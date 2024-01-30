@@ -1,3 +1,18 @@
+body {
+  font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial', sans-serif !important;
+}
+
+.row-heading {
+  font-size: 0.9rem;
+  font-weight: bold;
+  height: 40px;
+}
+
+.row-label {
+  font-size: 16px;
+  margin-left: 11px;
+}
+
 .fi-dropdown_popover {
   margin-top: 0px !important;
 }
@@ -10,12 +25,22 @@
   width: 20% !important;
 }
 
+.node-mappings {
+  .fi-label {
+    display: none;
+  }
+  .row {
+    line-height: 2.2rem;
+  }
+}
+
+
 /* EDIT MAPPING MODAL */
 .edit-mapping-modal {
   width: 1000px !important;
   .bg-light-blue {
     background: #d5e4f6 !important;
-    height: 480px;
+    height: 460px;
   }
   .edit-mapping-modal-content {
     font-size: 0.9rem;
@@ -100,7 +125,7 @@
     }
     h2 {
       color: #6b6b6b;
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: normal;
       margin-bottom: 0px;
       padding: 17px 14px 0px 17px;
@@ -117,7 +142,7 @@
       margin-bottom: 15px;
     }
     .bg-wrap {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       background: #fff;
       padding: 15px;
       min-height: 377px;
@@ -133,13 +158,29 @@
     }
   }
 
-  // Tree
+  // Crosswalk editor tree
   .MuiTreeItem-label {
     font-size: 17px !important;
   }
 
   .MuiTreeItem-iconContainer svg {
     font-size: 26px !important;
+  }
+
+  .MuiTreeItem-content {
+    padding: 0px;
+  }
+
+  .MuiTableCell-root {
+    font-size: 17px;
+  }
+
+  .MuiButton-root {
+    font-size: 17px;
+  }
+
+  .MuiTabs-scroller button {
+    font-size: 27px;
   }
 
   .linked-tree-item {
@@ -238,7 +279,7 @@
     padding: 0px 20px;
     .action-buttons {
       button {
-        width: 80px;
+        width: 85px;
         align-self: flex-end;
       }
     }
@@ -273,6 +314,10 @@
 
   .bg-light-blue {
     background: #d5e4f6;
+  }
+
+  .bg-lightest-blue {
+    background: #EAF2FA;
   }
 
   .bg-white {

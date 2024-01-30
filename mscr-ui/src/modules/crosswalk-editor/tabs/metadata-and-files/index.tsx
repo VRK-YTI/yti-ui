@@ -1,181 +1,274 @@
-import Button from '@mui/material/Button';
-import {
-    CrosswalkConnection, CrosswalkConnectionNew,
-    CrosswalkConnectionsNew,
-    RenderTreeOld
-} from '@app/common/interfaces/crosswalk-connection.interface';
-import EastIcon from '@mui/icons-material/East';
-import {Dropdown} from 'suomifi-ui-components';
-import {DropdownItem} from 'suomifi-ui-components';
-import {useState, useEffect} from 'react';
-import Input from '@mui/material/Input';
-import { TextInput } from 'suomifi-ui-components';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import {useBreakpoints} from '../../../../../../common-ui/components/media-query';
-import { TableCell } from '@mui/material';
-import JointListingAccordion from '@app/modules/crosswalk-editor/joint-listing-accordion';
+import {NodeMapping} from '@app/common/interfaces/crosswalk-connection.interface';
+import {Dropdown, Textarea, TextInput} from 'suomifi-ui-components';
+import {useEffect, useState} from 'react';
+import FixedButtonFooter, {FooterTypes} from '@app/common/components/fixed-button-footer';
+import { DropdownItem } from 'suomifi-ui-components';
 
-interface CrosswalkDetails {
-    crosswalkName: string;
-    uri: string;
-    pid: string;
-    version: string;
-    created: string;
-    modified: string;
-    publisher: string;
-    creator: string;
-    contributors: string[];
-    notes: string;
+interface patchPayload {
+    label: string;
     description: string;
-    keywords: string[];
+    contact: string;
+    versionLabel: string;
+    visibility: string;
     [key: string]: string | string[];
 }
 
-export default function MetadataAndFiles(props: { crosswalks: CrosswalkConnectionNew[]; data: any; performMetadataAndFilesAction: any }) {
-    const detailsInit: CrosswalkDetails = {
-        crosswalkName: '',
-        uri: '',
-        pid: '',
-        version: '',
-        created: '',
-        modified: '',
-        publisher: '',
-        creator: '',
-        contributors: [],
-        notes: '',
+export default function MetadataAndFiles(props: { crosswalkData: any; performMetadataAndFilesAction: any; nodeMappings: NodeMapping[], crosswalkId: string, isEditModeActive?: boolean}) {
+    const patchPayloadInit: patchPayload = {
+        label: '',
         description: '',
-        keywords: [],
+        contact: '',
+        versionLabel: '',
+        visibility: '',
     };
 
-    const [inputValue, setInputValue] = useState(detailsInit);
+    // All the values are not patchable. This is used to filter out patchable data from original json. True value is used to indicate a nested localized field.
+    const valuesToPatch = {
+        label: true,
+        description: true,
+        contact: false,
+        versionLabel: false,
+        visibility: false,
+        };
+
+    const localizedValueKeys = ['label', 'description'];
+
+    const visibilityStates = [
+        {
+            name: 'PUBLIC',
+            key: 'PUBLIC'
+        },
+        {
+            name: 'PRIVATE',
+            key: 'PRIVATE'
+        },
+    ];
+
+    const [unformattedPayload, setUnformattedPayload] = useState(patchPayloadInit);
     const [lang, setLanguage] = useState('en');
+    const [isEditModeActive, setEditModeActive] = useState<boolean>(false);
 
-    useEffect(() => {
-        // console.log('INPUT', inputValue);
-    }, [inputValue]);
+    function saveChanges() {
+        props.performMetadataAndFilesAction(formatPatchValuesForSave(), 'saveChanges');
+        setEditModeActive(false);
+    }
 
-    function updateValue(paramName: string, value: any) {
+    function updatePatchValue(attributeName: string, value: any) {
         const val = value === undefined ? '' : value.toString();
-        const details = {...inputValue};
-        details[paramName] = val;
-        setInputValue(details);
+        const newPayload = {...unformattedPayload};
+        newPayload[attributeName] = val;
+        setUnformattedPayload(newPayload);
     };
 
-    function updateValuesOnInit(prevDetails: any, paramName: string, value: any) {
+    function updateValuesOnInit(prevAttributes: any, attributeName: string, value: any) {
         const val = value === undefined ? '' : value.toString();
-        const details = {...prevDetails};
-        details[paramName] = val;
-        setInputValue(details);
-        return details;
+        const allPatchAttributes = {...prevAttributes};
+        allPatchAttributes[attributeName] = val;
+        setUnformattedPayload(allPatchAttributes);
+        return allPatchAttributes;
     };
 
-    /*    const StyledTableCell = styled(TableCell)(({theme}) => ({
-            [`&.${tableCellClasses.head}`]: {
-                backgroundColor: theme.palette.common.white,
-            },
-            [`&.${tableCellClasses.body}`]: {
-                fontSize: 14,
-            },
-        }));
-
-        const StyledTableRow = styled(TableRow)(({theme}) => ({
-            '&:nth-of-type(odd)': {
-                backgroundColor: theme.palette.action.hover,
-            },
-            // hide last border
-            '&:last-child td, &:last-child th': {
-                border: 0,
-            },
-        }));*/
-
-    useEffect(() => {
-        setValuesFromData();
-        detectLanguage();
-    }, [props.data]);
-
-    function setValuesFromData() {
-        let prevDetails = {...detailsInit};
-        prevDetails = updateValuesOnInit(prevDetails, 'crosswalkName', props.data?.label[lang]);
-        prevDetails = updateValuesOnInit(prevDetails,'created', props.data?.created);
-        prevDetails = updateValuesOnInit(prevDetails,'modified', props.data?.modified);
-        prevDetails = updateValuesOnInit(prevDetails,'description', props.data?.description[lang]);
+    function performFooterActionCallback(action: string) {
+        if (action === 'save') {
+            saveChanges();
+        }
+        if (action === 'setEditModeActive') {
+            setEditModeActive(true);
+        }
+        if (action === 'setEditModeInactive') {
+            setEditModeActive(false);
+        }
+        if (action === 'cancel') {
+            setEditModeActive(false);
+            setInitialPatchValuesFromData();
+        }
     }
 
     function detectLanguage() {
-        if (props.data?.label['fi']) {
+        if (props.crosswalkData?.label['fi']) {
             setLanguage('fi');
         }
     }
 
+    useEffect(() => {
+        detectLanguage();
+        setInitialPatchValuesFromData();
+    }, [props.crosswalkData]);
+
+    function setInitialPatchValuesFromData() {
+        const newPayload = {...unformattedPayload};
+        if (props.crosswalkData) {
+            for (const [key, value] of Object.entries(valuesToPatch)) {
+                if (value === true) {
+                    newPayload[key] = props.crosswalkData[key]?.[lang];
+                } else {
+                    newPayload[key] = props.crosswalkData[key] ? props.crosswalkData[key] : '';
+                }
+            }
+        }
+        setUnformattedPayload(newPayload);
+    }
+
+  function formatPatchValuesForSave() {
+        const formattedPatchPayload = [];
+    if (props.crosswalkData) {
+      for (const [key, value] of Object.entries(unformattedPayload)) {
+          if (localizedValueKeys.includes(key)) {
+              const locObj = {[key]: {[lang]: value}};
+              formattedPatchPayload.push(locObj);
+          }
+          else {
+              const obj = {[key]: value};
+              formattedPatchPayload.push(obj);
+          }
+      }
+      return formattedPatchPayload;
+    }
+  }
+
     return (<>
-        <div className='crosswalk-editor mx-2'>
+        <div className='crosswalk-editor node-mappings mx-2'>
             <h2 className='mt-4 mb-3'>Crosswalk details</h2>
             <div className='row d-flex justify-content-between metadata-and-files-wrap mx-2'>
-                <div className='row bg-light-blue'>
-                    <div className='col-6'>
-                        <div className='mt-3'>
-                            <TextInput
-                                onChange={(value) => updateValue('crosswalkName', value)}
-                                labelText="Crosswalk name"
-                                value={inputValue.crosswalkName.toString()}
-                            />
+                <div className='row bg-lightest-blue'>
+                    <div className='col-6 gx-0'>
+                        <div className='my-2 row'>
+                            <div className='col-4 row-heading'>Crosswalk name:</div>
+                            <div className='col-8'>
+                                {isEditModeActive &&
+                                  <TextInput
+                                    labelText=''
+                                    onChange={(value) => updatePatchValue('label', value)}
+                                    value={unformattedPayload.label.toString()}
+                                  />
+                                }
+                                {!isEditModeActive && <div className='row-label'>{props.crosswalkData?.label[lang]}</div>
+                                }
+                            </div>
                         </div>
-                        <div className='mt-2'>
-                            <TextInput
-                                onChange={(value) => updateValue('uri', value)}
-                                labelText="Uri"
-                                value={inputValue.uri.toString()}
-                            />
-                        </div>
-                        <div className='my-3'>PID: <span>{inputValue.pid}</span></div>
-                        <div className='my-3'>Version: <span>{inputValue.version}</span></div>
-                        <div className='my-3'>Created: <span>{inputValue.created}</span></div>
-                        <div className='my-3'>Modified: <span>{inputValue.modified}</span></div>
-                        <div className='my-3'>Publisher: <span>{inputValue.publisher}</span></div>
-                        <div className='my-3'>Creator: <span>{inputValue.creator}</span></div>
-                        <div className='my-3'>Contributors: <span>{inputValue.contributors}</span></div>
-                    </div>
 
-                    <div className='col-6'>
-                        <div className='mt-3'>
-                            <TextInput
-                                onChange={(value) => updateValue('notes', value)}
-                                labelText="Notes"
-                                value={inputValue.notes.toString()}
-                            />
+                        <div className='my-3 row'>
+                            <div className='col-4 row-heading'>Version label:</div>
+                            <div className='col-8'>
+                                {isEditModeActive &&
+                                  <TextInput
+                                    labelText=''
+                                    onChange={(value) => updatePatchValue('versionLabel', value)}
+                                    value={unformattedPayload.versionLabel.toString()}
+                                  />
+                                }
+                                {!isEditModeActive && <div className='row-label'>{props.crosswalkData?.versionLabel}</div>
+                                }
+                            </div>
                         </div>
-                        <div className='mt-2'>
-                            <TextInput
-                                onChange={(value) => updateValue('description', value)}
-                                labelText="Description"
-                                value={inputValue.description.toString()}
-                            />
+
+                        <div className='my-3 row'>
+                            <div className='col-4 row-heading'>Contact:</div>
+                            <div className='col-8'>
+                                {isEditModeActive &&
+                                  <TextInput
+                                    labelText=''
+                                    onChange={(value) => updatePatchValue('contact', value)}
+                                    value={unformattedPayload.contact.toString()}
+                                  />
+                                }
+                                {!isEditModeActive && <div className='row-label'>{props.crosswalkData?.contact}</div>
+                                }
+                            </div>
                         </div>
+
+                        <div className='my-3 row'>
+                            <div className='col-4 row-heading'>Pid:</div>
+                            <div className='col-8'>
+                                <div className='row-label'>{props.crosswalkData?.pid}</div>
+                            </div>
+                        </div>
+
+                        <div className='my-3 row'>
+                            <div className='col-4 row-heading'>Created:</div>
+                            <div className='col-8'>
+                                <div className='row-label'>{props.crosswalkData?.created}</div>
+                            </div>
+                        </div>
+
+                        <div className='my-3 row'>
+                            <div className='col-4 row-heading'>Modified:</div>
+                            <div className='col-8'>
+                                <div className='row-label'>{props.crosswalkData?.modified}</div>
+                            </div>
+                        </div>
+
+                        <div className='my-3 row'>
+                            <div className='col-4 row-heading'>State:</div>
+                            <div className='col-8'>
+                                <div className='row-label'>{props.crosswalkData?.state}</div>
+                            </div>
+                        </div>
+
+                        <div className='my-3 row'>
+                            <div className='col-4 row-heading'>Visibility:</div>
+                            <div className='col-8'>
+                                {isEditModeActive &&
+                                  <Dropdown
+                                    labelText=""
+                                    value={props.crosswalkData?.visibility}
+                                    onChange={(value) => updatePatchValue('visibility', value)}
+                                  >
+                                      {visibilityStates.map((state) => (
+                                        <DropdownItem key={state.key} value={state.key}>
+                                            {state.name}
+                                        </DropdownItem>
+                                      ))}
+                                  </Dropdown>
+                                }
+                                {!isEditModeActive && <div className='row-label'>{props.crosswalkData?.visibility}</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div className='col-1'></div>
+                    <div className='col-5'>
                         <div className='mt-2'>
-                            <TextInput
-                                onChange={(value) => updateValue('keywords', value)}
-                                labelText="Keywords"
-                                value={inputValue.keywords.toString()}
-                            />
+                            <div className='row-heading'>Description:</div>
+                            {isEditModeActive &&
+                            <Textarea
+                              labelText=""
+                              hintText=""
+                              resize="vertical"
+                              onChange={(event) => updatePatchValue('description', event.target.value)}
+                              value={unformattedPayload.description}
+                            >
+                            </Textarea>}
+                            {!isEditModeActive && <div>{unformattedPayload.description}</div>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
-            <h2 className='mt-4 mb-3'>Files</h2>
+            <br/>
+            {/*<h2 className='mt-4 mb-3'>Files</h2>*/}
             <div className='row d-flex justify-content-between metadata-and-files-wrap mx-2'>
                 <br/>
 
-                <div>TABLE HERE</div>
+                <div></div>
             </div>
-            <h2 className='mt-4 mb-3'>Crosswalk summary</h2>
-            <div className='row d-flex justify-content-between metadata-and-files-wrap mx-2'>
-                <JointListingAccordion crosswalkJoints={props.crosswalks} viewOnlyMode={true}
-                                       performAccordionAction={null}></JointListingAccordion>
-            </div>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            {/*             <h2 className='mt-4 mb-3'>Crosswalk summary</h2>
+
+           <div className='row d-flex justify-content-between metadata-and-files-wrap mx-2'>
+                <JointListingAccordion nodeMappings={props.nodeMappings} viewOnlyMode={true} isEditModeActive={false}
+                                       performAccordionAction={performAccordionAction}></JointListingAccordion>
+            </div>*/}
+
         </div>
+        <FixedButtonFooter footerType={FooterTypes.CROSSWALK_METADATA} isEditModeActive={true} performFooterActionCallback={performFooterActionCallback}></FixedButtonFooter>
     </>);
 }
