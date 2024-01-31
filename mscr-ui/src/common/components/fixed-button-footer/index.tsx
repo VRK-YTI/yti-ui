@@ -1,7 +1,6 @@
 import {Button as Sbutton} from 'suomifi-ui-components';
 import ConfirmModal from '@app/common/components/confirmation-modal';
 import * as React from 'react';
-import HasPermission from '@app/common/utils/has-permission';
 
 export enum FooterTypes {
   'CROSSWALK_EDITOR',
@@ -48,7 +47,7 @@ export default function FixedButtonFooter(props: { performFooterActionCallback?:
     <div className='row'>
       <div className='col-8'>
       </div>
-      {HasPermission({ actions: ['CREATE_CROSSWALK']}) &&
+
           <div className='col-4 d-flex flex-row justify-content-end'>
             {isEditModeActive && !props.isPublished &&
                 <Sbutton onClick={() => {
@@ -79,7 +78,7 @@ export default function FixedButtonFooter(props: { performFooterActionCallback?:
                 }}>Cancel</Sbutton>
             }
           </div>
-      }
+
     </div>
   </div>
       <ConfirmModal isVisible={isSaveConfirmModalOpen} actionName={'save'} actionText={'Save'} cancelText={'Cancel'} performConfirmModalAction={performFooterAction} heading={'Confirmation'} text1={'Do you want to save changes.'}/>
