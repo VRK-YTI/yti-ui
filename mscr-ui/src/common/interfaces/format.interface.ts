@@ -7,3 +7,9 @@ export type Format =
   | 'XML'
   | 'XLST'
   | 'MSCR';
+
+export const formatsAvailableForCrosswalkCreation: Format[] = [
+  'JSONSCHEMA',
+  'CSV',
+  'SKOSRDF',
+];

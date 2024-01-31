@@ -2,14 +2,21 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { createSlice } from '@reduxjs/toolkit';
-import { AppState, AppThunk } from '@app/store';
+import { AppThunk } from '@app/store';
 import isHydrate from '@app/store/isHydrate';
 import {
   Schema,
-  SchemaFormType,
   SchemaWithVersionInfo,
 } from '@app/common/interfaces/schema.interface';
-import { AnyNsRecord } from 'dns';
+import { MscrSearchResults } from '@app/common/interfaces/search.interface';
+import { Format } from '@app/common/interfaces/format.interface';
+
+function createUrl(formatRestrictions: Array<Format>) {
+  const formatString = formatRestrictions.reduce((filterString, fr) => {
+    return `${filterString}&format=${fr}`;
+  }, '');
+  return `/frontend/mscrSearch?type=SCHEMA${formatString}&pageSize=100`;
+}
 
 export const schemaApi = createApi({
   reducerPath: 'schemaApi',
@@ -60,9 +67,9 @@ export const schemaApi = createApi({
         method: 'GET',
       }),
     }),
-    getPublicSchemas: builder.query<any, any>({
-      query: () => ({
-        url: `/frontend/mscrSearch?type=SCHEMA&pageSize=100`,
+    getPublicSchemas: builder.query<MscrSearchResults, Array<Format>>({
+      query: (formatRestrictions) => ({
+        url: createUrl(formatRestrictions),
         method: 'GET',
       }),
     }),

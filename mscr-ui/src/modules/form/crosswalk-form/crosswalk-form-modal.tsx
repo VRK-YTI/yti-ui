@@ -35,9 +35,9 @@ interface CrosswalkFormModalProps {
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
 export default function CrosswalkFormModal({
-                                             refetch,
-                                             createNew = false,
-                                           }: CrosswalkFormModalProps) {
+  refetch,
+  createNew = false,
+}: CrosswalkFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
