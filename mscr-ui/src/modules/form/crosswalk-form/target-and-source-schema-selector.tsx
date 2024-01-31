@@ -1,17 +1,18 @@
 import { SingleSelect } from 'suomifi-ui-components';
 import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import { useGetPublicSchemasQuery } from '@app/common/components/schema/schema.slice';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { MscrSearchResult } from '@app/common/interfaces/search.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { ModelFormContainer } from '@app/modules/form/form.styles';
+import { formatsAvailableForCrosswalkCreation } from '@app/common/interfaces/format.interface';
 
 interface CrosswalkFormProps {
   formData: CrosswalkFormType;
   setFormData: Dispatch<SetStateAction<CrosswalkFormType>>;
+  createNew: boolean;
 }
 
 interface SelectableSchema {
@@ -22,8 +23,12 @@ interface SelectableSchema {
 export default function TargetAndSourceSchemaSelector({
   formData,
   setFormData,
+  createNew,
 }: CrosswalkFormProps) {
-  const { data, isSuccess } = useGetPublicSchemasQuery('');
+  const formatRestrictions = createNew
+    ? formatsAvailableForCrosswalkCreation
+    : [];
+  const { data, isSuccess } = useGetPublicSchemasQuery(formatRestrictions);
   //defaultSchemas.push({ labelText: 'test', uniqueItemId: 'test'});
   const [dataLoaded, setDataLoaded] = useState(false);
   const [defaultSchemas, setDefaultSchemas] = useState(
