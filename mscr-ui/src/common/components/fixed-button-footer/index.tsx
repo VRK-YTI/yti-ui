@@ -1,6 +1,7 @@
 import {Button as Sbutton} from 'suomifi-ui-components';
 import ConfirmModal from '@app/common/components/confirmation-modal';
 import * as React from 'react';
+import HasPermission from '@app/common/utils/has-permission';
 
 export enum FooterTypes {
   'CROSSWALK_EDITOR',
@@ -47,36 +48,38 @@ export default function FixedButtonFooter(props: { performFooterActionCallback?:
     <div className='row'>
       <div className='col-8'>
       </div>
-      <div className='col-4 d-flex flex-row justify-content-end'>
-        {isEditModeActive && !props.isPublished &&
-            <Sbutton onClick={() => {
-              setPublishConfirmModalOpen(true);
-            }}>Publish</Sbutton>
-        }
+      {HasPermission({ actions: ['CREATE_CROSSWALK']}) &&
+          <div className='col-4 d-flex flex-row justify-content-end'>
+            {isEditModeActive && !props.isPublished &&
+                <Sbutton onClick={() => {
+                  setPublishConfirmModalOpen(true);
+                }}>Publish</Sbutton>
+            }
 
-        {/* Save is always available for metadata regardless is the crosswalk published or not */}
-        {isEditModeActive && ((props.footerType === FooterTypes.SCHEMA_METADATA) || (props.footerType === FooterTypes.CROSSWALK_METADATA)) &&
-            <Sbutton hidden={!isEditModeActive || props.isPublished} onClick={() => {
-              setSaveConfirmModalOpen(true);
-            }}>Save</Sbutton>
-        }
+            {/* Save is always available for metadata regardless is the crosswalk published or not */}
+            {isEditModeActive && ((props.footerType === FooterTypes.SCHEMA_METADATA) || (props.footerType === FooterTypes.CROSSWALK_METADATA)) &&
+                <Sbutton hidden={!isEditModeActive || props.isPublished} onClick={() => {
+                  setSaveConfirmModalOpen(true);
+                }}>Save</Sbutton>
+            }
 
-        {(isEditModeActive && props.footerType === FooterTypes.CROSSWALK_EDITOR) && !props.isPublished &&
-            <Sbutton variant='secondary' onClick={() => {
-              performFooterAction('finishEditing');
-            }}>Finish editing</Sbutton>
-        }
-        {((props.footerType === FooterTypes.CROSSWALK_EDITOR && !isEditModeActive && !props.isPublished) || (props.footerType === FooterTypes.CROSSWALK_METADATA && !isEditModeActive)) &&
-            <Sbutton onClick={() => {
-              performFooterAction('setEditModeActive');
-            }}>Edit</Sbutton>
-        }
-        {isEditModeActive && (props.footerType === FooterTypes.CROSSWALK_METADATA) &&
-            <Sbutton variant='secondary' onClick={() => {
-              performFooterAction('cancel');
-            }}>Cancel</Sbutton>
-        }
-      </div>
+            {(isEditModeActive && props.footerType === FooterTypes.CROSSWALK_EDITOR) && !props.isPublished &&
+                <Sbutton variant='secondary' onClick={() => {
+                  performFooterAction('finishEditing');
+                }}>Finish editing</Sbutton>
+            }
+            {((props.footerType === FooterTypes.CROSSWALK_EDITOR && !isEditModeActive && !props.isPublished) || (props.footerType === FooterTypes.CROSSWALK_METADATA && !isEditModeActive)) &&
+                <Sbutton onClick={() => {
+                  performFooterAction('setEditModeActive');
+                }}>Edit</Sbutton>
+            }
+            {isEditModeActive && (props.footerType === FooterTypes.CROSSWALK_METADATA) &&
+                <Sbutton variant='secondary' onClick={() => {
+                  performFooterAction('cancel');
+                }}>Cancel</Sbutton>
+            }
+          </div>
+      }
     </div>
   </div>
       <ConfirmModal isVisible={isSaveConfirmModalOpen} actionName={'save'} actionText={'Save'} cancelText={'Cancel'} performConfirmModalAction={performFooterAction} heading={'Confirmation'} text1={'Do you want to save changes.'}/>
