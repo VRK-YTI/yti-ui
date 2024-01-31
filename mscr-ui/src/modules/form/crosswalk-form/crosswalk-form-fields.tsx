@@ -39,6 +39,7 @@ export default function CrosswalkFormFields({
       <TargetAndSourceSchemaSelector
         formData={formData}
         setFormData={setFormData}
+        createNew={createNew}
       ></TargetAndSourceSchemaSelector>
       {!createNew && renderCrosswalkFormat()}
       {renderLanguages()}

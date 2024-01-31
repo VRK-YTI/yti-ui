@@ -57,6 +57,7 @@ import LoginModalView from '@app/common/components/login-modal';
 import FixedButtonFooter, {FooterTypes} from '@app/common/components/fixed-button-footer';
 import {activeSlice} from '@app/common/components/active/active.slice';
 import {createTheme, ThemeProvider} from '@mui/material';
+import HasPermission from '@app/common/utils/has-permission';
 
 export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) {
 
@@ -196,6 +197,8 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     const [deleteMapping, deleteMappingResponse] = useDeleteMappingMutation();
     const [patchMapping, patchMappingResponse] = usePatchMappingMutation();
 
+    const [isAdmin, setIsAdmin] =  React.useState<boolean>(HasPermission({actions: ['CREATE_CROSSWALK']}));
+
     interface simpleNode {
         name: string | undefined;
         id: string;
@@ -216,8 +219,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         refetch: refetchCrosswalkData,
     } =
       useGetCrosswalkQuery(crosswalkId);
-
-
 
     const fromTree = (nodes: any) => (
       <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name} className='linked-tree-item'>
@@ -1020,7 +1021,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
           {selectedTab === 0 && isSourceDataFetched && isTargetDataFetched && getCrosswalkData &&
             <>
                 <MetadataAndFiles crosswalkData={getCrosswalkData}
-                                  performMetadataAndFilesAction={performMetadataAndFilesAction} nodeMappings={nodeMappings} crosswalkId={crosswalkId}/>
+                                  performMetadataAndFilesAction={performMetadataAndFilesAction} nodeMappings={nodeMappings} crosswalkId={crosswalkId} isAdmin={isAdmin}/>
             </>
           }
           {/*            <CustomTabPanel value={selectedTab} index={0}>
@@ -1114,14 +1115,16 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                             </div>
 
                             {/*  MID BUTTONS */}
-                            <div className='col-2 px-4 mid-buttons'>
-                                  <Sbutton className='link-button' disabled={(linkingError.length > 1)}
-                                           title={(linkingError.length > 1 ? linkingError : 'Link selected nodes')}
-                                           disabled={crosswalkPublished || !isEditModeActive}
-                                           onClick={() => {
-                                               addOrEditJointButtonClick(!isBothSelectedLinked, undefined);
-                                           }}><LinkIcon></LinkIcon></Sbutton>
-                            </div>
+                              <div className='col-2 px-4 mid-buttons'>
+                                  {isAdmin &&
+                                    <Sbutton className='link-button' disabled={(linkingError.length > 1)}
+                                             title={(linkingError.length > 1 ? linkingError : 'Link selected nodes')}
+                                             disabled={crosswalkPublished || !isEditModeActive}
+                                             onClick={() => {
+                                                 addOrEditJointButtonClick(!isBothSelectedLinked, undefined);
+                                             }}><LinkIcon></LinkIcon></Sbutton>
+                                  }
+                              </div>
 
                             {/*  TARGET TREE */}
                             <div className='col-5 pe-4'>
@@ -1213,7 +1216,9 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                           </Box>
                       </div>
                   </div>
+                  {isAdmin &&
                   <FixedButtonFooter isEditModeActive={isEditModeActive} footerType={FooterTypes.CROSSWALK_EDITOR} performFooterActionCallback={performCallbackFromFooter} isPublished={crosswalkPublished}></FixedButtonFooter>
+                  }
               </>}
           </div>
       </>}

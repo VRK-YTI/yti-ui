@@ -13,7 +13,7 @@ interface patchPayload {
     [key: string]: string | string[];
 }
 
-export default function MetadataAndFiles(props: { crosswalkData: any; performMetadataAndFilesAction: any; nodeMappings: NodeMapping[]; crosswalkId: string; isEditModeActive?: boolean}) {
+export default function MetadataAndFiles(props: { crosswalkData: any; performMetadataAndFilesAction: any; nodeMappings: NodeMapping[]; crosswalkId: string; isAdmin: boolean}) {
     const patchPayloadInit: patchPayload = {
         label: '',
         description: '',
@@ -291,6 +291,10 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
             </div>*/}
 
         </div>
-        <FixedButtonFooter footerType={FooterTypes.CROSSWALK_METADATA} isEditModeActive={true} performFooterActionCallback={performFooterActionCallback} isPublished={isPublished}></FixedButtonFooter>
+        {props.isAdmin &&
+          <FixedButtonFooter footerType={FooterTypes.CROSSWALK_METADATA} isEditModeActive={true}
+                             performFooterActionCallback={performFooterActionCallback}
+                             isPublished={isPublished}></FixedButtonFooter>
+        }
     </>);
 }
