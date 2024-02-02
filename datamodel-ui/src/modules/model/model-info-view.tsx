@@ -350,10 +350,6 @@ export default function ModelInfoView({
           )}
         </BasicBlock>
 
-        <BasicBlock title={t('references-from-other-components')}>
-          {t('no-references')}
-        </BasicBlock>
-
         <Separator isLarge />
 
         <BasicBlock title={t('created')}>

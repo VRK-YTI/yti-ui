@@ -19,6 +19,7 @@ import {
 } from './utils';
 import { pathForModelType } from '@app/common/utils/api-utils';
 import { UriData } from '@app/common/interfaces/uri.interface';
+import { ResourceReferencesResult } from '@app/common/interfaces/resource-reference.interface';
 
 interface ResourceData {
   modelId: string;
@@ -151,6 +152,19 @@ export const resourceApi = createApi({
       }),
       invalidatesTags: ['Resource'],
     }),
+    getResourceReferences: builder.query<
+      ResourceReferencesResult,
+      { uri: string }
+    >({
+      query: (props) => ({
+        url: '/resource/references',
+        params: {
+          uri: props.uri,
+        },
+        method: 'GET',
+      }),
+      providesTags: ['Resource'],
+    }),
   }),
 });
 
@@ -249,5 +263,6 @@ export const {
   useTogglePropertyShapeMutation,
   useMakeLocalCopyPropertyShapeMutation,
   useRenameResourceMutation,
+  useGetResourceReferencesQuery,
   util: { getRunningQueriesThunk, getRunningMutationsThunk },
 } = resourceApi;
