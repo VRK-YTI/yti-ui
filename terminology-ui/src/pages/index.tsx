@@ -120,7 +120,12 @@ export const getServerSideProps = createCommonGetServerSideProps(
       getSearchResult.initiate({ urlState: urlState, language: locale ?? 'fi' })
     );
     store.dispatch(getGroups.initiate(locale ?? 'fi'));
-    store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
+    store.dispatch(
+      getOrganizations.initiate({
+        language: locale ?? 'fi',
+        showChildOrganizations: false,
+      })
+    );
     store.dispatch(getCounts.initiate(null));
 
     await Promise.all(store.dispatch(terminologyGetRunningQueriesThunk()));
