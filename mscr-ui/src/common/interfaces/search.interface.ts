@@ -30,10 +30,11 @@ export interface ResultInfo {
   format?: Format;
 }
 
-export interface PatchedResult extends ResultInfo {
-  description: {
-    [key: string]: string;
-  };
+export interface PaginatedQuery {
+  query?: string;
+  type?: Type;
+  pageSize: number;
+  pageFrom: number;
 }
 
 export interface MscrSearchResult {
@@ -47,16 +48,6 @@ export type Facet =
   | 'format'
   | 'organization'
   | 'isReferenced';
-
-export interface Filter {
-  label: string;
-  facet: Facet;
-  options: Array<{
-    label?: string;
-    key: string;
-    count: number;
-  }>;
-}
 
 export interface Bucket {
   key: string;
@@ -72,6 +63,9 @@ export interface Aggregations {
 
 export interface MscrSearchResults {
   hits: {
+    total?: {
+      value: number;
+    };
     hits: MscrSearchResult[];
   };
   aggregations: Aggregations;

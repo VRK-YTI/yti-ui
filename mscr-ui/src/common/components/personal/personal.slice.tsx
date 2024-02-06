@@ -1,7 +1,14 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
-import { MscrSearchResults } from '@app/common/interfaces/search.interface';
+import {
+  MscrSearchResults,
+  PaginatedQuery,
+} from '@app/common/interfaces/search.interface';
+
+function createUrl({ type, pageSize, pageFrom }: PaginatedQuery) {
+  return `/frontend/mscrSearchPersonalContent?query=&type=${type}&pageSize=${pageSize}&pageFrom=${pageFrom}`;
+}
 
 export const mscrSearchPersonalContentApi = createApi({
   reducerPath: 'mscrSearchPersonalContentApi',
@@ -13,9 +20,9 @@ export const mscrSearchPersonalContentApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    getPersonalContent: builder.query<MscrSearchResults, string>({
-      query: (type) => ({
-        url: `/frontend/mscrSearchPersonalContent?query=&type=${type}`,
+    getPersonalContent: builder.query<MscrSearchResults, PaginatedQuery>({
+      query: (query) => ({
+        url: createUrl(query),
         method: 'GET',
       }),
     }),

@@ -10,20 +10,17 @@ import useUrlState, {
   initialUrlState,
 } from '@app/common/utils/hooks/use-url-state';
 import { IconClose } from 'suomifi-icons';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { SearchContext } from '@app/common/components/search-context-provider';
 import SearchFilterSet from 'src/modules/search/search-filter-set';
 import { useTranslation } from 'next-i18next';
 import { Grid } from '@mui/material';
-import { useRouter } from 'next/router';
 
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
   const { t } = useTranslation('common');
   const { setIsSearchActive } = useContext(SearchContext);
   const { data: mscrSearchResults } = useGetMscrSearchResultsQuery(urlState);
-  const { query, pathname } = useRouter();
-  const [currentPath] = useState(pathname);
 
   const handleClose = () => {
     setIsSearchActive(false);
