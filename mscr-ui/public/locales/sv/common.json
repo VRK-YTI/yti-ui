@@ -110,6 +110,15 @@
   "own-information": "",
   "page-indicator-text": "",
   "page-number": "",
+  "pagination": {
+    "aria": {
+      "info": "",
+      "label": "",
+      "next": "",
+      "prev": ""
+    },
+    "page": ""
+  },
   "previous-page": "",
   "profile": "",
   "profile-with-count_one": "",

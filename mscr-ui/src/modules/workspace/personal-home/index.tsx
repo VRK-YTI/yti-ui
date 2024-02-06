@@ -87,18 +87,18 @@ export default function PersonalWorkspace({
         )}
         {lastPage > 1 && (
           <Pagination
-            aria-label={t('pagination-label')}
+            aria-label={t('pagination.aria.label')}
             pageIndicatorText={(currentPage, lastPage) =>
               t('pagination.page') + ' ' + currentPage + ' / ' + lastPage
             }
             ariaPageIndicatorText={(currentPage, lastPage) =>
-              t('pagination.aria', { currentPage, lastPage })
+              t('pagination.aria.info', { currentPage, lastPage })
             }
             lastPage={lastPage}
             currentPage={currentPage}
             onChange={(page) => setCurrentPage(+page)}
-            nextButtonAriaLabel={t('pagination.aria-next')}
-            previousButtonAriaLabel={t('pagination.aria-prev')}
+            nextButtonAriaLabel={t('pagination.aria.next')}
+            previousButtonAriaLabel={t('pagination.aria.prev')}
             pageInput={false}
           />
         )}
