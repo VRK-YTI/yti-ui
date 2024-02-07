@@ -4,18 +4,25 @@ import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
 import WorkspaceTable from '@app/modules/workspace/workspace-table';
 import Title from 'yti-common-ui/components/title';
-import { Description, TitleDescriptionWrapper } from 'yti-common-ui/components/title/title.styles';
+import {
+  Description,
+  TitleDescriptionWrapper,
+} from 'yti-common-ui/components/title/title.styles';
 import Separator from 'yti-common-ui/components/separator';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import { useState } from 'react';
-import { Pagination } from 'suomifi-ui-components';
+import Pagination from '@app/common/components/pagination';
 
 interface GroupHomeProps {
   user: MscrUser;
   pid: string;
   contentType: Type;
 }
-export default function GroupWorkspace({ user, pid, contentType }: GroupHomeProps) {
+export default function GroupWorkspace({
+  user,
+  pid,
+  contentType,
+}: GroupHomeProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const [currentPage, setCurrentPage] = useState(1);
@@ -75,19 +82,9 @@ export default function GroupWorkspace({ user, pid, contentType }: GroupHomeProp
         )}
         {lastPage > 1 && (
           <Pagination
-            aria-label={t('pagination.aria.label')}
-            pageIndicatorText={(currentPage, lastPage) =>
-              t('pagination.page') + ' ' + currentPage + ' / ' + lastPage
-            }
-            ariaPageIndicatorText={(currentPage, lastPage) =>
-              t('pagination.aria.info', { currentPage, lastPage })
-            }
-            lastPage={lastPage}
             currentPage={currentPage}
-            onChange={(page) => setCurrentPage(+page)}
-            nextButtonAriaLabel={t('pagination.aria.next')}
-            previousButtonAriaLabel={t('pagination.aria.prev')}
-            pageInput={false}
+            setCurrentPage={setCurrentPage}
+            lastPage={lastPage}
           />
         )}
       </main>

@@ -14,7 +14,7 @@ import { useGetOrganizationsQuery } from '@app/common/components/organizations/o
 import CrosswalkFormModal from '@app/modules/form/crosswalk-form/crosswalk-form-modal';
 import { ButtonBlock } from '@app/modules/workspace/workspace.styles';
 import { useState } from 'react';
-import { Pagination } from 'suomifi-ui-components';
+import Pagination from '@app/common/components/pagination';
 
 export default function PersonalWorkspace({
   contentType,
@@ -87,19 +87,9 @@ export default function PersonalWorkspace({
         )}
         {lastPage > 1 && (
           <Pagination
-            aria-label={t('pagination.aria.label')}
-            pageIndicatorText={(currentPage, lastPage) =>
-              t('pagination.page') + ' ' + currentPage + ' / ' + lastPage
-            }
-            ariaPageIndicatorText={(currentPage, lastPage) =>
-              t('pagination.aria.info', { currentPage, lastPage })
-            }
-            lastPage={lastPage}
             currentPage={currentPage}
-            onChange={(page) => setCurrentPage(+page)}
-            nextButtonAriaLabel={t('pagination.aria.next')}
-            previousButtonAriaLabel={t('pagination.aria.prev')}
-            pageInput={false}
+            setCurrentPage={setCurrentPage}
+            lastPage={lastPage}
           />
         )}
       </main>
