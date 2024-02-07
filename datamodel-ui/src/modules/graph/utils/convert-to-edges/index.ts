@@ -56,7 +56,7 @@ export default function convertToEdges(
       sourceHandle: source,
       target: target,
       targetHandle: target,
-      id: `reactflow__edge-${source}-${target}`,
+      id: `reactflow__edge-${reference.identifier}-${source}-${target}`,
       referenceType: reference.referenceType,
     };
   };
@@ -92,12 +92,13 @@ export default function convertToEdges(
         sourceHandle: source,
         target: target,
         targetHandle: target,
-        id: `reactflow__edge-${source}-${target}`,
+        id: `reactflow__edge-${identifier}-${source}-${target}`,
         referenceType: 'ASSOCIATION',
       },
       applicationProfile,
       isCorner: true,
       offsetSource,
+      origin: identifier,
     });
   };
 
@@ -112,17 +113,20 @@ export default function convertToEdges(
         ? node.associations
             .filter((assoc) => assoc.referenceTarget)
             .flatMap((assoc, idx) => {
+              const origIndex =
+                node.associations?.findIndex(
+                  (n) =>
+                    n.identifier === assoc.identifier &&
+                    n.referenceTarget === assoc.referenceTarget
+                ) ?? 0;
               const offsetSource = node.attributes
-                ? node.attributes.length + idx + 1
-                : undefined;
-
-              const label = applicationProfile ? t('targets') : undefined;
+                ? node.attributes.length + origIndex + 1
+                : origIndex + 1;
 
               if (assoc.referenceTarget?.startsWith('corner-')) {
                 referenceLabels.push({
                   targetId: getEndEdge(assoc.referenceTarget),
                   identifier: assoc.identifier,
-                  label: label,
                   offsetSource: offsetSource,
                 });
 
@@ -131,6 +135,7 @@ export default function convertToEdges(
                   offsetSource: offsetSource,
                   applicationProfile: applicationProfile,
                   isCorner: true,
+                  origin: assoc.identifier,
                 });
               }
 
@@ -174,7 +179,6 @@ export default function convertToEdges(
                 );
 
                 return createEdge({
-                  label: label,
                   identifier: assoc.identifier,
                   params: getEdgeParams(firstCornerNodeId, assoc),
                   applicationProfile,
@@ -186,18 +190,14 @@ export default function convertToEdges(
                 params: getEdgeParams(node.identifier, assoc),
                 applicationProfile: applicationProfile,
                 offsetSource: offsetSource,
+                origin: assoc.identifier,
               });
             })
         : []),
 
       ...node.references.flatMap((reference, idx) => {
         let label;
-        if (applicationProfile && reference.referenceType === 'PARENT_CLASS') {
-          label = t('utilizes');
-        } else if (
-          !applicationProfile &&
-          reference.referenceType === 'ASSOCIATION'
-        ) {
+        if (!applicationProfile && reference.referenceType === 'ASSOCIATION') {
           label = reference.label;
         }
 
@@ -215,6 +215,7 @@ export default function convertToEdges(
           return createEdge({
             params: getEdgeParams(node.identifier, reference, true),
             isCorner: true,
+            origin: node.identifier,
           });
         }
 
@@ -291,6 +292,7 @@ export default function convertToEdges(
             : reference.identifier,
           params: getEdgeParams(node.identifier, reference),
           applicationProfile,
+          origin: node.identifier,
         });
       }),
     ]);
@@ -308,12 +310,14 @@ export default function convertToEdges(
       return createEdge({
         params: getEdgeParams(nodeIdentifier, node, true),
         isCorner: true,
+        origin: node.origin,
       });
     }
 
     if (node.referenceTarget.includes(':')) {
       return createEdge({
         params: getEdgeParams(nodeIdentifier, node),
+        origin: node.origin,
       });
     }
 
@@ -344,6 +348,7 @@ export default function convertToEdges(
       params: getEdgeParams(nodeIdentifier, node),
       offsetSource: associationInfo.offsetSource,
       applicationProfile: applicationProfile,
+      origin: associationInfo.identifier,
     });
   });
 

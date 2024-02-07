@@ -13,10 +13,17 @@ import { adminControlsSlice } from '../admin-controls/admin-controls.slice';
 import { vocabularyApi } from '../vocabulary/vocabulary.slice';
 import { subscriptionApi } from '../subscription/subscription.slice';
 import { screen, waitFor } from '@testing-library/react';
+import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
-const reducers = [adminControlsSlice, vocabularyApi, loginApi, subscriptionApi];
+const reducers = [
+  adminControlsSlice,
+  vocabularyApi,
+  loginApi,
+  subscriptionApi,
+  terminologySearchApi,
+];
 
 describe('infoExpander', () => {
   it('should render export button', async () => {

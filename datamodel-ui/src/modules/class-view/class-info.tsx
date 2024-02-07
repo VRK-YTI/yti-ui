@@ -58,6 +58,7 @@ import {
 } from '@app/common/utils/translation-helpers';
 import UnsavedAlertModal from '../unsaved-alert-modal';
 import ResourceReferences from '../common-view-content/resource-references';
+import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 
 interface ClassInfoProps {
   data?: ClassType;
@@ -139,6 +140,14 @@ export default function ClassInfo({
 
     handleEdit();
   };
+
+  const resourceLabelComparator = (a: SimpleResource, b: SimpleResource) =>
+    getLanguageVersion({
+      data: a.label,
+      lang: displayLang ?? i18n.language,
+    }).localeCompare(
+      getLanguageVersion({ data: b.label, lang: displayLang ?? i18n.language })
+    );
 
   function renderTopInfoByType() {
     if (!data) {
@@ -403,18 +412,21 @@ export default function ClassInfo({
                 openAllText=""
                 showToggleAllButton={false}
               >
-                {data.attribute.map((attr, idx) => (
-                  <ResourceInfo
-                    key={`${data.identifier}-attr-${attr.identifier}-${idx}`}
-                    data={attr}
-                    modelId={modelId}
-                    classId={data.identifier}
-                    hasPermission={hasPermission}
-                    applicationProfile={applicationProfile}
-                    attribute
-                    disableEdit={disableEdit}
-                  />
-                ))}
+                {data.attribute
+                  .slice()
+                  .sort(resourceLabelComparator)
+                  .map((attr, idx) => (
+                    <ResourceInfo
+                      key={`${data.identifier}-attr-${attr.identifier}-${idx}`}
+                      data={attr}
+                      modelId={modelId}
+                      classId={data.identifier}
+                      hasPermission={hasPermission}
+                      applicationProfile={applicationProfile}
+                      attribute
+                      disableEdit={disableEdit}
+                    />
+                  ))}
               </ExpanderGroup>
             ) : (
               t('no-attributes')
@@ -461,18 +473,21 @@ export default function ClassInfo({
                 openAllText=""
                 showToggleAllButton={false}
               >
-                {data.association.map((assoc) => (
-                  <ResourceInfo
-                    key={`${data.identifier}-attr-${assoc.identifier}-${assoc.range?.curie}`}
-                    data={assoc}
-                    modelId={modelId}
-                    classId={data.identifier}
-                    hasPermission={hasPermission}
-                    applicationProfile={applicationProfile}
-                    disableEdit={disableEdit}
-                    targetInClassRestriction={assoc.range}
-                  />
-                ))}
+                {data.association
+                  .slice()
+                  .sort(resourceLabelComparator)
+                  .map((assoc) => (
+                    <ResourceInfo
+                      key={`${data.identifier}-attr-${assoc.identifier}-${assoc.range?.curie}`}
+                      data={assoc}
+                      modelId={modelId}
+                      classId={data.identifier}
+                      hasPermission={hasPermission}
+                      applicationProfile={applicationProfile}
+                      disableEdit={disableEdit}
+                      targetInClassRestriction={assoc.range}
+                    />
+                  ))}
               </ExpanderGroup>
             ) : (
               t('no-assocations')

@@ -58,6 +58,9 @@ export interface OrganizationSearchResult {
   properties: {
     prefLabel: Property;
   };
+  references: {
+    parent: OrganizationSearchResult;
+  };
   type: {
     graph: {
       id: string;

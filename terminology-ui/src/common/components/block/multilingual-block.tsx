@@ -21,7 +21,11 @@ export default function MultilingualBlock<T>({
   extra,
   id,
 }: MultilingualBlockProps<T>) {
-  if (!data) {
+  if (
+    !data ||
+    (typeof data === 'string' && data === '') ||
+    (Array.isArray(data) && data.length === 0)
+  ) {
     return null;
   }
 

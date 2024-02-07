@@ -15,7 +15,11 @@ import {
   useGetResourceQuery,
 } from '@app/common/components/resource/resource.slice';
 import CommonViewContent from '@app/modules/common-view-content';
-import { setSelected, setView } from '@app/common/components/model/model.slice';
+import {
+  selectDisplayLang,
+  setSelected,
+  setView,
+} from '@app/common/components/model/model.slice';
 import { useStoreDispatch } from '@app/store';
 import { resourceToResourceFormType } from '../resource/utils';
 import RemoveReferenceModal from './remove-reference-modal';
@@ -33,6 +37,7 @@ import { useEffect, useState } from 'react';
 import ResourceError from '@app/common/components/resource-error';
 import { useRouter } from 'next/router';
 import { getSlugAsString } from '@app/common/utils/parse-slug';
+import { useSelector } from 'react-redux';
 
 interface ResourceInfoProps {
   data: SimpleResource;
@@ -60,6 +65,7 @@ export default function ResourceInfo({
   disableAssocTarget,
 }: ResourceInfoProps) {
   const { t, i18n } = useTranslation('common');
+  const displayLang = useSelector(selectDisplayLang());
   const [open, setOpen] = useState(false);
   const dispatch = useStoreDispatch();
   const router = useRouter();
@@ -117,7 +123,7 @@ export default function ResourceInfo({
           <PrimaryTextWrapper>
             {`${getLanguageVersion({
               data: data.label,
-              lang: i18n.language,
+              lang: displayLang ?? i18n.language,
               appendLocale: true,
             })} (${data.modelId}:${data.identifier})`}
           </PrimaryTextWrapper>
@@ -125,7 +131,7 @@ export default function ResourceInfo({
             {data.range && !attribute
               ? `${getLanguageVersion({
                   data: data.range.label,
-                  lang: i18n.language,
+                  lang: displayLang ?? i18n.language,
                   appendLocale: true,
                 })} (${data.range.curie})`
               : ''}
@@ -162,7 +168,7 @@ export default function ResourceInfo({
                   uri={data.uri}
                   name={getLanguageVersion({
                     data: data.label,
-                    lang: i18n.language,
+                    lang: displayLang ?? i18n.language,
                     appendLocale: true,
                   })}
                   applicationProfile={applicationProfile}

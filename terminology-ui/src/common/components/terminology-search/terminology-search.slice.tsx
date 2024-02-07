@@ -50,9 +50,14 @@ export const terminologySearchApi = createApi({
         method: 'GET',
       }),
     }),
-    getOrganizations: builder.query<OrganizationSearchResult[], string>({
+    getOrganizations: builder.query<
+      OrganizationSearchResult[],
+      { language: string; showChildOrganizations?: boolean }
+    >({
       query: (value) => ({
-        url: `/v2/organizations?language=${value}`,
+        url: `/v2/organizations?language=${
+          value.language
+        }&showChildOrganizations=${value.showChildOrganizations ?? false}`,
         method: 'GET',
       }),
     }),

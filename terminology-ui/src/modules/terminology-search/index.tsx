@@ -55,7 +55,10 @@ export default function TerminologySearch() {
     i18n.language
   );
   const { data: orgsData, error: organizationsError } =
-    useGetOrganizationsQuery(i18n.language);
+    useGetOrganizationsQuery({
+      language: i18n.language,
+      showChildOrganizations: false,
+    });
   const { data: counts, error: countsError } = useGetCountsQuery(null);
   const dispatch = useStoreDispatch();
   const [showModal, setShowModal] = useState(false);
