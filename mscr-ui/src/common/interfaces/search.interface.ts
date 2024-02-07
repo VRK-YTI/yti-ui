@@ -33,6 +33,7 @@ export interface ResultInfo {
 export interface PaginatedQuery {
   query?: string;
   type?: Type;
+  ownerOrg?: string;
   pageSize: number;
   pageFrom: number;
 }

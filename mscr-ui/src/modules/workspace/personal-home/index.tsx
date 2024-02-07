@@ -28,7 +28,7 @@ export default function PersonalWorkspace({
   const query: PaginatedQuery = {
     type: contentType,
     pageSize,
-    pageFrom: (+currentPage - 1) * pageSize,
+    pageFrom: (currentPage - 1) * pageSize,
   };
   const { data, isLoading } = useGetPersonalContentQuery(query);
   const lastPage = data?.hits.total?.value

@@ -1,4 +1,4 @@
-import { Type } from '@app/common/interfaces/search.interface';
+import { PaginatedQuery, Type } from '@app/common/interfaces/search.interface';
 import { useGetOrgContentQuery } from '@app/common/components/organization/organization.slice';
 import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
@@ -7,6 +7,8 @@ import Title from 'yti-common-ui/components/title';
 import { Description, TitleDescriptionWrapper } from 'yti-common-ui/components/title/title.styles';
 import Separator from 'yti-common-ui/components/separator';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
+import { useState } from 'react';
+import { Pagination } from 'suomifi-ui-components';
 
 interface GroupHomeProps {
   user: MscrUser;
@@ -16,10 +18,18 @@ interface GroupHomeProps {
 export default function GroupWorkspace({ user, pid, contentType }: GroupHomeProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
-  const { data, isLoading } = useGetOrgContentQuery({
-    type: contentType as string,
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 20;
+  const query: PaginatedQuery = {
+    type: contentType,
     ownerOrg: pid,
-  });
+    pageSize,
+    pageFrom: (currentPage - 1) * pageSize,
+  };
+  const { data, isLoading } = useGetOrgContentQuery(query);
+  const lastPage = data?.hits.total?.value
+    ? Math.ceil(data?.hits.total.value / pageSize)
+    : 0;
 
   if (isLoading) {
     return <div> Is Loading </div>; //ToDo: A loading circle or somesuch
@@ -62,6 +72,23 @@ export default function GroupWorkspace({ user, pid, contentType }: GroupHomeProp
           </div>
         ) : (
           <WorkspaceTable data={data} contentType={contentType} />
+        )}
+        {lastPage > 1 && (
+          <Pagination
+            aria-label={t('pagination.aria.label')}
+            pageIndicatorText={(currentPage, lastPage) =>
+              t('pagination.page') + ' ' + currentPage + ' / ' + lastPage
+            }
+            ariaPageIndicatorText={(currentPage, lastPage) =>
+              t('pagination.aria.info', { currentPage, lastPage })
+            }
+            lastPage={lastPage}
+            currentPage={currentPage}
+            onChange={(page) => setCurrentPage(+page)}
+            nextButtonAriaLabel={t('pagination.aria.next')}
+            previousButtonAriaLabel={t('pagination.aria.prev')}
+            pageInput={false}
+          />
         )}
       </main>
     );
