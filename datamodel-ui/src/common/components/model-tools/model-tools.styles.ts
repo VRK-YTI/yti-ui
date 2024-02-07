@@ -15,6 +15,10 @@ export const ToolsTooltip = styled.div`
   gap: ${(props) => props.theme.suomifi.spacing.s};
   padding: ${(props) => props.theme.suomifi.spacing.s};
 
+  position: absolute;
+  right: 60px;
+  top: 20px;
+
   * > {
     min-width: 100%;
   }
