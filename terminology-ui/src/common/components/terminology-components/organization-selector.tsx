@@ -33,7 +33,10 @@ export default function OrganizationSelector({
     data: organizations,
     isLoading,
     isError,
-  } = useGetOrganizationsQuery(i18n.language);
+  } = useGetOrganizationsQuery({
+    language: i18n.language,
+    showChildOrganizations: true,
+  });
   const [selectedOrganizations, setSelectedOrganizations] = useState<
     MultiSelectData[]
   >(

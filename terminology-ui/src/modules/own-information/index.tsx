@@ -29,7 +29,10 @@ export default function OwnInformation() {
   const user = useSelector(selectLogin());
   const { breakpoint } = useBreakpoints();
   const { t, i18n } = useTranslation('own-information');
-  const { data: organizations } = useGetOrganizationsQuery(i18n.language);
+  const { data: organizations } = useGetOrganizationsQuery({
+    language: i18n.language,
+    showChildOrganizations: true,
+  });
   const { data: subscriptions, refetch: refetchSubscriptions } =
     useGetSubscriptionsQuery();
   const { data: requests } = useGetRequestsQuery();

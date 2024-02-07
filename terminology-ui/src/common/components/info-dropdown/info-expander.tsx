@@ -52,9 +52,13 @@ const CopyTerminologyModal = dynamic(() => import('../copy-terminology-modal'));
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;
+  childOrganizations?: string[];
 }
 
-export default function InfoExpander({ data }: InfoExpanderProps) {
+export default function InfoExpander({
+  data,
+  childOrganizations,
+}: InfoExpanderProps) {
   const { t, i18n } = useTranslation('common');
   const { urlState } = useUrlState();
   const router = useRouter();
@@ -66,6 +70,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
     urlState,
     language: i18n.language,
   });
+
   const dispatch = useStoreDispatch();
 
   if (!data) {
@@ -323,7 +328,12 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         <BasicBlock title={t('vocabulary-info-organization')} id="organization">
           <PropertyList>
             {data.references.contributor
-              ?.filter((c) => c && c.properties.prefLabel)
+              ?.filter(
+                (c) =>
+                  c &&
+                  c.properties.prefLabel &&
+                  !childOrganizations?.includes(c.id)
+              )
               .map((contributor) => (
                 <li key={contributor.id}>
                   <PropertyValue property={contributor?.properties.prefLabel} />

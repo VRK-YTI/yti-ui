@@ -43,6 +43,7 @@ import isEmail from 'validator/lib/isEmail';
 import RemovalModal from '@app/common/components/removal-modal';
 import { getBlockData } from './utils';
 import { StatusChip } from 'yti-common-ui/status-chip';
+import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -65,10 +66,27 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
     terminologyId,
     conceptId,
   });
+  const {
+    data: organizations,
+    isLoading,
+    isError,
+  } = useGetOrganizationsQuery({
+    language: i18n.language,
+    showChildOrganizations: true,
+  });
 
   const { terms, definitions, notes, examples } = useMemo(() => {
     return getBlockData(t, concept);
   }, [concept, t]);
+
+  const childOrganizations = useMemo(() => {
+    if (isLoading || isError) {
+      return [];
+    }
+    return organizations
+      ?.filter((org) => org.references.parent)
+      .map((org) => org.id);
+  }, [organizations, isLoading, isError]);
 
   const prefLabel = getPropertyValue({
     property: getProperty('prefLabel', concept?.references.prefLabelXl),
@@ -225,7 +243,12 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           >
             <PropertyList $smBot={true}>
               {terminology?.references.contributor
-                ?.filter((c) => c && c.properties.prefLabel)
+                ?.filter(
+                  (c) =>
+                    c &&
+                    c.properties.prefLabel &&
+                    !childOrganizations?.includes(c.id)
+                )
                 .map((contributor) => (
                   <li key={contributor.id}>
                     <PropertyValue
