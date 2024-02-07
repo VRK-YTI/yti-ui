@@ -1,7 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
-import { MscrSearchResults } from '@app/common/interfaces/search.interface';
+import { MscrSearchResults, PaginatedQuery } from '@app/common/interfaces/search.interface';
+
+function createUrl({ type, ownerOrg, pageSize, pageFrom }: PaginatedQuery) {
+  return `/frontend/mscrSearchPersonalContent?query=&type=${type}&ownerOrg=${ownerOrg}&pageSize=${pageSize}&pageFrom=${pageFrom}`;
+}
 
 export const mscrSearchOrgContentApi = createApi({
   reducerPath: 'mscrSearchOrgContentApi',
@@ -13,9 +17,9 @@ export const mscrSearchOrgContentApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    getOrgContent: builder.query<MscrSearchResults, { type: string; ownerOrg: string }>({
-      query: ({ type, ownerOrg }) => ({
-        url: `/frontend/mscrSearchOrgContent?query=&type=${type}&ownerOrg=${ownerOrg}`,
+    getOrgContent: builder.query<MscrSearchResults, PaginatedQuery>({
+      query: (query) => ({
+        url: createUrl(query),
         method: 'GET',
       }),
     }),
