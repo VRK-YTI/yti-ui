@@ -59,6 +59,12 @@ export default function SchemaTree({
     const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
         performTreeAction(isSourceTree, 'treeToggle', event, nodeIds);
     };
+
+    useEffect(() => {
+        console.log('treeExpanded', treeExpanded);
+    }, [treeExpanded]);
+
+
     // console.log('TREEVIEW DATA', nodes, treeSelectedArray);
     return (
         <TreeView
