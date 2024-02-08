@@ -1,26 +1,14 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import TreeItem from '@mui/lab/TreeItem';
 import {useEffect} from 'react';
-import {Text,SearchInput, Notification,
+import {SearchInput, Notification,
     Button as Sbutton,
-    InlineAlert,
-    Modal,
-    ModalContent,
-    ModalFooter,
-    ModalTitle,
-    Paragraph,
 } from 'suomifi-ui-components';
-import MockupSchemaLoader, {generateTreeFromJson} from '../crosswalk-editor/schema-mockup';
 import {cloneDeep} from 'lodash';
 import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import LinkOffIcon from '@mui/icons-material/LinkOff';
-import AddLinkIcon from '@mui/icons-material/AddLink';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
@@ -28,34 +16,18 @@ import JointListingAccordion from '@app/modules/crosswalk-editor/joint-listing-a
 import MetadataAndFiles from '@app/modules/crosswalk-editor/tabs/metadata-and-files';
 import NodeInfo from '@app/modules/crosswalk-editor/tabs/crosswalk-info/node-info';
 import SchemaTree from '@app/modules/crosswalk-editor/tabs/edit-crosswalk/schema-tree';
-import ConfirmModal from '@app/common/components/confirmation-modal';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import {SSRConfig, useTranslation} from 'next-i18next';
-import {
-    CommonContextProvider,
-    CommonContextState,
-} from 'yti-common-ui/common-context-provider';
-
-import {fetchCrosswalkData} from '@app/common/components/simple-api-service';
-import callback from '@app/pages/api/auth/callback';
+import {generateTreeFromJson} from '../crosswalk-editor/schema-mockup';
 
 import {
-    RenderTreeOld,
-    CrosswalkConnection,
     CrosswalkConnectionNew,
-    CrosswalkConnectionsNew, RenderTree, NodeMapping
+    RenderTree, NodeMapping
 } from '@app/common/interfaces/crosswalk-connection.interface';
 import NodeMappingsModal from './tabs/node-mappings';
 import LinkIcon from '@app/common/components/shared-icons';
-import filter from '../../../../common-ui/components/filter';
-import {useRouter} from 'next/router';
-import {useGetCrosswalkQuery, usePatchCrosswalkMutation, usePutCrosswalkMutation, usePutMappingMutation, useDeleteMappingMutation, usePatchMappingMutation, useGetMappingsQuery} from '@app/common/components/crosswalk/crosswalk.slice';
+import {useGetCrosswalkQuery, usePatchCrosswalkMutation, usePutMappingMutation, useDeleteMappingMutation, usePatchMappingMutation, useGetMappingsQuery} from '@app/common/components/crosswalk/crosswalk.slice';
 import {useGetFrontendSchemaQuery} from '@app/common/components/schema/schema.slice';
 import {useGetCrosswalkMappingFunctionsQuery} from '@app/common/components/crosswalk-functions/crosswalk-functions.slice';
-import {usePostSchemaFileMutation} from '@app/common/components/import/import.slice';
-import LoginModalView from '@app/common/components/login-modal';
 import FixedButtonFooter, {FooterTypes} from '@app/common/components/fixed-button-footer';
-import {activeSlice} from '@app/common/components/active/active.slice';
 import {createTheme, ThemeProvider} from '@mui/material';
 import HasPermission from '@app/common/utils/has-permission';
 
@@ -71,22 +43,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
             ].join(','),
         },});
 
-    const emptyTreeSelectionOld: RenderTreeOld = {
-        idNumeric: 0,
-        id: '',
-        name: '',
-        isLinked: false,
-        title: '',
-        type: '',
-        description: '',
-        required: '',
-        isMappable: '',
-        parentName: '',
-        jsonPath: '',
-        parentId: 0,
-        children: [],
-    };
-
     const emptyTreeSelection: RenderTree = {
         elementPath: '',
         parentElementPath: undefined,
@@ -95,22 +51,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         visualTreeId: '',
         properties: undefined,
         children: []
-    };
-
-    const crosswalkConnectionInit: CrosswalkConnection = {
-        sourceDescription: undefined,
-        isSelected: false,
-        mappingType: undefined,
-        notes: undefined,
-        parentId: '',
-        parentName: undefined,
-        source: '',
-        sourceTitle: undefined,
-        sourceType: undefined,
-        target: '',
-        targetTitle: undefined,
-        targetType: undefined,
-        type: undefined,
     };
 
     const crosswalkConnectionNewInit: CrosswalkConnectionNew = {
@@ -128,21 +68,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         targetProcessing: undefined,
     };
 
-
-    const crosswalkConnectionsNewInit: CrosswalkConnectionsNew = {
-        source: [emptyTreeSelection],
-        target: [emptyTreeSelection],
-        id: '0',
-        description: '',
-    };
-
-
-    const emptyTree: any = [{
-        id: '0',
-        name: '',
-        children: '',
-    }];
-
     // STATE VARIABLES
     const inputData: RenderTree[] = [];
     const [isSourceDataFetched, setSourceDataFetched] = React.useState<boolean>(false);
@@ -151,35 +76,29 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     const [sourceSchemaUrn, setSourceSchemaUrn] = React.useState<string>('');
     const [targetSchemaUrn, setTargetSchemaUrn] = React.useState<string>('');
 
-    const [sourceTreeDataOriginal, setSourceDataOriginal] = React.useState<RenderTree[]>(inputData);
-    const [sourceTreeData, setSourceData] = React.useState<RenderTree[]>(inputData);
-    const [sourceTreeExpanded, setSourceExpanded] = React.useState<string[]>([]);
-    const [sourceTreeSelectedArray, selectFromSourceTreeByIds] = React.useState<string[]>([]);
+    const [sourceTreeDataOriginal, setSourceTreeDataOriginal] = React.useState<RenderTree[]>(inputData);
+    const [sourceTreeData, setSourceTreeData] = React.useState<RenderTree[]>(inputData);
+    const [sourceTreeExpandedArray, setSourceTreeExpanded] = React.useState<string[]>([]);
+    const [sourceTreeSelectedArray, setSourceTreeSelections] = React.useState<string[]>([]);
 
-    const [targetTreeDataOriginal, setTargetDataOriginal] = React.useState<RenderTree[]>(inputData);
-    const [targetTreeData, setTargetData] = React.useState<RenderTree[]>(inputData);
-    const [targetTreeExpanded, setTargetExpanded] = React.useState<string[]>([]);
-    const [targetTreeSelectedArray, selectFromTargetTreeByIds] = React.useState<string[]>([]);
+    const [targetTreeDataOriginal, setTargetTreeDataOriginal] = React.useState<RenderTree[]>(inputData);
+    const [targetTreeData, setTargetTreeData] = React.useState<RenderTree[]>(inputData);
+    const [targetTreeExpandedArray, setTargetTreeExpanded] = React.useState<string[]>([]);
+    const [targetTreeSelectedArray, setTargetTreeSelections] = React.useState<string[]>([]);
 
     const [selectedSourceNodes, setSelectedSourceNodes] = React.useState<RenderTree[]>([emptyTreeSelection]);
     const [selectedTargetNodes, setSelectedTargetNodes] = React.useState<RenderTree[]>([emptyTreeSelection]);
 
     const [connectedCrosswalksNew, setConnectedCrosswalksNew] = React.useState<CrosswalkConnectionNew[]>([]);
     const [nodeMappings, setNodeMappings] = React.useState<NodeMapping[]>([]);
-    const [mappingToBeEdited, setMappingToBeEdited] = React.useState<NodeMapping | undefined>(undefined);
 
     const [jointToBeEdited, setJointToBeEdited] = React.useState<CrosswalkConnectionNew | undefined>(undefined);
-
 
     const [isAnySelectedLinked, setAnySelectedLinkedState] = React.useState<boolean>(false);
     const [isBothSelectedLinked, setBothSelectedLinkedState] = React.useState<boolean>(false);
     const [linkingError, setLinkingError] = React.useState<string>('');
     const [selectedTab, setSelectedTab] = React.useState(1);
     const [isNodeMappingsModalOpen, setNodeMappingsModalOpen] = React.useState<boolean>(false);
-    const [isSaveConfirmModalOpen, setSaveConfirmModalOpen] = React.useState<boolean>(false);
-    const [isPublishConfirmModalOpen, setPublishConfirmModalOpen] = React.useState<boolean>(false);
-
-    const [crosswalksList, setCrosswalkList] = React.useState<string[]>([]);
 
     const [isEditModeActive, setEditModeActive] = React.useState<boolean>(false);
     const [isJointPatchOperation, setJointPatchOperation] = React.useState<boolean>(true);
@@ -228,10 +147,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
       </TreeItem>
     );
 
-    const emptyTreeTest = () => (
-      <TreeItem key="0" nodeId="0" label="test"></TreeItem>
-    );
-
     if (crosswalkPatchResponse.isSuccess) {
         if (!crosswalkPublished && crosswalkPatchResponse?.originalArgs?.payload?.state === 'PUBLISHED') {
             setCrosswalkPublished(true);
@@ -248,7 +163,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         }
     }
 
-
     useEffect(() => {
         // Reset initial state when tab changed.
         if (selectedTab === 1) {
@@ -257,7 +171,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     }, [selectedTab]);
 
     useEffect(() => {
-        //setConfirmModalOpen(true);
+        // After joint is created, this opens editing modal
         setNodeMappingsModalOpen(true);
     }, [jointToBeEdited]);
 
@@ -271,30 +185,16 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         if (getCrosswalkData && getCrosswalkData?.state !== 'PUBLISHED') {
             setCrosswalkPublished(false);
         }
-    }, [!getCrosswalkDataIsLoading]);
+    }, [getCrosswalkData]);
 
-
-    useEffect(() => {
-    }, [!mappingFunctionsIsLoading]);
-
-    useEffect(() => {
-    }, [!mappingFiltersIsLoading]);
-
-    useEffect(() => {
-    }, [!isSaveConfirmModalOpen, !isPublishConfirmModalOpen]);
-
-    // RESET EDITED JOINT VALUE IF MODAL NEEDS TO BE RE OPENED
-    useEffect(() => {
-    }, [isNodeMappingsModalOpen]);
-
-    // EXPAND TREES WHEN DATA LOADED
+    // Expand trees whedn data is loaded
     useEffect(() => {
         setExpanded(true);
-    }, [sourceTreeData]);
+    }, [isSourceDataFetched]);
 
     useEffect(() => {
         setExpanded(false);
-    }, [targetTreeData]);
+    }, [isTargetDataFetched]);
 
     useEffect(() => {
         // USED BY NODE INFO BOX SOURCE
@@ -303,15 +203,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         // USED BY NODE INFO BOX TARGET
         setSelectedTargetNodes(getTreeNodesByIds(targetTreeSelectedArray, false));
 
-        //updateIsLinkedStatus(sourceNode, targetNode);
-        //setSelectedSourceNodes(sourceNode);
-
-    }, [sourceTreeSelectedArray, targetTreeSelectedArray, connectedCrosswalksNew, crosswalksList]);
-
-    // USED BY LINK BUTTON STATE
-    useEffect(() => {
-        updateSelectionErrors();
-    }, [selectedSourceNodes, selectedTargetNodes]);
+    }, [sourceTreeSelectedArray, targetTreeSelectedArray, connectedCrosswalksNew]);
 
     const {
         data: getSourceSchemaData,
@@ -334,7 +226,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     const {
         data: mappingsFromBackend,
         isLoading: getMappingsDataIsLoading,
-        isSuccess: getMappingsDataIsSuccesss,
+        isSuccess: getMappingsDataIsSuccess,
         isError: getMappingsIsError,
         error: getMappingsError
     } =
@@ -344,25 +236,25 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         if (getSourceSchemaData?.content) {
             generateTreeFromJson(getSourceSchemaData).then(res => {
                 if (res) {
-                    setSourceDataOriginal(res);
-                    setSourceData(res);
+                    setSourceTreeDataOriginal(cloneDeep(res));
+                    setSourceTreeData(res);
                     setSourceDataFetched(true);
                 }
             });
         }
-    }, [getSourceSchemaDataIsSuccess]);
+    }, [getSourceSchemaDataIsSuccess, getSourceSchemaData]);
 
     useEffect(() => {
         if (getTargetSchemaData?.content) {
             generateTreeFromJson(getTargetSchemaData).then(res => {
                 if (res) {
-                    setTargetDataOriginal(res);
-                    setTargetData(res);
+                    setTargetTreeDataOriginal(cloneDeep(res));
+                    setTargetTreeData(res);
                     setTargetDataFetched(true);
                 }
             });
         }
-    }, [getTargetSchemaDataIsSuccess]);
+    }, [getTargetSchemaDataIsSuccess, getTargetSchemaData]);
 
     useEffect(() => {
         if (mappingsFromBackend) {
@@ -375,16 +267,14 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     if (putMappingResponse.isSuccess) {
         if (lastPutMappingPid !== putMappingResponse.data.pid) {
             addMappingToAccordion(putMappingResponse, true);
-        } else {
-            //TODO: add error notification
         }
+        //TODO: add error notification
     }
 
     if (patchMappingResponse.isSuccess) {
-        if (lastPatchMappingPid !== patchMappingResponse.data.pid) {
-        } else {
-            //TODO: add error notification
-        }
+        //TODO: add success and error notification?
+        // if (lastPatchMappingPid !== patchMappingResponse.data.pid) {
+        // }
     }
 
     if (deleteMappingResponse.isSuccess) {
@@ -416,6 +306,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                 });
             }
             else {
+                // This is needed in the future for showing success or error status
                 setLastPatchMappingPid(response.data.pid);
             }
         }
@@ -490,31 +381,10 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
             setJointPatchOperation(true);
             setJointToBeEdited(jointsToBeEdited[jointsToBeEdited.length - 1]);
         }
-    };
+    }
 
     function removeJoint(jointPid: any) {
         deleteMapping(jointPid);
-    }
-
-    function updateIsLinkedStatus(source: CrosswalkConnection, target: CrosswalkConnection) {
-        setAnySelectedLinkedState(source.target.length > 0 || target.target.length > 0);
-        setBothSelectedLinkedState(source.target.length > 0 && source.target === target.source);
-    }
-
-    function getJointEndNode(nodes: string[], isSourceTree: boolean) {
-        let ret: simpleNode = {name: '', id: ''};
-        connectedCrosswalksNew.forEach(item => {
-            if (isSourceTree) {
-                if (item.source.id === nodes.toString()) {
-                    ret = {name: item.target.name, id: item.target.id};
-                }
-            } else {
-                if (item.target.id === nodes.toString()) {
-                    ret = {name: item.source.name, id: item.source.id};
-                }
-            }
-        });
-        return ret;
     }
 
     function getJointNodes(nodeIds: string[], isSourceTree: boolean) {
@@ -525,13 +395,8 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         }
     }
 
+    // Used to generate data for mappings modal
     function getTreeNodesByIds(nodeIds: string[], isSourceTree: boolean) {
-        let nodeIdsArr: string[] = [];
-        if (typeof nodeIds === 'string') {
-            nodeIdsArr.push(nodeIds);
-        } else {
-            nodeIdsArr = nodeIds;
-        }
         if (isSourceTree) {
             const foundSourceNodes: RenderTree[] = [];
             return findNodesFromTree(sourceTreeDataOriginal, nodeIds, foundSourceNodes);
@@ -539,45 +404,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
             const foundTargetNodes: RenderTree[] = [];
             return findNodesFromTree(targetTreeDataOriginal, nodeIds, foundTargetNodes);
         }
-    }
-
-    function updateJointData(cc: CrosswalkConnectionNew) {
-        const newCrosswalks = [...connectedCrosswalksNew.map(item => {
-            if ((item.target === cc.target) && (item.source === cc.source)) {
-                return (cloneDeep(cc));
-            } else {
-                return (item);
-            }
-            ;
-        })];
-        setConnectedCrosswalksNew(() => [...newCrosswalks]);
-    }
-
-    function setJointSelected(nodeId: string) {
-        const newCons: CrosswalkConnectionNew[] = [];
-        connectedCrosswalksNew.forEach(cw => {
-            cw.id === nodeId ? cw.isSelected = true : cw.isSelected = false;
-            newCons.push(cw);
-        });
-        setConnectedCrosswalksNew(() => [...newCons]);
-    }
-
-    function findJointToBeEdited(nodeId: string) {
-        connectedCrosswalksNew.find(cw => {
-            cw.id === nodeId;
-        });
-    }
-
-    function getJointSelected(pid: string | undefined) {
-        let ret = undefined;
-        if (pid) {
-            nodeMappings.filter(node => {
-                if (node.pid === pid) {
-                    ret = node;
-                }
-            });
-        }
-        return ret;
     }
 
     function updateSelectionErrors() {
@@ -592,37 +418,38 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         setLinkingError(linkingError);
     }
 
-    const handleTreeSelect = (event: React.SyntheticEvent | undefined, nodeIds: string[], isSourceTree: boolean) => {
-        const newTreeSelection: RenderTree[] = [];
+    const handleTreeClick = (event: React.SyntheticEvent | undefined, nodeIds: string[], isSourceTree: boolean) => {
         if (isSourceTree) {
-            const results: string[] = [];
-            selectFromSourceTreeByIds(findFromTree(sourceTreeData, nodeIds, results));
-            //setSourceSelection(newTreeSelection);
-            //selectFromSourceTreeByIds(nodeIds);
+            setSourceTreeSelections(nodeIds);
         } else {
-            targetTreeData.forEach((item: RenderTree) => {
-                if (item.id === nodeIds.toString()) {
-                    newTreeSelection.push(item);
-                }
-            });
-            //setTargetSelection(newTreeSelection);
-            selectFromTargetTreeByIds(nodeIds);
+            setTargetTreeSelections(nodeIds);
         }
     };
 
-    function findFromTree(tree: any, itemsToFind: string[], results: string[]) {
-        tree.forEach((item: RenderTree) => {
-            if (itemsToFind.includes(item.id)) {
-                results.push(item.id);
-            } else {
-                if (item.children && item.children.length > 0) {
-                    return findFromTree(item.children, itemsToFind, results);
+
+    const handleTreeToggle = (event: React.SyntheticEvent, nodeIds: string[], isSourceTree: boolean) => {
+        if (isSourceTree) {
+            setSourceTreeExpanded(nodeIds);
+        } else {
+            setTargetTreeExpanded(nodeIds);
+        }
+    };
+
+    function getElementPathsFromTree(treeData: RenderTree[], nodeIds: string[], results: string[]) {
+        treeData.forEach(item => {
+            if (nodeIds.includes(item.id)) {
+                if (item.elementPath != null) {
+                    results.push(item.elementPath);
                 }
+            }
+            if (item.children && item.children.length > 0) {
+                return getElementPathsFromTree(item.children, nodeIds, results);
             }
         });
         return results;
     }
 
+    // Used to tree filtering
     function findNodesFromTree(tree: any, itemsToFind: string[], results: RenderTree[]) {
         tree.forEach((item: RenderTree) => {
             if (itemsToFind.includes(item.id)) {
@@ -636,36 +463,44 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         return results;
     }
 
-    const handleTreeToggle = (event: React.SyntheticEvent, nodeIds: string[], isSourceTree: boolean) => {
-        if (isSourceTree) {
-            setSourceExpanded(nodeIds);
-        } else {
-            setTargetExpanded(nodeIds);
-        }
-    };
-
     const selectFromTreeById = (nodeId: string, isTargetTree: boolean) => {
         const nodeIds = [];
         nodeIds.push(nodeId);
+        expandAndSelectNodes(nodeIds, nodeIds, isTargetTree);
+    };
+
+    // Called from accordion
+    const selectFromTreeByNodeMapping = (node: NodeMapping, isTargetTree: boolean) => {
+        const nodeIds: string[] = [];
+
         if (isTargetTree) {
-            selectFromTargetTreeByIds(nodeIds);
+            node.target.forEach(node => nodeIds.push(node.id));
+            expandAndSelectNodes(nodeIds, nodeIds, isTargetTree);
         } else {
-            selectFromSourceTreeByIds(nodeIds);
+            node.source.forEach(node => nodeIds.push(node.id));
+            expandAndSelectNodes(nodeIds, nodeIds, isTargetTree);
         }
     };
 
-    const selectFromTree = (node: NodeMapping, isTargetTree: boolean) => {
-        const nodeIds: React.SetStateAction<string[]> = [];
-        if (isTargetTree) {
-            node.target.forEach(node => nodeIds.push(node.id));
-            selectFromTargetTreeByIds(nodeIds);
-            //setTargetSelection(node.target)
-        } else {
-            node.source.forEach(node => nodeIds.push(node.id));
-            selectFromSourceTreeByIds(nodeIds);
-            //setSourceSelection(node.source)
-        }
-    };
+    function expandAndSelectNodes(expandNodeIds: string[], selectNodeIds: string[], isTargetTree: boolean) {
+        const nodeIdsToExpand = getAllNodeIdsOnPathToLeaf(expandNodeIds, isTargetTree);
+        isTargetTree ? setTargetTreeExpanded(nodeIdsToExpand) : setSourceTreeExpanded(nodeIdsToExpand);
+        isTargetTree ? setTargetTreeSelections(expandNodeIds) : setSourceTreeSelections(expandNodeIds);
+    }
+
+    // Used by tree select and filtering
+    function getAllNodeIdsOnPathToLeaf(nodeIds: string[], isTargetTree: boolean) {
+        const elementPaths = getElementPathsFromTree(isTargetTree ? targetTreeData : sourceTreeData, nodeIds, []);
+        const nodesToSelect: Set<string> = new Set();
+
+        elementPaths.forEach(path => {
+            const nodes = path.split('.');
+            nodes.forEach(node => {
+                nodesToSelect.add(node);
+            });
+        });
+        return Array.from(nodesToSelect);
+    }
 
     const handleExpandClick = (isSourceTree: boolean) => {
         const retData: string[] = [];
@@ -675,7 +510,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                     retData.push(id.toString());
                 }
             });
-            setSourceExpanded((oldExpanded) => {
+            setSourceTreeExpanded((oldExpanded) => {
                 return oldExpanded.length === 0 ? retData : [];
             });
         } else {
@@ -684,7 +519,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                     retData.push(id.toString());
                 }
             });
-            setTargetExpanded((oldExpanded) => {
+            setTargetTreeExpanded((oldExpanded) => {
                 return oldExpanded.length === 0 ? retData : [];
             });
         }
@@ -698,7 +533,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                     retData.push(id.toString());
                 }
             });
-            setSourceExpanded(() => {
+            setSourceTreeExpanded(() => {
                 return retData;
             });
         } else {
@@ -707,180 +542,47 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                     retData.push(id.toString());
                 }
             });
-            setTargetExpanded(() => {
+            setTargetTreeExpanded(() => {
                 return retData;
             });
         }
     };
 
-    function filterTreeData(treeData: RenderTree[], keywords: string[], results: RenderTree[]) {
-        treeData.forEach(item => {
-            if (keywords.includes(item.elementPath)) {
-                results.push(item);
-            }
-            if (item.children && item.children.length > 0) {
-                return filterTreeData(item.children, keywords, results);
-            }
-        });
-        return results;
-    }
-
-    function filterTreeDataOld(treeData: RenderTree[], keywords: string[], index: number, isSourceTree: boolean) {
-        let ret = undefined;
-        treeData = treeData.filter((elem: { name: string; elementPath: string }) => {
-            if (elem.elementPath.startsWith(keywords[index])) {
-                return elem;
-            }
-        });
-
-        if (treeData[0] && treeData[0].elementPath === keywords[keywords.length - 1]) {
-            ret = cloneDeep(buildPathToSubtrees(treeData, isSourceTree));
-        }
-
-        if (treeData[0]?.children && treeData[0].children.length > 0) {
-            filterTreeDataOld(treeData[0].children, keywords, index + 1, isSourceTree);
-        }
-    }
-
-    function buildPathToSubtrees(treeData: RenderTree[], isSourceTree: boolean) {
-        const jsonPathReady: string[] = [];
-        const jsonPathPieces = treeData[0].elementPath.split('.');
-        let prev = '';
-
-        for (let i = 0; i < jsonPathPieces.length; i += 1) {
-            if (i > 0) {
-                prev = prev + '.' + jsonPathPieces[i];
-                jsonPathReady.push(prev);
-            } else {
-                prev = jsonPathPieces[i];
-                jsonPathReady.push(prev);
-            }
-        }
-
-        const pathObjects: RenderTree[] = [];
-        if (isSourceTree) {
-            sourceTreeData.forEach(elem => {
-                if (jsonPathReady.includes(elem.elementPath)) {
-                    // console.log('final match', elem);
-                    pathObjects.push(elem);
-                }
-            });
-            setSourceData(pathObjects);
-            return pathObjects;
-        } else {
-            targetTreeData.forEach(elem => {
-                if (jsonPathReady.includes(elem.elementPath)) {
-                    // console.log('final match', elem);
-                    pathObjects.push(elem);
-                }
-            });
-            setTargetData(pathObjects);
-            return pathObjects;
-        }
-    }
-
     function clearTreeSearch(isSourceTree: boolean) {
         if (isSourceTree) {
-            setSourceData(sourceTreeDataOriginal);
+            setSourceTreeSelections([]);
+            setSourceTreeData(cloneDeep(sourceTreeDataOriginal));
             setExpanded(true);
         } else {
-            setTargetData(targetTreeDataOriginal);
+            setTargetTreeSelections([]);
+            setTargetTreeData(cloneDeep(targetTreeDataOriginal));
             setExpanded(false);
         }
+
     }
 
-    function findElementPathsFromTree(tree: RenderTree[], itemToFind: string, results: string[]) {
-        // console.log('FINDING FROM TREE', tree, itemToFind);
+    function doFiltering(tree: RenderTree[], nameToFind: string, results: {nodeIds: string[]; childNodeIds: string[]}) {
         tree.forEach(item => {
-            if (item.elementPath && item.elementPath.toLowerCase().includes(itemToFind.toLowerCase())) {
-                results.push(item.elementPath);
-            } else {
+            if (item.name && item.name.toLowerCase().includes(nameToFind.toLowerCase())) {
+                results.nodeIds.push(item.id);
                 if (item.children && item.children.length > 0) {
-                    //console.log('FINDING FROM SUBTREE', item.children, itemsToFind);
-                    return findElementPathsFromTree(item.children, itemToFind, results);
+                    item.children.forEach(child => {
+                        results.childNodeIds.push(child.id);
+                        });
+                    }
                 }
-            }
+                if (item.children && item.children.length > 0) {
+                    return doFiltering(item.children, nameToFind, results);
+                }
         });
-        // console.log('!!!! FIND RESULT', results);
         return results;
     }
 
     function searchFromTree(input: any, isSourceTree: boolean) {
-        //clearTreeSearch(isSourceTree);
-
-        //setSourceData(MockupSchemaLoader(true));
-        let treeDataNew: any;
-
-        const hits: string[] = [];
-
-        if (isSourceTree) {
-            findElementPathsFromTree(sourceTreeData, input.toString(), hits);
-        } else {
-            targetTreeData.forEach((elem: { name: string; elementPath: string }) => {
-                if (elem.name.includes(input.toString())) {
-                    hits.push(elem.elementPath);
-                }
-            });
-        }
-
-        const nodesToProcess: string[][] = [];
-
-        hits.forEach(hit => {
-            const treeNodeNames = hit.split('.');
-            nodesToProcess.push(treeNodeNames);
-        });
-
-        const nodesToProcessUnique: Set<string> = new Set();
-
-        nodesToProcess.forEach(path => {
-            let prev = '';
-            for (let i = 0; i < path.length; i += 1) {
-                if (i > 0) {
-                    prev = prev + '.' + path[i];
-                    nodesToProcessUnique.add(prev);
-                } else {
-                    prev = path[i];
-                    nodesToProcessUnique.add(prev);
-                }
-            }
-        });
-
-        // FOUND MATCHING SUBTREES
-        const filteredTreeData: RenderTree[] = [];
-
-        // console.log('!!!!!! FILTERED TREE DATA', filteredTreeData);
-        buildNestedFilterTree(filterTreeData(isSourceTree ? sourceTreeData : targetTreeData, Array.from(nodesToProcessUnique), filteredTreeData));
-
-        if (treeDataNew && treeDataNew.length > 0) {
-            if (isSourceTree) {
-                //setSourceData(treeDataNew)
-            } else {
-                //setTargetData(treeDataNew)
-            }
-        }
-    }
-
-    function buildNestedFilterTree(treeData: RenderTree[]) {
-        const retTreeData: RenderTree[] = [];
-        treeData = treeData.map(item => {
-            item.children = [];
-            return item;
-        });
-
-        let j = 0;
-        for (let i = 0; i < treeData.length; i += 1) {
-            if (treeData[i].elementPath === treeData[i + j].parentElementPath) {
-                treeData[i].children.push(treeData[i + j]);
-                if (j + 1 < treeData.length) {
-                    j += 1;
-                }
-            }
-        }
-    }
-
-    function clearSelections() {
-        selectFromSourceTreeByIds([]);
-        selectFromTargetTreeByIds([]);
+        clearTreeSearch(isSourceTree);
+        const hits = { nodeIds: [], childNodeIds: [] };
+        isSourceTree ? doFiltering(sourceTreeData, input.toString(), hits) :  doFiltering(targetTreeData, input.toString(), hits);
+        expandAndSelectNodes(hits.nodeIds, hits.nodeIds, !isSourceTree);
     }
 
     const performCallbackFromAccordionAction = (joint: NodeMapping, action: string, value: string) => {
@@ -893,11 +595,13 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         } else if (action === 'selectFromSourceTree') {
             //handleExpandClick(true);
             clearTreeSearch(true);
-            selectFromTree(joint, false);
+            selectFromTreeByNodeMapping(joint, false);
+            scrollToTop();
         } else if (action === 'selectFromTargetTree') {
             //handleExpandClick(false);
             clearTreeSearch(false);
-            selectFromTree(joint, true);
+            selectFromTreeByNodeMapping(joint, true);
+            scrollToTop();
         } else if (action === 'openJointDetails') {
             addOrEditJointButtonClick(false, joint);
         } else if (action === 'removeJoint') {
@@ -907,7 +611,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
 
     const performCallbackFromTreeAction = (isSourceTree: boolean, action: any, event: any, nodeIds: any) => {
         if (action === 'handleSelect') {
-            handleTreeSelect(event, nodeIds, isSourceTree);
+            handleTreeClick(event, nodeIds, isSourceTree);
         } else if (action === 'treeToggle') {
             handleTreeToggle(event, nodeIds, isSourceTree);
         }
@@ -928,7 +632,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
     };
 
     const performCallbackFromFooter = (action: any) => {
-        console.log('callback', action);
         if (action === 'setEditModeActive') {
             setEditModeActive(true);
         }
@@ -944,12 +647,12 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
         if (action === 'selectFromSourceTree') {
             setSelectedTab(1);
             clearTreeSearch(true);
-            selectFromTree(properties, false);
+            selectFromTreeByNodeMapping(properties, false);
         }
         if (action === 'selectFromTargetTree') {
             setSelectedTab(1);
-            clearTreeSearch(true);
-            selectFromTree(properties, true);
+            clearTreeSearch(false);
+            selectFromTreeByNodeMapping(properties, true);
         }
         if (action === 'saveChanges') {
             const obj = Object.assign({}, ...properties);
@@ -1005,7 +708,6 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
             behavior: 'smooth',
         });
     };
-
 
     return (
       <ThemeProvider theme={theme}>
@@ -1079,7 +781,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                                                     <IconButton onClick={() => handleExpandClick(true)}
                                                                 aria-label="unlink"
                                                                 color="primary" size="large">
-                                                        {sourceTreeExpanded.length === 0 ? <ExpandMoreIcon/> :
+                                                        {sourceTreeExpandedArray.length === 0 ? <ExpandMoreIcon/> :
                                                           <ExpandLessIcon/>}
                                                     </IconButton>
                                                 </div>
@@ -1095,7 +797,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                                                     <SchemaTree nodes={sourceTreeData[0]}
                                                                 isSourceTree={true}
                                                                 treeSelectedArray={sourceTreeSelectedArray}
-                                                                treeExpanded={sourceTreeExpanded}
+                                                                treeExpanded={sourceTreeExpandedArray}
                                                                 performTreeAction={performCallbackFromTreeAction}
                                                     />
 
@@ -1117,7 +819,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                             {/*  MID BUTTONS */}
                               <div className='col-2 px-4 mid-buttons'>
                                   {isAdmin &&
-                                    <Sbutton className='link-button' disabled={(linkingError.length > 1)}
+                                    <Sbutton className='link-button'
                                              title={(linkingError.length > 1 ? linkingError : 'Link selected nodes')}
                                              disabled={crosswalkPublished || !isEditModeActive}
                                              onClick={() => {
@@ -1154,7 +856,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                                                     <IconButton onClick={() => handleExpandClick(false)}
                                                                 aria-label="unlink"
                                                                 color="primary" size="large">
-                                                        {targetTreeExpanded.length === 0 ? <ExpandMoreIcon/> :
+                                                        {targetTreeExpandedArray.length === 0 ? <ExpandMoreIcon/> :
                                                           <ExpandLessIcon/>}
                                                     </IconButton>
                                                 </div>
@@ -1170,7 +872,7 @@ export default function CrosswalkEditor({crosswalkId}: { crosswalkId: string }) 
                                                       nodes={targetTreeData[0]}
                                                       isSourceTree={false}
                                                       treeSelectedArray={targetTreeSelectedArray}
-                                                      treeExpanded={targetTreeExpanded}
+                                                      treeExpanded={targetTreeExpandedArray}
                                                       performTreeAction={performCallbackFromTreeAction}
                                                     />
 
