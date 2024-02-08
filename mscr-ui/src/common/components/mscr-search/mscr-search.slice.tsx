@@ -29,7 +29,7 @@ function createUrl(urlState: UrlState) {
     );
   }
 
-  return baseQuery.concat('&includeFacets=true');
+  return baseQuery.concat('&includeFacets=true&pageSize=50');
 }
 
 export const mscrSearchApi = createApi({
