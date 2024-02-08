@@ -35,7 +35,7 @@ function getCompareKey(term: Term, type: string) {
   const langKey = `${
     langOrder[prefLabel?.lang ?? ''] ?? `x_${prefLabel?.lang}`
   }`;
-  return `${langKey}_${termTypeOrder[type] ?? 'x'}_${prefLabel?.value}`;
+  return `${langKey}_${termTypeOrder[type] ?? 'x'}`;
 }
 
 export function getBlockData(t: TFunction, concept?: Concept) {
