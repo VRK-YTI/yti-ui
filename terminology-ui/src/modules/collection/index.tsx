@@ -174,6 +174,8 @@ export default function Collection({
             <PropertyValue property={terminology?.properties.prefLabel} />
           </BadgeBar>
 
+          <BasicBlock title="URI">{collection?.uri}</BasicBlock>
+
           <MultilingualPropertyBlock
             title={t('field-name')}
             data={prefLabels}
@@ -263,7 +265,6 @@ export default function Collection({
             <FormattedDate date={collection?.lastModifiedDate} />
             {collection?.lastModifiedBy && `, ${collection.lastModifiedBy}`}
           </BasicBlock>
-          <BasicBlock title="URI">{collection?.uri}</BasicBlock>
         </MainContent>
         {collection && <CollectionSidebar collection={collection} />}
       </PageContent>

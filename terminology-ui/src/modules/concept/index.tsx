@@ -174,6 +174,8 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             </StatusChip>
           </BadgeBar>
 
+          <BasicBlock title="URI">{concept?.uri}</BasicBlock>
+
           <TermBlock title={<h2>{t('field-terms-label')}</h2>} data={terms} />
 
           <MultilingualPropertyBlock
@@ -269,7 +271,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             <FormattedDate date={concept?.lastModifiedDate} />
             {concept?.lastModifiedBy && `, ${concept.lastModifiedBy}`}
           </BasicBlock>
-          <BasicBlock title="URI">{concept?.uri}</BasicBlock>
 
           <Separator isLarge />
 

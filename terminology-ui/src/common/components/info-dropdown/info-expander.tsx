@@ -136,6 +136,9 @@ export default function InfoExpander({
           data={data.properties.description}
           id="description"
         />
+        <BasicBlock title="URI" id="uri">
+          {data.uri}
+        </BasicBlock>
         <BasicBlock
           title={t('vocabulary-info-information-domain')}
           id="information-domains"
@@ -356,9 +359,6 @@ export default function InfoExpander({
         <BasicBlock title={t('vocabulary-info-modified-at')} id="modified-at">
           <FormattedDate date={data.lastModifiedDate} />
           {data.lastModifiedBy && `, ${data.lastModifiedBy}`}
-        </BasicBlock>
-        <BasicBlock title="URI" id="uri">
-          {data.uri}
         </BasicBlock>
       </ExpanderContent>
     </InfoExpanderWrapper>
