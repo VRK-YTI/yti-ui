@@ -70,7 +70,6 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
       setPublishConfirmModalOpen(false);
     }
     if (action === 'close') {
-      setEditModeActive(false);
       setSaveConfirmModalOpen(false);
       setPublishConfirmModalOpen(false);
     }
