@@ -92,6 +92,13 @@
   "library-with-count_one": "",
   "library-with-count_other": "",
   "link-opens-new-window-external": "",
+  "metadata": {
+    "created": "",
+    "pid": "",
+    "state": "",
+    "version-label": "",
+    "versions": ""
+  },
   "mscr-title": "",
   "name": "",
   "navigate-to-homepage": "",
@@ -157,8 +164,6 @@
     "state": "",
     "version": "",
     "version-history": "",
-    "version-label": "",
-    "versions": "",
     "visibility": ""
   },
   "schema-form": {

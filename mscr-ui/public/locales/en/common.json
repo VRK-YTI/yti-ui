@@ -89,9 +89,14 @@
   "languages-available": "",
   "library": "",
   "library-variant": "",
-  "library-with-count_one": "",
-  "library-with-count_other": "",
   "link-opens-new-window-external": "",
+  "metadata": {
+    "created": "Created",
+    "pid": "PID",
+    "state": "State",
+    "version-label": "Version label",
+    "versions": "Versions"
+  },
   "mscr-title": "Metadata Schema and Crosswalk Registry",
   "name": "",
   "navigate-to-homepage": "Navigate to homepage",
@@ -159,8 +164,6 @@
     "state": "State",
     "version": "Version",
     "version-history": "Version history",
-    "version-label": "Version label",
-    "versions": "Versions",
     "visibility": "Visibility"
   },
   "schema-form": {
