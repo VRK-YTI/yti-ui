@@ -1,8 +1,10 @@
 import {NodeMapping} from '@app/common/interfaces/crosswalk-connection.interface';
-import {Dropdown, Textarea, TextInput} from 'suomifi-ui-components';
+import {Button as Sbutton, Dropdown, Textarea, TextInput, DropdownItem, ActionMenu, ActionMenuItem } from 'suomifi-ui-components';
 import {useEffect, useState} from 'react';
-import FixedButtonFooter, {FooterTypes} from '@app/common/components/fixed-button-footer';
-import { DropdownItem } from 'suomifi-ui-components';
+import ConfirmModal from '@app/common/components/confirmation-modal';
+import * as React from 'react';
+import {Grid} from '@mui/material';
+import router from 'next/router';
 
 interface patchPayload {
     label: string;
@@ -11,6 +13,12 @@ interface patchPayload {
     versionLabel: string;
     visibility: string;
     [key: string]: string | string[];
+}
+
+export enum ConfirmModalTexts {
+    'SAVE' = 'Are you sure you want to save changes?',
+    'PUBLISH1' = 'Are you sure you want to publish the crosswalk?',
+    'PUBLISH2' = 'After publishing, you cannot make changes to mappings in crosswalk.',
 }
 
 export default function MetadataAndFiles(props: { crosswalkData: any; performMetadataAndFilesAction: any; nodeMappings: NodeMapping[]; crosswalkId: string; isAdmin: boolean}) {
@@ -44,11 +52,30 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
         },
     ];
 
+    const lang = router.locale ?? 'en';
     const [unformattedPayload, setUnformattedPayload] = useState(patchPayloadInit);
-    const [lang, setLanguage] = useState('en');
     const [isEditModeActive, setEditModeActive] = useState<boolean>(false);
+    const [isSaveConfirmModalOpen, setSaveConfirmModalOpen] = React.useState<boolean>(false);
+    const [isPublishConfirmModalOpen, setPublishConfirmModalOpen] = React.useState<boolean>(false);
     const [isPublished, setIsPublished] = useState<boolean>(true);
     const [visibilityState, setVisibilityState] = useState<string>('PRIVATE');
+
+    function performModalAction(action: string) {
+        if (action === 'save') {
+            saveChanges();
+            setSaveConfirmModalOpen(false);
+        }
+        if (action === 'publish') {
+            publish();
+            setPublishConfirmModalOpen(false);
+        }
+        if (action === 'close') {
+            setEditModeActive(false);
+            setSaveConfirmModalOpen(false);
+            setPublishConfirmModalOpen(false);
+            setInitialPatchValuesFromData();
+        }
+    }
 
     function saveChanges() {
         props.performMetadataAndFilesAction(formatPatchValuesForSave(false), 'saveChanges');
@@ -70,43 +97,9 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
         const newPayload = {...unformattedPayload};
         newPayload[attributeName] = val;
         setUnformattedPayload(newPayload);
-    };
-
-    function updateValuesOnInit(prevAttributes: any, attributeName: string, value: any) {
-        const val = value === undefined ? '' : value.toString();
-        const allPatchAttributes = {...prevAttributes};
-        allPatchAttributes[attributeName] = val;
-        setUnformattedPayload(allPatchAttributes);
-        return allPatchAttributes;
-    };
-
-    function performFooterActionCallback(action: string) {
-        if (action === 'save') {
-            saveChanges();
-        }
-        if (action === 'publish') {
-            publish();
-        }
-        if (action === 'setEditModeActive') {
-            setEditModeActive(true);
-        }
-        if (action === 'setEditModeInactive') {
-            setEditModeActive(false);
-        }
-        if (action === 'cancel') {
-            setEditModeActive(false);
-            setInitialPatchValuesFromData();
-        }
-    }
-
-    function detectLanguage() {
-        if (props.crosswalkData?.label['fi']) {
-            setLanguage('fi');
-        }
     }
 
     useEffect(() => {
-        detectLanguage();
         setInitialPatchValuesFromData();
         setIsPublished(props.crosswalkData.state === 'PUBLISHED');
         setVisibilityState(props.crosswalkData.visibility);
@@ -116,7 +109,7 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
         const newPayload = {...unformattedPayload};
         if (props.crosswalkData) {
             for (const [key, value] of Object.entries(valuesToPatch)) {
-                if (value === true) {
+                if (value) {
                     newPayload[key] = props.crosswalkData[key]?.[lang];
                 } else {
                     newPayload[key] = props.crosswalkData[key] ? props.crosswalkData[key] : '';
@@ -150,151 +143,166 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
 
     return (<>
         <div className='crosswalk-editor node-mappings mx-2'>
-            <h2 className='mt-4 mb-3'>Crosswalk details</h2>
-            <div className='row d-flex justify-content-between metadata-and-files-wrap mx-2'>
-                <div className='row bg-lightest-blue'>
-                    <div className='col-6 gx-0'>
-                        <div className='my-2 row'>
-                            <div className='col-4 row-heading'>Crosswalk name:</div>
-                            <div className='col-8'>
+            <Grid>
+                <Grid container>
+                    <h2>Crosswalk details</h2>
+                </Grid>
+                <Grid container className='bg-lightest-blue p-3'>
+                    <Grid item xs={12} md={7}>
+                        <Grid container className='basic-row'>
+                            <Grid item xs={4} className='br-heading'>Crosswalk name:</Grid>
+                            <Grid item xs={8}>
+                                {isEditModeActive &&
+                              <TextInput
+                                  labelText=''
+                                  onChange={(value) => updatePatchValue('label', value)}
+                                  value={unformattedPayload.label.toString()}
+                              />
+                                }
+                                {!isEditModeActive && <div className='br-label'>{props.crosswalkData?.label[lang]}</div>
+                                }
+                            </Grid>
+                        </Grid>
+
+                        <Grid container className='basic-row'>
+                            <Grid item xs={4} className='br-heading'>Version label:</Grid>
+                            <Grid item xs={8}>
                                 {isEditModeActive &&
                                   <TextInput
-                                    labelText=''
-                                    onChange={(value) => updatePatchValue('label', value)}
-                                    value={unformattedPayload.label.toString()}
+                                      labelText=''
+                                      onChange={(value) => updatePatchValue('versionLabel', value)}
+                                      value={unformattedPayload.versionLabel.toString()}
                                   />
                                 }
-                                {!isEditModeActive && <div className='row-label'>{props.crosswalkData?.label[lang]}</div>
+                                {!isEditModeActive && <div className='br-label'>{props.crosswalkData?.versionLabel}</div>
                                 }
-                            </div>
-                        </div>
+                            </Grid>
+                        </Grid>
 
-                        <div className='my-3 row'>
-                            <div className='col-4 row-heading'>Version label:</div>
-                            <div className='col-8'>
+                        <Grid container className='basic-row'>
+                            <Grid item xs={4} className='br-heading'>Contact:</Grid>
+                            <Grid item xs={8}>
                                 {isEditModeActive &&
                                   <TextInput
-                                    labelText=''
-                                    onChange={(value) => updatePatchValue('versionLabel', value)}
-                                    value={unformattedPayload.versionLabel.toString()}
+                                      labelText=''
+                                      onChange={(value) => updatePatchValue('contact', value)}
+                                      value={unformattedPayload.contact.toString()}
                                   />
                                 }
-                                {!isEditModeActive && <div className='row-label'>{props.crosswalkData?.versionLabel}</div>
+                                {!isEditModeActive && <div>{props.crosswalkData?.contact}</div>
                                 }
-                            </div>
-                        </div>
+                            </Grid>
+                        </Grid>
 
-                        <div className='my-3 row'>
-                            <div className='col-4 row-heading'>Contact:</div>
-                            <div className='col-8'>
-                                {isEditModeActive &&
-                                  <TextInput
-                                    labelText=''
-                                    onChange={(value) => updatePatchValue('contact', value)}
-                                    value={unformattedPayload.contact.toString()}
-                                  />
-                                }
-                                {!isEditModeActive && <div className='row-label'>{props.crosswalkData?.contact}</div>
-                                }
-                            </div>
-                        </div>
+                        <Grid container className='basic-row'>
+                            <Grid item xs={4} className='br-heading'>Pid:</Grid>
+                            <Grid item xs={8}>
+                                <div className='br-label'>{props.crosswalkData?.pid}</div>
+                            </Grid>
+                        </Grid>
 
-                        <div className='my-3 row'>
-                            <div className='col-4 row-heading'>Pid:</div>
-                            <div className='col-8'>
-                                <div className='row-label'>{props.crosswalkData?.pid}</div>
-                            </div>
-                        </div>
+                        <Grid container className='basic-row'>
+                            <Grid item xs={4} className='br-heading'>Created:</Grid>
+                            <Grid item xs={8}>
+                                <div className='br-label'>{props.crosswalkData?.created}</div>
+                            </Grid>
+                        </Grid>
 
-                        <div className='my-3 row'>
-                            <div className='col-4 row-heading'>Created:</div>
-                            <div className='col-8'>
-                                <div className='row-label'>{props.crosswalkData?.created}</div>
-                            </div>
-                        </div>
+                        <Grid container className='basic-row'>
+                            <Grid item xs={4} className='br-heading'>Modified:</Grid>
+                            <Grid item xs={8}>
+                                <div className='br-label'>{props.crosswalkData?.modified}</div>
+                            </Grid>
+                        </Grid>
 
-                        <div className='my-3 row'>
-                            <div className='col-4 row-heading'>Modified:</div>
-                            <div className='col-8'>
-                                <div className='row-label'>{props.crosswalkData?.modified}</div>
-                            </div>
-                        </div>
+                        <Grid container className='basic-row'>
+                            <Grid item xs={4} className='br-heading'>State:</Grid>
+                            <Grid item xs={8}>
+                                <div className='br-label'>{props.crosswalkData?.state}</div>
+                            </Grid>
+                        </Grid>
 
-                        <div className='my-3 row'>
-                            <div className='col-4 row-heading'>State:</div>
-                            <div className='col-8'>
-                                <div className='row-label'>{props.crosswalkData?.state}</div>
-                            </div>
-                        </div>
-
-                        <div className='my-3 row'>
-                            <div className='col-4 row-heading'>Visibility:</div>
-                            <div className='col-8'>
+                        <Grid container className='basic-row'>
+                            <Grid item xs={4} className='br-heading'>Visibility:</Grid>
+                            <Grid item xs={8}>
                                 {isEditModeActive &&
                                   <Dropdown
-                                    labelText=""
-                                    value={visibilityState}
-                                    onChange={(value) => updateVisibilityState(value)}
+                                      labelText=""
+                                      value={visibilityState}
+                                      onChange={(value) => updateVisibilityState(value)}
                                   >
                                       {visibilityStates.map((state) => (
-                                        <DropdownItem key={state.key} value={state.key}>
-                                            {state.name}
-                                        </DropdownItem>
+                                          <DropdownItem key={state.key} value={state.key}>
+                                              {state.name}
+                                          </DropdownItem>
                                       ))}
                                   </Dropdown>
                                 }
-                                {!isEditModeActive && <div className='row-label'>{props.crosswalkData?.visibility}</div>
+                                {!isEditModeActive && <div className='br-label'>{props.crosswalkData?.visibility}</div>
                                 }
-                            </div>
-                        </div>
-                    </div>
-                    <div className='col-1'></div>
-                    <div className='col-5'>
-                        <div className='mt-2'>
-                            <div className='row-heading'>Description:</div>
-                            {isEditModeActive &&
-                              <Textarea
-                                labelText=""
-                                hintText=""
-                                resize="vertical"
-                                onChange={(event) => updatePatchValue('description', event.target.value)}
-                                value={unformattedPayload.description}
-                              >
-                              </Textarea>}
-                            {!isEditModeActive && <div>{unformattedPayload.description}</div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br/>
-            {/*<h2 className='mt-4 mb-3'>Files</h2>*/}
-            <div className='row d-flex justify-content-between metadata-and-files-wrap mx-2'>
-                <br/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
 
-                <div></div>
-            </div>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            {/*             <h2 className='mt-4 mb-3'>Crosswalk summary</h2>
+                    <Grid item xs={12} md={5}>
+                        <Grid container>
+                            <Grid item xs={6} md={7} >
+                                <Grid className='basic-row'>
+                                    <Grid item xs={12} className='br-heading'>Description:</Grid>
+                                    {isEditModeActive &&
+                                  <Textarea
+                                      labelText=''
+                                      hintText=''
+                                      resize='vertical'
+                                      onChange={(event) => updatePatchValue('description', event.target.value)}
+                                      value={unformattedPayload.description}
+                                  >
+                                  </Textarea>}
+                                    {!isEditModeActive && <div className='description-label'>{unformattedPayload.description}</div>
+                                    }
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={6} md={5}>
+                                <Grid container
+                                    direction='row'
+                                    justifyContent='flex-end'>
+                                    {props.isAdmin &&
+                                  <ActionMenu className='mt-' buttonText='Actions'>
+                                      <ActionMenuItem onClick={() => setEditModeActive(true)} className={isEditModeActive ? 'd-none' : ''}>
+                                          Edit
+                                      </ActionMenuItem>
+                                      <ActionMenuItem className={isPublished ? 'd-none' : ''} onClick={() => setPublishConfirmModalOpen(true)}>
+                                          Publish
+                                      </ActionMenuItem>
+                                  </ActionMenu>
+                                    }
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
 
-           <div className='row d-flex justify-content-between metadata-and-files-wrap mx-2'>
-                <JointListingAccordion nodeMappings={props.nodeMappings} viewOnlyMode={true} isEditModeActive={false}
-                                       performAccordionAction={performAccordionAction}></JointListingAccordion>
-            </div>*/}
+                    <Grid
+                        container
+                        direction="row"
+                        justifyContent="flex-end"
+                    >{props.isAdmin && isEditModeActive &&
+                      <>
+                          <Sbutton className='align-self-end my-3' hidden={!isEditModeActive} onClick={() => {
+                              setSaveConfirmModalOpen(true);
+                          }}>Save</Sbutton>
 
+                          <Sbutton className='align-self-end ms-2 my-3' hidden={!isEditModeActive} variant='secondary' onClick={() => {
+                              setEditModeActive(false);setInitialPatchValuesFromData();
+                          }}>Cancel</Sbutton>
+                      </>
+                        }
+
+                    </Grid>
+                </Grid>
+            </Grid>
+            <br/>
+            <ConfirmModal isVisible={isSaveConfirmModalOpen} actionName={'save'} actionText={'Save'} cancelText={'Cancel'} performConfirmModalAction={performModalAction} heading={'Confirmation'} text1={ConfirmModalTexts.SAVE}/>
+            <ConfirmModal isVisible={isPublishConfirmModalOpen} actionName={'publish'} actionText={'Publish'} cancelText={'Cancel'} performConfirmModalAction={performModalAction} heading={'Confirmation'} text1={ConfirmModalTexts.PUBLISH1} text2={ConfirmModalTexts.PUBLISH2}/>
         </div>
-        {props.isAdmin &&
-          <FixedButtonFooter footerType={FooterTypes.CROSSWALK_METADATA} isEditModeActive={true}
-                             performFooterActionCallback={performFooterActionCallback}
-                             isPublished={isPublished}></FixedButtonFooter>
-        }
     </>);
 }
