@@ -12,12 +12,15 @@ describe('order concept data', () => {
       (t) => t.term.properties.prefLabel?.[0].value
     );
     const defintions = data.definitions.map((def) => def.value);
+    const notes = data.notes.map((note) => note.value);
 
     const expectedTermOrder = [
       'finnish pref term',
-      'aaa finnish synonym',
       'zzz finnish synonym',
-      'finnish not recommended',
+      'aaa finnish synonym',
+      'bbb finnish not recommended',
+      'zzz finnish not recommended',
+      'aaa finnish not recommended',
       'swedish pref term',
       'swedish synonym',
       'german pref term',
@@ -28,10 +31,13 @@ describe('order concept data', () => {
       'swedish definition',
     ];
 
+    const expectedNoteOrder = ['newest note', 'newer note', 'first note'];
+
     expect(JSON.stringify(termLabels)).toBe(JSON.stringify(expectedTermOrder));
     expect(JSON.stringify(defintions)).toBe(
       JSON.stringify(expectedDefinitionOrder)
     );
+    expect(JSON.stringify(notes)).toBe(JSON.stringify(expectedNoteOrder));
   });
 });
 
@@ -46,6 +52,20 @@ const concept = {
       {
         lang: 'fi',
         value: 'finnish definition',
+      },
+    ],
+    note: [
+      {
+        lang: 'fi',
+        value: 'first note',
+      },
+      {
+        lang: 'fi',
+        value: 'newer note',
+      },
+      {
+        lang: 'fi',
+        value: 'newest note',
       },
     ],
   },
@@ -127,7 +147,29 @@ const concept = {
           prefLabel: [
             {
               lang: 'fi',
-              value: 'finnish not recommended',
+              value: 'bbb finnish not recommended',
+              regex: '(?s)^.*$',
+            },
+          ],
+        },
+      },
+      {
+        properties: {
+          prefLabel: [
+            {
+              lang: 'fi',
+              value: 'zzz finnish not recommended',
+              regex: '(?s)^.*$',
+            },
+          ],
+        },
+      },
+      {
+        properties: {
+          prefLabel: [
+            {
+              lang: 'fi',
+              value: 'aaa finnish not recommended',
               regex: '(?s)^.*$',
             },
           ],
