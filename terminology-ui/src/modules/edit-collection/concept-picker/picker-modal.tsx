@@ -5,7 +5,7 @@ import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -34,6 +34,7 @@ import {
 } from './concept-picker.styles';
 import { PickerModalProps, SelectedConceptProps } from './concept-picker.types';
 import { ExpanderConceptContent } from './expander-concept-content';
+import { DetachedPagination } from 'yti-common-ui/pagination';
 
 export default function PickerModal({
   setVisible,
@@ -49,6 +50,10 @@ export default function PickerModal({
   const [showSelected, setShowSelected] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [status, setStatus] = useState<string>('ALL-STATUSES');
+  const [totalResults, setTotalResults] = useState(0);
+  const [searchResults, setSearchResults] = useState<Concepts[]>([]);
+  const [currPage, setCurrPage] = useState(1);
+  const modalRef = createRef<HTMLDivElement>();
 
   const statuses = [
     {
@@ -137,6 +142,8 @@ export default function PickerModal({
       terminologyId: terminologyId,
       query: searchTerm,
       status: status !== 'ALL-STATUSES' ? status : undefined,
+      pageFrom: (currPage - 1) * 20,
+      pageSize: 20,
     });
   };
 
@@ -145,9 +152,35 @@ export default function PickerModal({
     setSearchTerm('');
   };
 
+  const handlePageChange = (num: number) => {
+    setCurrPage(num);
+    searchConcept({
+      terminologyId: terminologyId,
+      query: searchTerm,
+      status: status !== 'ALL-STATUSES' ? status : undefined,
+      pageFrom: (num - 1) * 20,
+      pageSize: 20,
+    });
+    focusToTop();
+  };
+
+  const focusToTop = () => {
+    if (modalRef.current) {
+      modalRef.current.scrollIntoView();
+    }
+  };
+
   useEffect(() => {
-    searchConcept({ terminologyId: terminologyId });
-  }, [terminologyId, searchConcept]);
+    if (result.isUninitialized) {
+      setSearchResults([]);
+      setTotalResults(0);
+    }
+
+    if (result.isSuccess) {
+      setSearchResults(result.data.concepts);
+      setTotalResults(result.data.totalHitCount);
+    }
+  }, [result, setTotalResults]);
 
   return (
     <Modal
@@ -157,6 +190,7 @@ export default function PickerModal({
       variant={!isSmall ? 'default' : 'smallScreen'}
     >
       <ModalContent>
+        <div ref={modalRef} />
         {showSelected ? (
           <SelectedConcepts
             selectedConcepts={selectedConcepts}
@@ -215,7 +249,7 @@ export default function PickerModal({
             <SearchResultCountBlock id="search-result-counts-block">
               <Text smallScreen variant="bold">
                 {t('number-of-concepts', {
-                  count: result.data?.concepts.length ?? 0,
+                  count: totalResults,
                 })}
               </Text>
             </SearchResultCountBlock>
@@ -225,7 +259,7 @@ export default function PickerModal({
               openAllText=""
               showToggleAllButton={false}
             >
-              {result.data?.concepts.map((concept) => {
+              {searchResults.map((concept) => {
                 return (
                   <Expander key={`concept-${concept.id}`}>
                     <ExpanderTitle
@@ -276,6 +310,12 @@ export default function PickerModal({
                 );
               })}
             </ResultBlock>
+            <DetachedPagination
+              currentPage={currPage}
+              maxPages={Math.ceil(totalResults / 20)}
+              maxTotal={20}
+              setCurrentPage={handlePageChange}
+            />
           </>
         )}
       </ModalContent>
