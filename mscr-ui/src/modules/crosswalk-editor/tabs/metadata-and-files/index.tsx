@@ -73,7 +73,6 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
       setEditModeActive(false);
       setSaveConfirmModalOpen(false);
       setPublishConfirmModalOpen(false);
-      setInitialPatchValuesFromData();
     }
   }
 
@@ -142,7 +141,7 @@ export default function MetadataAndFiles(props: { crosswalkData: any; performMet
   }
 
   return (<>
-    <div className='crosswalk-editor node-mappings mx-2'>
+    <div className='crosswalk-editor mx-2'>
       <Grid>
         <Grid container>
           <h2>Crosswalk details</h2>
