@@ -72,8 +72,8 @@ export default function SchemaView({
               onChange={changeTab}
               aria-label="Category selection"
             >
-              <Tab label={t('schema.metadata-and-files')} {...a11yProps(0)} />
-              <Tab label={t('schema.version-history')} {...a11yProps(1)} />
+              <Tab label={t('tabs.metadata-and-files')} {...a11yProps(0)} />
+              <Tab label={t('tabs.version-history')} {...a11yProps(1)} />
             </Tabs>
           </Box>
 

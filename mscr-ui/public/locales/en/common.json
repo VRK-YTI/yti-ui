@@ -92,10 +92,25 @@
   "link-opens-new-window-external": "",
   "metadata": {
     "created": "Created",
+    "description": "Description",
+    "file": {
+      "format": "Format",
+      "id": "ID",
+      "label": "Files",
+      "name": "Filename",
+      "size": "Size"
+    },
+    "format": "Format",
+    "metadata": "",
+    "modified": "Modified",
+    "name": "Name",
+    "namespace": "Namespace",
+    "organizations": "Organizations",
     "pid": "PID",
     "state": "State",
     "version-label": "Version label",
-    "versions": "Versions"
+    "versions": "Versions",
+    "visibility": "Visibility"
   },
   "mscr-title": "Metadata Schema and Crosswalk Registry",
   "name": "",
@@ -140,31 +155,6 @@
     "member": "",
     "roles": "",
     "terminology-editor": ""
-  },
-  "schema": {
-    "created": "Created",
-    "description": "Description",
-    "file": {
-      "actions": "Actions",
-      "added": "Added",
-      "format": "Format",
-      "label": "Schema files",
-      "name": "Filename",
-      "id":"ID",
-      "size":"Size"
-    },
-    "format": "Format",
-    "metadata": "Metadata",
-    "metadata-and-files": "Metadata and files",
-    "modified": "Modified",
-    "name": "Name",
-    "namespace": "Namespace",
-    "organizations": "Organizations",
-    "pid": "PID",
-    "state": "State",
-    "version": "Version",
-    "version-history": "Version history",
-    "visibility": "Visibility"
   },
   "schema-form": {
     "contributors": "Contributors",
@@ -238,6 +228,10 @@
   "subscribed-items": "",
   "subscription-description": "",
   "synonym": "",
+  "tabs": {
+    "metadata-and-files": "",
+    "version-history": ""
+  },
   "term-conjugation": {
     "plural": "",
     "singular": ""

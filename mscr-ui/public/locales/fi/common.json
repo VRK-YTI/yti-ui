@@ -94,10 +94,25 @@
   "link-opens-new-window-external": "",
   "metadata": {
     "created": "",
+    "description": "",
+    "file": {
+      "format": "",
+      "id": "",
+      "label": "",
+      "name": "",
+      "size": ""
+    },
+    "format": "",
+    "metadata": "",
+    "modified": "",
+    "name": "",
+    "namespace": "",
+    "organizations": "",
     "pid": "",
     "state": "",
     "version-label": "",
-    "versions": ""
+    "versions": "",
+    "visibility": ""
   },
   "mscr-title": "",
   "name": "",
@@ -142,29 +157,6 @@
     "member": "",
     "roles": "",
     "terminology-editor": ""
-  },
-  "schema": {
-    "created": "",
-    "description": "",
-    "file": {
-      "actions": "",
-      "added": "",
-      "format": "",
-      "label": "",
-      "name": ""
-    },
-    "format": "",
-    "metadata": "",
-    "metadata-and-files": "",
-    "modified": "",
-    "name": "",
-    "namespace": "",
-    "organizations": "",
-    "pid": "",
-    "state": "",
-    "version": "",
-    "version-history": "",
-    "visibility": ""
   },
   "schema-form": {
     "contributors": "",
@@ -238,6 +230,10 @@
   "subscribed-items": "",
   "subscription-description": "",
   "synonym": "",
+  "tabs": {
+    "metadata-and-files": "",
+    "version-history": ""
+  },
   "term-conjugation": {
     "plural": "",
     "singular": ""
