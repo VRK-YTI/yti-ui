@@ -30,12 +30,12 @@ const termTypeOrder: { [key: string]: string } = {
  * @param type term's type
  * @returns
  */
-function getCompareKey(term: Term, type: string) {
+function getCompareKey(term: Term, type: string, index: number) {
   const prefLabel = term.properties.prefLabel?.[0];
   const langKey = `${
     langOrder[prefLabel?.lang ?? ''] ?? `x_${prefLabel?.lang}`
   }`;
-  return `${langKey}_${termTypeOrder[type] ?? 'x'}`;
+  return `${langKey}_${termTypeOrder[type] ?? 'x'}_${index}`;
 }
 
 export function getBlockData(t: TFunction, concept?: Concept) {
@@ -44,25 +44,25 @@ export function getBlockData(t: TFunction, concept?: Concept) {
   }
 
   const terms = [
-    ...(concept.references.prefLabelXl ?? []).map((term) => ({
+    ...(concept.references.prefLabelXl ?? []).map((term, idx) => ({
       term,
       type: t('field-terms-preferred', { ns: 'concept' }),
-      compareKey: getCompareKey(term, 'prefLabelXl'),
+      compareKey: getCompareKey(term, 'prefLabelXl', idx),
     })),
-    ...(concept.references.altLabelXl ?? []).map((term) => ({
+    ...(concept.references.altLabelXl ?? []).map((term, idx) => ({
       term,
       type: t('field-terms-alternative', { ns: 'concept' }),
-      compareKey: getCompareKey(term, 'altLabelXl'),
+      compareKey: getCompareKey(term, 'altLabelXl', idx),
     })),
-    ...(concept.references.notRecommendedSynonym ?? []).map((term) => ({
+    ...(concept.references.notRecommendedSynonym ?? []).map((term, idx) => ({
       term,
       type: t('field-terms-non-recommended', { ns: 'concept' }),
-      compareKey: getCompareKey(term, 'notRecommendedSynonym'),
+      compareKey: getCompareKey(term, 'notRecommendedSynonym', idx),
     })),
     ...(concept.references.hiddenTerm ?? []).map((term) => ({
       term,
       type: t('field-terms-hidden', { ns: 'concept' }),
-      compareKey: getCompareKey(term, 'hiddenTerm'),
+      compareKey: getCompareKey(term, 'hiddenTerm', 0),
     })),
   ].sort((t1, t2) => t1.compareKey.localeCompare(t2.compareKey));
 
