@@ -14,6 +14,9 @@ import {
   ActionMenu,
   ActionMenuItem,
   ActionMenuDivider,
+  Expander,
+  ExpanderTitleButton,
+  ExpanderContent,
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
@@ -54,6 +57,7 @@ import {
   translateResourceAddition,
 } from '@app/common/utils/translation-helpers';
 import UnsavedAlertModal from '../unsaved-alert-modal';
+import ResourceReferences from '../common-view-content/resource-references';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 
 interface ClassInfoProps {
@@ -98,6 +102,7 @@ export default function ClassInfo({
   const [associationModalVisible, setAssociationModalVisible] = useState(false);
   const displayLang = useSelector(selectDisplayLang());
   const [addReference, addReferenceResult] = useAddPropertyReferenceMutation();
+  const [showReferences, setShowReferences] = useState(false);
 
   useEffect(() => {
     if (updateClassData) {
@@ -517,17 +522,20 @@ export default function ClassInfo({
           ) : (
             <></>
           )}
-          {!applicationProfile ? (
-            <>
-              <Separator />
 
-              <BasicBlock title={t('references-from-other-components')}>
-                {t('no-references')}
-              </BasicBlock>
-            </>
-          ) : (
-            <></>
-          )}
+          <Separator />
+
+          <Expander
+            open={showReferences}
+            onOpenChange={() => setShowReferences(!showReferences)}
+          >
+            <ExpanderTitleButton>
+              {t('references-from-other-components')}
+            </ExpanderTitleButton>
+            <ExpanderContent>
+              <ResourceReferences open={showReferences} uri={data.uri} />
+            </ExpanderContent>
+          </Expander>
 
           <Separator />
 

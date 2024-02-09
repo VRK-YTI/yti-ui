@@ -8,6 +8,9 @@ import {
 import { useTranslation } from 'next-i18next';
 import {
   Button,
+  Expander,
+  ExpanderContent,
+  ExpanderTitleButton,
   ExternalLink,
   IconCopy,
   Link,
@@ -31,6 +34,8 @@ import { default as NextLink } from 'next/link';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { getSlugAsString } from '@app/common/utils/parse-slug';
 import { useRouter } from 'next/router';
+import ResourceReferences from './resource-references';
+import { useState } from 'react';
 
 export default function CommonViewContent({
   modelId,
@@ -66,6 +71,7 @@ export default function CommonViewContent({
     }
   );
   const router = useRouter();
+  const [showReferences, setShowReferences] = useState(false);
 
   function getCodeListLabel(uri: string) {
     if (!codesResult) {
@@ -655,9 +661,17 @@ export default function CommonViewContent({
 
       <Separator />
 
-      <BasicBlock title={t('references-from-other-components')}>
-        {t('no-references')}
-      </BasicBlock>
+      <Expander
+        open={showReferences}
+        onOpenChange={() => setShowReferences(!showReferences)}
+      >
+        <ExpanderTitleButton>
+          {t('references-from-other-components')}
+        </ExpanderTitleButton>
+        <ExpanderContent>
+          <ResourceReferences open={showReferences} uri={data.uri} />
+        </ExpanderContent>
+      </Expander>
 
       <Separator />
 

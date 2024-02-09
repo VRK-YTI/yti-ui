@@ -200,7 +200,7 @@
   "profile": "Profile",
   "profile-with-count_one": "Profile ({{count}}) item",
   "profile-with-count_other": "Profile ({{count}}) items",
-  "references-from-other-components": "References from other components",
+  "references-from-other-components": "References",
   "remove": "Remove",
   "remove-all-subscriptions": "Remove all subscriptions",
   "remove-email-subscriptions": "Remove email subscriptions",

@@ -200,7 +200,7 @@
   "profile": "Soveltamisprofiili",
   "profile-with-count_one": "Soveltamisprofiilit ({{count}}) kpl",
   "profile-with-count_other": "Soveltamisprofiilit ({{count}}) kpl",
-  "references-from-other-components": "Viittaukset muista komponenteista",
+  "references-from-other-components": "Viittaukset",
   "remove": "Poista",
   "remove-all-subscriptions": "Poista kaikki ilmoitukset",
   "remove-email-subscriptions": "Poista sähköposti-ilmoitukset",
