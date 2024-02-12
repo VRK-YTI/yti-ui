@@ -8,6 +8,7 @@ import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabul
 import { useTranslation } from 'next-i18next';
 import { ExpanderContent } from 'suomifi-ui-components';
 import { ExpanderConceptContent as ExpanderConceptContentType } from './concept-picker.types';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 export function ExpanderConceptContent({
   concept,
@@ -26,21 +27,25 @@ export function ExpanderConceptContent({
     <ExpanderContent>
       <MultilingualPropertyBlock
         title={t('recommended-terms')}
-        data={Object.keys(concept.label).map((key) => ({
-          lang: key,
-          regex: '(?s)^.*$',
-          value: concept.label[key],
-        }))}
+        data={Object.keys(concept.label)
+          .map((key) => ({
+            lang: key,
+            regex: '(?s)^.*$',
+            value: concept.label[key],
+          }))
+          .sort(compareLocales)}
       />
 
       {concept.definition && (
         <MultilingualPropertyBlock
           title={t('definition')}
-          data={Object.keys(concept.definition).map((key) => ({
-            lang: key,
-            regex: '(?s)^.*$',
-            value: concept.definition[key],
-          }))}
+          data={Object.keys(concept.definition)
+            .map((key) => ({
+              lang: key,
+              regex: '(?s)^.*$',
+              value: concept.definition[key],
+            }))
+            .sort(compareLocales)}
         />
       )}
 

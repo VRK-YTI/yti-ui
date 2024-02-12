@@ -33,6 +33,7 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { v4 } from 'uuid';
 import { StatusChip } from 'yti-common-ui/status-chip';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -57,7 +58,10 @@ export default function EditConcept({
     useGetAuthenticatedUserMutMutation();
 
   const [languages] = useState(
-    terminology?.properties.language?.map(({ value }) => value) ?? []
+    terminology?.properties.language
+      ?.slice()
+      .sort((a, b) => compareLocales(a.value, b.value))
+      .map(({ value }) => value) ?? []
   );
   const [preferredTerms] = useState<
     {

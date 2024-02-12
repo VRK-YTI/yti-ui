@@ -36,6 +36,7 @@ import {
   useGetAuthenticatedUserMutMutation,
   useGetAuthenticatedUserQuery,
 } from '@app/common/components/login/login.slice';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 export default function EditCollection({
   terminologyId,
@@ -73,7 +74,10 @@ export default function EditCollection({
   const [isCreating, setIsCreating] = useState(false);
 
   const languages =
-    terminology?.properties.language?.map(({ value }) => value) ?? [];
+    terminology?.properties.language
+      ?.slice()
+      .sort((a, b) => compareLocales(a.value, b.value))
+      .map(({ value }) => value) ?? [];
 
   const [formData, setFormData] = useState<EditCollectionFormDataType>(
     setInitialData(collection)

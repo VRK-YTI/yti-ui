@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { Button, IconPlus } from 'suomifi-ui-components';
 import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 const NewConceptModalDynamic = dynamic(() => import('./new-concept-modal'));
 
@@ -40,7 +41,7 @@ export default function NewConceptModal({
       {visible && (
         <NewConceptModalDynamic
           terminologyId={terminologyId}
-          languages={languages}
+          languages={languages.slice().sort(compareLocales)}
           visible={visible}
           setVisible={setVisible}
           unauthenticatedUser={authenticatedUser.data?.anonymous}

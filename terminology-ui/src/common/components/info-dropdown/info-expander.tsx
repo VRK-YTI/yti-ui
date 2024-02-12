@@ -44,6 +44,7 @@ import UpdateWithFileModal from '../update-with-file-modal';
 import StatusMassEdit from '../status-mass-edit';
 import isEmail from 'validator/lib/isEmail';
 import { useRouter } from 'next/router';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
@@ -155,7 +156,9 @@ export default function InfoExpander({
 
         <PropertyBlock
           title={t('vocabulary-info-languages')}
-          property={data.properties.language}
+          property={data.properties.language
+            ?.slice()
+            .sort((a, b) => compareLocales(a.value, b.value))}
           delimiter=", "
           valueAccessor={({ value }) => {
             // if no translation found for language, return only language code

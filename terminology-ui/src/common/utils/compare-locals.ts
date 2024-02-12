@@ -22,6 +22,10 @@ export function compareLocales(
     return t1Lang === 'sv' ? -1 : 1;
   }
 
+  if (t1Lang === 'en' || t2Lang === 'en') {
+    return t1Lang === 'en' ? -1 : 1;
+  }
+
   if (t1Lang !== t2Lang) {
     return t1Lang > t2Lang ? 1 : -1;
   }
