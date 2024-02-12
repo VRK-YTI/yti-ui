@@ -7,11 +7,10 @@ import { resolve, small } from 'yti-common-ui/media-query/styled-helpers';
 export const MarginContainer = styled.div<{
   $breakpoint: Breakpoint;
 }>`
-  max-width: 96%;
   margin: auto;
-  padding: ${(props) => resolve(props.$breakpoint, '0 15px', '0 30px', 'auto')};
-  min-width: 300px;
-`;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  `;
 
 // main layout
 
@@ -19,18 +18,6 @@ export const SiteContainer = styled.div`
   width: 100%;
   margin: auto;
   height: 100%;
-`;
-
-// header layout
-
-export const HeaderContainer = styled.div<{ $noBorder?: boolean }>`
-  background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  ${(props) =>
-    !props.$noBorder &&
-    `
-  border-bottom: 1px solid ${props.theme.suomifi.colors.depthLight1};
-  border-top: 3px solid ${props.theme.suomifi.colors.brandBase};
-  `}
 `;
 
 export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`
