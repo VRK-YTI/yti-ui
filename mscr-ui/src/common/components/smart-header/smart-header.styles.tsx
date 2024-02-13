@@ -1,36 +1,24 @@
 import styled from 'styled-components';
 import { Breakpoint } from 'yti-common-ui/media-query';
-import { small } from 'yti-common-ui/media-query/styled-helpers';
 
 export const HeaderWrapper = styled.div<{
   $breakpoint: Breakpoint;
   $fullHeight?: boolean;
 }>`
   display: flex;
-  align-items: ${(props) => (props.$fullHeight ? 'flex-start' : 'center')};
-  height: ${(props) =>
-    props.$fullHeight
-      ? 'min-content'
-      : small(props.$breakpoint, '57px', '72px')};
-  column-gap: ${(props) => small(props.$breakpoint, '0', '20px')};
+  align-items: center;
+  gap: 2rem;
+  height: calc(1rem*60/18);
 
-  ${(props) =>
-    props.$fullHeight &&
-    `
-    width: 100vw;
-    max-width: 100vw;
-    `}
-`;
-
-export const LogoWrapper = styled.div`
-  flex-grow: 1;
-  line-height: 0;
-  min-width: 186px;
-
-  a {
-    display: block;
-    line-height: 0;
-  }
+  margin: auto;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  
+  ${(props) => `
+    background-color: ${props.theme.suomifi.colors.whiteBase};
+    border-bottom: 1px solid ${props.theme.suomifi.colors.depthLight1};
+    border-top: 3px solid ${props.theme.suomifi.colors.brandBase}; 
+  `}
 `;
 
 export const MobileMenuButtonWrapper = styled.div`
