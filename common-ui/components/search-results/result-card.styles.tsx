@@ -30,10 +30,6 @@ export const TitleLink = styled(Link)`
     padding-top: 6px;
   }
 
-  .fi-icon {
-    min-width: max-content;
-  }
-
   &:visited {
     h2 {
       color: ${(props) => props.theme.suomifi.colors.accentTertiaryDark1};
