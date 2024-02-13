@@ -217,10 +217,10 @@ function createRenderTree(input: any, elementPath: string, definitions: any) {
             visualTreeId: treeIndex.toString(),
             id: obj.toString(),
             properties: definitions[obj],
-            elementPath: elementPath + '.' + (definitions[obj].title).toString(),
+            elementPath: elementPath + '.' + obj.toString(),
             parentElementPath: elementPath,
             children: [],
-        }
+        };
 
         //console.log('OBJ', obj, input[obj].keys, Object.keys(input[obj]));
         if (Object.keys(input[obj]).length > 0) {
