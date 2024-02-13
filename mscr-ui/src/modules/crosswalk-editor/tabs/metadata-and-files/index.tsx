@@ -166,7 +166,7 @@ export default function MetadataAndFiles(props: {
 
   return (
     <>
-      <div className="crosswalk-editor mx-2">
+      <div className="crosswalk-editor metadata-and-files-wrap mx-2">
         <Grid>
           <Grid container>
             <h2>Crosswalk details</h2>
@@ -326,7 +326,7 @@ export default function MetadataAndFiles(props: {
                 <Grid item xs={6} md={5}>
                   <Grid container direction="row" justifyContent="flex-end">
                     {props.isAdmin && (
-                      <ActionMenu className="mt-" buttonText="Actions">
+                      <ActionMenu buttonText="Actions">
                         <ActionMenuItem
                           onClick={() => setEditModeActive(true)}
                           className={isEditModeActive ? 'd-none' : ''}
