@@ -5,7 +5,9 @@ import { useEffect } from 'react';
 import {
   SearchInput,
   Notification,
-  Button as Sbutton, ActionMenuItem, ActionMenu,
+  Button as Sbutton,
+  ActionMenuItem,
+  ActionMenu,
 } from 'suomifi-ui-components';
 import { cloneDeep } from 'lodash';
 import IconButton from '@mui/material/IconButton';
@@ -871,18 +873,18 @@ export default function CrosswalkEditor({
               isSourceDataFetched &&
               isTargetDataFetched &&
               getCrosswalkData && (
-              <>
-                <MetadataAndFiles
-                  crosswalkData={getCrosswalkData}
-                  performMetadataAndFilesAction={
-                    performMetadataAndFilesAction
-                  }
-                  nodeMappings={nodeMappings}
-                  crosswalkId={crosswalkId}
-                  isAdmin={isAdmin}
-                />
-              </>
-            )}
+                <>
+                  <MetadataAndFiles
+                    crosswalkData={getCrosswalkData}
+                    performMetadataAndFilesAction={
+                      performMetadataAndFilesAction
+                    }
+                    nodeMappings={nodeMappings}
+                    crosswalkId={crosswalkId}
+                    isAdmin={isAdmin}
+                  />
+                </>
+              )}
             {/*            <CustomTabPanel value={selectedTab} index={0}>
             </CustomTabPanel>
             <CustomTabPanel value={selectedTab} index={1}>
@@ -909,22 +911,29 @@ export default function CrosswalkEditor({
                 ></Notification>
               )}
               <div className={selectedTab === 1 ? 'col-10' : 'd-none'}></div>
-              <div className={selectedTab === 1 ? 'col-2 d-flex justify-content-end flex-row pe-4 pb-2' : 'd-none'}>{isAdmin &&
-                    <ActionMenu className="mb-2" buttonText="Actions">
-                      <ActionMenuItem
-                        onClick={() => setEditModeActive(true)}
-                        className={isEditModeActive ? 'd-none' : ''}
-                      >
-                            Edit
-                      </ActionMenuItem>
-                      <ActionMenuItem
-                        onClick={() => setEditModeActive(false)}
-                        className={isEditModeActive ? '' : 'd-none'}
-                      >
-                            Finish editing
-                      </ActionMenuItem>
-                    </ActionMenu>
-              }
+              <div
+                className={
+                  selectedTab === 1
+                    ? 'col-2 d-flex justify-content-end flex-row pe-4 pb-2'
+                    : 'd-none'
+                }
+              >
+                {isAdmin && (
+                  <ActionMenu className="mb-2" buttonText="Actions">
+                    <ActionMenuItem
+                      onClick={() => setEditModeActive(true)}
+                      className={isEditModeActive ? 'd-none' : ''}
+                    >
+                      Edit
+                    </ActionMenuItem>
+                    <ActionMenuItem
+                      onClick={() => setEditModeActive(false)}
+                      className={isEditModeActive ? '' : 'd-none'}
+                    >
+                      Finish editing
+                    </ActionMenuItem>
+                  </ActionMenu>
+                )}
               </div>
 
               {/*  LEFT COLUMN */}
@@ -1016,7 +1025,12 @@ export default function CrosswalkEditor({
                                 ? linkingError
                                 : 'Link selected nodes'
                             }
-                            disabled={selectedSourceNodes.length < 1 || selectedTargetNodes.length < 1 || crosswalkPublished || !isEditModeActive}
+                            disabled={
+                              selectedSourceNodes.length < 1 ||
+                              selectedTargetNodes.length < 1 ||
+                              crosswalkPublished ||
+                              !isEditModeActive
+                            }
                             onClick={() => {
                               addOrEditJointButtonClick(
                                 !isBothSelectedLinked,

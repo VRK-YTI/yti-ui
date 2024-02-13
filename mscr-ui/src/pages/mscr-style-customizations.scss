@@ -78,6 +78,12 @@ body {
   }
 }
 
+.metadata-and-files-wrap {
+    .fi-text-input_label--visible {
+      display: none !important;
+    }
+}
+
 .crosswalk-editor {
   color: #2b2b2b;
   .fi-dropdown_button {
@@ -342,13 +348,6 @@ body {
       padding: 5px;
       width: 100%;
       background: #e2f1fd;
-    }
-  }
-
-  .metadata-and-files-wrap {
-    h2 {
-      color: #6f787d;
-      font-size: 1.3rem;
     }
   }
 }
