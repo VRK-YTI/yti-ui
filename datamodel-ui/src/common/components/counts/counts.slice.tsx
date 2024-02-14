@@ -46,7 +46,10 @@ export const countApi = createApi({
       UrlState
     >({
       query: (urlState) => ({
-        url: getUrl(urlState),
+        url: getUrl({
+          ...urlState,
+          domain: [], // don't pass groups to the count endpoint YTI-3701
+        }),
         method: 'GET',
       }),
     }),
