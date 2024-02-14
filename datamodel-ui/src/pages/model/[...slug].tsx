@@ -91,7 +91,7 @@ export default function ModelPage(props: IndexPageProps) {
           path={asPath}
         />
 
-        <Model modelId={props.modelId} fullScreen={fullScreen} />
+        <Model modelId={props.modelId} />
       </Layout>
     </CommonContextProvider>
   );
