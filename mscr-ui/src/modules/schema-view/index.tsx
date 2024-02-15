@@ -26,7 +26,6 @@ export default function SchemaView({
     // isError,
     // error,
   } = useGetSchemaWithRevisionsQuery(schemaId);
-  // TODO: I can't make sense of the format this returns, and how it would be offered for download
 
   const theme = createTheme({
     typography: {

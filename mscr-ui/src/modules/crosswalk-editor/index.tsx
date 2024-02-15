@@ -30,20 +30,18 @@ import {
 import NodeMappingsModal from './tabs/node-mappings';
 import LinkIcon from '@app/common/components/shared-icons';
 import {
-  useGetCrosswalkQuery,
   usePatchCrosswalkMutation,
   usePutMappingMutation,
   useDeleteMappingMutation,
   usePatchMappingMutation,
   useGetMappingsQuery,
+  useGetCrosswalkWithRevisionsQuery
 } from '@app/common/components/crosswalk/crosswalk.slice';
 import { useGetFrontendSchemaQuery } from '@app/common/components/schema/schema.slice';
 import { useGetCrosswalkMappingFunctionsQuery } from '@app/common/components/crosswalk-functions/crosswalk-functions.slice';
-import FixedButtonFooter, {
-  FooterTypes,
-} from '@app/common/components/fixed-button-footer';
 import { createTheme, ThemeProvider } from '@mui/material';
 import HasPermission from '@app/common/utils/has-permission';
+import VersionHistory from '@app/common/components/version-history';
 
 export default function CrosswalkEditor({
   crosswalkId,
@@ -188,7 +186,7 @@ export default function CrosswalkEditor({
     isError: getCrosswalkDataIsError,
     error: getCrosswalkDataError,
     refetch: refetchCrosswalkData,
-  } = useGetCrosswalkQuery(crosswalkId);
+  } = useGetCrosswalkWithRevisionsQuery(crosswalkId);
 
   const fromTree = (nodes: any) => (
     <TreeItem
@@ -1157,6 +1155,11 @@ export default function CrosswalkEditor({
                     </div>
                   </div>
                 </>
+              )}
+              {selectedTab === 2 && (
+                <VersionHistory
+                  revisions={getCrosswalkData.revisions}
+                />
               )}
             </div>
           </>

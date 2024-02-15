@@ -6,8 +6,9 @@ import { AppThunk } from '@app/store';
 import isHydrate from '@app/store/isHydrate';
 import {
   Crosswalk,
+  CrosswalkWithVersionInfo,
 } from '@app/common/interfaces/crosswalk.interface';
-import {NodeMapping} from "@app/common/interfaces/crosswalk-connection.interface";
+import { NodeMapping } from '@app/common/interfaces/crosswalk-connection.interface';
 
 export const crosswalkApi = createApi({
   reducerPath: 'crosswalkApi',
@@ -45,6 +46,13 @@ export const crosswalkApi = createApi({
       }),
     }),
 
+    getCrosswalkWithRevisions: builder.query<CrosswalkWithVersionInfo, string>({
+      query: (pid) => ({
+        url: `/crosswalk/${pid}?includeVersionInfo=true`,
+        method: 'GET',
+      }),
+    }),
+
     getMappings: builder.query<NodeMapping[], any>({
       query: (pid) => ({
         url: `/crosswalk/${pid}/mapping`,
@@ -52,11 +60,13 @@ export const crosswalkApi = createApi({
       }),
     }),
 
-    putMapping: builder.mutation<NodeMapping,
+    putMapping: builder.mutation<
+      NodeMapping,
       {
-      payload: any;
-      pid: string;
-      }>({
+        payload: any;
+        pid: string;
+      }
+    >({
       query: (value) => ({
         url: `/crosswalk/${value.pid}/mapping`,
         method: 'PUT',
@@ -64,10 +74,13 @@ export const crosswalkApi = createApi({
       }),
     }),
 
-    patchMapping: builder.mutation<NodeMapping, {
-      payload: any;
-      pid: string;
-    }>({
+    patchMapping: builder.mutation<
+      NodeMapping,
+      {
+        payload: any;
+        pid: string;
+      }
+    >({
       query: (value) => ({
         url: `/crosswalk/${value.pid}`,
         method: 'PUT',
@@ -82,7 +95,8 @@ export const crosswalkApi = createApi({
       }),
     }),
 
-    patchCrosswalk: builder.mutation<any,
+    patchCrosswalk: builder.mutation<
+      any,
       {
         payload: any;
         pid: string;
@@ -108,6 +122,7 @@ export const {
   usePutCrosswalkMutation,
   usePutCrosswalkFullMutation,
   useGetCrosswalkQuery,
+  useGetCrosswalkWithRevisionsQuery,
   useGetMappingsQuery,
   usePutMappingMutation,
   usePatchMappingMutation,
@@ -121,6 +136,7 @@ export const {
   putCrosswalk,
   putCrosswalkFull,
   getCrosswalk,
+  getCrosswalkWithRevisions,
   patchCrosswalk,
   deleteCrosswalk,
 } = crosswalkApi.endpoints;
