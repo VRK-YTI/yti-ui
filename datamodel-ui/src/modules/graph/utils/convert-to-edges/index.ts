@@ -112,7 +112,7 @@ export default function convertToEdges(
       ...(node.associations
         ? node.associations
             .filter((assoc) => assoc.referenceTarget)
-            .flatMap((assoc, idx) => {
+            .flatMap((assoc) => {
               const origIndex =
                 node.associations?.findIndex(
                   (n) =>
@@ -142,15 +142,14 @@ export default function convertToEdges(
               if (assoc.referenceTarget === node.identifier) {
                 const firstCornerNodeId = `#corner-${v4().split('-')[0]}`;
                 const secondCornerNodeId = `#corner-${v4().split('-')[0]}`;
-
                 const offsetY = (offsetSource ?? 1) * 25;
-                const offsetX = idx * 30;
+                const offsetX = origIndex * 30;
 
                 loopNodes.push(
                   createLoopNode(
                     {
                       x: node.position.x - 150 - offsetX,
-                      y: node.position.y + 40,
+                      y: node.position.y + 80 - offsetY,
                     },
                     firstCornerNodeId,
                     secondCornerNodeId
@@ -158,7 +157,7 @@ export default function convertToEdges(
                   createLoopNode(
                     {
                       x: node.position.x - 150 - offsetX,
-                      y: node.position.y + 80 + offsetY,
+                      y: node.position.y + 65 + offsetY,
                     },
                     secondCornerNodeId,
                     node.identifier
@@ -327,7 +326,7 @@ export default function convertToEdges(
     let index;
     for (let i = 0; i < referenceLabels.length; i++) {
       const r = referenceLabels[i];
-      if (r.targetId === node.referenceTarget) {
+      if (r.targetId === node.referenceTarget && r.identifier === node.origin) {
         associationInfo = r;
         index = i;
         break;
