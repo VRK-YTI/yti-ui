@@ -1,7 +1,7 @@
 import { Organization } from '@app/common/interfaces/organizations.interface';
-import { Revision } from '@app/common/interfaces/schema.interface';
 import { State } from '@app/common/interfaces/state.interface';
 import { Format } from '@app/common/interfaces/format.interface';
+import { ContentRevision } from '@app/common/interfaces/content-revision.interface';
 
 export interface Label {
   [key: string]: string;
@@ -23,7 +23,7 @@ export interface ResultInfo {
   type: Type;
   prefix: string;
   organizations: Organization[];
-  revisions: Revision[];
+  revisions: ContentRevision[];
   numberOfRevisions: number;
   versionLabel: string;
   namespace: string;
