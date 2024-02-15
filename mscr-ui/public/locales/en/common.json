@@ -101,7 +101,7 @@
       "size": "Size"
     },
     "format": "Format",
-    "metadata": "",
+    "metadata": "Metadata",
     "modified": "Modified",
     "name": "Name",
     "namespace": "Namespace",
@@ -229,8 +229,8 @@
   "subscription-description": "",
   "synonym": "",
   "tabs": {
-    "metadata-and-files": "",
-    "version-history": ""
+    "metadata-and-files": "Metadata and files",
+    "version-history": "Version history"
   },
   "term-conjugation": {
     "plural": "",
