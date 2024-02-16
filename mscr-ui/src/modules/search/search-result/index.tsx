@@ -1,9 +1,10 @@
 import { MscrSearchResult } from '@app/common/interfaces/search.interface';
-import { Block, RouterLink } from 'suomifi-ui-components';
+import { Block, Paragraph } from 'suomifi-ui-components';
 import {
-  ChipWrapper, MetadataChip,
-  ResultTextWrapper,
-  TypeChip
+  ChipWrapper,
+  MetadataChip,
+  StyledRouterLink,
+  TypeChip,
 } from '@app/modules/search/search-result/search-result.styles';
 import { Schema } from '@app/common/interfaces/schema.interface';
 import router from 'next/router';
@@ -26,52 +27,53 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
     description: result.comment,
     format: result.format,
   };
+  const localizedLabel = getLanguageVersion({
+    data: displayResult.label,
+    lang,
+    appendLocale: true,
+  });
+  const localizedDescription = getLanguageVersion({
+    data: displayResult.description,
+    lang,
+    appendLocale: true,
+  });
   let url;
   if (result.type == 'SCHEMA') {
     url = `/schema/${displayResult.pid}`;
   } else {
     url = `/crosswalk/${displayResult.pid}`;
   }
-  let chips : string[] = [result.state];
+  let chips: string[] = [result.state];
   if (result.format) {
     chips = chips.concat(result.format);
   }
 
   return (
-    <Block>
-      <ResultTextWrapper>
-        <Link href={url} passHref>
-          <RouterLink onClick={() => setIsSearchActive(false)}>
-            <h4>
-              {getLanguageVersion({
-                data: displayResult.label,
-                lang,
-                appendLocale: true,
-              })}
-            </h4>
-          </RouterLink>
-        </Link>
-        <ChipWrapper>
-          {result.type == 'SCHEMA' && (
-            <TypeChip $isSchema>{result.type}</TypeChip>
-          )}
-          {result.type != 'SCHEMA' && (
-            <TypeChip>{result.type}</TypeChip>
-          )}
-        </ChipWrapper>
-        <p>
-          {getLanguageVersion({
-            data: displayResult.description,
-            lang,
-            appendLocale: true,
-          })}
-        </p>
-        {chips.map((chip) => (
-          <ChipWrapper key={chip}>
-            <MetadataChip>{chip}</MetadataChip>
+    <Link href={url} passHref>
+      <StyledRouterLink
+        onClick={() => setIsSearchActive(false)}
+        aria-label={localizedLabel}
+      >
+        <Block>
+          <h4>
+            {localizedLabel}
+          </h4>
+          <ChipWrapper>
+            {result.type == 'SCHEMA' && (
+              <TypeChip $isSchema>{result.type}</TypeChip>
+            )}
+            {result.type != 'SCHEMA' && <TypeChip>{result.type}</TypeChip>}
           </ChipWrapper>
-        ))}
-      </ResultTextWrapper>
-    </Block>
+          <Paragraph>
+            {localizedDescription}
+          </Paragraph>
+          {chips.map((chip) => (
+            <ChipWrapper key={chip}>
+              <MetadataChip>{chip}</MetadataChip>
+            </ChipWrapper>
+          ))}
+        </Block>
+      </StyledRouterLink>
+    </Link>
   );
 }

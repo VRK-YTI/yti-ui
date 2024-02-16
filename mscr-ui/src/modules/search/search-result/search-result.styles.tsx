@@ -1,16 +1,30 @@
 import styled from 'styled-components';
-import { StaticChip } from 'suomifi-ui-components';
+import { RouterLink, StaticChip } from 'suomifi-ui-components';
 
-export const ResultTextWrapper = styled.div`
+export const StyledRouterLink = styled(RouterLink)`
   padding: 10px 30px;
-  border-bottom: 1px solid ${(props) => props.theme.suomifi.colors.depthDark2};
-  && .fi-link--router {
+  h4 {
     color: ${(props) => props.theme.suomifi.colors.blackBase};
     text-decoration: underline;
     display: inline-block;
-    margin-right: 20px;
-    :hover {
+    padding-right: 20px;
+    margin-bottom: 10px;
+  }
+  && .fi-paragraph {
+    margin-bottom: 18px;
+  }
+  :hover {
+    h4 {
       color: ${(props) => props.theme.suomifi.colors.highlightBase};
+    }
+  }
+  :focus {
+    && {
+      outline: none;
+      box-shadow: none;
+    }
+    h4 {
+      ${(props) => props.theme.suomifi.focuses.boxShadowFocus};
     }
   }
 `;
