@@ -11,7 +11,7 @@ export const SearchContainer = styled(Block)`
 
 export const FacetsWrapper = styled(Block)`
   // position: absolute;
-  padding-top: 20px;
+  padding: 20px 30px 0 30px;
 `;
 
 export const ResultsWrapper = styled(Block)`
