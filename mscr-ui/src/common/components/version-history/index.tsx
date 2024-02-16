@@ -4,20 +4,24 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
-import { Revision } from '@app/common/interfaces/schema.interface';
+import { useTranslation } from 'next-i18next';
+import { ContentRevision } from '@app/common/interfaces/content-revision.interface';
 
-export default function HistoryTable({
-  headers,
+export default function VersionHistory({
   revisions,
-  ariaLabel,
 }: {
-  headers: Array<string>;
-  revisions: Revision[];
-  ariaLabel: string;
+  revisions: ContentRevision[];
 }) {
+  const { t } = useTranslation('common');
+  const headers = [
+    t('metadata.version-label'),
+    t('metadata.pid'),
+    t('metadata.created'),
+    t('metadata.state'),
+  ];
   return (
     <TableContainer>
-      <Table aria-label={ariaLabel}>
+      <Table aria-label={t('metadata.versions')}>
         <TableHead>
           <TableRow>
             {headers.map((header) => (

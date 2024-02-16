@@ -1,6 +1,7 @@
 import { MultiSelectData } from 'suomifi-ui-components';
 import { LanguageBlockType } from 'yti-common-ui/form/language-selector';
 import { State } from '@app/common/interfaces/state.interface';
+import { ContentRevision } from '@app/common/interfaces/content-revision.interface';
 
 //sample Crosswalk
 export interface Crosswalk {
@@ -20,6 +21,10 @@ export interface Crosswalk {
   state?: State;
   namespace?: string;
   versionLabel?: string;
+}
+
+export interface CrosswalkWithVersionInfo extends Crosswalk {
+  revisions: ContentRevision[];
 }
 
 export interface CrosswalkFormType {
