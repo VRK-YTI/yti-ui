@@ -54,8 +54,17 @@ export const NotificationInlineAlert = styled(InlineAlert)`
   }
 `;
 
-export const FlowWrapper = styled.div`
-  height: 100vh;
+export const FlowWrapper = styled.div<{ $isSmall: boolean }>`
+  height: 100%;
   width: 100%;
-  position: fixed;
+
+  ${(props) =>
+    props.$isSmall
+      ? `
+    position: fixed;
+  `
+      : `
+    position: relative;
+    margin-left: -42px;
+  `}
 `;

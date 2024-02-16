@@ -73,6 +73,7 @@ const GraphContent = ({
   children,
 }: GraphProps) => {
   const { t } = useTranslation('common');
+  const { isSmall } = useBreakpoints();
   const dispatch = useStoreDispatch();
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
   const { project, getZoom } = useReactFlow();
@@ -425,7 +426,7 @@ const GraphContent = ({
   }, [resetPosition, setNodePositions]);
 
   return (
-    <FlowWrapper ref={reactFlowWrapper}>
+    <FlowWrapper ref={reactFlowWrapper} $isSmall={isSmall}>
       <ModelFlow
         nodes={nodes}
         edges={edges}

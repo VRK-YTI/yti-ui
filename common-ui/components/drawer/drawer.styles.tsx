@@ -7,8 +7,8 @@ export const DrawerContainer = styled.div<{
   $open: boolean;
   $isSmall: boolean;
 }>`
-  max-height: 100vh;
-  height: 100vh;
+  max-height: 100%;
+  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: ${(props) =>
