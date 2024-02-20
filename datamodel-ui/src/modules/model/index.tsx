@@ -32,9 +32,10 @@ import { getSlugAsString } from '@app/common/utils/parse-slug';
 
 interface ModelProps {
   modelId: string;
+  fullScreen?: boolean;
 }
 
-export default function Model({ modelId }: ModelProps) {
+export default function Model({ modelId, fullScreen }: ModelProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const router = useRouter();
@@ -199,7 +200,7 @@ export default function Model({ modelId }: ModelProps) {
   return (
     <div
       style={{
-        height: '100vh',
+        height: fullScreen ? '100vh' : 0,
         flex: '1 1 auto',
       }}
     >
