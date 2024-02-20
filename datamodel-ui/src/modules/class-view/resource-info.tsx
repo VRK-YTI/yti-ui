@@ -38,6 +38,7 @@ import ResourceError from '@app/common/components/resource-error';
 import { useRouter } from 'next/router';
 import { getSlugAsString } from '@app/common/utils/parse-slug';
 import { useSelector } from 'react-redux';
+import ExternalResourceInfo from './external-resource-info';
 
 interface ResourceInfoProps {
   data: SimpleResource;
@@ -81,7 +82,7 @@ export default function ResourceInfo({
       applicationProfile,
       version: data.version,
     },
-    { skip: !open }
+    { skip: !open || !data.modelId }
   );
 
   const [updateTarget, updateResult] = useUpdateClassResrictionTargetMutation();
@@ -125,7 +126,7 @@ export default function ResourceInfo({
               data: data.label,
               lang: displayLang ?? i18n.language,
               appendLocale: true,
-            })} (${data.modelId}:${data.identifier})`}
+            })} (${data.curie})`}
           </PrimaryTextWrapper>
           <SecondaryTextWrapper>
             {data.range && !attribute
@@ -210,6 +211,9 @@ export default function ResourceInfo({
             handleChangeTarget={handleChangeTarget}
             targetInClassRestriction={targetInClassRestriction}
           />
+        )}
+        {!data.modelId && (
+          <ExternalResourceInfo resource={data} renderActions={renderActions} />
         )}
       </ExpanderContent>
     </Expander>
