@@ -2,11 +2,14 @@
 
 import styled from 'styled-components';
 import { Breakpoint } from 'yti-common-ui/media-query';
-import { resolve, small } from 'yti-common-ui/media-query/styled-helpers';
+import { small } from 'yti-common-ui/media-query/styled-helpers';
 
 export const MarginContainer = styled.div<{
   $breakpoint: Breakpoint;
 }>`
+  &&.hidden {
+    visibility: hidden;
+  }
   margin: auto;
   padding-right: 1rem;
   padding-left: 1rem;
