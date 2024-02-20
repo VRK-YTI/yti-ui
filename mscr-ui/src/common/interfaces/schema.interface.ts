@@ -1,6 +1,7 @@
 import { State } from '@app/common/interfaces/state.interface';
 import { Format } from '@app/common/interfaces/format.interface';
 import { LanguageBlockType } from 'yti-common-ui/components/form/language-selector';
+import { ContentRevision } from '@app/common/interfaces/content-revision.interface';
 
 export interface Schema {
   namespace?: string;
@@ -27,22 +28,12 @@ export interface Schema {
   versionLabel?: string;
 }
 
-export interface Revision {
-  pid: string;
-  label: {
-    [key: string]: string;
-  };
-  versionLabel: string;
-  state?: string;
-  created?: string;
-}
-
 export interface SchemaWithVersionInfo extends Schema {
-  revisions: Revision[];
+  revisions: ContentRevision[];
   fileMetadata?: SchemaFileData[];
 }
 
-export interface SchemaFileData{
+export interface SchemaFileData {
   id?: string;
   contentType?: string;
   size?: number;

@@ -92,6 +92,28 @@
   "library-with-count_one": "",
   "library-with-count_other": "",
   "link-opens-new-window-external": "",
+  "metadata": {
+    "created": "",
+    "description": "",
+    "file": {
+      "format": "",
+      "id": "",
+      "label": "",
+      "name": "",
+      "size": ""
+    },
+    "format": "",
+    "metadata": "",
+    "modified": "",
+    "name": "",
+    "namespace": "",
+    "organizations": "",
+    "pid": "",
+    "state": "",
+    "version-label": "",
+    "versions": "",
+    "visibility": ""
+  },
   "mscr-title": "",
   "name": "",
   "navigate-to-homepage": "",
@@ -135,31 +157,6 @@
     "member": "",
     "roles": "",
     "terminology-editor": ""
-  },
-  "schema": {
-    "created": "",
-    "description": "",
-    "file": {
-      "actions": "",
-      "added": "",
-      "format": "",
-      "label": "",
-      "name": ""
-    },
-    "format": "",
-    "metadata": "",
-    "metadata-and-files": "",
-    "modified": "",
-    "name": "",
-    "namespace": "",
-    "organizations": "",
-    "pid": "",
-    "state": "",
-    "version": "",
-    "version-history": "",
-    "version-label": "",
-    "versions": "",
-    "visibility": ""
   },
   "schema-form": {
     "contributors": "",
@@ -233,6 +230,10 @@
   "subscribed-items": "",
   "subscription-description": "",
   "synonym": "",
+  "tabs": {
+    "metadata-and-files": "",
+    "version-history": ""
+  },
   "term-conjugation": {
     "plural": "",
     "singular": ""

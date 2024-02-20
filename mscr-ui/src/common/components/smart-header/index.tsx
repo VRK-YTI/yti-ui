@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Block } from 'suomifi-ui-components';
 import Modal from 'react-modal';
 import {
-  HeaderContainer,
-  MarginContainer,
   NavigationContainer,
 } from '../layout/layout.styles';
 import Logo from './logo';
@@ -13,7 +11,6 @@ import {
   ModalOverlay,
   ModalContent,
 } from './smart-header.styles';
-import DesktopNavigation from 'yti-common-ui/navigation/desktop-navigation';
 import MobileNavigation from 'yti-common-ui/navigation/mobile-navigation';
 import DesktopLocaleChooser from 'yti-common-ui/locale-chooser/desktop-locale-chooser';
 import { useBreakpoints } from 'yti-common-ui/media-query';
@@ -64,7 +61,6 @@ export default function SmartHeader({
   return (
     <>
       {renderHeader()}
-      {/* {renderDesktopNavigation()} */}
       {/* {renderMobileNavigationModal()} */}
       {renderLoginModal()}
     </>
@@ -104,35 +100,17 @@ export default function SmartHeader({
     );
   }
 
-  function renderDesktopNavigation() {
-    if (!isSmall) {
-      return (
-        <Block variant="nav">
-          <NavigationContainer $breakpoint={breakpoint}>
-            <MarginContainer $breakpoint={breakpoint}>
-              <DesktopNavigation isLoggedIn={!user?.anonymous ?? false} />
-            </MarginContainer>
-          </NavigationContainer>
-        </Block>
-      );
-    }
-  }
-
   function renderHeader() {
     return (
       <Block variant="header" role="banner" id="top-header">
-        <HeaderContainer>
-          <MarginContainer $breakpoint={breakpoint}>
-            <HeaderWrapper $breakpoint={breakpoint}>
-              {renderLogo()}
-              {renderHeaderSearch()}
-              {/*renderDesktopLocaleChooser()*/}
-              {renderMobileNavigationToggleButton()}
-              {renderDesktopAuthenticationPanel()}
-            </HeaderWrapper>
-            {renderUserInfo()}
-          </MarginContainer>
-        </HeaderContainer>
+        <HeaderWrapper $breakpoint={breakpoint}>
+          {renderLogo()}
+          {renderHeaderSearch()}
+          {/*renderDesktopLocaleChooser()*/}
+          {renderMobileNavigationToggleButton()}
+          {renderDesktopAuthenticationPanel()}
+        </HeaderWrapper>
+        {renderUserInfo()}
       </Block>
     );
   }
@@ -140,14 +118,10 @@ export default function SmartHeader({
   function renderLandingHeader() {
     return (
       <Block variant="header" role="banner" id="top-header">
-        <HeaderContainer>
-          <MarginContainer $breakpoint={breakpoint}>
-            <HeaderWrapper $breakpoint={breakpoint}>
-              {renderLogo()}
-              {renderDesktopAuthenticationPanel()}
-            </HeaderWrapper>
-          </MarginContainer>
-        </HeaderContainer>
+        <HeaderWrapper $breakpoint={breakpoint}>
+          {renderLogo()}
+          {renderDesktopAuthenticationPanel()}
+        </HeaderWrapper>
       </Block>
     );
   }
@@ -155,22 +129,20 @@ export default function SmartHeader({
   function renderFullScreenHeader() {
     return (
       <Block variant="header" role="banner" id="top-header">
-        <HeaderContainer $noBorder={typeof fullScreenElements !== 'undefined'}>
-          <HeaderWrapper
-            $breakpoint={breakpoint}
-            $fullHeight={typeof fullScreenElements !== 'undefined'}
+        <HeaderWrapper
+          $breakpoint={breakpoint}
+          $fullHeight={typeof fullScreenElements !== 'undefined'}
+        >
+          {fullScreenElements}
+          <div
+            style={{ display: 'flex', padding: '20px 20px 0 0', gap: '10px' }}
           >
-            {fullScreenElements}
-            <div
-              style={{ display: 'flex', padding: '20px 20px 0 0', gap: '10px' }}
-            >
-              {/*renderDesktopLocaleChooser()*/}
-              {renderMobileNavigationToggleButton()}
-              {renderDesktopAuthenticationPanel()}
-            </div>
-          </HeaderWrapper>
-          {renderUserInfo()}
-        </HeaderContainer>
+            {/*renderDesktopLocaleChooser()*/}
+            {renderMobileNavigationToggleButton()}
+            {renderDesktopAuthenticationPanel()}
+          </div>
+        </HeaderWrapper>
+        {renderUserInfo()}
       </Block>
     );
   }

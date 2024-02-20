@@ -91,11 +91,11 @@ export default function MetadataAndFiles({
 
   return (
     <>
-      <Heading variant="h2">{t('schema.metadata')}</Heading>
+      <Heading variant="h2">{t('metadata.metadata')}</Heading>
       <DescriptionList>
         <Grid container spacing={2}>
           <Grid item xs={2}>
-            <DescriptionListTitle>{t('schema.name')}</DescriptionListTitle>
+            <DescriptionListTitle>{t('metadata.name')}</DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
             <dd>{schemaDisplay.schemaLabel}</dd>
@@ -103,7 +103,7 @@ export default function MetadataAndFiles({
 
           <Grid item xs={2}>
             <DescriptionListTitle>
-              {t('schema.description')}
+              {t('metadata.description')}
             </DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
@@ -111,35 +111,35 @@ export default function MetadataAndFiles({
           </Grid>
 
           <Grid item xs={2}>
-            <DescriptionListTitle>{t('schema.pid')}</DescriptionListTitle>
+            <DescriptionListTitle>{t('metadata.pid')}</DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
             <dd>{schemaDisplay.schemaPid}</dd>
           </Grid>
 
           <Grid item xs={2}>
-            <DescriptionListTitle>{t('schema.version')}</DescriptionListTitle>
+            <DescriptionListTitle>{t('metadata.version-label')}</DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
             <dd>{schemaDisplay.schemaVersionLabel}</dd>
           </Grid>
 
           <Grid item xs={2}>
-            <DescriptionListTitle>{t('schema.created')}</DescriptionListTitle>
+            <DescriptionListTitle>{t('metadata.created')}</DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
             <dd>{schemaDisplay.schemaCreated}</dd>
           </Grid>
 
           <Grid item xs={2}>
-            <DescriptionListTitle>{t('schema.modified')}</DescriptionListTitle>
+            <DescriptionListTitle>{t('metadata.modified')}</DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
             <dd>{schemaDisplay.schemaModified}</dd>
           </Grid>
 
           <Grid item xs={2}>
-            <DescriptionListTitle>{t('schema.state')}</DescriptionListTitle>
+            <DescriptionListTitle>{t('metadata.state')}</DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
             <dd>{schemaDisplay.schemaState}</dd>
@@ -147,7 +147,7 @@ export default function MetadataAndFiles({
 
           <Grid item xs={2}>
             <DescriptionListTitle>
-              {t('schema.visibility')}
+              {t('metadata.visibility')}
             </DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
@@ -155,14 +155,14 @@ export default function MetadataAndFiles({
           </Grid>
 
           <Grid item xs={2}>
-            <DescriptionListTitle>{t('schema.format')}</DescriptionListTitle>
+            <DescriptionListTitle>{t('metadata.format')}</DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
             <dd>{schemaDisplay.schemaFormat}</dd>
           </Grid>
 
           <Grid item xs={2}>
-            <DescriptionListTitle>{t('schema.namespace')}</DescriptionListTitle>
+            <DescriptionListTitle>{t('metadata.namespace')}</DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
             <dd>{schemaDisplay.schemaNamespace}</dd>
@@ -170,7 +170,7 @@ export default function MetadataAndFiles({
 
           <Grid item xs={2}>
             <DescriptionListTitle>
-              {t('schema.organizations')}
+              {t('metadata.organizations')}
             </DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
@@ -179,13 +179,13 @@ export default function MetadataAndFiles({
         </Grid>
       </DescriptionList>
       <TableContainer>
-        <Table aria-label={t('schema.file.label')}>
+        <Table aria-label={t('metadata.file.label')}>
           <TableHead>
             <TableRow>
-              <TableCell>{t('schema.file.name')}</TableCell>
-              <TableCell>{t('schema.file.id')}</TableCell>
-              <TableCell>{t('schema.file.format')}</TableCell>
-              <TableCell>{t('schema.file.size')}</TableCell>
+              <TableCell>{t('metadata.file.name')}</TableCell>
+              <TableCell>{t('metadata.file.id')}</TableCell>
+              <TableCell>{t('metadata.file.format')}</TableCell>
+              <TableCell>{t('metadata.file.size')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

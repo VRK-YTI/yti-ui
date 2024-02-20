@@ -89,9 +89,29 @@
   "languages-available": "",
   "library": "",
   "library-variant": "",
-  "library-with-count_one": "",
-  "library-with-count_other": "",
   "link-opens-new-window-external": "",
+  "metadata": {
+    "created": "Created",
+    "description": "Description",
+    "file": {
+      "format": "Format",
+      "id": "ID",
+      "label": "Files",
+      "name": "Filename",
+      "size": "Size"
+    },
+    "format": "Format",
+    "metadata": "Metadata",
+    "modified": "Modified",
+    "name": "Name",
+    "namespace": "Namespace",
+    "organizations": "Organizations",
+    "pid": "PID",
+    "state": "State",
+    "version-label": "Version label",
+    "versions": "Versions",
+    "visibility": "Visibility"
+  },
   "mscr-title": "Metadata Schema and Crosswalk Registry",
   "name": "",
   "navigate-to-homepage": "Navigate to homepage",
@@ -135,33 +155,6 @@
     "member": "",
     "roles": "",
     "terminology-editor": ""
-  },
-  "schema": {
-    "created": "Created",
-    "description": "Description",
-    "file": {
-      "actions": "Actions",
-      "added": "Added",
-      "format": "Format",
-      "label": "Schema files",
-      "name": "Filename",
-      "id":"ID",
-      "size":"Size"
-    },
-    "format": "Format",
-    "metadata": "Metadata",
-    "metadata-and-files": "Metadata and files",
-    "modified": "Modified",
-    "name": "Name",
-    "namespace": "Namespace",
-    "organizations": "Organizations",
-    "pid": "PID",
-    "state": "State",
-    "version": "Version",
-    "version-history": "Version history",
-    "version-label": "Version label",
-    "versions": "Versions",
-    "visibility": "Visibility"
   },
   "schema-form": {
     "contributors": "Contributors",
@@ -235,6 +228,10 @@
   "subscribed-items": "",
   "subscription-description": "",
   "synonym": "",
+  "tabs": {
+    "metadata-and-files": "Metadata and files",
+    "version-history": "Version history"
+  },
   "term-conjugation": {
     "plural": "",
     "singular": ""
