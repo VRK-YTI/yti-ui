@@ -55,18 +55,14 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
         aria-label={localizedLabel}
       >
         <Block>
-          <h4>
-            {localizedLabel}
-          </h4>
+          <h4>{localizedLabel}</h4>
           <ChipWrapper>
             {result.type == 'SCHEMA' && (
               <TypeChip $isSchema>{result.type}</TypeChip>
             )}
             {result.type != 'SCHEMA' && <TypeChip>{result.type}</TypeChip>}
           </ChipWrapper>
-          <Paragraph>
-            {localizedDescription}
-          </Paragraph>
+          <Paragraph>{localizedDescription}</Paragraph>
           {chips.map((chip) => (
             <ChipWrapper key={chip}>
               <MetadataChip>{chip}</MetadataChip>

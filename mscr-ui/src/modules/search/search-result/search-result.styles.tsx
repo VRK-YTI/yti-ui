@@ -49,13 +49,13 @@ export const TypeChip = styled(StaticChip)<{ $isSchema?: boolean }>`
     border-color: ${(props) =>
       props.$isSchema
         ? props.theme.suomifi.colors.highlightLight1
-        : props.theme.suomifi.colors.blackBase};;
+        : props.theme.suomifi.colors.blackBase};
   }
 `;
 
 export const MetadataChip = styled(StaticChip)`
   &&.fi-chip {
-    background-color: #69D8D7;
+    background-color: #69d8d7;
     color: ${(props) => props.theme.suomifi.colors.blackBase};
   }
 `;

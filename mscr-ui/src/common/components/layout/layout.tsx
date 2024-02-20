@@ -85,7 +85,10 @@ export default function Layout({
                 <Grid item xs={10}>
                   <ContentContainer>
                     {alerts && alerts}
-                    <MarginContainer $breakpoint={breakpoint} className={isSearchActive ? 'hidden' : ''}>
+                    <MarginContainer
+                      $breakpoint={breakpoint}
+                      className={isSearchActive ? 'hidden' : ''}
+                    >
                       {isSearchActive && <SearchScreen />}
                       {children}
                     </MarginContainer>
@@ -97,7 +100,10 @@ export default function Layout({
                 <Grid item xs={12}>
                   <ContentContainer>
                     {alerts && alerts}
-                    <MarginContainer $breakpoint={breakpoint} className={isSearchActive ? 'hidden' : ''}>
+                    <MarginContainer
+                      $breakpoint={breakpoint}
+                      className={isSearchActive ? 'hidden' : ''}
+                    >
                       {isSearchActive && <SearchScreen />}
                       {children}
                     </MarginContainer>

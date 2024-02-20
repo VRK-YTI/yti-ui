@@ -13,7 +13,7 @@ export const MarginContainer = styled.div<{
   margin: auto;
   padding-right: 1rem;
   padding-left: 1rem;
-  `;
+`;
 
 // main layout
 
@@ -38,7 +38,7 @@ export const ContentContainer = styled.div<{ $fullScreen?: boolean }>`
       ? props.theme.suomifi.colors.whiteBase
       : props.theme.suomifi.colors.depthLight3};
 
-/*  border-bottom: ${(props) =>
+  /*  border-bottom: ${(props) =>
     !props.$fullScreen &&
     `1px solid ${props.theme.suomifi.colors.depthLight1}`};*/
   flex-grow: 1;

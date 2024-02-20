@@ -35,16 +35,19 @@ export default function SearchScreen() {
     });
   }, [patchUrlState, setIsSearchActive]);
 
-  const closeOnEsc = useCallback((event) => {
-    if (event.key === 'Escape') handleClose();
-  }, [handleClose]);
+  const closeOnEsc = useCallback(
+    (event) => {
+      if (event.key === 'Escape') handleClose();
+    },
+    [handleClose]
+  );
 
   useEffect(() => {
     document.addEventListener('keydown', closeOnEsc, false);
     return () => {
       document.removeEventListener('keydown', closeOnEsc, false);
     };
-    }, [closeOnEsc]);
+  }, [closeOnEsc]);
 
   // if (!mscrSearchResults) {
   //   // TODO: Some kind of error message?
