@@ -7,7 +7,7 @@ export const SearchContainer = styled(Block)`
   position: absolute;
   background-color: ${(props) => props.theme.suomifi.colors.depthLight3};
   z-index: 1;
-  width: 100%;
+  width: 80%;
 `;
 
 export const FacetsWrapper = styled(Block)`
