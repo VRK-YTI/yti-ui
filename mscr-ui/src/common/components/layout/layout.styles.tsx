@@ -2,15 +2,18 @@
 
 import styled from 'styled-components';
 import { Breakpoint } from 'yti-common-ui/media-query';
-import { resolve, small } from 'yti-common-ui/media-query/styled-helpers';
+import { small } from 'yti-common-ui/media-query/styled-helpers';
 
 export const MarginContainer = styled.div<{
   $breakpoint: Breakpoint;
 }>`
+  &&.hidden {
+    visibility: hidden;
+  }
   margin: auto;
   padding-right: 1rem;
   padding-left: 1rem;
-  `;
+`;
 
 // main layout
 
@@ -35,7 +38,7 @@ export const ContentContainer = styled.div<{ $fullScreen?: boolean }>`
       ? props.theme.suomifi.colors.whiteBase
       : props.theme.suomifi.colors.depthLight3};
 
-/*  border-bottom: ${(props) =>
+  /*  border-bottom: ${(props) =>
     !props.$fullScreen &&
     `1px solid ${props.theme.suomifi.colors.depthLight1}`};*/
   flex-grow: 1;

@@ -1,7 +1,10 @@
 import { Bucket, Facet } from '@app/common/interfaces/search.interface';
 import useUrlState, { UrlState } from '@app/common/utils/hooks/use-url-state';
-import { Checkbox, CheckboxGroup } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
+import {
+  StyledSuomiCheckbox,
+  StyledSuomiCheckboxGroup,
+} from '@app/modules/search/search-facet/search-facet.styles';
 
 interface SearchFacetProps {
   facetKey: Facet;
@@ -45,16 +48,17 @@ export default function SearchFacet({ facetKey, buckets }: SearchFacetProps) {
   });
 
   return (
-    <CheckboxGroup labelText={facetTranslations[facetKey]}>
+    <StyledSuomiCheckboxGroup labelText={facetTranslations[facetKey]}>
       {options.map((option) => (
-        <Checkbox
+        <StyledSuomiCheckbox
           key={option.key}
           onClick={() => handleClick(option.key)}
           checked={urlState[facetKey].includes(option.key)}
+          hintText={`${option.count}`}
         >
-          {option.label} ({option.count})
-        </Checkbox>
+          {option.label}
+        </StyledSuomiCheckbox>
       ))}
-    </CheckboxGroup>
+    </StyledSuomiCheckboxGroup>
   );
 }
