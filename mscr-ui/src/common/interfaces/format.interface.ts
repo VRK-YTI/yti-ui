@@ -12,4 +12,5 @@ export const formatsAvailableForCrosswalkCreation: Format[] = [
   'JSONSCHEMA',
   'CSV',
   'SKOSRDF',
+  'XSD',
 ];
