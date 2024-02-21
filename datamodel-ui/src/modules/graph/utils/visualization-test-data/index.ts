@@ -101,24 +101,28 @@ export const libraryData = {
       position: { x: 85, y: 248 },
       referenceTarget: 'corner-4',
       referenceType: 'PARENT_CLASS',
+      origin: 'natural-person',
     },
     {
       identifier: 'corner-2',
       position: { x: 681, y: 51 },
       referenceTarget: 'ext:spouse',
       referenceType: 'ASSOCIATION',
+      origin: 'is-spouse',
     },
     {
       identifier: 'corner-3',
       position: { x: 409, y: -136 },
       referenceTarget: 'person',
       referenceType: 'ATTRIBUTE_DOMAIN',
+      origin: 'name',
     },
     {
       identifier: 'corner-4',
       position: { x: 84, y: 14 },
       referenceTarget: 'person',
       referenceType: 'PARENT_CLASS',
+      origin: 'natural-person',
     },
   ],
 } as VisualizationResult;
@@ -252,6 +256,7 @@ export const profileData = {
       },
       referenceTarget: 'person',
       referenceType: 'PARENT_CLASS',
+      origin: 'natural-person',
     },
     {
       identifier: 'corner-2',
@@ -261,6 +266,7 @@ export const profileData = {
       },
       referenceTarget: 'address',
       referenceType: 'ASSOCIATION',
+      origin: 'is-address',
     },
   ],
 } as VisualizationResult;
@@ -338,7 +344,7 @@ export const expectedLibraryEdges = {
       referenceType: 'PARENT_CLASS',
       type: 'generalEdge',
       markerEnd: undefined,
-      data: {},
+      data: { origin: 'natural-person' },
       style: { strokeDasharray: '4 2', stroke: '#235A9A' },
     },
     {
@@ -355,7 +361,7 @@ export const expectedLibraryEdges = {
         width: 20,
         color: '#212121',
       },
-      data: {},
+      data: { origin: 'is-spouse' },
     },
     {
       source: '#corner-3',
