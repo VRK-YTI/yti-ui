@@ -9,6 +9,7 @@ import {
   TableRow,
 } from '@mui/material';
 import * as React from 'react';
+import {StyledTableCell, StyledTableRow, StyledTableHead} from '@app/common/components/generic-table/generic-table.styles';
 
 // Usage: items can be an array of typed items e.g. FilesRow[]. Heading names are taken from the interface property names. Headings can be over-ridden with using headings array.
 
@@ -17,31 +18,6 @@ export default function GenericTable(props: {
   headings: [];
   caption: string;
 }) {
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
-
-  const StyledTableHead = styled(TableHead)(({ theme }) => ({
-    background: '#fff',
-  }));
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    backgroundColor: '#fff',
-    td: { border: 0 },
-    a: {
-      color: '#3D6DB6',
-      textDecoration: 'none',
-    },
-    '&:nth-of-type(odd)': {
-      backgroundColor: '#EAF2FA',
-    },
-    '&:first-of-type th, &:first-of-type thead': {
-      fontWeight: 700,
-      borderBottom: '3px solid #3D6DB6',
-      backgroundColor: '#fff',
-    },
-    '&.MuiTableRow-hover:hover': {
-      opacity: '1',
-    },
-  }));
 
   function createColumnHeadings(items: any) {
     const head: JSX.Element[] = [];
