@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import {TableCell, TableHead, TableRow} from "@mui/material";
+import styled from 'styled-components';
+import { TableCell, TableHead, TableRow } from '@mui/material';
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
 
