@@ -24,6 +24,7 @@ export default withIronSessionApiRoute(
     let shibsession_value = '';
     if (shibsession_key !== undefined) {
       shibsession_value = req.cookies[shibsession_key] ?? '';
+      cookies[shibsession_key] = shibsession_value;
     } else {
       console.warn('No shibsression found, login failed');
       res.redirect(target);
