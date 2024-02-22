@@ -4,6 +4,13 @@
   "access-request-description": "",
   "access-request-error": "",
   "access-request-sent": "",
+  "action": {
+    "actions": "Actions",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "publish": "Publish",
+    "save": "Save"
+  },
   "association": "",
   "attribute": "",
   "breadcrumb": "",
@@ -28,6 +35,12 @@
     "no-equivalent-attributes": "",
     "no-upper-associations": "",
     "no-upper-attributes": ""
+  },
+  "confirm-modal": {
+    "heading": "Confirmation",
+    "publish-crosswalk1": "Are you sure you want to publish the crosswalk?",
+    "publish-crosswalk2": "After publishing, you cannot make changes to mappings in crosswalk.",
+    "save": "Are you sure you want to save changes?"
   },
   "confirm-page-leave": "Are you sure you want to leave the page? Changes you made won't be saved.",
   "datamodel-title": "",
@@ -91,7 +104,9 @@
   "library-variant": "",
   "link-opens-new-window-external": "",
   "metadata": {
+    "contact": "Contact",
     "created": "Created",
+    "crosswalk-details": "Crosswalk details",
     "description": "Description",
     "file": {
       "format": "Format",

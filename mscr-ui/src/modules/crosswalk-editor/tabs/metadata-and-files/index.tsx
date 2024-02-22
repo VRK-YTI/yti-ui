@@ -14,6 +14,7 @@ import * as React from 'react';
 import { Grid } from '@mui/material';
 import router from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
+import { useTranslation } from 'next-i18next';
 // import FilesComponent from '@app/modules/crosswalk-editor/tabs/metadata-and-files/files-component';
 
 interface patchPayload {
@@ -26,12 +27,6 @@ interface patchPayload {
   [key: string]: string | string[];
 }
 
-export enum ConfirmModalTexts {
-  'SAVE' = 'Are you sure you want to save changes?',
-  'PUBLISH1' = 'Are you sure you want to publish the crosswalk?',
-  'PUBLISH2' = 'After publishing, you cannot make changes to mappings in crosswalk.',
-}
-
 export default function MetadataAndFiles(props: {
   crosswalkData: any;
   sourceSchemaData: any;
@@ -40,6 +35,7 @@ export default function MetadataAndFiles(props: {
   nodeMappings: NodeMapping[];
   crosswalkId: string;
 }) {
+  const { t } = useTranslation('common');
   const hasEditRights = HasPermission({ actions: ['EDIT_CROSSWALK_METADATA'] });
   const patchPayloadInit: patchPayload = {
     label: '',
@@ -173,13 +169,13 @@ export default function MetadataAndFiles(props: {
       <div className="crosswalk-editor metadata-and-files-wrap mx-2">
         <Grid>
           <Grid container>
-            <h2>Crosswalk details</h2>
+            <h2>{t('metadata.crosswalk-details')}</h2>
           </Grid>
           <Grid container className="bg-lightest-blue p-3">
             <Grid item xs={12} md={7}>
               <Grid container className="basic-row">
                 <Grid item xs={4} className="br-heading">
-                  Crosswalk name:
+                  {t('metadata.name')}:
                 </Grid>
                 <Grid item xs={8}>
                   {isEditModeActive && (
@@ -199,7 +195,7 @@ export default function MetadataAndFiles(props: {
 
               <Grid container className="basic-row">
                 <Grid item xs={4} className="br-heading">
-                  Version label:
+                  {t('metadata.version-label')}:
                 </Grid>
                 <Grid item xs={8}>
                   {isEditModeActive && (
@@ -221,7 +217,7 @@ export default function MetadataAndFiles(props: {
 
               <Grid container className="basic-row">
                 <Grid item xs={4} className="br-heading">
-                  Contact:
+                  {t('metadata.contact')}:
                 </Grid>
                 <Grid item xs={8}>
                   {isEditModeActive && (
@@ -239,7 +235,7 @@ export default function MetadataAndFiles(props: {
 
               <Grid container className="basic-row">
                 <Grid item xs={4} className="br-heading">
-                  Pid:
+                  {t('metadata.pid')}:
                 </Grid>
                 <Grid item xs={8}>
                   <div className="br-label">{props.crosswalkData?.pid}</div>
@@ -248,7 +244,7 @@ export default function MetadataAndFiles(props: {
 
               <Grid container className="basic-row">
                 <Grid item xs={4} className="br-heading">
-                  Format:
+                  {t('metadata.format')}:
                 </Grid>
                 <Grid item xs={8}>
                   <div className="br-label">{props.crosswalkData?.format}</div>
@@ -257,7 +253,7 @@ export default function MetadataAndFiles(props: {
 
               <Grid container className="basic-row">
                 <Grid item xs={4} className="br-heading">
-                  Created:
+                  {t('metadata.created')}:
                 </Grid>
                 <Grid item xs={8}>
                   <div className="br-label">{props.crosswalkData?.created}</div>
@@ -266,7 +262,7 @@ export default function MetadataAndFiles(props: {
 
               <Grid container className="basic-row">
                 <Grid item xs={4} className="br-heading">
-                  Modified:
+                  {t('metadata.modified')}:
                 </Grid>
                 <Grid item xs={8}>
                   <div className="br-label">
@@ -277,7 +273,7 @@ export default function MetadataAndFiles(props: {
 
               <Grid container className="basic-row">
                 <Grid item xs={4} className="br-heading">
-                  State:
+                  {t('metadata.state')}:
                 </Grid>
                 <Grid item xs={8}>
                   <div className="br-label">{props.crosswalkData?.state}</div>
@@ -286,7 +282,7 @@ export default function MetadataAndFiles(props: {
 
               <Grid container className="basic-row">
                 <Grid item xs={4} className="br-heading">
-                  Visibility:
+                  {t('metadata.visibility')}:
                 </Grid>
                 <Grid item xs={8}>
                   {isEditModeActive && (
@@ -316,7 +312,7 @@ export default function MetadataAndFiles(props: {
                 <Grid item xs={6} md={7}>
                   <Grid className="basic-row">
                     <Grid item xs={12} className="br-heading">
-                      Description:
+                      {t('metadata.description')}:
                     </Grid>
                     {isEditModeActive && (
                       <Textarea
@@ -339,18 +335,18 @@ export default function MetadataAndFiles(props: {
                 <Grid item xs={6} md={5}>
                   <Grid container direction="row" justifyContent="flex-end">
                     {hasEditRights && (
-                      <ActionMenu buttonText="Actions">
+                      <ActionMenu buttonText={t('action.actions')}>
                         <ActionMenuItem
                           onClick={() => setEditModeActive(true)}
                           className={isEditModeActive ? 'd-none' : ''}
                         >
-                          Edit
+                          {t('action.edit')}
                         </ActionMenuItem>
                         <ActionMenuItem
                           className={isPublished ? 'd-none' : ''}
                           onClick={() => setPublishConfirmModalOpen(true)}
                         >
-                          Publish
+                          {t('action.publish')}
                         </ActionMenuItem>
                       </ActionMenu>
                     )}
@@ -369,7 +365,7 @@ export default function MetadataAndFiles(props: {
                       setSaveConfirmModalOpen(true);
                     }}
                   >
-                    Save
+                    {t('action.save')}
                   </Sbutton>
 
                   <Sbutton
@@ -381,7 +377,7 @@ export default function MetadataAndFiles(props: {
                       setInitialPatchValuesFromData();
                     }}
                   >
-                    Cancel
+                    {t('action.cancel')}
                   </Sbutton>
                 </>
               )}
@@ -396,21 +392,21 @@ export default function MetadataAndFiles(props: {
         <ConfirmModal
           isVisible={isSaveConfirmModalOpen}
           actionName={'save'}
-          actionText={'Save'}
-          cancelText={'Cancel'}
+          actionText={t('action.save')}
+          cancelText={t('action.cancel')}
           performConfirmModalAction={performModalAction}
-          heading={'Confirmation'}
-          text1={ConfirmModalTexts.SAVE}
+          heading={t('confirm-modal.heading')}
+          text1={t('confirm-modal.save')}
         />
         <ConfirmModal
           isVisible={isPublishConfirmModalOpen}
           actionName={'publish'}
-          actionText={'Publish'}
-          cancelText={'Cancel'}
+          actionText={t('action.publish')}
+          cancelText={t('action.cancel')}
           performConfirmModalAction={performModalAction}
-          heading={'Confirmation'}
-          text1={ConfirmModalTexts.PUBLISH1}
-          text2={ConfirmModalTexts.PUBLISH2}
+          heading={t('confirm-modal.heading')}
+          text1={t('confirm-modal.publish-crosswalk1')}
+          text2={t('confirm-modal.publish-crosswalk2')}
         />
       </div>
     </>

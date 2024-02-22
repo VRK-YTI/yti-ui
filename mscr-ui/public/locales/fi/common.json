@@ -4,6 +4,13 @@
   "access-request-description": "",
   "access-request-error": "",
   "access-request-sent": "",
+  "action": {
+    "actions": "",
+    "cancel": "",
+    "edit": "",
+    "publish": "",
+    "save": ""
+  },
   "association": "",
   "attribute": "",
   "breadcrumb": "",
@@ -28,6 +35,12 @@
     "no-equivalent-attributes": "",
     "no-upper-associations": "",
     "no-upper-attributes": ""
+  },
+  "confirm-modal": {
+    "heading": "",
+    "publish-crosswalk1": "",
+    "publish-crosswalk2": "",
+    "save": ""
   },
   "confirm-page-leave": "",
   "datamodel-title": "",
@@ -93,7 +106,9 @@
   "library-with-count_other": "",
   "link-opens-new-window-external": "",
   "metadata": {
+    "contact": "",
     "created": "",
+    "crosswalk-details": "",
     "description": "",
     "file": {
       "format": "",
