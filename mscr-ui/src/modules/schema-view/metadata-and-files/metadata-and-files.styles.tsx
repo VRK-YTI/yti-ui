@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import {TableCell, TableHead, TableRow} from "@mui/material";
 
 export const DescriptionListTitle = styled.dt`
   font-weight: 400;
