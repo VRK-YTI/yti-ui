@@ -388,10 +388,10 @@ export default function MetadataAndFiles(props: {
           </Grid>
           <br />
         </Grid>
-        <FilesComponent
+        {/*        <FilesComponent
           crosswalkData={props.crosswalkData}
           isAdmin={props.isAdmin}
-        ></FilesComponent>
+        ></FilesComponent>*/}
         <ConfirmModal
           isVisible={isSaveConfirmModalOpen}
           actionName={'save'}
