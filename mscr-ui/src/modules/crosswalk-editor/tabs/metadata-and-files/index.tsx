@@ -13,7 +13,8 @@ import ConfirmModal from '@app/common/components/confirmation-modal';
 import * as React from 'react';
 import { Grid } from '@mui/material';
 import router from 'next/router';
-import FilesComponent from '@app/modules/crosswalk-editor/tabs/metadata-and-files/files-component';
+import HasPermission from '@app/common/utils/has-permission';
+// import FilesComponent from '@app/modules/crosswalk-editor/tabs/metadata-and-files/files-component';
 
 interface patchPayload {
   label: string;
@@ -38,8 +39,8 @@ export default function MetadataAndFiles(props: {
   performMetadataAndFilesAction: any;
   nodeMappings: NodeMapping[];
   crosswalkId: string;
-  isAdmin: boolean;
 }) {
+  const hasEditRights = HasPermission({ actions: ['EDIT_CROSSWALK_METADATA'] });
   const patchPayloadInit: patchPayload = {
     label: '',
     description: '',
@@ -337,7 +338,7 @@ export default function MetadataAndFiles(props: {
                 </Grid>
                 <Grid item xs={6} md={5}>
                   <Grid container direction="row" justifyContent="flex-end">
-                    {props.isAdmin && (
+                    {hasEditRights && (
                       <ActionMenu buttonText="Actions">
                         <ActionMenuItem
                           onClick={() => setEditModeActive(true)}
@@ -359,7 +360,7 @@ export default function MetadataAndFiles(props: {
             </Grid>
 
             <Grid container direction="row" justifyContent="flex-end">
-              {props.isAdmin && isEditModeActive && (
+              {hasEditRights && isEditModeActive && (
                 <>
                   <Sbutton
                     className="align-self-end my-3"
@@ -390,7 +391,7 @@ export default function MetadataAndFiles(props: {
         </Grid>
         {/*        <FilesComponent
           crosswalkData={props.crosswalkData}
-          isAdmin={props.isAdmin}
+          isAdmin={hasEditRights}
         ></FilesComponent>*/}
         <ConfirmModal
           isVisible={isSaveConfirmModalOpen}

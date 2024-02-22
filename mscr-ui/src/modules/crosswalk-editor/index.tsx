@@ -164,9 +164,7 @@ export default function CrosswalkEditor({
   const [deleteMapping, deleteMappingResponse] = useDeleteMappingMutation();
   const [patchMapping, patchMappingResponse] = usePatchMappingMutation();
 
-  const [isAdmin, setIsAdmin] = React.useState<boolean>(
-    HasPermission({ actions: ['CREATE_CROSSWALK'] }),
-  );
+  const hasEditRights = HasPermission({ actions: ['EDIT_CROSSWALK_MAPPINGS'] });
 
   interface simpleNode {
     name: string | undefined;
@@ -882,7 +880,6 @@ export default function CrosswalkEditor({
                   }
                   nodeMappings={nodeMappings}
                   crosswalkId={crosswalkId}
-                  isAdmin={isAdmin}
                 />
               </>
             )}
@@ -919,7 +916,7 @@ export default function CrosswalkEditor({
                     : 'd-none'
                 }
               >
-                {isAdmin && (
+                {hasEditRights && (
                   <ActionMenu className="mb-2" buttonText="Actions">
                     <ActionMenuItem
                       onClick={() => setEditModeActive(true)}
@@ -1018,7 +1015,7 @@ export default function CrosswalkEditor({
 
                       {/*  MID BUTTONS */}
                       <div className="col-2 px-4 mid-buttons">
-                        {isAdmin && (
+                        {hasEditRights && (
                           <Sbutton
                             className="link-button"
                             title={
