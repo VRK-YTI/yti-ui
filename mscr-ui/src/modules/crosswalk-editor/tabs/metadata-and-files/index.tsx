@@ -8,7 +8,7 @@ import {
   ActionMenu,
   ActionMenuItem,
 } from 'suomifi-ui-components';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ConfirmModal from '@app/common/components/confirmation-modal';
 import * as React from 'react';
 import { Grid } from '@mui/material';
