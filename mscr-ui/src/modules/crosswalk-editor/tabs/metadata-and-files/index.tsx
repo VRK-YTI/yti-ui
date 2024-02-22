@@ -13,6 +13,7 @@ import ConfirmModal from '@app/common/components/confirmation-modal';
 import * as React from 'react';
 import { Grid } from '@mui/material';
 import router from 'next/router';
+import FilesComponent from '@app/modules/crosswalk-editor/tabs/metadata-and-files/files-component';
 
 interface patchPayload {
   label: string;
@@ -32,6 +33,8 @@ export enum ConfirmModalTexts {
 
 export default function MetadataAndFiles(props: {
   crosswalkData: any;
+  sourceSchemaData: any;
+  targetSchemaData: any;
   performMetadataAndFilesAction: any;
   nodeMappings: NodeMapping[];
   crosswalkId: string;
@@ -244,6 +247,15 @@ export default function MetadataAndFiles(props: {
 
               <Grid container className="basic-row">
                 <Grid item xs={4} className="br-heading">
+                  Format:
+                </Grid>
+                <Grid item xs={8}>
+                  <div className="br-label">{props.crosswalkData?.format}</div>
+                </Grid>
+              </Grid>
+
+              <Grid container className="basic-row">
+                <Grid item xs={4} className="br-heading">
                   Created:
                 </Grid>
                 <Grid item xs={8}>
@@ -374,8 +386,12 @@ export default function MetadataAndFiles(props: {
               )}
             </Grid>
           </Grid>
+          <br />
         </Grid>
-        <br />
+        <FilesComponent
+          crosswalkData={props.crosswalkData}
+          isAdmin={props.isAdmin}
+        ></FilesComponent>
         <ConfirmModal
           isVisible={isSaveConfirmModalOpen}
           actionName={'save'}

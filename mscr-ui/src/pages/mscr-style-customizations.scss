@@ -79,9 +79,10 @@ body {
 }
 
 .metadata-and-files-wrap {
-    .fi-text-input_label--visible {
+    .fi-text-input_label--visible, .fi-dropdown_label--visible {
       display: none !important;
     }
+
 }
 
 .crosswalk-editor {
@@ -176,6 +177,9 @@ body {
 
   .MuiTableCell-root {
     font-size: 17px;
+    &.filename {
+      word-break: break-word;
+    }
   }
 
   .MuiButton-root {
