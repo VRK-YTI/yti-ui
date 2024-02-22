@@ -449,7 +449,7 @@ const GraphContent = ({
           minZoom: 1,
         }}
         maxZoom={5}
-        minZoom={0.2}
+        minZoom={0.25}
       >
         <GraphNotification hasChanges={graphHasChanges} />
         {children}
