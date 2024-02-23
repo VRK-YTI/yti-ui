@@ -17,8 +17,7 @@ import { getRunningQueriesThunk as getInternalResourcesRunningQueriesThunk } fro
 import { getRunningQueriesThunk as getVisualizationRunningQueriesThunk } from '@app/common/components/visualization/visualization.slice';
 import { useRouter } from 'next/router';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
-import SchemaView from '@app/modules/schema-view';
-import CrosswalkEditor from "@app/modules/crosswalk-editor";
+import CrosswalkEditor from '@app/modules/crosswalk-editor';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -26,9 +25,9 @@ interface IndexPageProps extends CommonContextState {
   schemaId: string;
 }
 
-export default function SchemaPage(props: IndexPageProps) {
-  const { query, } = useRouter();
-  const crosswalkId = (query?.pid ?? '') as string;
+export default function CrosswalkPage(props: IndexPageProps) {
+  const { query } = useRouter();
+  const crosswalkId = (query?.pid ?? [''])[0];
 
   return (
     <CommonContextProvider value={props}>

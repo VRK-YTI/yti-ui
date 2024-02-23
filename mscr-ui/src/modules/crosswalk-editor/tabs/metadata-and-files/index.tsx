@@ -33,7 +33,6 @@ export default function MetadataAndFiles(props: {
   targetSchemaData: any;
   performMetadataAndFilesAction: any;
   nodeMappings: NodeMapping[];
-  crosswalkId: string;
 }) {
   const { t } = useTranslation('common');
   const hasEditRights = HasPermission({ actions: ['EDIT_CROSSWALK_METADATA'] });

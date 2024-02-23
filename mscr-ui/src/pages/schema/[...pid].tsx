@@ -27,7 +27,7 @@ interface IndexPageProps extends CommonContextState {
 
 export default function SchemaPage(props: IndexPageProps) {
   const { query } = useRouter();
-  const schemaId = (query?.pid ?? '') as string;
+  const schemaId = (query?.pid ?? [''])[0];
 
   return (
     <CommonContextProvider value={props}>

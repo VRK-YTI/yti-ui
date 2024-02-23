@@ -288,7 +288,7 @@ export default function CrosswalkEditor({
     isSuccess: getMappingsDataIsSuccess,
     isError: getMappingsIsError,
     error: getMappingsError,
-  } = useGetMappingsQuery(crosswalkId[0]);
+  } = useGetMappingsQuery(crosswalkId);
 
   useEffect(() => {
     if (getSourceSchemaData?.content) {
@@ -379,7 +379,7 @@ export default function CrosswalkEditor({
     const publishPayload = {
       state: 'PUBLISHED',
     };
-    patchCrosswalk({ payload: publishPayload, pid: crosswalkId[0] });
+    patchCrosswalk({ payload: publishPayload, pid: crosswalkId });
   }
 
   function addOrEditJointButtonClick(
@@ -755,7 +755,7 @@ export default function CrosswalkEditor({
     }
     if (action === 'addJoint') {
       setNodeMappingsModalOpen(false);
-      putMapping({ payload: mappingPayload, pid: crosswalkId[0] });
+      putMapping({ payload: mappingPayload, pid: crosswalkId });
       setSourceTreeSelections([]);
       setTargetTreeSelections([]);
     }
@@ -791,7 +791,7 @@ export default function CrosswalkEditor({
     if (action === 'saveChanges') {
       const obj = Object.assign({}, ...properties);
       setEditModeActive(false);
-      patchCrosswalk({ payload: obj, pid: crosswalkId[0] });
+      patchCrosswalk({ payload: obj, pid: crosswalkId });
     }
   };
 
@@ -879,7 +879,6 @@ export default function CrosswalkEditor({
                     performMetadataAndFilesAction
                   }
                   nodeMappings={nodeMappings}
-                  crosswalkId={crosswalkId}
                 />
               </>
             )}
