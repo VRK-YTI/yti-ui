@@ -7,7 +7,7 @@ import {
 
 export default function generateCrosswalkPayload(
   data: CrosswalkFormType
-): Crosswalk {
+): Partial<Crosswalk> {
   return {
     format: data.format,
     description: data.languages
