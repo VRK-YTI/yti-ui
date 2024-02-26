@@ -40,29 +40,27 @@ export default withIronSessionApiRoute(
     }
 
     const sessionCookies = req.session.cookies ?? {};
-    const requestCookies: { [key: string]: string } = {};
 
-    if (sessionCookies) {
-      Object.entries(sessionCookies).forEach(([key, value]) => {
+    const cookieString = Object.entries(sessionCookies)
+      .map(([key, value]) => {
         if (key.toLowerCase() === 'jsessionid') {
-          requestCookies['JSESSIONID'] = value;
+          return `JSESSIONID=${value}`;
         } else if (key.toLowerCase().startsWith('_shibsession')) {
-          requestCookies[key] = value;
+          return `${key}=${value}`;
         }
-      });
-    }
+      })
+      .filter(Boolean)
+      .join('; ');
 
-    if (Object.keys(requestCookies).length > 0) {
-      const cookiestring = Object.entries(requestCookies)
-        .map(([key, value]) => `${key}=${value}`)
-        .join('; ');
-      headers['Cookie'] = cookiestring;
-    }
+    headers['Cookie'] = cookieString;
+
+    const apiUrl =
+      process.env.AWS_ENV === 'local'
+        ? process.env.DATAMODEL_API_URL
+        : `${process.env.AUTH_PROXY_URL}/datamodel-api`;
 
     const { status, data: response } = await axios.get(
-      `${process.env.DATAMODEL_API_URL}/v2/export/${target}${
-        version ? `?version=${version}` : ''
-      }`,
+      `${apiUrl}/v2/export/${target}${version ? `?version=${version}` : ''}`,
       {
         headers: headers,
         responseType: 'stream',
