@@ -63,6 +63,22 @@ export default function ModelTools({
   const [ref, setRef] = useState<HTMLButtonElement | null>(null);
   const [showHover, setShowHover] = useState(false);
 
+  const zoomLevels = [
+    0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4, 5,
+  ];
+
+  const zoom = (currentZoom: number, direction: 'in' | 'out'): number => {
+    const closestZoom = zoomLevels.reduce((prev, curr) =>
+      Math.abs(curr - currentZoom) < Math.abs(prev - currentZoom) ? curr : prev
+    );
+
+    return (
+      zoomLevels[
+        zoomLevels.indexOf(closestZoom) + (direction == 'in' ? 1 : -1)
+      ] ?? closestZoom
+    );
+  };
+
   const handleResetPosition = () => {
     dispatch(setResetPosition(true));
   };
@@ -127,7 +143,7 @@ export default function ModelTools({
                 setViewport({
                   x: transform[0],
                   y: transform[1],
-                  zoom: transform[2] + 0.25,
+                  zoom: zoom(transform[2], 'in'),
                 })
               }
               onMouseEnter={(ref) => setRef(ref.currentTarget)}
@@ -140,7 +156,7 @@ export default function ModelTools({
                 setViewport({
                   x: transform[0],
                   y: transform[1],
-                  zoom: transform[2] - 0.25,
+                  zoom: zoom(transform[2], 'out'),
                 })
               }
               onMouseEnter={(ref) => setRef(ref.currentTarget)}
