@@ -24,12 +24,34 @@ import PageHead from 'yti-common-ui/page-head';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import SiteInformationModule from '@app/modules/site-information';
 import SearchBar from 'src/modules/search/search-bar';
-import {Grid} from '@mui/material';
+import styled from 'styled-components';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
   user: MscrUser;
 }
+
+const LandingWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: calc(100vh - 64px);
+  gap: 30px;
+  padding-top: 30px;
+  
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+    justify-content: center;
+    height: calc(100vh - 64px);
+    max-height: 660px;
+    padding-top: 0;
+  }
+`
+
+const LandingItem = styled.div`
+  width: 100%;
+  max-width: 520px;
+`
 
 export default function IndexPage(props: IndexPageProps) {
   const { t } = useTranslation('common');
@@ -45,17 +67,14 @@ export default function IndexPage(props: IndexPageProps) {
           title={t('mscr-title')}
           description={t('service-description')}
         />
-        <Grid container alignItems="center">
-          <Grid item xs={6}>
+        <LandingWrapper>
+          <LandingItem>
             <SiteInformationModule />
-          </Grid>
-          <Grid item xs={6}>
-            <div>
-              <p>Search in MSCR</p>
-              <SearchBar placeholder={t('landing.search-placeholder')} />
-            </div>
-          </Grid>
-        </Grid>
+          </LandingItem>
+          <LandingItem>
+            <SearchBar placeholder={t('landing.search-placeholder')} />
+          </LandingItem>
+        </LandingWrapper>
       </Layout>
     </CommonContextProvider>
   );
