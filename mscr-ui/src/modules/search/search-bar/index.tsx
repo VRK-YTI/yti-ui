@@ -8,9 +8,9 @@ import {
   TEXT_INPUT_MAX,
 } from 'yti-common-ui/utils/constants';
 import { SearchContext } from '@app/common/components/search-context-provider';
-import { MscrSearchInput } from '@app/modules/search/search-bar/search-bar.styles';
+import { SearchInput } from 'suomifi-ui-components';
 
-export default function SearchBar({ placeholder }: { placeholder?: string }) {
+export default function SearchBar({ placeholder, hideLabel }: { placeholder?: string, hideLabel?: Boolean }) {
   const { t } = useTranslation('common');
   const { isSearchActive, setIsSearchActive } = useContext(SearchContext);
   const { urlState, patchUrlState } = useUrlState();
@@ -38,7 +38,7 @@ export default function SearchBar({ placeholder }: { placeholder?: string }) {
 
   return (
     <>
-      <MscrSearchInput
+      <SearchInput
         labelText={t('search.bar.label')}
         clearButtonLabel={t('search.bar.clear-button')}
         searchButtonLabel={t('search.bar.search-button')}
@@ -52,6 +52,8 @@ export default function SearchBar({ placeholder }: { placeholder?: string }) {
         }}
         onChange={(value) => handleChange(value?.toString() ?? '')}
         maxLength={TEXT_INPUT_MAX}
+        labelMode={isSearchActive || hideLabel ? "hidden" : "visible"}
+        fullWidth={!hideLabel}
       />
     </>
   );

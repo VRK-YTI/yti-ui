@@ -172,7 +172,7 @@
   "search": {
     "bar": {
       "clear-button": "Clear input and close search",
-      "label": "Search",
+      "label": "Search in MSCR",
       "placeholder": "Search for...",
       "search-button": "Search"
     },
