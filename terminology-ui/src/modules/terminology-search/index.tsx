@@ -55,7 +55,10 @@ export default function TerminologySearch() {
     i18n.language
   );
   const { data: orgsData, error: organizationsError } =
-    useGetOrganizationsQuery(i18n.language);
+    useGetOrganizationsQuery({
+      language: i18n.language,
+      showChildOrganizations: false,
+    });
   const { data: counts, error: countsError } = useGetCountsQuery(null);
   const dispatch = useStoreDispatch();
   const [showModal, setShowModal] = useState(false);
@@ -195,7 +198,11 @@ export default function TerminologySearch() {
             </TitleDescriptionWrapper>
             <Paragraph>
               {t('move-to-former')}{' '}
-              <Link href="https://sanastot.beta.yti.cloud.dvv.fi/" passHref>
+              <Link
+                href="https://sanastot.beta.yti.cloud.dvv.fi/"
+                passHref
+                legacyBehavior
+              >
                 <SuomiFiLink href="">{t('to-terminology-tool')}</SuomiFiLink>
               </Link>
               .
@@ -259,6 +266,7 @@ export default function TerminologySearch() {
                     'terminology-search-results-information-domains'
                   )}
                   noDescriptionText={t('vocabulary-results-no-description')}
+                  noVersion
                   tagsTitle={t('terminology-search-terminologies', {
                     count: data?.totalHitCount ?? 0,
                   })}

@@ -1,14 +1,8 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
+import { fireEvent, screen } from '@testing-library/react';
 import TermModal from '.';
-import { makeStore } from '@app/store';
-import { getMockContext, themeProvider } from '@app/tests/test-utils';
+import { renderWithProviders } from '@app/tests/test-utils';
 import { Term } from '@app/common/interfaces/term.interface';
-import {
-  initialState,
-  setLogin,
-} from '@app/common/components/login/login.slice';
+import { initialState } from '@app/common/components/login/login.slice';
 
 describe('term-modal', () => {
   let appRoot: HTMLDivElement | null = null;
@@ -20,18 +14,11 @@ describe('term-modal', () => {
   });
 
   it('should render everything in component', () => {
-    const store = makeStore(getMockContext());
+    renderWithProviders(<TermModal data={data} />, [], {
+      preloadedState: { login: { ...initialState, anonymous: false } },
+    });
 
-    store.dispatch(setLogin({ ...initialState, anonymous: false }));
-
-    render(
-      <Provider store={store}>
-        <TermModal data={data} />
-      </Provider>,
-      { wrapper: themeProvider }
-    );
-
-    userEvent.click(screen.getByText('pref label'));
+    fireEvent.click(screen.getByText('pref label'));
 
     expect(screen.getByText('Preferred term')).toBeInTheDocument();
     expect(screen.getByText('tr-statuses.draft')).toBeInTheDocument();
@@ -41,7 +28,7 @@ describe('term-modal', () => {
     expect(screen.getByText('term equivalency')).toBeInTheDocument();
     expect(screen.getByText('source 1')).toBeInTheDocument();
 
-    userEvent.click(
+    fireEvent.click(
       screen.getByText('tr-term-modal-organizational-information')
     );
 
@@ -50,7 +37,7 @@ describe('term-modal', () => {
     expect(screen.getByText('editorial note')).toBeInTheDocument();
     expect(screen.getByText('draft comment')).toBeInTheDocument();
 
-    userEvent.click(screen.getByText('tr-term-modal-grammatic-information'));
+    fireEvent.click(screen.getByText('tr-term-modal-grammatic-information'));
 
     expect(screen.getByText('term style')).toBeInTheDocument();
     expect(screen.getByText('term family')).toBeInTheDocument();
@@ -59,22 +46,17 @@ describe('term-modal', () => {
   });
 
   it('should render parts of component', () => {
-    const store = makeStore(getMockContext());
-
     delete data.term.properties.changeNote;
     delete data.term.properties.historyNote;
     delete data.term.properties.editorialNote;
     delete data.term.properties.draftComment;
     delete data.term.properties.wordClass;
 
-    render(
-      <Provider store={store}>
-        <TermModal data={data} />
-      </Provider>,
-      { wrapper: themeProvider }
-    );
+    renderWithProviders(<TermModal data={data} />, [], {
+      preloadedState: { login: { ...initialState, anonymous: false } },
+    });
 
-    userEvent.click(screen.getByText('pref label'));
+    fireEvent.click(screen.getByText('pref label'));
 
     expect(screen.getByText('Preferred term')).toBeInTheDocument();
     expect(screen.getByText('tr-statuses.draft')).toBeInTheDocument();
@@ -93,7 +75,7 @@ describe('term-modal', () => {
     expect(screen.queryByText('editorial note')).not.toBeInTheDocument();
     expect(screen.queryByText('draft comment')).not.toBeInTheDocument();
 
-    userEvent.click(screen.getByText('tr-term-modal-grammatic-information'));
+    fireEvent.click(screen.getByText('tr-term-modal-grammatic-information'));
 
     expect(screen.getByText('term style')).toBeInTheDocument();
     expect(screen.getByText('term family')).toBeInTheDocument();

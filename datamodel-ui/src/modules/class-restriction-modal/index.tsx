@@ -1,5 +1,4 @@
 import ResourceList, { ResultType } from '@app/common/components/resource-list';
-import WideModal from '@app/common/components/wide-modal';
 import { useTranslation } from 'next-i18next';
 import {
   Button,
@@ -13,12 +12,16 @@ import {
 import { ModalContentWrapper } from './class-restriction-modal.styles';
 import { useEffect, useMemo, useState } from 'react';
 import { useGetNodeShapesQuery } from '@app/common/components/class/class.slice';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import {
+  InternalClass,
+  InternalClassInfo,
+} from '@app/common/interfaces/internal-class.interface';
+import { mapInternalClassInfoToResultType } from './utils';
+import LargeModal from '@app/common/components/large-modal';
 
 interface ClassRestrictionModalProps {
   visible: boolean;
-  selectedNodeShape: InternalClass;
+  selectedTargetClass: InternalClassInfo;
   hide: () => void;
   handleFollowUp: (
     createNew?: boolean,
@@ -28,49 +31,21 @@ interface ClassRestrictionModalProps {
 
 export default function ClassRestrictionModal({
   visible,
-  selectedNodeShape,
+  selectedTargetClass,
   hide,
   handleFollowUp,
 }: ClassRestrictionModalProps) {
   const { t, i18n } = useTranslation('admin');
   const [keyword, setKeyword] = useState('');
-  const [selected, setSelected] = useState('');
-  const { data, isSuccess } = useGetNodeShapesQuery(selectedNodeShape.id);
+  const [selectedClassOrNodeShape, setTargetClassOrNodeShape] = useState(
+    selectedTargetClass.id
+  );
+  const { data, isSuccess } = useGetNodeShapesQuery(selectedTargetClass.id);
   const nodeShapes: ResultType[] = useMemo(() => {
     if (!data) {
       return [];
     }
-
-    return data.map((d) => ({
-      subClass: {
-        label: 'subClassLabel',
-        link: 'link',
-        partOf: 'partOf',
-      },
-      partOf: {
-        domains: ['domain-1'],
-        label: 'partOfLabel',
-        type: d.resourceType,
-        uri: '',
-      },
-      target: {
-        identifier: d.id,
-        label: getLanguageVersion({
-          data: d.label,
-          lang: i18n.language,
-        }),
-        link: d.id,
-        linkLabel: `${d.namespace.slice(0, -1).split('/').pop()}:${
-          d.identifier
-        }`,
-        note: getLanguageVersion({
-          data: d.note,
-          lang: i18n.language,
-        }),
-        status: d.status,
-        isValid: d.status === 'VALID',
-      },
-    }));
+    return data.map((d) => mapInternalClassInfoToResultType(d, i18n.language));
   }, [data, i18n.language]);
 
   const handleClose = () => {
@@ -79,21 +54,21 @@ export default function ClassRestrictionModal({
   };
 
   const handleClick = (id: string | string[]) => {
-    if (selected !== id) {
-      setSelected(Array.isArray(id) ? id[0] : id);
+    if (selectedClassOrNodeShape !== id) {
+      setTargetClassOrNodeShape(Array.isArray(id) ? id[0] : id);
       return;
     }
-    setSelected('');
+    setTargetClassOrNodeShape('');
   };
 
   useEffect(() => {
     if (isSuccess && data.length < 1) {
       handleFollowUp(true);
     }
-  }, [isSuccess, handleFollowUp, data, selected]);
+  }, [isSuccess, handleFollowUp, data, selectedClassOrNodeShape]);
 
   return (
-    <WideModal
+    <LargeModal
       appElementId="__next"
       visible={visible}
       onEscKeyDown={() => handleClose()}
@@ -116,42 +91,16 @@ export default function ClassRestrictionModal({
 
           <div>
             <ResourceList
-              handleClick={() => null}
-              type="display"
+              handleClick={(value) => handleClick(value)}
+              selected={selectedClassOrNodeShape}
               items={[
-                {
-                  subClass: {
-                    label: 'subClassLabel',
-                    link: 'link',
-                    partOf: 'partOf',
-                  },
-                  partOf: {
-                    domains: ['domain-1'],
-                    label: 'partOfLabel',
-                    type: selectedNodeShape.resourceType,
-                    uri: '',
-                  },
-                  target: {
-                    identifier: selectedNodeShape.identifier,
-                    label: getLanguageVersion({
-                      data: selectedNodeShape.label,
-                      lang: i18n.language,
-                    }),
-                    link: selectedNodeShape.id,
-                    linkLabel: `${selectedNodeShape.namespace
-                      .slice(0, -1)
-                      .split('/')
-                      .pop()}:${selectedNodeShape.identifier}`,
-                    note: getLanguageVersion({
-                      data: selectedNodeShape.note,
-                      lang: i18n.language,
-                    }),
-                    status: selectedNodeShape.status,
-                    isValid: selectedNodeShape.status === 'VALID',
-                  },
-                },
+                mapInternalClassInfoToResultType(
+                  selectedTargetClass,
+                  i18n.language
+                ),
               ]}
               primaryColumnName={t('class-name')}
+              id="selected-class-restriction"
             />
           </div>
 
@@ -167,7 +116,6 @@ export default function ClassRestrictionModal({
               labelText=""
               visualPlaceholder={t('search-by-class-name')}
               onChange={(e) => setKeyword(e?.toString() ?? '')}
-              defaultValue={keyword}
               debounce={300}
               id="search-text-input"
             />
@@ -175,7 +123,7 @@ export default function ClassRestrictionModal({
 
           <div>
             <ResourceList
-              handleClick={(value: string | string[]) => handleClick(value)}
+              handleClick={(value) => handleClick(value)}
               items={
                 keyword === ''
                   ? nodeShapes
@@ -186,7 +134,8 @@ export default function ClassRestrictionModal({
                     )
               }
               primaryColumnName={t('class-name')}
-              selected={selected}
+              selected={selectedClassOrNodeShape}
+              id="available-class-restrictions"
             />
           </div>
         </ModalContentWrapper>
@@ -194,11 +143,15 @@ export default function ClassRestrictionModal({
 
       <ModalFooter>
         <Button
-          disabled={!selected || selected === ''}
+          disabled={
+            !selectedClassOrNodeShape ||
+            selectedClassOrNodeShape === '' ||
+            selectedClassOrNodeShape === selectedTargetClass.id
+          }
           onClick={() =>
             handleFollowUp(
               false,
-              data?.find((d) => d.id === selected)
+              data?.find((d) => d.id === selectedClassOrNodeShape)
             )
           }
           id="select-class-restriction-button"
@@ -206,6 +159,7 @@ export default function ClassRestrictionModal({
           {t('select-class-restriction')}
         </Button>
         <Button
+          disabled={selectedClassOrNodeShape !== selectedTargetClass.id}
           variant="secondary"
           onClick={() => handleFollowUp(true)}
           id="create-new-class-restriction-button"
@@ -220,6 +174,6 @@ export default function ClassRestrictionModal({
           {t('cancel-variant')}
         </Button>
       </ModalFooter>
-    </WideModal>
+    </LargeModal>
   );
 }

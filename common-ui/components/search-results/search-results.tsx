@@ -5,6 +5,8 @@ import ResultCard from './result-card';
 import ResultCardExpander from './result-card-expander';
 import SanitizedTextContent from '../sanitized-text-content';
 import { ReactNode } from 'react';
+import ResultCardTypedExpander from './result-card-typed-expander';
+import { TFunction } from 'next-i18next';
 
 export interface SearchResultData {
   id: string;
@@ -13,6 +15,8 @@ export interface SearchResultData {
   icon?: ReactNode;
   status?: string;
   partOf?: string[];
+  identifier?: string;
+  version?: string;
   title: string;
   titleLink: string;
   type: string;
@@ -35,8 +39,10 @@ interface SearchResultsProps {
   partOfText?: string;
   noDescriptionText: string;
   noChip?: boolean;
+  noVersion?: boolean;
   tagsTitle: string;
   tagsHiddenTitle: string;
+  withDefaultStatuses?: string[];
   extra?:
     | {
         expander: {
@@ -58,6 +64,20 @@ interface SearchResultsProps {
             [key: string]: string;
           };
         };
+      }
+    | {
+        typedExpander: {
+          translateResultType: (type: string, t: TFunction) => string;
+          translateGroupType: (type: string, t: TFunction) => string;
+          deepHits: {
+            [key: string]: {
+              type: string;
+              label: string;
+              id: string;
+              uri: string;
+            }[];
+          };
+        };
       };
 }
 
@@ -69,14 +89,48 @@ export default function SearchResults({
   partOfText,
   noDescriptionText,
   noChip,
+  noVersion,
   tagsTitle,
   tagsHiddenTitle,
+  withDefaultStatuses,
   extra,
 }: SearchResultsProps) {
   const { isSmall } = useBreakpoints();
 
   if (!data) {
     return null;
+  }
+
+  function renderExtra(id: string) {
+    if (!extra || !id) {
+      return;
+    }
+
+    if ('expander' in extra && extra.expander.deepHits[id]) {
+      return (
+        <ResultCardExpander
+          buttonLabel={extra.expander.buttonLabel}
+          contentLabel={extra.expander.contentLabel}
+          deepHits={extra.expander.deepHits[id]}
+        />
+      );
+    } else if ('typedExpander' in extra && extra.typedExpander.deepHits[id]) {
+      return (
+        <ResultCardTypedExpander
+          translateGroupType={extra.typedExpander.translateGroupType}
+          translateResultType={extra.typedExpander.translateResultType}
+          deepHits={extra.typedExpander.deepHits[id]}
+        />
+      );
+    } else if ('other' in extra) {
+      return (
+        <>
+          <CardConcepts value={extra.other.title}>
+            <SanitizedTextContent text={extra.other.items[id]} />
+          </CardConcepts>
+        </>
+      );
+    }
   }
 
   return (
@@ -86,6 +140,7 @@ export default function SearchResults({
         hiddenTitle={tagsHiddenTitle}
         organizations={organizations}
         types={types}
+        withDefaultStatuses={withDefaultStatuses}
         domains={domains}
       />
       <ResultWrapper $isSmall={isSmall} id="search-results">
@@ -101,29 +156,13 @@ export default function SearchResults({
               icon={d.icon}
               status={d.status}
               partOf={d.partOf}
+              version={d.version}
+              identifier={d.identifier}
               partOfText={partOfText}
               noDescriptionText={noDescriptionText}
               noChip={noChip}
-              extra={
-                extra &&
-                ('expander' in extra
-                  ? extra.expander.deepHits[d.id] && (
-                      <ResultCardExpander
-                        buttonLabel={extra.expander.buttonLabel}
-                        contentLabel={extra.expander.contentLabel}
-                        deepHits={extra.expander.deepHits[d.id]}
-                      />
-                    )
-                  : extra.other.items[d.id] && (
-                      <>
-                        <CardConcepts value={extra.other.title}>
-                          <SanitizedTextContent
-                            text={extra.other.items[d.id]}
-                          />
-                        </CardConcepts>
-                      </>
-                    ))
-              }
+              noVersion={noVersion}
+              extra={renderExtra(d.id)}
             />
           );
         })}

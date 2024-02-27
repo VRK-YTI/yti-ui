@@ -83,7 +83,7 @@ export default function ResultCardExpander({
     return deepHits.map((hit, idx) => {
       if (hit.uri) {
         return (
-          <Link key={`${hit.id}-${idx}`} href={hit.uri} passHref>
+          <Link key={`${hit.id}-${idx}`} href={hit.uri} passHref legacyBehavior>
             <SuomiFiLink href="">
               <SanitizedTextContent text={hit.label} />
             </SuomiFiLink>

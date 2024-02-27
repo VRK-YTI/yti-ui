@@ -1,39 +1,39 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { NewModel } from '@app/common/interfaces/new-model.interface';
 import {
   ModelType,
   ModelUpdatePayload,
+  VersionedModelUpdatePayload,
 } from '@app/common/interfaces/model.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
-import isHydrate from '@app/store/isHydrate';
 
 export const modelApi = createApi({
   reducerPath: 'modelApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['modelApi'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
+  tagTypes: ['Model'],
   endpoints: (builder) => ({
-    putModel: builder.mutation<string, NewModel>({
+    createModel: builder.mutation<string, NewModel>({
       query: (value) => ({
         url: `/model/${value.type === 'LIBRARY' ? 'library' : 'profile'}`,
-        method: 'PUT',
+        method: 'POST',
         data: value,
       }),
     }),
-    getModel: builder.query<ModelType, string>({
-      query: (modelId) => ({
-        url: `/model/${modelId}`,
+    getModel: builder.query<ModelType, { modelId: string; version?: string }>({
+      query: (value) => ({
+        url: `/model/${value.modelId}`,
+        params: {
+          ...(value.version && {
+            version: value.version,
+          }),
+        },
         method: 'GET',
       }),
+      providesTags: ['Model'],
     }),
-    postModel: builder.mutation<
+    updateModel: builder.mutation<
       string,
       {
         payload: ModelUpdatePayload;
@@ -45,9 +45,10 @@ export const modelApi = createApi({
         url: `/model/${value.isApplicationProfile ? 'profile' : 'library'}/${
           value.prefix
         }`,
-        method: 'POST',
+        method: 'PUT',
         data: value.payload,
       }),
+      invalidatesTags: ['Model'],
     }),
     deleteModel: builder.mutation<string, string>({
       query: (value) => ({
@@ -55,24 +56,83 @@ export const modelApi = createApi({
         method: 'DELETE',
       }),
     }),
+    createRelease: builder.mutation<
+      string,
+      { modelId: string; version: string; status: string }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/release`,
+        params: {
+          status: value.status,
+          version: value.version,
+        },
+        method: 'POST',
+      }),
+    }),
+    getPriorVersions: builder.query<
+      {
+        label: { [key: string]: string };
+        version: string;
+        status: string;
+        versionIri: string;
+      }[],
+      { modelId: string; version?: string }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/versions`,
+        params: {
+          ...(value.version && {
+            version: value.version,
+          }),
+        },
+        method: 'GET',
+      }),
+    }),
+    updateVersionedModel: builder.mutation<
+      string,
+      {
+        payload: VersionedModelUpdatePayload;
+        modelId: string;
+        version: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/version`,
+        params: {
+          version: value.version,
+        },
+        data: value.payload,
+        method: 'PUT',
+      }),
+    }),
   }),
 });
 
 export const {
-  usePutModelMutation,
+  useCreateModelMutation,
   useGetModelQuery,
-  usePostModelMutation,
+  useUpdateModelMutation,
   useDeleteModelMutation,
+  useCreateReleaseMutation,
+  useGetPriorVersionsQuery,
+  useUpdateVersionedModelMutation,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
-export const { putModel, getModel, postModel, deleteModel } =
-  modelApi.endpoints;
+export const {
+  createModel,
+  getModel,
+  updateModel,
+  deleteModel,
+  createRelease,
+  getPriorVersions,
+} = modelApi.endpoints;
 
 // Slice setup below
 
 export type ViewListItem = {
   edit: boolean;
+  create: boolean;
   info: boolean;
   list: boolean;
 };
@@ -104,16 +164,19 @@ const initialView: ViewList = {
     list: false,
     info: false,
     edit: false,
+    create: false,
   },
   attributes: {
     list: false,
     info: false,
     edit: false,
+    create: false,
   },
   associations: {
     list: false,
     info: false,
     edit: false,
+    create: false,
   },
 };
 
@@ -121,15 +184,35 @@ const initialState = {
   selected: {
     id: '',
     type: '',
+    modelId: null,
   },
   hovered: {
     id: '',
     type: '',
   },
-  highlighted: [],
+  highlighted: [] as string[],
   view: initialView,
   hasChanges: false,
+  graphHasChanges: false,
+  displayGraphHasChanges: false,
   displayWarning: false,
+  displayLang: 'fi',
+  addResourceRestrictionToClass: false,
+  updateVisualization: false,
+  updateClassData: false,
+  tools: {
+    fullScreen: false,
+    resetPosition: false,
+    savePosition: false,
+    showAttributes: true,
+    showAssociations: true,
+    showDomainRange: true,
+    showAssociationRestrictions: true,
+    showAttributeRestrictions: true,
+    showByName: true,
+    showById: false,
+    showClassHighlights: false,
+  },
 };
 
 export const modelSlice = createSlice({
@@ -144,14 +227,6 @@ export const modelSlice = createSlice({
       },
     },
   },
-  extraReducers: (builder) => {
-    builder.addMatcher(isHydrate, (state, action) => {
-      return {
-        ...state,
-        ...action.payload.model,
-      };
-    });
-  },
   reducers: {
     setSelected(state, action) {
       return {
@@ -159,6 +234,8 @@ export const modelSlice = createSlice({
         selected: {
           id: action.payload.id,
           type: action.payload.type,
+          modelId: action.payload.modelId,
+          version: action.payload.version,
         },
         view: {
           ...initialView,
@@ -182,6 +259,12 @@ export const modelSlice = createSlice({
           id: action.payload.id,
           type: action.payload.type,
         },
+      };
+    },
+    setHighlighted(state, action) {
+      return {
+        ...state,
+        highlighted: action.payload,
       };
     },
     setView(state, action) {
@@ -224,6 +307,65 @@ export const modelSlice = createSlice({
         };
       }
     },
+    setDisplayLang(state, action) {
+      return {
+        ...state,
+        displayLang: action.payload,
+      };
+    },
+    setAddResourceRestrictionToClass(state, action) {
+      return {
+        ...state,
+        addResourceRestrictionToClass: action.payload,
+      };
+    },
+    setUpdateVisualization(state, action) {
+      return {
+        ...state,
+        updateVisualization: action.payload,
+      };
+    },
+    setUpdateClassData(state, action) {
+      return {
+        ...state,
+        updateClassData: action.payload,
+      };
+    },
+    setTools(state, action) {
+      if (
+        action.payload.key === 'showByName' ||
+        action.payload.key === 'showById'
+      ) {
+        return {
+          ...state,
+          tools: {
+            ...state.tools,
+            showByName: action.payload.key === 'showByName' ? true : false,
+            showById: action.payload.key === 'showById' ? true : false,
+          },
+        };
+      }
+
+      return {
+        ...state,
+        tools: {
+          ...state.tools,
+          [action.payload.key]: action.payload.value,
+        },
+      };
+    },
+    setGraphHasChanges(state, action) {
+      return {
+        ...state,
+        graphHasChanges: action.payload,
+      };
+    },
+    setDisplayGraphHasChanges(state, action) {
+      return {
+        ...state,
+        displayGraphHasChanges: action.payload,
+      };
+    },
   },
 });
 
@@ -233,9 +375,12 @@ export function selectSelected() {
 
 export function setSelected(
   id: string,
-  type: keyof typeof initialView
+  type: keyof typeof initialView,
+  modelId: string,
+  version?: string
 ): AppThunk {
-  return (dispatch) => dispatch(modelSlice.actions.setSelected({ id, type }));
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setSelected({ id, type, modelId, version }));
 }
 
 export function resetSelected(): AppThunk {
@@ -256,12 +401,24 @@ export function resetHovered(): AppThunk {
     dispatch(modelSlice.actions.setHovered({ id: '', type: '' }));
 }
 
+export function selectHighlighted() {
+  return (state: AppState) => state.model.highlighted;
+}
+
+export function setHighlighted(ids: string[]): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setHighlighted(ids));
+}
+
+export function resetHighlighted(): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setHighlighted([]));
+}
+
 export function selectViews() {
   return (state: AppState) => state.model.view;
 }
 
 export function selectClassView() {
-  return (state: AppState) => state.model.view.classes;
+  return (state: AppState): ViewListItem => state.model.view.classes;
 }
 
 export function selectResourceView(type: 'associations' | 'attributes') {
@@ -270,7 +427,7 @@ export function selectResourceView(type: 'associations' | 'attributes') {
 
 export function selectCurrentViewName() {
   return (state: AppState) =>
-    Object.entries(state.model.view).find((v) =>
+    Object.entries(state.model.view as ViewList).find((v) =>
       typeof v[1] === 'object'
         ? Object.entries(v[1]).filter(
             (val) => Object.values(val).filter((c) => c === true).length > 0
@@ -301,4 +458,91 @@ export function selectHasChanges() {
 
 export function selectDisplayWarning() {
   return (state: AppState) => state.model.displayWarning;
+}
+
+export function setDisplayLang(value: string): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setDisplayLang(value));
+}
+
+export function selectDisplayLang() {
+  return (state: AppState) => state.model.displayLang;
+}
+
+export function setModelTools(key: string, value: boolean): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setTools({ key, value }));
+}
+
+export function selectModelTools() {
+  return (state: AppState) => state.model.tools;
+}
+
+export function setFullScreen(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setTools({ key: 'fullScreen', value }));
+}
+
+export function selectFullScreen() {
+  return (state: AppState) => state.model.tools.fullScreen;
+}
+
+export function setSavePosition(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setTools({ key: 'savePosition', value }));
+}
+
+export function selectSavePosition() {
+  return (state: AppState) => state.model.tools.savePosition;
+}
+
+export function setResetPosition(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setTools({ key: 'resetPosition', value }));
+}
+
+export function selectResetPosition() {
+  return (state: AppState) => state.model.tools.resetPosition;
+}
+
+export function setAddResourceRestrictionToClass(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setAddResourceRestrictionToClass(value));
+}
+
+export function selectAddResourceRestrictionToClass() {
+  return (state: AppState): boolean =>
+    state.model.addResourceRestrictionToClass;
+}
+
+export function setUpdateVisualization(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setUpdateVisualization(value));
+}
+
+export function selectUpdateVisualization() {
+  return (state: AppState): boolean => state.model.updateVisualization;
+}
+
+export function setUpdateClassData(value: boolean): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setUpdateClassData(value));
+}
+
+export function selectUpdateClassData() {
+  return (state: AppState): boolean => state.model.updateClassData;
+}
+
+export function setGraphHasChanges(value: boolean): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setGraphHasChanges(value));
+}
+
+export function selectGraphHasChanges() {
+  return (state: AppState): boolean => state.model.graphHasChanges;
+}
+
+export function setDisplayGraphHasChanges(value: boolean): AppThunk {
+  return (dispatch) =>
+    dispatch(modelSlice.actions.setDisplayGraphHasChanges(value));
+}
+
+export function selectDisplayGraphHasChanges() {
+  return (state: AppState): boolean => state.model.displayGraphHasChanges;
 }

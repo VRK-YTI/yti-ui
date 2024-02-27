@@ -1,51 +1,43 @@
 import { useEffect, useState } from 'react';
 import ClassRestrictionModal from '../class-restriction-modal';
 import ResourcePicker from '../resource-picker-modal';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import {
+  InternalClass,
+  InternalClassInfo,
+} from '@app/common/interfaces/internal-class.interface';
+import { getPrefixFromURI } from '@app/common/utils/get-value';
+import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 
 export default function ApplicationProfileFlow({
   visible,
-  selectedNodeShape,
+  selectedTargetClass,
   handleFollowUp,
 }: {
   visible: boolean;
-  selectedNodeShape: {
-    nodeShape: InternalClass;
+  selectedTargetClass: {
+    targetClass: InternalClassInfo;
     isAppProfile?: boolean;
   };
   handleFollowUp: (data?: {
     value?: InternalClass;
     targetClass?: InternalClass;
-    associations?: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
-    attributes?: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
+    targetIsAppProfile?: boolean;
+    associations?: SimpleResource[];
+    attributes?: SimpleResource[];
   }) => void;
 }) {
   const [restrictionVisible, setRestrictionVisible] = useState(false);
   const [resourcePickerVisible, setResourcePickerVisible] = useState(false);
 
   useEffect(() => {
-    if (!selectedNodeShape.isAppProfile) {
+    if (!selectedTargetClass.isAppProfile) {
       setRestrictionVisible(visible);
     }
-  }, [visible, selectedNodeShape]);
-
-  const handleClassRestrictionClose = () => {
-    setRestrictionVisible(false);
-  };
+  }, [visible, selectedTargetClass]);
 
   const handleClassRestrictionFollowUp = (
     createNew?: boolean,
-    classRestriction?: InternalClass
+    existingNodeShape?: InternalClass
   ) => {
     setRestrictionVisible(false);
 
@@ -57,24 +49,14 @@ export default function ApplicationProfileFlow({
     setRestrictionVisible(false);
     setResourcePickerVisible(false);
     handleFollowUp({
-      value: selectedNodeShape.nodeShape,
-      targetClass: classRestriction,
+      value: existingNodeShape,
+      targetIsAppProfile: true,
     });
   };
 
   const handleResourcePickerFollowUp = (value?: {
-    associations: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
-    attributes: {
-      identifier: string;
-      label: { [key: string]: string };
-      modelId: string;
-      uri: string;
-    }[];
+    associations: SimpleResource[];
+    attributes: SimpleResource[];
   }) => {
     setResourcePickerVisible(false);
     setRestrictionVisible(false);
@@ -85,7 +67,7 @@ export default function ApplicationProfileFlow({
     }
 
     handleFollowUp({
-      value: selectedNodeShape.nodeShape,
+      value: selectedTargetClass.targetClass,
       associations: value.associations,
       attributes: value.attributes,
     });
@@ -95,9 +77,9 @@ export default function ApplicationProfileFlow({
     <>
       {restrictionVisible && (
         <ClassRestrictionModal
-          hide={() => handleClassRestrictionClose()}
+          hide={() => setRestrictionVisible(false)}
           visible={restrictionVisible}
-          selectedNodeShape={selectedNodeShape.nodeShape}
+          selectedTargetClass={selectedTargetClass.targetClass}
           handleFollowUp={(createNew, classRestriction) =>
             handleClassRestrictionFollowUp(createNew, classRestriction)
           }
@@ -108,27 +90,16 @@ export default function ApplicationProfileFlow({
         <ResourcePicker
           visible={resourcePickerVisible}
           selectedNodeShape={{
-            modelId:
-              selectedNodeShape.nodeShape.namespace
-                .replace(/\/$/, '')
-                .split('/')
-                .pop() ?? '',
-            classId: selectedNodeShape.nodeShape.identifier ?? '',
-            isAppProfile: selectedNodeShape.isAppProfile ?? false,
+            modelId: getPrefixFromURI(
+              selectedTargetClass.targetClass.namespace
+            ),
+            version: selectedTargetClass.targetClass.dataModelInfo.version,
+            classId: selectedTargetClass.targetClass.identifier,
+            isAppProfile: selectedTargetClass.isAppProfile ?? false,
           }}
           handleFollowUp={(value?: {
-            associations: {
-              identifier: string;
-              label: { [key: string]: string };
-              modelId: string;
-              uri: string;
-            }[];
-            attributes: {
-              identifier: string;
-              label: { [key: string]: string };
-              modelId: string;
-              uri: string;
-            }[];
+            associations: SimpleResource[];
+            attributes: SimpleResource[];
           }) => handleResourcePickerFollowUp(value)}
         />
       )}

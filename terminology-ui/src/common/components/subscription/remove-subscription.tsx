@@ -17,8 +17,6 @@ import {
   RemoveModalContent,
   RemoveModalUl,
 } from './subscription.styles';
-import { useStoreDispatch } from '@app/store';
-import { subscriptionApi } from './subscription.slice';
 
 interface RemoveSubscriptionProps {
   resources?: Resource[];
@@ -39,7 +37,6 @@ export default function RemoveSubscription({
   const { t, i18n } = useTranslation('own-information');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
-  const dispatch = useStoreDispatch();
 
   const handleUnsubscribe = () => {
     if (!resource) {
@@ -47,14 +44,15 @@ export default function RemoveSubscription({
     }
 
     setUnsubscribedItem(
-      getPrefLabel({ prefLabels: resource.prefLabel, lang: i18n.language })
+      resource.prefLabel
+        ? getPrefLabel({ prefLabels: resource.prefLabel, lang: i18n.language })
+        : resource.uri
     );
     setVisible(false);
     toggleSubscription({
       action: 'DELETE',
       uri: resource.uri.replace(/\/terminological[\w-]+/g, '/'),
     });
-    dispatch(subscriptionApi.internalActions.resetApiState());
   };
 
   const handleUnsubscribeAll = () => {
@@ -66,11 +64,15 @@ export default function RemoveSubscription({
       .map((resource) => resource.uri.replace(/\/terminological[\w-]+/g, '/'))
       .join(',');
     setUnsubscribedItem(
-      getPrefLabel({ prefLabels: resources[0].prefLabel, lang: i18n.language })
+      resources[0].prefLabel
+        ? getPrefLabel({
+            prefLabels: resources[0].prefLabel,
+            lang: i18n.language,
+          })
+        : resources[0].uri
     );
     setVisible(false);
     toggleSubscription({ action: 'DELETE', uri: uris });
-    dispatch(subscriptionApi.internalActions.resetApiState());
   };
 
   return (
@@ -108,7 +110,7 @@ export default function RemoveSubscription({
             {t('subscription-remove-email-notifications')}
           </ModalTitle>
 
-          <Paragraph marginBottomSpacing="m">
+          <Paragraph mb="m">
             <Text>{t('subscription-remove-email-description')}</Text>
           </Paragraph>
 
@@ -122,10 +124,12 @@ export default function RemoveSubscription({
               {resources.map((resource, idx) => (
                 <li key={`resource-${idx}`}>
                   <Text smallScreen className="to-be-removed-subscription">
-                    {getPrefLabel({
-                      prefLabels: resource.prefLabel,
-                      lang: i18n.language,
-                    })}
+                    {resource.prefLabel
+                      ? getPrefLabel({
+                          prefLabels: resource.prefLabel,
+                          lang: i18n.language,
+                        })
+                      : resource.uri}
                   </Text>
                 </li>
               ))}
@@ -134,10 +138,12 @@ export default function RemoveSubscription({
           {resource && (
             <Paragraph>
               <Text smallScreen>
-                {getPrefLabel({
-                  prefLabels: resource.prefLabel,
-                  lang: i18n.language,
-                })}
+                {resource.prefLabel
+                  ? getPrefLabel({
+                      prefLabels: resource.prefLabel,
+                      lang: i18n.language,
+                    })
+                  : resource.uri}
               </Text>
             </Paragraph>
           )}

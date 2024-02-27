@@ -2,91 +2,113 @@ import InlineListBlock from '@app/common/components/inline-list-block';
 import {
   selectResource,
   setResource,
-  useGetResourceIdentifierFreeQuery,
-  usePutResourceMutation,
+  useGetResourceExistsQuery,
+  useUpdateResourceMutation,
+  useCreateResourceMutation,
+  useTogglePropertyShapeMutation,
+  useGetResourceActiveQuery,
 } from '@app/common/components/resource/resource.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import {
   translateCommonForm,
   translateCommonFormErrors,
+  translatePageTitle,
+  translateCommonTooltips,
 } from '@app/common/utils/translation-helpers';
 import ConceptBlock from '@app/modules/concept-block';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { IconArrowLeft, IconPlus } from 'suomifi-icons';
+import { IconArrowLeft } from 'suomifi-icons';
 import {
   Button,
-  Dropdown,
-  DropdownItem,
-  SingleSelect,
-  SingleSelectData,
   Text,
   TextInput,
   Textarea,
+  Tooltip,
 } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
-import { Status } from 'yti-common-ui/interfaces/status.interface';
 import { FormWrapper, LanguageVersionedWrapper } from './resource-form.styles';
 import validateForm from './validate-form';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
-import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
-import { statusList } from 'yti-common-ui/utils/status-list';
-import ClassModal from '@app/modules/class-modal';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
   selectHasChanges,
   setHasChanges,
   setSelected,
-  setView,
+  setUpdateVisualization,
 } from '@app/common/components/model/model.slice';
 import { useRouter } from 'next/router';
 import getApiError from '@app/common/utils/get-api-errors';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
-import { useGetDatatypesQuery } from '@app/common/components/datatypes/datatypes.slice';
+import RangeAndDomain from './components/range-and-domain';
+import AttributeRestrictions from './components/attribute-restrictions';
+import ApplicationProfileTop from './components/application-profile-top';
+import AssociationRestrictions from './components/association-restrictions';
+import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
+import ResourceModal from '../resource-modal';
+import useSetView from '@app/common/utils/hooks/use-set-view';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
+import { HeaderRow, StyledSpinner } from '@app/common/components/header';
+import { UriData } from '@app/common/interfaces/uri.interface';
+import {
+  DEFAULT_ASSOCIATION_SUBPROPERTY,
+  DEFAULT_ATTRIBUTE_SUBPROPERTY,
+} from '@app/common/components/resource/utils';
+import PropertyToggle from './components/property-toggle';
+import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
 
 interface ResourceFormProps {
-  type: ResourceType;
   modelId: string;
   languages: string[];
   terminologies: string[];
-  isEdit: boolean;
+  isEdit?: boolean;
+  currentModelId: string;
   applicationProfile?: boolean;
-  refetch: () => void;
+  refetch?: () => void;
   handleReturn: () => void;
+  handleFollowUp?: (identifier: string, type: ResourceType) => void;
 }
 
 export default function ResourceForm({
-  type,
   modelId,
   languages,
   terminologies,
   isEdit,
+  currentModelId,
   applicationProfile,
   refetch,
   handleReturn,
+  handleFollowUp,
 }: ResourceFormProps) {
-  const { t, i18n } = useTranslation('admin');
+  const { t } = useTranslation('admin');
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
-  const statuses = statusList;
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const dispatch = useStoreDispatch();
   const data = useSelector(selectResource());
+  const [inUse, setInUse] = useState(true);
+  const [isSubResource] = useState(
+    !applicationProfile &&
+      data.subResourceOf &&
+      data.subResourceOf.length > 0 &&
+      data.subResourceOf[0].curie !== 'owl:topDataProperty' &&
+      data.subResourceOf[0].curie !== 'owl:topObjectProperty'
+  );
   const hasChanges = useSelector(selectHasChanges());
+  const { setView } = useSetView();
   const [userPosted, setUserPosted] = useState(false);
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [headerHeight, setHeaderHeight] = useState(99);
   const [errors, setErrors] = useState(validateForm(data));
-  const [putResource, result] = usePutResourceMutation();
-  const { data: dataTypesResult, isSuccess: isDataTypesSuccess } =
-    useGetDatatypesQuery();
+  const [updateResource, updateResult] = useUpdateResourceMutation();
+  const [createResource, createResult] = useCreateResourceMutation();
+  const [togglePropertyShape, toggleResult] = useTogglePropertyShapeMutation();
 
-  const { data: identifierFree, isSuccess } = useGetResourceIdentifierFreeQuery(
+  const { data: resourceAlreadyExists, isSuccess } = useGetResourceExistsQuery(
     {
       prefix: modelId,
       identifier: data.identifier,
@@ -96,16 +118,17 @@ export default function ResourceForm({
     }
   );
 
-  const attributeRanges: SingleSelectData[] = useMemo(() => {
-    if (!isDataTypesSuccess) {
-      return [];
-    }
+  const { data: inUseResult, isSuccess: isActiveSuccess } =
+    useGetResourceActiveQuery({
+      prefix: currentModelId,
+      uri: `${SUOMI_FI_NAMESPACE}${modelId}/${data.identifier}`,
+    });
 
-    return dataTypesResult.map((result) => ({
-      labelText: result,
-      uniqueItemId: result,
-    }));
-  }, [dataTypesResult, isDataTypesSuccess]);
+  useEffect(() => {
+    if (isActiveSuccess) {
+      setInUse(inUseResult);
+    }
+  }, [isActiveSuccess, inUseResult]);
 
   const handleSubmit = () => {
     disableConfirmation();
@@ -119,27 +142,38 @@ export default function ResourceForm({
 
     if (
       Object.values(errors).filter((val) => val).length > 0 ||
-      (isSuccess && !identifierFree)
+      (isSuccess && resourceAlreadyExists)
     ) {
       return;
     }
 
     const usedLabels = Object.fromEntries(
-      Object.entries(data.label).filter((obj) => obj[1] !== '')
+      Object.entries(data.label).filter(
+        (obj) => languages.includes(obj[0]) && obj[1] !== ''
+      )
     );
 
-    // TODO: Remove subResourceOf clearing when other supported
-    // are implemented
-
-    putResource({
+    const payload = {
       modelId: modelId,
-      data: { ...data, type: type, subResourceOf: [], label: usedLabels },
-      resourceId: isEdit ? data.identifier : undefined,
+      data: { ...data, label: usedLabels },
       applicationProfile,
-    });
+    };
+
+    isEdit
+      ? updateResource(payload).then(handleToggle)
+      : createResource(payload).then(handleToggle);
   };
 
-  const handleUpdate = (value: typeof data) => {
+  const handleToggle = () => {
+    if (inUseResult !== inUse) {
+      togglePropertyShape({
+        modelId: currentModelId,
+        uri: `${SUOMI_FI_NAMESPACE}${modelId}/${data.identifier}`,
+      });
+    }
+  };
+
+  const handleUpdate = (value: ResourceFormType) => {
     enableConfirmation();
     dispatch(setHasChanges(true));
     if (userPosted && Object.values(errors).filter((val) => val).length > 0) {
@@ -147,6 +181,13 @@ export default function ResourceForm({
     }
 
     dispatch(setResource(value));
+  };
+
+  const handleUpdateByKey = <T extends keyof ResourceFormType>(
+    key: T,
+    value: ResourceFormType[T]
+  ) => {
+    handleUpdate({ ...data, [key]: value });
   };
 
   const handleSetConcept = (value?: ConceptType) => {
@@ -174,52 +215,57 @@ export default function ResourceForm({
     });
   };
 
-  const handleDomainFollowUp = (value?: InternalClass) => {
-    if (!value) {
-      handleUpdate({ ...data, domain: value });
+  const handleResourceUpdate = (
+    value?: UriData,
+    key?: 'equivalentResource' | 'subResourceOf'
+  ) => {
+    if (!value || !key) {
       return;
     }
 
+    if (
+      key === 'subResourceOf' &&
+      data.subResourceOf &&
+      data.subResourceOf.length === 1 &&
+      [
+        DEFAULT_ASSOCIATION_SUBPROPERTY.uri,
+        DEFAULT_ATTRIBUTE_SUBPROPERTY.uri,
+      ].includes(data.subResourceOf[0].uri)
+    ) {
+      handleUpdate({
+        ...data,
+        subResourceOf: [value],
+      });
+      return;
+    }
+
+    const initData = Array.isArray(data[key]) ? data[key] : [];
+
     handleUpdate({
       ...data,
-      domain: {
-        id: value.id,
-        label: getLanguageVersion({
-          data: value.label,
-          lang: i18n.language,
-          appendLocale: true,
-        }),
-      },
+      [key]: [...(initData ?? []), value],
     });
   };
 
-  const handleRangeFollowUp = (value?: InternalClass) => {
-    if (type === ResourceType.ATTRIBUTE) {
-      return;
-    }
-
-    if (!value) {
-      handleUpdate({ ...data, range: value });
+  const handleResourceRemove = (
+    id: string,
+    key: 'equivalentResource' | 'subResourceOf'
+  ) => {
+    if (key === 'subResourceOf' && data.subResourceOf?.length === 1) {
+      const defaultSubResourceOf =
+        data.type === ResourceType.ASSOCIATION
+          ? DEFAULT_ASSOCIATION_SUBPROPERTY
+          : DEFAULT_ATTRIBUTE_SUBPROPERTY;
+      handleUpdate({
+        ...data,
+        subResourceOf: [defaultSubResourceOf],
+      });
       return;
     }
 
     handleUpdate({
       ...data,
-      range: {
-        id: value.id,
-        label: getLanguageVersion({
-          data: value.label,
-          lang: i18n.language,
-          appendLocale: true,
-        }),
-      },
-    });
-  };
-
-  const handleDomainOrRangeRemoval = (id: string, type: 'domain' | 'range') => {
-    handleUpdate({
-      ...data,
-      [type]: undefined,
+      [key]: data[key]?.filter((r: UriData) => r.uri !== id) ?? [],
     });
   };
 
@@ -228,31 +274,65 @@ export default function ResourceForm({
       setHeaderHeight(ref.current.clientHeight);
     }
 
-    if (result.isSuccess) {
+    if (
+      (updateResult.isSuccess || createResult.isSuccess) &&
+      (toggleResult.isSuccess ||
+        (toggleResult.isUninitialized && inUse === inUseResult))
+    ) {
+      switch (data.type) {
+        case ResourceType.ATTRIBUTE:
+          dispatch(
+            setNotification(
+              updateResult.isSuccess ? 'ATTRIBUTE_EDIT' : 'ATTRIBUTE_ADD'
+            )
+          );
+          break;
+        case ResourceType.ASSOCIATION:
+          dispatch(
+            setNotification(
+              updateResult.isSuccess ? 'ASSOCIATION_EDIT' : 'ASSOCIATION_ADD'
+            )
+          );
+      }
+
+      if (handleFollowUp) {
+        handleFollowUp(data.identifier, data.type);
+        return;
+      }
+
       dispatch(
         setSelected(
           data.identifier,
-          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
+          data.type === ResourceType.ASSOCIATION
+            ? 'associations'
+            : 'attributes',
+          modelId
         )
       );
-      dispatch(
-        setView(
-          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-          'info'
-        )
+      setView(
+        data.type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        'info',
+        data.identifier
       );
-      refetch();
+
+      if (isEdit && refetch) {
+        refetch();
+      }
+
       router.replace(
         `${modelId}/${
-          type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
+          data.type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
         }/${data.identifier}`
       );
+      dispatch(setUpdateVisualization(true));
     }
 
     if (
       ref.current &&
       userPosted &&
-      (Object.values(errors).filter((val) => val).length > 0 || result.error)
+      (Object.values(errors).filter((val) => val).length > 0 ||
+        updateResult.error ||
+        createResult.error)
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
@@ -260,13 +340,19 @@ export default function ResourceForm({
     ref,
     errors,
     userPosted,
-    result,
+    updateResult,
+    createResult,
+    inUse,
+    inUseResult,
+    toggleResult,
+    handleFollowUp,
     dispatch,
-    type,
     router,
     modelId,
     data,
     refetch,
+    isEdit,
+    setView,
   ]);
 
   return (
@@ -282,24 +368,44 @@ export default function ResourceForm({
               }
             }}
             style={{ textTransform: 'uppercase' }}
+            className="long-text"
             id="back-button"
           >
-            {t('back', { ns: 'common' })}
+            {isEdit
+              ? translatePageTitle(
+                  'return-to-resource',
+                  data.type,
+                  t,
+                  applicationProfile
+                )
+              : translatePageTitle(
+                  'return-to-list',
+                  data.type,
+                  t,
+                  applicationProfile
+                )}
           </Button>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Text variant="bold">
-            {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
-              translateCommonForm('name', type, t)}
-          </Text>
 
-          <div>
+          <div style={{ display: 'flex', gap: '10px' }}>
             <Button
               onClick={() => handleSubmit()}
-              style={{ marginRight: '15px' }}
-              id="submit-button"
+              id={
+                updateResult.isLoading || createResult.isLoading
+                  ? 'submit-button_submitted'
+                  : 'submit-button'
+              }
             >
-              {t('save')}
+              {updateResult.isLoading || createResult.isLoading ? (
+                <div role="alert">
+                  <StyledSpinner
+                    variant="small"
+                    text={t('saving')}
+                    textAlign="right"
+                  />
+                </div>
+              ) : (
+                <>{t('save')}</>
+              )}
             </Button>
             <Button
               variant="secondary"
@@ -314,18 +420,48 @@ export default function ResourceForm({
           </div>
         </div>
 
+        <HeaderRow>
+          <Text variant="bold">
+            {isEdit
+              ? translatePageTitle('edit', data.type, t, applicationProfile)
+              : translatePageTitle(
+                  isSubResource ? 'create-sub' : 'create',
+                  data.type,
+                  t,
+                  applicationProfile
+                )}
+          </Text>
+        </HeaderRow>
+
         {userPosted &&
         (Object.values(errors).filter((val) => val).length > 0 ||
-          result.isError ||
-          (isSuccess && !identifierFree)) ? (
+          updateResult.isError ||
+          createResult.isError ||
+          (isSuccess && resourceAlreadyExists)) ? (
           <div>
             <FormFooterAlert
               labelText={
-                Object.keys(errors).filter(
-                  (key) =>
-                    ['label', 'identifier'].includes(key) &&
+                Object.keys(errors).filter((key) => {
+                  const l: Array<keyof typeof errors> = [
+                    'label',
+                    'identifier',
+                    'identifierInitChar',
+                    'identifierLength',
+                    'identifierCharacters',
+                    'maxCount',
+                    'maxExclusive',
+                    'maxInclusive',
+                    'maxLength',
+                    'minCount',
+                    'minExclusive',
+                    'minInclusive',
+                    'minLength',
+                  ];
+                  return (
+                    (l as string[]).includes(key) &&
                     errors[key as keyof typeof errors] === true
-                ).length > 0
+                  );
+                }).length > 0
                   ? t('missing-information-title')
                   : t('unexpected-error-title')
               }
@@ -339,6 +475,13 @@ export default function ResourceForm({
 
       <DrawerContent height={headerHeight}>
         <FormWrapper>
+          <ApplicationProfileTop
+            inUse={inUse}
+            setInUse={setInUse}
+            type={data.type}
+            applicationProfile={applicationProfile}
+          />
+
           <ConceptBlock
             concept={data.concept}
             setConcept={handleSetConcept}
@@ -350,7 +493,11 @@ export default function ResourceForm({
               <TextInput
                 key={`label-${lang}`}
                 className="wide-text"
-                labelText={`${translateCommonForm('name', type, t)}, ${lang}`}
+                labelText={`${translateCommonForm(
+                  'name',
+                  data.type,
+                  t
+                )}, ${lang} (rdfs:label)`}
                 value={data.label[lang] ?? ''}
                 onChange={(e) =>
                   handleUpdate({
@@ -360,12 +507,22 @@ export default function ResourceForm({
                 }
                 status={userPosted && errors.label ? 'error' : 'default'}
                 id="label-input"
+                maxLength={TEXT_INPUT_MAX}
               />
             ))}
           </LanguageVersionedWrapper>
 
           <TextInput
-            labelText={translateCommonForm('identifier', type, t)}
+            labelText={`${translateCommonForm(
+              'identifier',
+              data.type,
+              t
+            )} (dcterms:identifier)`}
+            tooltipComponent={
+              <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+                {translateCommonTooltips('identifier', data.type, t)}
+              </Tooltip>
+            }
             defaultValue={data.identifier}
             onChange={(e) =>
               handleUpdate({
@@ -377,167 +534,230 @@ export default function ResourceForm({
               (userPosted &&
                 (errors.identifier ||
                   errors.identifierInitChar ||
-                  errors.identifierLength)) ||
-              (isSuccess && !identifierFree)
+                  errors.identifierLength ||
+                  errors.identifierCharacters)) ||
+              (isSuccess && resourceAlreadyExists)
                 ? 'error'
                 : 'default'
             }
             disabled={isEdit}
             debounce={300}
             statusText={
-              isSuccess && !identifierFree ? t('error-prefix-taken') : ''
+              isSuccess && resourceAlreadyExists ? t('error-prefix-taken') : ''
             }
             id="prefix-input"
+            maxLength={32}
           />
 
-          {type === ResourceType.ATTRIBUTE && (
+          <RangeAndDomain
+            applicationProfile={applicationProfile}
+            modelId={modelId}
+            data={data}
+            handleUpdate={handleUpdate}
+          />
+
+          {!applicationProfile && (
             <>
-              <SingleSelect
-                labelText={t('range')}
-                itemAdditionHelpText=""
-                ariaOptionsAvailableText={t('available-ranges') as string}
-                defaultSelectedItem={attributeRanges.find(
-                  (value) => value.uniqueItemId == '-1'
-                )}
-                selectedItem={attributeRanges.find((value) => {
-                  if (data.range != undefined) {
-                    return value.uniqueItemId == data.range.id;
-                  } else {
-                    return value.uniqueItemId == 'rdfs:Literal';
-                  }
-                })}
-                clearButtonLabel={t('clear-selection')}
-                onItemSelect={(e) =>
-                  e != undefined &&
-                  handleUpdate({ ...data, range: { id: e, label: e } })
+              <InlineListBlock
+                label={`${translateCommonForm(
+                  'upper',
+                  data.type,
+                  t
+                )} (rdfs:subPropertyOf)`}
+                tooltip={{
+                  text: translateCommonTooltips('upper', data.type, t),
+                  ariaCloseButtonLabelText: '',
+                  ariaToggleButtonLabelText: '',
+                }}
+                items={data.subResourceOf}
+                addNewComponent={
+                  <ResourceModal
+                    buttonTranslations={{
+                      useSelected: translateCommonForm(
+                        'add-upper',
+                        data.type,
+                        t
+                      ),
+                      openButton: translateCommonForm(
+                        'add-upper',
+                        data.type,
+                        t
+                      ),
+                    }}
+                    handleFollowUp={(e) =>
+                      handleResourceUpdate(e, 'subResourceOf')
+                    }
+                    modelId={modelId}
+                    type={data.type}
+                    applicationProfile={applicationProfile}
+                    buttonIcon
+                    hiddenResources={[
+                      data.uri,
+                      ...(data.subResourceOf?.map((s) => s.uri) ?? []),
+                    ]}
+                  />
                 }
-                items={attributeRanges}
+                deleteDisabled={[
+                  DEFAULT_ASSOCIATION_SUBPROPERTY.uri,
+                  DEFAULT_ATTRIBUTE_SUBPROPERTY.uri,
+                ]}
+                handleRemoval={(id: string) =>
+                  handleResourceRemove(id, 'subResourceOf')
+                }
               />
 
               <InlineListBlock
+                label={`${translateCommonForm(
+                  'equivalent',
+                  data.type,
+                  t
+                )} (owl:equivalentProperty)`}
+                tooltip={{
+                  text: translateCommonTooltips('equivalent', data.type, t),
+                  ariaCloseButtonLabelText: '',
+                  ariaToggleButtonLabelText: '',
+                }}
+                items={data.equivalentResource}
                 addNewComponent={
-                  <ClassModal
-                    handleFollowUp={handleDomainFollowUp}
+                  <ResourceModal
+                    buttonTranslations={{
+                      useSelected: translateCommonForm(
+                        'add-equivalent',
+                        data.type,
+                        t
+                      ),
+                      openButton: translateCommonForm(
+                        'add-equivalent',
+                        data.type,
+                        t
+                      ),
+                    }}
+                    handleFollowUp={(e) =>
+                      handleResourceUpdate(e, 'equivalentResource')
+                    }
                     modelId={modelId}
-                    modalButtonLabel={t('select-class')}
-                    mode="select"
-                    initialSelected={data.domain?.id}
+                    type={data.type}
+                    applicationProfile={applicationProfile}
+                    buttonIcon
+                    hiddenResources={[
+                      data.uri,
+                      ...(data.equivalentResource?.map((s) => s.uri) ?? []),
+                    ]}
                   />
                 }
-                handleRemoval={(id: string) =>
-                  handleDomainOrRangeRemoval(id, 'domain')
-                }
-                items={data.domain ? [data.domain] : []}
-                label={`${t('class')} (rdfs:domain)`}
                 optionalText={t('optional')}
+                handleRemoval={(id: string) =>
+                  handleResourceRemove(id, 'equivalentResource')
+                }
               />
             </>
           )}
 
-          {type === ResourceType.ASSOCIATION && (
-            <>
-              <InlineListBlock
-                addNewComponent={
-                  <ClassModal
-                    handleFollowUp={handleDomainFollowUp}
-                    modelId={modelId}
-                    modalButtonLabel={t('select-class')}
-                    mode="select"
-                    initialSelected={data.domain?.id}
-                  />
-                }
-                handleRemoval={(id: string) =>
-                  handleDomainOrRangeRemoval(id, 'domain')
-                }
-                items={data.domain ? [data.domain] : []}
-                label={t('source-class')}
-                optionalText={t('optional')}
-              />
+          <AssociationRestrictions
+            modelId={modelId}
+            data={data}
+            applicationProfile={applicationProfile}
+            handleUpdate={handleUpdateByKey}
+          />
 
-              <InlineListBlock
-                addNewComponent={
-                  <ClassModal
-                    handleFollowUp={handleRangeFollowUp}
-                    modelId={modelId}
-                    modalButtonLabel={t('select-class')}
-                    mode="select"
-                    initialSelected={data.range?.id}
-                  />
+          {!applicationProfile && (
+            <>
+              <PropertyToggle
+                label={`${translateCommonForm(
+                  'functional',
+                  data.type,
+                  t
+                )} (owl:FunctionalProperty)`}
+                tooltip={{
+                  text: translateCommonTooltips('functional', data.type, t),
+                  ariaCloseButtonLabelText: '',
+                  ariaToggleButtonLabelText: '',
+                }}
+                handleUpdate={(value) =>
+                  handleUpdate({
+                    ...data,
+                    functionalProperty: value ?? undefined,
+                  })
                 }
-                handleRemoval={(id: string) =>
-                  handleDomainOrRangeRemoval(id, 'range')
-                }
-                items={
-                  data.range && typeof data.range !== 'string'
-                    ? [data.range]
-                    : []
-                }
-                label={t('target-class')}
+                value={data.functionalProperty}
+                id="functional-property-toggle"
                 optionalText={t('optional')}
               />
+              {data.type === ResourceType.ASSOCIATION && (
+                <>
+                  <PropertyToggle
+                    label={`${translateCommonForm(
+                      'transitive',
+                      data.type,
+                      t
+                    )} (owl:TransitiveProperty)`}
+                    tooltip={{
+                      text: translateCommonTooltips('transitive', data.type, t),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
+                    handleUpdate={(value) =>
+                      handleUpdate({
+                        ...data,
+                        transitiveProperty: value ?? undefined,
+                      })
+                    }
+                    value={data.transitiveProperty}
+                    id="transitive-property-toggle"
+                    optionalText={t('optional')}
+                  />
+                  <PropertyToggle
+                    label={`${translateCommonForm(
+                      'reflexive',
+                      data.type,
+                      t
+                    )} (owl:ReflexiveProperty)`}
+                    tooltip={{
+                      text: translateCommonTooltips('reflexive', data.type, t),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
+                    handleUpdate={(value) =>
+                      handleUpdate({
+                        ...data,
+                        reflexiveProperty: value ?? undefined,
+                      })
+                    }
+                    value={data.reflexiveProperty}
+                    id="reflexive-property-toggle"
+                    optionalText={t('optional')}
+                  />
+                </>
+              )}
             </>
           )}
 
-          <InlineListBlock
-            label={translateCommonForm('upper', type, t)}
-            items={data.subResourceOf.map((resource) => ({
-              id: resource,
-              label: resource,
-            }))}
-            addNewComponent={
-              <Button
-                variant="secondary"
-                icon={<IconPlus />}
-                id="add-upper-button"
-              >
-                {translateCommonForm('add-upper', type, t)}
-              </Button>
-            }
-            deleteDisabled={[
-              'owl:topDataProperty',
-              'owl:TopObjectProperty',
-              'owl:topObjectProperty',
-            ]}
-            handleRemoval={() => null}
+          <AttributeRestrictions
+            data={data}
+            errors={errors}
+            applicationProfile={applicationProfile}
+            handleUpdate={handleUpdateByKey}
+            handleUpdateData={handleUpdate}
           />
-
-          <InlineListBlock
-            label={translateCommonForm('equivalent', type, t)}
-            items={[]}
-            addNewComponent={
-              <Button
-                variant="secondary"
-                icon={<IconPlus />}
-                id="add-equivalent-button"
-              >
-                {translateCommonForm('add-equivalent', type, t)}
-              </Button>
-            }
-            optionalText={t('optional')}
-            handleRemoval={() => null}
-          />
-
-          <div>
-            <Dropdown
-              labelText={t('status')}
-              defaultValue="DRAFT"
-              onChange={(e) => handleUpdate({ ...data, status: e as Status })}
-              id="status-dropdown"
-            >
-              {statuses.map((status) => (
-                <DropdownItem key={`status-${status}`} value={status}>
-                  {translateStatus(status, t)}
-                </DropdownItem>
-              ))}
-            </Dropdown>
-          </div>
 
           <LanguageVersionedWrapper>
             {languages.map((lang) => (
               <Textarea
                 key={`label-${lang}`}
-                labelText={`${translateCommonForm('note', type, t)}, ${lang}`}
-                defaultValue={data.note[lang] ?? ''}
+                labelText={`${translateCommonForm(
+                  'note',
+                  data.type,
+                  t
+                )}, ${lang} (rdfs:comment)`}
+                tooltipComponent={
+                  <Tooltip
+                    ariaCloseButtonLabelText=""
+                    ariaToggleButtonLabelText=""
+                  >
+                    {t('tooltip.technical-description', { ns: 'common' })}
+                  </Tooltip>
+                }
+                defaultValue={data.note?.[lang] ?? ''}
                 onChange={(e) =>
                   handleUpdate({
                     ...data,
@@ -546,13 +766,18 @@ export default function ResourceForm({
                 }
                 optionalText={t('optional')}
                 className="wide-text"
-                id="note-input"
+                id={`note-input-${lang}`}
+                maxLength={TEXT_AREA_MAX}
               />
             ))}
           </LanguageVersionedWrapper>
 
           <Textarea
-            labelText={translateCommonForm('work-group-comment', type, t)}
+            labelText={`${translateCommonForm(
+              'work-group-comment',
+              data.type,
+              t
+            )} (dcterms:description)`}
             optionalText={t('optional')}
             defaultValue={data.editorialNote}
             onChange={(e) =>
@@ -561,6 +786,7 @@ export default function ResourceForm({
             hintText={t('editor-comment-hint')}
             className="wide-text"
             id="editorial-note-input"
+            maxLength={TEXT_AREA_MAX}
           />
         </FormWrapper>
       </DrawerContent>
@@ -568,27 +794,56 @@ export default function ResourceForm({
   );
 
   function getErrors(): string[] {
-    const translatedErrors = Object.entries(errors)
+    const nanKeys = [
+      'maxCount',
+      'maxExclusive',
+      'maxInclusive',
+      'maxLength',
+      'minCount',
+      'minExclusive',
+      'minInclusive',
+      'minLength',
+    ];
+
+    const hasNanValues =
+      Object.entries(errors)
+        .filter((e) => nanKeys.includes(e[0]) && e[1])
+        .map((e) => e[1])
+        .filter(Boolean).length > 0;
+
+    const errorsWithNonNumeric = hasNanValues
+      ? Object.fromEntries(
+          Object.entries({ ...errors, ...{ nonNumeric: true } }).filter(
+            (e) => !nanKeys.includes(e[0])
+          )
+        )
+      : errors;
+
+    const translatedErrors = Object.entries(errorsWithNonNumeric)
       .filter((e) => e[1])
       .map((e) =>
         translateCommonFormErrors(
           e[0],
-          type === ResourceType.ASSOCIATION
+          data.type === ResourceType.ASSOCIATION
             ? ResourceType.ASSOCIATION
             : ResourceType.ATTRIBUTE,
           t
         )
       );
 
-    if (isSuccess && !identifierFree) {
+    if (isSuccess && resourceAlreadyExists) {
       return [...translatedErrors, t('error-prefix-taken')];
     }
 
-    if (result.error) {
-      const catchedError = getApiError(result.error);
+    if (updateResult.error) {
+      const catchedError = getApiError(updateResult.error);
       return [...translatedErrors, ...catchedError];
     }
 
+    if (createResult.error) {
+      const catchedError = getApiError(createResult.error);
+      return [...translatedErrors, ...catchedError];
+    }
     return translatedErrors;
   }
 }

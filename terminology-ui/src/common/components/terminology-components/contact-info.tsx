@@ -34,7 +34,7 @@ export default function ContactInfo({
         <Paragraph>
           <Text variant="bold">{t('contact-information')}</Text>
         </Paragraph>
-        <Paragraph marginBottomSpacing="m">
+        <Paragraph mb="m">
           <Text>{t('contact-information-description')}</Text>
         </Paragraph>
       </BlankLegend>

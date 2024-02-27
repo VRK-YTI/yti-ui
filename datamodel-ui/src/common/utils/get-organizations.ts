@@ -1,4 +1,5 @@
 import { Organization } from '../interfaces/organizations.interface';
+import { getLanguageVersion } from './get-language-version';
 
 export default function getOrganizations(
   organizationsData?: Organization[],
@@ -12,7 +13,11 @@ export default function getOrganizations(
     const id = org.id.replaceAll('urn:uuid:', '');
     return {
       id: id,
-      label: org.label[lang ?? 'fi'],
+      label: getLanguageVersion({
+        data: org.label,
+        lang: lang ?? 'fi',
+        appendLocale: true,
+      }),
     };
   });
 }

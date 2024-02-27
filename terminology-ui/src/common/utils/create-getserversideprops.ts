@@ -97,7 +97,7 @@ export function createCommonGetServerSideProps<
           user.anonymous
             ? {
                 permanent: false,
-                destination: '/401',
+                destination: '/',
               }
             : undefined;
 

@@ -35,13 +35,15 @@ import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
 import { getProperty } from '@app/common/utils/get-property';
-import { MainTitle, BadgeBar, Badge } from 'yti-common-ui/title-block';
+import { MainTitle, BadgeBar } from 'yti-common-ui/title-block';
 import HasPermission from '@app/common/utils/has-permission';
 import Link from 'next/link';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import isEmail from 'validator/lib/isEmail';
 import RemovalModal from '@app/common/components/removal-modal';
 import { getBlockData } from './utils';
+import { StatusChip } from 'yti-common-ui/status-chip';
+import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -56,7 +58,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery({
     id: terminologyId,
   });
-  //We cannot call a hook on a conditional statement so this has to be checked before rendering
   const hasPermission = HasPermission({
     actions: ['EDIT_CONCEPT', 'DELETE_CONCEPT'],
     targetOrganization: terminology?.references.contributor,
@@ -65,10 +66,27 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
     terminologyId,
     conceptId,
   });
+  const {
+    data: organizations,
+    isLoading,
+    isError,
+  } = useGetOrganizationsQuery({
+    language: i18n.language,
+    showChildOrganizations: true,
+  });
 
   const { terms, definitions, notes, examples } = useMemo(() => {
     return getBlockData(t, concept);
   }, [concept, t]);
+
+  const childOrganizations = useMemo(() => {
+    if (isLoading || isError) {
+      return [];
+    }
+    return organizations
+      ?.filter((org) => org.references.parent)
+      .map((org) => org.id);
+  }, [organizations, isLoading, isError]);
 
   const prefLabel = getPropertyValue({
     property: getProperty('prefLabel', concept?.references.prefLabelXl),
@@ -151,10 +169,12 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           <BadgeBar>
             {t('heading')}
             <PropertyValue property={terminology?.properties.prefLabel} />
-            <Badge $isValid={status === 'VALID'}>
+            <StatusChip status={status}>
               {translateStatus(status, t)}
-            </Badge>
+            </StatusChip>
           </BadgeBar>
+
+          <BasicBlock title="URI">{concept?.uri}</BasicBlock>
 
           <TermBlock title={<h2>{t('field-terms-label')}</h2>} data={terms} />
 
@@ -225,7 +245,12 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           >
             <PropertyList $smBot={true}>
               {terminology?.references.contributor
-                ?.filter((c) => c && c.properties.prefLabel)
+                ?.filter(
+                  (c) =>
+                    c &&
+                    c.properties.prefLabel &&
+                    !childOrganizations?.includes(c.id)
+                )
                 .map((contributor) => (
                   <li key={contributor.id}>
                     <PropertyValue
@@ -246,7 +271,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             <FormattedDate date={concept?.lastModifiedDate} />
             {concept?.lastModifiedBy && `, ${concept.lastModifiedBy}`}
           </BasicBlock>
-          <BasicBlock title="URI">{concept?.uri}</BasicBlock>
 
           <Separator isLarge />
 

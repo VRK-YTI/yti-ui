@@ -1,5 +1,4 @@
 const { i18n } = require('./next-i18next.config');
-const withTM = require('next-transpile-modules')(['../common-ui']);
 
 module.exports = () => {
   let config = {
@@ -10,17 +9,28 @@ module.exports = () => {
     eslint: {
       dirs: ['src'],
     },
+    images: {
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: '**',
+          pathname: '**',
+        },
+      ],
+    },
     i18n,
+    transpilePackages: ['common-ui'],
     async headers() {
       const isProd = process.env.NODE_ENV === 'production';
+      const matomoUrl = process.env.MATOMO_URL ?? '';
 
       const ProductionContentSecurityPolicy = [
         "base-uri 'self';",
         "default-src 'self';",
         "font-src 'self';",
         "img-src 'self' data:;",
-        "script-src 'self' 'unsafe-inline';",
-        "connect-src 'self';",
+        `script-src 'self' 'unsafe-inline' ${matomoUrl};`,
+        `connect-src 'self' ${matomoUrl};`,
         "style-src 'self' 'unsafe-inline' data:;",
         "frame-src 'self';",
       ];
@@ -30,8 +40,8 @@ module.exports = () => {
         "default-src 'self';",
         "font-src 'self';",
         "img-src 'self' 'unsafe-eval' 'unsafe-inline' data:;",
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval';",
-        "connect-src 'self';",
+        `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${matomoUrl};`,
+        `connect-src 'self' ${matomoUrl};`,
         "style-src 'self' 'unsafe-inline' data:;",
         "frame-src 'self';",
       ];
@@ -87,11 +97,16 @@ module.exports = () => {
           },
           {
             source: '/terminology-api/:path*',
-            destination: 'http://localhost:9103/terminology-api/:path*',
+            destination:
+              'https://yhteentoimiva.test.yti.cloud.dvv.fi/terminology-api/:path*',
           },
           {
             source: '/codelist-api/:path*',
             destination: 'https://koodistot.suomi.fi/codelist-api/:path*',
+          },
+          {
+            source: '/messaging-api/:path*',
+            destination: 'http://localhost:9801/messaging-api/:path*',
           },
         ];
       },
@@ -119,10 +134,14 @@ module.exports = () => {
             destination:
               'http://yti-codelist-public-api-service:9601/codelist-api/:path*',
           },
+          {
+            source: '/messaging-api/:path*',
+            destination: 'http://yti-messaging-api:9801/messaging-api/:path*',
+          },
         ];
       },
     };
   }
 
-  return withTM(config);
+  return config;
 };

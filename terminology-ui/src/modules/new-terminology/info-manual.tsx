@@ -138,7 +138,6 @@ export default function InfoManual({
 
   return (
     <form>
-      {/* <TallerSeparator /> */}
       <LanguageSelector
         items={languageList}
         labelText={t('information-description-languages')}
@@ -188,7 +187,7 @@ export default function InfoManual({
         disabled={disabled}
       />
       <TallerSeparator />
-      <Paragraph marginBottomSpacing="m">
+      <Paragraph mb="m">
         <Text variant="bold">{t('terminology-other-information')}</Text>
       </Paragraph>
       <OrganizationSelector
@@ -226,7 +225,7 @@ export default function InfoManual({
             data: [value, true],
           })
         }
-        validatePrefixMutation={useGetIfNamespaceInUseMutation}
+        inUseMutation={useGetIfNamespaceInUseMutation}
         typeInUri={'terminology'}
         error={false}
         translations={{
@@ -240,7 +239,6 @@ export default function InfoManual({
           textInputLabel: t('prefix'),
           uriPreview: t('url-preview'),
         }}
-        invertCheck
       />
 
       <TallerSeparator />

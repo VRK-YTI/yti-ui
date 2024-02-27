@@ -22,7 +22,7 @@ export default function generateFormData(
         draftComment: '',
         editorialNote: [],
         historyNote: '',
-        id: v4(),
+        id: '',
         language: term.lang,
         prefLabel: term.value,
         scope: '',
@@ -330,7 +330,7 @@ export default function generateFormData(
             termInfo: r.properties.termInfo?.[0].value ?? '',
             termStyle: r.properties.termStyle?.[0].value ?? '',
             termType: termType,
-            wordClass: '',
+            wordClass: r.properties.wordClass?.[0].value ?? '',
           };
         }
       )

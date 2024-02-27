@@ -40,7 +40,6 @@ import getPrefLabel from '@app/common/utils/get-preflabel';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import {
-  StatusChip,
   TitleType,
   TitleTypeAndStatusWrapper,
 } from 'yti-common-ui/title/title.styles';
@@ -51,6 +50,8 @@ import {
 import InfoExpander from '@app/common/components/info-dropdown/info-expander';
 import { useStoreDispatch } from '@app/store';
 import { setTitle } from '@app/common/components/title/title.slice';
+import { StatusChip } from 'yti-common-ui/status-chip';
+import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 
 const NewConceptModal = dynamic(
   () => import('@app/common/components/new-concept-modal')
@@ -87,6 +88,14 @@ export default function Vocabulary({ id }: VocabularyProps) {
     id,
   });
   const { data: counts } = useGetVocabularyCountQuery(id);
+  const {
+    data: organizationsData,
+    isLoading: isOrganizationsLoading,
+    isError: organizationsError,
+  } = useGetOrganizationsQuery({
+    language: i18n.language,
+    showChildOrganizations: true,
+  });
   const [showModal, setShowModal] = useState(false);
   const [showLoadingConcepts, setShowLoadingConcepts] = useState(false);
   const [showLoadingCollections, setShowLoadingCollections] = useState(true);
@@ -132,6 +141,15 @@ export default function Vocabulary({ id }: VocabularyProps) {
       type: t('vocabulary-info-collection'),
     }));
   }, [collectionsData, t, id, urlState.lang, i18n.language]);
+
+  const childOrganizations = useMemo(() => {
+    if (isOrganizationsLoading || organizationsError) {
+      return [];
+    }
+    return organizationsData
+      ?.filter((org) => org.references.parent)
+      .map((org) => org.id);
+  }, [organizationsData, isOrganizationsLoading, organizationsError]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -213,11 +231,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                 </TitleType>{' '}
                 &middot;
                 <StatusChip
-                  valid={
-                    info?.properties.status?.[0].value === 'VALID'
-                      ? 'true'
-                      : undefined
-                  }
+                  status={info?.properties.status?.[0].value ?? 'DRAFT'}
                   id="status-chip"
                 >
                   {translateStatus(
@@ -226,7 +240,10 @@ export default function Vocabulary({ id }: VocabularyProps) {
                   )}
                 </StatusChip>
               </TitleTypeAndStatusWrapper>
-              <InfoExpander data={info} />
+              <InfoExpander
+                data={info}
+                childOrganizations={childOrganizations}
+              />
             </>
           }
         />
@@ -256,7 +273,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
             </Modal>
           )}
           <ResultAndStatsWrapper id="search-results">
-            <QuickActionsWrapper isSmall={isSmall}>
+            <QuickActionsWrapper $isSmall={isSmall}>
               <Heading variant="h2" id="results-title">
                 {urlState.type === 'concept'
                   ? t('vocabulary-concepts')
@@ -311,6 +328,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                       domains={[]}
                       organizations={[]}
                       noChip
+                      noVersion
                     />
                     <Pagination
                       maxPages={Math.ceil(conceptsData.totalHitCount / 50)}
@@ -427,6 +445,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
             data={filteredCollections}
             domains={[]}
             organizations={[]}
+            noVersion
             extra={{
               other: {
                 title: t('vocabulary-filter-concepts'),

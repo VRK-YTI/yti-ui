@@ -24,12 +24,14 @@ import {
   getCount,
   getRunningQueriesThunk as getCountRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
+import { wrapper } from '@app/store';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
 export default function IndexPage(props: IndexPageProps) {
+  wrapper.useHydration(props);
   const { t } = useTranslation('common');
 
   return (
@@ -96,7 +98,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
-    store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
+    store.dispatch(getOrganizations.initiate({ sortLang: locale ?? 'fi' }));
     store.dispatch(
       getSearchModels.initiate({ urlState, lang: locale ?? 'fi' })
     );

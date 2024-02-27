@@ -24,7 +24,6 @@ export const SearchToolsBlock = styled.div`
 
   .fi-dropdown_button {
     min-width: 135px !important;
-    overflow: hidden;
 
     span {
       white-space: nowrap;
@@ -37,5 +36,10 @@ export const SearchToolsBlock = styled.div`
       min-width: 150px !important;
       white-space: nowrap !important;
     }
+  }
+
+  .fi-filter-input_input::placeholder {
+    color: ${(props) => props.theme.suomifi.colors.blackBase};
+    font-style: normal;
   }
 `;

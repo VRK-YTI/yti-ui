@@ -12,7 +12,7 @@ export interface UseLocalesResult {
   currentLocale: { locale: Locale; label: string };
 }
 
-export default function useLocales(): UseLocalesResult {
+export default function useLocales(hideSv?: boolean): UseLocalesResult {
   const router = useRouter();
   const currentLocale = router.locale?.toLowerCase() ?? 'fi';
 
@@ -20,11 +20,15 @@ export default function useLocales(): UseLocalesResult {
     console.warn(`Unsupported locale: ${currentLocale}`);
   }
 
-  const locales: { locale: Locale; label: string }[] = [
+  let locales: { locale: Locale; label: string }[] = [
     { locale: 'fi', label: 'Suomeksi (FI)' },
     { locale: 'sv', label: 'På svenska (SV)' },
     { locale: 'en', label: 'In English (EN)' },
   ];
+
+  if (hideSv) {
+    locales = locales.filter(({ locale }) => locale !== 'sv');
+  }
 
   return {
     locales: locales.map(({ locale, label }) => ({

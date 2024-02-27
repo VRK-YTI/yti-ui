@@ -5,6 +5,7 @@ import { Type } from './type.interface';
 export interface InternalClass {
   created: string;
   id: string;
+  curie: string;
   identifier: string;
   isDefinedBy: string;
   label: {
@@ -29,6 +30,7 @@ export interface InternalClassInfo extends InternalClass {
     status: Status;
     modelType: Type;
     uri: string;
+    version?: string;
   };
   conceptInfo: {
     conceptURI: string;

@@ -1,4 +1,3 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { ServiceCategory } from '@app/common/interfaces/service-categories.interface';
@@ -9,16 +8,11 @@ export const serviceCategoriesApi = createApi({
     ...headers,
     accept: 'application/json',
   })),
-  tagTypes: ['serviceCategories'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
+  tagTypes: ['ServiceCategories'],
   endpoints: (builder) => ({
     getServiceCategories: builder.query<ServiceCategory[], string>({
       query: (value) => ({
-        url: `/frontend/serviceCategories?sortLang=${value}`,
+        url: `/frontend/service-categories?sortLang=${value}`,
         method: 'GET',
       }),
     }),

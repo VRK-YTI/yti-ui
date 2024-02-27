@@ -9,6 +9,7 @@ import { LinkedItemWrapper } from './linked-data-form.styles';
 import { useTranslation } from 'next-i18next';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { BasicBlock } from 'yti-common-ui/block';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 interface LinkedItemProps {
   itemData:
@@ -19,16 +20,17 @@ interface LinkedItemProps {
         type: 'terminology';
       }
     | {
-        name: string;
-        uri: string;
+        name: { [key: string]: string };
+        namespace: string;
+        prefix: string;
         type: 'datamodel-internal';
       }
     | {
-        name: string;
+        name: { [key: string]: string };
         namespace: string;
         prefix: string;
         type: 'datamodel-external';
-        setData: (value: string) => void;
+        setData: (value: { [key: string]: string }) => void;
       }
     | {
         prefLabel: { [key: string]: string };
@@ -36,11 +38,15 @@ interface LinkedItemProps {
         id: string;
       };
   handleRemove: (id: string) => void;
+  languages?: string[];
+  isError?: boolean;
 }
 
 export default function LinkedItem({
   itemData,
   handleRemove,
+  languages,
+  isError,
 }: LinkedItemProps) {
   const { t, i18n } = useTranslation('admin');
 
@@ -98,42 +104,38 @@ export default function LinkedItem({
   }
 
   function renderDatamodelContent() {
-    if (itemData.type === 'datamodel-internal') {
+    if (
+      itemData.type === 'datamodel-internal' ||
+      itemData.type === 'datamodel-external'
+    ) {
       return (
         <>
-          <BasicBlock title={t('data-model-name')}>
-            {itemData.name !== '' ? itemData.name : itemData.uri}
-          </BasicBlock>
-
-          <BasicBlock title={t('prefix-in-this-service')}>
-            {itemData.uri.split('/').pop()?.replace('#', '') ?? itemData.uri}
-          </BasicBlock>
-
-          <div className="datamodel-link">
-            <ExternalLink
-              labelNewWindow={t('site-open-link-new-window', { ns: 'common' })}
-              href={itemData.uri}
-            >
-              {itemData.uri}
-            </ExternalLink>
-          </div>
-        </>
-      );
-    }
-
-    if (itemData.type === 'datamodel-external') {
-      return (
-        <>
-          <TextInput
-            labelText={t('data-model-name')}
-            defaultValue={itemData.name}
-            onChange={(e) => itemData.setData(e?.toString() ?? '')}
-          />
-
+          {itemData.type == 'datamodel-internal' && (
+            <BasicBlock title={t('data-model-name')}>
+              {getLanguageVersion({
+                data: itemData.name,
+                lang: i18n.language,
+                appendLocale: true,
+              })}
+            </BasicBlock>
+          )}
+          {itemData.type == 'datamodel-external' &&
+            Array.from(languages ?? [])
+              .sort((a, b) => compareLocales(a, b))
+              ?.map((lang) => (
+                <TextInput
+                  key={`external-name-${lang}`}
+                  labelText={`${t('data-model-name')}, ${lang}`}
+                  defaultValue={itemData.name[lang]}
+                  onChange={(e) => {
+                    itemData.setData({ [lang]: e?.toString() ?? '' });
+                  }}
+                  status={isError ? 'error' : 'default'}
+                />
+              ))}
           <BasicBlock title={t('prefix-in-this-service')}>
             {itemData.prefix}
           </BasicBlock>
-
           <div className="datamodel-link">
             <ExternalLink
               labelNewWindow={t('site-open-link-new-window', { ns: 'common' })}

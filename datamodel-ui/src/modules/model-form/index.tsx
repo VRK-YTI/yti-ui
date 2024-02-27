@@ -3,7 +3,7 @@ import { useGetServiceCategoriesQuery } from '@app/common/components/service-cat
 import getOrganizations from '@app/common/utils/get-organizations';
 import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Dropdown,
   DropdownItem,
@@ -23,13 +23,19 @@ import LanguageSelector, {
 } from 'yti-common-ui/form/language-selector';
 import Prefix from 'yti-common-ui/form/prefix';
 import Contact from 'yti-common-ui/form/contact';
-import { useGetFreePrefixMutation } from '@app/common/components/prefix/prefix.slice';
+import { useGetModelExistsMutation } from '@app/common/components/prefix/prefix.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { FormErrors } from './validate-form';
-import AddBlock from './add-block';
 import { Status } from '@app/common/interfaces/status.interface';
 import { FormUpdateErrors } from '../model/validate-form-update';
 import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
+import LinkBlock from './link-block';
+import { compareLocales } from '@app/common/utils/compare-locals';
+import { translateStatus } from '@app/common/utils/translation-helpers';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '@app/common/components/login/login.slice';
+import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
+import { checkPermission } from '@app/common/utils/has-permission';
 
 interface ModelFormProps {
   formData: ModelFormType;
@@ -38,6 +44,7 @@ interface ModelFormProps {
   disabled?: boolean;
   errors?: FormErrors | FormUpdateErrors;
   editMode?: boolean;
+  oldVersion?: boolean;
 }
 
 export default function ModelForm({
@@ -47,14 +54,27 @@ export default function ModelForm({
   disabled,
   errors,
   editMode,
+  oldVersion,
 }: ModelFormProps) {
+  const user = useSelector(selectLogin());
   const { t, i18n } = useTranslation('admin');
   const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
     i18n.language
   );
-  const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
+  const { data: organizationsData } = useGetOrganizationsQuery({
+    sortLang: i18n.language,
+  });
   const { data: languages, isSuccess } = useGetLanguagesQuery();
   const [languageList, setLanguageList] = useState<LanguageBlockType[]>([]);
+
+  const initialStatus = useRef(formData.status);
+
+  const statuses: Status[] = [
+    'VALID',
+    'RETIRED',
+    'SUPERSEDED',
+    ...(initialStatus.current === 'SUGGESTED' ? ['SUGGESTED' as Status] : []),
+  ];
 
   const serviceCategories = useMemo(() => {
     if (!serviceCategoriesData) {
@@ -79,8 +99,15 @@ export default function ModelForm({
         labelText: o.label,
         uniqueItemId: o.id,
       }))
+      .filter((o) =>
+        checkPermission({
+          user: user,
+          actions: ['CREATE_DATA_MODEL'],
+          targetOrganizations: [o.uniqueItemId],
+        })
+      )
       .sort((o1, o2) => (o1.labelText > o2.labelText ? 1 : -1));
-  }, [organizationsData, i18n.language]);
+  }, [organizationsData, user, i18n.language]);
 
   useEffect(() => {
     if (isSuccess && languageList.length === 0) {
@@ -236,7 +263,7 @@ export default function ModelForm({
           userPosted={userPosted}
           translations={{
             textInput: t('language-input-text'),
-            textDescription: t('description'),
+            textDescription: t('description', { ns: 'common' }),
             optionalText: t('optional'),
           }}
           allowItemAddition={false}
@@ -246,10 +273,10 @@ export default function ModelForm({
           ariaOptionChipRemovedText={''}
           noItemsText={''}
           status={errors?.languageAmount ? 'error' : 'default'}
-          disabled={disabled}
-          defaultSelectedItems={formData.languages.filter(
-            (lang) => lang.selected
-          )}
+          disabled={disabled || oldVersion}
+          defaultSelectedItems={formData.languages
+            .filter((lang) => lang.selected)
+            .sort((a, b) => compareLocales(a.uniqueItemId, b.uniqueItemId))}
         />
       </div>
     );
@@ -260,43 +287,36 @@ export default function ModelForm({
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
-            <Label>{t('prefix')}</Label>
+            <Label>{t('prefix', { ns: 'common' })}</Label>
             <Text smallScreen>{formData.prefix}</Text>
           </div>
           <div>
             <Label>{t('namespace')}</Label>
-            <Text
-              smallScreen
-            >{`http://uri.suomi.fi/datamodel/ns/${formData.prefix}`}</Text>
+            <Text smallScreen>{`${SUOMI_FI_NAMESPACE}${formData.prefix}`}</Text>
           </div>
-
-          <Dropdown
-            labelText={t('status')}
-            defaultValue={formData.status ?? ''}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                status: e as Status | undefined,
-              })
-            }
-            id="status-dropdown"
-          >
-            <DropdownItem value={'DRAFT'}>
-              {t('statuses.draft', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'VALID'}>
-              {t('statuses.valid', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'SUPERSEDED'}>
-              {t('statuses.superseded', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'RETIRED'}>
-              {t('statuses.retired', { ns: 'common' })}
-            </DropdownItem>
-            <DropdownItem value={'INVALID'}>
-              {t('statuses.invalid', { ns: 'common' })}
-            </DropdownItem>
-          </Dropdown>
+          {oldVersion &&
+            (initialStatus.current === 'SUGGESTED' ||
+              initialStatus.current === 'VALID') && (
+              <Dropdown
+                labelText={t('status')}
+                defaultValue={initialStatus.current}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    status: e as Status,
+                  })
+                }
+                id="status-dropdown"
+              >
+                {statuses.map((status) => {
+                  return (
+                    <DropdownItem key={status} value={status}>
+                      {translateStatus(status, t)}
+                    </DropdownItem>
+                  );
+                })}
+              </Dropdown>
+            )}
         </div>
       );
     }
@@ -319,23 +339,25 @@ export default function ModelForm({
               prefix: e,
             })
           }
-          validatePrefixMutation={useGetFreePrefixMutation}
-          typeInUri={'datamodel/ns'}
+          inUseMutation={useGetModelExistsMutation}
+          typeInUri={'model'}
           error={errorInPrefix()}
           translations={{
             automatic: t('create-prefix-automatically'),
             errorInvalid: t('error-prefix-invalid'),
             errorTaken: t('error-prefix-taken'),
             hintText: t('prefix-input-hint-text'),
-            label: t('prefix'),
+            label: t('prefix', { ns: 'common' }),
             manual: t('input-prefix-manually'),
             textInputHint: t('input-prefix'),
-            textInputLabel: t('prefix'),
+            textInputLabel: t('prefix', { ns: 'common' }),
             uriPreview: t('uri-preview'),
           }}
           disabled={disabled}
           noAuto
           fullWidth
+          minLength={2}
+          maxLength={32}
         />
         <Separator />
       </>
@@ -346,7 +368,7 @@ export default function ModelForm({
     return (
       <WideMultiSelect
         chipListVisible={true}
-        labelText={t('information-domains')}
+        labelText={t('information-domains', { ns: 'common' })}
         hintText={t('information-domains-hint-text')}
         visualPlaceholder={t('select-information-domains-for-data-model')}
         removeAllButtonLabel={t('clear-all-selections')}
@@ -375,7 +397,7 @@ export default function ModelForm({
     return (
       <WideMultiSelect
         chipListVisible={true}
-        labelText={t('contributors')}
+        labelText={t('contributors', { ns: 'common' })}
         hintText={t('contributors-hint-text')}
         visualPlaceholder={t('select-contributors')}
         removeAllButtonLabel={t('clear-all-selections')}
@@ -403,14 +425,27 @@ export default function ModelForm({
     if (!editMode) {
       return <></>;
     }
+
     return (
-      <AddBlock
-        data={formData}
-        locale={i18n.language}
-        setTerminologies={(terminologies) =>
+      <LinkBlock
+        data={formData.links}
+        languages={formData.languages.sort((a, b) =>
+          compareLocales(a.uniqueItemId, b.uniqueItemId)
+        )}
+        errors={{
+          linksInvalidUri:
+            errors && 'linksInvalidUri' in errors
+              ? errors?.linksInvalidUri
+              : undefined,
+          linksMissingInfo:
+            errors && 'linksMissingInfo' in errors
+              ? errors?.linksMissingInfo
+              : undefined,
+        }}
+        setData={(value) =>
           setFormData({
             ...formData,
-            terminologies,
+            links: value,
           })
         }
       />
@@ -434,7 +469,7 @@ export default function ModelForm({
           inputLabel: t('contact-input-label'),
           inputOptionLabel: t('contact-input-type-label'),
           inputPlaceholder: t('contact-input-placeholder'),
-          label: t('feedback'),
+          label: t('feedback', { ns: 'common' }),
           labelHint: t('contact-input-hint'),
           optional: t('optional'),
           undefined: t('still-unknown'),

@@ -26,6 +26,9 @@ function getLangObject(data: { [key: string]: string }) {
   });
 }
 
+export const SUOMI_FI_NAMESPACE = 'https://iri.suomi.fi/model/';
+export const ADMIN_EMAIL = 'yhteentoimivuus@dvv.fi';
+
 export function getTitle(data?: ModelType, lang?: string): string {
   if (!data) {
     return '';
@@ -95,7 +98,7 @@ export function getComments(data?: ModelType): LangObject[] {
 }
 
 export function getContact(data?: ModelType): string {
-  return data?.contact ?? 'yhteentoimivuus@dvv.fi';
+  return data?.contact ?? ADMIN_EMAIL;
 }
 
 export function getDocumentation(data?: ModelType): string {
@@ -180,8 +183,8 @@ export function getLanguages(data?: ModelType): string[] {
   return data?.languages ?? [];
 }
 
-export function getUri(data?: ModelType): string {
-  return `http://uri.suomi.fi/datamodel/ns/${data?.prefix}`;
+export function getPrefixFromURI(namespace: string): string {
+  return namespace.split('/').filter(Boolean).pop()?.replace('#', '') ?? '';
 }
 
 export function getTerminology(

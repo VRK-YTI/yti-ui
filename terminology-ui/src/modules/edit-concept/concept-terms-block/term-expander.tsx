@@ -4,6 +4,7 @@ import { ExpanderIcon, SuccessIcon } from './concept-terms-block.styles';
 import ExpanderTitle from '@app/common/components/expander-title';
 import {
   translateLanguage,
+  translateStatus,
   translateTermType,
 } from '@app/common/utils/translation-helpers';
 import { ConceptTermType } from './concept-term-block-types';
@@ -27,13 +28,12 @@ export default function TermExpander({
     term.language,
     t
   )} ${term.language.toUpperCase()}`;
+
   const primaryText = `${term.prefLabel} ${
     term.termType !== 'recommended-term'
       ? `- ${translateTermType(term.termType, t)}`
       : ''
-  } - ${t('statuses.draft', {
-    ns: 'common',
-  })}`;
+  } - ${translateStatus(term.status, t)}`;
 
   const displayIcon =
     (errors.termPrefLabel && !term.prefLabel) ||

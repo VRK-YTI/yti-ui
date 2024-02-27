@@ -1,3 +1,3 @@
 export interface NavigationProps {
-  active?: boolean;
+  $active?: boolean;
 }

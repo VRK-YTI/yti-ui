@@ -20,12 +20,14 @@ import Layout from '@app/common/components/layout';
 import EditVocabulary from '@app/modules/edit-vocabulary';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import { wrapper } from '@app/store';
 
 interface EditTerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
 export default function EditTerminology(props: EditTerminologyPageProps) {
+  wrapper.useHydration(props);
   const { t } = useTranslation('admin');
   const { query } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
@@ -60,7 +62,12 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
-    store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
+    store.dispatch(
+      getOrganizations.initiate({
+        language: locale ?? 'fi',
+        showChildOrganizations: true,
+      })
+    );
     store.dispatch(getGroups.initiate(locale ?? 'fi'));
 
     await Promise.all(store.dispatch(getRunningQueriesThunk()));

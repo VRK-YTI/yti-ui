@@ -20,10 +20,10 @@ import {
   ModalContent,
   ModalFooter,
   ModalTitle,
-  SearchInput,
   SingleSelect,
   SingleSelectData,
   Text,
+  TextInput,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { DetachedPagination } from 'yti-common-ui/pagination';
@@ -37,6 +37,7 @@ import {
   SearchResultSubTitle,
   StatusChip,
 } from './terminology-modal.styles';
+import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 
 export default function TerminologyModal({
   addedTerminologies,
@@ -116,11 +117,11 @@ export default function TerminologyModal({
 
   useEffect(() => {
     setSelected(addedTerminologies);
-  }, [visible]);
+  }, [visible, addedTerminologies]);
 
   const handleSearchChange = (
     key: keyof TerminologySearchParams,
-    value: typeof searchParams[keyof TerminologySearchParams]
+    value: (typeof searchParams)[keyof TerminologySearchParams]
   ) => {
     if (key === 'groups' && isEqual(value, ['-1'])) {
       setSearchParams({ ...searchParams, [key]: [], ['pageFrom']: 0 });
@@ -196,15 +197,13 @@ export default function TerminologyModal({
     return (
       <div>
         <SearchBlock $isSmall={isSmall}>
-          <SearchInput
-            labelText={t('search-for-terminology')}
-            clearButtonLabel={t('clear-all-selections')}
-            searchButtonLabel={t('search')}
+          <TextInput
             defaultValue={searchParams.query}
-            onBlur={(e) => handleSearchChange('query', e?.target.value ?? '')}
-            onSearch={(e) => handleSearchChange('query', e ?? '')}
-            debounce={500}
+            labelText={t('search-for-terminology')}
+            onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
+            debounce={300}
             id="search-input"
+            maxLength={TEXT_INPUT_MAX}
           />
 
           <SingleSelect
@@ -231,16 +230,24 @@ export default function TerminologyModal({
 
         {selected.length > 0 && (
           <SelectedChipBlock id="selected-chips">
-            {selected.map((s) => (
-              <Chip
-                key={s.uri}
-                removable
-                onClick={() => handleChipClick(s.uri)}
-                id={`selected-terminology-${s.uri}`}
-              >
-                {s.label[i18n.language]}
-              </Chip>
-            ))}
+            {selected.map((s) => {
+              const label = getLanguageVersion({
+                data: s.label,
+                lang: i18n.language,
+                appendLocale: true,
+              });
+
+              return (
+                <Chip
+                  key={s.uri}
+                  removable
+                  onClick={() => handleChipClick(s.uri)}
+                  id={`selected-terminology-${s.uri}`}
+                >
+                  {label !== '' ? label : s.uri}
+                </Chip>
+              );
+            })}
           </SelectedChipBlock>
         )}
       </div>
@@ -250,7 +257,6 @@ export default function TerminologyModal({
   function renderResults() {
     return (
       <div>
-        <Text>{t('add-refrence-to-terminologies-description')}</Text>
         <SearchResultCount>
           <Text variant="bold">
             {t('terminology-counts', {
@@ -266,6 +272,11 @@ export default function TerminologyModal({
                 <Checkbox
                   checked={selected.map((s) => s.uri).includes(result.uri)}
                   onClick={() => handleCheckboxClick(result.uri)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleCheckboxClick(result.uri);
+                    }
+                  }}
                   id={`checkbox-${result.uri}`}
                 />
               </div>
@@ -282,7 +293,7 @@ export default function TerminologyModal({
 
                 <SearchResultSubTitle>
                   <span>
-                    <StatusChip $isValid={result.status === 'VALID'}>
+                    <StatusChip status={result.status}>
                       {translateStatus(result.status, t)}
                     </StatusChip>
                   </span>

@@ -6,20 +6,26 @@ import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import TerminologyModal from '../terminology-modal';
 import {
+  ExternalNamespace,
+  InternalNamespace,
   ModelCodeList,
   ModelTerminology,
   ModelType,
 } from '@app/common/interfaces/model.interface';
 import {
   setHasChanges,
-  usePostModelMutation,
+  useUpdateModelMutation,
 } from '@app/common/components/model/model.slice';
-import generatePayload from '../model/generate-payload';
+import generatePayloadUpdate from '../model/generate-payload';
 import CodeListModal from '../code-list-modal';
 import LinkedModel from '../linked-model';
 import LinkedItem from './linked-item';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { HeaderRow, StyledSpinner } from '@app/common/components/header';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
+import getApiError from '@app/common/utils/get-api-errors';
 
 export default function LinkedDataForm({
   hasCodelist,
@@ -35,28 +41,19 @@ export default function LinkedDataForm({
     useConfirmBeforeLeavingPage('disabled');
   const dispatch = useStoreDispatch();
   const ref = useRef<HTMLDivElement>(null);
-  const [postModel, result] = usePostModelMutation();
-  const [headerHeight, setHeaderHeight] = useState(0);
+  const [updateModel, result] = useUpdateModelMutation();
+  const [headerHeight, setHeaderHeight] = useState(57);
+  const [userPosted, setUserPosted] = useState(false);
+  const [extNSWithNoName, setExtNSWithNoName] = useState<string[]>([]);
   const [data, setData] = useState<{
     codeLists: ModelCodeList[];
-    externalNamespaces: {
-      name: string;
-      namespace: string;
-      prefix: string;
-    }[];
-    internalNamespaces: {
-      name: string;
-      uri: string;
-    }[];
+    externalNamespaces: ExternalNamespace[];
+    internalNamespaces: InternalNamespace[];
     terminologies: ModelTerminology[];
   }>({
     codeLists: model.codeLists ?? [],
     externalNamespaces: model.externalNamespaces ?? [],
-    internalNamespaces:
-      model.internalNamespaces.map((n) => ({
-        name: '',
-        uri: n,
-      })) ?? [],
+    internalNamespaces: model.internalNamespaces ?? [],
     terminologies: model.terminologies ?? [],
   });
 
@@ -64,49 +61,96 @@ export default function LinkedDataForm({
     enableConfirmation();
     dispatch(setHasChanges(true));
     setData(value);
+
+    if (extNSWithNoName.length > 0) {
+      validateExternalNS();
+    }
   };
 
   const handleSubmit = () => {
     disableConfirmation();
     dispatch(setHasChanges(false));
 
-    const payload = generatePayload({
+    if (!userPosted) {
+      setUserPosted(true);
+    }
+
+    const extNSErrors = validateExternalNS();
+
+    if (extNSErrors) {
+      return;
+    }
+
+    const payload = generatePayloadUpdate({
       ...model,
       codeLists: data.codeLists,
       externalNamespaces: data.externalNamespaces,
-      internalNamespaces: data.internalNamespaces.map((n) => n.uri),
+      internalNamespaces: data.internalNamespaces,
       terminologies: data.terminologies,
     });
 
-    postModel({
+    updateModel({
       payload: payload,
       prefix: model.prefix,
       isApplicationProfile: model.type === 'PROFILE',
     });
   };
 
+  const validateExternalNS = () => {
+    if (data.externalNamespaces.length > 0) {
+      const extNSWithNoName = data.externalNamespaces.filter(
+        (ns) =>
+          Object.keys(ns.name).length < 1 ||
+          Object.values(ns.name).filter((name) => name !== '').length !==
+            Object.keys(ns.name).length
+      );
+
+      if (extNSWithNoName.length > 0) {
+        setExtNSWithNoName(extNSWithNoName.map((ns) => ns.prefix));
+        return true;
+      }
+    }
+
+    setExtNSWithNoName([]);
+    return false;
+  };
+
+  const getErrors = () => {
+    const errorMsgs: string[] = [];
+    if (extNSWithNoName.length > 0) {
+      errorMsgs.push(
+        t('following-external-ns-miss-name', {
+          data: extNSWithNoName.join(', '),
+        })
+      );
+    }
+
+    if (result.isError) {
+      errorMsgs.push(...getApiError(result.error));
+    }
+
+    return errorMsgs;
+  };
+
   useEffect(() => {
     if (ref.current) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref]);
+  }, [ref, extNSWithNoName, result]);
 
   useEffect(() => {
     if (result.isSuccess) {
+      setUserPosted(false);
       handleReturn();
+      dispatch(setNotification('LINK_EDIT'));
     }
-  }, [result, handleReturn]);
+  }, [result, dispatch, handleReturn, disableConfirmation]);
 
   return (
     <>
       <StaticHeader ref={ref}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'space-between',
-          }}
-        >
-          <Text variant="bold">{t('links', { ns: 'common' })}</Text>
+        <HeaderRow>
+          <Text variant="bold">{t('edit-links')}</Text>
 
           <div
             style={{
@@ -115,7 +159,17 @@ export default function LinkedDataForm({
             }}
           >
             <Button onClick={() => handleSubmit()} id="submit-button">
-              {t('save')}
+              {userPosted && result.isLoading ? (
+                <div role="alert">
+                  <StyledSpinner
+                    variant="small"
+                    text={t('saving')}
+                    textAlign="right"
+                  />
+                </div>
+              ) : (
+                <>{t('save')}</>
+              )}
             </Button>
             <Button
               variant="secondary"
@@ -128,7 +182,21 @@ export default function LinkedDataForm({
               {t('cancel-variant')}
             </Button>
           </div>
-        </div>
+        </HeaderRow>
+        {userPosted && (extNSWithNoName.length > 0 || result.isError) ? (
+          <div>
+            <FormFooterAlert
+              labelText={
+                result.isError
+                  ? t('unexpected-error-title')
+                  : t('missing-information-title')
+              }
+              alerts={getErrors()}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
@@ -247,7 +315,7 @@ export default function LinkedDataForm({
                   })
                 }
                 setExternalData={(external: {
-                  name: string;
+                  name: { [key: string]: string };
                   namespace: string;
                   prefix: string;
                 }) =>
@@ -256,6 +324,9 @@ export default function LinkedDataForm({
                     externalNamespaces: [...data.externalNamespaces, external],
                   })
                 }
+                currentModel={model.prefix}
+                languages={model.languages}
+                applicationProfile={hasCodelist}
               />
             </div>
           }
@@ -263,17 +334,18 @@ export default function LinkedDataForm({
           <div>
             {data.internalNamespaces.map((n) => (
               <LinkedItem
-                key={`internal-namespace-item-${n.uri}`}
+                key={`internal-namespace-item-${n.prefix}`}
                 itemData={{
-                  uri: n.uri,
+                  prefix: n.prefix,
                   name: n.name,
+                  namespace: n.namespace,
                   type: 'datamodel-internal',
                 }}
                 handleRemove={(id) =>
                   handleUpdate({
                     ...data,
                     internalNamespaces: data.internalNamespaces.filter(
-                      (n) => n.uri !== id
+                      (n) => n.namespace !== id
                     ),
                   })
                 }
@@ -291,12 +363,11 @@ export default function LinkedDataForm({
                       if (ext.prefix === n.prefix) {
                         return {
                           ...ext,
-                          name: name,
+                          name: { ...ext.name, ...name },
                         };
                       }
                       return ext;
                     });
-
                     handleUpdate({
                       ...data,
                       externalNamespaces: updated,
@@ -311,6 +382,8 @@ export default function LinkedDataForm({
                     ),
                   })
                 }
+                languages={model.languages}
+                isError={extNSWithNoName.includes(n.prefix)}
               />
             ))}
           </div>

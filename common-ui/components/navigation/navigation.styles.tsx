@@ -20,7 +20,7 @@ export const NavigationItem = styled.li<NavigationProps>`
     padding: 12px 5px 9px 5px;
     border-bottom: 3px solid
       ${(props) =>
-        props.active
+        props.$active
           ? props.theme.suomifi.colors.highlightBase
           : 'transparent'};
 

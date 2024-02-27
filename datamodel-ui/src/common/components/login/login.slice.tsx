@@ -1,10 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { HYDRATE } from 'next-redux-wrapper';
 import { AppState, AppThunk } from '@app/store';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
-import isHydrate from '@app/store/isHydrate';
 
 export const initialState: User = {
   anonymous: true,
@@ -38,25 +36,12 @@ export const loginSlice = createSlice({
       };
     },
   },
-  extraReducers: (builder) => {
-    builder.addMatcher(isHydrate, (state, action) => {
-      return {
-        ...state,
-        ...action.payload.login,
-      };
-    });
-  },
 });
 
 export const loginApi = createApi({
   reducerPath: 'loginApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['login'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
+  tagTypes: ['Login'],
   endpoints: (builder) => ({
     getAuthenticatedUser: builder.query<User, void>({
       query: () => ({

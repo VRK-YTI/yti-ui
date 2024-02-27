@@ -1,5 +1,6 @@
 import { ReactFlow } from 'reactflow';
 import styled from 'styled-components';
+import { InlineAlert } from 'suomifi-ui-components';
 
 export const ModelFlow = styled(ReactFlow)`
   max-height: 100%;
@@ -19,12 +20,16 @@ export const ModelFlow = styled(ReactFlow)`
     pointer-events: none;
   }
 
-  .react-flow__panel {
-    margin: 0;
-    z-index: 4;
+  .react-flow__renderer {
+    z-index: 0;
   }
 
-  [data-id^="#corner-"] {
+  .react-flow__panel {
+    margin: 0;
+    z-index: 1;
+  }
+
+  [data-id^='#corner-'] {
     padding: 0;
     margin: 0;
     width: 20px;
@@ -33,24 +38,33 @@ export const ModelFlow = styled(ReactFlow)`
     margin-left: 10px;
     margin-top: -10px;
     border: 1px solid transparent;
-
-    box-shadow: none !important;
-    background: none;
-
-    .react-flow__handle {
-      min-width: 0 !important;
-      min-height: 0 !important;
-      width: 0;
-      height: 0;
-      border: 0;
-      top: 0;
-      bottom 0;
-    }
-
-    &:hover {
-      background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-      border-radius: 50%;
-      border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-    }
   }
+
+  .react-flow__edge-path {
+    stroke: ${(props) => props.theme.suomifi.colors.blackBase};
+  }
+`;
+
+export const NotificationInlineAlert = styled(InlineAlert)`
+  width: max-content !important;
+
+  .fi-inline-alert_text-content-wrapper {
+    padding: 0px 5px !important;
+    margin: 5px !important;
+  }
+`;
+
+export const FlowWrapper = styled.div<{ $isSmall: boolean }>`
+  height: 100%;
+  width: 100%;
+
+  ${(props) =>
+    props.$isSmall
+      ? `
+    position: fixed;
+  `
+      : `
+    position: relative;
+    margin-left: -42px;
+  `}
 `;

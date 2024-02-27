@@ -1,21 +1,25 @@
 import { MultiSelectData } from 'suomifi-ui-components';
 import { LanguageBlockType } from 'yti-common-ui/form/language-selector';
-import { ModelType, ModelTerminology, ModelCodeList } from './model.interface';
+import {
+  ModelType,
+  ModelTerminology,
+  ModelCodeList,
+  ExternalNamespace,
+  InternalNamespace,
+  Link,
+} from './model.interface';
 import { Status } from './status.interface';
 
 export interface ModelFormType {
   contact: string;
-  externalNamespaces: {
-    name: string;
-    namespace: string;
-    prefix: string;
-  }[];
-  internalNamespaces: string[];
+  externalNamespaces: ExternalNamespace[];
+  internalNamespaces: InternalNamespace[];
   languages: (LanguageBlockType & { selected: boolean })[];
+  links: Link[];
   organizations: MultiSelectData[];
   prefix: string;
   serviceCategories: MultiSelectData[];
-  status?: Status;
+  status: Status;
   type: ModelType['type'];
   terminologies: ModelTerminology[];
   codeLists: ModelCodeList[];

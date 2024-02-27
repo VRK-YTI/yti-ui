@@ -15,7 +15,7 @@ interface PrefixProps {
   setPrefix: (value: string) => void;
   // Using 'any' here same way useMutation() is implemented
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  validatePrefixMutation: UseMutation<any>;
+  inUseMutation: UseMutation<any>;
   typeInUri: string;
   error: boolean;
   translations: {
@@ -29,31 +29,34 @@ interface PrefixProps {
     errorTaken: string;
     uriPreview: string;
   };
-  invertCheck?: boolean;
   disabled?: boolean;
   fullWidth?: boolean;
   noAuto?: boolean;
+  maxLength?: number;
+  minLength?: number;
 }
 
 export default function Prefix({
   prefix,
   setPrefix,
-  validatePrefixMutation,
+  inUseMutation,
   typeInUri,
   error,
   translations,
-  invertCheck,
   disabled,
   fullWidth,
   noAuto,
+  maxLength,
+  minLength,
 }: PrefixProps) {
-  const URI = 'http://uri.suomi.fi';
+  const URI =
+    typeInUri === 'model' ? 'https://iri.suomi.fi' : 'http://uri.suomi.fi';
   const [initalPrefix] = useState(prefix);
   const [inputType, setInputType] = useState<'manual' | 'automatic'>(
     noAuto ? 'manual' : 'automatic'
   );
   const [prefixValid, setPrefixValid] = useState(true);
-  const [validatePrefix, validPrefix] = validatePrefixMutation();
+  const [validatePrefix, inUse] = inUseMutation();
 
   const handleInputTypeChange = (e: typeof inputType) => {
     setInputType(e);
@@ -116,21 +119,18 @@ export default function Prefix({
             visualPlaceholder={translations.textInputHint}
             onChange={(e) => handleTextInput(e?.toString().trim() ?? '')}
             debounce={500}
-            maxLength={TEXT_INPUT_MAX}
+            maxLength={maxLength ?? TEXT_INPUT_MAX}
+            minLength={minLength ?? 0}
             id="prefix-text-input"
             status={
-              (prefix !== '' &&
-                (!prefixValid ||
-                  validPrefix.data === (invertCheck ? true : false))) ||
-              error
+              (prefix !== '' && (!prefixValid || inUse.data)) || error
                 ? 'error'
                 : 'default'
             }
             statusText={
               (prefix !== '' &&
                 ((!prefixValid && translations.errorInvalid) ||
-                  (validPrefix.data === (invertCheck ? true : false) &&
-                    translations.errorTaken))) ||
+                  (inUse.data === true && translations.errorTaken))) ||
               ''
             }
             defaultValue={prefix}

@@ -15,21 +15,40 @@ const StaticHeaderWrapper = styled.div`
     justify-content: space-between;
     padding: ${(props) => props.theme.suomifi.spacing.s};
     padding-bottom: 0;
+    max-width: inherit;
+  }
+
+  button {
+    flex-shrink: 0 !important;
+    max-height: 42px !important;
+  }
+
+  #submit-button_submitted {
+    flex-shrink: 1 !important;
+    padding: 10px 14px;
+  }
+
+  .fi-loadingSpinner_text {
+    font-weight: 600 !important;
+  }
+
+  .long-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 5 !important;
   }
 `;
 
 const Blur = styled.div`
   width: inherit;
   max-width: inherit;
-  height: 20px;
+  height: 30px;
   content: '';
-  background: linear-gradient(
-    to top,
-    rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 1)
-  );
+  background: linear-gradient(to bottom, hsl(0, 0%, 100%), rgba(0, 0, 0, 0));
   position: fixed;
   padding: 0 !important;
+  pointer-events: none;
 `;
 
 interface StaticHeaderProps {

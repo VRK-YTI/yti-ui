@@ -34,7 +34,7 @@ export default function Pagination({ maxPages }: PaginationProps) {
         }
         lastPage={maxPages}
         nextButtonAriaLabel={t('next-page')}
-        onChange={(e) => patchUrlState({ page: e })}
+        onChange={(e) => typeof e === 'number' && patchUrlState({ page: e })}
         pageIndicatorText={(currentPage: number, lastPage: number) =>
           `${currentPage}/${lastPage}`
         }
@@ -89,7 +89,7 @@ export function DetachedPagination({
         }
         lastPage={maxPages}
         nextButtonAriaLabel={t('next-page')}
-        onChange={(e) => setCurrentPage(e)}
+        onChange={(e) => typeof e === 'number' && setCurrentPage(e)}
         pageIndicatorText={(currentPage: number, lastPage: number) =>
           `${currentPage}/${lastPage}`
         }

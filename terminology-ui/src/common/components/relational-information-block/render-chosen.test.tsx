@@ -1,6 +1,5 @@
-import { themeProvider } from '@app/tests/test-utils';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { renderWithProviders } from '@app/tests/test-utils';
+import { fireEvent, screen } from '@testing-library/react';
 import RenderChosen from './render-chosen';
 
 describe('render-chosen', () => {
@@ -8,14 +7,13 @@ describe('render-chosen', () => {
     const setChosenMock = jest.fn();
     const setShowChosenMock = jest.fn();
 
-    render(
+    renderWithProviders(
       <RenderChosen
         chosen={chosen}
         setChosen={setChosenMock}
         setShowChosen={setShowChosenMock}
         chipLabel={'chipLabel'}
-      />,
-      { wrapper: themeProvider }
+      />
     );
 
     expect(screen.getByText('chosen1')).toBeInTheDocument();
@@ -26,18 +24,17 @@ describe('render-chosen', () => {
     const setChosenMock = jest.fn();
     const setShowChosenMock = jest.fn();
 
-    render(
+    renderWithProviders(
       <RenderChosen
         chosen={chosen}
         setChosen={setChosenMock}
         setShowChosen={setShowChosenMock}
         chipLabel={'chipLabel'}
-      />,
-      { wrapper: themeProvider }
+      />
     );
 
     expect(screen.getByText('chosen1')).toBeInTheDocument();
-    userEvent.click(screen.getByText('chosen1'));
+    fireEvent.click(screen.getByText('chosen1'));
 
     expect(setChosenMock).toHaveBeenCalledTimes(1);
     expect(setChosenMock).toHaveBeenCalledWith([chosen[1]]);
@@ -47,18 +44,17 @@ describe('render-chosen', () => {
     const setChosenMock = jest.fn();
     const setShowChosenMock = jest.fn();
 
-    render(
+    renderWithProviders(
       <RenderChosen
         chosen={[chosen[0]]}
         setChosen={setChosenMock}
         setShowChosen={setShowChosenMock}
         chipLabel={'chipLabel'}
-      />,
-      { wrapper: themeProvider }
+      />
     );
 
     expect(screen.getByText('chosen1')).toBeInTheDocument();
-    userEvent.click(screen.getByText('chosen1'));
+    fireEvent.click(screen.getByText('chosen1'));
 
     expect(setChosenMock).toHaveBeenCalledTimes(1);
     expect(setShowChosenMock).toHaveBeenCalledTimes(1);

@@ -1,7 +1,5 @@
-import { makeStore } from '@app/store';
-import { getMockContext, themeProvider } from '@app/tests/test-utils';
-import { render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
+import { renderWithProviders } from '@app/tests/test-utils';
+import { screen } from '@testing-library/react';
 import ConceptImportModal from './concept-import-modal';
 
 describe('info-file', () => {
@@ -14,23 +12,16 @@ describe('info-file', () => {
   });
 
   it('should render components', () => {
-    const store = makeStore(getMockContext());
-
     const mockRefetch = jest.fn();
     const mockSetVisible = jest.fn();
 
-    render(
-      <Provider store={store}>
-        <ConceptImportModal
-          visible
-          setVisible={mockSetVisible}
-          terminologyId="testID"
-          refetch={mockRefetch}
-        />
-      </Provider>,
-      {
-        wrapper: themeProvider,
-      }
+    renderWithProviders(
+      <ConceptImportModal
+        visible
+        setVisible={mockSetVisible}
+        terminologyId="testID"
+        refetch={mockRefetch}
+      />
     );
 
     expect(screen.getByText('tr-import-concepts')).toBeInTheDocument();

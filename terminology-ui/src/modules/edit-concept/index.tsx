@@ -1,11 +1,6 @@
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import PropertyValue from '@app/common/components/property-value';
-import {
-  MainTitle,
-  SubTitle,
-  BadgeBar,
-  Badge,
-} from 'yti-common-ui/title-block';
+import { MainTitle, SubTitle, BadgeBar } from 'yti-common-ui/title-block';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';
@@ -36,6 +31,9 @@ import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-b
 import validateForm, { FormError } from './validate-form';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { translateStatus } from '@app/common/utils/translation-helpers';
+import { v4 } from 'uuid';
+import { StatusChip } from 'yti-common-ui/status-chip';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -60,7 +58,10 @@ export default function EditConcept({
     useGetAuthenticatedUserMutMutation();
 
   const [languages] = useState(
-    terminology?.properties.language?.map(({ value }) => value) ?? []
+    terminology?.properties.language
+      ?.slice()
+      .sort((a, b) => compareLocales(a.value, b.value))
+      .map(({ value }) => value) ?? []
   );
   const [preferredTerms] = useState<
     {
@@ -140,6 +141,19 @@ export default function EditConcept({
     }
   }, [addConceptStatus, postedData, terminologyId, router]);
 
+  useEffect(() => {
+    if (formData.terms.some((term) => term.id === '')) {
+      setFormData({
+        ...formData,
+        terms: formData.terms.map((term) => ({
+          ...term,
+          id: v4(),
+        })),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (preferredTerms.length < 1) {
     return (
       <>
@@ -211,9 +225,9 @@ export default function EditConcept({
         <BadgeBar>
           {t('heading')}
           <PropertyValue property={terminology?.properties.prefLabel} />
-          <Badge $isValid={formData.basicInformation.status === 'VALID'}>
+          <StatusChip status={formData.basicInformation.status}>
             {translateStatus(formData.basicInformation.status, t)}
-          </Badge>
+          </StatusChip>
         </BadgeBar>
         <PageHelpText>{t('new-concept-page-help')}</PageHelpText>
 

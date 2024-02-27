@@ -1,19 +1,28 @@
+import LargeModal from '@app/common/components/large-modal';
+import {
+  selectDisplayGraphHasChanges,
+  selectGraphHasChanges,
+  setDisplayGraphHasChanges,
+} from '@app/common/components/model/model.slice';
 import MultiColumnSearch from '@app/common/components/multi-column-search';
 import { ResultType } from '@app/common/components/resource-list';
 import {
   InternalResourcesSearchParams,
+  initialSearchData,
   useGetInternalResourcesInfoMutation,
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
-import WideModal from '@app/common/components/wide-modal';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { UriData } from '@app/common/interfaces/uri.interface';
 import {
   translateResourceAddition,
   translateResourceName,
-  translateStatus,
 } from '@app/common/utils/translation-helpers';
+import { mapInternalClassInfoToResultType } from '@app/modules/class-restriction-modal/utils';
+import UnsavedAlertModal from '@app/modules/unsaved-alert-modal';
+import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   Button,
   IconPlus,
@@ -21,8 +30,6 @@ import {
   ModalFooter,
   ModalTitle,
 } from 'suomifi-ui-components';
-import format from 'yti-common-ui/formatted-date/format';
-import { Locale } from 'yti-common-ui/locale-chooser/use-locales';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 
 interface ResourceModalProps {
@@ -31,10 +38,14 @@ interface ResourceModalProps {
   buttonTranslations: {
     useSelected: string;
     createNew?: string;
+    openButton?: string;
   };
-  handleFollowUp: (value?: { label: string; uri: string }) => void;
+  handleFollowUp: (value?: UriData) => void;
+  defaultSelected?: string;
   buttonIcon?: boolean;
   applicationProfile?: boolean;
+  buttonVariant?: 'secondary' | 'secondaryNoBorder';
+  hiddenResources?: string[];
 }
 
 export default function ResourceModal({
@@ -42,28 +53,27 @@ export default function ResourceModal({
   type,
   buttonTranslations,
   handleFollowUp,
+  defaultSelected,
   buttonIcon,
   applicationProfile,
+  buttonVariant,
+  hiddenResources,
 }: ResourceModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
+  const dispatch = useStoreDispatch();
+  const displayGraphHasChanges = useSelector(selectDisplayGraphHasChanges());
+  const graphHasChanges = useSelector(selectGraphHasChanges());
   const [visible, setVisible] = useState(false);
-  const [selectedId, setSelectedId] = useState('');
+  const [selectedId, setSelectedId] = useState(
+    defaultSelected ? defaultSelected : ''
+  );
   const [contentLanguage, setContentLanguage] = useState<string>();
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [searchParams, setSearchParams] =
-    useState<InternalResourcesSearchParams>({
-      query: '',
-      status: ['VALID', 'DRAFT'],
-      groups: [],
-      sortLang: i18n.language,
-      pageSize: 50,
-      pageFrom: 0,
-      limitToDataModel: modelId,
-      limitToModelType: 'LIBRARY',
-      fromAddedNamespaces: true,
-      resourceTypes: [type],
-    });
+    useState<InternalResourcesSearchParams>(
+      initialSearchData(i18n.language, modelId, type)
+    );
   const [searchInternalResources, result] =
     useGetInternalResourcesInfoMutation();
 
@@ -78,120 +88,82 @@ export default function ResourceModal({
   const handleOpen = () => {
     setVisible(true);
     handleSearch();
+
+    if (defaultSelected && defaultSelected !== selectedId) {
+      setSelectedId(defaultSelected);
+    }
+  };
+
+  const handleOpenClick = () => {
+    if (graphHasChanges) {
+      dispatch(setDisplayGraphHasChanges(true));
+      return;
+    }
+
+    handleOpen();
   };
 
   const handleClose = () => {
-    setSearchParams({
-      query: '',
-      status: ['VALID', 'DRAFT'],
-      groups: [],
-      sortLang: i18n.language,
-      pageSize: 50,
-      pageFrom: 0,
-      limitToDataModel: modelId,
-      limitToModelType: 'LIBRARY',
-      resourceTypes: [type],
-    });
+    setSearchParams(initialSearchData(i18n.language, modelId, type));
     setContentLanguage(undefined);
     setVisible(false);
+    setSelectedId('');
   };
 
   const handleSubmit = () => {
     if (!selectedId || selectedId === '' || !result.data) {
       handleFollowUp();
+      handleClose();
       return;
     }
 
     const selectedObj = result.data.responseObjects.find(
-      (obj) => obj.identifier === selectedId
+      (obj) => obj.id === selectedId
     );
 
     if (selectedObj) {
-      const domain =
-        selectedObj.namespace[selectedObj.namespace.length - 1] === '/'
-          ? selectedObj.namespace.slice(0, -1)?.split('/').pop()
-          : selectedObj.namespace.split('/').pop();
       handleFollowUp({
-        label: `${domain}:${selectedObj.identifier}`,
         uri: selectedObj.id,
+        curie: selectedObj.curie,
+        label: selectedObj.label,
       });
-    } else {
-      handleClose();
     }
-  };
-
-  const getLinkLabel = (ns: string, id: string) => {
-    const namespace =
-      ns
-        .split('/')
-        .filter((val) => val !== '')
-        .pop()
-        ?.replace('#', '') ?? ns;
-    return `${namespace}:${id}`;
+    handleClose();
   };
 
   useEffect(() => {
     if (result.isSuccess) {
       setResultsFormatted(
-        result.data.responseObjects.map((r) => ({
-          target: {
-            identifier: r.id,
-            label: getLanguageVersion({
-              data: r.label,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-            linkLabel: getLinkLabel(r.namespace, r.identifier),
-            link: r.id,
-            status: translateStatus(r.status, t),
-            isValid: r.status === 'VALID',
-            modified: format(r.modified, (i18n.language as Locale) ?? 'fi'),
-            note: getLanguageVersion({
-              data: r.note,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-          },
-          partOf: {
-            label: getLanguageVersion({
-              data: r.dataModelInfo.label,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-            type: r.dataModelInfo.modelType,
-            domains: r.dataModelInfo.groups,
-            uri: r.dataModelInfo.uri,
-          },
-          subClass: {
-            label: getLanguageVersion({
-              data: r.conceptInfo?.conceptLabel,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-            link: r.conceptInfo?.conceptURI,
-            partOf: getLanguageVersion({
-              data: r.conceptInfo?.terminologyLabel,
-              lang: contentLanguage ?? i18n.language,
-              appendLocale: true,
-            }),
-          },
-        }))
+        result.data.responseObjects
+          .filter((r) => !hiddenResources?.includes(r.id))
+          .map((r) =>
+            mapInternalClassInfoToResultType(
+              r,
+              contentLanguage ?? i18n.language
+            )
+          )
       );
     }
-  }, [result, i18n.language, contentLanguage, t]);
+  }, [result, i18n.language, contentLanguage, t, hiddenResources]);
 
   return (
-    <div>
+    <>
       <Button
-        variant="secondary"
+        variant={buttonVariant ?? 'secondary'}
         icon={buttonIcon ? <IconPlus /> : undefined}
-        onClick={() => handleOpen()}
+        onClick={() => handleOpenClick()}
         id="add-resource-button"
       >
-        {translateResourceAddition(type, t)}
+        {buttonTranslations.openButton ??
+          translateResourceAddition(type, t, applicationProfile)}
       </Button>
 
-      <WideModal
+      <UnsavedAlertModal
+        visible={displayGraphHasChanges}
+        handleFollowUp={() => handleOpen()}
+      />
+
+      <LargeModal
         appElementId="__next"
         visible={visible}
         variant={isSmall ? 'smallScreen' : 'default'}
@@ -200,9 +172,13 @@ export default function ResourceModal({
         <ModalContent>
           <ModalTitle>{translateResourceAddition(type, t)}</ModalTitle>
           <MultiColumnSearch
-            primaryColumnName={translateResourceName(type, t)}
+            primaryColumnName={translateResourceName(
+              type,
+              t,
+              applicationProfile
+            )}
             result={{
-              totalHitCount: result.data?.totalHitCount ?? 0,
+              totalHitCount: resultsFormatted.length,
               items: resultsFormatted,
             }}
             selectedId={selectedId}
@@ -210,7 +186,6 @@ export default function ResourceModal({
             searchParams={searchParams}
             setSearchParams={handleSearch}
             setContentLanguage={setContentLanguage}
-            applicationProfile={applicationProfile}
             languageVersioned
             modelId={modelId}
           />
@@ -245,7 +220,7 @@ export default function ResourceModal({
             {t('cancel-variant')}
           </Button>
         </ModalFooter>
-      </WideModal>
-    </div>
+      </LargeModal>
+    </>
   );
 }

@@ -2,6 +2,7 @@ import { Status } from './status.interface';
 
 export interface ModelType {
   type: 'LIBRARY' | 'PROFILE';
+  uri: string;
   prefix: string;
   status: Status;
   label: { [key: string]: string };
@@ -11,14 +12,15 @@ export interface ModelType {
   organizations: Organization[];
   groups: Group[];
   contact: string;
-  internalNamespaces: string[];
-  externalNamespaces: {
-    name: string;
-    namespace: string;
-    prefix: string;
-  }[];
+  internalNamespaces: InternalNamespace[];
+  externalNamespaces: ExternalNamespace[];
   terminologies: ModelTerminology[];
   codeLists: ModelCodeList[];
+  links: {
+    description: { [key: string]: string };
+    name: { [key: string]: string };
+    uri: string;
+  }[];
   created: string;
   creator: {
     id: string;
@@ -29,6 +31,20 @@ export interface ModelType {
     id: string;
     name: string;
   };
+  version?: string;
+  versionIri?: string;
+}
+
+export interface InternalNamespace {
+  name: { [key: string]: string };
+  namespace: string;
+  prefix: string;
+}
+
+export interface ExternalNamespace {
+  name: { [key: string]: string };
+  namespace: string;
+  prefix: string;
 }
 
 export interface Group {
@@ -45,10 +61,10 @@ export interface Organization {
 
 // Note: This might need a more descriptive name
 export interface Link {
+  description: { [key: string]: string };
+  name: { [key: string]: string };
+  uri: string;
   id: string;
-  description: LangObject;
-  homepage: string;
-  title: LangObject;
 }
 
 export interface ModelTerminology {
@@ -87,7 +103,6 @@ export interface LangObject {
 }
 
 export interface ModelUpdatePayload {
-  status: string;
   label: { [key: string]: string };
   description: { [key: string]: string };
   languages: string[];
@@ -95,7 +110,7 @@ export interface ModelUpdatePayload {
   groups: string[];
   internalNamespaces: string[];
   externalNamespaces: {
-    name: string;
+    name: { [key: string]: string };
     namespace: string;
     prefix: string;
   }[];
@@ -103,4 +118,24 @@ export interface ModelUpdatePayload {
   codeLists: string[];
   documentation: { [key: string]: string };
   contact: string;
+  links: {
+    description: { [key: string]: string };
+    name: { [key: string]: string };
+    uri: string;
+  }[];
+}
+
+export interface VersionedModelUpdatePayload {
+  label: { [key: string]: string };
+  description: { [key: string]: string };
+  organizations: string[];
+  groups: string[];
+  contact: string;
+  documentation: { [key: string]: string };
+  links: {
+    description: { [key: string]: string };
+    name: { [key: string]: string };
+    uri: string;
+  }[];
+  status: Status;
 }

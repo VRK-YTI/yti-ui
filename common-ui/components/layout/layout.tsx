@@ -25,6 +25,9 @@ export default function Layout({
   matomo,
   alerts,
   fullScreenElements,
+  headerHidden,
+  langPickerHidden,
+  hideSv,
 }: {
   children: React.ReactNode;
   feedbackSubject?: string;
@@ -33,10 +36,22 @@ export default function Layout({
   matomo?: React.ReactNode;
   alerts?: React.ReactNode;
   fullScreenElements?: React.ReactNode;
+  headerHidden?: boolean;
+  langPickerHidden?: boolean;
+  hideSv?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
   const { publicRuntimeConfig } = getConfig();
+
+  if (headerHidden) {
+    return (
+      <ThemeProvider theme={lightTheme}>
+        {matomo && matomo}
+        <div style={{ minWidth: '100vw', minHeight: '100vh' }}>{children}</div>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider theme={lightTheme}>
@@ -49,6 +64,8 @@ export default function Layout({
             user={user}
             fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
             fullScreenElements={fullScreenElements}
+            langPickerHidden={langPickerHidden}
+            hideSv={hideSv}
           />
 
           <ContentContainer
@@ -62,6 +79,7 @@ export default function Layout({
           <SmartHeader
             user={user}
             fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
+            hideSv={hideSv}
           />
 
           <ContentContainer>

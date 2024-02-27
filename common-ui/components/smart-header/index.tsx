@@ -28,10 +28,14 @@ export default function SmartHeader({
   user,
   fakeableUsers,
   fullScreenElements,
+  langPickerHidden,
+  hideSv,
 }: {
   user?: User;
   fakeableUsers?: FakeableUser[];
   fullScreenElements?: React.ReactNode;
+  langPickerHidden?: boolean;
+  hideSv?: boolean;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -92,6 +96,7 @@ export default function SmartHeader({
             handleLoginModalClick={handleLoginModalClick}
             isLoggedIn={!user?.anonymous ?? false}
             fakeableUsers={fakeableUsers}
+            hideSv={hideSv}
           />
         </NavigationContainer>
       </Block>
@@ -120,7 +125,7 @@ export default function SmartHeader({
             <HeaderWrapper $breakpoint={breakpoint}>
               {renderLogo()}
               {renderHeaderSearch()}
-              {renderDesktopLocaleChooser()}
+              {!langPickerHidden && renderDesktopLocaleChooser()}
               {renderMobileNavigationToggleButton()}
               {renderDesktopAuthenticationPanel()}
             </HeaderWrapper>
@@ -143,7 +148,7 @@ export default function SmartHeader({
             <div
               style={{ display: 'flex', padding: '20px 20px 0 0', gap: '10px' }}
             >
-              {renderDesktopLocaleChooser()}
+              {!langPickerHidden && renderDesktopLocaleChooser()}
               {renderMobileNavigationToggleButton()}
               {renderDesktopAuthenticationPanel()}
             </div>
@@ -174,6 +179,7 @@ export default function SmartHeader({
       return (
         <DesktopLocaleChooser
           noFlex={typeof fullScreenElements !== 'undefined'}
+          hideSv={hideSv}
         />
       );
     }

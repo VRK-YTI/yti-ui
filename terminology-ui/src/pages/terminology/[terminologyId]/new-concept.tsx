@@ -15,12 +15,14 @@ import {
   getVocabulary,
   getRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
+import { wrapper } from '@app/store';
 
 interface NewConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
 export default function NewConcept(props: NewConceptPageProps) {
+  wrapper.useHydration(props);
   const { t } = useTranslation('admin');
   const { query } = useRouter();
 

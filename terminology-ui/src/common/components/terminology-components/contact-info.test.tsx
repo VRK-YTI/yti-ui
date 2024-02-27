@@ -1,21 +1,20 @@
-import { themeProvider } from 'yti-common-ui/utils/test-utils';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, screen } from '@testing-library/react';
 import ContactInfo from './contact-info';
+import { renderWithProviders } from '@app/tests/test-utils';
 
 describe('contact-info', () => {
   it('should take input', () => {
     const mockUpdate = jest.fn();
 
-    render(<ContactInfo update={mockUpdate} userPosted={false} />, {
-      wrapper: themeProvider,
-    });
+    renderWithProviders(<ContactInfo update={mockUpdate} userPosted={false} />);
 
-    userEvent.click(
-      screen.getByPlaceholderText('tr-contact-visual-placeholder')
+    const contactEl = screen.getByPlaceholderText(
+      'tr-contact-visual-placeholder'
     );
-    userEvent.keyboard('admin@email.org');
-    userEvent.click(screen.getByText('tr-contact-information'));
+
+    fireEvent.click(contactEl);
+    fireEvent.change(contactEl, { target: { value: 'admin@email.org' } });
+    fireEvent.focusOut(contactEl);
 
     expect(mockUpdate).toHaveBeenCalledTimes(1);
     expect(mockUpdate).toHaveBeenCalledWith({
@@ -27,15 +26,12 @@ describe('contact-info', () => {
   it('should show initial data', () => {
     const mockUpdate = jest.fn();
 
-    render(
+    renderWithProviders(
       <ContactInfo
         defaultValue="test contact info"
         update={mockUpdate}
         userPosted={false}
-      />,
-      {
-        wrapper: themeProvider,
-      }
+      />
     );
 
     expect(screen.getByDisplayValue('test contact info')).toBeInTheDocument();

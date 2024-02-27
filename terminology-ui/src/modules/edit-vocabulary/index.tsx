@@ -34,7 +34,6 @@ import {
 import generateInitialData from './generate-initial-data';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import {
-  StatusChip,
   TitleType,
   TitleTypeAndStatusWrapper,
 } from 'yti-common-ui/title/title.styles';
@@ -42,6 +41,7 @@ import { translateTerminologyType } from '@app/common/utils/translation-helpers'
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
 import { setTitle } from '@app/common/components/title/title.slice';
+import { StatusChip } from 'yti-common-ui/status-chip';
 
 interface EditVocabularyProps {
   terminologyId: string;
@@ -55,7 +55,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
     id: terminologyId,
   });
   const user = useSelector(selectLogin());
-  const [data, setData] = useState(generateInitialData(i18n.language, t, info));
+  const [data, setData] = useState(generateInitialData(i18n.language, info));
   const [isValid, setIsValid] = useState(true);
   const [userPosted, setUserPosted] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
@@ -152,11 +152,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
             </TitleType>{' '}
             &middot;
             <StatusChip
-              valid={
-                info?.properties.status?.[0].value === 'VALID'
-                  ? 'true'
-                  : undefined
-              }
+              status={info?.properties.status?.[0].value ?? 'DRAFT'}
               id="status-chip"
             >
               {translateStatus(

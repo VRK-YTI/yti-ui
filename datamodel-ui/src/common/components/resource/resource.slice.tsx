@@ -1,95 +1,58 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
-import {
-  AssociationFormType,
-  initialAssociation,
-} from '@app/common/interfaces/association-form.interface';
-import {
-  AttributeFormType,
-  initialAttribute,
-} from '@app/common/interfaces/attribute-form.interface';
 import { Resource } from '@app/common/interfaces/resource.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import {
+  ResourceFormType,
+  initialAttribute,
+  initialAssociation,
+  initialAppAssociation,
+  initialAppAttribute,
+} from '@app/common/interfaces/resource-form.interface';
+import {
+  DEFAULT_ASSOCIATION_SUBPROPERTY,
+  DEFAULT_ATTRIBUTE_SUBPROPERTY,
+  convertToPayload,
+  pathForResourceType,
+} from './utils';
+import { pathForModelType } from '@app/common/utils/api-utils';
+import { UriData } from '@app/common/interfaces/uri.interface';
+import { ResourceReferencesResult } from '@app/common/interfaces/resource-reference.interface';
 
-function convertToPUT(
-  data: AssociationFormType | AttributeFormType,
-  isEdit: boolean
-): object {
-  const removeKeys: string[] = isEdit
-    ? ['identifier', 'type', 'concept']
-    : ['concept'];
-
-  const ret = Object.fromEntries(
-    Object.entries(data).filter((e) => !removeKeys.includes(e[0]))
-  );
-
-  if (!data.concept) {
-    return ret;
-  }
-
-  return {
-    ...ret,
-    subject: data.concept.conceptURI,
-  };
+interface ResourceData {
+  modelId: string;
+  data: ResourceFormType;
+  applicationProfile?: boolean;
 }
-
-function pathForModelType(isApplicationProfile?: boolean) {
-  return isApplicationProfile ? 'profile/' : 'library/';
-}
-
-function pathForResourceType(
-  type: ResourceType,
-  isApplicationProfile?: boolean
-) {
-  if (isApplicationProfile) {
-    return '';
-  }
-  return type === ResourceType.ATTRIBUTE ? '/attribute' : '/association';
-}
-
 export const resourceApi = createApi({
   reducerPath: 'resourceApi',
   baseQuery: getDatamodelApiBaseQuery((headers) => ({
     ...headers,
     accept: 'application/json',
   })),
-  tagTypes: ['resource'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
+  tagTypes: ['Resource'],
   endpoints: (builder) => ({
-    putResource: builder.mutation<
-      null,
-      {
-        modelId: string;
-        data: AssociationFormType | AttributeFormType;
-        resourceId?: string;
-        applicationProfile?: boolean;
-      }
-    >({
+    updateResource: builder.mutation<null, ResourceData>({
       query: (value) => ({
-        url: !value.resourceId
-          ? `/resource/${pathForModelType(value.applicationProfile)}${
-              value.modelId
-            }${pathForResourceType(value.data.type, value.applicationProfile)}`
-          : `/resource/${pathForModelType(value.applicationProfile)}${
-              value.modelId
-            }${pathForResourceType(
-              value.data.type,
-              value.applicationProfile
-            )}/${value.resourceId}`,
+        url: `/resource/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }${pathForResourceType(value.data.type)}/${value.data.identifier}`,
         method: 'PUT',
-        data: {
-          ...convertToPUT(value.data, value.resourceId ? true : false),
-          domain: value.data.domain ? value.data.domain.id : '',
-          range: value.data.range ? value.data.range.id : '',
-        },
+        data: convertToPayload(value.data, true, value.applicationProfile),
       }),
+      invalidatesTags: ['Resource'],
+    }),
+    createResource: builder.mutation<null, ResourceData>({
+      query: (value) => ({
+        url: `/resource/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }${pathForResourceType(value.data.type)}`,
+        method: 'POST',
+        data: convertToPayload(value.data, false, value.applicationProfile),
+      }),
+      invalidatesTags: ['Resource'],
     }),
     getResource: builder.query<
       Resource,
@@ -97,14 +60,19 @@ export const resourceApi = createApi({
         modelId: string;
         resourceIdentifier: string;
         applicationProfile?: boolean;
+        version?: string;
       }
     >({
       query: (value) => ({
         url: `/resource/${pathForModelType(value.applicationProfile)}${
           value.modelId
         }/${value.resourceIdentifier}`,
+        params: {
+          ...(value.version && { version: value.version }),
+        },
         method: 'GET',
       }),
+      providesTags: ['Resource'],
     }),
     deleteResource: builder.mutation<
       string,
@@ -117,7 +85,7 @@ export const resourceApi = createApi({
         method: 'DELETE',
       }),
     }),
-    getResourceIdentifierFree: builder.query<
+    getResourceExists: builder.query<
       boolean,
       {
         prefix: string;
@@ -125,89 +93,176 @@ export const resourceApi = createApi({
       }
     >({
       query: (props) => ({
-        url: `/resource/${props.prefix}/free-identifier/${props.identifier}`,
+        url: `/resource/${props.prefix}/${props.identifier}/exists`,
         method: 'GET',
       }),
+      providesTags: ['Resource'],
+    }),
+    getResourceActive: builder.query<
+      boolean,
+      { prefix: string; uri: string; version?: string }
+    >({
+      query: (props) => ({
+        url: `/resource/profile/${props.prefix}/active?uri=${props.uri}`,
+        params: {
+          ...(props.version && { version: props.version }),
+        },
+        method: 'GET',
+      }),
+      providesTags: ['Resource'],
+    }),
+    togglePropertyShape: builder.mutation<
+      string,
+      { modelId: string; uri: string }
+    >({
+      query: (props) => ({
+        url: `/class/toggle-deactivate/${props.modelId}?propertyUri=${props.uri}`,
+        method: 'PUT',
+      }),
+    }),
+    makeLocalCopyPropertyShape: builder.mutation<
+      null,
+      {
+        modelid: string;
+        resourceId: string;
+        targetPrefix: string;
+        newIdentifier: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/resource/profile/${value.modelid}/${value.resourceId}/copy?targetPrefix=${value.targetPrefix}&newIdentifier=${value.newIdentifier}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['Resource'],
+    }),
+    renameResource: builder.mutation<
+      string,
+      {
+        prefix: string;
+        identifier: string;
+        newIdentifier: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/resource/${value.prefix}/${value.identifier}/rename`,
+        params: {
+          newIdentifier: value.newIdentifier,
+        },
+        method: 'POST',
+      }),
+      invalidatesTags: ['Resource'],
+    }),
+    getResourceReferences: builder.query<
+      ResourceReferencesResult,
+      { uri: string }
+    >({
+      query: (props) => ({
+        url: '/resource/references',
+        params: {
+          uri: props.uri,
+        },
+        method: 'GET',
+      }),
+      providesTags: ['Resource'],
     }),
   }),
 });
 
 function resourceInitialData(
   type: ResourceType,
-  languages?: string[],
-  initialSubResourceOf?: string
-): AssociationFormType | AttributeFormType {
-  let retValue = {} as AssociationFormType | AttributeFormType;
-
-  if (!initialSubResourceOf) {
-    retValue =
+  initialReferenceResource?: UriData,
+  applicationProfile?: boolean
+): ResourceFormType {
+  if (applicationProfile) {
+    const initialData =
       type === ResourceType.ASSOCIATION
-        ? { ...initialAssociation, subResourceOf: ['owl:TopObjectProperty'] }
-        : { ...initialAttribute, subResourceOf: ['owl:topDataProperty'] };
+        ? initialAppAssociation
+        : initialAppAttribute;
+    return {
+      ...initialData,
+      path: initialReferenceResource,
+    };
   } else {
-    retValue =
-      type === ResourceType.ASSOCIATION
-        ? { ...initialAssociation, subResourceOf: [initialSubResourceOf] }
-        : { ...initialAttribute, subResourceOf: [initialSubResourceOf] };
-  }
-
-  if (languages) {
-    retValue = {
-      ...retValue,
-      label: Object.fromEntries(languages.map((lang) => [lang, ''])),
+    if (type === ResourceType.ASSOCIATION) {
+      return {
+        ...initialAssociation,
+        subResourceOf: [
+          initialReferenceResource ?? DEFAULT_ASSOCIATION_SUBPROPERTY,
+        ],
+      };
+    }
+    return {
+      ...initialAttribute,
+      subResourceOf: [
+        initialReferenceResource ?? DEFAULT_ATTRIBUTE_SUBPROPERTY,
+      ],
     };
   }
-
-  return retValue;
 }
 
 export const resourceSlice = createSlice({
   name: 'resource',
-  initialState: resourceInitialData(ResourceType.ASSOCIATION),
+  initialState: {
+    label: {},
+    identifier: '',
+    note: {},
+    status: 'DRAFT',
+    type: ResourceType.ASSOCIATION,
+  } as ResourceFormType,
   reducers: {
-    setResource(state, action) {
-      return {
-        ...state,
-        ...action.payload,
-      };
+    setResource(_state, action) {
+      return action.payload;
     },
   },
 });
 
 export function selectResource() {
-  return (state: AppState) => state.resource;
+  return (state: AppState): ResourceFormType => state.resource;
 }
 
-export function setResource(
-  data: AssociationFormType | AttributeFormType
-): AppThunk {
+export function setResource(data: ResourceFormType): AppThunk {
   return (dispatch) => dispatch(resourceSlice.actions.setResource(data));
 }
 
 export function initializeResource(
   type: ResourceType,
-  langs: string[],
-  initialSubResourceOf?: string
+  initialReferenceResource?: UriData,
+  applicationProfile?: boolean
 ): AppThunk {
   return (dispatch) =>
     dispatch(
       resourceSlice.actions.setResource(
-        resourceInitialData(type, langs, initialSubResourceOf)
+        resourceInitialData(type, initialReferenceResource, applicationProfile)
       )
     );
 }
 
 export function resetResource(): AppThunk {
   return (dispatch) =>
-    dispatch(resourceSlice.actions.setResource(initialAssociation));
+    dispatch(
+      resourceSlice.actions.setResource({
+        label: {},
+        identifier: '',
+        note: {},
+        status: 'DRAFT',
+        type: ResourceType.ASSOCIATION,
+      } as ResourceFormType)
+    );
 }
 
-export const { putResource, getResource } = resourceApi.endpoints;
+export const { updateResource, createResource, getResource } =
+  resourceApi.endpoints;
 
 export const {
-  usePutResourceMutation,
+  useUpdateResourceMutation,
+  useCreateResourceMutation,
   useGetResourceQuery,
   useDeleteResourceMutation,
-  useGetResourceIdentifierFreeQuery,
+  useGetResourceExistsQuery,
+  useGetResourceActiveQuery,
+  useTogglePropertyShapeMutation,
+  useMakeLocalCopyPropertyShapeMutation,
+  useRenameResourceMutation,
+  useGetResourceReferencesQuery,
   util: { getRunningQueriesThunk, getRunningMutationsThunk },
 } = resourceApi;

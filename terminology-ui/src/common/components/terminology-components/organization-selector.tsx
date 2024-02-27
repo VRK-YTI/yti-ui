@@ -8,8 +8,10 @@ import {
 } from './terminology-components.styles';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
-import { useEffect, useState } from 'react';
-import HasPermission from '@app/common/utils/has-permission';
+import { useEffect, useMemo, useState } from 'react';
+import { checkPermission } from '@app/common/utils/has-permission';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '../login/login.slice';
 
 export interface OrganizationSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
@@ -26,7 +28,15 @@ export default function OrganizationSelector({
 }: OrganizationSelectorProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
-  const { data: organizations } = useGetOrganizationsQuery(i18n.language);
+  const user = useSelector(selectLogin());
+  const {
+    data: organizations,
+    isLoading,
+    isError,
+  } = useGetOrganizationsQuery({
+    language: i18n.language,
+    showChildOrganizations: true,
+  });
   const [selectedOrganizations, setSelectedOrganizations] = useState<
     MultiSelectData[]
   >(
@@ -38,30 +48,37 @@ export default function OrganizationSelector({
       : []
   );
 
-  const adminOrgs: MultiSelectData[] = organizations
-    ?.map((org) => {
-      if (
-        HasPermission({
-          actions: ['CREATE_TERMINOLOGY'],
-          targetOrganization: org.id.toString(),
-        })
-      ) {
-        const orgName = org.properties.prefLabel.value;
+  const adminOrgs: MultiSelectData[] = useMemo(() => {
+    if (isLoading || isError) {
+      return [];
+    }
 
-        if (orgName) {
-          return {
-            name: orgName,
-            labelText: orgName,
-            uniqueItemId: org.id,
-            organizationId: org.type.graph.id,
-          } as MultiSelectData;
+    return organizations
+      ?.map((org) => {
+        if (
+          checkPermission({
+            user: user,
+            actions: ['CREATE_TERMINOLOGY'],
+            targetOrganizations: [org.id.toString()],
+          })
+        ) {
+          const orgName = org.properties.prefLabel.value;
+
+          if (orgName) {
+            return {
+              name: orgName,
+              labelText: orgName,
+              uniqueItemId: org.id,
+              organizationId: org.type.graph.id,
+            } as MultiSelectData;
+          }
         }
-      }
-    })
-    .filter((org) => org) as MultiSelectData[];
+      })
+      .filter((org) => org) as MultiSelectData[];
+  }, [organizations, isLoading, isError, user]);
 
   useEffect(() => {
-    if (adminOrgs.length === 1 && selectedOrganizations.length === 0) {
+    if (adminOrgs?.length === 1 && selectedOrganizations.length === 0) {
       setSelectedOrganizations(adminOrgs);
       update({ key: 'contributors', data: adminOrgs });
     }
@@ -74,7 +91,7 @@ export default function OrganizationSelector({
 
   return (
     <BlankFieldset>
-      {adminOrgs.length > 1 ? (
+      {adminOrgs?.length > 1 ? (
         <MultiselectSmBot
           labelText={t('orgs-label-text')}
           hintText={t('org-hint-text')}
@@ -105,8 +122,8 @@ export default function OrganizationSelector({
               {t('content-creator')}
             </Text>
           </Paragraph>
-          <Paragraph marginBottomSpacing="m">
-            <Text smallScreen>{adminOrgs[0].labelText}</Text>
+          <Paragraph mb="m">
+            <Text smallScreen>{adminOrgs[0]?.labelText}</Text>
           </Paragraph>
         </>
       )}

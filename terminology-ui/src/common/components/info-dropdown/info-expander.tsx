@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import {
   Button,
@@ -30,7 +30,6 @@ import {
   translateLanguage,
   translateTerminologyType,
 } from '@app/common/utils/translation-helpers';
-import Link from 'next/link';
 import { getPropertyValue } from '../property-value/get-property-value';
 import PropertyValue from '../property-value';
 import RemovalModal from '../removal-modal';
@@ -44,6 +43,8 @@ import { setAlert } from '../alert/alert.slice';
 import UpdateWithFileModal from '../update-with-file-modal';
 import StatusMassEdit from '../status-mass-edit';
 import isEmail from 'validator/lib/isEmail';
+import { useRouter } from 'next/router';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
@@ -52,11 +53,16 @@ const CopyTerminologyModal = dynamic(() => import('../copy-terminology-modal'));
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;
+  childOrganizations?: string[];
 }
 
-export default function InfoExpander({ data }: InfoExpanderProps) {
+export default function InfoExpander({
+  data,
+  childOrganizations,
+}: InfoExpanderProps) {
   const { t, i18n } = useTranslation('common');
   const { urlState } = useUrlState();
+  const router = useRouter();
   const user = useSelector(selectLogin());
   const terminologyId =
     data?.type?.graph.id ?? data?.identifier?.type.graph?.id ?? '';
@@ -65,6 +71,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
     urlState,
     language: i18n.language,
   });
+
   const dispatch = useStoreDispatch();
 
   if (!data) {
@@ -130,6 +137,9 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           data={data.properties.description}
           id="description"
         />
+        <BasicBlock title="URI" id="uri">
+          {data.uri}
+        </BasicBlock>
         <BasicBlock
           title={t('vocabulary-info-information-domain')}
           id="information-domains"
@@ -146,7 +156,9 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
 
         <PropertyBlock
           title={t('vocabulary-info-languages')}
-          property={data.properties.language}
+          property={data.properties.language
+            ?.slice()
+            .sort((a, b) => compareLocales(a.value, b.value))}
           delimiter=", "
           valueAccessor={({ value }) => {
             // if no translation found for language, return only language code
@@ -194,15 +206,16 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
               extra={
                 <BasicBlockExtraWrapper>
                   <ActionBlock>
-                    <Link href={`/terminology/${terminologyId}/edit`}>
-                      <Button
-                        icon={<IconEdit />}
-                        variant="secondary"
-                        id="edit-terminology-button"
-                      >
-                        {t('edit-terminology', { ns: 'admin' })}
-                      </Button>
-                    </Link>
+                    <Button
+                      icon={<IconEdit />}
+                      variant="secondary"
+                      id="edit-terminology-button"
+                      onClick={() =>
+                        router.push(`/terminology/${terminologyId}/edit`)
+                      }
+                    >
+                      {t('edit-terminology', { ns: 'admin' })}
+                    </Button>
 
                     <UpdateWithFileModal />
 
@@ -251,15 +264,18 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                       terminologyId={terminologyId}
                     />
 
-                    <Link href={`/terminology/${terminologyId}/new-collection`}>
-                      <Button
-                        icon={<IconPlus />}
-                        variant="secondary"
-                        id="create-collection-button"
-                      >
-                        {t('add-new-collection', { ns: 'admin' })}
-                      </Button>
-                    </Link>
+                    <Button
+                      icon={<IconPlus />}
+                      variant="secondary"
+                      id="create-collection-button"
+                      onClick={() =>
+                        router.push(
+                          `/terminology/${terminologyId}/new-collection`
+                        )
+                      }
+                    >
+                      {t('add-new-collection', { ns: 'admin' })}
+                    </Button>
 
                     <StatusMassEdit terminologyId={terminologyId} />
                   </ActionBlock>
@@ -318,7 +334,12 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         <BasicBlock title={t('vocabulary-info-organization')} id="organization">
           <PropertyList>
             {data.references.contributor
-              ?.filter((c) => c && c.properties.prefLabel)
+              ?.filter(
+                (c) =>
+                  c &&
+                  c.properties.prefLabel &&
+                  !childOrganizations?.includes(c.id)
+              )
               .map((contributor) => (
                 <li key={contributor.id}>
                   <PropertyValue property={contributor?.properties.prefLabel} />
@@ -341,9 +362,6 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         <BasicBlock title={t('vocabulary-info-modified-at')} id="modified-at">
           <FormattedDate date={data.lastModifiedDate} />
           {data.lastModifiedBy && `, ${data.lastModifiedBy}`}
-        </BasicBlock>
-        <BasicBlock title="URI" id="uri">
-          {data.uri}
         </BasicBlock>
       </ExpanderContent>
     </InfoExpanderWrapper>

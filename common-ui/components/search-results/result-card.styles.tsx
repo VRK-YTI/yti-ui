@@ -1,12 +1,5 @@
 import styled from 'styled-components';
-import {
-  Block,
-  Heading,
-  Link,
-  Paragraph,
-  StaticChip,
-} from 'suomifi-ui-components';
-import { CardChipProps } from './search-count-tags.props';
+import { Block, Heading, Link, Paragraph } from 'suomifi-ui-components';
 
 export const CardBlock = styled(Block)`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
@@ -37,8 +30,10 @@ export const TitleLink = styled(Link)`
     padding-top: 6px;
   }
 
-  .fi-icon {
-    min-width: max-content;
+  &:visited {
+    h2 {
+      color: ${(props) => props.theme.suomifi.colors.accentTertiaryDark1};
+    }
   }
 `;
 
@@ -64,16 +59,4 @@ export const Description = styled.p`
 
 export const PartOf = styled.p`
   margin: ${(props) => props.theme.suomifi.spacing.xs} 0 0 0;
-`;
-
-export const Status = styled(StaticChip)<CardChipProps>`
-  background-color: ${(props) =>
-    props.valid
-      ? 'hsl(166, 90%, 30%)'
-      : props.theme.suomifi.colors.depthDark1} !important;
-  font-size: 12px;
-  line-height: 0;
-  padding: 0px 5px !important;
-  text-transform: uppercase;
-  vertical-align: bottom;
 `;

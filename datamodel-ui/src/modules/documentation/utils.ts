@@ -1,3 +1,6 @@
+import { translateLinkPlaceholder } from '@app/common/utils/translation-helpers';
+import { TFunction } from 'i18next';
+
 export function getRows(data: string): string[] {
   return data.split('\n');
 }
@@ -14,7 +17,9 @@ export function getAddNewLine(data: string, position: number): boolean {
 
 export function getSpecialCharacters(
   key: string,
-  addNewLine: boolean
+  addNewLine: boolean,
+  t: TFunction,
+  selectionData?: string
 ): [string, string] {
   switch (key) {
     case 'bold':
@@ -22,15 +27,23 @@ export function getSpecialCharacters(
     case 'italic':
       return ['*', '*'];
     case 'quote':
-      return ['>', ''];
+      return ['> ', ''];
     case 'listBulleted':
       return [addNewLine ? '\n- ' : '- ', ''];
     case 'listNumbered':
       return [addNewLine ? '\n1. ' : '1. ', ''];
     case 'link':
-      return ['[](http://)', ''];
+      return [
+        `[${selectionData ?? translateLinkPlaceholder('link', t)}](https://)`,
+        '',
+      ];
     case 'image':
-      return ['![]()', ''];
+      return [
+        `![${
+          selectionData ?? translateLinkPlaceholder('image', t)
+        } width:200px height:200px](https://)`,
+        '',
+      ];
     default:
       return ['', ''];
   }
@@ -42,8 +55,15 @@ export function injectSpecialCharacters(
     start: number;
     end: number;
   },
-  elem: [string, string]
+  elem: [string, string],
+  removeInitial?: boolean
 ): string {
+  if (removeInitial) {
+    return `${data.slice(0, selection.start)}${elem[0]}${data.slice(
+      selection.end
+    )}${elem[1]}`;
+  }
+
   return `${data.slice(0, selection.start)}${elem[0]}${data.slice(
     selection.start,
     selection.end

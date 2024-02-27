@@ -1,10 +1,9 @@
-import { Panel } from 'reactflow';
 import styled from 'styled-components';
 
-export const ModelPanel = styled(Panel)<{ $isSmall: boolean }>`
-  height: ${(props) => (props.$isSmall ? 'min-content' : '100%')};
-  position: absolute;
+export const ModelPanel = styled.div<{ $isSmall: boolean }>`
+  height: ${(props) => (props.$isSmall ? 'auto' : '100%')};
   display: flex;
+  z-index: 1;
 
   ${(props) =>
     props.$isSmall &&
@@ -20,6 +19,7 @@ export const ModelDrawerContainer = styled.div<{ $isSmall: boolean }>`
   position: sticky;
   display: flex;
   flex-direction: column;
+  padding-top: 2px;
 `;
 
 export const DrawerViewContainer = styled.div`

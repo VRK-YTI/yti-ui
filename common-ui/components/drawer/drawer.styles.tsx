@@ -60,16 +60,18 @@ export const DrawerContent = styled.div.attrs<{
     props.$isSmall &&
     props.$viewOpen &&
     `
+    z-index: 1;
     height: 100vh;
   `}
 
   /* This is necessary for <DrawerContentWrapper /> to align correctly */
+  transform: translate3d(0, 0, 0);
   -webkit-transform: translate3d(0, 0, 0);
 `;
 
 export const DrawerWrapper = styled.div<{ $open: boolean }>`
   min-height: min-content;
-  max-height: 100%;
+  max-height: calc(100% - 1px);
   height: 100%;
   width: ${(props) => (props.$open ? 'min-content' : '0')};
   display: flex;
@@ -78,12 +80,12 @@ export const DrawerWrapper = styled.div<{ $open: boolean }>`
     props.$open
       ? `1px solid ${props.theme.suomifi.colors.depthDark3}`
       : 'none'};
+  border-bottom: none;
 `;
 
 export const DrawerButtonGroup = styled.div<{ $isSmall: boolean }>`
   display: flex;
   flex-direction: ${(props) => (props.$isSmall ? 'row' : 'column')};
-  font: 12px;
   height: 100%;
   background: ${(props) => props.theme.suomifi.colors.highlightLight3};
 
@@ -100,10 +102,16 @@ export const DrawerButtonGroup = styled.div<{ $isSmall: boolean }>`
       }
       `
       : `
-  > button {
-    border-top: 1px solid ${props.theme.suomifi.colors.whiteBase} !important;
-    border-bottom: 1px solid ${props.theme.suomifi.colors.whiteBase} !important;
-  }
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      > button {
+        border-top: 1px solid ${props.theme.suomifi.colors.whiteBase} !important;
+        border-bottom: 1px solid ${props.theme.suomifi.colors.whiteBase} !important;
+        font-size: 12px;
+        padding: 20px 10px;
+        height: min-content;
+      }
   `}
 `;
 
@@ -131,9 +139,9 @@ export const ToolsButtonGroup = styled.div<{
 }>`
   padding: 6px 2px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 6px;
-  align-items: center;
+  align-items: flex-end;
   width: min-content;
 
   button {
@@ -142,6 +150,7 @@ export const ToolsButtonGroup = styled.div<{
     width: 30px !important;
     height: 30px !important;
     padding: 0;
+    pointer-events: all;
 
     ${(props) => props.$isSmall && 'opacity: 0.5;'}
 
@@ -159,6 +168,7 @@ export const DrawerButton = styled(Button)<{
   width: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '100px')};
   min-height: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '85px')};
   min-width: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '100px')};
+  max-height: 100px !important;
   text-transform: uppercase;
   font-weight: ${(props) => (props.$active ? '600' : '400')};
   display: flex;
@@ -168,6 +178,10 @@ export const DrawerButton = styled(Button)<{
   justify-content: center;
   white-space: pre;
   border-radius: 0;
+
+  .fi-button_icon--right {
+    display: none;
+  }
 
   ${(props) =>
     props.$breakpoint === 'small' &&
@@ -206,5 +220,28 @@ export const DrawerButton = styled(Button)<{
     width: 24px !important;
     height: auto !important;
     margin: 0 !important;
+  }
+`;
+
+export const WidthDragger = styled.div`
+  height: calc(100% - 70px);
+  width: 30px;
+  cursor: w-resize;
+  z-index: -1;
+
+  &:hover {
+    background-image: linear-gradient(
+      to right,
+      ${(props) => props.theme.suomifi.colors.depthLight1},
+      transparent
+    );
+  }
+
+  &:active {
+    background-image: linear-gradient(
+      to right,
+      ${(props) => props.theme.suomifi.colors.depthBase},
+      transparent
+    );
   }
 `;

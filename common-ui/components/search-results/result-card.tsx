@@ -11,10 +11,10 @@ import {
   Description,
   PartOf,
   TitleLink,
-  Status,
   Extra,
 } from './result-card.styles';
 import SanitizedTextContent from '../sanitized-text-content';
+import { StatusChip } from '../status-chip/status-chip.styles';
 
 interface ResultCardProps {
   contributors?: string[];
@@ -23,8 +23,11 @@ interface ResultCardProps {
   icon?: ReactNode;
   noChip?: boolean;
   noDescriptionText: string;
+  noVersion?: boolean;
   partOfText?: string;
   partOf?: string[];
+  identifier?: string;
+  version?: string;
   status?: string;
   title: string;
   titleLink: string;
@@ -39,6 +42,9 @@ export default function ResultCard({
   noChip = false,
   noDescriptionText,
   partOf,
+  noVersion,
+  version,
+  identifier,
   partOfText,
   status,
   title,
@@ -56,7 +62,7 @@ export default function ResultCard({
             : `${contributors.length} ${t('card-organizations')}`}
         </OrganizationParagraph>
       )}
-      <Link passHref href={titleLink}>
+      <Link passHref href={titleLink} legacyBehavior>
         <TitleLink href="">
           {icon && icon}
           <Title variant="h2" id="card-title-link">
@@ -69,6 +75,29 @@ export default function ResultCard({
       </Link>
       <Subtitle id="card-subtitle">
         <span>{type}</span>
+        {identifier && (
+          <>
+            <span aria-hidden={true}>&middot;</span>
+            <span style={{ textTransform: 'uppercase' }}>{identifier}</span>
+          </>
+        )}
+        {noVersion ? (
+          <></>
+        ) : version ? (
+          <>
+            <span aria-hidden={true}>&middot;</span>
+            <span style={{ textTransform: 'uppercase' }}>{`${t(
+              'version'
+            )} ${version}`}</span>
+          </>
+        ) : (
+          <>
+            <span aria-hidden={true}>&middot;</span>
+            <span style={{ textTransform: 'uppercase' }}>
+              {t('working-version')}
+            </span>
+          </>
+        )}
         {status && renderStatus()}
       </Subtitle>
       <Description id="card-description">
@@ -97,12 +126,9 @@ export default function ResultCard({
         {noChip ? (
           translateStatus(status ?? 'DRAFT', t)
         ) : (
-          <Status
-            valid={status === 'VALID' ? 'true' : undefined}
-            id="card-status"
-          >
+          <StatusChip status={status ?? 'DRAFT'} id="card-status">
             {translateStatus(status ?? 'DRAFT', t)}
-          </Status>
+          </StatusChip>
         )}
       </>
     );

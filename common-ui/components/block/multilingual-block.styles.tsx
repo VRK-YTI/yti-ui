@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const MultilingualBlockWrapper = styled.ul<{ maxSize: number }>`
+export const MultilingualBlockWrapper = styled.ul<{ $maxSize: number }>`
   list-style: none;
   padding: 0;
   margin: 0;
@@ -9,7 +9,7 @@ export const MultilingualBlockWrapper = styled.ul<{ maxSize: number }>`
 
   > li {
     padding-left: calc(
-      ${(props) => props.theme.suomifi.spacing.s} + ${(props) => props.maxSize} *
+      ${(props) => props.theme.suomifi.spacing.s} + ${(props) => props.$maxSize} *
         7px + 25px
     );
   }

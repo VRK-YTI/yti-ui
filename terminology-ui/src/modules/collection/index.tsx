@@ -37,6 +37,7 @@ import HasPermission from '@app/common/utils/has-permission';
 import Link from 'next/link';
 import RemovalModal from '@app/common/components/removal-modal';
 import { getBlockData } from './utils';
+import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 
 interface CollectionProps {
   terminologyId: string;
@@ -64,6 +65,23 @@ export default function Collection({
       skip: router.isFallback,
     }
   );
+  const {
+    data: organizations,
+    isLoading,
+    isError,
+  } = useGetOrganizationsQuery({
+    language: i18n.language,
+    showChildOrganizations: true,
+  });
+
+  const childOrganizations = useMemo(() => {
+    if (isLoading || isError) {
+      return [];
+    }
+    return organizations
+      ?.filter((org) => org.references.parent)
+      .map((org) => org.id);
+  }, [organizations, isLoading, isError]);
 
   const prefLabel = getPropertyValue({
     property: collection?.properties.prefLabel,
@@ -156,6 +174,8 @@ export default function Collection({
             <PropertyValue property={terminology?.properties.prefLabel} />
           </BadgeBar>
 
+          <BasicBlock title="URI">{collection?.uri}</BasicBlock>
+
           <MultilingualPropertyBlock
             title={t('field-name')}
             data={prefLabels}
@@ -219,7 +239,12 @@ export default function Collection({
           >
             <PropertyList $smBot={true}>
               {terminology?.references.contributor
-                ?.filter((c) => c && c.properties.prefLabel)
+                ?.filter(
+                  (c) =>
+                    c &&
+                    c.properties.prefLabel &&
+                    !childOrganizations?.includes(c.id)
+                )
                 .map((contributor) => (
                   <li key={contributor.id}>
                     <PropertyValue
@@ -240,7 +265,6 @@ export default function Collection({
             <FormattedDate date={collection?.lastModifiedDate} />
             {collection?.lastModifiedBy && `, ${collection.lastModifiedBy}`}
           </BasicBlock>
-          <BasicBlock title="URI">{collection?.uri}</BasicBlock>
         </MainContent>
         {collection && <CollectionSidebar collection={collection} />}
       </PageContent>

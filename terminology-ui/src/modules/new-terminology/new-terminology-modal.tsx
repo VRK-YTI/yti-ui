@@ -21,8 +21,6 @@ import {
   ModalContent,
   ModalFooter,
   Paragraph,
-  // RadioButton,
-  // RadioButtonGroup,
   Text,
 } from 'suomifi-ui-components';
 import FileUpload from './file-upload';
@@ -94,13 +92,6 @@ export default function NewTerminologyModal({
     handleClose();
     dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
   };
-
-  // const handleSetInputType = (type: string) => {
-  //   setInputType(type);
-  //   setUserPosted(false);
-  //   setIsValid(false);
-  //   setStartFileUpload(false);
-  // };
 
   const handlePost = () => {
     if (inputType === 'self') {
@@ -207,31 +198,9 @@ export default function NewTerminologyModal({
   function renderInfoInput() {
     return (
       <>
-        <Paragraph marginBottomSpacing="m">
+        <Paragraph mb="m">
           <Text>{t('info-input-description')}</Text>
         </Paragraph>
-
-        {/* <RadioButtonGroup
-          labelText={t('which-input')}
-          name="input-type"
-          onChange={(e) => handleSetInputType(e)}
-          id="new-terminology-input-type"
-        >
-          <RadioButton
-            disabled={error || isCreating || unauthenticatedUser}
-            value="self"
-            id="new-terminology-input-type-hand"
-          >
-            {t('by-hand')}
-          </RadioButton>
-          <RadioButton
-            disabled={error || isCreating || unauthenticatedUser}
-            value="file"
-            id="new-terminology-input-type-file"
-          >
-            {t('by-file')}
-          </RadioButton>
-        </RadioButtonGroup> */}
 
         {inputType === 'self' && (
           <InfoManual

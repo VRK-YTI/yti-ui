@@ -11,6 +11,7 @@ import {
   Paragraph,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
+import SaveSpinner from 'yti-common-ui/save-spinner';
 import ModelForm from '.';
 import { FormErrors, validateForm } from './validate-form';
 import { useInitialModelForm } from '@app/common/utils/hooks/use-initial-model-form';
@@ -21,16 +22,13 @@ import {
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import generatePayload from './generate-payload';
-import { usePutModelMutation } from '@app/common/components/model/model.slice';
+import { useCreateModelMutation } from '@app/common/components/model/model.slice';
 import getApiError from '@app/common/utils/get-api-errors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
+import { FooterBlock } from './model-form.styles';
 
-interface ModelFormModalProps {
-  refetch: () => void;
-}
-
-export default function ModelFormModal({ refetch }: ModelFormModalProps) {
+export default function ModelFormModal() {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
@@ -41,7 +39,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
   const [userPosted, setUserPosted] = useState(false);
   const [getAuthenticatedUser, authenticatedUser] =
     useGetAuthenticatedUserMutMutation();
-  const [putModel, result] = usePutModelMutation();
+  const [createModel, result] = useCreateModelMutation();
 
   const handleOpen = () => {
     setVisible(true);
@@ -56,11 +54,10 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
 
   useEffect(() => {
     if (userPosted && result.isSuccess) {
-      refetch();
+      router.push(`/model/${formData.prefix}?new=true`);
       handleClose();
-      router.push(`/model/${formData.prefix}`);
     }
-  }, [result, refetch, userPosted, handleClose, router, formData.prefix]);
+  }, [result, userPosted, handleClose, router, formData.prefix]);
 
   const handleSubmit = () => {
     setUserPosted(true);
@@ -71,13 +68,13 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
     const errors = validateForm(formData);
     setErrors(errors);
 
-    if (Object.values(errors).includes(true)) {
+    if (Object.values(errors).includes(true) || errors.titleAmount.length > 0) {
       return;
     }
 
     const payload = generatePayload(formData);
 
-    putModel(payload);
+    createModel(payload);
   };
 
   useEffect(() => {
@@ -137,17 +134,25 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
               alerts={getErrors(errors)}
             />
           )}
-
-          <Button onClick={() => handleSubmit()} id="submit-button">
-            {t('create-model')}
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => handleClose()}
-            id="cancel-button"
-          >
-            {t('cancel')}
-          </Button>
+          <FooterBlock>
+            <Button
+              disabled={userPosted && !errors}
+              onClick={() => handleSubmit()}
+              id="submit-button"
+            >
+              {t('create-model')}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => handleClose()}
+              id="cancel-button"
+            >
+              {t('cancel')}
+            </Button>
+            {userPosted && !errors && (
+              <SaveSpinner text={t('creating-model')} />
+            )}
+          </FooterBlock>
         </ModalFooter>
       </Modal>
     </>

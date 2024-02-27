@@ -11,7 +11,7 @@ describe('createCommonGetServersideProps', () => {
       req: httpMocks.createRequest({ headers: { foo: 'bar' } }),
       res: httpMocks.createResponse(),
       query: {},
-      resolvedUrl: '',
+      resolvedUrl: '/',
       locale: 'en',
     };
 
@@ -48,7 +48,7 @@ describe('createCommonGetServersideProps', () => {
       }),
       res: httpMocks.createResponse(),
       query: {},
-      resolvedUrl: '',
+      resolvedUrl: '/',
       locale: 'en',
     };
 
@@ -72,7 +72,7 @@ describe('createCommonGetServersideProps', () => {
       }),
       res: httpMocks.createResponse(),
       query: {},
-      resolvedUrl: '',
+      resolvedUrl: '/',
       locale: 'en',
     };
 

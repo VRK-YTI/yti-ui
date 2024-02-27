@@ -104,13 +104,13 @@ export function createCommonGetServerSideProps<
           user.anonymous
             ? {
                 permanent: false,
-                destination: '/401',
+                destination: '/',
               }
             : undefined;
 
         return {
           ...results,
-          redirect: redirectProp,
+          ...(redirectProp && { redirect: redirectProp }),
           props: {
             ...resultsProps,
             ...(await serverSideTranslations(locale ?? 'fi', [
@@ -123,6 +123,9 @@ export function createCommonGetServerSideProps<
                 /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
               )
             ),
+            isMatomoEnabled: process.env.MATOMO_ENABLED === 'true',
+            matomoUrl: process.env.MATOMO_URL ?? null,
+            matomoSiteId: process.env.MATOMO_SITE_ID ?? null,
             user: user ?? null,
             fakeableUsers:
               !fakeableUsers || isEqual(fakeableUsers, {})

@@ -1,5 +1,4 @@
 @import '~suomifi-design-tokens/dist/tokens';
-@import 'suomifi-ui-components/dist/main.css';
 
 html,
 body {
@@ -7,4 +6,12 @@ body {
   margin: 0;
   @include fi-text-body-text;
   background-color: $fi-color-depth-light3;
+
+  .fi-modal_overlay {
+    z-index: 1;
+  }
+
+  .fi-portal {
+    z-index: 2;
+  }
 }

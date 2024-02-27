@@ -5,6 +5,7 @@ import { withIronSessionApiRoute } from 'iron-session/next';
 export default withIronSessionApiRoute(
   async function getModelAsFile(req, res) {
     const target = (req.query['modelId'] as string) ?? '/';
+    const version = (req.query['version'] as string) ?? '';
     const fileType = (req.query['fileType'] as string) ?? 'LD-JSON';
     const isRaw = (req.query['raw'] as string) ?? 'false';
     let filename = (req.query['filename'] as string) ?? 'datamodel';
@@ -38,8 +39,28 @@ export default withIronSessionApiRoute(
       headers['host'] = host;
     }
 
+    const sessionCookies = req.session.cookies ?? {};
+
+    const cookieString = Object.entries(sessionCookies)
+      .map(([key, value]) => {
+        if (key.toLowerCase() === 'jsessionid') {
+          return `JSESSIONID=${value}`;
+        } else if (key.toLowerCase().startsWith('_shibsession')) {
+          return `${key}=${value}`;
+        }
+      })
+      .filter(Boolean)
+      .join('; ');
+
+    headers['Cookie'] = cookieString;
+
+    const apiUrl =
+      process.env.AWS_ENV === 'local'
+        ? process.env.DATAMODEL_API_URL
+        : `${process.env.AUTH_PROXY_URL}/datamodel-api`;
+
     const { status, data: response } = await axios.get(
-      `${process.env.DATAMODEL_API_URL}/v2/export/${target}`,
+      `${apiUrl}/v2/export/${target}${version ? `?version=${version}` : ''}`,
       {
         headers: headers,
         responseType: 'stream',

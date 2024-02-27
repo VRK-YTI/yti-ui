@@ -31,5 +31,5 @@ function generateImpersonate(email: string, language: string): () => string {
   return () =>
     (window.location.href = `/api/auth/fake-login?fake.login.mail=${encodeURIComponent(
       email
-    )}&target=/${language ?? 'fi'}${asPath}`);
+    )}&target=/${language ?? 'fi'}${encodeURIComponent(asPath)}`);
 }

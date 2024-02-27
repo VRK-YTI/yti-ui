@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { StaticChip } from 'suomifi-ui-components';
+import { StatusChip as BaseStatusChip } from 'yti-common-ui/status-chip';
 
 export const SearchBlock = styled.div<{ $isSmall?: boolean }>`
   display: flex;
@@ -88,17 +88,4 @@ export const SearchResult = styled.div`
   }
 `;
 
-export const StatusChip = styled(StaticChip)<{ $isValid?: boolean }>`
-  font-size: inherit;
-  line-height: inherit;
-  padding: 2px 6px !important;
-
-  background: ${(props) =>
-    props.$isValid
-      ? props.theme.suomifi.colors.successBase
-      : props.theme.suomifi.colors.depthDark1} !important;
-
-  .fi-chip--content {
-    line-height: 1em !important;
-  }
-`;
+export const StatusChip = styled(BaseStatusChip)<{ status?: string }>``;

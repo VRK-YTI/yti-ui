@@ -1,20 +1,16 @@
 import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
 import generateInitialData from './generate-initial-data';
 
-const mockTranslations = () => {
-  return 'mock label text';
-};
-
 describe('generate-initial-data', () => {
   it('should generate initial data from input', () => {
-    const returned = generateInitialData('fi', mockTranslations, dataSmall);
+    const returned = generateInitialData('fi', dataSmall);
 
     const expected = {
       contact: 'yhteentoimivuus@dvv.fi',
       languages: [
         {
           description: 'kuvaus',
-          labelText: 'mock label text',
+          labelText: 'fi',
           selected: true,
           title: 'testi2',
           uniqueItemId: 'fi',
@@ -46,27 +42,27 @@ describe('generate-initial-data', () => {
   });
 
   it('should generate data from large input', () => {
-    const returned = generateInitialData('fi', mockTranslations, dataLarge);
+    const returned = generateInitialData('fi', dataLarge);
     const expected = {
       contact: 'yhteentoimivuus@dvv.fi',
       languages: [
         {
           description: 'kuvaus',
-          labelText: 'mock label text',
+          labelText: 'fi',
           selected: true,
           title: 'testi2',
           uniqueItemId: 'fi',
         },
         {
           description: 'description',
-          labelText: 'mock label text',
+          labelText: 'en',
           selected: true,
           title: 'test2',
           uniqueItemId: 'en',
         },
         {
           description: '',
-          labelText: 'mock label text',
+          labelText: 'sv',
           selected: true,
           title: 'test2',
           uniqueItemId: 'sv',

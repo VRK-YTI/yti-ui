@@ -18,21 +18,41 @@ manually.
 
 ## Getting Started
 
-First, run the development server:
+First install dependencies by running the following in yti-ui root folder:
+
+```bash
+npm install
+```
+
+Create file .env.local to the project root directory and add the following lines
+
+```
+DATAMODEL_API_URL=http://localhost:9004/datamodel-api
+REWRITE_PROFILE=local
+SECRET_COOKIE_PASSWORD=<random string min 32 characters>
+```
+
+Add the following to `.vscode/settings.json` in [yti-ui] root directory.
+This is necessary for VSCodes eslint to work correctly.
+
+```
+{
+  "eslint.workingDirectories": [
+    { "directory": "./datamodel-ui", "changeProcessCWD": true }
+  ]
+}
+```
+
+Run terminology-api backend application (and all its dependencies) for example
+by using [yti-compose](https://github.com/VRK-YTI/yti-compose)
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
 ## Troubleshooting and more documentation
 

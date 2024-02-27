@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { StaticChip } from 'suomifi-ui-components';
+import { StatusChip as BaseStatusChip } from 'yti-common-ui/status-chip';
 
 export const ResultsTable = styled.table<{ $expandedLastCell?: boolean }>`
   width: 100%;
@@ -26,8 +26,16 @@ export const ResultsTable = styled.table<{ $expandedLastCell?: boolean }>`
     padding: 10px 15px;
   }
 
+  td:first-child {
+    min-width: 25%;
+  }
+
   td:not(:first-child) {
     width: 25%;
+  }
+
+  td:last-child {
+    width: auto;
   }
 
   ${(props) =>
@@ -71,18 +79,9 @@ export const ResultsTable = styled.table<{ $expandedLastCell?: boolean }>`
   }
 `;
 
-export const StatusChip = styled(StaticChip)<{ $isValid?: boolean }>`
-  font-size: inherit;
-  line-height: inherit;
-  padding: 2px 6px !important;
+export const StatusChip = styled(BaseStatusChip)<{ status?: string }>`
   width: min-content;
   font-size: 14px;
-
-  background: ${(props) =>
-    props.$isValid
-      ? props.theme.suomifi.colors.successBase
-      : props.theme.suomifi.colors.depthDark1} !important;
-
   .fi-chip--content {
     line-height: 1em !important;
     white-space: nowrap;

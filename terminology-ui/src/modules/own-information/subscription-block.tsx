@@ -90,12 +90,15 @@ export default function SubscriptionBlock({
                 <Link
                   passHref
                   href={`/terminology-api/api/v1/resolve?uri=${resource.uri}`}
+                  legacyBehavior
                 >
                   <SuomiLink href="">
-                    {getPrefLabel({
-                      prefLabels: resource.prefLabel,
-                      lang: i18n.language,
-                    })}
+                    {resource.prefLabel
+                      ? getPrefLabel({
+                          prefLabels: resource.prefLabel,
+                          lang: i18n.language,
+                        })
+                      : resource.uri}
                   </SuomiLink>
                 </Link>
                 <RemoveSubscription

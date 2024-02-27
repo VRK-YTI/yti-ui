@@ -5,7 +5,7 @@ export const ContentWrapper = styled.div`
   flex-direction: column;
   gap: ${(props) => props.theme.suomifi.spacing.m};
 
-  div:first-child {
+  div.namespaceInternal {
     display: inherit;
     flex-direction: row;
     justify-content: space-between;

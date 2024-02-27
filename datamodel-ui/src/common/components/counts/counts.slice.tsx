@@ -1,8 +1,8 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { CountsType } from '@app/common/interfaces/counts.interface';
 import { UrlState } from 'yti-common-ui/utils/hooks/use-url-state';
+import { inUseStatusList } from '@app/common/utils/status-list';
 
 function getUrl(urlState: UrlState) {
   const validEntries = Object.entries({
@@ -14,7 +14,7 @@ function getUrl(urlState: UrlState) {
       ? urlState.types.map((type) => type.toUpperCase())
       : [],
     ...(urlState.status.length === 0
-      ? { status: ['VALID', 'DRAFT'] }
+      ? { status: inUseStatusList }
       : { status: urlState.status }),
   }).filter(
     (item) =>
@@ -36,12 +36,7 @@ function getUrl(urlState: UrlState) {
 export const countApi = createApi({
   reducerPath: 'count',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['count'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
+  tagTypes: ['Count'],
   endpoints: (builder) => ({
     getCount: builder.query<
       {
@@ -51,7 +46,10 @@ export const countApi = createApi({
       UrlState
     >({
       query: (urlState) => ({
-        url: getUrl(urlState),
+        url: getUrl({
+          ...urlState,
+          domain: [], // don't pass groups to the count endpoint YTI-3701
+        }),
         method: 'GET',
       }),
     }),

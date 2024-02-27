@@ -1,10 +1,14 @@
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import {
+  resetHighlighted,
+  resetHovered,
   resetSelected,
+  selectDisplayLang,
   selectResourceView,
   selectSelected,
+  setHighlighted,
+  setHovered,
   setSelected,
-  setView,
 } from '@app/common/components/model/model.slice';
 import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
@@ -12,7 +16,6 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import HasPermission from '@app/common/utils/has-permission';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { SearchInput, Text } from 'suomifi-ui-components';
@@ -21,10 +24,11 @@ import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import {
   initializeResource,
+  resetResource,
   setResource,
+  useGetResourceActiveQuery,
   useGetResourceQuery,
 } from '@app/common/components/resource/resource.slice';
-import { getResourceInfo } from '@app/common/utils/parse-slug';
 import ResourceInfo from './resource-info/index';
 import {
   translateCreateNewResource,
@@ -34,25 +38,39 @@ import {
 import ResourceModal from './resource-modal';
 import ResourceForm from './resource-form';
 import { resourceToResourceFormType } from './utils';
+import useSetView from '@app/common/utils/hooks/use-set-view';
+import useSetPage from '@app/common/utils/hooks/use-set-page';
+import { useReactFlow } from 'reactflow';
+import getConnectedElements from '../graph/utils/get-connected-elements';
+import { UriData } from '@app/common/interfaces/uri.interface';
+import ResourceError from '@app/common/components/resource-error';
+import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
 
 interface ResourceViewProps {
   modelId: string;
+  version?: string;
   type: ResourceType;
   languages: string[];
   terminologies: string[];
   applicationProfile?: boolean;
+  organizationIds?: string[];
 }
 
 export default function ResourceView({
   modelId,
+  version,
   type,
   languages,
   terminologies,
   applicationProfile,
+  organizationIds,
 }: ResourceViewProps) {
   const { t, i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
-  const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
+  const hasPermission = HasPermission({
+    actions: ['CREATE_ATTRIBUTE'],
+    targetOrganization: organizationIds,
+  });
   const globalSelected = useSelector(selectSelected());
   const view = useSelector(
     selectResourceView(
@@ -60,18 +78,13 @@ export default function ResourceView({
     )
   );
   const ref = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-  const [headerHeight, setHeaderHeight] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  const { setView } = useSetView();
+  const { setPage, getPage } = useSetPage();
+  const { getNodes, getEdges } = useReactFlow();
+  const displayLang = useSelector(selectDisplayLang());
+  const [headerHeight, setHeaderHeight] = useState(hasPermission ? 112 : 97);
+  const [currentPage, setCurrentPage] = useState(getPage());
   const [query, setQuery] = useState('');
-  const [isEdit, setIsEdit] = useState(false);
-  const [currentResourceId, setCurrentResourceId] = useState<
-    string | undefined
-  >(
-    getResourceInfo(router.query.slug)?.type === type.toString().toLowerCase()
-      ? getResourceInfo(router.query.slug)?.id
-      : undefined
-  );
 
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
@@ -79,16 +92,36 @@ export default function ResourceView({
     pageSize: 20,
     pageFrom: (currentPage - 1) * 20,
     resourceTypes: [type],
+    fromVersion: version,
   });
 
-  const { data: resourceData, refetch: refetchResource } = useGetResourceQuery(
+  const {
+    data: resourceData,
+    refetch: refetchResource,
+    isError: resourceIsError,
+  } = useGetResourceQuery(
     {
-      modelId: modelId,
-      resourceIdentifier: currentResourceId ?? '',
+      modelId: globalSelected.modelId ?? modelId,
+      resourceIdentifier: globalSelected.id ?? '',
       applicationProfile,
+      version: globalSelected.version ?? version,
     },
     {
-      skip: typeof currentResourceId === 'undefined',
+      skip:
+        !['associations', 'attributes'].includes(globalSelected.type) ||
+        !globalSelected.id,
+    }
+  );
+
+  const { data: inUse, refetch: refetchInUse } = useGetResourceActiveQuery(
+    {
+      prefix: modelId,
+      uri: `${SUOMI_FI_NAMESPACE}${globalSelected.modelId}/${globalSelected.id}`,
+      version: version,
+    },
+    {
+      skip:
+        !globalSelected.id || !globalSelected.modelId || !applicationProfile,
     }
   );
 
@@ -97,78 +130,86 @@ export default function ResourceView({
     setCurrentPage(1);
   };
 
-  const handleShowResource = (id: string) => {
-    dispatch(
-      setView(
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-        'info'
-      )
-    );
+  const handleShowResource = (id: string, modelPrefix: string) => {
     dispatch(
       setSelected(
+        id,
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        modelPrefix
+      )
+    );
+    setView(
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+      'info',
+      modelPrefix !== modelId ? `${modelPrefix}:${id}` : id
+    );
+  };
+
+  const handleResourceHover = (id?: string, modelPrefix?: string) => {
+    if (!id || !modelPrefix) {
+      dispatch(resetHovered());
+
+      if (type === ResourceType.ASSOCIATION) {
+        dispatch(resetHighlighted());
+      }
+      return;
+    }
+
+    dispatch(
+      setHovered(
         id,
         type === ResourceType.ASSOCIATION ? 'associations' : 'attributes'
       )
     );
-    router.replace(
-      `${modelId}/${
-        type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
-      }/${id}`
-    );
+
+    if (type === ResourceType.ASSOCIATION) {
+      const targetEdge = getEdges().find((edge) => edge.data.identifier === id);
+
+      if (!targetEdge) {
+        return;
+      }
+
+      dispatch(
+        setHighlighted(getConnectedElements(targetEdge, getNodes(), getEdges()))
+      );
+    }
   };
 
   const handleReturn = () => {
     dispatch(resetSelected());
-    dispatch(
-      setView(
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-        'list'
-      )
+    setView(
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+      'list'
     );
+    dispatch(resetResource());
     refetch();
-
-    if (isEdit) {
-      setIsEdit(false);
-    }
   };
 
   const handleFormReturn = () => {
-    dispatch(
-      setView(
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-        'info'
-      )
+    setView(
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+      'info',
+      globalSelected.id
     );
-
-    if (isEdit) {
-      setIsEdit(false);
-    }
+    dispatch(resetResource());
   };
 
-  const handleFollowUp = (value?: { label: string; uri: string }) => {
-    dispatch(initializeResource(type, languages, value?.label));
-    dispatch(
-      setView(
-        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-        'edit'
-      )
-    );
+  const handleFollowUp = (value?: UriData) => {
+    dispatch(initializeResource(type, value, applicationProfile));
 
-    if (isEdit) {
-      setIsEdit(false);
-    }
+    setView(
+      type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+      'create'
+    );
   };
 
   const handleEdit = () => {
     if (resourceData) {
-      dispatch(
-        setView(
-          type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
-          'edit'
-        )
+      setView(
+        type === ResourceType.ASSOCIATION ? 'associations' : 'attributes',
+        'edit'
       );
       dispatch(setResource(resourceToResourceFormType(resourceData)));
-      setIsEdit(true);
     }
   };
 
@@ -177,17 +218,6 @@ export default function ResourceView({
       setHeaderHeight(ref.current.clientHeight);
     }
   }, [ref, view]);
-
-  useEffect(() => {
-    if (
-      type === ResourceType.ASSOCIATION
-        ? globalSelected.type === 'associations'
-        : globalSelected.type === 'attributes' &&
-          currentResourceId !== globalSelected.id
-    ) {
-      setCurrentResourceId(globalSelected.id);
-    }
-  }, [globalSelected, currentResourceId, type]);
 
   return (
     <>
@@ -209,14 +239,31 @@ export default function ResourceView({
             <Text variant="bold">
               {translateResourceCountTitle(type, t, data?.totalHitCount)}
             </Text>
-            {hasPermission && (
+
+            {!version && hasPermission && (
               <ResourceModal
                 modelId={modelId}
                 type={type}
-                buttonTranslations={{
-                  useSelected: translateCreateNewResourceForSelected(type, t),
-                  createNew: translateCreateNewResource(type, t),
-                }}
+                buttonTranslations={
+                  applicationProfile
+                    ? {
+                        useSelected:
+                          type === ResourceType.ATTRIBUTE
+                            ? t('create-new-attribute-constraint', {
+                                ns: 'admin',
+                              })
+                            : t('create-new-association-constraint', {
+                                ns: 'admin',
+                              }),
+                      }
+                    : {
+                        useSelected: translateCreateNewResourceForSelected(
+                          type,
+                          t
+                        ),
+                        createNew: translateCreateNewResource(type, t),
+                      }
+                }
                 handleFollowUp={handleFollowUp}
                 buttonIcon={true}
                 applicationProfile={applicationProfile}
@@ -237,18 +284,37 @@ export default function ResourceView({
         </StaticHeader>
 
         <DrawerContent height={headerHeight} spaced>
-          {!data || data?.totalHitCount < 1 ? (
-            <Text>{t('datamodel-no-attributes')}</Text>
+          {!data || (query === '' && data?.totalHitCount < 1) ? (
+            <Text>
+              {type === 'ASSOCIATION'
+                ? t('datamodel-no-associations')
+                : t('datamodel-no-attributes')}
+            </Text>
+          ) : query !== '' && data?.totalHitCount < 1 ? (
+            <Text>{t('no-results')}</Text>
           ) : (
             <DrawerItemList
-              items={data.responseObjects.map((item) => ({
-                label: getLanguageVersion({
-                  data: item.label,
-                  lang: i18n.language,
-                }),
-                subtitle: `${modelId}:${item.identifier}`,
-                onClick: () => handleShowResource(item.identifier),
-              }))}
+              items={data.responseObjects.map((item) => {
+                return {
+                  label: getLanguageVersion({
+                    data: item.label,
+                    lang: displayLang ?? i18n.language,
+                    appendLocale: true,
+                  }),
+                  subtitle: item.curie,
+                  onClick: () =>
+                    handleShowResource(
+                      item.identifier,
+                      item.curie.split(':')[0]
+                    ),
+                  onMouseEnter: () =>
+                    handleResourceHover(
+                      item.identifier,
+                      item.curie.split(':')[0]
+                    ),
+                  onMouseLeave: () => handleResourceHover(),
+                };
+              })}
             />
           )}
 
@@ -256,7 +322,10 @@ export default function ResourceView({
             currentPage={currentPage}
             maxPages={Math.ceil((data?.totalHitCount ?? 0) / 20)}
             maxTotal={20}
-            setCurrentPage={(number) => setCurrentPage(number)}
+            setCurrentPage={(number) => {
+              setCurrentPage(number);
+              setPage(number);
+            }}
           />
         </DrawerContent>
       </>
@@ -264,35 +333,52 @@ export default function ResourceView({
   }
 
   function renderInfo() {
-    if (!view.info || !resourceData) {
+    if (!view.info) {
       return <></>;
+    }
+
+    if (resourceIsError) {
+      return <ResourceError handleReturn={handleReturn} />;
     }
 
     return (
       <ResourceInfo
         data={resourceData}
-        modelId={modelId}
+        inUse={inUse}
+        modelId={globalSelected.modelId ?? modelId}
         handleEdit={handleEdit}
         handleReturn={handleReturn}
+        handleShowResource={handleShowResource}
+        handleRefetch={refetchInUse}
+        isPartOfCurrentModel={globalSelected.modelId === modelId}
+        applicationProfile={applicationProfile}
+        currentModelId={
+          globalSelected.modelId !== modelId ? modelId : undefined
+        }
+        disableEdit={version ? true : false}
+        organizationIds={organizationIds}
       />
     );
   }
 
   function renderEdit() {
-    if (!view.edit || !hasPermission) {
+    if ((!view.edit && !view.create) || !hasPermission) {
       return <></>;
     }
 
     return (
       <ResourceForm
-        type={type}
-        modelId={modelId}
+        modelId={globalSelected.modelId ?? modelId}
         languages={languages}
         terminologies={terminologies}
         applicationProfile={applicationProfile}
-        isEdit={isEdit}
-        refetch={refetchResource}
-        handleReturn={isEdit ? handleFormReturn : handleReturn}
+        currentModelId={modelId}
+        isEdit={view.edit}
+        refetch={() => {
+          refetchResource();
+          refetchInUse();
+        }}
+        handleReturn={view.edit ? handleFormReturn : handleReturn}
       />
     );
   }

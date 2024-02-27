@@ -27,11 +27,11 @@ const actions = [
   'DELETE_ATTRIBUTE',
 ] as const;
 
-export type Actions = typeof actions[number];
+export type Actions = (typeof actions)[number];
 
 export interface hasPermissionProps {
   actions: Actions | Actions[];
-  targetOrganization?: string;
+  targetOrganization?: string[];
 }
 
 export interface checkPermissionProps {
@@ -77,7 +77,9 @@ export default function HasPermission({
   return checkPermission({
     user,
     actions: Array.isArray(actions) ? actions : [actions],
-    targetOrganizations: [targetOrganization],
+    targetOrganizations: Array.isArray(targetOrganization)
+      ? targetOrganization
+      : [targetOrganization],
   });
 }
 
@@ -98,15 +100,28 @@ export function checkPermission({
     return true;
   }
 
-  // Return true if target organization is undefined and user has admin role
-  if (rolesInOrganizations.includes('ADMIN') && !targetOrganizations) {
-    return true;
-  }
-
   // Return true if user has admin role in target organization
   if (
     rolesInOrganizations.includes('ADMIN') &&
     rolesInTargetOrganizations?.includes('ADMIN')
+  ) {
+    return true;
+  }
+
+  // Actions not related to any organization
+  if (
+    (!targetOrganizations || targetOrganizations.length === 0) &&
+    rolesInOrganizations.some((role) =>
+      ['DATA_MODEL_EDITOR', 'ADMIN'].includes(role)
+    ) &&
+    actions.includes('CREATE_DATA_MODEL')
+  ) {
+    return true;
+  }
+
+  if (
+    rolesInTargetOrganizations?.includes('DATA_MODEL_EDITOR') &&
+    !actions.some((action) => action.includes('ADMIN'))
   ) {
     return true;
   }

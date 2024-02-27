@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { Text, VisuallyHidden } from 'suomifi-ui-components';
 import useUrlState, { initialUrlState } from '../../utils/hooks/use-url-state';
 import { useBreakpoints } from '../media-query';
@@ -27,6 +27,7 @@ interface SearchCountTagsProps {
     id: string;
   }[];
   renderQBeforeStatus?: boolean;
+  withDefaultStatuses?: string[];
 }
 
 export default function SearchCountTags({
@@ -36,6 +37,7 @@ export default function SearchCountTags({
   types = [],
   renderQBeforeStatus = false,
   hiddenTitle,
+  withDefaultStatuses,
 }: SearchCountTagsProps) {
   const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
@@ -55,7 +57,7 @@ export default function SearchCountTags({
         {renderStatusTags()}
         {!renderQBeforeStatus && renderQTag()}
         {renderDomainTags()}
-        {renderNoActiveFilters()}
+        {!withDefaultStatuses && renderNoActiveFilters()}
       </ChipWrapper>
     </CountWrapper>
   );
@@ -99,7 +101,34 @@ export default function SearchCountTags({
   }
 
   function renderStatusTags() {
-    return ['valid', 'draft', 'retired', 'superseded', 'invalid']
+    if (
+      urlState.status.length === 0 &&
+      withDefaultStatuses &&
+      withDefaultStatuses.length > 0
+    ) {
+      return (
+        <>
+          {withDefaultStatuses.map((status) => {
+            return (
+              <Tag
+                key={status}
+                onRemove={() => {
+                  patchUrlState({
+                    status: withDefaultStatuses.filter(
+                      (s) => s !== status && s !== status.toUpperCase()
+                    ),
+                  });
+                }}
+              >
+                {translateStatus(status, t)}
+              </Tag>
+            );
+          })}
+        </>
+      );
+    }
+
+    return ['valid', 'draft', 'retired', 'superseded', 'invalid', 'suggested']
       .map((status) => {
         if (
           urlState.status.includes(status) ||

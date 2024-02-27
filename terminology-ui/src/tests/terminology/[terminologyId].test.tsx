@@ -41,28 +41,42 @@ describe('terminologyId page', () => {
       res: httpMocks.createResponse(),
       query: { q: 'test', status: ['draft'] },
       params: { terminologyId: terminologyId },
-      resolvedUrl: '',
+      resolvedUrl: `/terminology/${terminologyId}?q=test&status=draft`,
       locale: 'en',
     };
 
     const results = await terminologyIdGetServerSideProps(ctx);
 
-    expect(results.props).toBeDefined();
-    expect((results.props as any).initialState).toBeDefined(); // eslint-disable-line @typescript-eslint/no-explicit-any
-    const initialState = (results.props as any).initialState; // eslint-disable-line @typescript-eslint/no-explicit-any
+    expect((results as any).props).toBeDefined(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
-    // check that each of the mock responses are found
-    const data = Object.keys(initialState.vocabularyAPI.queries).map(
-      (x) => initialState.vocabularyAPI.queries[x].data
+    expect(mock.history.get).toHaveLength(5);
+
+    const polledUrls = [
+      '/vocabulary?graphId=1234',
+      '/conceptCounts?graphId=1234',
+      '/statusCounts?graphId=1234',
+      '/authenticated-user',
+      '/fakeableUsers',
+    ];
+
+    const foundUrls = polledUrls.filter((url) =>
+      mock.history.get.some((x) => x.url?.endsWith(url))
     );
-    expect(data).toHaveLength(2);
-    expect(data).toContain('response from vocabulary');
-    expect(data).toContain('response from searchConcept');
 
-    // check that all requests finished successfully
-    const statuses = Object.keys(initialState.vocabularyAPI.queries)
-      .map((x) => initialState.vocabularyAPI.queries[x].status)
-      .filter((x) => x === 'fulfilled');
-    expect(statuses).toHaveLength(2);
+    expect(foundUrls).toHaveLength(5);
+
+    expect(mock.history.post).toHaveLength(1);
+    expect(mock.history.post[0]?.data).toStrictEqual(
+      JSON.stringify({
+        highlight: true,
+        pageFrom: 0,
+        pageSize: 50,
+        query: 'test',
+        sortDirection: 'ASC',
+        sortLanguage: 'en',
+        status: ['DRAFT'],
+        terminologyId: ['1234'],
+      })
+    );
   });
 });

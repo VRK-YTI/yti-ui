@@ -48,5 +48,5 @@ automatically renders the correct text based on the current language of the UI.
 <PropertyValue property={obj.properties.prefLabel} />
 ```
 
-[Read more](../src/common/components/property-value/property-value.md)
+[Read more](../terminology-ui/src/common/components/property-value/property-value.md)
 in its documentation.

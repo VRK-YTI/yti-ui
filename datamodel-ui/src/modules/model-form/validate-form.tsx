@@ -34,25 +34,23 @@ export function validateForm(data: ModelFormType) {
   // All selected languages should have a title
   if (
     selectedLanguages.filter(
-      (lang) => !lang.title || lang.title === '' || lang.title.length < 1
+      (lang) => !lang.title || lang.title.trim().length < 1
     ).length > 0
   ) {
     const langsWithError = selectedLanguages
-      .filter(
-        (lang) => !lang.title || lang.title === '' || lang.title.length < 1
-      )
+      .filter((lang) => !lang.title || lang.title.trim().length < 1)
       .map((lang) => lang.uniqueItemId);
 
     errors.titleAmount = langsWithError ?? [];
   }
 
   // Prefix should be defined
-  if (!data.prefix || data.prefix.length < 1 || data.prefix === '') {
+  if (!data.prefix || data.prefix.trim().length < 1) {
     errors.prefix = true;
   }
 
   // Prefix should not start with a digit
-  if (data.prefix && data.prefix !== '' && /^[0-9]/.test(data.prefix)) {
+  if (data.prefix && data.prefix.trim() !== '' && /^[0-9]/.test(data.prefix)) {
     errors.prefixInitChar = true;
   }
 
@@ -75,6 +73,7 @@ export function validateForm(data: ModelFormType) {
     errors.organizations = true;
   }
 
+  // If contact is set, it should be a valid email address
   if (data.contact && !isEmail(data.contact)) {
     errors.contact = true;
   }

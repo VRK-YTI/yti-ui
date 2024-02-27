@@ -1,4 +1,3 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { ClassType } from '@app/common/interfaces/class.interface';
@@ -8,99 +7,46 @@ import {
   ClassFormType,
   initialClassForm,
 } from '@app/common/interfaces/class-form.interface';
-import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
+import { pathForModelType } from '@app/common/utils/api-utils';
+import { convertToPayload } from './utils';
 
-function convertToPUT(
-  data: ClassFormType,
-  isEdit: boolean,
-  applicationProfile?: boolean,
-  basedOnNodeShape?: boolean
-): object {
-  const { concept, ...retVal } = data;
-  const conceptURI = concept?.conceptURI;
-
-  const ret = {
-    ...retVal,
-    equivalentClass: data.equivalentClass.map((eq) => eq.identifier),
-    subClassOf: data.subClassOf
-      .filter((soc) => soc.identifier !== 'owl:Thing')
-      .map((sco) => sco.identifier),
-    subject: conceptURI,
-    ...(basedOnNodeShape
-      ? {
-          targetNode: data.targetClass?.id,
-        }
-      : {
-          targetClass: data.targetClass?.id,
-          ...(data.node && {
-            targetNode: data.node.id,
-          }),
-        }),
-    ...(applicationProfile &&
-      !basedOnNodeShape && {
-        properties: [
-          ...(data.association?.map((a) => a.uri) ?? []),
-          ...(data.attribute?.map((a) => a.uri) ?? []),
-        ],
-      }),
-  };
-
-  if (applicationProfile) {
-    delete ret.association;
-    delete ret.attribute;
-  }
-
-  if (basedOnNodeShape) {
-    delete ret.targetClass;
-  }
-
-  if (data.node) {
-    delete ret.node;
-  }
-
-  return isEdit
-    ? Object.fromEntries(
-        Object.entries(ret).filter((e) => e[0] !== 'identifier')
-      )
-    : ret;
-}
-
-function pathForModelType(isApplicationProfile?: boolean) {
-  return isApplicationProfile ? 'profile/' : 'library/';
+interface ClassData {
+  modelId: string;
+  data: ClassFormType;
+  applicationProfile?: boolean;
+  basedOnNodeShape?: boolean;
 }
 
 export const classApi = createApi({
   reducerPath: 'classApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['classApi'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
+  tagTypes: ['Class'],
   endpoints: (builder) => ({
-    putClass: builder.mutation<
-      string,
-      {
-        modelId: string;
-        data: ClassFormType;
-        classId?: string;
-        applicationProfile?: boolean;
-        basedOnNodeShape?: boolean;
-      }
-    >({
+    updateClass: builder.mutation<string, ClassData>({
       query: (value) => ({
-        url: !value.classId
-          ? `/class/${pathForModelType(value.applicationProfile)}${
-              value.modelId
-            }`
-          : `/class/${pathForModelType(value.applicationProfile)}${
-              value.modelId
-            }/${value.classId}`,
+        url: `/class/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }/${value.data.identifier}`,
         method: 'PUT',
-        data: convertToPUT(
+        data: convertToPayload(
           value.data,
-          value.classId ? true : false,
+          true,
+          value.applicationProfile,
+          value.basedOnNodeShape
+        ),
+      }),
+      invalidatesTags: ['Class'],
+    }),
+    createClass: builder.mutation<null, ClassData>({
+      query: (value) => ({
+        url: `/class/${pathForModelType(value.applicationProfile)}${
+          value.modelId
+        }`,
+        method: 'POST',
+        data: convertToPayload(
+          value.data,
+          false,
           value.applicationProfile,
           value.basedOnNodeShape
         ),
@@ -108,27 +54,27 @@ export const classApi = createApi({
     }),
     getClass: builder.query<
       ClassType,
-      { modelId: string; classId: string; applicationProfile?: boolean }
+      {
+        modelId: string;
+        version?: string;
+        classId: string;
+        applicationProfile?: boolean;
+      }
     >({
       query: (value) => ({
         url: `/class/${pathForModelType(value.applicationProfile)}${
           value.modelId
         }/${value.classId}`,
+        params: {
+          ...(value.version && {
+            version: value.version,
+          }),
+        },
         method: 'GET',
       }),
+      providesTags: ['Class'],
     }),
-    getClassMut: builder.mutation<
-      ClassType,
-      { modelId: string; classId: string; applicationProfile?: boolean }
-    >({
-      query: (value) => ({
-        url: `/class/${pathForModelType(value.applicationProfile)}${
-          value.modelId
-        }/${value.classId}`,
-        method: 'GET',
-      }),
-    }),
-    getNodeShapes: builder.query<InternalClass[], string>({
+    getNodeShapes: builder.query<InternalClassInfo[], string>({
       query: (targetClass) => ({
         url: `/class/nodeshapes?targetClass=${targetClass}`,
         method: 'GET',
@@ -145,7 +91,7 @@ export const classApi = createApi({
         method: 'DELETE',
       }),
     }),
-    getClassIdentifierFree: builder.query<
+    getClassExists: builder.query<
       boolean,
       {
         prefix: string;
@@ -153,9 +99,89 @@ export const classApi = createApi({
       }
     >({
       query: (props) => ({
-        url: `/class/${props.prefix}/free-identifier/${props.identifier}`,
+        url: `/class/${props.prefix}/${props.identifier}/exists`,
         method: 'GET',
       }),
+    }),
+    addPropertyReference: builder.mutation<
+      string,
+      {
+        prefix: string;
+        identifier: string;
+        uri: string;
+        applicationProfile: boolean;
+      }
+    >({
+      query: (value) => ({
+        url: `/class/${pathForModelType(value.applicationProfile)}${
+          value.prefix
+        }/${value.identifier}/properties`,
+        params: {
+          uri: value.uri,
+        },
+        method: 'PUT',
+      }),
+      invalidatesTags: ['Class'],
+    }),
+    deletePropertyReference: builder.mutation<
+      string,
+      {
+        prefix: string;
+        identifier: string;
+        uri: string;
+        currentTarget?: string;
+        applicationProfile: boolean;
+      }
+    >({
+      query: (value) => ({
+        url: `/class/${pathForModelType(value.applicationProfile)}${
+          value.prefix
+        }/${value.identifier}/properties`,
+        params: {
+          uri: value.uri,
+          currentTarget: value.currentTarget,
+        },
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Class'],
+    }),
+    updateClassResrictionTarget: builder.mutation<
+      string,
+      {
+        prefix: string;
+        identifier: string;
+        uri: string;
+        currentTarget?: string;
+        newTarget?: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/class/library/${value.prefix}/${value.identifier}/properties/modify`,
+        params: {
+          uri: value.uri,
+          currentTarget: value.currentTarget,
+          newTarget: value.newTarget,
+        },
+        method: 'PUT',
+      }),
+      invalidatesTags: ['Class'],
+    }),
+    renameClass: builder.mutation<
+      string,
+      {
+        prefix: string;
+        identifier: string;
+        newIdentifier: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/class/${value.prefix}/${value.identifier}/rename`,
+        params: {
+          newIdentifier: value.newIdentifier,
+        },
+        method: 'POST',
+      }),
+      invalidatesTags: ['Class'],
     }),
   }),
 });
@@ -171,19 +197,6 @@ export const classSlice = createSlice({
       };
     },
   },
-  // extraReducers: (builder) => {
-  //   builder.addMatcher(
-  //     classApi.endpoints.getClass.matchFulfilled, (state, action) => {
-  //       if (isEqual(state, action.payload)) {
-  //         return state;
-  //       }
-  //       return action.payload;
-  //     }
-  //   );
-  //   builder.addMatcher(isHydrate, (_, action) => {
-  //     return action.payload.model;
-  //   });
-  // }
 });
 
 export function selectClass() {
@@ -199,13 +212,17 @@ export function resetClass(): AppThunk {
 }
 
 export const {
-  usePutClassMutation,
+  useUpdateClassMutation,
+  useCreateClassMutation,
   useGetClassQuery,
-  useGetClassMutMutation,
   useGetNodeShapesQuery,
   useDeleteClassMutation,
-  useGetClassIdentifierFreeQuery,
+  useGetClassExistsQuery,
+  useAddPropertyReferenceMutation,
+  useDeletePropertyReferenceMutation,
+  useRenameClassMutation,
+  useUpdateClassResrictionTargetMutation,
   util: { getRunningQueriesThunk },
 } = classApi;
 
-export const { putClass, getClass, getClassMut } = classApi.endpoints;
+export const { updateClass, createClass, getClass } = classApi.endpoints;

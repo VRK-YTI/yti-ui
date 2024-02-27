@@ -1,6 +1,7 @@
 import {
   setHasChanges,
-  usePostModelMutation,
+  useUpdateModelMutation,
+  useUpdateVersionedModelMutation,
 } from '@app/common/components/model/model.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { ModelType } from '@app/common/interfaces/model.interface';
@@ -20,10 +21,15 @@ import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import ModelForm from '../model-form';
-import generatePayload from './generate-payload';
+import generatePayloadUpdate, {
+  generatePayloadVersionedUpdate,
+} from './generate-payload';
 import { FormUpdateErrors, validateFormUpdate } from './validate-form-update';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
+import { v4 } from 'uuid';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 
 interface ModelEditViewProps {
   model: ModelType;
@@ -44,7 +50,9 @@ export default function ModelEditView({
   const [userPosted, setUserPosted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
-  const [postModel, result] = usePostModelMutation();
+  const [updateModel, result] = useUpdateModelMutation();
+  const [updateVersionedModel, versionedResult] =
+    useUpdateVersionedModelMutation();
   const [formData, setFormData] = useState<ModelFormType>({
     contact: model.contact,
     externalNamespaces: model.externalNamespaces ?? [],
@@ -65,13 +73,17 @@ export default function ModelEditView({
     terminologies: model.terminologies ?? [],
     codeLists: model.codeLists ?? [],
     documentation: model.documentation ?? {},
+    links: model.links
+      ? model.links.map((l) => ({ ...l, id: v4().split('-')[0] }))
+      : [],
   });
 
   useEffect(() => {
-    if (result.isSuccess) {
+    if (result.isSuccess || versionedResult.isSuccess) {
       handleSuccess();
+      dispatch(setNotification('MODEL_EDIT'));
     }
-  }, [result, handleSuccess]);
+  }, [result, versionedResult, dispatch, handleSuccess]);
 
   useEffect(() => {
     if (!userPosted) {
@@ -90,11 +102,24 @@ export default function ModelEditView({
     if (
       ref.current &&
       ((errors && Object.values(errors).filter((val) => val).length > 0) ||
-        result.isError)
+        result.isError ||
+        versionedResult.isError)
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors, result]);
+
+    if (
+      ref.current &&
+      headerHeight > ref.current.clientHeight &&
+      (errors
+        ? Object.values(errors).filter((val) => val).length === 0
+        : true) &&
+      !result.isError &&
+      !versionedResult.isError
+    ) {
+      setHeaderHeight(ref.current.clientHeight);
+    }
+  }, [ref, errors, result, versionedResult, headerHeight]);
 
   const handleSubmit = () => {
     setUserPosted(true);
@@ -112,13 +137,22 @@ export default function ModelEditView({
       return;
     }
 
-    const payload = generatePayload(formData);
+    if (!model.version) {
+      const payload = generatePayloadUpdate(formData);
 
-    postModel({
-      payload: payload,
-      prefix: formData.prefix,
-      isApplicationProfile: formData.type === 'PROFILE',
-    });
+      updateModel({
+        payload: payload,
+        prefix: formData.prefix,
+        isApplicationProfile: formData.type === 'PROFILE',
+      });
+    } else {
+      const payload = generatePayloadVersionedUpdate(formData);
+      updateVersionedModel({
+        payload: payload,
+        modelId: formData.prefix,
+        version: model.version,
+      });
+    }
   };
 
   const handleUpdate = (data: ModelFormType) => {
@@ -130,10 +164,22 @@ export default function ModelEditView({
   return (
     <>
       <StaticHeader ref={ref}>
-        <div>
-          <Text variant="bold">{t('details', { ns: 'common' })}</Text>
-          <div>
-            <Button onClick={() => handleSubmit()}>{t('save')}</Button>
+        <HeaderRow>
+          <Text variant="bold">{t('edit-data-model')}</Text>
+          <HeaderRow>
+            <Button onClick={() => handleSubmit()}>
+              {result.isLoading || versionedResult.isLoading ? (
+                <div role="alert">
+                  <StyledSpinner
+                    variant="small"
+                    text={t('saving')}
+                    textAlign="right"
+                  />
+                </div>
+              ) : (
+                <>{t('save')}</>
+              )}
+            </Button>
             <Button
               variant="secondary"
               style={{ marginLeft: '10px' }}
@@ -141,8 +187,8 @@ export default function ModelEditView({
             >
               {t('cancel-variant')}
             </Button>
-          </div>
-        </div>
+          </HeaderRow>
+        </HeaderRow>
 
         <div>
           <FormFooterAlert
@@ -159,6 +205,7 @@ export default function ModelEditView({
           userPosted={userPosted}
           editMode={true}
           errors={userPosted ? errors : undefined}
+          oldVersion={!!model.version}
         />
       </DrawerContent>
     </>
@@ -169,14 +216,14 @@ export default function ModelEditView({
       return [];
     }
 
-    const langsWithError = Object.entries(errors)
-      .filter(([_, value]) => Array.isArray(value))
-      ?.flatMap(([key, value]) =>
-        (value as string[]).map(
-          (lang) =>
-            `${translateModelFormErrors(key, t)} ${translateLanguage(lang, t)}`
-        )
-      );
+    const langsWithError =
+      errors.titleAmount.length > 0
+        ? [
+            `${translateModelFormErrors('titleAmount', t)} ${errors.titleAmount
+              .map((lang) => translateLanguage(lang, t))
+              .join(', ')}`,
+          ]
+        : [];
 
     const otherErrors = Object.entries(errors)
       .filter(([_, value]) => value && !Array.isArray(value))
@@ -184,6 +231,11 @@ export default function ModelEditView({
 
     if (result.isError) {
       const errorMessage = getApiError(result.error);
+      return [...langsWithError, ...otherErrors, ...errorMessage];
+    }
+
+    if (versionedResult.isError) {
+      const errorMessage = getApiError(versionedResult.error);
       return [...langsWithError, ...otherErrors, ...errorMessage];
     }
 

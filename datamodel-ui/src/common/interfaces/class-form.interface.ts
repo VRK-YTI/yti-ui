@@ -1,36 +1,21 @@
 import { ConceptType } from './concept-interface';
-import { Status } from './status.interface';
+import { SimpleResource } from './simple-resource.interface';
+import { UriData } from './uri.interface';
 
 export interface ClassFormType {
   editorialNote: string;
   concept?: ConceptType;
-  equivalentClass: {
-    label: { [key: string]: string };
-    identifier: string;
-  }[];
+  equivalentClass?: UriData[];
   identifier: string;
+  uri: string;
   label: { [key: string]: string };
   note: { [key: string]: string };
-  subClassOf: {
-    label: string;
-    identifier: string;
-    attributes: string[];
-  }[];
-  status: Status;
-  targetClass?: { label: string; id: string };
-  node?: { label: string; id: string };
-  attribute?: {
-    identifier: string;
-    label: { [key: string]: string };
-    modelId: string;
-    uri: string;
-  }[];
-  association?: {
-    identifier: string;
-    label: { [key: string]: string };
-    modelId: string;
-    uri: string;
-  }[];
+  subClassOf?: UriData[];
+  disjointWith?: UriData[];
+  targetClass?: UriData;
+  node?: UriData;
+  attribute?: SimpleResource[];
+  association?: SimpleResource[];
 }
 
 export const initialClassForm: ClassFormType = {
@@ -38,8 +23,13 @@ export const initialClassForm: ClassFormType = {
   concept: undefined,
   equivalentClass: [],
   identifier: '',
+  uri: '',
   label: {},
   note: {},
   subClassOf: [],
-  status: 'DRAFT',
+  disjointWith: [],
+  targetClass: undefined,
+  node: undefined,
+  attribute: [],
+  association: [],
 };

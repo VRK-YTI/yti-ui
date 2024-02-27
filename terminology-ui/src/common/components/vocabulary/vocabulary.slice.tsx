@@ -9,7 +9,6 @@ import {
 } from '@app/common/interfaces/vocabulary.interface';
 import { UrlState } from '@app/common/utils/hooks/use-url-state';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
-import { HYDRATE } from 'next-redux-wrapper';
 
 export const vocabularyInitialState = {};
 
@@ -22,11 +21,6 @@ export const vocabularySlice = createSlice({
 export const vocabularyApi = createApi({
   reducerPath: 'vocabularyAPI',
   baseQuery: getTerminologyApiBaseQuery(),
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
   tagTypes: ['Vocabulary'],
   endpoints: (builder) => ({
     getCollections: builder.query<Collection[], string>({

@@ -1,6 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getMessagingApiBaseQuery } from '@app/store/api-base-query';
-import { HYDRATE } from 'next-redux-wrapper';
 import {
   Subscription,
   Subscriptions,
@@ -9,17 +8,12 @@ import {
 export const subscriptionApi = createApi({
   reducerPath: 'subsriptionApi',
   baseQuery: getMessagingApiBaseQuery(),
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
   tagTypes: ['Subscription'],
   endpoints: (builder) => ({
     getSubscription: builder.query<Subscription | '', string>({
       query: (url) => ({
         url:
-          process.env.ENV_TYPE !== 'production'
+          process.env.ENV_TYPE === 'development'
             ? '/subscriptions?fake.login.mail=admin@localhost'
             : '/subscriptions',
         method: 'POST',
@@ -29,10 +23,10 @@ export const subscriptionApi = createApi({
         },
       }),
     }),
-    getSubscriptions: builder.query<Subscriptions, null>({
+    getSubscriptions: builder.query<Subscriptions, void>({
       query: () => ({
         url:
-          process.env.ENV_TYPE !== 'production'
+          process.env.ENV_TYPE === 'development'
             ? '/user?fake.login.mail=admin@localhost'
             : '/user',
         method: 'GET',
@@ -44,7 +38,7 @@ export const subscriptionApi = createApi({
     >({
       query: (params) => ({
         url:
-          process.env.ENV_TYPE !== 'production'
+          process.env.ENV_TYPE === 'development'
             ? '/subscriptions?fake.login.mail=admin@localhost'
             : '/subscriptions',
         method: 'POST',
@@ -59,7 +53,7 @@ export const subscriptionApi = createApi({
     toggleSubscriptions: builder.mutation<Subscriptions, 'DAILY' | 'DISABLED'>({
       query: (subscriptionType) => ({
         url:
-          process.env.NODE_ENV === 'development'
+          process.env.ENV_TYPE === 'development'
             ? '/user/subscriptiontype?fake.login.mail=admin@localhost'
             : '/user/subscriptiontype',
         method: 'POST',

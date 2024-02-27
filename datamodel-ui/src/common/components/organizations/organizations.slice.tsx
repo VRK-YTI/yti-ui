@@ -1,4 +1,3 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { Organization } from '@app/common/interfaces/organizations.interface';
@@ -6,16 +5,18 @@ import { Organization } from '@app/common/interfaces/organizations.interface';
 export const organizationsApi = createApi({
   reducerPath: 'organizationsApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['organizations'],
-  extractRehydrationInfo(action, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
+  tagTypes: ['Organizations'],
   endpoints: (builder) => ({
-    getOrganizations: builder.query<Organization[], string>({
+    getOrganizations: builder.query<
+      Organization[],
+      { sortLang: string; includeChildOrganizations?: boolean }
+    >({
       query: (value) => ({
-        url: `/frontend/organizations?sortLang=${value}`,
+        url: `/frontend/organizations?sortLang=${value.sortLang}${
+          value.includeChildOrganizations
+            ? '&includeChildOrganizations=true'
+            : ''
+        }`,
         method: 'GET',
       }),
     }),

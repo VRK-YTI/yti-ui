@@ -31,13 +31,14 @@ export default function SanitizedTextContent({
           <Link
             passHref
             href={url?.includes('uri.suomi.fi') ? `${url}&env=env_v2` : url}
+            legacyBehavior
           >
             <SuomiInternalLink href="">{children}</SuomiInternalLink>
           </Link>
         );
       } else {
         return (
-          <Link passHref href={node.getAttribute('href') ?? ''}>
+          <Link passHref href={node.getAttribute('href') ?? ''} legacyBehavior>
             <SuomiExternalLink
               href=""
               labelNewWindow={`${t(

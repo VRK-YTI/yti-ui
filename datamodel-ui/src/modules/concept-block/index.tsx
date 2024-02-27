@@ -2,11 +2,9 @@ import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Button,
-  Expander,
-  ExpanderTitleButton,
   ExternalLink,
   InlineAlert,
   Modal,
@@ -21,15 +19,12 @@ import {
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import {
-  SearchBlock,
-  SearchResultWrapper,
-  SelectedConceptsGroup,
-} from './concept-block.styles';
+import { SearchBlock, SearchResultWrapper } from './concept-block.styles';
 import { useGetConceptsQuery } from '@app/common/components/concept-search/concept-search.slice';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
 import { DetachedPagination } from 'yti-common-ui/pagination';
+import ConceptView from '../concept-view';
 
 interface ConceptBlockProps {
   concept?: ConceptType;
@@ -48,6 +43,7 @@ export default function ConceptBlock({
   const [keyword, setKeyword] = useState('');
   const [selected, setSelected] = useState<ConceptType | undefined>(concept);
   const [currentPage, setCurrentPage] = useState(1);
+
   const [terminologyOptions] = useState([
     {
       labelText: t('terminologies-linked-to-data-model'),
@@ -62,13 +58,27 @@ export default function ConceptBlock({
     terminologyOptions.find((o) => o.uniqueItemId === 'linked')
   );
 
-  const { data } = useGetConceptsQuery({
-    keyword: keyword,
-    terminologies:
-      selectedOption?.uniqueItemId === 'linked' ? terminologies : [],
-    highlight: false,
-    pageFrom: currentPage,
-  });
+  // set to false if no terminologies are linked to data model, and the
+  // uniqueItemId is 'linked'
+  const [hasTerminologies, setHasTerminologies] = useState<boolean>(false);
+  useEffect(() => {
+    setHasTerminologies(
+      !(selectedOption?.uniqueItemId === 'linked' && terminologies.length === 0)
+    );
+  }, [selectedOption, terminologies]);
+
+  const { data } = useGetConceptsQuery(
+    {
+      keyword: keyword,
+      terminologies:
+        selectedOption?.uniqueItemId === 'linked' ? terminologies : [],
+      highlight: false,
+      pageFrom: currentPage,
+    },
+    {
+      skip: !hasTerminologies, // no need to fetch if we're not listing concepts
+    }
+  );
 
   const handleOpen = () => {
     setVisible(true);
@@ -112,36 +122,43 @@ export default function ConceptBlock({
 
   return (
     <>
-      <BasicBlock title={t('concept')}>
+      <BasicBlock
+        largeGap
+        title={`${t('concept', { ns: 'common' })} (dcterms:subject)`}
+      >
         {!concept ? (
-          <InlineAlert status="warning" style={{ marginBottom: '5px' }}>
-            {t('concept-undefined')}
-          </InlineAlert>
+          <InlineAlert>{t('choose-concept-from-terminology')}</InlineAlert>
         ) : (
-          <SelectedConceptsGroup
-            closeAllText=""
-            openAllText=""
-            showToggleAllButton={false}
-          >
-            <Expander>
-              <ExpanderTitleButton>
-                {getLanguageVersion({
-                  data: concept.label,
-                  lang: i18n.language,
-                })}
-              </ExpanderTitleButton>
-            </Expander>
-          </SelectedConceptsGroup>
+          <ConceptView data={concept} />
         )}
-        <Button
-          variant="secondary"
-          style={{ width: 'min-content', whiteSpace: 'nowrap' }}
-          onClick={() => handleOpen()}
-          id="select-concept-button"
-        >
-          {t('select-concept')}
-        </Button>
-
+        <div>
+          <Button
+            variant="secondary"
+            style={{
+              width: 'min-content',
+              marginLeft: '1px',
+              whiteSpace: 'nowrap',
+            }}
+            onClick={() => handleOpen()}
+            id="select-concept-button"
+          >
+            {t('select-concept')}
+          </Button>
+          {concept && (
+            <Button
+              variant="secondary"
+              style={{
+                width: 'min-content',
+                marginLeft: '10px',
+                whiteSpace: 'nowrap',
+              }}
+              onClick={() => setConcept(undefined)}
+              id="delete-concept-button"
+            >
+              {t('delete-concept')}
+            </Button>
+          )}
+        </div>
         <Modal
           appElementId="__next"
           visible={visible}
@@ -161,11 +178,9 @@ export default function ConceptBlock({
               />
               <SingleSelect
                 clearButtonLabel={t('clear-selection')}
-                labelText={t('terminology')}
-                noItemsText={t('no-terminologies-available') as string}
-                ariaOptionsAvailableText={
-                  t('terminologies-available') as string
-                }
+                labelText={t('terminology', { ns: 'common' })}
+                noItemsText={t('no-terminologies-available')}
+                ariaOptionsAvailableText={t('terminologies-available')}
                 allowItemAddition={false}
                 selectedItem={selectedOption}
                 items={terminologyOptions}
@@ -174,7 +189,9 @@ export default function ConceptBlock({
               />
             </SearchBlock>
 
-            {!data || data.totalHitCount < 1 ? (
+            {!hasTerminologies ? (
+              <Text>{t('no-linked-terminologies', { ns: 'common' })}</Text>
+            ) : !data || data.totalHitCount < 1 ? (
               <Text>{t('search-concept-by-keyword')}</Text>
             ) : (
               <>
@@ -212,7 +229,17 @@ export default function ConceptBlock({
                             terminology: c.terminology,
                           })
                         }
-                        id="concept-radio-button"
+                        onKeyPress={(e) =>
+                          e.key === 'Enter' &&
+                          handleRadioButtonClick({
+                            label: c.label,
+                            conceptURI: c.uri,
+                            definition: c.definition,
+                            status: c.status,
+                            terminology: c.terminology,
+                          })
+                        }
+                        id={`concept-radio-button-${c.uri}`}
                       />
                       <div>
                         <Text>
