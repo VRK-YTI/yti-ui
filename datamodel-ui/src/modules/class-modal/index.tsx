@@ -64,6 +64,7 @@ export default function ClassModal({
   const [visible, setVisible] = useState(false);
   const [selectedId, setSelectedId] = useState(initialSelected ?? '');
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
+  const [totalHitCount, setTotalHitCount] = useState(0);
   const [contentLanguage, setContentLanguage] = useState<string>();
   const [searchInternalResources, result] =
     useGetInternalResourcesInfoMutation();
@@ -136,6 +137,7 @@ export default function ClassModal({
 
   useEffect(() => {
     if (result.isSuccess) {
+      setTotalHitCount(result.data.totalHitCount);
       setResultsFormatted(
         result.data.responseObjects
           .filter((r) => !hiddenClasses?.includes(r.id))
@@ -171,7 +173,7 @@ export default function ClassModal({
           <MultiColumnSearch
             primaryColumnName={t('class-name')}
             result={{
-              totalHitCount: resultsFormatted.length,
+              totalHitCount: totalHitCount,
               items: resultsFormatted,
             }}
             selectedId={selectedId}

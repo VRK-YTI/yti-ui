@@ -194,7 +194,7 @@ export default function MultiColumnSearch({
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    setSearchParams({ ...searchParams, pageFrom: (page - 1) * 2 });
+    setSearchParams({ ...searchParams, pageFrom: page - 1 });
   };
 
   return (
@@ -381,8 +381,8 @@ export default function MultiColumnSearch({
 
       <DetachedPagination
         currentPage={currentPage}
-        maxPages={Math.ceil((result.totalHitCount ?? 0) / 20)}
-        maxTotal={20}
+        maxPages={Math.ceil((result.totalHitCount ?? 0) / 50)}
+        maxTotal={50}
         setCurrentPage={(number) => handlePageChange(number)}
       />
     </div>
