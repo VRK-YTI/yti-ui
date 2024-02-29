@@ -56,6 +56,7 @@ export default function ResourceModal({
   const [selectedId, setSelectedId] = useState('');
   const [contentLanguage, setContentLanguage] = useState<string>();
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
+  const [totalHitCount, setTotalHitCount] = useState(0);
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>(
       initialSearchData(i18n.language, modelId, type, limitSearchTo)
@@ -114,6 +115,7 @@ export default function ResourceModal({
 
   useEffect(() => {
     if (result.isSuccess) {
+      setTotalHitCount(result.data.totalHitCount);
       setResultsFormatted(
         result.data.responseObjects
           .filter((r) => !hiddenResources?.includes(r.id))
@@ -141,7 +143,7 @@ export default function ResourceModal({
         <MultiColumnSearch
           primaryColumnName={translateResourceName(type, t, applicationProfile)}
           result={{
-            totalHitCount: resultsFormatted.length,
+            totalHitCount: totalHitCount,
             items: resultsFormatted,
           }}
           selectedId={selectedId}
