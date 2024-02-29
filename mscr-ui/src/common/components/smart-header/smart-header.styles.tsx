@@ -5,6 +5,7 @@ export const HeaderWrapper = styled.div<{
   $breakpoint: Breakpoint;
   $fullHeight?: boolean;
 }>`
+  position: relative;
   display: flex;
   align-items: center;
   gap: 2rem;

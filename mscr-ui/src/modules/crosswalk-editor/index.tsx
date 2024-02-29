@@ -37,7 +37,7 @@ import {
   useGetMappingsQuery,
   useGetCrosswalkWithRevisionsQuery
 } from '@app/common/components/crosswalk/crosswalk.slice';
-import { useGetFrontendSchemaQuery } from '@app/common/components/schema/schema.slice';
+import {useGetFrontendSchemaQuery} from '@app/common/components/schema/schema.slice';
 import { useGetCrosswalkMappingFunctionsQuery } from '@app/common/components/crosswalk-functions/crosswalk-functions.slice';
 import { createTheme, ThemeProvider } from '@mui/material';
 import HasPermission from '@app/common/utils/has-permission';
@@ -299,6 +299,7 @@ export default function CrosswalkEditor({
           setSourceTreeDataOriginal(cloneDeep(res));
           setSourceTreeData(res);
           setSourceDataFetched(true);
+          //refetchOriginalSourceSchemaData();
         }
       });
     }
@@ -321,7 +322,7 @@ export default function CrosswalkEditor({
       const nodeMappings = mappingsFromBackend as NodeMapping[];
       setNodeMappings(nodeMappings);
     }
-  }, [getTargetSchemaDataIsSuccess]);
+  }, [getMappingsDataIsSuccess]);
 
   // Add mapping to accordion
   if (putMappingResponse.isSuccess) {
@@ -871,18 +872,20 @@ export default function CrosswalkEditor({
               isSourceDataFetched &&
               isTargetDataFetched &&
               getCrosswalkData && (
-                <>
-                  <MetadataAndFiles
-                    crosswalkData={getCrosswalkData}
-                    performMetadataAndFilesAction={
-                      performMetadataAndFilesAction
-                    }
-                    nodeMappings={nodeMappings}
-                    crosswalkId={crosswalkId}
-                    isAdmin={isAdmin}
-                  />
-                </>
-              )}
+              <>
+                <MetadataAndFiles
+                  crosswalkData={getCrosswalkData}
+                  sourceSchemaData={getSourceSchemaData}
+                  targetSchemaData={getTargetSchemaData}
+                  performMetadataAndFilesAction={
+                    performMetadataAndFilesAction
+                  }
+                  nodeMappings={nodeMappings}
+                  crosswalkId={crosswalkId}
+                  isAdmin={isAdmin}
+                />
+              </>
+            )}
             {/*            <CustomTabPanel value={selectedTab} index={0}>
             </CustomTabPanel>
             <CustomTabPanel value={selectedTab} index={1}>

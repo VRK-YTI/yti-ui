@@ -3,7 +3,6 @@ import { LanguageBlockType } from 'yti-common-ui/form/language-selector';
 import { State } from '@app/common/interfaces/state.interface';
 import { ContentRevision } from '@app/common/interfaces/content-revision.interface';
 
-//sample Crosswalk
 export interface Crosswalk {
   pid?: string;
   format: string;
@@ -40,25 +39,6 @@ export interface CrosswalkFormType {
   versionLabel?: string;
 }
 
-export interface CreateCrosswalkMockupType {
-  pid?: string;
-  format: string;
-  status: string | undefined;
-  state: string | undefined;
-  label: {
-    [key: string]: string;
-  };
-  description: {
-    [key: string]: string;
-  };
-  languages: string[];
-  organizations: string[];
-  sourceSchema: string;
-  targetSchema: string;
-  namespace?: string;
-  versionLabel?: string;
-}
-
 export interface CrosswalkFormMockupType {
   pid?: string;
   format: string;
@@ -72,4 +52,11 @@ export interface CrosswalkFormMockupType {
   targetSchema: string;
   namespace?: string;
   versionLabel?: string;
+}
+
+export interface FilesRow {
+  name: any;
+  added: any;
+  format: any;
+  file: any;
 }

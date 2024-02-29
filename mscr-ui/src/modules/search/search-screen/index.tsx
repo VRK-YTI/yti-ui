@@ -10,7 +10,7 @@ import useUrlState, {
   initialUrlState,
 } from '@app/common/utils/hooks/use-url-state';
 import { IconClose } from 'suomifi-icons';
-import { useContext } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { SearchContext } from '@app/common/components/search-context-provider';
 import SearchFilterSet from 'src/modules/search/search-filter-set';
 import { useTranslation } from 'next-i18next';
@@ -22,7 +22,7 @@ export default function SearchScreen() {
   const { setIsSearchActive } = useContext(SearchContext);
   const { data: mscrSearchResults } = useGetMscrSearchResultsQuery(urlState);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsSearchActive(false);
     patchUrlState({
       q: initialUrlState.q,
@@ -33,7 +33,21 @@ export default function SearchScreen() {
       isReferenced: initialUrlState.isReferenced,
       page: initialUrlState.page,
     });
-  };
+  }, [patchUrlState, setIsSearchActive]);
+
+  const closeOnEsc = useCallback(
+    (event) => {
+      if (event.key === 'Escape') handleClose();
+    },
+    [handleClose]
+  );
+
+  useEffect(() => {
+    document.addEventListener('keydown', closeOnEsc, false);
+    return () => {
+      document.removeEventListener('keydown', closeOnEsc, false);
+    };
+  }, [closeOnEsc]);
 
   // if (!mscrSearchResults) {
   //   // TODO: Some kind of error message?
