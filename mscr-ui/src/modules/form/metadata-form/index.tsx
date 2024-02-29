@@ -18,6 +18,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { Visibility } from '@app/common/interfaces/search.interface';
+import { State } from '@app/common/interfaces/state.interface';
 
 interface MetadataFormProps {
   metadata: Metadata;
@@ -248,7 +249,7 @@ export default function MetadataForm({
                           {t('action.edit')}
                         </ActionMenuItem>
                         <ActionMenuItem
-                          className={isPublished ? 'd-none' : ''}
+                          className={metadata.state == State.Draft ? '' : 'd-none'}
                           onClick={() => setPublishConfirmModalOpen(true)}
                         >
                           {t('action.publish')}
