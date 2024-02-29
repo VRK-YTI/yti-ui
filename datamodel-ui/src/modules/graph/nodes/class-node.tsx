@@ -42,6 +42,7 @@ import ResourceModal from '@app/modules/class-view/resource-modal';
 import { translateResourceAddition } from '@app/common/utils/translation-helpers';
 import { getSlugAsString } from '@app/common/utils/parse-slug';
 import { useRouter } from 'next/router';
+import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
 
 interface ClassNodeProps {
   id: string;
@@ -124,6 +125,11 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
     type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE,
     uri: string
   ) => {
+    if (!uri.startsWith(SUOMI_FI_NAMESPACE)) {
+      window.open(uri, '_blank');
+      return;
+    }
+
     const resourceType =
       type === ResourceType.ASSOCIATION ? 'associations' : 'attributes';
 
