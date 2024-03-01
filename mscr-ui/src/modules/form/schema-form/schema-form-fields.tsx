@@ -59,6 +59,7 @@ SchemaFormProps) {
           <DropdownItem value={'SKOSRDF'}>{'SKOSRDF'}</DropdownItem>
           <DropdownItem value={'XSD'}>{'XSD'}</DropdownItem>
           <DropdownItem value={'XML'}>{'XML'}</DropdownItem>
+	  <DropdownItem value={'SHACL'}>{'SHACL'}</DropdownItem>
         </Dropdown>
       </div>
     );
