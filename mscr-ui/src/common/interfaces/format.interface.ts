@@ -13,4 +13,5 @@ export const formatsAvailableForCrosswalkCreation: Format[] = [
   'CSV',
   'SKOSRDF',
   'XSD',
+  'SHACL',
 ];
