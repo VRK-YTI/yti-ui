@@ -13,7 +13,6 @@ import {
 } from './mscr-language-selector.styles';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 
-
 export interface LanguageBlockType {
   labelText: string;
   uniqueItemId: string;
@@ -126,7 +125,7 @@ export default function MscrLanguageSelector(
           key={`${item.uniqueItemId}-${idx}`}
           id={`language-block-${item.uniqueItemId}`}
         >
-         {/*  <Paragraph marginBottomSpacing="m">
+          {/*  <Paragraph marginBottomSpacing="m">
             <Text variant="bold">{item.labelText}</Text>
           </Paragraph> */}
           <NameInput
