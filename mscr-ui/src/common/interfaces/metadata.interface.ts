@@ -22,3 +22,19 @@ export interface Metadata {
   namespace?: string;
   prefix?: string;
 }
+
+export interface MetadataFormType {
+  label: string;
+  description: string;
+  contact: string;
+  versionLabel: string;
+  visibility: string;
+}
+
+export const initialMetadataForm: MetadataFormType = {
+  label: '',
+  description: '',
+  contact: '',
+  versionLabel: '',
+  visibility: '',
+};

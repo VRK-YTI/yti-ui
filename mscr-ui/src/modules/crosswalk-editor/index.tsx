@@ -171,7 +171,7 @@ export default function CrosswalkEditor({
     id: string;
   }
 
-  const { data: mappingFunctions, isLoading: mappingFunctionsIsLoading } =
+  const { data: mappingFunctions, isLoading: mappingFunctionsIsLoading, refetch } =
     useGetCrosswalkMappingFunctionsQuery('');
 
   const { data: mappingFilters, isLoading: mappingFiltersIsLoading } =
@@ -873,6 +873,7 @@ export default function CrosswalkEditor({
               <>
                 <MetadataAndFiles
                   crosswalkData={getCrosswalkData}
+                  refetch={refetchCrosswalkData}
                   sourceSchemaData={getSourceSchemaData}
                   targetSchemaData={getTargetSchemaData}
                   performMetadataAndFilesAction={

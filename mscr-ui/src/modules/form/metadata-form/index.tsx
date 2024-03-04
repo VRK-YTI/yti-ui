@@ -1,4 +1,8 @@
-import { Metadata } from '@app/common/interfaces/metadata.interface';
+import {
+  initialMetadataForm,
+  Metadata,
+  MetadataFormType,
+} from '@app/common/interfaces/metadata.interface';
 import { usePatchCrosswalkMutation } from '@app/common/components/crosswalk/crosswalk.slice';
 import { usePatchSchemaMutation } from '@app/common/components/schema/schema.slice';
 import { useTranslation } from 'next-i18next';
@@ -13,19 +17,23 @@ import {
   Textarea,
   TextInput,
 } from 'suomifi-ui-components';
-import ConfirmModal from '@app/common/components/confirmation-modal';
 import * as React from 'react';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { Visibility } from '@app/common/interfaces/search.interface';
+import { Type, Visibility } from '@app/common/interfaces/search.interface';
 import { State } from '@app/common/interfaces/state.interface';
+import ConfirmModal from '@app/common/components/confirmation-modal';
 
 interface MetadataFormProps {
+  type: Type;
   metadata: Metadata;
+  refetchMetadata: () => void;
   hasEditPermission: boolean;
 }
 export default function MetadataForm({
+  type,
   metadata,
+  refetchMetadata,
   hasEditPermission,
 }: MetadataFormProps) {
   const { t } = useTranslation('common');
@@ -33,42 +41,82 @@ export default function MetadataForm({
   const lang = router.locale ?? '';
   const [isEditModeActive, setIsEditModeActive] = useState<boolean>(false);
   const [patchCrosswalk, patchCrosswalkResponse] = usePatchCrosswalkMutation();
-  const [patchSchema, patchSchemaMutation] = usePatchSchemaMutation();
-  const localizedLabel = metadata.label
-    ? getLanguageVersion({
+  const [patchSchema, patchSchemaResponse] = usePatchSchemaMutation();
+  const [isSaveConfirmModalOpen, setSaveConfirmModalOpen] =
+    React.useState<boolean>(false);
+  const [isPublishConfirmModalOpen, setPublishConfirmModalOpen] =
+    React.useState<boolean>(false);
+  const [formData, setFormData] =
+    useState<MetadataFormType>(initialMetadataForm);
+
+  const performModalAction = (action: string) => {
+    setSaveConfirmModalOpen(false);
+    setPublishConfirmModalOpen(false);
+    if (action === 'close') {
+      return;
+    }
+    let payload = generatePayload();
+    if (action === 'publish') {
+      payload = {...payload, state: State.Published, visibility: Visibility.Public};
+    }
+    if (action === 'save' || action === 'publish') {
+      setIsEditModeActive(false);
+      if (type === 'CROSSWALK') {
+        patchCrosswalk({payload: payload, pid: metadata.pid});
+      } else if (type === 'SCHEMA') {
+        patchSchema({payload: payload, pid: metadata.pid});
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (patchCrosswalkResponse.isSuccess || patchSchemaResponse.isSuccess) {
+      refetchMetadata();
+    }
+  }, [patchCrosswalkResponse.isSuccess, patchSchemaResponse.isSuccess, refetchMetadata]);
+
+  const generatePayload = () : Partial<Metadata> => {
+    return {
+      label: {...metadata.label, [lang]: formData.label},
+      description: {...metadata.description, [lang]: formData.description},
+      contact: formData.contact,
+      versionLabel: formData.versionLabel,
+      visibility: formData.visibility as Visibility
+    };
+  };
+
+  const setFormValuesFromData = useCallback(() => {
+    const localizedLabel = metadata.label
+      ? getLanguageVersion({
         data: metadata.label,
         lang,
       })
-    : '';
-  const localizedDescription = metadata.description
-    ? getLanguageVersion({
+      : '';
+    const localizedDescription = metadata.description
+      ? getLanguageVersion({
         data: metadata.description,
         lang,
       })
-    : '';
+      : '';
+    const formValuesFromData: MetadataFormType = {
+      label: localizedLabel,
+      description: localizedDescription,
+      visibility: metadata.visibility ?? Visibility.Private,
+      versionLabel: metadata.versionLabel ?? '',
+      contact: metadata.contact ?? '',
+    };
+    setFormData(formValuesFromData);
+  }, [metadata, lang]);
 
-  interface EditableMetadataFields {
-    label: string;
-    description: string;
-    visibility: string;
-    versionLabel: string;
-    contact: string;
-  }
-  const initialFormData: EditableMetadataFields = {
-    label: localizedLabel,
-    description: localizedDescription,
-    visibility: metadata.visibility ?? 'PRIVATE',
-    versionLabel: metadata.versionLabel ?? '',
-    contact: metadata.contact ?? '',
-  };
-  const [formData, setFormData] =
-    useState<EditableMetadataFields>(initialFormData);
+  useEffect(() => {
+    setFormValuesFromData();
+  }, [setFormValuesFromData]);
 
   function updateFormData(
-    attributeName: keyof EditableMetadataFields,
+    attributeName: keyof MetadataFormType,
     value: string | number | undefined
   ) {
-    const newFormData: EditableMetadataFields = { ...formData };
+    const newFormData: MetadataFormType = { ...formData };
     newFormData[attributeName] = value?.toString() ?? '';
     setFormData(newFormData);
   }
@@ -95,7 +143,7 @@ export default function MetadataForm({
                     />
                   )}
                   {!isEditModeActive && (
-                    <div className="br-label">{localizedLabel}</div>
+                    <div className="br-label">{formData.label}</div>
                   )}
                 </Grid>
               </Grid>
@@ -190,7 +238,7 @@ export default function MetadataForm({
                   {t('metadata.visibility')}:
                 </Grid>
                 <Grid item xs={8}>
-                  {isEditModeActive && (
+                  {isEditModeActive && metadata.state === State.Draft && (
                     <Dropdown
                       labelText=""
                       value={formData.visibility}
@@ -204,7 +252,7 @@ export default function MetadataForm({
                       </DropdownItem>
                     </Dropdown>
                   )}
-                  {!isEditModeActive && (
+                  {(!isEditModeActive || metadata.state !== State.Draft) && (
                     <div className="br-label">
                       {metadata.visibility}
                     </div>
@@ -233,7 +281,7 @@ export default function MetadataForm({
                     )}
                     {!isEditModeActive && (
                       <div className="description-label">
-                        {localizedDescription}
+                        {formData.description}
                       </div>
                     )}
                   </Grid>
@@ -280,7 +328,7 @@ export default function MetadataForm({
                     variant="secondary"
                     onClick={() => {
                       setIsEditModeActive(false);
-                      setInitialPatchValuesFromData();
+                      setFormValuesFromData();
                     }}
                   >
                     {t('action.cancel')}
@@ -291,10 +339,6 @@ export default function MetadataForm({
           </Grid>
           <br />
         </Grid>
-        {/*        <FilesComponent
-          crosswalkData={props.crosswalkData}
-          isAdmin={hasEditRights}
-        ></FilesComponent>*/}
         <ConfirmModal
           isVisible={isSaveConfirmModalOpen}
           actionName={'save'}

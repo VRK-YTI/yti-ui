@@ -15,6 +15,10 @@ import { Grid } from '@mui/material';
 import router from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import { useTranslation } from 'next-i18next';
+import MetadataForm from '@app/modules/form/metadata-form';
+import { Type } from '@app/common/interfaces/search.interface';
+import { CrosswalkWithVersionInfo } from '@app/common/interfaces/crosswalk.interface';
+
 // import FilesComponent from '@app/modules/crosswalk-editor/tabs/metadata-and-files/files-component';
 
 interface patchPayload {
@@ -28,6 +32,8 @@ interface patchPayload {
 }
 
 export default function MetadataAndFiles(props: {
+  refetch: () => void;
+  // crosswalkData: CrosswalkWithVersionInfo;
   crosswalkData: any;
   sourceSchemaData: any;
   targetSchemaData: any;
@@ -163,8 +169,13 @@ export default function MetadataAndFiles(props: {
     }
   }
 
+  const newFormTesting = false;
   return (
     <>
+      {newFormTesting && (
+        <MetadataForm type={Type.Crosswalk} metadata={props.crosswalkData} refetchMetadata={props.refetch} hasEditPermission={hasEditRights} />
+      )}
+      {!newFormTesting && (
       <div className="crosswalk-editor metadata-and-files-wrap mx-2">
         <Grid>
           <Grid container>
@@ -408,6 +419,7 @@ export default function MetadataAndFiles(props: {
           text2={t('confirm-modal.publish-crosswalk2')}
         />
       </div>
+      )}
     </>
   );
 }
