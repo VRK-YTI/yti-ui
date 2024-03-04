@@ -32,7 +32,7 @@ export default function GenericTable(props: {
         );
       });
       head.push(
-        <StyledTableHead>
+        <StyledTableHead key={self.crypto.randomUUID()}>
           <StyledTableRow key={self.crypto.randomUUID()}>
             {cells}
           </StyledTableRow>
@@ -49,7 +49,7 @@ export default function GenericTable(props: {
       }
       head.push(
         <StyledTableHead key={self.crypto.randomUUID()}>
-          <StyledTableRow>{cells}</StyledTableRow>
+          <StyledTableRow key={self.crypto.randomUUID()}>{cells}</StyledTableRow>
         </StyledTableHead>,
       );
     }

@@ -1,4 +1,5 @@
 import { useTranslation } from 'next-i18next';
+import * as React from 'react';
 import { useMemo } from 'react';
 import {
   SchemaFileData,
@@ -19,6 +20,7 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
+import MetadataFilesTable from '@app/common/components/metadata-files-table';
 
 export default function MetadataAndFiles({
   schemaDetails,
@@ -118,7 +120,9 @@ export default function MetadataAndFiles({
           </Grid>
 
           <Grid item xs={2}>
-            <DescriptionListTitle>{t('metadata.version-label')}</DescriptionListTitle>
+            <DescriptionListTitle>
+              {t('metadata.version-label')}
+            </DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
             <dd>{schemaDisplay.schemaVersionLabel}</dd>
@@ -132,7 +136,9 @@ export default function MetadataAndFiles({
           </Grid>
 
           <Grid item xs={2}>
-            <DescriptionListTitle>{t('metadata.modified')}</DescriptionListTitle>
+            <DescriptionListTitle>
+              {t('metadata.modified')}
+            </DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
             <dd>{schemaDisplay.schemaModified}</dd>
@@ -162,7 +168,9 @@ export default function MetadataAndFiles({
           </Grid>
 
           <Grid item xs={2}>
-            <DescriptionListTitle>{t('metadata.namespace')}</DescriptionListTitle>
+            <DescriptionListTitle>
+              {t('metadata.namespace')}
+            </DescriptionListTitle>
           </Grid>
           <Grid item xs={10}>
             <dd>{schemaDisplay.schemaNamespace}</dd>
@@ -178,30 +186,9 @@ export default function MetadataAndFiles({
           </Grid>
         </Grid>
       </DescriptionList>
-      <TableContainer>
-        <Table aria-label={t('metadata.file.label')}>
-          <TableHead>
-            <TableRow>
-              <TableCell>{t('metadata.file.name')}</TableCell>
-              <TableCell>{t('metadata.file.id')}</TableCell>
-              <TableCell>{t('metadata.file.format')}</TableCell>
-              <TableCell>{t('metadata.file.size')}</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {/*TODO: Use the below template to create lines for files*/}
-            {schemaFiles &&
-              schemaFiles.map((file) => (
-                <TableRow key={file.fileID}>
-                  <TableCell>{file.fileID}</TableCell>
-                  <TableCell>{file.fileID}</TableCell>
-                  <TableCell>{file.contentType}</TableCell>
-                  <TableCell>{file.size}</TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <MetadataFilesTable
+        filesRowInput={schemaFiles} pid={schemaDetails?.pid} canEdit={false}
+      ></MetadataFilesTable>
     </>
   );
 }

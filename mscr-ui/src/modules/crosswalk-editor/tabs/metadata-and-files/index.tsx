@@ -14,6 +14,7 @@ import * as React from 'react';
 import { Grid } from '@mui/material';
 import router from 'next/router';
 import FilesComponent from '@app/modules/crosswalk-editor/tabs/metadata-and-files/files-component';
+import MetadataFilesTable from "@app/common/components/metadata-files-table";
 
 interface patchPayload {
   label: string;
@@ -388,10 +389,10 @@ export default function MetadataAndFiles(props: {
           </Grid>
           <br />
         </Grid>
-        {/*        <FilesComponent
-          crosswalkData={props.crosswalkData}
-          isAdmin={props.isAdmin}
-        ></FilesComponent>*/}
+
+        <MetadataFilesTable filesRowInput={props.crosswalkData.fileMetadata} crosswalkData={props.crosswalkData} pid={props.crosswalkData.pid} canEdit={props.isAdmin}>
+        </MetadataFilesTable>
+
         <ConfirmModal
           isVisible={isSaveConfirmModalOpen}
           actionName={'save'}
