@@ -76,7 +76,7 @@ export default function GenericTable(props: {
         <Grid container>
           <h2>{props.caption}</h2>
         </Grid>
-        <TableContainer>
+        <TableContainer >
           <Table aria-label={props.caption}>
             {createColumnHeadings(props.items)}
             {createColumns(props.items)}

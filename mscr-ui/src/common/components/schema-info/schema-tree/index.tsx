@@ -43,21 +43,20 @@ export default function SchemaTree({
   nodes,
   treeSelectedArray,
   treeExpanded,
-  isSourceTree,
   performTreeAction,
 }: {
   nodes: any;
   treeSelectedArray: string[];
   treeExpanded: string[];
-  isSourceTree: boolean;
   performTreeAction: any;
 }) {
+
   const handleSelect = (event: React.SyntheticEvent, nodeIds: string[]) => {
-    performTreeAction(isSourceTree, 'handleSelect', event, nodeIds);
+    performTreeAction('handleSelect', event, nodeIds);
   };
 
   const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
-    performTreeAction(isSourceTree, 'treeToggle', event, nodeIds);
+    performTreeAction('treeToggle', event, nodeIds);
   };
 
   // console.log('TREEVIEW DATA', nodes, treeSelectedArray);
