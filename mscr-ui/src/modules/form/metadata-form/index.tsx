@@ -43,7 +43,7 @@ export default function MetadataForm({
   const router = useRouter();
   const lang = router.locale ?? '';
   const dispatch = useStoreDispatch();
-  const [isEditModeActive, setIsEditModeActive] = useState<boolean>(false);
+  const [isEditModeActive, setIsEditModeActive] = useState(false);
   const [patchCrosswalk, patchCrosswalkResponse] = usePatchCrosswalkMutation();
   const [patchSchema, patchSchemaResponse] = usePatchSchemaMutation();
   const [isSaveConfirmModalOpen, setSaveConfirmModalOpen] = useState(false);
@@ -52,8 +52,6 @@ export default function MetadataForm({
   const [isPublishAction, setIsPublishAction] = useState(false);
   const [formData, setFormData] =
     useState<MetadataFormType>(initialMetadataForm);
-
-  // ToDo: Error notifications
 
   const performModalAction = (action: string) => {
     setSaveConfirmModalOpen(false);
@@ -73,40 +71,27 @@ export default function MetadataForm({
     if (action === 'save' || action === 'publish') {
       setIsEditModeActive(false);
       if (type === 'CROSSWALK') {
-        patchCrosswalk({ payload: payload, pid: metadata.pid });
+        patchCrosswalk({ payload: payload, pid: metadata.pid })
+          .unwrap()
+          .then(() => {
+            dispatch(
+              setNotification(
+                action === 'publish' ? 'CROSSWALK_PUBLISH' : 'CROSSWALK_SAVE'
+              )
+            );
+          });
+        // ToDo: Error notifications with .catch
       } else if (type === 'SCHEMA') {
-        patchSchema({ payload: payload, pid: metadata.pid });
+        patchSchema({ payload: payload, pid: metadata.pid })
+          .unwrap()
+          .then(() => {
+            dispatch(
+              setNotification(action === 'publish' ? 'SCHEMA_PUBLISH' : 'SCHEMA_SAVE')
+            );
+          });
       }
     }
   };
-
-  useEffect(() => {
-    if (patchCrosswalkResponse.isSuccess || patchSchemaResponse.isSuccess) {
-      switch (type) {
-        case Type.Crosswalk:
-          dispatch(
-            setNotification(
-              isPublishAction ? 'CROSSWALK_PUBLISH' : 'CROSSWALK_SAVE'
-            )
-          );
-          break;
-        case Type.Schema:
-          dispatch(
-            setNotification(isPublishAction ? 'SCHEMA_PUBLISH' : 'SCHEMA_SAVE')
-          );
-          break;
-      }
-      refetchMetadata();
-    }
-    setIsPublishAction(false);
-  }, [
-    dispatch,
-    isPublishAction,
-    patchCrosswalkResponse.isSuccess,
-    patchSchemaResponse.isSuccess,
-    refetchMetadata,
-    type,
-  ]);
 
   const generatePayload = (): Partial<Metadata> => {
     return {

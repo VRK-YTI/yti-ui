@@ -24,6 +24,6 @@ export const NotificationWrapper = styled.div<{ $visible?: boolean }>`
   transform: translate(-50%, 0);
 
   :not(:hover) {
-    animation: ${fadeOut} 10s linear;
+    animation: ${fadeOut} 9s linear;
   }
 `;
