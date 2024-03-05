@@ -169,7 +169,7 @@ export default function MetadataAndFiles(props: {
     }
   }
 
-  const newFormTesting = false;
+  const newFormTesting = true;
   return (
     <>
       {newFormTesting && (

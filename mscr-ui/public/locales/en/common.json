@@ -140,6 +140,12 @@
   "no-languages-available": "",
   "no-subscribed-items": "",
   "not-recommended-synonym": "",
+  "notifications": {
+    "crosswalk-published": "Crosswalk published successfully",
+    "crosswalk-saved": "Crosswalk metadata saved successfully",
+    "schema-published": "Schema published successfully",
+    "schema-saved": "Schema metadata saved successfully"
+  },
   "organization": "",
   "organizations-and-roles": "",
   "own-information": "",

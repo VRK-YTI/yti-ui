@@ -23,6 +23,9 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { Type, Visibility } from '@app/common/interfaces/search.interface';
 import { State } from '@app/common/interfaces/state.interface';
 import ConfirmModal from '@app/common/components/confirmation-modal';
+import { useStoreDispatch } from '@app/store';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import Notification from '@app/common/components/notifications';
 
 interface MetadataFormProps {
   type: Type;
@@ -39,15 +42,18 @@ export default function MetadataForm({
   const { t } = useTranslation('common');
   const router = useRouter();
   const lang = router.locale ?? '';
+  const dispatch = useStoreDispatch();
   const [isEditModeActive, setIsEditModeActive] = useState<boolean>(false);
   const [patchCrosswalk, patchCrosswalkResponse] = usePatchCrosswalkMutation();
   const [patchSchema, patchSchemaResponse] = usePatchSchemaMutation();
-  const [isSaveConfirmModalOpen, setSaveConfirmModalOpen] =
-    React.useState<boolean>(false);
+  const [isSaveConfirmModalOpen, setSaveConfirmModalOpen] = useState(false);
   const [isPublishConfirmModalOpen, setPublishConfirmModalOpen] =
-    React.useState<boolean>(false);
+    useState(false);
+  const [isPublishAction, setIsPublishAction] = useState(false);
   const [formData, setFormData] =
     useState<MetadataFormType>(initialMetadataForm);
+
+  // ToDo: Error notifications
 
   const performModalAction = (action: string) => {
     setSaveConfirmModalOpen(false);
@@ -57,46 +63,73 @@ export default function MetadataForm({
     }
     let payload = generatePayload();
     if (action === 'publish') {
-      payload = {...payload, state: State.Published, visibility: Visibility.Public};
+      payload = {
+        ...payload,
+        state: State.Published,
+        visibility: Visibility.Public,
+      };
+      setIsPublishAction(true);
     }
     if (action === 'save' || action === 'publish') {
       setIsEditModeActive(false);
       if (type === 'CROSSWALK') {
-        patchCrosswalk({payload: payload, pid: metadata.pid});
+        patchCrosswalk({ payload: payload, pid: metadata.pid });
       } else if (type === 'SCHEMA') {
-        patchSchema({payload: payload, pid: metadata.pid});
+        patchSchema({ payload: payload, pid: metadata.pid });
       }
     }
   };
 
   useEffect(() => {
     if (patchCrosswalkResponse.isSuccess || patchSchemaResponse.isSuccess) {
+      switch (type) {
+        case Type.Crosswalk:
+          dispatch(
+            setNotification(
+              isPublishAction ? 'CROSSWALK_PUBLISH' : 'CROSSWALK_SAVE'
+            )
+          );
+          break;
+        case Type.Schema:
+          dispatch(
+            setNotification(isPublishAction ? 'SCHEMA_PUBLISH' : 'SCHEMA_SAVE')
+          );
+          break;
+      }
       refetchMetadata();
     }
-  }, [patchCrosswalkResponse.isSuccess, patchSchemaResponse.isSuccess, refetchMetadata]);
+    setIsPublishAction(false);
+  }, [
+    dispatch,
+    isPublishAction,
+    patchCrosswalkResponse.isSuccess,
+    patchSchemaResponse.isSuccess,
+    refetchMetadata,
+    type,
+  ]);
 
-  const generatePayload = () : Partial<Metadata> => {
+  const generatePayload = (): Partial<Metadata> => {
     return {
-      label: {...metadata.label, [lang]: formData.label},
-      description: {...metadata.description, [lang]: formData.description},
+      label: { ...metadata.label, [lang]: formData.label },
+      description: { ...metadata.description, [lang]: formData.description },
       contact: formData.contact,
       versionLabel: formData.versionLabel,
-      visibility: formData.visibility as Visibility
+      visibility: formData.visibility as Visibility,
     };
   };
 
   const setFormValuesFromData = useCallback(() => {
     const localizedLabel = metadata.label
       ? getLanguageVersion({
-        data: metadata.label,
-        lang,
-      })
+          data: metadata.label,
+          lang,
+        })
       : '';
     const localizedDescription = metadata.description
       ? getLanguageVersion({
-        data: metadata.description,
-        lang,
-      })
+          data: metadata.description,
+          lang,
+        })
       : '';
     const formValuesFromData: MetadataFormType = {
       label: localizedLabel,
@@ -124,6 +157,7 @@ export default function MetadataForm({
   return (
     <>
       <div className="crosswalk-editor metadata-and-files-wrap mx-2">
+        <Notification />
         <Grid>
           <Grid container>
             <h2>{t('metadata.crosswalk-details')}</h2>
@@ -180,9 +214,7 @@ export default function MetadataForm({
                       value={formData.contact}
                     />
                   )}
-                  {!isEditModeActive && (
-                    <div>{metadata.contact}</div>
-                  )}
+                  {!isEditModeActive && <div>{metadata.contact}</div>}
                 </Grid>
               </Grid>
 
@@ -218,9 +250,7 @@ export default function MetadataForm({
                   {t('metadata.modified')}:
                 </Grid>
                 <Grid item xs={8}>
-                  <div className="br-label">
-                    {metadata.modified}
-                  </div>
+                  <div className="br-label">{metadata.modified}</div>
                 </Grid>
               </Grid>
 
@@ -244,18 +274,22 @@ export default function MetadataForm({
                       value={formData.visibility}
                       onChange={(value) => updateFormData('visibility', value)}
                     >
-                      <DropdownItem key={Visibility.Public} value={Visibility.Public}>
+                      <DropdownItem
+                        key={Visibility.Public}
+                        value={Visibility.Public}
+                      >
                         {Visibility.Public}
                       </DropdownItem>
-                      <DropdownItem key={Visibility.Private} value={Visibility.Private}>
+                      <DropdownItem
+                        key={Visibility.Private}
+                        value={Visibility.Private}
+                      >
                         {Visibility.Private}
                       </DropdownItem>
                     </Dropdown>
                   )}
                   {(!isEditModeActive || metadata.state !== State.Draft) && (
-                    <div className="br-label">
-                      {metadata.visibility}
-                    </div>
+                    <div className="br-label">{metadata.visibility}</div>
                   )}
                 </Grid>
               </Grid>
@@ -297,7 +331,9 @@ export default function MetadataForm({
                           {t('action.edit')}
                         </ActionMenuItem>
                         <ActionMenuItem
-                          className={metadata.state == State.Draft ? '' : 'd-none'}
+                          className={
+                            metadata.state == State.Draft ? '' : 'd-none'
+                          }
                           onClick={() => setPublishConfirmModalOpen(true)}
                         >
                           {t('action.publish')}
