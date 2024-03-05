@@ -2,24 +2,15 @@ import { MultiSelectData } from 'suomifi-ui-components';
 import { LanguageBlockType } from 'yti-common-ui/form/language-selector';
 import { State } from '@app/common/interfaces/state.interface';
 import { ContentRevision } from '@app/common/interfaces/content-revision.interface';
+import { Metadata } from '@app/common/interfaces/metadata.interface';
+import { Format } from '@app/common/interfaces/format.interface';
 
-export interface Crosswalk {
-  pid?: string;
-  format: string;
+export interface Crosswalk extends Metadata {
   status?: string | undefined;
-  label: {
-    [key: string]: string;
-  };
-  description: {
-    [key: string]: string;
-  };
   languages?: string[];
   organizations?: string[];
   sourceSchema: string;
   targetSchema: string;
-  state?: State;
-  namespace?: string;
-  versionLabel?: string;
 }
 
 export interface CrosswalkWithVersionInfo extends Crosswalk {
@@ -28,7 +19,7 @@ export interface CrosswalkWithVersionInfo extends Crosswalk {
 
 export interface CrosswalkFormType {
   pid?: string;
-  format: string;
+  format: Format;
   label: string;
   state: State;
   languages: (LanguageBlockType & { selected: boolean })[];

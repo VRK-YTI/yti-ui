@@ -7,9 +7,15 @@ export interface Label {
   [key: string]: string;
 }
 
-export type Visibility = 'PRIVATE' | 'PUBLIC';
+export enum Visibility {
+  Private = 'PRIVATE',
+  Public = 'PUBLIC'
+}
 
-export type Type = 'CROSSWALK' | 'SCHEMA';
+export enum Type {
+  Crosswalk = 'CROSSWALK',
+  Schema = 'SCHEMA'
+}
 
 export interface ResultInfo {
   id: string;

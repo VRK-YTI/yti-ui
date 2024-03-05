@@ -10,6 +10,7 @@ import {
 } from '@app/common/interfaces/schema.interface';
 import { MscrSearchResults } from '@app/common/interfaces/search.interface';
 import { Format } from '@app/common/interfaces/format.interface';
+import { Metadata } from '@app/common/interfaces/metadata.interface';
 
 function createUrl(formatRestrictions: Array<Format>) {
   const formatString = formatRestrictions.reduce((filterString, fr) => {
@@ -47,6 +48,19 @@ export const schemaApi = createApi({
           'content-Type': 'multipart/form-data;',
         },
       }),
+    }),
+    patchSchema: builder.mutation<
+      Metadata,
+      {
+        payload: Partial<Metadata>;
+        pid: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/schema/${value.pid}`,
+        method: 'PATCH',
+        data: value.payload,
+      })
     }),
     getSchema: builder.query<Schema, string>({
       query: (pid) => ({
@@ -119,6 +133,7 @@ export const {
   useDeleteSchemaMutation,
   useGetSchemasQuery,
   usePutSchemaFullMutation,
+  usePatchSchemaMutation,
   util: { getRunningQueriesThunk },
 } = schemaApi;
 
