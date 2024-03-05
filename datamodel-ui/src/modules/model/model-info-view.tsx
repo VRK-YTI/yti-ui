@@ -222,7 +222,7 @@ export default function ModelInfoView({
             >
               {t('download-as-file')}
             </ActionMenuItem>
-            {!user.anonymous ? (
+            {/*!user.anonymous ? (
               <ActionMenuItem
                 onClick={() => handleModalChange('getEmailNotification', true)}
               >
@@ -230,7 +230,7 @@ export default function ModelInfoView({
               </ActionMenuItem>
             ) : (
               <></>
-            )}
+            )*/}
           </ActionMenu>
         </div>
         {renderModals()}
