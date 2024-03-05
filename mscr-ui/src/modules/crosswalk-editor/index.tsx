@@ -36,8 +36,8 @@ import VersionHistory from '@app/common/components/version-history';
 import SchemaInfo from '@app/common/components/schema-info';
 
 export default function CrosswalkEditor({
-                                          crosswalkId,
-                                        }: {
+  crosswalkId,
+}: {
   crosswalkId: string;
 }) {
   const theme = createTheme({
@@ -82,25 +82,23 @@ export default function CrosswalkEditor({
 
   const [selectedSourceNodes, setSelectedSourceNodes] = React.useState<
     RenderTree[]
-    >([emptyTreeSelection]);
+  >([emptyTreeSelection]);
   const [selectedTargetNodes, setSelectedTargetNodes] = React.useState<
     RenderTree[]
-    >([emptyTreeSelection]);
-  const [patchSourceNodes, setPatchSourceNodes] = React.useState<
-    RenderTree[]
-    >([emptyTreeSelection]);
-  const [patchTargetNodes, setPatchTargetNodes] = React.useState<
-    RenderTree[]
-    >([emptyTreeSelection]);
-  const [patchPid, setPatchPid] = React.useState<
-    string
-    >('');
+  >([emptyTreeSelection]);
+  const [patchSourceNodes, setPatchSourceNodes] = React.useState<RenderTree[]>([
+    emptyTreeSelection,
+  ]);
+  const [patchTargetNodes, setPatchTargetNodes] = React.useState<RenderTree[]>([
+    emptyTreeSelection,
+  ]);
+  const [patchPid, setPatchPid] = React.useState<string>('');
 
   const [nodeMappings, setNodeMappings] = React.useState<NodeMapping[]>([]);
 
   const [jointToBeEdited, setJointToBeEdited] = React.useState<
     CrosswalkConnectionNew | undefined
-    >(undefined);
+  >(undefined);
 
   const [linkingError, setLinkingError] = React.useState<string>('');
   const [selectedTab, setSelectedTab] = React.useState(1);
@@ -134,14 +132,17 @@ export default function CrosswalkEditor({
 
   const [sourceTreeSelection, setSourceTreeSelection] = React.useState<
     string[]
-    >([]);
+  >([]);
 
   const [targetTreeSelection, setTargetTreeSelection] = React.useState<
     string[]
-    >([]);
+  >([]);
 
-  const { data: mappingFunctions, isLoading: mappingFunctionsIsLoading, refetch } =
-    useGetCrosswalkMappingFunctionsQuery('');
+  const {
+    data: mappingFunctions,
+    isLoading: mappingFunctionsIsLoading,
+    refetch,
+  } = useGetCrosswalkMappingFunctionsQuery('');
 
   const { data: mappingFilters, isLoading: mappingFiltersIsLoading } =
     useGetCrosswalkMappingFunctionsQuery('FILTERS');
@@ -198,9 +199,16 @@ export default function CrosswalkEditor({
   }, [selectedTab]);
 
   useEffect(() => {
-    if (patchSourceNodes && patchTargetNodes && patchSourceNodes[0].id.length > 0 && patchTargetNodes[0].id.length > 0) {
+    if (
+      patchSourceNodes &&
+      patchTargetNodes &&
+      patchSourceNodes[0].id.length > 0 &&
+      patchTargetNodes[0].id.length > 0
+    ) {
       // Source and target nodes are both now fetched from trees
-      setJointToBeEdited(generateJointToBeEdited(patchSourceNodes, patchTargetNodes, patchPid));
+      setJointToBeEdited(
+        generateJointToBeEdited(patchSourceNodes, patchTargetNodes, patchPid),
+      );
     }
   }, [patchSourceNodes, patchTargetNodes]);
 
@@ -278,7 +286,6 @@ export default function CrosswalkEditor({
           return [newMapping, ...mappings];
         });
         setLastPutMappingPid(response.data.pid);
-
       } else {
         // This is needed in the future for showing success or error status
         setLastPatchMappingPid(response.data.pid);
@@ -316,7 +323,11 @@ export default function CrosswalkEditor({
     setJointToBeEdited(jointsToBeAdded[jointsToBeAdded.length - 1]);
   }
 
-  function generateJointToBeEdited(sourceNodes: RenderTree[], targetNodes: RenderTree[], patchPid: string){
+  function generateJointToBeEdited(
+    sourceNodes: RenderTree[],
+    targetNodes: RenderTree[],
+    patchPid: string,
+  ) {
     const jointsToBeAdded: CrosswalkConnectionNew[] = [];
     sourceNodes.forEach((sourceNode) => {
       const joint: CrosswalkConnectionNew = {
@@ -366,7 +377,7 @@ export default function CrosswalkEditor({
     isSourceTree: boolean,
   ) => {
     const nodeIds: string[] = [];
-    if (node){
+    if (node) {
       if (isSourceTree) {
         node.source.forEach((node) => nodeIds.push(node.id));
         setSourceTreeSelection(nodeIds);
@@ -528,15 +539,14 @@ export default function CrosswalkEditor({
               </Tabs>
             </Box>
 
-            {selectedTab === 0 &&
-              getCrosswalkData && (
-                <>
-                  <MetadataAndFiles
-                    crosswalkData={getCrosswalkData}
-                    refetch={refetchCrosswalkData}
-                  />
-                </>
-              )}
+            {selectedTab === 0 && getCrosswalkData && (
+              <>
+                <MetadataAndFiles
+                  crosswalkData={getCrosswalkData}
+                  refetch={refetchCrosswalkData}
+                />
+              </>
+            )}
             {/*            <CustomTabPanel value={selectedTab} index={0}>
             </CustomTabPanel>
             <CustomTabPanel value={selectedTab} index={1}>
@@ -590,7 +600,6 @@ export default function CrosswalkEditor({
 
               {/*  LEFT COLUMN */}
               <div className={selectedTab === 1 ? 'col-12' : 'd-none'}>
-
                 <>
                   <div className="row gx-0"></div>
                   <div className="row gx-0">

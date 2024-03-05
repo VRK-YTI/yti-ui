@@ -9,8 +9,8 @@ import SchemaTree from '@app/common/components/schema-info/schema-tree';
 import NodeInfo from '@app/common/components/schema-info/schema-tree/node-info';
 import { RenderTree } from '@app/common/interfaces/crosswalk-connection.interface';
 import { cloneDeep } from 'lodash';
-import {generateTreeFromJson} from "@app/common/components/schema-info/schema-tree/schema-tree-renderer";
-import {useGetFrontendSchemaQuery} from "@app/common/components/schema/schema.slice";
+import { generateTreeFromJson } from '@app/common/components/schema-info/schema-tree/schema-tree-renderer';
+import { useGetFrontendSchemaQuery } from '@app/common/components/schema/schema.slice';
 
 const inputData: RenderTree[] = [];
 
@@ -79,7 +79,6 @@ export default function SchemaInfo(props: {
   useEffect(() => {
     expandAndSelectNodes(props.treeSelection);
   }, [props.treeSelection]);
-
 
   useEffect(() => {
     // Update selections for node info and parent component for mappings
