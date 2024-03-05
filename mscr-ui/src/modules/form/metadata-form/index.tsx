@@ -1,8 +1,4 @@
-import {
-  initialMetadataForm,
-  Metadata,
-  MetadataFormType,
-} from '@app/common/interfaces/metadata.interface';
+import { initialMetadataForm, Metadata, MetadataFormType } from '@app/common/interfaces/metadata.interface';
 import { usePatchCrosswalkMutation } from '@app/common/components/crosswalk/crosswalk.slice';
 import { usePatchSchemaMutation } from '@app/common/components/schema/schema.slice';
 import { useTranslation } from 'next-i18next';
@@ -15,7 +11,7 @@ import {
   Dropdown,
   DropdownItem,
   Textarea,
-  TextInput,
+  TextInput
 } from 'suomifi-ui-components';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
@@ -49,7 +45,6 @@ export default function MetadataForm({
   const [isSaveConfirmModalOpen, setSaveConfirmModalOpen] = useState(false);
   const [isPublishConfirmModalOpen, setPublishConfirmModalOpen] =
     useState(false);
-  const [isPublishAction, setIsPublishAction] = useState(false);
   const [formData, setFormData] =
     useState<MetadataFormType>(initialMetadataForm);
 
@@ -66,7 +61,6 @@ export default function MetadataForm({
         state: State.Published,
         visibility: Visibility.Public,
       };
-      setIsPublishAction(true);
     }
     if (action === 'save' || action === 'publish') {
       setIsEditModeActive(false);
@@ -149,7 +143,11 @@ export default function MetadataForm({
         <Notification />
         <Grid>
           <Grid container>
-            <h2>{t('metadata.crosswalk-details')}</h2>
+            {type === Type.Crosswalk ? (
+              <h2>{t('metadata.crosswalk-details')}</h2>
+            ) : (
+              <h2>{t('metadata.schema-details')}</h2>
+            )}
           </Grid>
           <Grid container className="bg-lightest-blue p-3">
             <Grid item xs={12} md={7}>
@@ -380,8 +378,8 @@ export default function MetadataForm({
           cancelText={t('action.cancel')}
           performConfirmModalAction={performModalAction}
           heading={t('confirm-modal.heading')}
-          text1={t('confirm-modal.publish-crosswalk1')}
-          text2={t('confirm-modal.publish-crosswalk2')}
+          text1={type === Type.Crosswalk ? t('confirm-modal.publish-crosswalk1') : t('confirm-modal.publish-schema')}
+          text2={type === Type.Crosswalk ? t('confirm-modal.publish-crosswalk2') : undefined}
         />
       </div>
     </>

@@ -40,6 +40,7 @@
     "heading": "",
     "publish-crosswalk1": "",
     "publish-crosswalk2": "",
+    "publish-schema": "",
     "save": ""
   },
   "confirm-page-leave": "",
@@ -112,18 +113,15 @@
     "description": "",
     "file": {
       "format": "",
-      "id": "",
       "label": "",
       "name": "",
       "size": ""
     },
     "format": "",
-    "metadata": "",
     "modified": "",
     "name": "",
-    "namespace": "",
-    "organizations": "",
     "pid": "",
+    "schema-details": "",
     "state": "",
     "version-label": "",
     "versions": "",

@@ -40,6 +40,7 @@
     "heading": "Confirmation",
     "publish-crosswalk1": "Are you sure you want to publish the crosswalk?",
     "publish-crosswalk2": "After publishing, you cannot make changes to mappings in crosswalk.",
+    "publish-schema": "Are you sure you want to publish the schema?",
     "save": "Are you sure you want to save changes?"
   },
   "confirm-page-leave": "Are you sure you want to leave the page? Changes you made won't be saved.",
@@ -110,18 +111,15 @@
     "description": "Description",
     "file": {
       "format": "Format",
-      "id": "ID",
       "label": "Files",
       "name": "Filename",
       "size": "Size"
     },
     "format": "Format",
-    "metadata": "Metadata",
     "modified": "Modified",
     "name": "Name",
-    "namespace": "Namespace",
-    "organizations": "Organizations",
     "pid": "PID",
+    "schema-details": "Schema details",
     "state": "State",
     "version-label": "Version label",
     "versions": "Versions",
