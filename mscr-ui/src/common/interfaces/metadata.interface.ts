@@ -21,6 +21,15 @@ export interface Metadata {
   targetSchema?: string;
   namespace?: string;
   prefix?: string;
+  fileMetadata?: FileData[];
+}
+
+export interface FileData {
+  id?: string;
+  contentType?: string;
+  size?: number;
+  fileID: number;
+  name?: string;
 }
 
 export interface MetadataFormType {

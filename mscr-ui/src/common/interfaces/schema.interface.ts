@@ -12,15 +12,6 @@ export interface Schema extends Metadata {
 
 export interface SchemaWithVersionInfo extends Schema {
   revisions: ContentRevision[];
-  fileMetadata?: SchemaFileData[];
-}
-
-export interface SchemaFileData {
-  id?: string;
-  contentType?: string;
-  size?: number;
-  fileID?: number;
-  name?: string;
 }
 
 export interface Organization {

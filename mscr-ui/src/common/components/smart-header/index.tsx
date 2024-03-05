@@ -155,7 +155,7 @@ export default function SmartHeader({
 
   function renderHeaderSearch() {
     return (
-      <SearchBar />
+      <SearchBar hideLabel={true}/>
       // <HeaderSearch
       //   isSearchOpen={isSearchOpen}
       //   setIsSearchOpen={setIsSearchOpen}

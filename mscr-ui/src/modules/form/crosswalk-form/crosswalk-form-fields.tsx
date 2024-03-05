@@ -1,7 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction } from 'react';
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
-import LanguageSelector from 'yti-common-ui/components/form/language-selector';
 import { FormErrors } from './validate-crosswalk-form';
 import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import TargetAndSourceSchemaSelector from './target-and-source-schema-selector';
@@ -10,6 +9,7 @@ import {
   ModelFormContainer,
   WideMultiSelect,
 } from '@app/modules/form/form.styles';
+import MscrLanguageSelector from '@app/common/components/language-selector/mscr-language-selector';
 import { Format, formatsAvailableForCrosswalkRegistration } from '@app/common/interfaces/format.interface';
 
 interface RegisterCrosswalkFormProps {
@@ -74,7 +74,7 @@ export default function CrosswalkFormFields({
     // mscr-ui/src/common/utils/hooks/use-initial-crosswalk-form.tsx
     return (
       <div>
-        <LanguageSelector
+        <MscrLanguageSelector
           items={formData.languages}
           labelText={t('information-description-languages')}
           hintText={t('information-description-languages-hint-text')}

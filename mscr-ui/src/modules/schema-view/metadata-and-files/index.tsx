@@ -2,6 +2,7 @@ import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
 import MetadataForm from '@app/modules/form/metadata-form';
 import { Type } from '@app/common/interfaces/search.interface';
 import HasPermission from '@app/common/utils/has-permission';
+import MetadataFilesTable from '@app/common/components/metadata-files-table';
 
 export default function MetadataAndFiles({
   schemaDetails,
@@ -23,6 +24,11 @@ export default function MetadataAndFiles({
         metadata={schemaDetails}
         refetchMetadata={refetch}
         hasEditPermission={hasEditPermission}
+      />
+      <MetadataFilesTable
+        filesRowInput={schemaFiles}
+        pid={schemaDetails?.pid}
+        canEdit={false}
       />
     </>
   );

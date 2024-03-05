@@ -7,6 +7,7 @@ import { FormErrors } from './validate-schema-form';
 import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 import { Format } from '@app/common/interfaces/format.interface';
 import { State } from '@app/common/interfaces/state.interface';
+import MscrLanguageSelector from '@app/common/components/language-selector/mscr-language-selector';
 
 interface SchemaFormProps {
   formData: SchemaFormType;
@@ -58,6 +59,7 @@ SchemaFormProps) {
           <DropdownItem value={'SKOSRDF'}>{'SKOSRDF'}</DropdownItem>
           <DropdownItem value={'XSD'}>{'XSD'}</DropdownItem>
           <DropdownItem value={'XML'}>{'XML'}</DropdownItem>
+	  <DropdownItem value={'SHACL'}>{'SHACL'}</DropdownItem>
         </Dropdown>
       </div>
     );
@@ -68,7 +70,7 @@ SchemaFormProps) {
     // mscr-ui/src/common/utils/hooks/use-initial-schema-form.tsx
     return (
       <div>
-        <LanguageSelector
+        <MscrLanguageSelector
           items={formData.languages}
           labelText={t('schema-form.information-description-languages')}
           visualPlaceholder={t(
