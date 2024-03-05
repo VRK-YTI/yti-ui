@@ -79,6 +79,7 @@ export default function MetadataForm({
                 action === 'publish' ? 'CROSSWALK_PUBLISH' : 'CROSSWALK_SAVE'
               )
             );
+            refetchMetadata();
           });
         // ToDo: Error notifications with .catch
       } else if (type === 'SCHEMA') {
@@ -86,8 +87,11 @@ export default function MetadataForm({
           .unwrap()
           .then(() => {
             dispatch(
-              setNotification(action === 'publish' ? 'SCHEMA_PUBLISH' : 'SCHEMA_SAVE')
+              setNotification(
+                action === 'publish' ? 'SCHEMA_PUBLISH' : 'SCHEMA_SAVE'
+              )
             );
+            refetchMetadata();
           });
       }
     }
