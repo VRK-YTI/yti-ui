@@ -777,24 +777,6 @@ export default function CrosswalkEditor({
     }
   };
 
-  const performMetadataAndFilesAction = (properties: any, action: string) => {
-    if (action === 'selectFromSourceTree') {
-      setSelectedTab(1);
-      clearTreeSearch(true);
-      selectFromTreeByNodeMapping(properties, false);
-    }
-    if (action === 'selectFromTargetTree') {
-      setSelectedTab(1);
-      clearTreeSearch(false);
-      selectFromTreeByNodeMapping(properties, true);
-    }
-    if (action === 'saveChanges') {
-      const obj = Object.assign({}, ...properties);
-      setEditModeActive(false);
-      patchCrosswalk({ payload: obj, pid: crosswalkId });
-    }
-  };
-
   interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -874,12 +856,6 @@ export default function CrosswalkEditor({
                 <MetadataAndFiles
                   crosswalkData={getCrosswalkData}
                   refetch={refetchCrosswalkData}
-                  sourceSchemaData={getSourceSchemaData}
-                  targetSchemaData={getTargetSchemaData}
-                  performMetadataAndFilesAction={
-                    performMetadataAndFilesAction
-                  }
-                  nodeMappings={nodeMappings}
                 />
               </>
             )}

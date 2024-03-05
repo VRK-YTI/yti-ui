@@ -77,7 +77,7 @@ export default function SchemaView({
             </Tabs>
           </Box>
 
-          {selectedTab === 0 && (
+          {selectedTab === 0 && schemaDetails && (
             <MetadataAndFiles
               schemaDetails={schemaDetails}
               refetch={refetch}
