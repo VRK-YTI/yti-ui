@@ -1,13 +1,12 @@
 import { RenderTree } from '@app/common/interfaces/crosswalk-connection.interface';
-import { Dropdown } from 'suomifi-ui-components';
-import { DropdownItem } from 'suomifi-ui-components';
+import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { InfoIcon } from '@app/common/components/shared-icons';
 
 export default function NodeInfo(props: {
   treeData: RenderTree[];
-  performNodeInfoAction: any;
+  // performNodeInfoAction: any;
 }) {
   let sourceSelectionInit = '';
 

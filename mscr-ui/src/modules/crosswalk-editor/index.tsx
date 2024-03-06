@@ -409,7 +409,7 @@ export default function CrosswalkEditor({
   };
 
   const performCallbackFromSchemaInfo = (
-    nodeIds: any,
+    nodeIds: RenderTree[],
     isSourceTree: boolean,
   ) => {
     if (nodeIds.length > 0) {

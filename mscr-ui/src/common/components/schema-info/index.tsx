@@ -15,7 +15,10 @@ import { useGetFrontendSchemaQuery } from '@app/common/components/schema/schema.
 const inputData: RenderTree[] = [];
 
 export default function SchemaInfo(props: {
-  updateTreeNodeSelectionsOutput?: any;
+  updateTreeNodeSelectionsOutput?: (
+    nodeIds: RenderTree[],
+    isSourceSchema: boolean
+  ) => void;
   isSourceTree?: boolean;
   treeSelection?: string[];
   caption: string;
@@ -85,10 +88,13 @@ export default function SchemaInfo(props: {
   useEffect(() => {
     // Update selections for node info and parent component for mappings
     const selectedTreeNodeIds = getTreeNodesByIds(treeSelectedArray);
-    if (props.updateTreeNodeSelectionsOutput && props.isSourceTree !== undefined) {
+    if (
+      props.updateTreeNodeSelectionsOutput &&
+      props.isSourceTree !== undefined
+    ) {
       props.updateTreeNodeSelectionsOutput(
         selectedTreeNodeIds,
-        props.isSourceTree,
+        props.isSourceTree
       );
     }
     setSelectedTreeNodes(selectedTreeNodeIds);
@@ -114,9 +120,9 @@ export default function SchemaInfo(props: {
 
   // Used to tree filtering
   function findNodesFromTree(
-    tree: any,
+    tree: RenderTree[],
     itemsToFind: string[],
-    results: RenderTree[],
+    results: RenderTree[]
   ) {
     tree.forEach((item: RenderTree) => {
       if (itemsToFind.includes(item.id)) {
@@ -139,7 +145,7 @@ export default function SchemaInfo(props: {
   function doFiltering(
     tree: RenderTree[],
     nameToFind: string,
-    results: { nodeIds: string[]; childNodeIds: string[] },
+    results: { nodeIds: string[]; childNodeIds: string[] }
   ) {
     tree.forEach((item) => {
       if (
@@ -163,7 +169,7 @@ export default function SchemaInfo(props: {
   function getElementPathsFromTree(
     treeData: RenderTree[],
     nodeIds: string[],
-    results: string[],
+    results: string[]
   ) {
     treeData.forEach((item) => {
       if (nodeIds.includes(item.id)) {
@@ -212,48 +218,38 @@ export default function SchemaInfo(props: {
     }
   }
 
-  function searchFromTree(input: any) {
+  function searchFromTree(input: string) {
     clearTreeSearch();
     const hits = { nodeIds: [], childNodeIds: [] };
     doFiltering(treeData, input.toString(), hits);
     expandAndSelectNodes(hits.nodeIds);
   }
 
-  function handleTreeClick(
-    event: React.SyntheticEvent | undefined,
-    nodeIds: string[],
-  ) {
+  function handleTreeClick(nodeIds: string[]) {
     setTreeSelections(nodeIds);
   }
 
-  function handleTreeToggle(
-    event: React.SyntheticEvent | undefined,
-    nodeIds: string[],
-  ) {
+  function handleTreeToggle(nodeIds: string[]) {
     setTreeExpanded(nodeIds);
   }
 
-  const selectFromTreeById = (nodeId: string) => {
-    const nodeIds = [];
-    nodeIds.push(nodeId);
-    expandAndSelectNodes(nodeIds);
-  };
+  // const selectFromTreeById = (nodeId: string) => {
+  //   const nodeIds = [];
+  //   nodeIds.push(nodeId);
+  //   expandAndSelectNodes(nodeIds);
+  // };
 
-  const performCallbackFromTreeAction = (
-    action: any,
-    event: any,
-    nodeIds: any,
-  ) => {
+  const performCallbackFromTreeAction = (action: string, nodeIds: string[]) => {
     if (action === 'handleSelect') {
-      handleTreeClick(event, nodeIds);
+      handleTreeClick(nodeIds);
     } else if (action === 'treeToggle') {
-      handleTreeToggle(event, nodeIds);
+      handleTreeToggle(nodeIds);
     }
   };
 
-  const performNodeInfoAction = (nodeId: any, isSourceTree: boolean) => {
-    selectFromTreeById(nodeId);
-  };
+  // const performNodeInfoAction = (nodeId: any, isSourceTree: boolean) => {
+  //   selectFromTreeById(nodeId);
+  // };
 
   return (
     <>
@@ -268,7 +264,9 @@ export default function SchemaInfo(props: {
                 clearButtonLabel="Clear"
                 visualPlaceholder="Find an attribute..."
                 onSearch={(value) => {
-                  searchFromTree(value);
+                  if (typeof value === 'string') {
+                    searchFromTree(value);
+                  }
                 }}
                 onChange={(value) => {
                   if (!value) {
@@ -315,7 +313,7 @@ export default function SchemaInfo(props: {
         <div className="col-5 px-0 node-info-wrap">
           <NodeInfo
             treeData={selectedTreeNodes}
-            performNodeInfoAction={performNodeInfoAction}
+            // performNodeInfoAction={performNodeInfoAction}
           ></NodeInfo>
         </div>
       </div>

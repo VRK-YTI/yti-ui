@@ -48,15 +48,15 @@ export default function SchemaTree({
   nodes: any;
   treeSelectedArray: string[];
   treeExpanded: string[];
-  performTreeAction: any;
+  performTreeAction: (action: string, nodeIds: string[]) => void;
 }) {
 
   const handleSelect = (event: React.SyntheticEvent, nodeIds: string[]) => {
-    performTreeAction('handleSelect', event, nodeIds);
+    performTreeAction('handleSelect', nodeIds);
   };
 
   const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
-    performTreeAction('treeToggle', event, nodeIds);
+    performTreeAction('treeToggle', nodeIds);
   };
 
   // console.log('TREEVIEW DATA', nodes, treeSelectedArray);
