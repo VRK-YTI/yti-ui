@@ -190,6 +190,9 @@
     "status": "",
     "status-select": ""
   },
+  "schema-tree": {
+    "filter-schema": ""
+  },
   "search": {
     "bar": {
       "clear-button": "",
@@ -251,6 +254,7 @@
   "synonym": "",
   "tabs": {
     "metadata-and-files": "",
+    "schema": "",
     "version-history": ""
   },
   "term-conjugation": {

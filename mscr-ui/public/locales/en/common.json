@@ -188,6 +188,9 @@
     "status": "Status",
     "status-select": "Select status"
   },
+  "schema-tree": {
+    "filter-schema": "Select from schema"
+  },
   "search": {
     "bar": {
       "clear-button": "Clear input and close search",
@@ -249,6 +252,7 @@
   "synonym": "",
   "tabs": {
     "metadata-and-files": "Metadata and files",
+    "schema": "Schema",
     "version-history": "Version history"
   },
   "term-conjugation": {

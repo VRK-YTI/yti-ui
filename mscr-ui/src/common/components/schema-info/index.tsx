@@ -77,16 +77,20 @@ export default function SchemaInfo(props: {
 
   // Expand and select nodes when input changed (from mappings accordion)
   useEffect(() => {
-    expandAndSelectNodes(props.treeSelection);
+    if (props.treeSelection) {
+      expandAndSelectNodes(props.treeSelection);
+    }
   }, [props.treeSelection]);
 
   useEffect(() => {
     // Update selections for node info and parent component for mappings
     const selectedTreeNodeIds = getTreeNodesByIds(treeSelectedArray);
-    props.updateTreeNodeSelectionsOutput(
-      selectedTreeNodeIds,
-      props.isSourceTree,
-    );
+    if (props.updateTreeNodeSelectionsOutput && props.isSourceTree !== undefined) {
+      props.updateTreeNodeSelectionsOutput(
+        selectedTreeNodeIds,
+        props.isSourceTree,
+      );
+    }
     setSelectedTreeNodes(selectedTreeNodeIds);
   }, [treeSelectedArray]);
 
