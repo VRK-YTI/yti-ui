@@ -141,7 +141,6 @@ export default function CrosswalkEditor({
   const {
     data: mappingFunctions,
     isLoading: mappingFunctionsIsLoading,
-    refetch,
   } = useGetCrosswalkMappingFunctionsQuery('');
 
   const { data: mappingFilters, isLoading: mappingFiltersIsLoading } =

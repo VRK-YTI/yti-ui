@@ -20,7 +20,7 @@ import { Type, Visibility } from '@app/common/interfaces/search.interface';
 import { State } from '@app/common/interfaces/state.interface';
 import ConfirmModal from '@app/common/components/confirmation-modal';
 import { useStoreDispatch } from '@app/store';
-import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { clearNotification, setNotification } from '@app/common/components/notifications/notifications.slice';
 import Notification from '@app/common/components/notifications';
 
 interface MetadataFormProps {
@@ -40,8 +40,8 @@ export default function MetadataForm({
   const lang = router.locale ?? '';
   const dispatch = useStoreDispatch();
   const [isEditModeActive, setIsEditModeActive] = useState(false);
-  const [patchCrosswalk, patchCrosswalkResponse] = usePatchCrosswalkMutation();
-  const [patchSchema, patchSchemaResponse] = usePatchSchemaMutation();
+  const [patchCrosswalk,] = usePatchCrosswalkMutation();
+  const [patchSchema,] = usePatchSchemaMutation();
   const [isSaveConfirmModalOpen, setSaveConfirmModalOpen] = useState(false);
   const [isPublishConfirmModalOpen, setPublishConfirmModalOpen] =
     useState(false);
@@ -127,6 +127,10 @@ export default function MetadataForm({
   useEffect(() => {
     setFormValuesFromData();
   }, [setFormValuesFromData]);
+
+  useEffect(() => {
+    dispatch(clearNotification());
+  }, [dispatch]);
 
   function updateFormData(
     attributeName: keyof MetadataFormType,
