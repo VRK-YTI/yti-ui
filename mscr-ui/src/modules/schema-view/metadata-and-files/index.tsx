@@ -5,9 +5,9 @@ import HasPermission from '@app/common/utils/has-permission';
 import MetadataFilesTable from '@app/common/components/metadata-files-table';
 
 export default function MetadataAndFiles({
-  schemaDetails,
-  refetch,
-}: {
+                                           schemaDetails,
+                                           refetch,
+                                         }: {
   schemaDetails: SchemaWithVersionInfo;
   refetch: () => void;
 }) {

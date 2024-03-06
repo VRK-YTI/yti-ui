@@ -25,16 +25,6 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import { NodeMapping } from '@app/common/interfaces/crosswalk-connection.interface';
 import { InfoIcon } from '@app/common/components/shared-icons';
 
-const crosswalkConnectionInit = {
-  source: '',
-  target: '',
-  sourceTitle: '',
-  targetTitle: '',
-  type: '',
-  notes: '',
-  title: '',
-};
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -140,10 +130,7 @@ function Row(props: {
                                         className='fw-normal'>exact match</span></div>
                                     <br/>
                                 </Box>*/}
-                <div
-                  className="fw-bold mt-3 mb-2"
-                  style={{ fontSize: '0.9em' }}
-                >
+                <div className="fw-bold ms-1 mt-3 mb-2">
                   Mapping type: <span className="fw-normal">exact match</span>
                 </div>
                 <br />
@@ -185,7 +172,6 @@ function Row(props: {
 
 export default function JointListingAccordion(props: any) {
   const nodeMappingsInput = props.nodeMappings;
-
   return (
     <>
       <TableContainer component={Paper} className="gx-0">
