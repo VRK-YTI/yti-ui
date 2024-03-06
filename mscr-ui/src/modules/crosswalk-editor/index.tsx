@@ -82,10 +82,10 @@ export default function CrosswalkEditor({
 
   const [selectedSourceNodes, setSelectedSourceNodes] = React.useState<
     RenderTree[]
-  >([emptyTreeSelection]);
+  >([]);
   const [selectedTargetNodes, setSelectedTargetNodes] = React.useState<
     RenderTree[]
-  >([emptyTreeSelection]);
+  >([]);
   const [patchSourceNodes, setPatchSourceNodes] = React.useState<RenderTree[]>([
     emptyTreeSelection,
   ]);
@@ -293,13 +293,6 @@ export default function CrosswalkEditor({
     }
   }
 
-  function publishCrosswalk() {
-    const publishPayload = {
-      state: 'PUBLISHED',
-    };
-    patchCrosswalk({ payload: publishPayload, pid: crosswalkId[0] });
-  }
-
   function addJointButtonClick() {
     setIsJointPatchOperation(false);
     const jointsToBeAdded: CrosswalkConnectionNew[] = [];
@@ -445,7 +438,7 @@ export default function CrosswalkEditor({
     }
     if (action === 'addJoint') {
       setNodeMappingsModalOpen(false);
-      putMapping({ payload: mappingPayload, pid: crosswalkId[0] });
+      putMapping({ payload: mappingPayload, pid: crosswalkId });
       const sourceIds: string[] = [];
       const targetIds: string[] = [];
       mappingPayload.source.forEach((node: { id: string }) =>
@@ -461,14 +454,6 @@ export default function CrosswalkEditor({
       setIsJointPatchOperation(false);
       setNodeMappingsModalOpen(false);
       patchMapping({ payload: mappingPayload, pid: patchPid });
-    }
-  };
-
-  const performMetadataAndFilesAction = (properties: any, action: string) => {
-    if (action === 'saveChanges') {
-      const obj = Object.assign({}, ...properties);
-      setEditModeActive(false);
-      patchCrosswalk({ payload: obj, pid: crosswalkId[0] });
     }
   };
 
