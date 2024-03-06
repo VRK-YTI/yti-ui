@@ -51,7 +51,7 @@ export default function ListForm({
       query: '',
       resourceTypes: [],
       sortLang: i18n.language,
-      status: ['SUGGESTED', 'VALID'],
+      status: ['SUGGESTED', 'VALID', 'DRAFT'],
     });
 
   const { data: models } = useGetSearchModelsQuery(
@@ -82,7 +82,7 @@ export default function ListForm({
       query: '',
       resourceTypes: [],
       sortLang: i18n.language,
-      status: ['SUGGESTED', 'VALID'],
+      status: ['SUGGESTED', 'VALID', 'DRAFT'],
     });
     setSelected(initialData.internalNamespaces);
     setContentLanguage(i18n.language);
