@@ -2,6 +2,7 @@ import {
   Crosswalk,
   CrosswalkFormType,
 } from '@app/common/interfaces/crosswalk.interface';
+import {Visibility} from '@app/common/interfaces/search.interface';
 
 // here we are creating crosswalk payload by converting the form data to crosswalk type
 
@@ -36,5 +37,6 @@ export default function generateCrosswalkPayload(
     sourceSchema: data.sourceSchema,
     targetSchema: data.targetSchema,
     versionLabel: '1',
+    visibility: Visibility.Private,
   };
 }
