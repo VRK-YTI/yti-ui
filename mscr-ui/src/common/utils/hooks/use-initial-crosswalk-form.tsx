@@ -1,5 +1,10 @@
-import {CrosswalkFormMockupType, CrosswalkFormType} from '@app/common/interfaces/crosswalk.interface';
+import {
+  CrosswalkFormMockupType,
+  CrosswalkFormType,
+} from '@app/common/interfaces/crosswalk.interface';
 import { useTranslation } from 'next-i18next';
+import { State } from '@app/common/interfaces/state.interface';
+import { Format } from '@app/common/interfaces/format.interface';
 
 // Here we need initial crosswalk form data defined in CrosswalkFormType
 export function useInitialCrosswalkForm(): CrosswalkFormType {
@@ -7,9 +12,9 @@ export function useInitialCrosswalkForm(): CrosswalkFormType {
 
   return {
     pid: '',
-    format: 'MSCR',
+    format: Format.Mscr,
     label: '',
-    state: 'DRAFT',
+    state: State.Draft,
     languages: [
       // Hiding Swedish and Finnish for now
       // {

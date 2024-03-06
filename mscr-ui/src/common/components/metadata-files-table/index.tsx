@@ -1,10 +1,10 @@
 import { useTranslation } from 'next-i18next';
 import GenericTable from '@app/common/components/generic-table';
 import * as React from 'react';
-import { SchemaFileData } from '@app/common/interfaces/schema.interface';
 import { FilesRow } from '@app/common/interfaces/crosswalk.interface';
 import { useEffect, useState } from 'react';
 import router from 'next/router';
+import { FileData } from '@app/common/interfaces/metadata.interface';
 
 export enum DownloadTypes {
   'CROSSWALK',
@@ -23,7 +23,7 @@ export default function MetadataFilesTable({
   crosswalkData,
   canEdit,
 }: {
-  filesRowInput?: SchemaFileData[] | undefined;
+  filesRowInput?: FileData[] | undefined;
   crosswalkData?: any | undefined;
   pid?: string | undefined;
   canEdit: boolean;
@@ -130,17 +130,12 @@ export default function MetadataFilesTable({
   let tableRows;
   if (filesRowInput && pid) {
     tableRows = filesRowInput.map(
-      (item: {
-        filename: any;
-        fileID: Number;
-        contentType: any;
-        size: Number;
-      }) => {
+      (item) => {
         const downloadType = crosswalkData
           ? DownloadTypes.CROSSWALK_FILES
           : DownloadTypes.SCHEMA_FILES;
         const row = {
-          filename: item.filename,
+          filename: item.name,
           format: item.contentType,
           size: item.size,
           downloadLink: generateDownloadLink(

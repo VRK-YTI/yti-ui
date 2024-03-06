@@ -1,17 +1,16 @@
-import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
-import getOrganizations from '@app/common/utils/get-organizations';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction } from 'react';
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
-import LanguageSelector from 'yti-common-ui/components/form/language-selector';
 import { FormErrors } from './validate-crosswalk-form';
 import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import TargetAndSourceSchemaSelector from './target-and-source-schema-selector';
-import { State } from '@app/common/interfaces/state.interface';
+import { possibleStatesAtRegistration, State } from '@app/common/interfaces/state.interface';
 import {
   ModelFormContainer,
   WideMultiSelect,
 } from '@app/modules/form/form.styles';
+import MscrLanguageSelector from '@app/common/components/language-selector/mscr-language-selector';
+import { Format, formatsAvailableForCrosswalkRegistration } from '@app/common/interfaces/format.interface';
 
 interface RegisterCrosswalkFormProps {
   formData: CrosswalkFormType;
@@ -55,16 +54,16 @@ export default function CrosswalkFormFields({
           labelText={'Format'}
           defaultValue={formData.format ?? ''}
           visualPlaceholder={'Select Crosswalk File Format'}
-          onChange={(e) =>
+          onChange={(e: Format) =>
             setFormData({
               ...formData,
               format: e,
             })
           }
         >
-          <DropdownItem value={'XSLT'}>{'XSLT'}</DropdownItem>
-          <DropdownItem value={'CSV'}>{'CSV'}</DropdownItem>
-          <DropdownItem value={'PDF'}>{'PDF'}</DropdownItem>
+          {formatsAvailableForCrosswalkRegistration.map((format) => (
+            <DropdownItem key={format} value={format}>{format}</DropdownItem>
+          ))}
         </Dropdown>
       </div>
     );
@@ -75,7 +74,7 @@ export default function CrosswalkFormFields({
     // mscr-ui/src/common/utils/hooks/use-initial-crosswalk-form.tsx
     return (
       <div>
-        <LanguageSelector
+        <MscrLanguageSelector
           items={formData.languages}
           labelText={t('information-description-languages')}
           hintText={t('information-description-languages-hint-text')}
@@ -116,16 +115,16 @@ export default function CrosswalkFormFields({
           labelText={'State'}
           visualPlaceholder={'Select state'}
           defaultValue={formData.state ?? ''}
-          onChange={(e) =>
+          onChange={(e: State) =>
             setFormData({
               ...formData,
-              state: e as State,
+              state: e,
             })
           }
         >
-          <DropdownItem value={'DRAFT'}>{'DRAFT'}</DropdownItem>
-          <DropdownItem value={'PUBLISHED'}>{'PUBLISHED'}</DropdownItem>
-          <DropdownItem value={'DEPRECATED'}>{'DEPRECATED'}</DropdownItem>
+          {possibleStatesAtRegistration.map((state) => (
+            <DropdownItem key={state} value={state}>{state}</DropdownItem>
+          ))}
         </Dropdown>
       </div>
     );

@@ -1,6 +1,7 @@
 import { TFunction } from 'next-i18next';
 import { ResourceType } from '../interfaces/resource-type.interface';
 import { Type } from '../interfaces/type.interface';
+import { NotificationKeys } from '@app/common/interfaces/notifications.interface';
 
 export function translateModelType(type: Type, t: TFunction) {
   switch (type) {
@@ -298,5 +299,23 @@ export function translateFileUploadError(
       });
     default:
       return;
+  }
+}
+
+export function translateNotification(
+  key: NotificationKeys,
+  t: TFunction
+) {
+  switch (key) {
+    case 'CROSSWALK_SAVE':
+      return t('notifications.crosswalk-saved');
+    case 'SCHEMA_SAVE':
+      return t('notifications.schema-saved');
+    case 'CROSSWALK_PUBLISH':
+      return t('notifications.crosswalk-published');
+    case 'SCHEMA_PUBLISH':
+      return t('notifications.schema-published');
+    default:
+      return '';
   }
 }

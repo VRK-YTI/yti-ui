@@ -164,16 +164,14 @@ export default function CrosswalkEditor({
   const [deleteMapping, deleteMappingResponse] = useDeleteMappingMutation();
   const [patchMapping, patchMappingResponse] = usePatchMappingMutation();
 
-  const [isAdmin, setIsAdmin] = React.useState<boolean>(
-    HasPermission({ actions: ['CREATE_CROSSWALK'] }),
-  );
+  const hasEditRights = HasPermission({ actions: ['EDIT_CROSSWALK_MAPPINGS'] });
 
   interface simpleNode {
     name: string | undefined;
     id: string;
   }
 
-  const { data: mappingFunctions, isLoading: mappingFunctionsIsLoading } =
+  const { data: mappingFunctions, isLoading: mappingFunctionsIsLoading, refetch } =
     useGetCrosswalkMappingFunctionsQuery('');
 
   const { data: mappingFilters, isLoading: mappingFiltersIsLoading } =
@@ -290,7 +288,7 @@ export default function CrosswalkEditor({
     isSuccess: getMappingsDataIsSuccess,
     isError: getMappingsIsError,
     error: getMappingsError,
-  } = useGetMappingsQuery(crosswalkId[0]);
+  } = useGetMappingsQuery(crosswalkId);
 
   useEffect(() => {
     if (getSourceSchemaData?.content) {
@@ -381,7 +379,7 @@ export default function CrosswalkEditor({
     const publishPayload = {
       state: 'PUBLISHED',
     };
-    patchCrosswalk({ payload: publishPayload, pid: crosswalkId[0] });
+    patchCrosswalk({ payload: publishPayload, pid: crosswalkId });
   }
 
   function addOrEditJointButtonClick(
@@ -757,7 +755,7 @@ export default function CrosswalkEditor({
     }
     if (action === 'addJoint') {
       setNodeMappingsModalOpen(false);
-      putMapping({ payload: mappingPayload, pid: crosswalkId[0] });
+      putMapping({ payload: mappingPayload, pid: crosswalkId });
       setSourceTreeSelections([]);
       setTargetTreeSelections([]);
     }
@@ -776,24 +774,6 @@ export default function CrosswalkEditor({
     }
     if (action === 'publish') {
       publishCrosswalk();
-    }
-  };
-
-  const performMetadataAndFilesAction = (properties: any, action: string) => {
-    if (action === 'selectFromSourceTree') {
-      setSelectedTab(1);
-      clearTreeSearch(true);
-      selectFromTreeByNodeMapping(properties, false);
-    }
-    if (action === 'selectFromTargetTree') {
-      setSelectedTab(1);
-      clearTreeSearch(false);
-      selectFromTreeByNodeMapping(properties, true);
-    }
-    if (action === 'saveChanges') {
-      const obj = Object.assign({}, ...properties);
-      setEditModeActive(false);
-      patchCrosswalk({ payload: obj, pid: crosswalkId[0] });
     }
   };
 
@@ -875,14 +855,7 @@ export default function CrosswalkEditor({
               <>
                 <MetadataAndFiles
                   crosswalkData={getCrosswalkData}
-                  sourceSchemaData={getSourceSchemaData}
-                  targetSchemaData={getTargetSchemaData}
-                  performMetadataAndFilesAction={
-                    performMetadataAndFilesAction
-                  }
-                  nodeMappings={nodeMappings}
-                  crosswalkId={crosswalkId}
-                  isAdmin={isAdmin}
+                  refetch={refetchCrosswalkData}
                 />
               </>
             )}
@@ -919,7 +892,7 @@ export default function CrosswalkEditor({
                     : 'd-none'
                 }
               >
-                {isAdmin && (
+                {hasEditRights && (
                   <ActionMenu className="mb-2" buttonText="Actions">
                     <ActionMenuItem
                       onClick={() => setEditModeActive(true)}
@@ -1018,7 +991,7 @@ export default function CrosswalkEditor({
 
                       {/*  MID BUTTONS */}
                       <div className="col-2 px-4 mid-buttons">
-                        {isAdmin && (
+                        {hasEditRights && (
                           <Sbutton
                             className="link-button"
                             title={

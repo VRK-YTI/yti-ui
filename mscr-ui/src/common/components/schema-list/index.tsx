@@ -32,7 +32,7 @@ export default function SchemaList({ items }: SchemaListProps) {
     return <div>{'There is no Schemas to show'}</div>;
   }
 
-  function handleClick(pid: string): void {
+  function handleClick(pid: string | undefined): void {
     // will go the schema detail page
     if (pid) {
       router.push(`/schema/${pid}`);

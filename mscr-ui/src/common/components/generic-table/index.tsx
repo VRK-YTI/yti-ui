@@ -1,12 +1,8 @@
 import {
   Grid,
-  styled,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
-  TableHead,
-  TableRow,
 } from '@mui/material';
 import * as React from 'react';
 import {StyledTableCell, StyledTableRow, StyledTableHead} from '@app/common/components/generic-table/generic-table.styles';
@@ -15,7 +11,7 @@ import {StyledTableCell, StyledTableRow, StyledTableHead} from '@app/common/comp
 
 export default function GenericTable(props: {
   items: any;
-  headings: [];
+  headings: string[];
   caption: string;
 }) {
 

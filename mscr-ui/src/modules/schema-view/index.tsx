@@ -22,6 +22,7 @@ export default function SchemaView({
     data: schemaDetails,
     isLoading,
     isSuccess,
+    refetch,
     // Add these in when adding error handling
     // isError,
     // error,
@@ -76,10 +77,10 @@ export default function SchemaView({
             </Tabs>
           </Box>
 
-          {selectedTab === 0 && (
+          {selectedTab === 0 && schemaDetails && (
             <MetadataAndFiles
               schemaDetails={schemaDetails}
-              schemaFiles={schemaDetails?.fileMetadata}
+              refetch={refetch}
             />
           )}
           {selectedTab === 1 && (
