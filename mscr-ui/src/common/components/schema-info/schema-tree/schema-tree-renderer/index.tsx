@@ -220,6 +220,7 @@ function createRenderTree(input: any, elementPath: string, definitions: any) {
             elementPath: elementPath + '.' + obj.toString(),
             parentElementPath: elementPath,
             children: [],
+            uri: definitions[obj]['@id']
         };
 
         //console.log('OBJ', obj, input[obj].keys, Object.keys(input[obj]));

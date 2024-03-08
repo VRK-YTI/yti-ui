@@ -92,10 +92,12 @@ export default function NodeMappings(props: {
     mappings.source.push({
       id: props.selectedCrosswalk.source.id,
       label: props.selectedCrosswalk.source.name,
+      uri: props.selectedCrosswalk.source.uri
     });
     mappings.target.push({
       id: props.selectedCrosswalk.target.id,
       label: props.selectedCrosswalk.target.name,
+      uri: props.selectedCrosswalk.source.uri
     });
     mappings.predicate = predicateValue ? predicateValue : '0';
     return mappings;
