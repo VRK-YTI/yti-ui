@@ -49,7 +49,7 @@ export default function SearchView({
     query: query ?? '',
     limitToDataModel: modelId,
     pageSize: 20,
-    pageFrom: (currentPage - 1) * 20,
+    pageFrom: currentPage - 1,
     resourceTypes: [],
     fromVersion: version,
   });

@@ -90,7 +90,7 @@ export default function ClassView({
     query: query ?? '',
     limitToDataModel: modelId,
     pageSize: 20,
-    pageFrom: (currentPage - 1) * 20,
+    pageFrom: currentPage - 1,
     resourceTypes: [ResourceType.CLASS],
     fromVersion: version,
   });
