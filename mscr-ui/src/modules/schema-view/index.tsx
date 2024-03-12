@@ -86,7 +86,7 @@ export default function SchemaView({
             />
           )}
           {selectedTab === 1 && (
-            <SchemaVisualization pid={schemaId} />
+            <SchemaVisualization pid={schemaId} format={schemaDetails.format} />
           )}
           {selectedTab === 2 && (
             <VersionHistory

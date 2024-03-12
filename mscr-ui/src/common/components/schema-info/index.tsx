@@ -12,8 +12,6 @@ import { cloneDeep } from 'lodash';
 import { generateTreeFromJson } from '@app/common/components/schema-info/schema-tree/schema-tree-renderer';
 import { useGetFrontendSchemaQuery } from '@app/common/components/schema/schema.slice';
 
-const inputData: RenderTree[] = [];
-
 export default function SchemaInfo(props: {
   updateTreeNodeSelectionsOutput?: (
     nodeIds: RenderTree[],
@@ -43,8 +41,8 @@ export default function SchemaInfo(props: {
   } = useGetFrontendSchemaQuery(props.schemaUrn);
 
   const [treeDataOriginal, setTreeDataOriginal] =
-    React.useState<RenderTree[]>(inputData);
-  const [treeData, setTreeData] = React.useState<RenderTree[]>(inputData);
+    React.useState<RenderTree[]>([]);
+  const [treeData, setTreeData] = React.useState<RenderTree[]>([]);
   const [treeExpandedArray, setTreeExpanded] = React.useState<string[]>([]);
 
   // These are used by tree visualization

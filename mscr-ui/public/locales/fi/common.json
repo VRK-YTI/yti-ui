@@ -191,6 +191,8 @@
     "status-select": ""
   },
   "schema-tree": {
+    "error-heading": "",
+    "error-info": "",
     "filter-schema": ""
   },
   "search": {
