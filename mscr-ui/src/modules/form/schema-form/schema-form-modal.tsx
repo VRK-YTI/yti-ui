@@ -28,11 +28,13 @@ import getErrors from '@app/common/utils/get-errors';
 
 interface SchemaFormModalProps {
   refetch: () => void;
+  groupContent: boolean;
+  pid: string;
 }
 
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
-export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
+export default function SchemaFormModal({ refetch ,groupContent,pid}: SchemaFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
@@ -87,17 +89,23 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
     if (Object.values(errors).includes(true)) {
       return;
     }
+    
+    console.log(pid);
+    if(authenticatedUser)
+    {
+      const payload = generateSchemaPayload(formData, groupContent, pid, authenticatedUser); 
+      const schemaFormData = new FormData();
+      schemaFormData.append('metadata', JSON.stringify(payload));
+      if (fileData) {
+        schemaFormData.append('file', fileData);
+        putSchemaFull(schemaFormData);
+      } else {
+        return;
+      }
+   }
+  
 
-    const payload = generateSchemaPayload(formData);
-
-    const schemaFormData = new FormData();
-    schemaFormData.append('metadata', JSON.stringify(payload));
-    if (fileData) {
-      schemaFormData.append('file', fileData);
-      putSchemaFull(schemaFormData);
-    } else {
-      return;
-    }
+   
   };
 
   useEffect(() => {

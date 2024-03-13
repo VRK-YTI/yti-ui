@@ -77,6 +77,8 @@ export default function HasPermission({
   ) {
     return false;
   }
+  if(user)
+  console.log(user);
 
   if (!targetOrganization) {
     return checkPermission({
@@ -98,6 +100,7 @@ export function checkPermission({
   targetOrganizations,
 }: checkPermissionProps) {
   const rolesInOrganizations = Object.keys(user.organizationsInRole);
+
   const rolesInTargetOrganizations =
     targetOrganizations &&
     targetOrganizations
@@ -109,6 +112,10 @@ export function checkPermission({
     return true;
   }
 
+  if (targetOrganizations) {
+    console.log(targetOrganizations);
+  }
+
   // Return true if target organization is undefined and user has admin role
   if (rolesInOrganizations.includes('ADMIN') && !targetOrganizations) {
     return true;
@@ -116,7 +123,15 @@ export function checkPermission({
 
   // Return true if user has admin role in target organization
   if (
-    rolesInOrganizations.includes('ADMIN') &&
+    rolesInOrganizations.includes('DATA_MODEL_EDITOR') &&
+    rolesInTargetOrganizations?.includes('DATA_MODEL_EDITOR')
+  ) {
+    return true;
+  }
+
+   // Return true if user has datamodel editor role in target organization
+   if (
+    rolesInOrganizations.includes('') &&
     rolesInTargetOrganizations?.includes('ADMIN')
   ) {
     return true;
