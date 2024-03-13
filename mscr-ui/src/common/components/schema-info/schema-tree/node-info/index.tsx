@@ -20,13 +20,12 @@ export default function NodeInfo(props: {
     }
   }, [props]);
 
-  const [sourceDropdownValue, setDropdownValue] =
-    useState(sourceSelectionInit);
+  const [sourceDropdownValue, setDropdownValue] = useState(sourceSelectionInit);
   const [selectedNode] = props.treeData.filter(
-    (item) => item.id === sourceDropdownValue,
+    (item) => item.id === sourceDropdownValue
   );
 
-  let dropdownInit: {id: string; name?: string}[] = [
+  let dropdownInit: { id: string; name?: string }[] = [
     {
       id: '1',
     },
@@ -42,9 +41,7 @@ export default function NodeInfo(props: {
 
   const nodeProperties: constantAttribute[] = [];
   if (props.treeData.length > 0 && props.treeData[0]?.properties) {
-    for (const [key, value] of Object.entries(
-      props.treeData[0]?.properties,
-    )) {
+    for (const [key, value] of Object.entries(props.treeData[0]?.properties)) {
       nodeProperties.push({
         name: key,
         value: typeof value === 'string' ? value.toString() : undefined,
@@ -100,7 +97,7 @@ export default function NodeInfo(props: {
                 labelText={t('schema-tree.dropdown-label')}
                 labelMode={'hidden'}
                 className="mt-2 node-info-dropdown"
-                visualPlaceholder= {t('schema-tree.dropdown-placeholder')}
+                visualPlaceholder={t('schema-tree.dropdown-placeholder')}
                 value={sourceDropdownValue}
                 onChange={(newValue) => setDropdownValue(newValue)}
               >

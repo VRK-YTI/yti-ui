@@ -80,18 +80,13 @@ export default function SchemaView({
           </Box>
 
           {selectedTab === 0 && schemaDetails && (
-            <MetadataAndFiles
-              schemaDetails={schemaDetails}
-              refetch={refetch}
-            />
+            <MetadataAndFiles schemaDetails={schemaDetails} refetch={refetch} />
           )}
           {selectedTab === 1 && (
             <SchemaVisualization pid={schemaId} format={schemaDetails.format} />
           )}
           {selectedTab === 2 && (
-            <VersionHistory
-              revisions={schemaDetails.revisions}
-            />
+            <VersionHistory revisions={schemaDetails.revisions} />
           )}
         </>
       </ThemeProvider>

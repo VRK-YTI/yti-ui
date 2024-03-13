@@ -64,7 +64,7 @@ export default function SchemaTree({
   // console.log('TREEVIEW DATA', nodes, treeSelectedArray);
   return (
     <TreeView
-      aria-label= {t('schema-tree.tree-label')} // "controlled"
+      aria-label={t('schema-tree.tree-label')}
       expanded={treeExpanded}
       selected={treeSelectedArray}
       onNodeSelect={handleSelect}

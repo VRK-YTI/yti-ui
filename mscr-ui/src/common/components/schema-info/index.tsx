@@ -42,8 +42,9 @@ export default function SchemaInfo(props: {
     error: getSchemaDataError,
   } = useGetFrontendSchemaQuery(props.schemaUrn);
 
-  const [treeDataOriginal, setTreeDataOriginal] =
-    React.useState<RenderTree[]>([]);
+  const [treeDataOriginal, setTreeDataOriginal] = React.useState<RenderTree[]>(
+    []
+  );
   const [treeData, setTreeData] = React.useState<RenderTree[]>([]);
   const [treeExpandedArray, setTreeExpanded] = React.useState<string[]>([]);
 
@@ -278,7 +279,7 @@ export default function SchemaInfo(props: {
             <div className="expand-button-wrap">
               <IconButton
                 onClick={() => handleExpandClick()}
-                aria-label= {t('schema-tree.expand')}
+                aria-label={t('schema-tree.expand')}
                 color="primary"
                 size="large"
               >
