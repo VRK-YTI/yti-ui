@@ -189,9 +189,17 @@
     "status-select": "Select status"
   },
   "schema-tree": {
+    "clear": "Clear",
+    "dropdown-label": "Selected nodes",
+    "dropdown-placeholder": "Node(s) not selected",
     "error-heading": "Visualization not available",
     "error-info": "Cannot show tree view for schemas of this format, download the file instead in Metadata and files tab.",
-    "filter-schema": "Select from schema"
+    "expand": "Expand tree",
+    "filter-schema": "Select from schema",
+    "search": "Search",
+    "search-placeholder": "Find an attribute...",
+    "selected-node": "Selected node:",
+    "tree-label": "Schema tree"
   },
   "search": {
     "bar": {

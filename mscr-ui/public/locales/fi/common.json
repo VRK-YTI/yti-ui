@@ -191,9 +191,17 @@
     "status-select": ""
   },
   "schema-tree": {
+    "clear": "",
+    "dropdown-label": "",
+    "dropdown-placeholder": "",
     "error-heading": "",
     "error-info": "",
-    "filter-schema": ""
+    "expand": "",
+    "filter-schema": "",
+    "search": "",
+    "search-placeholder": "",
+    "selected-node": "",
+    "tree-label": ""
   },
   "search": {
     "bar": {

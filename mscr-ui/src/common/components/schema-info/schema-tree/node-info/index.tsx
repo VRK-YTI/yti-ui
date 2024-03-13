@@ -3,11 +3,13 @@ import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { InfoIcon } from '@app/common/components/shared-icons';
+import { useTranslation } from 'next-i18next';
 
 export default function NodeInfo(props: {
   treeData: RenderTree[];
   // performNodeInfoAction: any;
 }) {
+  const { t } = useTranslation('common');
   let sourceSelectionInit = '';
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function NodeInfo(props: {
     (item) => item.id === sourceDropdownValue,
   );
 
-  let dropdownInit: any = [
+  let dropdownInit: {id: string; name?: string}[] = [
     {
       id: '1',
     },
@@ -95,8 +97,10 @@ export default function NodeInfo(props: {
           {props.treeData.length > 1 && (
             <div className="dropdown-wrap">
               <Dropdown
+                labelText={t('schema-tree.dropdown-label')}
+                labelMode={'hidden'}
                 className="mt-2 node-info-dropdown"
-                visualPlaceholder="Node(s) not selected"
+                visualPlaceholder= {t('schema-tree.dropdown-placeholder')}
                 value={sourceDropdownValue}
                 onChange={(newValue) => setDropdownValue(newValue)}
               >
@@ -113,7 +117,7 @@ export default function NodeInfo(props: {
               {props.treeData.length > 1 && (
                 <>
                   <div className="col-12">
-                    <div>Selected node:</div>
+                    <div>{t('schema-tree.selected-node')}</div>
                     <div className="attribute-font">{selectedNode?.name}</div>
                   </div>
                 </>

@@ -11,6 +11,7 @@ import { RenderTree } from '@app/common/interfaces/crosswalk-connection.interfac
 import { cloneDeep } from 'lodash';
 import { generateTreeFromJson } from '@app/common/components/schema-info/schema-tree/schema-tree-renderer';
 import { useGetFrontendSchemaQuery } from '@app/common/components/schema/schema.slice';
+import { useTranslation } from 'next-i18next';
 
 export default function SchemaInfo(props: {
   updateTreeNodeSelectionsOutput?: (
@@ -22,6 +23,7 @@ export default function SchemaInfo(props: {
   caption: string;
   schemaUrn: string;
 }) {
+  const { t } = useTranslation('common');
   const emptyTreeSelection: RenderTree = {
     elementPath: '',
     parentElementPath: undefined,
@@ -258,9 +260,9 @@ export default function SchemaInfo(props: {
               <SearchInput
                 className="py-2"
                 labelText={props.caption}
-                searchButtonLabel="Search"
-                clearButtonLabel="Clear"
-                visualPlaceholder="Find an attribute..."
+                searchButtonLabel={t('schema-tree.search')}
+                clearButtonLabel={t('schema-tree.clear')}
+                visualPlaceholder={t('schema-tree.search-placeholder')}
                 onSearch={(value) => {
                   if (typeof value === 'string') {
                     searchFromTree(value);
@@ -276,7 +278,7 @@ export default function SchemaInfo(props: {
             <div className="expand-button-wrap">
               <IconButton
                 onClick={() => handleExpandClick()}
-                aria-label="expand tree"
+                aria-label= {t('schema-tree.expand')}
                 color="primary"
                 size="large"
               >

@@ -4,6 +4,7 @@ import TreeItem from '@mui/lab/TreeItem';
 import { useEffect } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useTranslation } from 'next-i18next';
 
 function toTree(nodes: any) {
   let ret = undefined;
@@ -50,6 +51,7 @@ export default function SchemaTree({
   treeExpanded: string[];
   performTreeAction: (action: string, nodeIds: string[]) => void;
 }) {
+  const { t } = useTranslation('common');
 
   const handleSelect = (event: React.SyntheticEvent, nodeIds: string[]) => {
     performTreeAction('handleSelect', nodeIds);
@@ -62,7 +64,7 @@ export default function SchemaTree({
   // console.log('TREEVIEW DATA', nodes, treeSelectedArray);
   return (
     <TreeView
-      aria-label="controlled"
+      aria-label= {t('schema-tree.tree-label')} // "controlled"
       expanded={treeExpanded}
       selected={treeSelectedArray}
       onNodeSelect={handleSelect}
