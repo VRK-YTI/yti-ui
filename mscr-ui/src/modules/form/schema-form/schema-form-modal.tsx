@@ -29,12 +29,16 @@ import getErrors from '@app/common/utils/get-errors';
 interface SchemaFormModalProps {
   refetch: () => void;
   groupContent: boolean;
-  pid: string;
+  pid?: string;
 }
 
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
-export default function SchemaFormModal({ refetch ,groupContent,pid}: SchemaFormModalProps) {
+export default function SchemaFormModal({
+  refetch,
+  groupContent,
+  pid
+}: SchemaFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
@@ -89,11 +93,14 @@ export default function SchemaFormModal({ refetch ,groupContent,pid}: SchemaForm
     if (Object.values(errors).includes(true)) {
       return;
     }
-    
-    console.log(pid);
-    if(authenticatedUser)
-    {
-      const payload = generateSchemaPayload(formData, groupContent, pid, authenticatedUser); 
+
+    if (authenticatedUser) {
+      const payload = generateSchemaPayload(
+        formData,
+        groupContent,
+        pid,
+        authenticatedUser
+      );
       const schemaFormData = new FormData();
       schemaFormData.append('metadata', JSON.stringify(payload));
       if (fileData) {
@@ -102,10 +109,7 @@ export default function SchemaFormModal({ refetch ,groupContent,pid}: SchemaForm
       } else {
         return;
       }
-   }
-  
-
-   
+    }
   };
 
   useEffect(() => {
@@ -117,8 +121,10 @@ export default function SchemaFormModal({ refetch ,groupContent,pid}: SchemaForm
     //console.log(errors);
   }, [userPosted, formData, fileData]);
 
-  // Need to add action type create_schema
+  // Need to add action type create_schema, if the user is allowed to post in this group
+
   if (!HasPermission({ actions: ['CREATE_SCHEMA'] })) {
+    console.log('checking group permission');
     return null;
   }
 
@@ -126,6 +132,7 @@ export default function SchemaFormModal({ refetch ,groupContent,pid}: SchemaForm
     const inputErrors = getErrors(t, errors);
     if (resultSchemaFull.isError) {
       const errorMessage = getApiError(resultSchemaFull.error);
+      console.log('the error is' + errorMessage);
       return [...inputErrors, errorMessage];
     }
     return inputErrors;

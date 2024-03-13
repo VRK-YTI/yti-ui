@@ -30,6 +30,8 @@ import getErrors from '@app/common/utils/get-errors';
 interface CrosswalkFormModalProps {
   refetch: () => void;
   createNew?: boolean;
+  groupContent: boolean;
+  pid?:string
 }
 
 // For the time being, using as schema metadata form, Need to update the props accordingly
@@ -37,6 +39,8 @@ interface CrosswalkFormModalProps {
 export default function CrosswalkFormModal({
   refetch,
   createNew = false,
+  groupContent,
+  pid
 }: CrosswalkFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -98,7 +102,10 @@ export default function CrosswalkFormModal({
       return;
     }
 
-    const payload = generateCrosswalkPayload(formData);
+    const payload = generateCrosswalkPayload(formData,
+      groupContent,
+      pid,
+      authenticatedUser);
     console.log('payload: ', payload);
     if (!createNew && fileData) {
       const crosswalkFormData = new FormData();

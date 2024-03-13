@@ -71,8 +71,8 @@ export default function GroupWorkspace({
             <SchemaFormModal refetch={refetchInfo} groupContent={true} pid={pid}></SchemaFormModal>
           ) : (
             <>
-                <CrosswalkFormModal refetch={refetchInfo}></CrosswalkFormModal>
-                <CrosswalkFormModal
+                <CrosswalkFormModal refetch={refetchInfo} groupContent={true} pid={pid}></CrosswalkFormModal>
+                <CrosswalkFormModal groupContent={true} pid={pid}
                 refetch={refetchInfo}
                 createNew={true}
               ></CrosswalkFormModal>

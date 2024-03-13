@@ -2,12 +2,21 @@ import {
   Crosswalk,
   CrosswalkFormType,
 } from '@app/common/interfaces/crosswalk.interface';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 // here we are creating crosswalk payload by converting the form data to crosswalk type
 
 export default function generateCrosswalkPayload(
-  data: CrosswalkFormType
+  data: CrosswalkFormType,
+  groupContent: boolean,
+  pid?: string,
+  user?: MscrUser
 ): Partial<Crosswalk> {
+  data.organizations = [];
+  if (user && groupContent && pid) {
+    const ownerOrg = user?.organizations.find((x) => x.id == pid);
+    if (ownerOrg) data.organizations.push(ownerOrg);
+  } 
   return {
     format: data.format,
     description: data.languages
@@ -36,5 +45,7 @@ export default function generateCrosswalkPayload(
     sourceSchema: data.sourceSchema,
     targetSchema: data.targetSchema,
     versionLabel: '1',
+    organizations: data.organizations.map((o: { id: any }) => o.id)
+
   };
 }

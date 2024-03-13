@@ -78,7 +78,7 @@ export default function HasPermission({
     return false;
   }
   if(user)
-  console.log(user);
+  console.log(user.organizationsInRole);
 
   if (!targetOrganization) {
     return checkPermission({
@@ -100,7 +100,7 @@ export function checkPermission({
   targetOrganizations,
 }: checkPermissionProps) {
   const rolesInOrganizations = Object.keys(user.organizationsInRole);
-
+  
   const rolesInTargetOrganizations =
     targetOrganizations &&
     targetOrganizations
