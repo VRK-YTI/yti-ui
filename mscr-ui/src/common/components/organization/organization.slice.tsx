@@ -4,7 +4,7 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { MscrSearchResults, PaginatedQuery } from '@app/common/interfaces/search.interface';
 
 function createUrl({ type, ownerOrg, pageSize, pageFrom }: PaginatedQuery) {
-  return `/frontend/mscrSearchPersonalContent?query=&type=${type}&ownerOrg=${ownerOrg}&pageSize=${pageSize}&pageFrom=${pageFrom}`;
+  return `/frontend/mscrSearchOrgContent?query=&type=${type}&ownerOrg=${ownerOrg}&pageSize=${pageSize}&pageFrom=${pageFrom}`;
 }
 
 export const mscrSearchOrgContentApi = createApi({
