@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { InfoIcon } from '@app/common/components/shared-icons';
 import { useTranslation } from 'next-i18next';
+import { DropdownWrapper } from '@app/common/components/schema-info/schema-info.styles';
 
 export default function NodeInfo(props: {
   treeData: RenderTree[];
@@ -62,7 +63,7 @@ export default function NodeInfo(props: {
 
   return (
     <div className="row d-flex justify-content-between node-info-box">
-      <h2>Selected node info</h2>
+      <h3>{t('schema-tree.node-info')}</h3>
       <div className="col flex-column d-flex justify-content-between side-bar-wrap">
         <div className="mb-2"></div>
         <Box
@@ -92,11 +93,11 @@ export default function NodeInfo(props: {
             </>
           )}
           {props.treeData.length > 1 && (
-            <div className="dropdown-wrap">
+            <DropdownWrapper>
               <Dropdown
                 labelText={t('schema-tree.dropdown-label')}
                 labelMode={'hidden'}
-                className="mt-2 node-info-dropdown"
+                className="mt-2"
                 visualPlaceholder={t('schema-tree.dropdown-placeholder')}
                 value={sourceDropdownValue}
                 onChange={(newValue) => setDropdownValue(newValue)}
@@ -107,7 +108,7 @@ export default function NodeInfo(props: {
                   </DropdownItem>
                 ))}
               </Dropdown>
-            </div>
+            </DropdownWrapper>
           )}
           <div>
             <div className="row">

@@ -12,6 +12,11 @@ import { cloneDeep } from 'lodash';
 import { generateTreeFromJson } from '@app/common/components/schema-info/schema-tree/schema-tree-renderer';
 import { useGetFrontendSchemaQuery } from '@app/common/components/schema/schema.slice';
 import { useTranslation } from 'next-i18next';
+import {
+  ExpandButtonWrapper,
+  NodeInfoWrapper,
+  SearchWrapper
+} from '@app/common/components/schema-info/schema-info.styles';
 
 export default function SchemaInfo(props: {
   updateTreeNodeSelectionsOutput?: (
@@ -257,7 +262,7 @@ export default function SchemaInfo(props: {
       <div className="row content-box">
         <div className="col-7 px-0">
           <div className="d-flex justify-content-between mb-2 ps-3 pe-2">
-            <div className="w-100">
+            <SearchWrapper className="w-100">
               <SearchInput
                 className="py-2"
                 labelText={props.caption}
@@ -275,8 +280,8 @@ export default function SchemaInfo(props: {
                   }
                 }}
               />
-            </div>
-            <div className="expand-button-wrap">
+            </SearchWrapper>
+            <ExpandButtonWrapper>
               <IconButton
                 onClick={() => handleExpandClick()}
                 aria-label={t('schema-tree.expand')}
@@ -289,7 +294,7 @@ export default function SchemaInfo(props: {
                   <ExpandLessIcon />
                 )}
               </IconButton>
-            </div>
+            </ExpandButtonWrapper>
           </div>
           <div className="mx-2">
             <Box
@@ -311,12 +316,12 @@ export default function SchemaInfo(props: {
             </Box>
           </div>
         </div>
-        <div className="col-5 px-0 node-info-wrap">
+        <NodeInfoWrapper className="col-5 px-0">
           <NodeInfo
             treeData={selectedTreeNodes}
             // performNodeInfoAction={performNodeInfoAction}
           ></NodeInfo>
-        </div>
+        </NodeInfoWrapper>
       </div>
     </>
   );
