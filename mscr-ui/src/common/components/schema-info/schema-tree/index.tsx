@@ -1,12 +1,12 @@
 import * as React from 'react';
 import TreeView from '@mui/lab/TreeView';
 import TreeItem from '@mui/lab/TreeItem';
-import { useEffect } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useTranslation } from 'next-i18next';
+import { RenderTree } from '@app/common/interfaces/crosswalk-connection.interface';
 
-function toTree(nodes: any) {
+function toTree(nodes: RenderTree) {
   let ret = undefined;
   if (Array.isArray(nodes)) {
     return nodes.map((node) => {
@@ -18,7 +18,7 @@ function toTree(nodes: any) {
           className="linked-tree-item"
         >
           {Array.isArray(node.children)
-            ? node.children.map((node: any) => toTree(node))
+            ? node.children.map((node: RenderTree) => toTree(node))
             : null}
         </TreeItem>
       );
@@ -32,7 +32,7 @@ function toTree(nodes: any) {
         className="linked-tree-item"
       >
         {Array.isArray(nodes.children)
-          ? nodes.children.map((node: any) => toTree(node))
+          ? nodes.children.map((node: RenderTree) => toTree(node))
           : null}
       </TreeItem>
     );
@@ -46,7 +46,7 @@ export default function SchemaTree({
   treeExpanded,
   performTreeAction,
 }: {
-  nodes: any;
+  nodes: RenderTree;
   treeSelectedArray: string[];
   treeExpanded: string[];
   performTreeAction: (action: string, nodeIds: string[]) => void;
@@ -80,7 +80,7 @@ export default function SchemaTree({
         className="linked-tree-item"
       >
         {Array.isArray(nodes.children)
-          ? nodes.children.map((node: any) => toTree(node))
+          ? nodes.children.map((node: RenderTree) => toTree(node))
           : null}
       </TreeItem>
     </TreeView>
