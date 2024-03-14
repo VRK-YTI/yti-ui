@@ -289,11 +289,11 @@
   "tooltip": {
     "allowed-values": "Lista arvoista, jotka ominaisuudelle on sallittu. Esimerkiksi: sininen, valkoinen, vihreä.",
     "association-targets-class": "Luokka eli kohde, johon assosiaatio linkittää tämän luokan eli luo näiden kahden luokan välisen yhteyden.",
-    "associations-functional": "Vipu, joka ilmaisee, että assosiaatiolla voi olla vain yksi arvo. Esimerkiksi, jos assosiaatio on \"\"identifioi\"\", voidaan edellyttää, että suomalaisella se voi osoittaa vain yhteen voimassa olevaan henkilötunnukseen.",
+    "associations-functional": "Vipu, joka ilmaisee, että assosiaatiolla voi olla vain yksi arvo. Esimerkiksi, jos assosiaatio on \"identifioi\", voidaan edellyttää, että suomalaisella se voi osoittaa vain yhteen voimassa olevaan henkilötunnukseen.",
     "associations-identifier": "Tunnus (käytännössä merkkijono), joka yksilöi assosiaation tässä tietomallissa. Samaa tunnusta ei samassa tietomallissa voi olla millään muulla resurssilla (assosiaatiolla, attribuutilla tai luokalla).",
     "associations-source": "Ydintietomallin luokka, jolle halutaan määritellä semanttinen yhteys eli assosiaatio toiseen luokkaan. Assosiaatiosuhteen lähdeluokka, josta päin suhde määritellään.",
     "associations-target": "Ydintietomallin luokka, jolle on määritelty semanttinen yhteys eli assosiaatio toisesta luokasta. Assosiaatiosuhteen kohdeluokka.",
-    "attributes-functional": "Vipu, joka ilmaisee, että attribuutilla voi olla vain yksi arvo. Esimerkiksi \"\"pii\"\"-nimisen attribuutin arvona voi olla vain 3,14.",
+    "attributes-functional": "Vipu, joka ilmaisee, että attribuutilla voi olla vain yksi arvo. Esimerkiksi \"pii\"-nimisen attribuutin arvona voi olla vain 3,14.",
     "attributes-identifier": "Tunnus (käytännössä merkkijono), joka yksilöi attribuutin tässä tietomallissa. Samaa tunnusta ei samassa tietomallissa voi olla millään muulla resurssilla (attribuutilla, assosiaatiolla tai luokalla).",
     "class": "Luokka, jonka semanttinen merkitys määritellään sen ominaisuuksien perusteella. Esimerkiksi vanhempi voi olla vain aikuinen henkilö, jolla on yksi tai useampi lapsi.",
     "class-identifier": "Tunnus (käytännössä merkkijono), joka yksilöi luokan tässä tietomallissa. Samaa tunnusta ei samassa tietomallissa voi olla millään muulla resurssilla (luokalla, attribuutilla tai assosiaatiolla).",

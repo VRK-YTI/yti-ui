@@ -293,7 +293,7 @@
     "associations-identifier": "Identifier (character string) that identifies the association in this data model. The identifier must be unique, so that no other resource (association, attribute or class) has that same identifier.",
     "associations-source": "The class that acts as the source of an association which creates a semantical relation between two classes. Starting point of the relation.",
     "associations-target": "The class that acts as the target of an association which creates a semantical relation between two classes. Ending point of the relation.",
-    "attributes-functional": "Boolean, indicating that this attribute is functional. It means that the property can only have one value for a given individual. E.g. mathematical constant \"\"pi\"\" must equal 3.14.",
+    "attributes-functional": "Boolean, indicating that this attribute is functional. It means that the property can only have one value for a given individual. E.g. mathematical constant \"pi\" must equal 3.14.",
     "attributes-identifier": "Identifier (character string) that identifies the attribute in this data model. The identifier must be unique, so that no other resource (association, attribute or class) has that same identifier.",
     "class": "Any resource that has a given property is an instance of one or more classes. E.g. the parent class asserts that this domain is restricted only to individuals that are adult persons with one or more children.",
     "class-identifier": "Identifier (character string) that identifies the class in this data model. The identifier must be unique, so that no other resource (association, attribute or class) has that same identifier.",
