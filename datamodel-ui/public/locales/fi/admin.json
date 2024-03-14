@@ -267,7 +267,7 @@
   "reference-data-counts_other": "{{count}} koodistoa",
   "release": "Julkaise",
   "release-version-number": "Tietomallin versionumero",
-  "release-version-number-hint": "Kirjoita versionumero mouodossa x.y.z (esimerkiksi 1.1.0)",
+  "release-version-number-hint": "Kirjoita versionumero muodossa x.y.z (esimerkiksi 1.1.0)",
   "remove": "Poista",
   "remove-reference": "Poista viittaus",
   "remove-reference-description-association": "Haluatko poistaa viittauksen assosiaatiorajoitteeseen {{name}} tästä luokasta?",
