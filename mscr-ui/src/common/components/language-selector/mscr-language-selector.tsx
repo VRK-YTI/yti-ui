@@ -120,7 +120,6 @@ export default function MscrLanguageSelector(
  */}
       {selectedItems.map((item, idx) => (
         <LanguageBlock
-          padding="m"
           className="language-block"
           key={`${item.uniqueItemId}-${idx}`}
           id={`language-block-${item.uniqueItemId}`}

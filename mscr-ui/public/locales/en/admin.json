@@ -1,11 +1,6 @@
 {
   "add-class": "Add class",
-  "add-data-model": "Add Schema File",
-  "add-file": "Add File",
-  "add-new-link": "Add new link",
-  "add-or-drag-a-new-file-here": "Add or drag a file here",
-  "add-reference-data": "Add reference data",
-  "allowed-file-formats": "Allowed file formats:",
+  "and": "and",
   "association-missing-general": "Association is missing information",
   "association-missing-identifier": "Association identifier is missing",
   "association-missing-label": "Association name is missing",
@@ -18,7 +13,6 @@
   "class-missing-identifier": "Class identifier is undefined",
   "class-missing-language-title": "Class title is undefined",
   "class-name": "Class name",
-  "clear-all-selections": "Clear all selections",
   "clear-keyword-filter": "Clear keyword",
   "clear-selection": "Clear selection",
   "close": "",
@@ -51,8 +45,6 @@
     "value-not-valid": ""
   },
   "content-language": "Content language",
-  "contributors": "Contributors",
-  "contributors-hint-text": "You can only add organizations to which  you have editing permissions",
   "create-new-class": "Create new class",
   "create-subclass-for-selected": "Create subclass for selected",
   "crosswalk-form": {
@@ -63,7 +55,6 @@
   },
   "data-model": "Data model",
   "data-models-added-to-this-model": "Data models added to this model",
-  "data-models-in-use": "Data models in use",
   "delete-modal": {
     "association-description": "Remove association {{targetName}}?",
     "association-error": "An error occurred while removing association {{targetName}}",
@@ -84,6 +75,7 @@
   },
   "description": "Description",
   "download-failed": "",
+  "drag-files-to-upload": "Drag files to upload",
   "edit-concept-error": {
     "default": "",
     "diagrams": "",
@@ -127,11 +119,9 @@
   "language-finnish-with-suffix": "Finnish FI",
   "language-input-text": "Crosswalk name",
   "language-swedish-with-suffix": "Swedish SV",
-  "links": "Links",
   "missing-description": "Description hasn't been set",
   "missing-general": "Model is missing information",
   "missing-information-domain": "Information domain hasn't been set",
-  "missing-information-title": "Missing information",
   "missing-language-title": "Title is missing in language",
   "missing-languages": "Language hasn't been set",
   "missing-name": "Name hasn't been set",
@@ -141,9 +131,10 @@
   "missing-target-schema": "Target schema hasn't been selected",
   "modified": "Modified",
   "optional": "optional",
-  "reference-data-in-use": "Reference data in use",
   "register-schema": "Register Schema",
-  "register-schema-file-required": "Upload a Schema File. You must upload a schema file to register schema",
+  "register-schema-file-required": "You must provide a schema file to register a schema.",
+  "register-schema-file-uri-reference": "Provide schema file URI reference",
+  "register-schema-supported-file-formats": "Supported schema file formats are ",
   "remove": "Remove",
   "remove-modal": {
     "collection-confirmation": "",
@@ -166,13 +157,12 @@
     "terminology-warning": ""
   },
   "select-class": "Select class",
-  "select-contributors": "Select contributors",
   "select-information-description-languages": "Select languages for information description",
   "site-open-link-new-window": "",
   "status": "Status",
   "status-all": "All statuses",
   "statuses-in-use": "Statuses in use",
   "statuses-not-in-use": "Statuses not in use",
-  "terminologies-in-use": "Terminologies in use",
-  "try-again": "Try again"
+  "try-again": "Try again",
+  "upload-documents": "Upload documents"
 }
