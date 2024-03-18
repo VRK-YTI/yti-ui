@@ -8,6 +8,7 @@ export enum Format {
   Xslt = 'XSLT',
   Shacl = 'SHACL',
   Mscr = 'MSCR',
+  Rdfs = 'RDFS'
 }
 
 export const formatsAvailableForCrosswalkCreation: Format[] = [
@@ -16,6 +17,7 @@ export const formatsAvailableForCrosswalkCreation: Format[] = [
   Format.Skosrdf,
   Format.Xsd,
   Format.Shacl,
+  Format.Rdfs
 ];
 
 export const formatsAvailableForCrosswalkRegistration: Format[] = [
