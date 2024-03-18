@@ -37,7 +37,7 @@ interface SchemaFormModalProps {
 export default function SchemaFormModal({
   refetch,
   groupContent,
-  pid
+  pid,
 }: SchemaFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -121,12 +121,12 @@ export default function SchemaFormModal({
     //console.log(errors);
   }, [userPosted, formData, fileData]);
 
-  // Need to add action type create_schema, if the user is allowed to post in this group
 
-  if (!HasPermission({ actions: ['CREATE_SCHEMA'] })) {
-    console.log('checking group permission');
+  // This part was checking the user permission and based on that showing the button in every render
+  /* if (groupContent && !HasPermission({ actions: ['CREATE_SCHEMA'] })) {
+    console.log(HasPermission({actions:['CREATE_SCHEMA']}));
     return null;
-  }
+  } */
 
   function gatherErrorMessages() {
     const inputErrors = getErrors(t, errors);
@@ -138,17 +138,36 @@ export default function SchemaFormModal({
     return inputErrors;
   }
 
+  function renderButton() {
+    return (
+       <Button
+            variant="secondary"
+            icon={<IconPlus />}
+            style={{ height: 'min-content' }}
+            onClick={() => handleOpen()}
+          >
+            {t('register-schema')}
+          </Button>
+      
+    );
+  }
+
   return (
     <>
-      <Button
-        variant="secondary"
-        icon={<IconPlus />}
-        style={{ height: 'min-content' }}
-        onClick={() => handleOpen()}
-      >
-        {t('register-schema')}
-      </Button>
-
+      {groupContent && HasPermission({ actions: ['CREATE_SCHEMA'] }) ? (
+        <div>
+          {renderButton()}
+        </div>
+      ) : (
+        !groupContent ? (
+            <div>
+              {renderButton()}
+          </div>
+        ) : (
+              <div/>
+        ))}
+        
+      
       <Modal
         appElementId="__next"
         visible={visible}

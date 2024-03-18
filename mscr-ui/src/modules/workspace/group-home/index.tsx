@@ -15,7 +15,7 @@ import Pagination from '@app/common/components/pagination';
 import CrosswalkFormModal from '@app/modules/form/crosswalk-form/crosswalk-form-modal';
 import SchemaFormModal from '@app/modules/form/schema-form/schema-form-modal';
 import { ButtonBlock } from '../workspace.styles';
-import getOrganizations from '@app/common/utils/get-organizations';
+
 
 interface GroupHomeProps {
   user: MscrUser;
@@ -66,6 +66,7 @@ export default function GroupWorkspace({
         />
         <Separator isLarge />
         {/* ToDo: From these buttons you should create content with this org as owner */}
+        <div>
         <ButtonBlock>
           {contentType == 'SCHEMA' ? (
             <SchemaFormModal refetch={refetchInfo} groupContent={true} pid={pid}></SchemaFormModal>
@@ -79,7 +80,8 @@ export default function GroupWorkspace({
           
             </>
           )}
-        </ButtonBlock>
+          </ButtonBlock>
+          </div>
         <Separator isLarge />
         {data?.hits.hits && data?.hits.hits.length < 1 ? (
           <div>

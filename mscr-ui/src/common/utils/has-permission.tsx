@@ -77,9 +77,7 @@ export default function HasPermission({
   ) {
     return false;
   }
-  if(user)
-  console.log(user.organizationsInRole);
-
+  
   if (!targetOrganization) {
     return checkPermission({
       user,
@@ -106,30 +104,28 @@ export function checkPermission({
     targetOrganizations
       ?.flatMap((org) => user.rolesInOrganizations[org])
       .filter((t) => t);
-
+  console.log(rolesInTargetOrganizations);
   // Return true if user is superuser
   if (user.superuser) {
     return true;
   }
 
-  if (targetOrganizations) {
-    console.log(targetOrganizations);
-  }
-
   // Return true if target organization is undefined and user has admin role
-  if (rolesInOrganizations.includes('ADMIN') && !targetOrganizations) {
+  if ((rolesInOrganizations.includes('ADMIN')) && !targetOrganizations) {
+    console.log("ONly admin");
     return true;
   }
 
-  // Return true if user has admin role in target organization
+  // Return true if user has data model editor role in target organization
   if (
-    rolesInOrganizations.includes('DATA_MODEL_EDITOR') &&
+    rolesInOrganizations.includes('DATA_MODEL_EDITOR') ||
     rolesInTargetOrganizations?.includes('DATA_MODEL_EDITOR')
   ) {
+    console.log("Role is datamodel editor");
     return true;
   }
 
-   // Return true if user has datamodel editor role in target organization
+   // Return true if user has admin role in target organization
    if (
     rolesInOrganizations.includes('') &&
     rolesInTargetOrganizations?.includes('ADMIN')

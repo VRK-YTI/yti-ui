@@ -129,10 +129,7 @@ export default function CrosswalkFormModal({
     setErrors(errors);
   }, [userPosted, formData]);
 
-  if (!HasPermission({ actions: ['CREATE_CROSSWALK'] })) {
-    return null;
-  }
-
+ 
   function gatherErrorMessages() {
     const inputErrors = getErrors(t, errors);
     const result = createNew ? newCrosswalkResult : registerCrosswalkResult;
@@ -143,17 +140,33 @@ export default function CrosswalkFormModal({
     return inputErrors;
   }
 
+  function renderButton() {
+    return (
+      <Button
+      variant="secondary"
+      icon={<IconPlus />}
+      style={{ height: 'min-content' }}
+      onClick={() => handleOpen()}
+    >
+      {createNew ? t('crosswalk-form.create') : t('crosswalk-form.register')}
+    </Button>
+    )
+  }
+
   return (
     <>
-      <Button
-        variant="secondary"
-        icon={<IconPlus />}
-        style={{ height: 'min-content' }}
-        onClick={() => handleOpen()}
-      >
-        {createNew ? t('crosswalk-form.create') : t('crosswalk-form.register')}
-      </Button>
-
+       {groupContent && HasPermission({ actions: ['CREATE_CROSSWALK'] }) ? (
+        <div>
+          {renderButton()}
+        </div>
+      ) : (
+          !groupContent ? (
+            <div>
+              {renderButton()}
+            </div>
+        ) : (
+              <div></div>
+        ))}
       <Modal
         appElementId="__next"
         visible={visible}
