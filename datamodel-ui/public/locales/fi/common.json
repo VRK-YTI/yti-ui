@@ -150,7 +150,7 @@
   "linked-datamodel-prefix": "Tunnus: {{prefix}}",
   "linked-datamodels": "Linkitetyt tietomallit",
   "linked-terminologies": "Linkitetyt sanastot",
-  "links": "Linkit",
+  "links": "Linkitykset",
   "links-to-additional-information": "Linkit lisätietoihin",
   "maximum-count": "Enimmäismäärä",
   "minimum-count": "Vähimmäismäärä",
