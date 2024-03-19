@@ -116,6 +116,7 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
 
   function gatherErrorMessages() {
     const inputErrors = getErrors(t, errors);
+    console.log(inputErrors);
     if (resultSchemaFull.isError) {
       const errorMessage = getApiError(resultSchemaFull.error);
       return [...inputErrors, errorMessage];
