@@ -4,6 +4,7 @@ import {
   Format,
   formatsAvailableForCrosswalkCreation,
 } from '@app/common/interfaces/format.interface';
+import { SchemaVisualizationContainer } from '@app/modules/schema-view/schema-visualization/schema-visualization.styles';
 
 export default function SchemaVisualization({
   pid,
@@ -17,7 +18,11 @@ export default function SchemaVisualization({
   const visualizationAvailable =
     formatsAvailableForCrosswalkCreation.includes(format);
   if (visualizationAvailable) {
-    return <SchemaInfo caption={filterLabel} schemaUrn={pid} />;
+    return (
+      <SchemaVisualizationContainer>
+        <SchemaInfo caption={filterLabel} schemaUrn={pid} />
+      </SchemaVisualizationContainer>
+    );
   } else {
     return (
       <>
