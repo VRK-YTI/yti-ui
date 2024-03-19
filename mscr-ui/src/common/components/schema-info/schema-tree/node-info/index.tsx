@@ -1,14 +1,16 @@
 import { RenderTree } from '@app/common/interfaces/crosswalk-connection.interface';
-import { Dropdown } from 'suomifi-ui-components';
-import { DropdownItem } from 'suomifi-ui-components';
+import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { InfoIcon } from '@app/common/components/shared-icons';
+import { useTranslation } from 'next-i18next';
+import { DropdownWrapper } from '@app/common/components/schema-info/schema-info.styles';
 
 export default function NodeInfo(props: {
   treeData: RenderTree[];
-  performNodeInfoAction: any;
+  // performNodeInfoAction: any;
 }) {
+  const { t } = useTranslation('common');
   let sourceSelectionInit = '';
 
   useEffect(() => {
@@ -19,13 +21,12 @@ export default function NodeInfo(props: {
     }
   }, [props]);
 
-  const [sourceDropdownValue, setDropdownValue] =
-    useState(sourceSelectionInit);
+  const [sourceDropdownValue, setDropdownValue] = useState(sourceSelectionInit);
   const [selectedNode] = props.treeData.filter(
-    (item) => item.id === sourceDropdownValue,
+    (item) => item.id === sourceDropdownValue
   );
 
-  let dropdownInit: any = [
+  let dropdownInit: { id: string; name?: string }[] = [
     {
       id: '1',
     },
@@ -41,9 +42,7 @@ export default function NodeInfo(props: {
 
   const nodeProperties: constantAttribute[] = [];
   if (props.treeData.length > 0 && props.treeData[0]?.properties) {
-    for (const [key, value] of Object.entries(
-      props.treeData[0]?.properties,
-    )) {
+    for (const [key, value] of Object.entries(props.treeData[0]?.properties)) {
       nodeProperties.push({
         name: key,
         value: typeof value === 'string' ? value.toString() : undefined,
@@ -64,7 +63,7 @@ export default function NodeInfo(props: {
 
   return (
     <div className="row d-flex justify-content-between node-info-box">
-      <h2>Selected node info</h2>
+      <h3>{t('schema-tree.node-info')}</h3>
       <div className="col flex-column d-flex justify-content-between side-bar-wrap">
         <div className="mb-2"></div>
         <Box
@@ -94,10 +93,12 @@ export default function NodeInfo(props: {
             </>
           )}
           {props.treeData.length > 1 && (
-            <div className="dropdown-wrap">
+            <DropdownWrapper>
               <Dropdown
-                className="mt-2 node-info-dropdown"
-                visualPlaceholder="Node(s) not selected"
+                labelText={t('schema-tree.dropdown-label')}
+                labelMode={'hidden'}
+                className="mt-2"
+                visualPlaceholder={t('schema-tree.dropdown-placeholder')}
                 value={sourceDropdownValue}
                 onChange={(newValue) => setDropdownValue(newValue)}
               >
@@ -107,14 +108,14 @@ export default function NodeInfo(props: {
                   </DropdownItem>
                 ))}
               </Dropdown>
-            </div>
+            </DropdownWrapper>
           )}
           <div>
             <div className="row">
               {props.treeData.length > 1 && (
                 <>
                   <div className="col-12">
-                    <div>Selected node:</div>
+                    <div>{t('schema-tree.selected-node')}</div>
                     <div className="attribute-font">{selectedNode?.name}</div>
                   </div>
                 </>

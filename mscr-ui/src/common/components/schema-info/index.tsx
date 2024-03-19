@@ -11,16 +11,24 @@ import { RenderTree } from '@app/common/interfaces/crosswalk-connection.interfac
 import { cloneDeep } from 'lodash';
 import { generateTreeFromJson } from '@app/common/components/schema-info/schema-tree/schema-tree-renderer';
 import { useGetFrontendSchemaQuery } from '@app/common/components/schema/schema.slice';
-
-const inputData: RenderTree[] = [];
+import { useTranslation } from 'next-i18next';
+import {
+  ExpandButtonWrapper,
+  NodeInfoWrapper,
+  SearchWrapper
+} from '@app/common/components/schema-info/schema-info.styles';
 
 export default function SchemaInfo(props: {
-  updateTreeNodeSelectionsOutput?: any;
+  updateTreeNodeSelectionsOutput?: (
+    nodeIds: RenderTree[],
+    isSourceSchema: boolean
+  ) => void;
   isSourceTree?: boolean;
   treeSelection?: string[];
   caption: string;
   schemaUrn: string;
 }) {
+  const { t } = useTranslation('common');
   const emptyTreeSelection: RenderTree = {
     elementPath: '',
     parentElementPath: undefined,
@@ -39,9 +47,10 @@ export default function SchemaInfo(props: {
     error: getSchemaDataError,
   } = useGetFrontendSchemaQuery(props.schemaUrn);
 
-  const [treeDataOriginal, setTreeDataOriginal] =
-    React.useState<RenderTree[]>(inputData);
-  const [treeData, setTreeData] = React.useState<RenderTree[]>(inputData);
+  const [treeDataOriginal, setTreeDataOriginal] = React.useState<RenderTree[]>(
+    []
+  );
+  const [treeData, setTreeData] = React.useState<RenderTree[]>([]);
   const [treeExpandedArray, setTreeExpanded] = React.useState<string[]>([]);
 
   // These are used by tree visualization
@@ -77,16 +86,23 @@ export default function SchemaInfo(props: {
 
   // Expand and select nodes when input changed (from mappings accordion)
   useEffect(() => {
-    expandAndSelectNodes(props.treeSelection);
+    if (props.treeSelection) {
+      expandAndSelectNodes(props.treeSelection);
+    }
   }, [props.treeSelection]);
 
   useEffect(() => {
     // Update selections for node info and parent component for mappings
     const selectedTreeNodeIds = getTreeNodesByIds(treeSelectedArray);
-    props.updateTreeNodeSelectionsOutput(
-      selectedTreeNodeIds,
-      props.isSourceTree,
-    );
+    if (
+      props.updateTreeNodeSelectionsOutput &&
+      props.isSourceTree !== undefined
+    ) {
+      props.updateTreeNodeSelectionsOutput(
+        selectedTreeNodeIds,
+        props.isSourceTree
+      );
+    }
     setSelectedTreeNodes(selectedTreeNodeIds);
   }, [treeSelectedArray]);
 
@@ -110,9 +126,9 @@ export default function SchemaInfo(props: {
 
   // Used to tree filtering
   function findNodesFromTree(
-    tree: any,
+    tree: RenderTree[],
     itemsToFind: string[],
-    results: RenderTree[],
+    results: RenderTree[]
   ) {
     tree.forEach((item: RenderTree) => {
       if (itemsToFind.includes(item.id)) {
@@ -135,7 +151,7 @@ export default function SchemaInfo(props: {
   function doFiltering(
     tree: RenderTree[],
     nameToFind: string,
-    results: { nodeIds: string[]; childNodeIds: string[] },
+    results: { nodeIds: string[]; childNodeIds: string[] }
   ) {
     tree.forEach((item) => {
       if (
@@ -159,7 +175,7 @@ export default function SchemaInfo(props: {
   function getElementPathsFromTree(
     treeData: RenderTree[],
     nodeIds: string[],
-    results: string[],
+    results: string[]
   ) {
     treeData.forEach((item) => {
       if (nodeIds.includes(item.id)) {
@@ -208,63 +224,55 @@ export default function SchemaInfo(props: {
     }
   }
 
-  function searchFromTree(input: any) {
+  function searchFromTree(input: string) {
     clearTreeSearch();
     const hits = { nodeIds: [], childNodeIds: [] };
     doFiltering(treeData, input.toString(), hits);
     expandAndSelectNodes(hits.nodeIds);
   }
 
-  function handleTreeClick(
-    event: React.SyntheticEvent | undefined,
-    nodeIds: string[],
-  ) {
+  function handleTreeClick(nodeIds: string[]) {
     setTreeSelections(nodeIds);
   }
 
-  function handleTreeToggle(
-    event: React.SyntheticEvent | undefined,
-    nodeIds: string[],
-  ) {
+  function handleTreeToggle(nodeIds: string[]) {
     setTreeExpanded(nodeIds);
   }
 
-  const selectFromTreeById = (nodeId: string) => {
-    const nodeIds = [];
-    nodeIds.push(nodeId);
-    expandAndSelectNodes(nodeIds);
-  };
+  // const selectFromTreeById = (nodeId: string) => {
+  //   const nodeIds = [];
+  //   nodeIds.push(nodeId);
+  //   expandAndSelectNodes(nodeIds);
+  // };
 
-  const performCallbackFromTreeAction = (
-    action: any,
-    event: any,
-    nodeIds: any,
-  ) => {
+  const performCallbackFromTreeAction = (action: string, nodeIds: string[]) => {
     if (action === 'handleSelect') {
-      handleTreeClick(event, nodeIds);
+      handleTreeClick(nodeIds);
     } else if (action === 'treeToggle') {
-      handleTreeToggle(event, nodeIds);
+      handleTreeToggle(nodeIds);
     }
   };
 
-  const performNodeInfoAction = (nodeId: any, isSourceTree: boolean) => {
-    selectFromTreeById(nodeId);
-  };
+  // const performNodeInfoAction = (nodeId: any, isSourceTree: boolean) => {
+  //   selectFromTreeById(nodeId);
+  // };
 
   return (
     <>
       <div className="row content-box">
         <div className="col-7 px-0">
           <div className="d-flex justify-content-between mb-2 ps-3 pe-2">
-            <div className="w-100">
+            <SearchWrapper className="w-100">
               <SearchInput
                 className="py-2"
                 labelText={props.caption}
-                searchButtonLabel="Search"
-                clearButtonLabel="Clear"
-                visualPlaceholder="Find an attribute..."
+                searchButtonLabel={t('schema-tree.search')}
+                clearButtonLabel={t('schema-tree.clear')}
+                visualPlaceholder={t('schema-tree.search-placeholder')}
                 onSearch={(value) => {
-                  searchFromTree(value);
+                  if (typeof value === 'string') {
+                    searchFromTree(value);
+                  }
                 }}
                 onChange={(value) => {
                   if (!value) {
@@ -272,11 +280,11 @@ export default function SchemaInfo(props: {
                   }
                 }}
               />
-            </div>
-            <div className="expand-button-wrap">
+            </SearchWrapper>
+            <ExpandButtonWrapper>
               <IconButton
                 onClick={() => handleExpandClick()}
-                aria-label="expand tree"
+                aria-label={t('schema-tree.expand')}
                 color="primary"
                 size="large"
               >
@@ -286,7 +294,7 @@ export default function SchemaInfo(props: {
                   <ExpandLessIcon />
                 )}
               </IconButton>
-            </div>
+            </ExpandButtonWrapper>
           </div>
           <div className="mx-2">
             <Box
@@ -308,12 +316,12 @@ export default function SchemaInfo(props: {
             </Box>
           </div>
         </div>
-        <div className="col-5 px-0 node-info-wrap">
+        <NodeInfoWrapper className="col-5 px-0">
           <NodeInfo
             treeData={selectedTreeNodes}
-            performNodeInfoAction={performNodeInfoAction}
+            // performNodeInfoAction={performNodeInfoAction}
           ></NodeInfo>
-        </div>
+        </NodeInfoWrapper>
       </div>
     </>
   );
