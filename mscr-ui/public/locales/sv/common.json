@@ -190,6 +190,20 @@
     "status": "",
     "status-select": ""
   },
+  "schema-tree": {
+    "clear": "",
+    "dropdown-label": "",
+    "dropdown-placeholder": "",
+    "error-heading": "",
+    "error-info": "",
+    "expand": "",
+    "filter-schema": "",
+    "node-info": "",
+    "search": "",
+    "search-placeholder": "",
+    "selected-node": "",
+    "tree-label": ""
+  },
   "search": {
     "bar": {
       "clear-button": "",
@@ -251,6 +265,7 @@
   "synonym": "",
   "tabs": {
     "metadata-and-files": "",
+    "schema": "",
     "version-history": ""
   },
   "term-conjugation": {
