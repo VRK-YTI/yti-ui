@@ -1,7 +1,6 @@
 import {initialMetadataForm, Metadata, MetadataFormType} from '@app/common/interfaces/metadata.interface';
 import {useDeleteCrosswalkMutation, usePatchCrosswalkMutation} from '@app/common/components/crosswalk/crosswalk.slice';
-import {useDeleteSchemaMutation} from '@app/common/components/schema/schema.slice';
-import {usePatchSchemaMutation} from '@app/common/components/schema/schema.slice';
+import {useDeleteSchemaMutation, usePatchSchemaMutation} from '@app/common/components/schema/schema.slice';
 import {useTranslation} from 'next-i18next';
 import {useRouter} from 'next/router';
 import {Grid} from '@mui/material';
@@ -419,11 +418,11 @@ export default function MetadataForm({
         <ConfirmModal
           isVisible={isDeleteModalOpen}
           actionName={type === Type.Crosswalk ? 'deleteCrosswalk' : 'deleteSchema'}
-          actionText={t(type === Type.Crosswalk ? 'action.delete-crosswalk' : 'action.delete-schema')}
+          actionText={type === Type.Crosswalk ? t('action.delete-crosswalk') : t('action.delete-schema')}
           cancelText={t('action.cancel')}
           performConfirmModalAction={performModalAction}
           heading={t('confirm-modal.heading')}
-          text1={t(type === Type.Crosswalk ? 'confirm-modal.delete-crosswalk' : 'confirm-modal.delete-schema')}
+          text1={type === Type.Crosswalk ? t('confirm-modal.delete-crosswalk') : t('confirm-modal.delete-schema')}
         />
         <ConfirmModal
           isVisible={isPublishConfirmModalOpen}

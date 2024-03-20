@@ -7,6 +7,9 @@
   "action": {
     "actions": "",
     "cancel": "",
+    "delete": "",
+    "delete-crosswalk": "",
+    "delete-schema": "",
     "edit": "",
     "publish": "",
     "save": ""
@@ -37,6 +40,8 @@
     "no-upper-attributes": ""
   },
   "confirm-modal": {
+    "delete-crosswalk": "",
+    "delete-schema": "",
     "heading": "",
     "publish-crosswalk1": "",
     "publish-crosswalk2": "",
@@ -141,8 +146,10 @@
   "no-subscribed-items": "",
   "not-recommended-synonym": "",
   "notifications": {
+    "crosswalk-deleted": "",
     "crosswalk-published": "",
     "crosswalk-saved": "",
+    "schema-deleted": "",
     "schema-published": "",
     "schema-saved": ""
   },
