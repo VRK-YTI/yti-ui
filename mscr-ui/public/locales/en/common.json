@@ -7,6 +7,9 @@
   "action": {
     "actions": "Actions",
     "cancel": "Cancel",
+    "delete": "Delete",
+    "delete-crosswalk": "Delete crosswalk",
+    "delete-schema": "Delete schema",
     "edit": "Edit",
     "publish": "Publish",
     "save": "Save"
@@ -37,6 +40,8 @@
     "no-upper-attributes": ""
   },
   "confirm-modal": {
+    "delete-crosswalk": "Are you sure you want to delete the crosswalk?",
+    "delete-schema": "Are you sure you want to delete the schema?",
     "heading": "Confirmation",
     "publish-crosswalk1": "Are you sure you want to publish the crosswalk?",
     "publish-crosswalk2": "After publishing, you cannot make changes to mappings in crosswalk.",
@@ -139,8 +144,10 @@
   "no-subscribed-items": "",
   "not-recommended-synonym": "",
   "notifications": {
+    "crosswalk-deleted": "Crosswalk was removed",
     "crosswalk-published": "Crosswalk published successfully",
     "crosswalk-saved": "Crosswalk metadata saved successfully",
+    "schema-deleted": "Schema was removed",
     "schema-published": "Schema published successfully",
     "schema-saved": "Schema metadata saved successfully"
   },
