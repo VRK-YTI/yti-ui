@@ -1,9 +1,12 @@
-import {initialMetadataForm, Metadata, MetadataFormType} from '@app/common/interfaces/metadata.interface';
-import {useDeleteCrosswalkMutation, usePatchCrosswalkMutation} from '@app/common/components/crosswalk/crosswalk.slice';
-import {useDeleteSchemaMutation, usePatchSchemaMutation} from '@app/common/components/schema/schema.slice';
-import {useTranslation} from 'next-i18next';
-import {useRouter} from 'next/router';
-import {Grid} from '@mui/material';
+import { initialMetadataForm, Metadata, MetadataFormType } from '@app/common/interfaces/metadata.interface';
+import {
+  useDeleteCrosswalkMutation,
+  usePatchCrosswalkMutation
+} from '@app/common/components/crosswalk/crosswalk.slice';
+import { useDeleteSchemaMutation, usePatchSchemaMutation } from '@app/common/components/schema/schema.slice';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import { Grid } from '@mui/material';
 import {
   ActionMenu,
   ActionMenuItem,
@@ -14,13 +17,13 @@ import {
   TextInput
 } from 'suomifi-ui-components';
 import * as React from 'react';
-import {useCallback, useEffect, useState} from 'react';
-import {getLanguageVersion} from '@app/common/utils/get-language-version';
-import {Type, Visibility} from '@app/common/interfaces/search.interface';
-import {State} from '@app/common/interfaces/state.interface';
+import { useCallback, useEffect, useState } from 'react';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { Type, Visibility } from '@app/common/interfaces/search.interface';
+import { State } from '@app/common/interfaces/state.interface';
 import ConfirmModal from '@app/common/components/confirmation-modal';
-import {useStoreDispatch} from '@app/store';
-import {clearNotification, setNotification} from '@app/common/components/notifications/notifications.slice';
+import { useStoreDispatch } from '@app/store';
+import { clearNotification, setNotification } from '@app/common/components/notifications/notifications.slice';
 import Notification from '@app/common/components/notifications';
 
 interface MetadataFormProps {
@@ -363,6 +366,8 @@ export default function MetadataForm({
                         </ActionMenuItem>
                         <ActionMenuItem
                           className={
+                          // ToDo: Enable for CROSSWALK when works
+                            type === Type.Schema &&
                             metadata.state == State.Draft ? '' : 'd-none'
                           }
                           onClick={() => setDeleteModalOpen(true)}
