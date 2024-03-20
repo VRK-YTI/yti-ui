@@ -9,6 +9,7 @@ export interface Schema extends Metadata {
   status?: string;
   languages?: string[];
   organizations: Organization[];
+  owner?: string[];
 }
 
 export interface SchemaWithVersionInfo extends Schema {

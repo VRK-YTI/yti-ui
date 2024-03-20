@@ -10,22 +10,6 @@ import { User } from 'yti-common-ui/interfaces/user.interface';
 
 // Need to specify the acctions permitted for each type of user
 const actions = [
-  'ADMIN_DATA_MODEL',
-  'CREATE_DATA_MODEL',
-  'EDIT_DATA_MODEL',
-  'DELETE_DATA_MODEL',
-  'ADMIN_CLASS',
-  'CREATE_CLASS',
-  'DELETE_CLASS',
-  'EDIT_CLASS',
-  'ADMIN_ASSOCIATION',
-  'CREATE_ASSOCIATION',
-  'EDIT_ASSOCIATION',
-  'DELETE_ASSOCIATION',
-  'ADMIN_ATTRIBUTE',
-  'CREATE_ATTRIBUTE',
-  'EDIT_ATTRIBUTE',
-  'DELETE_ATTRIBUTE',
   'CREATE_SCHEMA',
   'EDIT_SCHEMA',
   'EDIT_SCHEMA_METADATA',
@@ -43,17 +27,21 @@ export type Actions = typeof actions[number];
 export interface hasPermissionProps {
   actions: Actions | Actions[];
   targetOrganization?: string;
+  owner?: string[];
+  
 }
 
 export interface checkPermissionProps {
   user: User;
   actions: Actions[];
   targetOrganizations?: string[];
+  owner?: string[];
 }
 
 export default function HasPermission({
   actions,
   targetOrganization,
+  owner,
 }: hasPermissionProps) {
   const { data: authenticatedUser } = useGetAuthenticatedUserQuery();
   const dispatch = useStoreDispatch();
@@ -77,15 +65,39 @@ export default function HasPermission({
   ) {
     return false;
   }
-  
+
   if (!targetOrganization) {
+    if (owner && owner.length) {
+      //Editing Step as already has owner
+      console.log(owner.length);
+      console.log("checking edit permission");
+      return checkEditPermission({
+        user,
+        actions: Array.isArray(actions) ? actions : [actions],
+        owner,
+      });
+    }
+  
     return checkPermission({
       user,
       actions: Array.isArray(actions) ? actions : [actions],
     });
   }
 
-  return checkPermission({
+
+  //If there is target organization
+
+  if (owner && owner.length) {
+    //Editing Step as already has owner
+    return checkEditPermission({
+      user,
+      actions: Array.isArray(actions) ? actions : [actions],
+      targetOrganizations: [targetOrganization],
+      owner,
+    });
+  }
+
+  return checkPermission({ //Content Creation
     user,
     actions: Array.isArray(actions) ? actions : [actions],
     targetOrganizations: [targetOrganization],
@@ -98,21 +110,20 @@ export function checkPermission({
   targetOrganizations,
 }: checkPermissionProps) {
   const rolesInOrganizations = Object.keys(user.organizationsInRole);
-  
+
   const rolesInTargetOrganizations =
     targetOrganizations &&
     targetOrganizations
       ?.flatMap((org) => user.rolesInOrganizations[org])
       .filter((t) => t);
-  console.log(rolesInTargetOrganizations);
   // Return true if user is superuser
   if (user.superuser) {
     return true;
   }
 
   // Return true if target organization is undefined and user has admin role
-  if ((rolesInOrganizations.includes('ADMIN')) && !targetOrganizations) {
-    console.log("ONly admin");
+  if (rolesInOrganizations.includes('ADMIN') && !targetOrganizations) {
+    console.log('ONly admin');
     return true;
   }
 
@@ -121,17 +132,41 @@ export function checkPermission({
     rolesInOrganizations.includes('DATA_MODEL_EDITOR') ||
     rolesInTargetOrganizations?.includes('DATA_MODEL_EDITOR')
   ) {
-    console.log("Role is datamodel editor");
+    console.log('Role is datamodel editor');
     return true;
   }
 
-   // Return true if user has admin role in target organization
-   if (
+  // Return true if user has admin role in target organization
+  if (
     rolesInOrganizations.includes('') &&
     rolesInTargetOrganizations?.includes('ADMIN')
   ) {
     return true;
   }
 
+  return false;
+}
+
+export function checkEditPermission({
+  user,
+  actions,
+  targetOrganizations,
+  owner
+}: checkPermissionProps) {
+
+  //Check for personal Contents
+  if (owner?.includes(user.id)) {
+    //user is the owner
+    return true;
+  }
+
+  const rolesInOrganizations = Object.keys(user.organizationsInRole);
+  if (rolesInOrganizations.includes('ADMIN')) {
+    console.log('ONly admin');
+    console.log(user.organizationsInRole.filter());
+    return true;
+  }
+
+  
   return false;
 }
