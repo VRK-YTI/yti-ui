@@ -366,8 +366,6 @@ export default function MetadataForm({
                         </ActionMenuItem>
                         <ActionMenuItem
                           className={
-                          // ToDo: Enable for CROSSWALK when works
-                            type === Type.Schema &&
                             metadata.state == State.Draft ? '' : 'd-none'
                           }
                           onClick={() => setDeleteModalOpen(true)}
