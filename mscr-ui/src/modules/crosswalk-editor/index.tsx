@@ -34,6 +34,7 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import HasPermission from '@app/common/utils/has-permission';
 import VersionHistory from '@app/common/components/version-history';
 import SchemaInfo from '@app/common/components/schema-info';
+import {useTranslation} from 'next-i18next';
 
 export default function CrosswalkEditor({
   crosswalkId,
@@ -50,6 +51,8 @@ export default function CrosswalkEditor({
       ].join(','),
     },
   });
+
+  const { t } = useTranslation('common');
 
   const emptyTreeSelection: RenderTree = {
     elementPath: '',
@@ -588,14 +591,14 @@ export default function CrosswalkEditor({
                   <div className="row gx-0"></div>
                   <div className="row gx-0">
                     {/*  SOURCE TREE */}
-                    <div className="col-5 ps-4">
+                    <div className="col-5">
                       <SchemaInfo
                         updateTreeNodeSelectionsOutput={
                           performCallbackFromSchemaInfo
                         }
                         isSourceTree={true}
                         treeSelection={sourceTreeSelection}
-                        caption={'Filter from source schema'}
+                        caption={t('crosswalk-editor.search-from-source-schema')}
                         schemaUrn={sourceSchemaUrn}
                       ></SchemaInfo>
                     </div>
@@ -633,7 +636,7 @@ export default function CrosswalkEditor({
                         }
                         isSourceTree={false}
                         treeSelection={targetTreeSelection}
-                        caption={'Filter from target schema'}
+                        caption={t('crosswalk-editor.search-from-target-schema')}
                         schemaUrn={targetSchemaUrn}
                       ></SchemaInfo>
                     </div>
