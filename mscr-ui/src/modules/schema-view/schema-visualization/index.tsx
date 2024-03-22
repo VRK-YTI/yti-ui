@@ -14,7 +14,7 @@ export default function SchemaVisualization({
   format: Format;
 }) {
   const { t } = useTranslation('common');
-  const filterLabel = t('schema-tree.filter-schema');
+  const filterLabel = t('schema-tree.search-schema');
   const visualizationAvailable =
     formatsAvailableForCrosswalkCreation.includes(format);
   if (visualizationAvailable) {
