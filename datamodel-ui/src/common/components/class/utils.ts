@@ -1,4 +1,5 @@
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
+import { OWL_THING } from '@app/modules/class-view/utils';
 
 export function convertToPayload(
   data: ClassFormType,
@@ -16,7 +17,7 @@ export function convertToPayload(
       equivalentClass: data.equivalentClass?.map((eq) => eq.uri) ?? [],
       subClassOf: data.subClassOf
         ? data.subClassOf
-            .filter((soc) => soc.uri !== 'owl:Thing')
+            .filter((soc) => soc.uri !== OWL_THING.uri)
             .map((sco) => sco.uri)
         : [],
       disjointWith: data.disjointWith?.map((disjoint) => disjoint.uri) ?? [],
@@ -28,7 +29,10 @@ export function convertToPayload(
           targetNode: data.targetClass?.uri,
         }
       : {
-          targetClass: data.targetClass?.uri,
+          targetClass:
+            data.targetClass?.uri === OWL_THING.uri
+              ? undefined
+              : data.targetClass?.uri,
           ...(data.node && {
             targetNode: data.node.uri,
           }),

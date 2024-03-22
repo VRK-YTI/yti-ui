@@ -55,8 +55,8 @@ import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import {
-  DEFAULT_ASSOCIATION_SUBPROPERTY,
-  DEFAULT_ATTRIBUTE_SUBPROPERTY,
+  OWL_TOP_OBJECT_PROPERTY,
+  OWL_TOP_DATA_PROPERTY,
 } from '@app/common/components/resource/utils';
 import PropertyToggle from './components/property-toggle';
 import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
@@ -227,10 +227,9 @@ export default function ResourceForm({
       key === 'subResourceOf' &&
       data.subResourceOf &&
       data.subResourceOf.length === 1 &&
-      [
-        DEFAULT_ASSOCIATION_SUBPROPERTY.uri,
-        DEFAULT_ATTRIBUTE_SUBPROPERTY.uri,
-      ].includes(data.subResourceOf[0].uri)
+      [OWL_TOP_OBJECT_PROPERTY.uri, OWL_TOP_DATA_PROPERTY.uri].includes(
+        data.subResourceOf[0].uri
+      )
     ) {
       handleUpdate({
         ...data,
@@ -254,8 +253,8 @@ export default function ResourceForm({
     if (key === 'subResourceOf' && data.subResourceOf?.length === 1) {
       const defaultSubResourceOf =
         data.type === ResourceType.ASSOCIATION
-          ? DEFAULT_ASSOCIATION_SUBPROPERTY
-          : DEFAULT_ATTRIBUTE_SUBPROPERTY;
+          ? OWL_TOP_OBJECT_PROPERTY
+          : OWL_TOP_DATA_PROPERTY;
       handleUpdate({
         ...data,
         subResourceOf: [defaultSubResourceOf],
@@ -598,8 +597,8 @@ export default function ResourceForm({
                   />
                 }
                 deleteDisabled={[
-                  DEFAULT_ASSOCIATION_SUBPROPERTY.uri,
-                  DEFAULT_ATTRIBUTE_SUBPROPERTY.uri,
+                  OWL_TOP_OBJECT_PROPERTY.uri,
+                  OWL_TOP_DATA_PROPERTY.uri,
                 ]}
                 handleRemoval={(id: string) =>
                   handleResourceRemove(id, 'subResourceOf')

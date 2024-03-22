@@ -59,7 +59,7 @@ import {
   TEXT_INPUT_MAX,
 } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
-import { DEFAULT_SUBCLASS_OF } from '../class-view/utils';
+import { OWL_THING } from '../class-view/utils';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
@@ -96,7 +96,7 @@ export default function ClassForm({
   const [isSubClass] = useState(
     data.subClassOf &&
       data.subClassOf.length > 0 &&
-      data.subClassOf[0].uri !== 'owl:Thing'
+      data.subClassOf[0].uri !== OWL_THING.uri
   );
   const [errors, setErrors] = useState<ClassFormErrors>(
     validateClassForm(data)
@@ -248,7 +248,7 @@ export default function ClassForm({
       if (newSubClasses.length < 1) {
         handleUpdate({
           ...data,
-          subClassOf: [DEFAULT_SUBCLASS_OF],
+          subClassOf: [OWL_THING],
         });
       } else {
         handleUpdate({
@@ -289,7 +289,7 @@ export default function ClassForm({
       const initData =
         data.subClassOf &&
         data.subClassOf.length === 1 &&
-        data.subClassOf[0].uri === 'owl:Thing'
+        data.subClassOf[0].uri === OWL_THING.uri
           ? []
           : data.subClassOf ?? [];
 
@@ -586,7 +586,7 @@ export default function ClassForm({
             handleRemoval={(id: string) =>
               handleClassOfRemoval(id, 'subClassOf')
             }
-            deleteDisabled={['owl:Thing']}
+            deleteDisabled={[OWL_THING.uri]}
           />
         ) : (
           <></>
@@ -616,6 +616,7 @@ export default function ClassForm({
               handleRemoval={() =>
                 handleUpdate({ ...data, targetClass: undefined })
               }
+              deleteDisabled={true}
             />
 
             <ResourcePicker
