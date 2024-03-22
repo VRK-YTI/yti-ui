@@ -28,7 +28,6 @@ export interface hasPermissionProps {
   actions: Actions | Actions[];
   targetOrganization?: string;
   owner?: string[];
-  
 }
 
 export interface checkPermissionProps {
@@ -66,27 +65,23 @@ export default function HasPermission({
     return false;
   }
 
+  //No Target Organization
   if (!targetOrganization) {
     if (owner && owner.length) {
       //Editing Step as already has owner
-      console.log(owner.length);
-      console.log("checking edit permission");
       return checkEditPermission({
         user,
         actions: Array.isArray(actions) ? actions : [actions],
         owner,
       });
     }
-  
     return checkPermission({
       user,
       actions: Array.isArray(actions) ? actions : [actions],
     });
   }
 
-
   //If there is target organization
-
   if (owner && owner.length) {
     //Editing Step as already has owner
     return checkEditPermission({
@@ -96,8 +91,8 @@ export default function HasPermission({
       owner,
     });
   }
-
-  return checkPermission({ //Content Creation
+  return checkPermission({
+    //Content Creation
     user,
     actions: Array.isArray(actions) ? actions : [actions],
     targetOrganizations: [targetOrganization],
@@ -109,13 +104,17 @@ export function checkPermission({
   actions,
   targetOrganizations,
 }: checkPermissionProps) {
-  const rolesInOrganizations = Object.keys(user.organizationsInRole);
+  console.log(targetOrganizations);
 
+  console.log("check content creation permission");
+  const rolesInOrganizations = Object.keys(user.organizationsInRole);
+ 
   const rolesInTargetOrganizations =
     targetOrganizations &&
     targetOrganizations
       ?.flatMap((org) => user.rolesInOrganizations[org])
       .filter((t) => t);
+  
   // Return true if user is superuser
   if (user.superuser) {
     return true;
@@ -123,18 +122,17 @@ export function checkPermission({
 
   // Return true if target organization is undefined and user has admin role
   if (rolesInOrganizations.includes('ADMIN') && !targetOrganizations) {
-    console.log('ONly admin');
     return true;
   }
 
+  console.log(rolesInTargetOrganizations);
   // Return true if user has data model editor role in target organization
   if (
-    rolesInOrganizations.includes('DATA_MODEL_EDITOR') ||
-    rolesInTargetOrganizations?.includes('DATA_MODEL_EDITOR')
+    rolesInTargetOrganizations?.includes('DATA_MODEL_EDITOR')||rolesInTargetOrganizations?.includes('ADMIN')
   ) {
-    console.log('Role is datamodel editor');
     return true;
   }
+  
 
   // Return true if user has admin role in target organization
   if (
@@ -149,24 +147,32 @@ export function checkPermission({
 
 export function checkEditPermission({
   user,
-  actions,
-  targetOrganizations,
   owner
-}: checkPermissionProps) {
-
-  //Check for personal Contents
+}: checkPermissionProps) { 
+  console.log("Checking editing permisison");
   if (owner?.includes(user.id)) {
-    //user is the owner
+    //user is the owner, Check for personal Contents
     return true;
+  } else {
+    //Gruop Content
+    const rolesInOrganizations = Object.keys(user.organizationsInRole);
+    console.log(rolesInOrganizations);
+    const adminProp = 'ADMIN';
+    if (owner && user.organizationsInRole[adminProp].includes(owner[0])) {
+      // User has admin right for this group
+      console.log('user has admin right');
+      return true;
+    }
+    const datamodeleditorProp = 'DATA_MODEL_EDITOR';
+    if (
+      owner &&
+      user.organizationsInRole[datamodeleditorProp].includes(owner[0])
+    ) {
+      console.log('user has datamodel editor right');
+      return true;
+    }
   }
-
-  const rolesInOrganizations = Object.keys(user.organizationsInRole);
-  if (rolesInOrganizations.includes('ADMIN')) {
-    console.log('ONly admin');
-    console.log(user.organizationsInRole.filter());
-    return true;
-  }
-
   
+
   return false;
 }

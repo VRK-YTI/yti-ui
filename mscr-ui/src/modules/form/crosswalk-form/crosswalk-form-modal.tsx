@@ -155,7 +155,7 @@ export default function CrosswalkFormModal({
 
   return (
     <>
-       {groupContent && HasPermission({ actions: ['CREATE_CROSSWALK'] }) ? (
+       {groupContent && HasPermission({ actions: ['CREATE_CROSSWALK'],targetOrganization:pid }) ? (
         <div>
           {renderButton()}
         </div>

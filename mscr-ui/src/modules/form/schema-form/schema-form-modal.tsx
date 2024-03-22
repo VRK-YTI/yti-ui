@@ -154,7 +154,8 @@ export default function SchemaFormModal({
 
   return (
     <>
-      {groupContent && HasPermission({ actions: ['CREATE_SCHEMA'] }) ? (
+      {/*Sending group pid as targetOrganization to check content creation right*/}
+      {groupContent && HasPermission({ actions: ['CREATE_SCHEMA'],targetOrganization:pid }) ? (
         <div>
           {renderButton()}
         </div>

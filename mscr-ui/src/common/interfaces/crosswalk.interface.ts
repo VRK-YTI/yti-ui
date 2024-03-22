@@ -12,6 +12,7 @@ export interface Crosswalk extends Metadata {
   organizations?: string[];
   sourceSchema: string;
   targetSchema: string;
+  owner?: string[]; // Added owner for checking permission
 }
 
 export interface CrosswalkWithVersionInfo extends Crosswalk {
