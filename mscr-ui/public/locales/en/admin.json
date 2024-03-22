@@ -58,6 +58,7 @@
   "crosswalk-form": {
     "create": "Create Crosswalk",
     "createTitle": "Create and register new crosswalk",
+    "format-note": "NOTE: Public schemas in following formats are available for crosswalk creation: ",
     "register": "Register Crosswalk",
     "registerTitle": "Register existing crosswalk"
   },
