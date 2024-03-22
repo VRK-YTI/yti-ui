@@ -1,9 +1,9 @@
 {
   "add-class": "Lisää luokka",
-  "and": "",
   "add-file": "",
   "add-or-drag-a-new-file-here": "",
   "allowed-file-formats": "",
+  "and": "",
   "association-missing-general": "Assosisaation kaikkia tietoja ei ole määritelty",
   "association-missing-identifier": "Assosisaation yksilöivää tunnusta ei ole määritelty",
   "association-missing-label": "Assosisaation nimeä ei ole määritelty",
@@ -166,5 +166,6 @@
   "status-all": "Kaikki tilat",
   "statuses-in-use": "Käytössä olevat tilat",
   "statuses-not-in-use": "Ei käytössä olevat tilat",
-  "try-again": "Yritä uudelleen"
+  "try-again": "Yritä uudelleen",
+  "upload-documents": ""
 }

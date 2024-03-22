@@ -2,9 +2,8 @@ import styled from 'styled-components';
 import { Heading } from 'suomifi-ui-components';
 
 export const SchemaHeading = styled(Heading)`
-  margin: -40px 0 5px 5px;
+  margin: -40px 110px 5px 5px;
   color: ${(props) => props.theme.suomifi.colors.depthDark2};
-  width: 83%;
 `;
 
 export const TreeviewWrapper = styled.div`

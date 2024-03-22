@@ -271,7 +271,7 @@ export default function SchemaInfo(props: {
               data: getSchemaData.metadata.label,
               lang,
             })
-          : ''}
+          : t('schema-tree.no-label')}
       </SchemaHeading>
       <TreeviewWrapper className="row ps-2">
         <div className="col-7 px-0">

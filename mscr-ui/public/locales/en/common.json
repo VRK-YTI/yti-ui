@@ -195,6 +195,7 @@
     "error-heading": "Visualization not available",
     "error-info": "Cannot show tree view for schemas of this format, download the file instead in Metadata and files tab.",
     "expand": "Expand tree",
+    "no-label": "[No label found]",
     "node-info": "Selected node info",
     "search": "Search",
     "search-placeholder": "Find an attribute...",

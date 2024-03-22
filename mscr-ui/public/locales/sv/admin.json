@@ -1,9 +1,9 @@
 {
   "add-class": "",
-  "and": "",
   "add-file": "",
   "add-or-drag-a-new-file-here": "",
   "allowed-file-formats": "",
+  "and": "",
   "association-missing-general": "",
   "association-missing-identifier": "",
   "association-missing-label": "",
@@ -166,5 +166,6 @@
   "status-all": "",
   "statuses-in-use": "",
   "statuses-not-in-use": "",
-  "try-again": ""
+  "try-again": "",
+  "upload-documents": ""
 }
