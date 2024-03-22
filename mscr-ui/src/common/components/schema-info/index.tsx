@@ -15,8 +15,12 @@ import { useTranslation } from 'next-i18next';
 import {
   ExpandButtonWrapper,
   NodeInfoWrapper,
-  SearchWrapper
+  SchemaHeading,
+  SearchWrapper,
+  TreeviewWrapper,
 } from '@app/common/components/schema-info/schema-info.styles';
+import { useRouter } from 'next/router';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
 export default function SchemaInfo(props: {
   updateTreeNodeSelectionsOutput?: (
@@ -29,6 +33,7 @@ export default function SchemaInfo(props: {
   schemaUrn: string;
 }) {
   const { t } = useTranslation('common');
+  const lang = useRouter().locale ?? '';
   const emptyTreeSelection: RenderTree = {
     elementPath: '',
     parentElementPath: undefined,
@@ -260,7 +265,15 @@ export default function SchemaInfo(props: {
 
   return (
     <>
-      <div className="row content-box ps-2">
+      <SchemaHeading variant="h2">
+        {getSchemaData?.metadata.label
+          ? getLanguageVersion({
+              data: getSchemaData.metadata.label,
+              lang,
+            })
+          : ''}
+      </SchemaHeading>
+      <TreeviewWrapper className="row ps-2">
         <div className="col-7 px-0">
           <div className="d-flex justify-content-between mb-2 ps-3 pe-2">
             <SearchWrapper className="w-100">
@@ -324,7 +337,7 @@ export default function SchemaInfo(props: {
             // performNodeInfoAction={performNodeInfoAction}
           ></NodeInfo>
         </NodeInfoWrapper>
-      </div>
+      </TreeviewWrapper>
     </>
   );
 }
