@@ -1,6 +1,9 @@
 {
   "add-class": "Lisää luokka",
   "and": "",
+  "add-file": "",
+  "add-or-drag-a-new-file-here": "",
+  "allowed-file-formats": "",
   "association-missing-general": "Assosisaation kaikkia tietoja ei ole määritelty",
   "association-missing-identifier": "Assosisaation yksilöivää tunnusta ei ole määritelty",
   "association-missing-label": "Assosisaation nimeä ei ole määritelty",

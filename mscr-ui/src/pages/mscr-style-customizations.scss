@@ -87,14 +87,6 @@ body {
 
 .crosswalk-editor {
   color: #2b2b2b;
-  .fi-dropdown_button {
-    min-width: 100% !important;
-    width: 100%;
-  }
-
-  .fi-search-input {
-    width: 100%;
-  }
 
   h2 {
     color: #6b6b6b;
@@ -102,63 +94,11 @@ body {
     font-weight: bold;
   }
 
-  .expand-button-wrap {
-    margin-top: 37px;
-    margin-right: 15px;
-  }
-
   .link-button {
     width: 60px;
     height: 60px;
     svg {
       margin-left: -2px;
-    }
-  }
-
-  .node-info-wrap {
-    font-size: 0.9rem;
-    color: #6b6b6b;
-    .attribute-font {
-      font-size: 0.9rem;
-      line-height: 1.3rem;
-      margin-bottom: 2px;
-      color: #2b2b2b;
-      margin-top: -2px;
-      inline-size: 100%;
-      overflow-wrap: break-word;
-    }
-    h2 {
-      color: #6b6b6b;
-      font-size: 1.1rem;
-      font-weight: normal;
-      margin-bottom: 0px;
-      padding: 17px 14px 0px 17px;
-    }
-    .fi-dropdown {
-      width: 100%;
-    }
-    .side-bar-wrap {
-      padding: 5px 5px;
-    }
-    background: #d8e3f4;
-    .dropdown-wrap {
-      margin-top: -35px;
-      margin-bottom: 15px;
-    }
-    .bg-wrap {
-      font-size: 0.95rem;
-      background: #fff;
-      padding: 15px;
-      min-height: 377px;
-      max-width: 500px;
-    }
-    .node-info-texts {
-      padding: 5px;
-    }
-    .node-info-dropdown {
-      ul {
-        max-width: 265px !important;
-      }
     }
   }
 
@@ -226,25 +166,6 @@ body {
     //border: 4px solid #3D6DB6;
     background-color: #fff;
     border-radius: 5px;
-  }
-
-  .node-info-box {
-    min-height: 175px;
-    font-size: 0.95rem;
-    margin: 0px;
-
-    .source-to-destination-wrap {
-      min-height: 42px;
-
-      button {
-        padding: 0px;
-      }
-
-      .arrow-icon {
-        margin: 0px 15px;
-        font-size: 1.3rem;
-      }
-    }
   }
 
   h5 {

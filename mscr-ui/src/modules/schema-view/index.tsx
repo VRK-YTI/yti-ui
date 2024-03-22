@@ -8,6 +8,7 @@ import MetadataAndFiles from './metadata-and-files';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import VersionHistory from 'src/common/components/version-history';
+import SchemaVisualization from '@app/modules/schema-view/schema-visualization';
 
 export default function SchemaView({
   schemaId,
@@ -73,20 +74,19 @@ export default function SchemaView({
               aria-label="Category selection"
             >
               <Tab label={t('tabs.metadata-and-files')} {...a11yProps(0)} />
-              <Tab label={t('tabs.version-history')} {...a11yProps(1)} />
+              <Tab label={t('tabs.schema')} {...a11yProps(1)} />
+              <Tab label={t('tabs.version-history')} {...a11yProps(2)} />
             </Tabs>
           </Box>
 
           {selectedTab === 0 && schemaDetails && (
-            <MetadataAndFiles
-              schemaDetails={schemaDetails}
-              refetch={refetch}
-            />
+            <MetadataAndFiles schemaDetails={schemaDetails} refetch={refetch} />
           )}
           {selectedTab === 1 && (
-            <VersionHistory
-              revisions={schemaDetails.revisions}
-            />
+            <SchemaVisualization pid={schemaId} format={schemaDetails.format} />
+          )}
+          {selectedTab === 2 && (
+            <VersionHistory revisions={schemaDetails.revisions} />
           )}
         </>
       </ThemeProvider>

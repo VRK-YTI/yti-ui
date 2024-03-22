@@ -1,6 +1,9 @@
 import { initialMetadataForm, Metadata, MetadataFormType } from '@app/common/interfaces/metadata.interface';
-import { usePatchCrosswalkMutation } from '@app/common/components/crosswalk/crosswalk.slice';
-import { usePatchSchemaMutation } from '@app/common/components/schema/schema.slice';
+import {
+  useDeleteCrosswalkMutation,
+  usePatchCrosswalkMutation
+} from '@app/common/components/crosswalk/crosswalk.slice';
+import { useDeleteSchemaMutation, usePatchSchemaMutation } from '@app/common/components/schema/schema.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { Grid } from '@mui/material';
@@ -42,8 +45,12 @@ export default function MetadataForm({
   const [isEditModeActive, setIsEditModeActive] = useState(false);
   const [patchCrosswalk,] = usePatchCrosswalkMutation();
   const [patchSchema,] = usePatchSchemaMutation();
+  const [deleteSchema,] = useDeleteSchemaMutation();
+  const [deleteCrosswalk,] = useDeleteCrosswalkMutation();
   const [isSaveConfirmModalOpen, setSaveConfirmModalOpen] = useState(false);
   const [isPublishConfirmModalOpen, setPublishConfirmModalOpen] =
+    useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] =
     useState(false);
   const [formData, setFormData] =
     useState<MetadataFormType>(initialMetadataForm);
@@ -51,6 +58,7 @@ export default function MetadataForm({
   const performModalAction = (action: string) => {
     setSaveConfirmModalOpen(false);
     setPublishConfirmModalOpen(false);
+    setDeleteModalOpen(false);
     if (action === 'close') {
       return;
     }
@@ -64,7 +72,7 @@ export default function MetadataForm({
     }
     if (action === 'save' || action === 'publish') {
       setIsEditModeActive(false);
-      if (type === 'CROSSWALK') {
+      if (type === Type.Crosswalk) {
         patchCrosswalk({ payload: payload, pid: metadata.pid })
           .unwrap()
           .then(() => {
@@ -76,7 +84,7 @@ export default function MetadataForm({
             refetchMetadata();
           });
         // ToDo: Error notifications with .catch
-      } else if (type === 'SCHEMA') {
+      } else if (type === Type.Schema) {
         patchSchema({ payload: payload, pid: metadata.pid })
           .unwrap()
           .then(() => {
@@ -89,6 +97,33 @@ export default function MetadataForm({
           });
       }
     }
+    if (action === 'deleteCrosswalk') {
+      console.log('crosswalk pid', metadata.pid);
+        deleteCrosswalk(metadata.pid.toString())
+          .unwrap()
+          .then(() => {
+            dispatch(
+              setNotification(
+                'CROSSWALK_DELETE'
+              )
+            );
+            refetchMetadata();
+          });
+        // ToDo: Error notifications with .catch
+    } else if (action === 'deleteSchema') {
+      console.log('schema pid', metadata.pid);
+        deleteSchema(metadata.pid.toString())
+          .unwrap()
+          .then(() => {
+            dispatch(
+              setNotification(
+                'SCHEMA_DELETE'
+              )
+            );
+            refetchMetadata();
+          });
+        // ToDo: Error notifications with .catch
+      }
   };
 
   const generatePayload = (): Partial<Metadata> => {
@@ -329,6 +364,14 @@ export default function MetadataForm({
                         >
                           {t('action.publish')}
                         </ActionMenuItem>
+                        <ActionMenuItem
+                          className={
+                            metadata.state == State.Draft ? '' : 'd-none'
+                          }
+                          onClick={() => setDeleteModalOpen(true)}
+                        >
+                          {t('action.delete')}
+                        </ActionMenuItem>
                       </ActionMenu>
                     )}
                   </Grid>
@@ -374,6 +417,15 @@ export default function MetadataForm({
           performConfirmModalAction={performModalAction}
           heading={t('confirm-modal.heading')}
           text1={t('confirm-modal.save')}
+        />
+        <ConfirmModal
+          isVisible={isDeleteModalOpen}
+          actionName={type === Type.Crosswalk ? 'deleteCrosswalk' : 'deleteSchema'}
+          actionText={type === Type.Crosswalk ? t('action.delete-crosswalk') : t('action.delete-schema')}
+          cancelText={t('action.cancel')}
+          performConfirmModalAction={performModalAction}
+          heading={t('confirm-modal.heading')}
+          text1={type === Type.Crosswalk ? t('confirm-modal.delete-crosswalk') : t('confirm-modal.delete-schema')}
         />
         <ConfirmModal
           isVisible={isPublishConfirmModalOpen}

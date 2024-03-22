@@ -29,7 +29,9 @@ export const formatsAvailableForCrosswalkCreation: Format[] = [
 ];
 
 export const formatsAvailableForCrosswalkRegistration: Format[] = [
-  Format.Xslt, Format.Csv, Format.Pdf,
+  Format.Xslt,
+  Format.Csv,
+  Format.Pdf,
 ];
 
 export const formatsAvailableForSchemaRegistration: Format[] = [

@@ -7,6 +7,9 @@
   "action": {
     "actions": "",
     "cancel": "",
+    "delete": "",
+    "delete-crosswalk": "",
+    "delete-schema": "",
     "edit": "",
     "publish": "",
     "save": ""
@@ -37,6 +40,8 @@
     "no-upper-attributes": ""
   },
   "confirm-modal": {
+    "delete-crosswalk": "",
+    "delete-schema": "",
     "heading": "",
     "publish-crosswalk1": "",
     "publish-crosswalk2": "",
@@ -44,6 +49,10 @@
     "save": ""
   },
   "confirm-page-leave": "",
+  "crosswalk-editor": {
+    "search-from-source-schema": "",
+    "search-from-target-schema": ""
+  },
   "datamodel-title": "",
   "datamodels-all": "",
   "download": "",
@@ -133,8 +142,10 @@
   "no-subscribed-items": "",
   "not-recommended-synonym": "",
   "notifications": {
+    "crosswalk-deleted": "",
     "crosswalk-published": "",
     "crosswalk-saved": "",
+    "schema-deleted": "",
     "schema-published": "",
     "schema-saved": ""
   },
@@ -176,6 +187,20 @@
     "name": "",
     "status": "",
     "status-select": ""
+  },
+  "schema-tree": {
+    "clear": "",
+    "dropdown-label": "",
+    "dropdown-placeholder": "",
+    "error-heading": "",
+    "error-info": "",
+    "expand": "",
+    "node-info": "",
+    "search": "",
+    "search-placeholder": "",
+    "search-schema": "",
+    "selected-node": "",
+    "tree-label": ""
   },
   "search": {
     "bar": {
@@ -236,6 +261,7 @@
   "synonym": "",
   "tabs": {
     "metadata-and-files": "",
+    "schema": "",
     "version-history": ""
   },
   "term-conjugation": {
