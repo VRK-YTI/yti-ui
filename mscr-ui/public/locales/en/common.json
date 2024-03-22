@@ -184,7 +184,7 @@
     "format-placeholder": "Select file format",
     "information-description-languages": "Languages",
     "information-description-languages-hint-text": "Select languages in which the content of the schema is described",
-    "name": "Name(required)",
+    "name": "Name (required)",
     "status": "Status",
     "status-select": "Select status"
   },

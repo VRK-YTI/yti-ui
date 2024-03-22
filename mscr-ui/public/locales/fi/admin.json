@@ -1,5 +1,6 @@
 {
   "add-class": "Lisää luokka",
+  "and": "",
   "add-file": "",
   "add-or-drag-a-new-file-here": "",
   "allowed-file-formats": "",
@@ -77,6 +78,7 @@
   },
   "description": "Kuvaus",
   "download-failed": "",
+  "drag-files-to-upload": "",
   "edit-concept-error": {
     "default": "",
     "diagrams": "",
@@ -134,6 +136,8 @@
   "optional": "valinnainen",
   "register-schema": "",
   "register-schema-file-required": "",
+  "register-schema-file-uri-reference": "",
+  "register-schema-supported-file-formats": "",
   "remove": "Poista",
   "remove-modal": {
     "collection-confirmation": "",

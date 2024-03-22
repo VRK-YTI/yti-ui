@@ -1,5 +1,6 @@
 {
   "add-class": "Add class",
+  "and": "and",
   "add-file": "Add File",
   "add-or-drag-a-new-file-here": "Add or drag a file here",
   "allowed-file-formats": "Allowed file formats:",
@@ -77,6 +78,7 @@
   },
   "description": "Description",
   "download-failed": "",
+  "drag-files-to-upload": "Drag files to upload",
   "edit-concept-error": {
     "default": "",
     "diagrams": "",
@@ -133,7 +135,9 @@
   "modified": "Modified",
   "optional": "optional",
   "register-schema": "Register Schema",
-  "register-schema-file-required": "Upload a Schema File. You must upload a schema file to register schema",
+  "register-schema-file-required": "You must provide a schema file to register a schema.",
+  "register-schema-file-uri-reference": "Provide schema file URI reference",
+  "register-schema-supported-file-formats": "Supported schema file formats are ",
   "remove": "Remove",
   "remove-modal": {
     "collection-confirmation": "",
@@ -162,5 +166,6 @@
   "status-all": "All statuses",
   "statuses-in-use": "Statuses in use",
   "statuses-not-in-use": "Statuses not in use",
-  "try-again": "Try again"
+  "try-again": "Try again",
+  "upload-documents": "Upload documents"
 }

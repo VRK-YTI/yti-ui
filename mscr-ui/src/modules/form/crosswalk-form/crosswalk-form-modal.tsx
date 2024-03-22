@@ -24,8 +24,9 @@ import {
   usePutCrosswalkMutation,
 } from '@app/common/components/crosswalk/crosswalk.slice';
 import CrosswalkForm from './crosswalk-form-fields';
-import FileDropArea from 'yti-common-ui/components/file-drop-area';
 import getErrors from '@app/common/utils/get-errors';
+import FileDropAreaMscr from '@app/common/components/file-drop-area-mscr';
+import {fileExtensionsAvailableForCrosswalkRegistrationAttachments} from "@app/common/interfaces/format.interface";
 
 interface CrosswalkFormModalProps {
   refetch: () => void;
@@ -173,10 +174,10 @@ export default function CrosswalkFormModal({
             errors={userPosted ? errors : undefined}
           />
           {!createNew && (
-            <FileDropArea
+            <FileDropAreaMscr
               setFileData={setFileData}
               setIsValid={setIsValid}
-              validFileTypes={['csv', 'xslt', 'pdf']}
+              validFileTypes={fileExtensionsAvailableForCrosswalkRegistrationAttachments}
               translateFileUploadError={translateFileUploadError}
             />
           )}
