@@ -22,9 +22,11 @@ import HasPermission from '@app/common/utils/has-permission';
 import { useInitialSchemaForm } from '@app/common/utils/hooks/use-initial-schema-form';
 import { usePutSchemaFullMutation } from '@app/common/components/schema/schema.slice';
 import SchemaFormFields from './schema-form-fields';
-import FileDropArea from 'yti-common-ui/components/file-drop-area';
 import Separator from 'yti-common-ui/components/separator';
 import getErrors from '@app/common/utils/get-errors';
+import {fileExtensionsAvailableForSchemaRegistration} from '@app/common/interfaces/format.interface';
+import FileDropAreaMscr from '@app/common/components/file-drop-area-mscr';
+import * as React from 'react';
 
 interface SchemaFormModalProps {
   refetch: () => void;
@@ -47,6 +49,7 @@ export default function SchemaFormModal({
   const [schemaFormInitialData] = useState(useInitialSchemaForm());
   const [formData, setFormData] = useState(schemaFormInitialData);
   const [fileData, setFileData] = useState<File | null>();
+  const [fileUri, setFileUri] = useState<string | null>();
   const [errors, setErrors] = useState<FormErrors>();
   const [skip, setSkip] = useState(true);
   const { data: authenticatedUser } = useGetAuthenticatedUserQuery(undefined, {
@@ -67,6 +70,7 @@ export default function SchemaFormModal({
     setUserPosted(false);
     setFormData(schemaFormInitialData);
     setFileData(null);
+    setFileUri(null);
   }, [schemaFormInitialData]);
 
   useEffect(() => {
@@ -87,7 +91,7 @@ export default function SchemaFormModal({
     if (!formData) {
       return;
     }
-    const errors = validateSchemaForm(formData, fileData);
+    const errors = validateSchemaForm(formData, fileData, fileUri);
     setErrors(errors);
 
     if (Object.values(errors).includes(true)) {
@@ -103,7 +107,11 @@ export default function SchemaFormModal({
       );
       const schemaFormData = new FormData();
       schemaFormData.append('metadata', JSON.stringify(payload));
-      if (fileData) {
+      if (fileUri && fileUri.length > 0) {
+        schemaFormData.append('contentURL', fileUri);
+        putSchemaFull(schemaFormData);
+      }
+      else if (fileData) {
         schemaFormData.append('file', fileData);
         putSchemaFull(schemaFormData);
       } else {
@@ -116,7 +124,7 @@ export default function SchemaFormModal({
     if (!userPosted) {
       return;
     }
-    const errors = validateSchemaForm(formData, fileData);
+    const errors = validateSchemaForm(formData, fileData, fileUri);
     setErrors(errors);
     //console.log(errors);
   }, [userPosted, formData, fileData]);
@@ -177,6 +185,17 @@ export default function SchemaFormModal({
       >
         <ModalContent>
           <ModalTitle>{t('register-schema')}</ModalTitle>
+          <Text>{t('register-schema-file-required') + ' '}</Text>
+          <Text>{t('register-schema-supported-file-formats') + fileExtensionsAvailableForSchemaRegistration.slice(0, fileExtensionsAvailableForSchemaRegistration.length - 1).join(', ').toUpperCase() + ' ' + t('and') + (' ') + fileExtensionsAvailableForSchemaRegistration.slice(fileExtensionsAvailableForSchemaRegistration.length - 1).toString().toUpperCase() + ('.')}</Text>
+          <FileDropAreaMscr
+            setFileData={setFileData}
+            setIsValid={setIsValid}
+            validFileTypes={fileExtensionsAvailableForSchemaRegistration}
+            translateFileUploadError={translateFileUploadError}
+            isSchemaUpload={true}
+            setFileUri={setFileUri}/>
+          <br></br>
+
           <SchemaFormFields
             formData={formData}
             setFormData={setFormData}
@@ -185,13 +204,7 @@ export default function SchemaFormModal({
             errors={userPosted ? errors : undefined}
           />
           <Separator></Separator>
-          <Text>{t('register-schema-file-required')}</Text>
-          <FileDropArea
-            setFileData={setFileData}
-            setIsValid={setIsValid}
-            validFileTypes={['json', 'csv', 'pdf', 'ttl', 'xml', 'xsd']}
-            translateFileUploadError={translateFileUploadError}
-          />
+
         </ModalContent>
         <ModalFooter>
           {authenticatedUser && authenticatedUser.anonymous && (

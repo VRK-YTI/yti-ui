@@ -259,7 +259,7 @@ export default function SchemaInfo(props: {
 
   return (
     <>
-      <div className="row content-box">
+      <div className="row content-box ps-2">
         <div className="col-7 px-0">
           <div className="d-flex justify-content-between mb-2 ps-3 pe-2">
             <SearchWrapper className="w-100">
@@ -296,10 +296,11 @@ export default function SchemaInfo(props: {
               </IconButton>
             </ExpandButtonWrapper>
           </div>
-          <div className="mx-2">
+          <div>
             <Box
+              className="px-3"
               sx={{
-                height: 400,
+                height: 436,
                 flexGrow: 1,
                 maxWidth: 700,
                 overflowY: 'auto',

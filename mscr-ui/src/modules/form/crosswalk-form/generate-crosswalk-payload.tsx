@@ -1,7 +1,6 @@
-import {
-  Crosswalk,
-  CrosswalkFormType,
-} from '@app/common/interfaces/crosswalk.interface';
+import {Crosswalk, CrosswalkFormType,} from '@app/common/interfaces/crosswalk.interface';
+import {Visibility} from '@app/common/interfaces/search.interface';
+import {State} from "@app/common/interfaces/state.interface";
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 // here we are creating crosswalk payload by converting the form data to crosswalk type
@@ -45,6 +44,7 @@ export default function generateCrosswalkPayload(
     sourceSchema: data.sourceSchema,
     targetSchema: data.targetSchema,
     versionLabel: '1',
+    visibility: (data.state !== State.Draft) ? Visibility.Public : Visibility.Private
     organizations: data.organizations.map((o: { id: any }) => o.id)
 
   };

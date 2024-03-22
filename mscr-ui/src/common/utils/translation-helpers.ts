@@ -315,6 +315,10 @@ export function translateNotification(
       return t('notifications.crosswalk-published');
     case 'SCHEMA_PUBLISH':
       return t('notifications.schema-published');
+    case 'CROSSWALK_DELETE':
+      return t('notifications.crosswalk-deleted');
+    case 'SCHEMA_DELETE':
+      return t('notifications.schema-deleted');
     default:
       return '';
   }

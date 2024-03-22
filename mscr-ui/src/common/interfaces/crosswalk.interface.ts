@@ -4,6 +4,7 @@ import { State } from '@app/common/interfaces/state.interface';
 import { ContentRevision } from '@app/common/interfaces/content-revision.interface';
 import { Metadata } from '@app/common/interfaces/metadata.interface';
 import { Format } from '@app/common/interfaces/format.interface';
+import { Visibility } from '@app/common/interfaces/search.interface';
 import { Organization } from './organizations.interface';
 
 export interface Crosswalk extends Metadata {
@@ -30,6 +31,7 @@ export interface CrosswalkFormType {
   targetSchema: string;
   description?: string;
   versionLabel?: string;
+  visibility: Visibility;
 }
 
 export interface CrosswalkFormMockupType {

@@ -11,9 +11,9 @@ export const MultiSelect = styled(MultiSelectDS)<{ $isWide?: boolean }>`
 `;
 
 export const LanguageBlock = styled(Block)`
-  border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-  margin-top: ${(props) => props.theme.suomifi.spacing.xs};
-  background: ${(props) => props.theme.suomifi.colors.highlightLight4};
+  //border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+  //margin-top: ${(props) => props.theme.suomifi.spacing.xs};
+  //background: ${(props) => props.theme.suomifi.colors.highlightLight3};
 
   .name-input {
     margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
