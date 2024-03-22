@@ -37,6 +37,7 @@ export default function SchemaInfo(props: {
     visualTreeId: '',
     properties: undefined,
     children: [],
+    uri: '',
   };
 
   const {
