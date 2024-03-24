@@ -1,4 +1,15 @@
 import styled from 'styled-components';
+import { Heading } from 'suomifi-ui-components';
+
+export const SchemaHeading = styled(Heading)`
+  margin: -40px 110px 5px 5px;
+  color: ${(props) => props.theme.suomifi.colors.depthDark2};
+`;
+
+export const TreeviewWrapper = styled.div`
+  background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
+  border-radius: 5px;
+`;
 
 export const ExpandButtonWrapper = styled.div`
   margin-top: 37px;
