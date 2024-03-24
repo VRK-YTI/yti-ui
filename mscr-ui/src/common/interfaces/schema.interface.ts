@@ -12,6 +12,14 @@ export interface Schema extends Metadata {
   owner?: string[];
 }
 
+export interface SchemaWithContent {
+  metadata: Metadata;
+  content: {
+    tree: unknown;
+    definitions: unknown;
+  };
+}
+
 export interface SchemaWithVersionInfo extends Schema {
   revisions: ContentRevision[];
 }

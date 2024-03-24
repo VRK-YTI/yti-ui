@@ -5,8 +5,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import { AppThunk } from '@app/store';
 import isHydrate from '@app/store/isHydrate';
 import {
-  Schema,
-  SchemaWithVersionInfo,
+  Schema, SchemaWithContent,
+  SchemaWithVersionInfo
 } from '@app/common/interfaces/schema.interface';
 import { MscrSearchResults } from '@app/common/interfaces/search.interface';
 import { Format } from '@app/common/interfaces/format.interface';
@@ -87,7 +87,7 @@ export const schemaApi = createApi({
         method: 'GET',
       }),
     }),
-    getFrontendSchema: builder.query<any, string>({
+    getFrontendSchema: builder.query<SchemaWithContent, string>({
       query: (pid) => ({
         url: `/frontend/schema/${pid}`,
         method: 'GET',
