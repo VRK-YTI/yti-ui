@@ -12,8 +12,8 @@ import {
   initialAppAttribute,
 } from '@app/common/interfaces/resource-form.interface';
 import {
-  DEFAULT_ASSOCIATION_SUBPROPERTY,
-  DEFAULT_ATTRIBUTE_SUBPROPERTY,
+  OWL_TOP_DATA_PROPERTY,
+  OWL_TOP_OBJECT_PROPERTY,
   convertToPayload,
   pathForResourceType,
 } from './utils';
@@ -180,22 +180,22 @@ function resourceInitialData(
         : initialAppAttribute;
     return {
       ...initialData,
-      path: initialReferenceResource,
+      path: initialReferenceResource
+        ? initialReferenceResource
+        : type === ResourceType.ASSOCIATION
+        ? OWL_TOP_OBJECT_PROPERTY
+        : OWL_TOP_DATA_PROPERTY,
     };
   } else {
     if (type === ResourceType.ASSOCIATION) {
       return {
         ...initialAssociation,
-        subResourceOf: [
-          initialReferenceResource ?? DEFAULT_ASSOCIATION_SUBPROPERTY,
-        ],
+        subResourceOf: [initialReferenceResource ?? OWL_TOP_OBJECT_PROPERTY],
       };
     }
     return {
       ...initialAttribute,
-      subResourceOf: [
-        initialReferenceResource ?? DEFAULT_ATTRIBUTE_SUBPROPERTY,
-      ],
+      subResourceOf: [initialReferenceResource ?? OWL_TOP_DATA_PROPERTY],
     };
   }
 }

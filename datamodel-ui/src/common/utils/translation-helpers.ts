@@ -701,3 +701,12 @@ export function translateResultType(key: string, t: TFunction) {
       return '';
   }
 }
+
+export function translateValidationError(key: string, t: TFunction) {
+  switch (key) {
+    case 'missing-reference-to-library':
+      return t('release-missing-reference-to-library-title', { ns: 'admin' });
+    case 'missing-reference-to-library-info':
+      return t('release-missing-reference-to-library-info', { ns: 'admin' });
+  }
+}

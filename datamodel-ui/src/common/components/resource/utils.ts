@@ -44,13 +44,13 @@ export interface ApplicationProfileResourcePutType {
   codeList?: string;
 }
 
-export const DEFAULT_ATTRIBUTE_SUBPROPERTY: UriData = {
+export const OWL_TOP_DATA_PROPERTY: UriData = {
   uri: 'http://www.w3.org/2002/07/owl#topDataProperty',
   curie: 'owl:topDataProperty',
   label: { en: 'topDataProperty' },
 };
 
-export const DEFAULT_ASSOCIATION_SUBPROPERTY: UriData = {
+export const OWL_TOP_OBJECT_PROPERTY: UriData = {
   uri: 'http://www.w3.org/2002/07/owl#topObjectProperty',
   curie: 'owl:topObjectProperty',
   label: { en: 'topObjectProperty' },
@@ -86,6 +86,15 @@ export function convertToPayload(
           return false;
         }
 
+        if (
+          e[0] === 'path' &&
+          [OWL_TOP_DATA_PROPERTY.uri, OWL_TOP_OBJECT_PROPERTY.uri].includes(
+            e[1].uri
+          )
+        ) {
+          return false;
+        }
+
         return true;
       })
       .map((e) => {
@@ -107,8 +116,8 @@ export function convertToPayload(
               .filter(
                 (r: string) =>
                   ![
-                    DEFAULT_ASSOCIATION_SUBPROPERTY.uri,
-                    DEFAULT_ATTRIBUTE_SUBPROPERTY.uri,
+                    OWL_TOP_OBJECT_PROPERTY.uri,
+                    OWL_TOP_DATA_PROPERTY.uri,
                   ].includes(r)
               ),
           ];

@@ -8,11 +8,12 @@ import {
 } from '@app/common/interfaces/model.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
+import { UriData } from '@app/common/interfaces/uri.interface';
 
 export const modelApi = createApi({
   reducerPath: 'modelApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['Model'],
+  tagTypes: ['Model', 'Class', 'Resource'],
   endpoints: (builder) => ({
     createModel: builder.mutation<string, NewModel>({
       query: (value) => ({
@@ -105,6 +106,19 @@ export const modelApi = createApi({
         method: 'PUT',
       }),
     }),
+    getValidationErrors: builder.query<
+      {
+        [key: string]: UriData[];
+      },
+      { modelId: string }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/validate`,
+        method: 'GET',
+      }),
+
+      providesTags: ['Model', 'Class', 'Resource'],
+    }),
   }),
 });
 
@@ -116,6 +130,7 @@ export const {
   useCreateReleaseMutation,
   useGetPriorVersionsQuery,
   useUpdateVersionedModelMutation,
+  useGetValidationErrorsQuery,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
@@ -126,6 +141,7 @@ export const {
   deleteModel,
   createRelease,
   getPriorVersions,
+  getValidationErrors,
 } = modelApi.endpoints;
 
 // Slice setup below

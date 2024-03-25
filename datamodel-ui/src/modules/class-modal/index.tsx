@@ -202,16 +202,14 @@ export default function ClassModal({
                   ? t('select-class')
                   : t('create-subclass-for-selected')}
               </Button>
-              {!applicationProfile && (
-                <Button
-                  icon={<IconPlus />}
-                  disabled={selectedId !== ''}
-                  onClick={() => handleSubmit()}
-                  id="create-class-button"
-                >
-                  {t('create-new-class')}
-                </Button>
-              )}
+              <Button
+                icon={<IconPlus />}
+                disabled={selectedId !== ''}
+                onClick={() => handleSubmit()}
+                id="create-class-button"
+              >
+                {t('create-new-class')}
+              </Button>
               <Button
                 variant="secondaryNoBorder"
                 onClick={() => handleClose()}

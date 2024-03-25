@@ -195,7 +195,7 @@ export default function ResourceModal({
 
         <ModalFooter>
           <Button
-            disabled={selectedId === ''}
+            disabled={applicationProfile ? false : selectedId === ''}
             onClick={() => handleSubmit()}
             id="use-selected-button"
           >
