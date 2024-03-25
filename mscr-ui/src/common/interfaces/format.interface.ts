@@ -51,3 +51,9 @@ export const fileExtensionsAvailableForSchemaRegistration: FileExtensions[] = [
   FileExtensions.Jsonschema, FileExtensions.Csv, FileExtensions.Skosrdf, FileExtensions.Pdf, FileExtensions.Xsd
 ];
 
+export const Roles = {
+  admin: "ADMIN",
+  dataModelEditor:"DATA_MODEL_EDITOR"
+  
+}
+

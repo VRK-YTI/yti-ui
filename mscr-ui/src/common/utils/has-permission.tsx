@@ -7,6 +7,7 @@ import {
   useGetAuthenticatedUserQuery,
 } from '../components/login/login.slice';
 import { User } from 'yti-common-ui/interfaces/user.interface';
+import { Roles } from '../interfaces/format.interface';
 
 // Need to specify the acctions permitted for each type of user
 const actions = [
@@ -104,9 +105,7 @@ export function checkPermission({
   actions,
   targetOrganizations,
 }: checkPermissionProps) {
-  console.log(targetOrganizations);
-
-  console.log("check content creation permission");
+  
   const rolesInOrganizations = Object.keys(user.organizationsInRole);
  
   const rolesInTargetOrganizations =
@@ -121,26 +120,18 @@ export function checkPermission({
   }
 
   // Return true if target organization is undefined and user has admin role
-  if (rolesInOrganizations.includes('ADMIN') && !targetOrganizations) {
+  if (rolesInOrganizations.includes(Roles.admin) && !targetOrganizations) {
     return true;
   }
 
   console.log(rolesInTargetOrganizations);
   // Return true if user has data model editor role in target organization
   if (
-    rolesInTargetOrganizations?.includes('DATA_MODEL_EDITOR')||rolesInTargetOrganizations?.includes('ADMIN')
+    rolesInTargetOrganizations?.includes(Roles.dataModelEditor)||rolesInTargetOrganizations?.includes(Roles.admin)
   ) {
     return true;
   }
   
-
-  // Return true if user has admin role in target organization
-  if (
-    rolesInOrganizations.includes('') &&
-    rolesInTargetOrganizations?.includes('ADMIN')
-  ) {
-    return true;
-  }
 
   return false;
 }
@@ -149,26 +140,21 @@ export function checkEditPermission({
   user,
   owner
 }: checkPermissionProps) { 
-  console.log("Checking editing permisison");
   if (owner?.includes(user.id)) {
     //user is the owner, Check for personal Contents
     return true;
   } else {
     //Gruop Content
-    const rolesInOrganizations = Object.keys(user.organizationsInRole);
-    console.log(rolesInOrganizations);
-    const adminProp = 'ADMIN';
-    if (owner && user.organizationsInRole[adminProp].includes(owner[0])) {
+    
+    if (owner && user.organizationsInRole[Roles.admin].includes(owner[0])) {
       // User has admin right for this group
-      console.log('user has admin right');
       return true;
     }
-    const datamodeleditorProp = 'DATA_MODEL_EDITOR';
+    
     if (
       owner &&
-      user.organizationsInRole[datamodeleditorProp].includes(owner[0])
+      user.organizationsInRole[Roles.dataModelEditor].includes(owner[0])
     ) {
-      console.log('user has datamodel editor right');
       return true;
     }
   }
