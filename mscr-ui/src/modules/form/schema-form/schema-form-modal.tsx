@@ -30,11 +30,17 @@ import * as React from 'react';
 
 interface SchemaFormModalProps {
   refetch: () => void;
+  groupContent: boolean;
+  pid?: string;
 }
 
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
-export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
+export default function SchemaFormModal({
+  refetch,
+  groupContent,
+  pid,
+}: SchemaFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
@@ -92,18 +98,25 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
       return;
     }
 
-    const payload = generateSchemaPayload(formData);
-    const schemaFormData = new FormData();
-    schemaFormData.append('metadata', JSON.stringify(payload));
-    if (fileUri && fileUri.length > 0) {
-      schemaFormData.append('contentURL', fileUri);
-      putSchemaFull(schemaFormData);
-    }
-    else if (fileData) {
-      schemaFormData.append('file', fileData);
-      putSchemaFull(schemaFormData);
-    } else {
-      return;
+    if (authenticatedUser) {
+      const payload = generateSchemaPayload(
+        formData,
+        groupContent,
+        pid,
+        authenticatedUser
+      );
+      const schemaFormData = new FormData();
+      schemaFormData.append('metadata', JSON.stringify(payload));
+      if (fileUri && fileUri.length > 0) {
+        schemaFormData.append('contentURL', fileUri);
+        putSchemaFull(schemaFormData);
+      }
+      else if (fileData) {
+        schemaFormData.append('file', fileData);
+        putSchemaFull(schemaFormData);
+      } else {
+        return;
+      }
     }
   };
 
@@ -116,31 +129,54 @@ export default function SchemaFormModal({ refetch }: SchemaFormModalProps) {
     //console.log(errors);
   }, [userPosted, formData, fileData]);
 
-  // Need to add action type create_schema
-  if (!HasPermission({ actions: ['CREATE_SCHEMA'] })) {
+
+  // This part was checking the user permission and based on that showing the button in every render
+  /* if (groupContent && !HasPermission({ actions: ['CREATE_SCHEMA'] })) {
+    console.log(HasPermission({actions:['CREATE_SCHEMA']}));
     return null;
-  }
+  } */
 
   function gatherErrorMessages() {
     const inputErrors = getErrors(t, errors);
     if (resultSchemaFull.isError) {
       const errorMessage = getApiError(resultSchemaFull.error);
+      console.log('the error is' + errorMessage);
       return [...inputErrors, errorMessage];
     }
     return inputErrors;
   }
 
+  function renderButton() {
+    return (
+       <Button
+            variant="secondary"
+            icon={<IconPlus />}
+            style={{ height: 'min-content' }}
+            onClick={() => handleOpen()}
+          >
+            {t('register-schema')}
+          </Button>
+      
+    );
+  }
+
   return (
     <>
-      <Button
-        variant="secondary"
-        icon={<IconPlus />}
-        style={{ height: 'min-content' }}
-        onClick={() => handleOpen()}
-      >
-        {t('register-schema')}
-      </Button>
-
+      {/*Sending group pid as targetOrganization to check content creation right*/}
+      {groupContent && HasPermission({ actions: ['CREATE_SCHEMA'],targetOrganization:pid }) ? (
+        <div>
+          {renderButton()}
+        </div>
+      ) : (
+        !groupContent ? (
+            <div>
+              {renderButton()}
+          </div>
+        ) : (
+              <div/>
+        ))}
+        
+      
       <Modal
         appElementId="__next"
         visible={visible}

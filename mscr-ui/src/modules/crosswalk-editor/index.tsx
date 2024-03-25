@@ -131,8 +131,6 @@ export default function CrosswalkEditor({
   const [deleteMapping, deleteMappingResponse] = useDeleteMappingMutation();
   const [patchMapping, patchMappingResponse] = usePatchMappingMutation();
 
-  const hasEditRights = HasPermission({ actions: ['EDIT_CROSSWALK_MAPPINGS'] });
-
   const [sourceTreeSelection, setSourceTreeSelection] = React.useState<
     string[]
   >([]);
@@ -157,6 +155,8 @@ export default function CrosswalkEditor({
     error: getCrosswalkDataError,
     refetch: refetchCrosswalkData,
   } = useGetCrosswalkWithRevisionsQuery(crosswalkId);
+
+  const hasEditRights = HasPermission({ actions: ['EDIT_CROSSWALK_MAPPINGS'],owner:getCrosswalkData?.owner });
 
   const fromTree = (nodes: any) => (
     <TreeItem

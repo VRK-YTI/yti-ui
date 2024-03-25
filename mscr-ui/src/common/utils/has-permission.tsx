@@ -7,25 +7,10 @@ import {
   useGetAuthenticatedUserQuery,
 } from '../components/login/login.slice';
 import { User } from 'yti-common-ui/interfaces/user.interface';
+import { Roles } from '../interfaces/format.interface';
 
 // Need to specify the acctions permitted for each type of user
 const actions = [
-  'ADMIN_DATA_MODEL',
-  'CREATE_DATA_MODEL',
-  'EDIT_DATA_MODEL',
-  'DELETE_DATA_MODEL',
-  'ADMIN_CLASS',
-  'CREATE_CLASS',
-  'DELETE_CLASS',
-  'EDIT_CLASS',
-  'ADMIN_ASSOCIATION',
-  'CREATE_ASSOCIATION',
-  'EDIT_ASSOCIATION',
-  'DELETE_ASSOCIATION',
-  'ADMIN_ATTRIBUTE',
-  'CREATE_ATTRIBUTE',
-  'EDIT_ATTRIBUTE',
-  'DELETE_ATTRIBUTE',
   'CREATE_SCHEMA',
   'EDIT_SCHEMA',
   'EDIT_SCHEMA_METADATA',
@@ -43,17 +28,20 @@ export type Actions = typeof actions[number];
 export interface hasPermissionProps {
   actions: Actions | Actions[];
   targetOrganization?: string;
+  owner?: string[];
 }
 
 export interface checkPermissionProps {
   user: User;
   actions: Actions[];
   targetOrganizations?: string[];
+  owner?: string[];
 }
 
 export default function HasPermission({
   actions,
   targetOrganization,
+  owner,
 }: hasPermissionProps) {
   const { data: authenticatedUser } = useGetAuthenticatedUserQuery();
   const dispatch = useStoreDispatch();
@@ -78,14 +66,34 @@ export default function HasPermission({
     return false;
   }
 
+  //No Target Organization
   if (!targetOrganization) {
+    if (owner && owner.length) {
+      //Editing Step as already has owner
+      return checkEditPermission({
+        user,
+        actions: Array.isArray(actions) ? actions : [actions],
+        owner,
+      });
+    }
     return checkPermission({
       user,
       actions: Array.isArray(actions) ? actions : [actions],
     });
   }
 
+  //If there is target organization
+  if (owner && owner.length) {
+    //Editing Step as already has owner
+    return checkEditPermission({
+      user,
+      actions: Array.isArray(actions) ? actions : [actions],
+      targetOrganizations: [targetOrganization],
+      owner,
+    });
+  }
   return checkPermission({
+    //Content Creation
     user,
     actions: Array.isArray(actions) ? actions : [actions],
     targetOrganizations: [targetOrganization],
@@ -97,30 +105,60 @@ export function checkPermission({
   actions,
   targetOrganizations,
 }: checkPermissionProps) {
+  
   const rolesInOrganizations = Object.keys(user.organizationsInRole);
+ 
   const rolesInTargetOrganizations =
     targetOrganizations &&
     targetOrganizations
       ?.flatMap((org) => user.rolesInOrganizations[org])
       .filter((t) => t);
-
+  
   // Return true if user is superuser
   if (user.superuser) {
     return true;
   }
 
   // Return true if target organization is undefined and user has admin role
-  if (rolesInOrganizations.includes('ADMIN') && !targetOrganizations) {
+  if (rolesInOrganizations.includes(Roles.admin) && !targetOrganizations) {
     return true;
   }
 
-  // Return true if user has admin role in target organization
+  console.log(rolesInTargetOrganizations);
+  // Return true if user has data model editor role in target organization
   if (
-    rolesInOrganizations.includes('ADMIN') &&
-    rolesInTargetOrganizations?.includes('ADMIN')
+    rolesInTargetOrganizations?.includes(Roles.dataModelEditor)||rolesInTargetOrganizations?.includes(Roles.admin)
   ) {
     return true;
   }
+  
+
+  return false;
+}
+
+export function checkEditPermission({
+  user,
+  owner
+}: checkPermissionProps) { 
+  if (owner?.includes(user.id)) {
+    //user is the owner, Check for personal Contents
+    return true;
+  } else {
+    //Gruop Content
+    
+    if (owner && user.organizationsInRole[Roles.admin].includes(owner[0])) {
+      // User has admin right for this group
+      return true;
+    }
+    
+    if (
+      owner &&
+      user.organizationsInRole[Roles.dataModelEditor].includes(owner[0])
+    ) {
+      return true;
+    }
+  }
+  
 
   return false;
 }

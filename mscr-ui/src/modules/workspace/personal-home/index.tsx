@@ -63,14 +63,16 @@ export default function PersonalWorkspace({
         <ButtonBlock>
           {contentType == 'SCHEMA' ? (
             <>
-              <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>
+              {/*Just sending empty string as pid for personal content*/}
+              <SchemaFormModal refetch={refetchInfo} groupContent={false}></SchemaFormModal>
             </>
           ) : (
             <>
-              <CrosswalkFormModal refetch={refetchInfo}></CrosswalkFormModal>
+              <CrosswalkFormModal refetch={refetchInfo}  groupContent={false}></CrosswalkFormModal>
               <CrosswalkFormModal
                 refetch={refetchInfo}
                 createNew={true}
+                groupContent={false}
               ></CrosswalkFormModal>
             </>
           )}
