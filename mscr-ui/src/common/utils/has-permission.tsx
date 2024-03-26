@@ -146,13 +146,13 @@ export function checkEditPermission({
   } else {
     //Gruop Content
     
-    if (owner && user.organizationsInRole[Roles.admin].includes(owner[0])) {
+    if (owner && user.organizationsInRole[Roles.admin]&& user.organizationsInRole[Roles.admin].includes(owner[0])) {
       // User has admin right for this group
       return true;
     }
     
     if (
-      owner &&
+      owner &&user.organizationsInRole[Roles.dataModelEditor]&&
       user.organizationsInRole[Roles.dataModelEditor].includes(owner[0])
     ) {
       return true;
