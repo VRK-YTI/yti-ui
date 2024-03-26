@@ -1,5 +1,5 @@
-import { TFunction, useTranslation } from 'next-i18next';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import {TFunction, useTranslation} from 'next-i18next';
+import {ChangeEvent, useEffect, useRef, useState} from 'react';
 import {
   Button,
   IconRemove,
@@ -33,19 +33,17 @@ interface FileDropAreaProps {
 }
 
 export default function FileDropAreaMscr({
-                                           setIsValid,
-                                           setFileData,
-                                           validFileTypes,
-                                           translateFileUploadError,
-                                           setFileUri,
-                                           isSchemaUpload,
-                                         }: FileDropAreaProps) {
-  const { t } = useTranslation('admin');
+  setIsValid,
+  setFileData,
+  validFileTypes,
+  translateFileUploadError,
+  setFileUri,
+  isSchemaUpload,
+}: FileDropAreaProps) {
+  const {t} = useTranslation('admin');
   const input = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [alert, setAlert] = useState<
-    'none' | 'upload-error' | 'incorrect-file-type'
-    >('none');
+  const [alert, setAlert] = useState<'none' | 'upload-error' | 'incorrect-file-type'>('none');
   const [fileUriField, setFileUriField] = useState<string>('');
 
   useEffect(() => {
@@ -161,7 +159,7 @@ export default function FileDropAreaMscr({
                   type="file"
                   ref={input}
                   accept={validFileTypes.map((type) => `.${type}`).join(',')}
-                  style={{ display: 'none' }}
+                  style={{display: 'none'}}
                   onChange={(e) => {
                     handleUpload(e);
                   }}
@@ -184,7 +182,7 @@ export default function FileDropAreaMscr({
             ) : (
               <FileInfoBlock>
                 <FileInfo>
-                  <FileInfoStaticIcon />
+                  <FileInfoStaticIcon/>
                   <div>
                     <Paragraph>
                       <Text color={'highlightBase'} variant={'bold'}>
@@ -203,7 +201,7 @@ export default function FileDropAreaMscr({
                 </FileInfo>
                 <FileRemoveButton
                   variant="secondaryNoBorder"
-                  icon={<IconRemove />}
+                  icon={<IconRemove/>}
                   onClick={() => setFile(null)}
                   id="remove-file-button"
                 >
