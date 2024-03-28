@@ -14,7 +14,7 @@ import {
 } from './side-navigation.styles';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import getOrganizations from '@app/common/utils/get-organizations';
 
@@ -47,7 +47,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
             <MscrSideNavigationLevel3
               className="personal"
               subLevel={3}
-              selected={router.asPath == personalSchemasPath}
+              selected={router.asPath.startsWith(personalSchemasPath)}
               content={
                 <Link href={personalSchemasPath} passHref>
                   <RouterLink onClick={() => setOpenGroup('')}>
@@ -59,7 +59,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
             <MscrSideNavigationLevel3
               className="personal"
               subLevel={3}
-              selected={router.asPath == personalCrosswalksPath}
+              selected={router.asPath.startsWith(personalCrosswalksPath)}
               content={
                 <Link href={personalCrosswalksPath} passHref>
                   <RouterLink onClick={() => setOpenGroup('')}>
@@ -71,7 +71,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
             <MscrSideNavigationLevel3
               className="personal"
               subLevel={3}
-              selected={router.asPath == personalSettingsPath}
+              selected={router.asPath.startsWith(personalSettingsPath)}
               content={''}
               // content={
               //   <Link href={personalSettingsPath} passHref>
@@ -116,7 +116,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
               <MscrSideNavigationLevel3
                 className="group"
                 subLevel={3}
-                selected={router.asPath == '/' + group.id + '/schemas'}
+                selected={router.asPath.startsWith('/' + group.id + '/schemas')}
                 content={
                   <Link href={'/' + group.id + '/schemas'} passHref>
                     <RouterLink>{t('workspace.schemas')}</RouterLink>
@@ -126,7 +126,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
               <MscrSideNavigationLevel3
                 className="group"
                 subLevel={3}
-                selected={router.asPath == '/' + group.id + '/crosswalks'}
+                selected={router.asPath.startsWith('/' + group.id + '/crosswalks')}
                 content={
                   <Link href={'/' + group.id + '/crosswalks'} passHref>
                     <RouterLink>{t('workspace.crosswalks')}</RouterLink>
@@ -136,7 +136,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
               <MscrSideNavigationLevel3
                 className="group"
                 subLevel={3}
-                selected={router.asPath == '/' + group.id + '/settings'}
+                selected={router.asPath.startsWith('/' + group.id + '/settings')}
                 content={''}
                 // content={
                 //   <Link href={'/' + group.id + '/settings'} passHref>
