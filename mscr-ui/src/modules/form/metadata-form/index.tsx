@@ -25,6 +25,7 @@ import ConfirmModal from '@app/common/components/confirmation-modal';
 import { useStoreDispatch } from '@app/store';
 import { clearNotification, setNotification } from '@app/common/components/notifications/notifications.slice';
 import Notification from '@app/common/components/notifications';
+import FormattedDate from 'yti-common-ui/components/formatted-date';
 
 interface MetadataFormProps {
   type: Type;
@@ -267,7 +268,9 @@ export default function MetadataForm({
                   {t('metadata.created')}:
                 </Grid>
                 <Grid item xs={8}>
-                  <div className="br-label">{metadata.created}</div>
+                  <div className="br-label">
+                    <FormattedDate date={metadata.created} />
+                  </div>
                 </Grid>
               </Grid>
 
@@ -276,7 +279,9 @@ export default function MetadataForm({
                   {t('metadata.modified')}:
                 </Grid>
                 <Grid item xs={8}>
-                  <div className="br-label">{metadata.modified}</div>
+                  <div className="br-label">
+                    <FormattedDate date={metadata.modified} />
+                  </div>
                 </Grid>
               </Grid>
 
