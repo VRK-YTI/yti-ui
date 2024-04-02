@@ -1,9 +1,16 @@
-import { initialMetadataForm, Metadata, MetadataFormType } from '@app/common/interfaces/metadata.interface';
+import {
+  initialMetadataForm,
+  Metadata,
+  MetadataFormType,
+} from '@app/common/interfaces/metadata.interface';
 import {
   useDeleteCrosswalkMutation,
-  usePatchCrosswalkMutation
+  usePatchCrosswalkMutation,
 } from '@app/common/components/crosswalk/crosswalk.slice';
-import { useDeleteSchemaMutation, usePatchSchemaMutation } from '@app/common/components/schema/schema.slice';
+import {
+  useDeleteSchemaMutation,
+  usePatchSchemaMutation,
+} from '@app/common/components/schema/schema.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { Grid } from '@mui/material';
@@ -14,7 +21,7 @@ import {
   Dropdown,
   DropdownItem,
   Textarea,
-  TextInput
+  TextInput,
 } from 'suomifi-ui-components';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
@@ -23,8 +30,12 @@ import { Type, Visibility } from '@app/common/interfaces/search.interface';
 import { State } from '@app/common/interfaces/state.interface';
 import ConfirmModal from '@app/common/components/confirmation-modal';
 import { useStoreDispatch } from '@app/store';
-import { clearNotification, setNotification } from '@app/common/components/notifications/notifications.slice';
+import {
+  clearNotification,
+  setNotification,
+} from '@app/common/components/notifications/notifications.slice';
 import Notification from '@app/common/components/notifications';
+import FormattedDate from 'yti-common-ui/components/formatted-date';
 
 interface MetadataFormProps {
   type: Type;
@@ -43,15 +54,14 @@ export default function MetadataForm({
   const lang = router.locale ?? '';
   const dispatch = useStoreDispatch();
   const [isEditModeActive, setIsEditModeActive] = useState(false);
-  const [patchCrosswalk,] = usePatchCrosswalkMutation();
-  const [patchSchema,] = usePatchSchemaMutation();
-  const [deleteSchema,] = useDeleteSchemaMutation();
-  const [deleteCrosswalk,] = useDeleteCrosswalkMutation();
+  const [patchCrosswalk] = usePatchCrosswalkMutation();
+  const [patchSchema] = usePatchSchemaMutation();
+  const [deleteSchema] = useDeleteSchemaMutation();
+  const [deleteCrosswalk] = useDeleteCrosswalkMutation();
   const [isSaveConfirmModalOpen, setSaveConfirmModalOpen] = useState(false);
   const [isPublishConfirmModalOpen, setPublishConfirmModalOpen] =
     useState(false);
-  const [isDeleteModalOpen, setDeleteModalOpen] =
-    useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [formData, setFormData] =
     useState<MetadataFormType>(initialMetadataForm);
 
@@ -99,31 +109,23 @@ export default function MetadataForm({
     }
     if (action === 'deleteCrosswalk') {
       console.log('crosswalk pid', metadata.pid);
-        deleteCrosswalk(metadata.pid.toString())
-          .unwrap()
-          .then(() => {
-            dispatch(
-              setNotification(
-                'CROSSWALK_DELETE'
-              )
-            );
-            refetchMetadata();
-          });
-        // ToDo: Error notifications with .catch
+      deleteCrosswalk(metadata.pid.toString())
+        .unwrap()
+        .then(() => {
+          dispatch(setNotification('CROSSWALK_DELETE'));
+          refetchMetadata();
+        });
+      // ToDo: Error notifications with .catch
     } else if (action === 'deleteSchema') {
       console.log('schema pid', metadata.pid);
-        deleteSchema(metadata.pid.toString())
-          .unwrap()
-          .then(() => {
-            dispatch(
-              setNotification(
-                'SCHEMA_DELETE'
-              )
-            );
-            refetchMetadata();
-          });
-        // ToDo: Error notifications with .catch
-      }
+      deleteSchema(metadata.pid.toString())
+        .unwrap()
+        .then(() => {
+          dispatch(setNotification('SCHEMA_DELETE'));
+          refetchMetadata();
+        });
+      // ToDo: Error notifications with .catch
+    }
   };
 
   const generatePayload = (): Partial<Metadata> => {
@@ -267,7 +269,9 @@ export default function MetadataForm({
                   {t('metadata.created')}:
                 </Grid>
                 <Grid item xs={8}>
-                  <div className="br-label">{metadata.created}</div>
+                  <div className="br-label">
+                    <FormattedDate date={metadata.created} />
+                  </div>
                 </Grid>
               </Grid>
 
@@ -276,7 +280,9 @@ export default function MetadataForm({
                   {t('metadata.modified')}:
                 </Grid>
                 <Grid item xs={8}>
-                  <div className="br-label">{metadata.modified}</div>
+                  <div className="br-label">
+                    <FormattedDate date={metadata.modified} />
+                  </div>
                 </Grid>
               </Grid>
 
@@ -420,12 +426,22 @@ export default function MetadataForm({
         />
         <ConfirmModal
           isVisible={isDeleteModalOpen}
-          actionName={type === Type.Crosswalk ? 'deleteCrosswalk' : 'deleteSchema'}
-          actionText={type === Type.Crosswalk ? t('action.delete-crosswalk') : t('action.delete-schema')}
+          actionName={
+            type === Type.Crosswalk ? 'deleteCrosswalk' : 'deleteSchema'
+          }
+          actionText={
+            type === Type.Crosswalk
+              ? t('action.delete-crosswalk')
+              : t('action.delete-schema')
+          }
           cancelText={t('action.cancel')}
           performConfirmModalAction={performModalAction}
           heading={t('confirm-modal.heading')}
-          text1={type === Type.Crosswalk ? t('confirm-modal.delete-crosswalk') : t('confirm-modal.delete-schema')}
+          text1={
+            type === Type.Crosswalk
+              ? t('confirm-modal.delete-crosswalk')
+              : t('confirm-modal.delete-schema')
+          }
         />
         <ConfirmModal
           isVisible={isPublishConfirmModalOpen}
@@ -434,8 +450,16 @@ export default function MetadataForm({
           cancelText={t('action.cancel')}
           performConfirmModalAction={performModalAction}
           heading={t('confirm-modal.heading')}
-          text1={type === Type.Crosswalk ? t('confirm-modal.publish-crosswalk1') : t('confirm-modal.publish-schema')}
-          text2={type === Type.Crosswalk ? t('confirm-modal.publish-crosswalk2') : undefined}
+          text1={
+            type === Type.Crosswalk
+              ? t('confirm-modal.publish-crosswalk1')
+              : t('confirm-modal.publish-schema')
+          }
+          text2={
+            type === Type.Crosswalk
+              ? t('confirm-modal.publish-crosswalk2')
+              : undefined
+          }
         />
       </div>
     </>

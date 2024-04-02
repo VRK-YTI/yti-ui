@@ -6,6 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
 import { useTranslation } from 'next-i18next';
 import { ContentRevision } from '@app/common/interfaces/content-revision.interface';
+import FormattedDate from 'yti-common-ui/components/formatted-date';
 
 export default function VersionHistory({
   revisions,
@@ -34,7 +35,9 @@ export default function VersionHistory({
             <TableRow key={revision.versionLabel}>
               <TableCell>{revision.versionLabel}</TableCell>
               <TableCell>{revision.pid}</TableCell>
-              <TableCell>{revision.created}</TableCell>
+              <TableCell>
+                <FormattedDate date={revision.created} />
+              </TableCell>
               <TableCell>{revision.state}</TableCell>
             </TableRow>
           ))}
