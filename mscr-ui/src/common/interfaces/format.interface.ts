@@ -4,10 +4,11 @@ export enum Format {
   Skosrdf = 'SKOSRDF',
   Pdf = 'PDF',
   Xsd = 'XSD',
+  Owl = 'OWL',
   Xslt = 'XSLT',
   Shacl = 'SHACL',
   Mscr = 'MSCR',
-  Rdfs = 'RDFS'
+  Rdfs = 'RDFS',
 }
 
 export enum FileExtensions {
@@ -16,7 +17,7 @@ export enum FileExtensions {
   Skosrdf = 'ttl',
   Pdf = 'pdf',
   Xsd = 'xsd',
-  Xslt = 'xslt'
+  Xslt = 'xslt',
 }
 
 export const formatsAvailableForCrosswalkCreation: Format[] = [
@@ -26,6 +27,7 @@ export const formatsAvailableForCrosswalkCreation: Format[] = [
   Format.Skosrdf,
   Format.Xsd,
   Format.Shacl,
+  Format.Owl,
 ];
 
 export const formatsAvailableForCrosswalkRegistration: Format[] = [
@@ -41,19 +43,21 @@ export const formatsAvailableForSchemaRegistration: Format[] = [
   Format.Rdfs,
   Format.Skosrdf,
   Format.Xsd,
+  Format.Owl,
 ];
 
-export const fileExtensionsAvailableForCrosswalkRegistrationAttachments: FileExtensions[] = [
-  FileExtensions.Csv, FileExtensions.Xslt, FileExtensions.Pdf
-];
+export const fileExtensionsAvailableForCrosswalkRegistrationAttachments: FileExtensions[] =
+  [FileExtensions.Csv, FileExtensions.Xslt, FileExtensions.Pdf];
 
 export const fileExtensionsAvailableForSchemaRegistration: FileExtensions[] = [
-  FileExtensions.Jsonschema, FileExtensions.Csv, FileExtensions.Skosrdf, FileExtensions.Pdf, FileExtensions.Xsd
+  FileExtensions.Jsonschema,
+  FileExtensions.Csv,
+  FileExtensions.Skosrdf,
+  FileExtensions.Pdf,
+  FileExtensions.Xsd,
 ];
 
 export const Roles = {
-  admin: "ADMIN",
-  dataModelEditor:"DATA_MODEL_EDITOR"
-  
-}
-
+  admin: 'ADMIN',
+  dataModelEditor: 'DATA_MODEL_EDITOR',
+};
