@@ -26,7 +26,7 @@ export function convertToPayload(
     subject: conceptURI,
     ...(basedOnNodeShape
       ? {
-          targetNode: data.targetClass?.uri,
+          targetNode: data.node?.uri,
         }
       : {
           targetClass:
