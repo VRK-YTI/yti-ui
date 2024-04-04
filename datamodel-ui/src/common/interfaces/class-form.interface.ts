@@ -16,6 +16,7 @@ export interface ClassFormType {
   node?: UriData;
   attribute?: SimpleResource[];
   association?: SimpleResource[];
+  apiPath?: string;
 }
 
 export const initialClassForm: ClassFormType = {
@@ -32,4 +33,5 @@ export const initialClassForm: ClassFormType = {
   node: undefined,
   attribute: [],
   association: [],
+  apiPath: '',
 };

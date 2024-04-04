@@ -49,6 +49,8 @@ export function convertToPayload(
   if (applicationProfile) {
     delete ret.association;
     delete ret.attribute;
+  } else {
+    delete ret.apiPath;
   }
 
   if (basedOnNodeShape) {

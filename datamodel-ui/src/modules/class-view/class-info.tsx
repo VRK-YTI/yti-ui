@@ -401,6 +401,20 @@ export default function ClassInfo({
             )}
           </BasicBlock>
 
+          {applicationProfile ? (
+            <BasicBlock
+              title={t('api-path')}
+              tooltip={{
+                text: t('tooltip.api-path'),
+                ariaCloseButtonLabelText: '',
+                ariaToggleButtonLabelText: '',
+              }}
+            >
+              {data.apiPath ? data.apiPath : t('not-defined')}
+            </BasicBlock>
+          ) : (
+            <></>
+          )}
           <Separator />
 
           <BasicBlock

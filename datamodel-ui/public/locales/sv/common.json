@@ -7,6 +7,7 @@
   "actions": "",
   "add-email-subscription": "",
   "an-error-occured-while-fetching-resource": "",
+  "api-path": "",
   "association": "",
   "association-count-title_one": "",
   "association-count-title_other": "",
@@ -288,6 +289,7 @@
   "terminology-title": "",
   "tooltip": {
     "allowed-values": "",
+    "api-path": "",
     "association-targets-class": "",
     "associations-functional": "",
     "associations-identifier": "",

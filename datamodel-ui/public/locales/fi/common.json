@@ -7,6 +7,7 @@
   "actions": "Toiminnot",
   "add-email-subscription": "Tilaa sähköposti-ilmoitukset",
   "an-error-occured-while-fetching-resource": "Resurssin tietojen haussa ilmeni ongelma.",
+  "api-path": "API polku",
   "association": "Assosiaatio",
   "association-count-title_one": "{{count}} Assosiaatio",
   "association-count-title_other": "{{count}} Assosiaatiota",
@@ -288,6 +289,7 @@
   "terminology-title": "Sanastot",
   "tooltip": {
     "allowed-values": "Lista arvoista, jotka ominaisuudelle on sallittu. Esimerkiksi: sininen, valkoinen, vihreä.",
+    "api-path": "Vähintään yhdelle luokalle on määriteltävä API polku jotta Open API kuvaus voidaan tuottaa oikein. API polkuun voidaan määritellä polku- ({}) tai kyselyparametreja (?&) esimerkiksi: /org/{id}/person?name&role",
     "association-targets-class": "Luokka eli kohde, johon assosiaatio linkittää tämän luokan eli luo näiden kahden luokan välisen yhteyden.",
     "associations-functional": "Vipu, joka ilmaisee, että assosiaatiolla voi olla vain yksi arvo. Esimerkiksi, jos assosiaatio on \"identifioi\", voidaan edellyttää, että suomalaisella se voi osoittaa vain yhteen voimassa olevaan henkilötunnukseen.",
     "associations-identifier": "Tunnus (käytännössä merkkijono), joka yksilöi assosiaation tässä tietomallissa. Samaa tunnusta ei samassa tietomallissa voi olla millään muulla resurssilla (assosiaatiolla, attribuutilla tai luokalla).",

@@ -750,6 +750,29 @@ export default function ClassForm({
           ))}
         </LanguageVersionedWrapper>
 
+        {applicationProfile ? (
+          <TextInput
+            labelText={t('api-path', { ns: 'common' })}
+            value={data.apiPath ?? ''}
+            onChange={(e) =>
+              handleUpdate({
+                ...data,
+                apiPath: e?.toString(),
+              })
+            }
+            fullWidth
+            id="api-path-input"
+            maxLength={TEXT_INPUT_MAX}
+            tooltipComponent={
+              <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+                {t('tooltip.api-path', { ns: 'common' })}
+              </Tooltip>
+            }
+          />
+        ) : (
+          <></>
+        )}
+
         <Separator />
 
         <BasicBlock
