@@ -603,7 +603,10 @@ export default function ClassForm({
                   handleFollowUp={handleTargetClassUpdate}
                   initialSelected={data.targetClass?.uri}
                   applicationProfile
-                  hiddenClasses={[data.uri]}
+                  hiddenClasses={
+                    data.targetClass?.uri ? [data.targetClass?.uri] : []
+                  }
+                  limitToModelType="LIBRARY"
                 />
               }
               items={data.targetClass ? [data.targetClass] : []}
