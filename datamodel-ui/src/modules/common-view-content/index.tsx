@@ -47,6 +47,7 @@ export default function CommonViewContent({
   renderActions,
   handleChangeTarget,
   targetInClassRestriction,
+  organizationIds,
 }: {
   modelId: string;
   inUse?: boolean;
@@ -57,10 +58,12 @@ export default function CommonViewContent({
   renderActions?: () => void;
   handleChangeTarget?: (value?: InternalClassInfo) => void;
   targetInClassRestriction?: UriData;
+  organizationIds?: string[];
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
     actions: ['EDIT_ASSOCIATION', 'EDIT_ATTRIBUTE'],
+    targetOrganization: organizationIds,
   });
   const displayLang = useSelector(selectDisplayLang());
   const { data: codesResult } = useGetAllCodesQuery(

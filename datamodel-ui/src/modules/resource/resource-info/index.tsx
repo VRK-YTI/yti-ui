@@ -276,6 +276,7 @@ export default function ResourceInfo({
               modelId={modelId}
               data={data}
               inUse={inUse}
+              organizationIds={organizationIds}
             />
           </>
         )}
