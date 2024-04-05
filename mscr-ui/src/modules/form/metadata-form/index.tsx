@@ -248,6 +248,15 @@ export default function MetadataForm({
 
               <Grid container className="basic-row">
                 <Grid item xs={4} className="br-heading">
+                  {t('metadata.owner')}:
+                </Grid>
+                <Grid item xs={8}>
+                  <div className="br-label">{metadata.ownerMetadata.map((o) => o.name ?? o.id).toString()}</div>
+                </Grid>
+              </Grid>
+
+              <Grid container className="basic-row">
+                <Grid item xs={4} className="br-heading">
                   {t('metadata.pid')}:
                 </Grid>
                 <Grid item xs={8}>

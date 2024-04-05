@@ -17,6 +17,10 @@ export interface Metadata {
   modified: string;
   versionLabel: string;
   contact: string;
+  ownerMetadata: [{
+    id: string;
+    name: string;
+  }];
   sourceSchema?: string;
   targetSchema?: string;
   namespace?: string;
