@@ -126,6 +126,8 @@
     "pid": "PID",
     "schema-details": "Schema details",
     "state": "State",
+    "stub-crosswalk-details": "Deleted crosswalk",
+    "stub-schema-details": "Deleted schema",
     "version-label": "Version label",
     "versions": "Versions",
     "visibility": "Visibility"
@@ -263,7 +265,9 @@
   "subscription-description": "",
   "synonym": "",
   "tabs": {
+    "label": "Content tabs",
     "metadata-and-files": "Metadata and files",
+    "metadata-stub": "Metadata",
     "schema": "Schema",
     "version-history": "Version history"
   },

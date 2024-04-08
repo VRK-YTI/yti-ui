@@ -2,24 +2,6 @@ body {
   font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial', sans-serif !important;
 }
 
-.basic-row {
-  font-size: 0.9rem;
-  height: 60px;
-  margin-top: 8px;
-  .br-heading {
-    font-weight: bold;
-    margin-top: 8px;
-  }
-  .br-label {
-    font-size: 16px;
-    margin-left: 11px;
-    margin-top: 8px;
-  }
-  .description-label {
-    margin: 10px 0px;
-  }
-}
-
 .fi-dropdown_popover {
   margin-top: 0px !important;
 }
@@ -76,13 +58,6 @@ body {
     min-width: 69px;
     margin: 20px 15px 10px 10px;
   }
-}
-
-.metadata-and-files-wrap {
-    .fi-text-input_label--visible, .fi-dropdown_label--visible {
-      display: none !important;
-    }
-
 }
 
 .crosswalk-editor {
@@ -236,10 +211,6 @@ body {
 
   .bg-light-blue {
     background: #d5e4f6;
-  }
-
-  .bg-lightest-blue {
-    background: #EAF2FA;
   }
 
   .bg-white {

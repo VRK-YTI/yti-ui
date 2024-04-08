@@ -9,6 +9,8 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import VersionHistory from 'src/common/components/version-history';
 import SchemaVisualization from '@app/modules/schema-view/schema-visualization';
+import { State } from '@app/common/interfaces/state.interface';
+import MetadataStub from '@app/modules/form/metadata-form/metadata-stub';
 
 export default function SchemaView({
   schemaId,
@@ -63,32 +65,60 @@ export default function SchemaView({
   } else if (isSuccess) {
     return (
       <ThemeProvider theme={theme}>
-        <>
-          <Box
-            className="mb-3"
-            sx={{ borderBottom: 1, borderColor: 'divider' }}
-          >
-            <Tabs
-              value={selectedTab}
-              onChange={changeTab}
-              aria-label="Category selection"
+        {schemaDetails.state == State.Removed ? (
+          <>
+            <Box
+              className="mb-3"
+              sx={{ borderBottom: 1, borderColor: 'divider' }}
             >
-              <Tab label={t('tabs.metadata-and-files')} {...a11yProps(0)} />
-              <Tab label={t('tabs.schema')} {...a11yProps(1)} />
-              <Tab label={t('tabs.version-history')} {...a11yProps(2)} />
-            </Tabs>
-          </Box>
+              <Tabs
+                value={0}
+                aria-label={t('tabs.label')}
+              >
+                <Tab label={t('tabs.metadata-stub')} {...a11yProps(0)} />
+              </Tabs>
+            </Box>
 
-          {selectedTab === 0 && schemaDetails && (
-            <MetadataAndFiles schemaDetails={schemaDetails} refetch={refetch} />
-          )}
-          {selectedTab === 1 && (
-            <SchemaVisualization pid={schemaId} format={schemaDetails.format} />
-          )}
-          {selectedTab === 2 && (
-            <VersionHistory revisions={schemaDetails.revisions} />
-          )}
-        </>
+            {selectedTab === 0 && schemaDetails && (
+              <MetadataStub
+                metadata={schemaDetails}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            <Box
+              className="mb-3"
+              sx={{ borderBottom: 1, borderColor: 'divider' }}
+            >
+              <Tabs
+                value={selectedTab}
+                onChange={changeTab}
+                aria-label="Category selection"
+              >
+                <Tab label={t('tabs.metadata-and-files')} {...a11yProps(0)} />
+                <Tab label={t('tabs.schema')} {...a11yProps(1)} />
+                <Tab label={t('tabs.version-history')} {...a11yProps(2)} />
+              </Tabs>
+            </Box>
+
+            {selectedTab === 0 && schemaDetails && (
+              <MetadataAndFiles
+                schemaDetails={schemaDetails}
+                refetch={refetch}
+              />
+            )}
+            {selectedTab === 1 && (
+              <SchemaVisualization
+                pid={schemaId}
+                format={schemaDetails.format}
+              />
+            )}
+            {selectedTab === 2 && (
+              <VersionHistory revisions={schemaDetails.revisions} />
+            )}
+          </>
+        )}
       </ThemeProvider>
     );
   }
