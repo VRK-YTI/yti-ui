@@ -153,7 +153,7 @@ export default function MetadataFilesTable({
 
   return (
     <>
-      <div className="crosswalk-editor metadata-and-files-wrap mx-2">
+      <div className="crosswalk-editor mx-2">
         {filesRowInput && filesRowInput.length > 0 && (
           <GenericTable
             items={tableRows}

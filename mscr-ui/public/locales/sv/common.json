@@ -125,6 +125,8 @@
     "pid": "",
     "schema-details": "",
     "state": "",
+    "stub-crosswalk-details": "",
+    "stub-schema-details": "",
     "version-label": "",
     "versions": "",
     "visibility": ""
@@ -262,7 +264,9 @@
   "subscription-description": "",
   "synonym": "",
   "tabs": {
+    "label": "",
     "metadata-and-files": "",
+    "metadata-stub": "",
     "schema": "",
     "version-history": ""
   },
