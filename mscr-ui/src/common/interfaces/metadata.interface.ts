@@ -4,6 +4,7 @@ import { State } from '@app/common/interfaces/state.interface';
 
 export interface Metadata {
   pid: string;
+  handle: string;
   label: {
     [key: string]: string;
   };

@@ -260,7 +260,7 @@ export default function MetadataForm({
                   {t('metadata.pid')}:
                 </Grid>
                 <Grid item xs={8}>
-                  <div className="br-label">{metadata.pid}</div>
+                  <div className="br-label">{metadata.handle ?? t('metadata.not-available')}</div>
                 </Grid>
               </Grid>
 
