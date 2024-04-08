@@ -121,6 +121,7 @@
     "format": "Format",
     "modified": "Modified",
     "name": "Name",
+    "owner": "Owner",
     "pid": "PID",
     "schema-details": "Schema details",
     "state": "State",
