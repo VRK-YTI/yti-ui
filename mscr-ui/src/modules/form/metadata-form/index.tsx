@@ -251,7 +251,7 @@ export default function MetadataForm({
                   {t('metadata.owner')}:
                 </Grid>
                 <Grid item xs={8}>
-                  <div className="br-label">{metadata.ownerMetadata.map((o) => o.name ?? o.id).toString()}</div>
+                  <div className="br-label">{metadata.ownerMetadata.map((o) => o.name ?? o.id).join(', ')}</div>
                 </Grid>
               </Grid>
 
