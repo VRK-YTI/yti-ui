@@ -600,6 +600,7 @@ export default function CrosswalkEditor({
                         treeSelection={sourceTreeSelection}
                         caption={t('crosswalk-editor.search-from-source-schema')}
                         schemaUrn={sourceSchemaUrn}
+                        raiseHeading={hasEditRights}
                       ></SchemaInfo>
                     </div>
 
@@ -638,6 +639,7 @@ export default function CrosswalkEditor({
                         treeSelection={targetTreeSelection}
                         caption={t('crosswalk-editor.search-from-target-schema')}
                         schemaUrn={targetSchemaUrn}
+                        raiseHeading={hasEditRights}
                       ></SchemaInfo>
                     </div>
                   </div>

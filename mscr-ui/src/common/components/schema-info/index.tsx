@@ -31,6 +31,7 @@ export default function SchemaInfo(props: {
   treeSelection?: string[];
   caption: string;
   schemaUrn: string;
+  raiseHeading?: boolean;
 }) {
   const { t } = useTranslation('common');
   const lang = useRouter().locale ?? '';
@@ -265,7 +266,7 @@ export default function SchemaInfo(props: {
 
   return (
     <>
-      <SchemaHeading variant="h2">
+      <SchemaHeading variant="h2" className={props.raiseHeading ? 'raise-heading' : ''}>
         {getSchemaData?.metadata.label
           ? getLanguageVersion({
               data: getSchemaData.metadata.label,
