@@ -121,6 +121,7 @@
     "format": "Format",
     "modified": "Modified",
     "name": "Name",
+    "not-available": "Not available",
     "owner": "Owner",
     "pid": "PID",
     "schema-details": "Schema details",
