@@ -54,25 +54,22 @@ export default function ListForm({
       status: ['SUGGESTED', 'VALID', 'DRAFT'],
     });
 
-  const { data: models } = useGetSearchModelsQuery(
-    {
-      lang: i18n.language,
-      urlState: {
-        domain: searchParams.groups ?? [],
-        lang: contentLanguage ?? i18n.language,
-        organization: '',
-        page: searchParams.pageFrom ?? 0,
-        q: searchParams.query,
-        status: searchParams.status ?? [],
-        type: '',
-        types:
-          applicationProfile && searchParams.limitToModelType
-            ? [searchParams.limitToModelType]
-            : ['LIBRARY'],
-      },
+  const { data: models } = useGetSearchModelsQuery({
+    lang: i18n.language,
+    urlState: {
+      domain: searchParams.groups ?? [],
+      lang: contentLanguage ?? i18n.language,
+      organization: '',
+      page: searchParams.pageFrom ?? 0,
+      q: searchParams.query,
+      status: searchParams.status ?? [],
+      type: '',
+      types:
+        applicationProfile && searchParams.limitToModelType
+          ? [searchParams.limitToModelType]
+          : ['LIBRARY'],
     },
-    { skip: searchParams.query === '' }
-  );
+  });
 
   const resetToInit = () => {
     setSearchParams({
