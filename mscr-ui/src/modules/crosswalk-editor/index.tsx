@@ -35,6 +35,9 @@ import HasPermission from '@app/common/utils/has-permission';
 import VersionHistory from '@app/common/components/version-history';
 import SchemaInfo from '@app/common/components/schema-info';
 import {useTranslation} from 'next-i18next';
+import { State } from '@app/common/interfaces/state.interface';
+import MetadataStub from '@app/modules/form/metadata-form/metadata-stub';
+import { Type } from '@app/common/interfaces/search.interface';
 
 export default function CrosswalkEditor({
   crosswalkId,
@@ -506,10 +509,31 @@ export default function CrosswalkEditor({
     });
   };
 
+  if (getCrosswalkDataIsError) {
+    console.log('Error: ', getCrosswalkDataError);
+  }
+
+  if (getCrosswalkDataIsError) {
+    if ('status' in getCrosswalkDataError && getCrosswalkDataError.status === 404) {
+      return (
+        <ThemeProvider theme={theme}>
+          <Box
+            className="mb-3"
+            sx={{ borderBottom: 1, borderColor: 'divider' }}
+          >
+            {t('error.not-found')}
+          </Box>
+        </ThemeProvider>
+      );
+    }
+  }
+
+
+
   return (
     <ThemeProvider theme={theme}>
       <>
-        {getCrosswalkDataIsSuccess && (
+        {getCrosswalkDataIsSuccess && getCrosswalkData.state !== State.Removed ? (
           <>
             <Box
               className="mb-3"
@@ -687,6 +711,27 @@ export default function CrosswalkEditor({
                 <VersionHistory revisions={getCrosswalkData.revisions} />
               )}
             </div>
+          </>
+        ) : getCrosswalkDataIsSuccess && ( // Stub view if state is REMOVED
+          <>
+            <Box
+              className="mb-3"
+              sx={{ borderBottom: 1, borderColor: 'divider' }}
+            >
+              <Tabs
+                value={0}
+                aria-label={t('tabs.label')}
+              >
+                <Tab label={t('tabs.metadata-stub')} {...a11yProps(0)} />
+              </Tabs>
+            </Box>
+
+            {getCrosswalkData && (
+              <MetadataStub
+                metadata={getCrosswalkData}
+                type={Type.Schema}
+              />
+            )}
           </>
         )}
       </>

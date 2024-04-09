@@ -115,7 +115,6 @@ export default function MetadataForm({
       }
     }
     if (action === 'deleteCrosswalk') {
-      console.log('crosswalk pid', metadata.pid);
       deleteCrosswalk(metadata.pid.toString())
         .unwrap()
         .then(() => {
@@ -124,7 +123,6 @@ export default function MetadataForm({
         });
       // ToDo: Error notifications with .catch
     } else if (action === 'deleteSchema') {
-      console.log('schema pid', metadata.pid);
       deleteSchema(metadata.pid.toString())
         .unwrap()
         .then(() => {

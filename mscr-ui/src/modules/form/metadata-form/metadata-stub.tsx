@@ -20,7 +20,7 @@ export default function MetadataStub({
   type,
 }: {
   metadata: Schema | Crosswalk;
-  type: string;
+  type: Type;
 }) {
   const { t } = useTranslation('common');
   const lang = useRouter().locale ?? '';

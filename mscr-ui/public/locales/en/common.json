@@ -62,6 +62,9 @@
   "email-subscriptions": "",
   "email-subscriptions-off": "",
   "email-subscriptions-on": "",
+  "error": {
+    "not-found": "Not found"
+  },
   "error-occured": "",
   "feedback-terminologies": "",
   "filter-by-language": "",

@@ -11,6 +11,7 @@ import VersionHistory from 'src/common/components/version-history';
 import SchemaVisualization from '@app/modules/schema-view/schema-visualization';
 import { State } from '@app/common/interfaces/state.interface';
 import MetadataStub from '@app/modules/form/metadata-form/metadata-stub';
+import { Type } from '@app/common/interfaces/search.interface';
 
 export default function SchemaView({
   schemaId,
@@ -65,7 +66,7 @@ export default function SchemaView({
   } else if (isSuccess) {
     return (
       <ThemeProvider theme={theme}>
-        {schemaDetails.state == State.Removed ? (
+        {schemaDetails.state === State.Removed ? ( // Stub view if state is REMOVED
           <>
             <Box
               className="mb-3"
@@ -82,6 +83,7 @@ export default function SchemaView({
             {selectedTab === 0 && schemaDetails && (
               <MetadataStub
                 metadata={schemaDetails}
+                type={Type.Schema}
               />
             )}
           </>
