@@ -24,6 +24,7 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
 import { NodeMapping } from '@app/common/interfaces/crosswalk-connection.interface';
 import { InfoIcon } from '@app/common/components/shared-icons';
+import { useEffect } from 'react';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
 
@@ -46,7 +47,7 @@ function Row(props: {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <React.Fragment>
+    <>
       <StyledTableRow className="accordion-row row">
         <StyledTableCell className="col-5">
           <Button
@@ -124,7 +125,7 @@ function Row(props: {
             unmountOnExit
           >
             <div className="row">
-              <div className="col-10">
+              <div className="col-5">
                 {/*                                <Box sx={{margin: 1}}>
                                     <div className='fw-bold mt-3 mb-2' style={{fontSize: '0.9em'}}>Mapping type: <span
                                         className='fw-normal'>exact match</span></div>
@@ -134,6 +135,13 @@ function Row(props: {
                   Mapping type: <span className="fw-normal">exact match</span>
                 </div>
                 <br />
+              </div>
+              <div className="col-5">
+                <Textarea
+                  labelText='Notes:'
+                  visualPlaceholder='No notes set.'
+                  value={props.row.notes}
+                />
               </div>
               <div className="col-2 mt-4 d-flex flex-column action-buttons">
                 {props.isEditModeActive && (
@@ -166,11 +174,14 @@ function Row(props: {
           </Collapse>
         </TableCell>
       </StyledTableRow>
-    </React.Fragment>
+    </>
   );
 }
 
 export default function JointListingAccordion(props: any) {
+  useEffect(() => {
+console.log('props changed', props);
+  }, [props]);
   const nodeMappingsInput = props.nodeMappings;
   return (
     <>

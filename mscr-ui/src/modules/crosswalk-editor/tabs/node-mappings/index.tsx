@@ -7,9 +7,9 @@ import {
 } from '@app/common/interfaces/crosswalk-connection.interface';
 import validateMapping from '@app/modules/crosswalk-editor/mapping-validator';
 import EastIcon from '@mui/icons-material/East';
-import { Dropdown, IconPlus, Textarea, TextInput } from 'suomifi-ui-components';
-import { DropdownItem } from 'suomifi-ui-components';
-import { useCallback, useEffect, useState } from 'react';
+import {Dropdown, IconPlus, Textarea, TextInput} from 'suomifi-ui-components';
+import {DropdownItem} from 'suomifi-ui-components';
+import {useCallback, useEffect, useState} from 'react';
 import {
   Button,
   InlineAlert,
@@ -51,6 +51,9 @@ export default function NodeMappings(props: {
     if (props?.selectedCrosswalk?.target) {
       targetSelectionInit = props.selectedCrosswalk.target.id;
       setTargetInputValue(props.selectedCrosswalk.target.id);
+    }
+    if (props?.selectedCrosswalk?.notes) {
+      setNotesValue(props.selectedCrosswalk.notes);
     }
 
     setVisible(props?.modalOpen);
@@ -100,19 +103,22 @@ export default function NodeMappings(props: {
       uri: props.selectedCrosswalk.source.uri
     });
     mappings.predicate = predicateValue ? predicateValue : '0';
+    mappings.notes = notesValue;
     return mappings;
   }
 
   function closeModal() {
+    setNotesValue('');
     props.performMappingsModalAction('closeModal', null, null);
   }
 
-  function setSourceFilterValue(value: any) {}
+  function setSourceFilterValue(value: any) {
+  }
 
   function generatePropertiesDropdownItems(input: any) {
     let keys = [];
     for (let key in input) {
-      keys.push({ name: key });
+      keys.push({name: key});
     }
     return keys;
   }
@@ -130,7 +136,7 @@ export default function NodeMappings(props: {
       });
     if (mappingInputFields.length > 0) {
       ret = mappingInputFields[0]['parameters'].map((item) => {
-        return { name: item.name, datatype: item.datatype };
+        return {name: item.name, datatype: item.datatype};
       });
     }
     ret.forEach((item) => {
@@ -153,6 +159,7 @@ export default function NodeMappings(props: {
     } else {
       props.performMappingsModalAction('addJoint', generateMappingPayload());
     }
+    setNotesValue('');
   }
 
   // CLEAR FIELDS WHEN MODAL OPENED
@@ -288,7 +295,7 @@ export default function NodeMappings(props: {
                                   visualPlaceholder="Operation value"
                                 /></div>*/}
                   <div>
-                    <br />
+                    <br/>
                     <Dropdown
                       className="mt-2 node-info-dropdown"
                       labelText="Predicate"
@@ -305,15 +312,13 @@ export default function NodeMappings(props: {
                     </Dropdown>
                   </div>
                 </div>
-
-                {/*                         //TODO: fix notes saving
-                            <Textarea
-                              onChange={(event) => setNotesValue(event.target.value)}
-                              labelText="Notes:"
-                              visualPlaceholder="No notes set. Add free form notes here."
-                              value={notesValue}
-                            />*/}
-                <br />
+                <Textarea
+                  onChange={(event) => setNotesValue(event.target.value)}
+                  labelText="Notes:"
+                  visualPlaceholder="No notes set. Add free form notes here."
+                  value={notesValue}
+                />
+                <br/>
               </div>
 
               {/* TARGET OPERATIONS */}
@@ -333,7 +338,7 @@ export default function NodeMappings(props: {
                       ? props.selectedCrosswalk.target.properties.description
                       : 'N/A'}
                   </p>
-                  <br />
+                  <br/>
                   {/*                                <div><Dropdown className='mt-2 node-info-dropdown'
                                                labelText="Target operation"
                                                visualPlaceholder="Operation not selected"
@@ -352,11 +357,11 @@ export default function NodeMappings(props: {
           </div>
         </ModalContent>
         <ModalFooter>
-          <Button style={{ height: 'min-content' }} onClick={() => save()}>
+          <Button style={{height: 'min-content'}} onClick={() => save()}>
             {'Save'}
           </Button>
           <Button
-            style={{ height: 'min-content' }}
+            style={{height: 'min-content'}}
             variant="secondary"
             onClick={() => closeModal()}
           >

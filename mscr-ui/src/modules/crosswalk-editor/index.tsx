@@ -241,6 +241,7 @@ export default function CrosswalkEditor({
     isSuccess: getMappingsDataIsSuccess,
     isError: getMappingsIsError,
     error: getMappingsError,
+    refetch: refetchMappings,
   } = useGetMappingsQuery(crosswalkId);
 
   useEffect(() => {
@@ -259,9 +260,9 @@ export default function CrosswalkEditor({
   }
 
   if (patchMappingResponse.isSuccess) {
-    //TODO: add success and error notification?
-    // if (lastPatchMappingPid !== patchMappingResponse.data.pid) {
-    // }
+    if (lastPatchMappingPid !== patchMappingResponse.data.pid) {
+      addMappingToAccordion(patchMappingResponse, false);
+    }
   }
 
   if (deleteMappingResponse.isSuccess) {
@@ -295,6 +296,16 @@ export default function CrosswalkEditor({
       } else {
         // This is needed in the future for showing success or error status
         setLastPatchMappingPid(response.data.pid);
+        const patchedMapping = patchMappingResponse.data as NodeMapping;
+
+        const filteredMappings = [
+          ...nodeMappings.filter((item) => {
+            return item.pid !== patchMappingResponse?.originalArgs?.pid;
+          }),
+        ];
+        setNodeMappings((mappings) => {
+          return [patchedMapping, ...filteredMappings];
+        });
       }
     }
   }
@@ -316,6 +327,7 @@ export default function CrosswalkEditor({
         sourceProcessing: undefined,
         targetPredicate: undefined,
         targetProcessing: undefined,
+        notes: undefined,
       };
       jointsToBeAdded.push(joint);
     });
@@ -327,13 +339,16 @@ export default function CrosswalkEditor({
     targetNodes: RenderTree[],
     patchPid: string,
   ) {
+
+    const originalMapping: NodeMapping[] = nodeMappings.filter(item => item.pid === patchPid);
+
     const jointsToBeAdded: CrosswalkConnectionNew[] = [];
     sourceNodes.forEach((sourceNode) => {
       const joint: CrosswalkConnectionNew = {
         source: sourceNode,
         target: targetNodes[0],
         id: patchPid,
-        description: '',
+        notes: originalMapping.length > 0 ? originalMapping[0].notes : '',
         isSelected: true,
         isDraft: true,
         sourceJsonPath: undefined,

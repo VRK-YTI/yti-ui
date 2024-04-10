@@ -45,7 +45,7 @@ export interface CrosswalkConnectionNew {
     source: RenderTree;
     target: RenderTree;
     id: string;
-    description: string | undefined;
+    notes: string | undefined;
     isSelected: boolean;
     isDraft: boolean;
     sourceJsonPath: string | undefined;
@@ -78,5 +78,6 @@ export interface NodeMapping {
     processing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } };
     oneOf?: { filter: { path: string; distinctValues: boolean; value: {}; operator: string } }[];
     pid?: string;
+    notes?: string;
 }
 
