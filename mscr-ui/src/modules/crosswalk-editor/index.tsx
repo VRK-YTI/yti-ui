@@ -620,6 +620,7 @@ export default function CrosswalkEditor({
                           'crosswalk-editor.search-from-source-schema'
                         )}
                         schemaUrn={sourceSchemaUrn}
+                        raiseHeading={hasEditRights}
                       ></SchemaInfo>
                     </div>
 
@@ -660,6 +661,7 @@ export default function CrosswalkEditor({
                           'crosswalk-editor.search-from-target-schema'
                         )}
                         schemaUrn={targetSchemaUrn}
+                        raiseHeading={hasEditRights}
                       ></SchemaInfo>
                     </div>
                   </div>

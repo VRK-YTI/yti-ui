@@ -269,7 +269,7 @@ export default function MetadataForm({
             </Grid>
             <Grid item xs={8}>
               <MetadataAttribute>
-                {metadata.pid}
+                {metadata.handle ?? t('metadata.not-available')}
               </MetadataAttribute>
             </Grid>
           </MetadataRow>
