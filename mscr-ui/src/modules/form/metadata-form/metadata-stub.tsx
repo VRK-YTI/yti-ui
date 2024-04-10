@@ -86,6 +86,12 @@ export default function MetadataStub({
       <MetadataFormContainer container>
         <Grid item xs={12} md={7}>
           {metadataRows.map((item) => renderRow(item.label, item.attribute))}
+          {type === Type.Crosswalk ? (
+            <>
+              {renderRow(t('metadata.source-schema'), metadata.sourceSchema ?? '')}
+              {renderRow(t('metadata.target-schema'), metadata.targetSchema ?? '')}
+            </>
+          ) : (<></>)}
         </Grid>
         <Grid item xs={12} md={5}>
           <MetadataRow item xs={6} md={7}>

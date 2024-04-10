@@ -725,7 +725,7 @@ export default function CrosswalkEditor({
               </Box>
 
               {getCrosswalkData && (
-                <MetadataStub metadata={getCrosswalkData} type={Type.Schema} />
+                <MetadataStub metadata={getCrosswalkData} type={Type.Crosswalk} />
               )}
             </>
           )

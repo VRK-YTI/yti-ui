@@ -128,9 +128,11 @@
     "owner": "",
     "pid": "",
     "schema-details": "",
+    "source-schema": "",
     "state": "",
     "stub-crosswalk-details": "",
     "stub-schema-details": "",
+    "target-schema": "",
     "version-label": "",
     "versions": "",
     "visibility": ""

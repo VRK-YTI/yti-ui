@@ -128,9 +128,11 @@
     "owner": "Owner",
     "pid": "PID",
     "schema-details": "Schema details",
+    "source-schema": "Source schema",
     "state": "State",
     "stub-crosswalk-details": "Deleted crosswalk",
     "stub-schema-details": "Deleted schema",
+    "target-schema": "Target schema",
     "version-label": "Version label",
     "versions": "Versions",
     "visibility": "Visibility"
