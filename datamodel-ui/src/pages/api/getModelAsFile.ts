@@ -20,6 +20,10 @@ export default withIronSessionApiRoute(
         mimeType = 'text/turtle';
         filename += '.ttl';
         break;
+      case 'OpenAPI':
+        mimeType = 'application/vnd+oai+openapi+json';
+        filename += '.json';
+        break;
       case 'LD+JSON':
       default:
         mimeType = 'application/ld+json';

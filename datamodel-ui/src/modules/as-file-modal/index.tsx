@@ -23,6 +23,7 @@ interface AsFileModalProps {
   onClose: () => void;
   filename?: string;
   version?: string;
+  applicationProfile: boolean;
 }
 
 export default function AsFileModal({
@@ -32,10 +33,15 @@ export default function AsFileModal({
   onClose,
   filename,
   version,
+  applicationProfile,
 }: AsFileModalProps) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
-  const fileTypes = ['JSON-LD', 'RDF', 'Turtle' /*'XML', 'OpenAPI'*/];
+  const fileTypes = ['JSON-LD', 'RDF', 'Turtle' /*'XML'*/];
+  if (applicationProfile) {
+    fileTypes.push('OpenAPI');
+  }
+
   const [chosenFileType, setChosenFileType] = useState('JSON-LD');
 
   const handleClose = () => {
