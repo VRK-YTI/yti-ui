@@ -11,7 +11,6 @@ export default function MetadataAndFiles({
   schemaDetails: SchemaWithVersionInfo;
   refetch: () => void;
 }) {
-  // TODO: Editing -> Only edit with permission, we have util has-permission
   const hasEditPermission = HasPermission({
     actions: ['EDIT_SCHEMA_METADATA'],
     owner: schemaDetails?.owner

@@ -27,7 +27,7 @@ export default function GroupWorkspace({
   pid,
   contentType,
 }: GroupHomeProps) {
-  const { t, i18n } = useTranslation('common');
+  const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 20;
@@ -65,7 +65,6 @@ export default function GroupWorkspace({
           }
         />
         <Separator isLarge />
-        {/* ToDo: From these buttons you should create content with this org as owner */}
         <div>
         <ButtonBlock>
           {contentType == 'SCHEMA' ? (
@@ -77,7 +76,7 @@ export default function GroupWorkspace({
                 refetch={refetchInfo}
                 createNew={true}
               ></CrosswalkFormModal>
-          
+
             </>
           )}
           </ButtonBlock>

@@ -63,7 +63,6 @@ export default function PersonalWorkspace({
         <ButtonBlock>
           {contentType == 'SCHEMA' ? (
             <>
-              {/*Just sending empty string as pid for personal content*/}
               <SchemaFormModal refetch={refetchInfo} groupContent={false}></SchemaFormModal>
             </>
           ) : (
