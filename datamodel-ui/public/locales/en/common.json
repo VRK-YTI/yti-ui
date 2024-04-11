@@ -7,6 +7,7 @@
   "actions": "Actions",
   "add-email-subscription": "Add email subscription",
   "an-error-occured-while-fetching-resource": "An error occured while fetching resource.",
+  "api-path": "API path",
   "association": "Association",
   "association-count-title_one": "{{count}} Association",
   "association-count-title_other": "{{count}} Associations",
@@ -288,6 +289,7 @@
   "terminology-title": "Terminologies",
   "tooltip": {
     "allowed-values": "List of values that are allowed for the property. E.g. blue, white, green.",
+    "api-path": "Define at least one path for some class to export valid Open API specification. Paths can include path ({}) or query (?&) parameters, for example: /org/{id}/?name&role",
     "association-targets-class": "The class that acts as the target of an association which creates a semantical relation between two classes.",
     "associations-functional": "Boolean, indicating that this association is functional. It means that the property can only have one value for a given individual.",
     "associations-identifier": "Identifier (character string) that identifies the association in this data model. The identifier must be unique, so that no other resource (association, attribute or class) has that same identifier.",

@@ -27,6 +27,7 @@ export function internalClassToClassForm(
     subClassOf: [],
     ownAttributes: [],
     status: 'DRAFT',
+    apiPath: '',
   } as ClassFormType;
 
   if (applicationProfile) {
@@ -77,6 +78,7 @@ export function classTypeToClassForm(
           //Application profile specific properties
           targetClass: data.targetClass,
           node: data.targetNode,
+          apiPath: data.apiPath,
         }
       : {
           //Library specific properties
