@@ -14,7 +14,11 @@ import CrosswalkFormModal from '@app/modules/form/crosswalk-form/crosswalk-form-
 import SchemaFormModal from '@app/modules/form/schema-form/schema-form-modal';
 import { ButtonBlock } from '../workspace.styles';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
-import { useGetOrgContentQuery } from '@app/common/components/mscr-search/mscr-search.slice';
+import {
+  mscrSearchApi,
+  useGetOrgContentQuery,
+} from '@app/common/components/mscr-search/mscr-search.slice';
+import { useStoreDispatch } from '@app/store';
 
 interface GroupHomeProps {
   user: MscrUser;
@@ -29,6 +33,7 @@ export default function GroupWorkspace({
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
+  const dispatch = useStoreDispatch();
   const pageSize = 20;
   const { data, isLoading } = useGetOrgContentQuery({
     type: contentType,
@@ -40,9 +45,14 @@ export default function GroupWorkspace({
     ? Math.ceil(data?.hits.total.value / pageSize)
     : 0;
 
-   // Need to decide what data we want to fetch loading the application
   const refetchInfo = () => {
-    // Under construction
+    setTimeout(
+      () =>
+        dispatch(
+          mscrSearchApi.util.invalidateTags(['OrgContent', 'MscrSearch'])
+        ),
+      300
+    );
   };
 
   if (isLoading) {
@@ -65,21 +75,30 @@ export default function GroupWorkspace({
         />
         <Separator isLarge />
         <div>
-        <ButtonBlock>
-          {contentType == 'SCHEMA' ? (
-            <SchemaFormModal refetch={refetchInfo} groupContent={true} pid={pid}></SchemaFormModal>
-          ) : (
-            <>
-                <CrosswalkFormModal refetch={refetchInfo} groupContent={true} pid={pid}></CrosswalkFormModal>
-                <CrosswalkFormModal groupContent={true} pid={pid}
+          <ButtonBlock>
+            {contentType == 'SCHEMA' ? (
+              <SchemaFormModal
                 refetch={refetchInfo}
-                createNew={true}
-              ></CrosswalkFormModal>
-
-            </>
-          )}
+                groupContent={true}
+                pid={pid}
+              ></SchemaFormModal>
+            ) : (
+              <>
+                <CrosswalkFormModal
+                  refetch={refetchInfo}
+                  groupContent={true}
+                  pid={pid}
+                ></CrosswalkFormModal>
+                <CrosswalkFormModal
+                  refetch={refetchInfo}
+                  groupContent={true}
+                  pid={pid}
+                  createNew={true}
+                ></CrosswalkFormModal>
+              </>
+            )}
           </ButtonBlock>
-          </div>
+        </div>
         <Separator isLarge />
         {data?.hits.hits && data?.hits.hits.length < 1 ? (
           <div>
@@ -90,11 +109,7 @@ export default function GroupWorkspace({
         ) : (
           <WorkspaceTable data={data} contentType={contentType} />
         )}
-        {lastPage > 1 && (
-          <Pagination
-            lastPage={lastPage}
-          />
-        )}
+        {lastPage > 1 && <Pagination lastPage={lastPage} />}
       </main>
     );
   }

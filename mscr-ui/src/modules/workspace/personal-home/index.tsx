@@ -13,7 +13,11 @@ import CrosswalkFormModal from '@app/modules/form/crosswalk-form/crosswalk-form-
 import { ButtonBlock } from '@app/modules/workspace/workspace.styles';
 import Pagination from '@app/common/components/pagination';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
-import { useGetPersonalContentQuery } from '@app/common/components/mscr-search/mscr-search.slice';
+import {
+  mscrSearchApi,
+  useGetPersonalContentQuery,
+} from '@app/common/components/mscr-search/mscr-search.slice';
+import { useStoreDispatch } from '@app/store';
 
 export default function PersonalWorkspace({
   contentType,
@@ -23,6 +27,7 @@ export default function PersonalWorkspace({
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
+  const dispatch = useStoreDispatch();
   const pageSize = 20;
   const { data, isLoading } = useGetPersonalContentQuery({
     type: contentType,
@@ -35,7 +40,13 @@ export default function PersonalWorkspace({
 
   // Need to decide what data we want to fetch loading the application
   const refetchInfo = () => {
-    // Under construction
+    setTimeout(
+      () =>
+        dispatch(
+          mscrSearchApi.util.invalidateTags(['PersonalContent', 'MscrSearch'])
+        ),
+      300
+    );
   };
 
   if (isLoading) {
@@ -58,15 +69,21 @@ export default function PersonalWorkspace({
         <ButtonBlock>
           {contentType == 'SCHEMA' ? (
             <>
-              <SchemaFormModal refetch={refetchInfo} groupContent={false}></SchemaFormModal>
+              <SchemaFormModal
+                refetch={refetchInfo}
+                groupContent={false}
+              ></SchemaFormModal>
             </>
           ) : (
             <>
-              <CrosswalkFormModal refetch={refetchInfo}  groupContent={false}></CrosswalkFormModal>
               <CrosswalkFormModal
                 refetch={refetchInfo}
-                createNew={true}
                 groupContent={false}
+              ></CrosswalkFormModal>
+              <CrosswalkFormModal
+                refetch={refetchInfo}
+                groupContent={false}
+                createNew={true}
               ></CrosswalkFormModal>
             </>
           )}
@@ -81,11 +98,7 @@ export default function PersonalWorkspace({
         ) : (
           <WorkspaceTable data={data} contentType={contentType} />
         )}
-        {lastPage > 1 && (
-          <Pagination
-            lastPage={lastPage}
-          />
-        )}
+        {lastPage > 1 && <Pagination lastPage={lastPage} />}
       </main>
     );
   }

@@ -43,6 +43,7 @@ import {
   MetadataLabel,
   MetadataRow,
 } from '@app/modules/form/metadata-form/metadata-form.styles';
+import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
 
 interface MetadataFormProps {
   type: Type;
@@ -118,6 +119,7 @@ export default function MetadataForm({
       deleteCrosswalk(metadata.pid.toString())
         .unwrap()
         .then(() => {
+          dispatch(mscrSearchApi.util.invalidateTags(['MscrSearch', 'OrgContent', 'PersonalContent']));
           dispatch(setNotification('CROSSWALK_DELETE'));
           refetchMetadata();
         });
@@ -126,6 +128,7 @@ export default function MetadataForm({
       deleteSchema(metadata.pid.toString())
         .unwrap()
         .then(() => {
+          dispatch(mscrSearchApi.util.invalidateTags(['MscrSearch', 'OrgContent', 'PersonalContent']));
           dispatch(setNotification('SCHEMA_DELETE'));
           refetchMetadata();
         });
