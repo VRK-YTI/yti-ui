@@ -3,7 +3,8 @@ import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
 import { MscrSearchResults, PaginatedQuery } from '@app/common/interfaces/search.interface';
 
-function createUrl({ type, ownerOrg, pageSize, pageFrom }: PaginatedQuery) {
+function createUrl({ type, ownerOrg, pageSize, urlState }: PaginatedQuery) {
+  const pageFrom = (urlState.page - 1) * pageSize;
   return `/frontend/mscrSearchOrgContent?query=&type=${type}&ownerOrg=${ownerOrg}&pageSize=${pageSize}&pageFrom=${pageFrom}`;
 }
 

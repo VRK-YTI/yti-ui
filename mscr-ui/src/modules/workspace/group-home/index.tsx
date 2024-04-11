@@ -1,4 +1,4 @@
-import { PaginatedQuery, Type } from '@app/common/interfaces/search.interface';
+import { Type } from '@app/common/interfaces/search.interface';
 import { useGetOrgContentQuery } from '@app/common/components/organization/organization.slice';
 import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
@@ -10,12 +10,11 @@ import {
 } from 'yti-common-ui/components/title/title.styles';
 import Separator from 'yti-common-ui/components/separator';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
-import { useState } from 'react';
 import Pagination from '@app/common/components/pagination';
 import CrosswalkFormModal from '@app/modules/form/crosswalk-form/crosswalk-form-modal';
 import SchemaFormModal from '@app/modules/form/schema-form/schema-form-modal';
 import { ButtonBlock } from '../workspace.styles';
-
+import useUrlState from '@app/common/utils/hooks/use-url-state';
 
 interface GroupHomeProps {
   user: MscrUser;
@@ -29,23 +28,23 @@ export default function GroupWorkspace({
 }: GroupHomeProps) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
-  const [currentPage, setCurrentPage] = useState(1);
+  const { urlState } = useUrlState();
   const pageSize = 20;
-  const query: PaginatedQuery = {
+  const { data, isLoading } = useGetOrgContentQuery({
     type: contentType,
     ownerOrg: pid,
     pageSize,
-    pageFrom: (currentPage - 1) * pageSize,
-  };
-  const { data, isLoading } = useGetOrgContentQuery(query);
+    urlState,
+  });
   const lastPage = data?.hits.total?.value
     ? Math.ceil(data?.hits.total.value / pageSize)
     : 0;
 
    // Need to decide what data we want to fetch loading the application
   const refetchInfo = () => {
-  }
-  
+    // Under construction
+  };
+
   if (isLoading) {
     return <div> Is Loading </div>; //ToDo: A loading circle or somesuch
   } else if (!user || user.anonymous || !user.rolesInOrganizations[pid]) {
@@ -93,8 +92,6 @@ export default function GroupWorkspace({
         )}
         {lastPage > 1 && (
           <Pagination
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
             lastPage={lastPage}
           />
         )}

@@ -6,7 +6,8 @@ import {
   PaginatedQuery,
 } from '@app/common/interfaces/search.interface';
 
-function createUrl({ type, pageSize, pageFrom }: PaginatedQuery) {
+function createUrl({ type, pageSize, urlState }: PaginatedQuery) {
+  const pageFrom = (urlState.page - 1) * pageSize;
   return `/frontend/mscrSearchPersonalContent?query=&type=${type}&pageSize=${pageSize}&pageFrom=${pageFrom}`;
 }
 
