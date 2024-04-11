@@ -1,4 +1,3 @@
-import { useGetPersonalContentQuery } from '@app/common/components/personal/personal.slice';
 import { Type } from '@app/common/interfaces/search.interface';
 import WorkspaceTable from 'src/modules/workspace/workspace-table';
 import { useTranslation } from 'next-i18next';
@@ -14,6 +13,7 @@ import CrosswalkFormModal from '@app/modules/form/crosswalk-form/crosswalk-form-
 import { ButtonBlock } from '@app/modules/workspace/workspace.styles';
 import Pagination from '@app/common/components/pagination';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
+import { useGetPersonalContentQuery } from '@app/common/components/mscr-search/mscr-search.slice';
 
 export default function PersonalWorkspace({
   contentType,

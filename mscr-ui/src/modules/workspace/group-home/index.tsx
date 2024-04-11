@@ -1,5 +1,4 @@
 import { Type } from '@app/common/interfaces/search.interface';
-import { useGetOrgContentQuery } from '@app/common/components/organization/organization.slice';
 import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
 import WorkspaceTable from '@app/modules/workspace/workspace-table';
@@ -15,6 +14,7 @@ import CrosswalkFormModal from '@app/modules/form/crosswalk-form/crosswalk-form-
 import SchemaFormModal from '@app/modules/form/schema-form/schema-form-modal';
 import { ButtonBlock } from '../workspace.styles';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
+import { useGetOrgContentQuery } from '@app/common/components/mscr-search/mscr-search.slice';
 
 interface GroupHomeProps {
   user: MscrUser;
@@ -32,9 +32,9 @@ export default function GroupWorkspace({
   const pageSize = 20;
   const { data, isLoading } = useGetOrgContentQuery({
     type: contentType,
-    ownerOrg: pid,
     pageSize,
     urlState,
+    ownerOrg: pid,
   });
   const lastPage = data?.hits.total?.value
     ? Math.ceil(data?.hits.total.value / pageSize)
