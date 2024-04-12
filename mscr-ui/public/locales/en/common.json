@@ -7,6 +7,9 @@
   "action": {
     "actions": "Actions",
     "cancel": "Cancel",
+    "delete": "Delete",
+    "delete-crosswalk": "Delete crosswalk",
+    "delete-schema": "Delete schema",
     "edit": "Edit",
     "publish": "Publish",
     "save": "Save"
@@ -37,6 +40,8 @@
     "no-upper-attributes": ""
   },
   "confirm-modal": {
+    "delete-crosswalk": "Are you sure you want to delete the crosswalk?",
+    "delete-schema": "Are you sure you want to delete the schema?",
     "heading": "Confirmation",
     "publish-crosswalk1": "Are you sure you want to publish the crosswalk?",
     "publish-crosswalk2": "After publishing, you cannot make changes to mappings in crosswalk.",
@@ -44,10 +49,12 @@
     "save": "Are you sure you want to save changes?"
   },
   "confirm-page-leave": "Are you sure you want to leave the page? Changes you made won't be saved.",
+  "crosswalk-editor": {
+    "search-from-source-schema": "Search from source schema",
+    "search-from-target-schema": "Search from target schema"
+  },
   "datamodel-title": "",
   "datamodels-all": "",
-  "datamodels-in-use": "",
-  "datamodels-unused": "",
   "download": "Download",
   "download-as-file": "Download as file",
   "download-as-file-description": "",
@@ -55,13 +62,12 @@
   "email-subscriptions": "",
   "email-subscriptions-off": "",
   "email-subscriptions-on": "",
+  "error": {
+    "not-found": "Not found"
+  },
   "error-occured": "",
   "feedback-terminologies": "",
-  "filter-by-keyword": "",
-  "filter-by-keyword-placeholder": "",
   "filter-by-language": "",
-  "filter-by-organization": "",
-  "filter-by-organization-placeholder": "",
   "filter-character-not-allowed": "",
   "filter-list": "",
   "filter-remove-all": "",
@@ -118,9 +124,15 @@
     "format": "Format",
     "modified": "Modified",
     "name": "Name",
+    "not-available": "Not available",
+    "owner": "Owner",
     "pid": "PID",
     "schema-details": "Schema details",
+    "source-schema": "Source schema",
     "state": "State",
+    "stub-crosswalk-details": "Deleted crosswalk",
+    "stub-schema-details": "Deleted schema",
+    "target-schema": "Target schema",
     "version-label": "Version label",
     "versions": "Versions",
     "visibility": "Visibility"
@@ -139,8 +151,10 @@
   "no-subscribed-items": "",
   "not-recommended-synonym": "",
   "notifications": {
+    "crosswalk-deleted": "Crosswalk was removed",
     "crosswalk-published": "Crosswalk published successfully",
     "crosswalk-saved": "Crosswalk metadata saved successfully",
+    "schema-deleted": "Schema was removed",
     "schema-published": "Schema published successfully",
     "schema-saved": "Schema metadata saved successfully"
   },
@@ -160,8 +174,6 @@
   },
   "previous-page": "",
   "profile": "",
-  "profile-with-count_one": "",
-  "profile-with-count_other": "",
   "recommended-term": "",
   "remove": "Remove",
   "remove-all-subscriptions": "",
@@ -176,17 +188,29 @@
     "terminology-editor": ""
   },
   "schema-form": {
-    "contributors": "Contributors",
-    "contributors-clear-all-selections": "Clear all selected contributors",
-    "contributors-select": "Select contributors",
     "description": "Description",
     "format-label": "Format",
     "format-placeholder": "Select file format",
     "information-description-languages": "Languages",
     "information-description-languages-hint-text": "Select languages in which the content of the schema is described",
-    "name": "Name(required)",
+    "name": "Name (required)",
     "status": "Status",
     "status-select": "Select status"
+  },
+  "schema-tree": {
+    "clear": "Clear",
+    "dropdown-label": "Selected nodes",
+    "dropdown-placeholder": "Node(s) not selected",
+    "error-heading": "Visualization not available",
+    "error-info": "Cannot show tree view for schemas of this format, download the file instead in Metadata and files tab.",
+    "expand": "Expand tree",
+    "no-label": "[No label found]",
+    "node-info": "Selected node info",
+    "search": "Search",
+    "search-placeholder": "Find an attribute...",
+    "search-schema": "Search from schema",
+    "selected-node": "Selected node:",
+    "tree-label": "Schema tree"
   },
   "search": {
     "bar": {
@@ -215,8 +239,6 @@
   "show": "",
   "show-as-file": "",
   "show-as-file-description": "",
-  "show-by-information-domain": "",
-  "show-only": "",
   "site-cancel": "Cancel",
   "site-frontpage": "",
   "site-information": "",
@@ -248,7 +270,10 @@
   "subscription-description": "",
   "synonym": "",
   "tabs": {
+    "label": "Content tabs",
     "metadata-and-files": "Metadata and files",
+    "metadata-stub": "Metadata",
+    "schema": "Schema",
     "version-history": "Version history"
   },
   "term-conjugation": {

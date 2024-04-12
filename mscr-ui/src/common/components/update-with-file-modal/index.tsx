@@ -1,6 +1,5 @@
 /**This will be used if uploading file from detail page */
 import { translateFileUploadError } from '@app/common/utils/translation-helpers';
-import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { IconUpload} from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -15,7 +14,7 @@ import {
   Paragraph,
   Text,
 } from 'suomifi-ui-components';
-import FileDropArea from 'yti-common-ui/file-drop-area';
+
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
   usePostCrosswalkFileMutation,
@@ -27,6 +26,7 @@ import {
   UpdateDescriptionBlock,
   ImportDescriptionBlock,
 } from './update-with-file-modal.styles';
+import FileDropAreaMscr from '@app/common/components/file-drop-area-mscr';
 
 interface UpdateWithFileModalProps {
   pid: string;
@@ -131,7 +131,7 @@ export default function UpdateWithFileModal({
                 <Paragraph>{'import file description'} </Paragraph>
               </ImportDescriptionBlock>
 
-              <FileDropArea
+              <FileDropAreaMscr
                 setFileData={setFileData}
                 setIsValid={setIsValid}
                 validFileTypes={['csv', 'json']}

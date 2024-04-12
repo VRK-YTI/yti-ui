@@ -4,6 +4,7 @@ import { State } from '@app/common/interfaces/state.interface';
 
 export interface Metadata {
   pid: string;
+  handle: string;
   label: {
     [key: string]: string;
   };
@@ -17,6 +18,10 @@ export interface Metadata {
   modified: string;
   versionLabel: string;
   contact: string;
+  ownerMetadata: [{
+    id: string;
+    name: string;
+  }];
   sourceSchema?: string;
   targetSchema?: string;
   namespace?: string;

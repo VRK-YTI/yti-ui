@@ -1,11 +1,9 @@
 {
   "add-class": "Lisää luokka",
-  "add-data-model": "Lisää tietomalli",
   "add-file": "",
-  "add-new-link": "Lisää uusi linkki",
   "add-or-drag-a-new-file-here": "",
-  "add-reference-data": "Lisää koodisto",
   "allowed-file-formats": "",
+  "and": "",
   "association-missing-general": "Assosisaation kaikkia tietoja ei ole määritelty",
   "association-missing-identifier": "Assosisaation yksilöivää tunnusta ei ole määritelty",
   "association-missing-label": "Assosisaation nimeä ei ole määritelty",
@@ -18,7 +16,6 @@
   "class-missing-identifier": "Luokan tunnusta ei ole määritetty",
   "class-missing-language-title": "Luokan nimeä ei ole määritelty",
   "class-name": "Luokan nimi",
-  "clear-all-selections": "Poista kaikki valinnat",
   "clear-keyword-filter": "Poista hakusana",
   "clear-selection": "Tyhjennä valinta",
   "close": "",
@@ -51,19 +48,17 @@
     "value-not-valid": ""
   },
   "content-language": "Sisällön kieli",
-  "contributors": "Sisällöntuottajat",
-  "contributors-hint-text": "Voit lisätä vain organisaation, joka on antanut sinulle muokkausoikeudet",
   "create-new-class": "Luo uusi luokka",
   "create-subclass-for-selected": "Luo valitulle alaluokka",
   "crosswalk-form": {
     "create": "",
     "createTitle": "",
+    "format-note": "",
     "register": "",
     "registerTitle": ""
   },
   "data-model": "Tietomalli",
   "data-models-added-to-this-model": "Tähän tietomalliin lisätyt tietomallit",
-  "data-models-in-use": "Käytetyt tietomallit",
   "delete-modal": {
     "association-description": "Haluatko poistaa assosiaation {{targetName}}?",
     "association-error": "Assosiaation {{targetName}} poistamisessa ilmeni ongelma",
@@ -84,6 +79,7 @@
   },
   "description": "Kuvaus",
   "download-failed": "",
+  "drag-files-to-upload": "",
   "edit-concept-error": {
     "default": "",
     "diagrams": "",
@@ -127,11 +123,9 @@
   "language-finnish-with-suffix": "suomi FI",
   "language-input-text": "Tietomallin nimi",
   "language-swedish-with-suffix": "ruotsi SV",
-  "links": "Linkit",
   "missing-description": "Kuvausta ei ole määritelty",
   "missing-general": "Tietomallin kaikkia tietoja ei ole määritelty",
   "missing-information-domain": "Tietomallin tietoaluetta ei ole määritelty",
-  "missing-information-title": "Puuttuvia tietoja",
   "missing-language-title": "Tietomallin nimi puuttuu kieleltä",
   "missing-languages": "Tietomallin kieliä ei ole määritelty",
   "missing-name": "Nimeä ei ole määritelty",
@@ -141,9 +135,10 @@
   "missing-target-schema": "Kohdeskeemaa ei ole määritelty",
   "modified": "Muokattu",
   "optional": "valinnainen",
-  "reference-data-in-use": "Käytetyt koodistot",
   "register-schema": "",
   "register-schema-file-required": "",
+  "register-schema-file-uri-reference": "",
+  "register-schema-supported-file-formats": "",
   "remove": "Poista",
   "remove-modal": {
     "collection-confirmation": "",
@@ -166,13 +161,12 @@
     "terminology-warning": ""
   },
   "select-class": "Valitse luokka",
-  "select-contributors": "Valitse sisällöntuottajat",
   "select-information-description-languages": "Valitse tietomallin kielet",
   "site-open-link-new-window": "",
   "status": "Tila",
   "status-all": "Kaikki tilat",
   "statuses-in-use": "Käytössä olevat tilat",
   "statuses-not-in-use": "Ei käytössä olevat tilat",
-  "terminologies-in-use": "Käytetyt sanastot",
-  "try-again": "Yritä uudelleen"
+  "try-again": "Yritä uudelleen",
+  "upload-documents": ""
 }

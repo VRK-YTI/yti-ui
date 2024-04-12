@@ -12,6 +12,10 @@ import Separator from 'yti-common-ui/components/separator';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import { useState } from 'react';
 import Pagination from '@app/common/components/pagination';
+import CrosswalkFormModal from '@app/modules/form/crosswalk-form/crosswalk-form-modal';
+import SchemaFormModal from '@app/modules/form/schema-form/schema-form-modal';
+import { ButtonBlock } from '../workspace.styles';
+
 
 interface GroupHomeProps {
   user: MscrUser;
@@ -38,6 +42,10 @@ export default function GroupWorkspace({
     ? Math.ceil(data?.hits.total.value / pageSize)
     : 0;
 
+   // Need to decide what data we want to fetch loading the application
+  const refetchInfo = () => {
+  }
+  
   if (isLoading) {
     return <div> Is Loading </div>; //ToDo: A loading circle or somesuch
   } else if (!user || user.anonymous || !user.rolesInOrganizations[pid]) {
@@ -58,19 +66,23 @@ export default function GroupWorkspace({
         />
         <Separator isLarge />
         {/* ToDo: From these buttons you should create content with this org as owner */}
-        {/*<ButtonBlock>*/}
-        {/*  {contentType == 'SCHEMA' ? (*/}
-        {/*    <SchemaFormModal refetch={refetchInfo}></SchemaFormModal>*/}
-        {/*  ) : (*/}
-        {/*    <>*/}
-        {/*      <CrosswalkFormModal refetch={refetchInfo}></CrosswalkFormModal>*/}
-        {/*      <CrosswalkSelectionModal*/}
-        {/*        refetch={refetchInfo}*/}
-        {/*      ></CrosswalkSelectionModal>*/}
-        {/*    </>*/}
-        {/*  )}*/}
-        {/*</ButtonBlock>*/}
-
+        <div>
+        <ButtonBlock>
+          {contentType == 'SCHEMA' ? (
+            <SchemaFormModal refetch={refetchInfo} groupContent={true} pid={pid}></SchemaFormModal>
+          ) : (
+            <>
+                <CrosswalkFormModal refetch={refetchInfo} groupContent={true} pid={pid}></CrosswalkFormModal>
+                <CrosswalkFormModal groupContent={true} pid={pid}
+                refetch={refetchInfo}
+                createNew={true}
+              ></CrosswalkFormModal>
+          
+            </>
+          )}
+          </ButtonBlock>
+          </div>
+        <Separator isLarge />
         {data?.hits.hits && data?.hits.hits.length < 1 ? (
           <div>
             {contentType == 'SCHEMA'

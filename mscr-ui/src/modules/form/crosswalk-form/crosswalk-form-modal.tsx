@@ -24,12 +24,15 @@ import {
   usePutCrosswalkMutation,
 } from '@app/common/components/crosswalk/crosswalk.slice';
 import CrosswalkForm from './crosswalk-form-fields';
-import FileDropArea from 'yti-common-ui/components/file-drop-area';
 import getErrors from '@app/common/utils/get-errors';
+import FileDropAreaMscr from '@app/common/components/file-drop-area-mscr';
+import {fileExtensionsAvailableForCrosswalkRegistrationAttachments} from "@app/common/interfaces/format.interface";
 
 interface CrosswalkFormModalProps {
   refetch: () => void;
   createNew?: boolean;
+  groupContent: boolean;
+  pid?:string
 }
 
 // For the time being, using as schema metadata form, Need to update the props accordingly
@@ -37,6 +40,8 @@ interface CrosswalkFormModalProps {
 export default function CrosswalkFormModal({
   refetch,
   createNew = false,
+  groupContent,
+  pid
 }: CrosswalkFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -98,7 +103,10 @@ export default function CrosswalkFormModal({
       return;
     }
 
-    const payload = generateCrosswalkPayload(formData);
+    const payload = generateCrosswalkPayload(formData,
+      groupContent,
+      pid,
+      authenticatedUser);
     console.log('payload: ', payload);
     if (!createNew && fileData) {
       const crosswalkFormData = new FormData();
@@ -122,10 +130,7 @@ export default function CrosswalkFormModal({
     setErrors(errors);
   }, [userPosted, formData]);
 
-  if (!HasPermission({ actions: ['CREATE_CROSSWALK'] })) {
-    return null;
-  }
-
+ 
   function gatherErrorMessages() {
     const inputErrors = getErrors(t, errors);
     const result = createNew ? newCrosswalkResult : registerCrosswalkResult;
@@ -136,17 +141,33 @@ export default function CrosswalkFormModal({
     return inputErrors;
   }
 
+  function renderButton() {
+    return (
+      <Button
+      variant="secondary"
+      icon={<IconPlus />}
+      style={{ height: 'min-content' }}
+      onClick={() => handleOpen()}
+    >
+      {createNew ? t('crosswalk-form.create') : t('crosswalk-form.register')}
+    </Button>
+    )
+  }
+
   return (
     <>
-      <Button
-        variant="secondary"
-        icon={<IconPlus />}
-        style={{ height: 'min-content' }}
-        onClick={() => handleOpen()}
-      >
-        {createNew ? t('crosswalk-form.create') : t('crosswalk-form.register')}
-      </Button>
-
+       {groupContent && HasPermission({ actions: ['CREATE_CROSSWALK'],targetOrganization:pid }) ? (
+        <div>
+          {renderButton()}
+        </div>
+      ) : (
+          !groupContent ? (
+            <div>
+              {renderButton()}
+            </div>
+        ) : (
+              <div></div>
+        ))}
       <Modal
         appElementId="__next"
         visible={visible}
@@ -173,10 +194,10 @@ export default function CrosswalkFormModal({
             errors={userPosted ? errors : undefined}
           />
           {!createNew && (
-            <FileDropArea
+            <FileDropAreaMscr
               setFileData={setFileData}
               setIsValid={setIsValid}
-              validFileTypes={['csv', 'xslt', 'pdf']}
+              validFileTypes={fileExtensionsAvailableForCrosswalkRegistrationAttachments}
               translateFileUploadError={translateFileUploadError}
             />
           )}

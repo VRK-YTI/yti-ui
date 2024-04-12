@@ -1,9 +1,21 @@
 /* eslint-disable */
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 
 // here we can create the schema payload
 
-export default function generateSchemaPayload(data: SchemaFormType): any {
+export default function generateSchemaPayload(
+  data: SchemaFormType,
+  groupContent: boolean,
+  pid?: string,
+  user?: MscrUser
+): any {
+  data.organizations = [];
+  if (user && groupContent && pid) {
+    const ownerOrg = user?.organizations.find((x) => x.id == pid);
+    if (ownerOrg) data.organizations.push(ownerOrg);
+  }
+
   return {
     namespace: 'http://test.com',
     description: data.languages

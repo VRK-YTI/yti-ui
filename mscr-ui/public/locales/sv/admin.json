@@ -1,11 +1,9 @@
 {
   "add-class": "",
-  "add-data-model": "",
   "add-file": "",
-  "add-new-link": "",
   "add-or-drag-a-new-file-here": "",
-  "add-reference-data": "",
   "allowed-file-formats": "",
+  "and": "",
   "association-missing-general": "",
   "association-missing-identifier": "",
   "association-missing-label": "",
@@ -18,7 +16,6 @@
   "class-missing-identifier": "",
   "class-missing-language-title": "",
   "class-name": "",
-  "clear-all-selections": "",
   "clear-keyword-filter": "",
   "clear-selection": "",
   "close": "",
@@ -51,19 +48,17 @@
     "value-not-valid": ""
   },
   "content-language": "",
-  "contributors": "",
-  "contributors-hint-text": "",
   "create-new-class": "",
   "create-subclass-for-selected": "",
   "crosswalk-form": {
     "create": "",
     "createTitle": "",
+    "format-note": "",
     "register": "",
     "registerTitle": ""
   },
   "data-model": "",
   "data-models-added-to-this-model": "",
-  "data-models-in-use": "",
   "delete-modal": {
     "association-description": "",
     "association-error": "",
@@ -84,6 +79,7 @@
   },
   "description": "",
   "download-failed": "",
+  "drag-files-to-upload": "",
   "edit-concept-error": {
     "default": "",
     "diagrams": "",
@@ -127,11 +123,9 @@
   "language-finnish-with-suffix": "",
   "language-input-text": "",
   "language-swedish-with-suffix": "",
-  "links": "",
   "missing-description": "",
   "missing-general": "",
   "missing-information-domain": "",
-  "missing-information-title": "",
   "missing-language-title": "",
   "missing-languages": "",
   "missing-name": "",
@@ -141,9 +135,10 @@
   "missing-target-schema": "",
   "modified": "",
   "optional": "",
-  "reference-data-in-use": "",
   "register-schema": "",
   "register-schema-file-required": "",
+  "register-schema-file-uri-reference": "",
+  "register-schema-supported-file-formats": "",
   "remove": "",
   "remove-modal": {
     "collection-confirmation": "",
@@ -166,13 +161,12 @@
     "terminology-warning": ""
   },
   "select-class": "",
-  "select-contributors": "",
   "select-information-description-languages": "",
   "site-open-link-new-window": "",
   "status": "",
   "status-all": "",
   "statuses-in-use": "",
   "statuses-not-in-use": "",
-  "terminologies-in-use": "",
-  "try-again": ""
+  "try-again": "",
+  "upload-documents": ""
 }

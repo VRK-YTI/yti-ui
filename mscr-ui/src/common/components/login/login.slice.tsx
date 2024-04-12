@@ -5,6 +5,7 @@ import { User } from 'yti-common-ui/interfaces/user.interface';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import isHydrate from '@app/store/isHydrate';
+import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 
 export const initialState: User = {
   anonymous: true,
@@ -58,13 +59,13 @@ export const loginApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    getAuthenticatedUser: builder.query<User, void>({
+    getAuthenticatedUser: builder.query<MscrUser, void>({
       query: () => ({
         url: '/user',
         method: 'GET',
       }),
     }),
-    getAuthenticatedUserMut: builder.mutation<User, void>({
+    getAuthenticatedUserMut: builder.mutation<MscrUser, void>({
       query: () => ({
         url: '/user',
         method: 'GET',

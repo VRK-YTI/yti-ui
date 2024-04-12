@@ -13,7 +13,8 @@ export interface FormErrors {
 
 export function validateSchemaForm(
   data: SchemaFormType,
-  fileData: File | null | undefined
+  fileData: File | null | undefined,
+  fileUri: string | null | undefined
 ) {
   // console.log(FormData);
   const errors: FormErrors = {
@@ -47,7 +48,7 @@ export function validateSchemaForm(
     errors.titleAmount = langsWithError ?? [];
   }
 
-  if (!fileData) {
+  if (!fileData && !fileUri) {
     errors.fileData = true;
   }
 

@@ -4,6 +4,8 @@ import { State } from '@app/common/interfaces/state.interface';
 import { ContentRevision } from '@app/common/interfaces/content-revision.interface';
 import { Metadata } from '@app/common/interfaces/metadata.interface';
 import { Format } from '@app/common/interfaces/format.interface';
+import { Visibility } from '@app/common/interfaces/search.interface';
+import { Organization } from './organizations.interface';
 
 export interface Crosswalk extends Metadata {
   status?: string | undefined;
@@ -11,6 +13,7 @@ export interface Crosswalk extends Metadata {
   organizations?: string[];
   sourceSchema: string;
   targetSchema: string;
+  owner?: string[]; // Added owner for checking permission
 }
 
 export interface CrosswalkWithVersionInfo extends Crosswalk {
@@ -23,11 +26,12 @@ export interface CrosswalkFormType {
   label: string;
   state: State;
   languages: (LanguageBlockType & { selected: boolean })[];
-  organizations?: MultiSelectData[];
+  organizations?: Organization[];
   sourceSchema: string;
   targetSchema: string;
   description?: string;
   versionLabel?: string;
+  visibility: Visibility;
 }
 
 export interface CrosswalkFormMockupType {

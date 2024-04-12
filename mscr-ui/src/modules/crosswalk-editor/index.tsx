@@ -7,6 +7,7 @@ import {
   Button as Sbutton,
   ActionMenuItem,
   ActionMenu,
+  Text
 } from 'suomifi-ui-components';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -34,6 +35,10 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import HasPermission from '@app/common/utils/has-permission';
 import VersionHistory from '@app/common/components/version-history';
 import SchemaInfo from '@app/common/components/schema-info';
+import {useTranslation} from 'next-i18next';
+import { State } from '@app/common/interfaces/state.interface';
+import MetadataStub from '@app/modules/form/metadata-form/metadata-stub';
+import { Type } from '@app/common/interfaces/search.interface';
 
 export default function CrosswalkEditor({
   crosswalkId,
@@ -50,6 +55,8 @@ export default function CrosswalkEditor({
       ].join(','),
     },
   });
+
+  const { t } = useTranslation('common');
 
   const emptyTreeSelection: RenderTree = {
     elementPath: '',
@@ -128,8 +135,6 @@ export default function CrosswalkEditor({
   const [deleteMapping, deleteMappingResponse] = useDeleteMappingMutation();
   const [patchMapping, patchMappingResponse] = usePatchMappingMutation();
 
-  const hasEditRights = HasPermission({ actions: ['EDIT_CROSSWALK_MAPPINGS'] });
-
   const [sourceTreeSelection, setSourceTreeSelection] = React.useState<
     string[]
   >([]);
@@ -154,6 +159,8 @@ export default function CrosswalkEditor({
     error: getCrosswalkDataError,
     refetch: refetchCrosswalkData,
   } = useGetCrosswalkWithRevisionsQuery(crosswalkId);
+
+  const hasEditRights = HasPermission({ actions: ['EDIT_CROSSWALK_MAPPINGS'],owner:getCrosswalkData?.owner });
 
   const fromTree = (nodes: any) => (
     <TreeItem
@@ -408,7 +415,7 @@ export default function CrosswalkEditor({
   };
 
   const performCallbackFromSchemaInfo = (
-    nodeIds: any,
+    nodeIds: RenderTree[],
     isSourceTree: boolean,
   ) => {
     if (nodeIds.length > 0) {
@@ -503,10 +510,24 @@ export default function CrosswalkEditor({
     });
   };
 
+  if (getCrosswalkDataIsError) {
+    console.log('Error: ', getCrosswalkDataError);
+  }
+
+  if (getCrosswalkDataIsError) {
+    if (
+      'status' in getCrosswalkDataError &&
+      getCrosswalkDataError.status === 404
+    ) {
+      return <Text>{t('error.not-found')}</Text>;
+    }
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <>
-        {getCrosswalkDataIsSuccess && (
+        {getCrosswalkDataIsSuccess &&
+        getCrosswalkData.state !== State.Removed ? (
           <>
             <Box
               className="mb-3"
@@ -588,15 +609,18 @@ export default function CrosswalkEditor({
                   <div className="row gx-0"></div>
                   <div className="row gx-0">
                     {/*  SOURCE TREE */}
-                    <div className="col-5 ps-4">
+                    <div className="col-5">
                       <SchemaInfo
                         updateTreeNodeSelectionsOutput={
                           performCallbackFromSchemaInfo
                         }
                         isSourceTree={true}
                         treeSelection={sourceTreeSelection}
-                        caption={'Filter from source schema'}
+                        caption={t(
+                          'crosswalk-editor.search-from-source-schema'
+                        )}
                         schemaUrn={sourceSchemaUrn}
+                        raiseHeading={hasEditRights}
                       ></SchemaInfo>
                     </div>
 
@@ -633,8 +657,11 @@ export default function CrosswalkEditor({
                         }
                         isSourceTree={false}
                         treeSelection={targetTreeSelection}
-                        caption={'Filter from target schema'}
+                        caption={t(
+                          'crosswalk-editor.search-from-target-schema'
+                        )}
                         schemaUrn={targetSchemaUrn}
+                        raiseHeading={hasEditRights}
                       ></SchemaInfo>
                     </div>
                   </div>
@@ -685,6 +712,23 @@ export default function CrosswalkEditor({
               )}
             </div>
           </>
+        ) : (
+          getCrosswalkDataIsSuccess && ( // Stub view if state is REMOVED
+            <>
+              <Box
+                className="mb-3"
+                sx={{ borderBottom: 1, borderColor: 'divider' }}
+              >
+                <Tabs value={0} aria-label={t('tabs.label')}>
+                  <Tab label={t('tabs.metadata-stub')} {...a11yProps(0)} />
+                </Tabs>
+              </Box>
+
+              {getCrosswalkData && (
+                <MetadataStub metadata={getCrosswalkData} type={Type.Crosswalk} />
+              )}
+            </>
+          )
         )}
       </>
     </ThemeProvider>

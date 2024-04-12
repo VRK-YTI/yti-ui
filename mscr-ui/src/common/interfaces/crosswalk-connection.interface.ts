@@ -67,12 +67,12 @@ export interface NodeMapping {
     isPartOf?: string;
     id?: string;
     depends_on?: string[];
-    source: { processing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } }; id: string; label: string, uri: string }[];
+    source: { processing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } }; id: string; label: string; uri: string }[];
     sourceType?: string;
     sourceDescription?: string;
     predicate: string;
     filter?: { path: string; distinctValues: boolean; value: {}; operator: string };
-    target: { processing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } }; id: string; label: string, uri: string }[];
+    target: { processing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } }; id: string; label: string; uri: string }[];
     targetType?: string;
     targetDescription?: string;
     processing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } };

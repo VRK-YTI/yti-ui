@@ -249,7 +249,7 @@ export function generateTreeFromJson(jsonInput: any) {
             children: renderedTree,
         }
         retTree.push(treeRoot);
-        console.log('renderedTree', renderedTree);
+        // console.log('renderedTree', renderedTree);
         resolve(retTree);
     });
 }

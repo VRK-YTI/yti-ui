@@ -13,6 +13,7 @@ export default function getOrganizations(
     return {
       id: id,
       label: org.label[lang ?? 'fi'],
+      //label:"Test Org"
     };
   });
 }
