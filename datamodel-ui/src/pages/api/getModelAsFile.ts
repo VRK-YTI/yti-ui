@@ -8,6 +8,7 @@ export default withIronSessionApiRoute(
     const version = (req.query['version'] as string) ?? '';
     const fileType = (req.query['fileType'] as string) ?? 'LD-JSON';
     const isRaw = (req.query['raw'] as string) ?? 'false';
+    const language = (req.query['language'] as string) ?? 'fi';
     let filename = (req.query['filename'] as string) ?? 'datamodel';
 
     let mimeType: string;
@@ -19,6 +20,10 @@ export default withIronSessionApiRoute(
       case 'Turtle':
         mimeType = 'text/turtle';
         filename += '.ttl';
+        break;
+      case 'OpenAPI':
+        mimeType = 'application/vnd+oai+openapi+json';
+        filename += '.json';
         break;
       case 'LD+JSON':
       default:
@@ -60,7 +65,9 @@ export default withIronSessionApiRoute(
         : `${process.env.AUTH_PROXY_URL}/datamodel-api`;
 
     const { status, data: response } = await axios.get(
-      `${apiUrl}/v2/export/${target}${version ? `?version=${version}` : ''}`,
+      `${apiUrl}/v2/export/${target}?language=${language}${
+        version ? `&version=${version}` : ''
+      }`,
       {
         headers: headers,
         responseType: 'stream',

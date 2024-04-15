@@ -15,6 +15,8 @@ import {
   RadioButtonGroupSimple,
   SimpleModalContent,
 } from './as-file-modal.styles';
+import { useSelector } from 'react-redux';
+import { selectDisplayLang } from '@app/common/components/model/model.slice';
 
 interface AsFileModalProps {
   type: 'show' | 'download';
@@ -23,6 +25,7 @@ interface AsFileModalProps {
   onClose: () => void;
   filename?: string;
   version?: string;
+  applicationProfile: boolean;
 }
 
 export default function AsFileModal({
@@ -32,11 +35,18 @@ export default function AsFileModal({
   onClose,
   filename,
   version,
+  applicationProfile,
 }: AsFileModalProps) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
-  const fileTypes = ['JSON-LD', 'RDF', 'Turtle' /*'XML', 'OpenAPI'*/];
+  const displayLang = useSelector(selectDisplayLang());
+  const fileTypes = ['JSON-LD', 'RDF', 'Turtle' /*'XML'*/];
+  if (applicationProfile) {
+    fileTypes.push('OpenAPI');
+  }
+
   const [chosenFileType, setChosenFileType] = useState('JSON-LD');
+  const language = displayLang ?? i18n.language;
 
   const handleClose = () => {
     onClose();
@@ -80,7 +90,7 @@ export default function AsFileModal({
 
         <ButtonFooter>
           <Link
-            href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&raw=true${versionParam}`}
+            href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&raw=true${versionParam}&language=${language}`}
             passHref
             legacyBehavior
             download
@@ -123,7 +133,7 @@ export default function AsFileModal({
 
         <ButtonFooter>
           <Link
-            href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&filename=${filename}${versionParam}`}
+            href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&filename=${filename}${versionParam}&language=${language}`}
             passHref
             legacyBehavior
           >

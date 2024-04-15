@@ -401,6 +401,7 @@ export default function ModelInfoView({
           visible={openModals.showAsFile}
           onClose={() => handleModalChange('showAsFile', false)}
           version={version}
+          applicationProfile={modelInfo?.type === 'PROFILE'}
         />
         {modelInfo && (
           <>
@@ -436,6 +437,7 @@ export default function ModelInfoView({
               visible={openModals.downloadAsFile}
               onClose={() => handleModalChange('downloadAsFile', false)}
               version={version}
+              applicationProfile={modelInfo.type === 'PROFILE'}
             />
           </>
         )}
