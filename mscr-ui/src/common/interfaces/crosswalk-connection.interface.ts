@@ -32,6 +32,7 @@ export interface RenderTreeOld {
 
 export interface RenderTree {
     name: string;
+    qname: string;
     visualTreeId: string;
     id: string;
     properties: any;

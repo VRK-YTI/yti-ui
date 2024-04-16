@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { SearchInput } from 'suomifi-ui-components';
+import {Checkbox, SearchInput, ToggleButton} from 'suomifi-ui-components';
 import IconButton from '@mui/material/IconButton';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Box from '@mui/material/Box';
@@ -37,6 +37,7 @@ export default function SchemaInfo(props: {
   const lang = useRouter().locale ?? '';
   const emptyTreeSelection: RenderTree = {
     elementPath: '',
+    qname: 'empty',
     parentElementPath: undefined,
     name: '',
     id: '',
@@ -70,6 +71,8 @@ export default function SchemaInfo(props: {
 
   const [isTreeDataFetched, setTreeDataFetched] =
     React.useState<boolean>(false);
+
+  const [showAttributeNames, setShowAttributeNames] = React.useState(true);
 
   useEffect(() => {
     if (getSchemaData?.content) {
@@ -161,9 +164,11 @@ export default function SchemaInfo(props: {
     results: { nodeIds: string[]; childNodeIds: string[] }
   ) {
     tree.forEach((item) => {
-      if (
+      if (showAttributeNames &&
         item.name &&
-        item.name.toLowerCase().includes(nameToFind.toLowerCase())
+        item.name.toLowerCase().includes(nameToFind.toLowerCase()) || !showAttributeNames &&
+        item.qname &&
+        item.qname.toLowerCase().includes(nameToFind.toLowerCase())
       ) {
         results.nodeIds.push(item.id);
         if (item.children && item.children.length > 0) {
@@ -266,14 +271,36 @@ export default function SchemaInfo(props: {
 
   return (
     <>
-      <SchemaHeading variant="h2" className={props.raiseHeading ? 'raise-heading' : ''}>
-        {getSchemaData?.metadata.label
-          ? getLanguageVersion({
-              data: getSchemaData.metadata.label,
-              lang,
-            })
-          : t('schema-tree.no-label')}
-      </SchemaHeading>
+      <div className='row d-flex justify-content-between'>
+        <div className='col-6'>
+          <SchemaHeading variant='h2'>
+            {getSchemaData?.metadata.label
+              ? getLanguageVersion({
+                data: getSchemaData.metadata.label,
+                lang,
+              })
+              : t('schema-tree.no-label')}
+          </SchemaHeading>
+
+        </div>
+        <div className='col-6  d-flex justify-content-end my-1'>
+
+{/*        <span className='me-2'>Qname</span>
+          <ToggleButton
+            checked={showAttributeNames}
+            onClick={(checked) => setShowAttributeNames(checked)}
+          >Title
+          </ToggleButton>*/}
+          <Checkbox
+            checked={showAttributeNames}
+            onClick={(newState) => {
+              setShowAttributeNames(newState.checkboxState);
+            }}
+          >Show node titles
+          </Checkbox>
+        </div>
+      </div>
+
       <TreeviewWrapper className="row ps-2">
         <div className="col-7 px-0">
           <div className="d-flex justify-content-between mb-2 ps-3 pe-2">
@@ -327,6 +354,7 @@ export default function SchemaInfo(props: {
                   treeSelectedArray={treeSelectedArray}
                   treeExpanded={treeExpandedArray}
                   performTreeAction={performCallbackFromTreeAction}
+                  showQname={!showAttributeNames}
                 />
               )}
             </Box>

@@ -214,6 +214,7 @@ function createRenderTree(input: any, elementPath: string, definitions: any) {
         treeIndex += 1;
         let newNode: RenderTree = {
             name: definitions[obj].title,
+            qname: definitions[obj]?.qname ? definitions[obj]?.qname : 'empty',
             visualTreeId: treeIndex.toString(),
             id: obj.toString(),
             properties: definitions[obj],
@@ -241,6 +242,7 @@ export function generateTreeFromJson(jsonInput: any) {
         let retTree: RenderTree[] = [];
         let treeRoot = {
             name: 'ROOT',
+            qname: 'ROOT',
             visualTreeId: '0',
             id: 'ROOT',
             properties: undefined,
