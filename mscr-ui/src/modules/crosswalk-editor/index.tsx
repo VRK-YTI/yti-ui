@@ -65,6 +65,7 @@ export default function CrosswalkEditor({
     id: '',
     visualTreeId: '',
     properties: undefined,
+    uri: '',
     children: [],
   };
 

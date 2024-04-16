@@ -1,26 +1,18 @@
 import {
-  CrosswalkConnection,
   CrosswalkConnectionNew,
-  CrosswalkConnectionsNew,
   NodeMapping,
-  RenderTreeOld,
 } from '@app/common/interfaces/crosswalk-connection.interface';
 import validateMapping from '@app/modules/crosswalk-editor/mapping-validator';
-import EastIcon from '@mui/icons-material/East';
 import {Dropdown, IconPlus, Textarea, TextInput} from 'suomifi-ui-components';
 import {DropdownItem} from 'suomifi-ui-components';
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
   Button,
-  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
   ModalTitle,
-  Paragraph,
 } from 'suomifi-ui-components';
-import CrosswalkForm from '@app/modules/form/crosswalk-form/crosswalk-form-fields';
-import FormFooterAlert from '../../../../../../common-ui/components/form-footer-alert';
 
 export default function NodeMappings(props: {
   selectedCrosswalk: CrosswalkConnectionNew;
@@ -124,22 +116,22 @@ export default function NodeMappings(props: {
   }
 
   function generateMappingOperationTextboxes(input: string) {
-    let mappingInputFields = [];
+    let mappingInputFields: any[] = [];
     let ret = [];
     let ret2 = [];
     props.mappingFunctions
-      .filter((item) => {
+      .filter((item: { uri: string; }) => {
         return item.uri === input;
       })
-      .map((match) => {
+      .map((match: any) => {
         mappingInputFields.push(match);
       });
     if (mappingInputFields.length > 0) {
-      ret = mappingInputFields[0]['parameters'].map((item) => {
+      ret = mappingInputFields[0]['parameters'].map((item: { name: any; datatype: any; }) => {
         return {name: item.name, datatype: item.datatype};
       });
     }
-    ret.forEach((item) => {
+    ret.forEach(() => {
       ret2.push(
         <TextInput
           onChange={(value) => null}
@@ -196,7 +188,7 @@ export default function NodeMappings(props: {
         className="row bg-white edit-mapping-modal"
       >
         <ModalContent className="edit-mapping-modal-content">
-          <ModalTitle>{'Edit mapping'}</ModalTitle>
+          <ModalTitle>{props.isJointPatchOperation ? 'Edit mapping' : 'Add mapping'}</ModalTitle>
           <div className="col flex-column d-flex justify-content-between">
             <div className="row bg-white">
               {/* SOURCE OPERATIONS */}
