@@ -72,7 +72,7 @@ export default function CrosswalkEditor({
     source: emptyTreeSelection,
     target: emptyTreeSelection,
     id: '0',
-    description: '',
+    notes: '',
     isSelected: false,
     isDraft: false,
     sourceJsonPath: undefined,
@@ -125,7 +125,7 @@ export default function CrosswalkEditor({
   const [lastPatchCrosswalkId, setLastPatchCrosswalkId] =
     React.useState<string>('');
   const [lastPutMappingPid, setLastPutMappingPid] = React.useState<string>('');
-  const [lastPatchMappingPid, setLastPatchMappingPid] =
+  const [lastPatchMappingReqId, setLastPatchMappingReqId] =
     React.useState<string>('');
   const [lastDeleteMappingPid, setLastDeleteMappingPid] =
     React.useState<string>('');
@@ -260,7 +260,7 @@ export default function CrosswalkEditor({
   }
 
   if (patchMappingResponse.isSuccess) {
-    if (lastPatchMappingPid !== patchMappingResponse.data.pid) {
+    if (lastPatchMappingReqId !== patchMappingResponse.requestId) {
       addMappingToAccordion(patchMappingResponse, false);
     }
   }
@@ -295,7 +295,7 @@ export default function CrosswalkEditor({
         setLastPutMappingPid(response.data.pid);
       } else {
         // This is needed in the future for showing success or error status
-        setLastPatchMappingPid(response.data.pid);
+        setLastPatchMappingReqId(response.requestId);
         const patchedMapping = patchMappingResponse.data as NodeMapping;
 
         const filteredMappings = [
@@ -318,7 +318,6 @@ export default function CrosswalkEditor({
         source: sourceNode,
         target: selectedTargetNodes[0],
         id: '',
-        description: '',
         isSelected: true,
         isDraft: true,
         sourceJsonPath: undefined,

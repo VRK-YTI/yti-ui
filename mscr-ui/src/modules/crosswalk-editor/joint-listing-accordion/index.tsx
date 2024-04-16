@@ -11,7 +11,7 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { styled } from '@mui/material';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableCell, {tableCellClasses} from '@mui/material/TableCell';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
@@ -22,13 +22,13 @@ import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import CheckIcon from '@mui/icons-material/Check';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 
-import { NodeMapping } from '@app/common/interfaces/crosswalk-connection.interface';
-import { InfoIcon } from '@app/common/components/shared-icons';
-import { useEffect } from 'react';
+import {NodeMapping} from '@app/common/interfaces/crosswalk-connection.interface';
+import {InfoIcon} from '@app/common/components/shared-icons';
+import {useEffect} from 'react';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
+const StyledTableCell = styled(TableCell)(({theme}) => ({}));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)(({theme}) => ({
   '&:nth-of-type(odd)': {
     //backgroundColor: theme.palette.action.hover,
   },
@@ -52,7 +52,7 @@ function Row(props: {
         <StyledTableCell className="col-5">
           <Button
             className="px-3 py-0"
-            style={{ textTransform: 'none' }}
+            style={{textTransform: 'none'}}
             title="Select linked node from source tree"
             onClick={(e) => {
               props.callBackFunction.performAccordionAction(
@@ -76,7 +76,7 @@ function Row(props: {
         <StyledTableCell className="col-4">
           <Button
             className="px-3 py-0"
-            style={{ textTransform: 'none' }}
+            style={{textTransform: 'none'}}
             title="Select linked node from target tree"
             onClick={(e) => {
               props.callBackFunction.performAccordionAction(
@@ -112,7 +112,7 @@ function Row(props: {
               e.stopPropagation();
             }}
           >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            {open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
           </IconButton>
         </StyledTableCell>
       </StyledTableRow>
@@ -124,53 +124,59 @@ function Row(props: {
             timeout="auto"
             unmountOnExit
           >
-            <div className="row">
-              <div className="col-5">
-                {/*                                <Box sx={{margin: 1}}>
+              <div className="row row ms-2 mt-2 mb-3">
+                <div className='row col-12'>
+                  <div className="col-5 gx-0">
+                    {/*                                <Box sx={{margin: 1}}>
                                     <div className='fw-bold mt-3 mb-2' style={{fontSize: '0.9em'}}>Mapping type: <span
                                         className='fw-normal'>exact match</span></div>
                                     <br/>
                                 </Box>*/}
-                <div className="fw-bold ms-1 mt-3 mb-2">
-                  Mapping type: <span className="fw-normal">exact match</span>
+                    <div className="ms-0 mt-1 mb-2">
+                      <div>Mapping type:</div>
+                      <div className="fw-normal mt-2">exact match</div>
+                    </div>
+                    <br/>
+                  </div>
+                  <div className="col-5 mt-1 mx-3">
+                    {props.row.notes &&
+                        <>
+                            <div>Notes:</div>
+                            <div className="fw-normal mt-2">{props.row.notes}</div>
+                        </>
+                    }
+                  </div>
+                  <div className='col mt-4 d-flex flex-row gx-0 justify-content-end'>
+                    <div className="d-flex flex-column action-buttons">
+                      {props.isEditModeActive && (
+                        <>
+                          <Sbutton
+                            onClick={(e) => {
+                              props.callBackFunction.performAccordionAction(
+                                props.row,
+                                'openJointDetails',
+                              );
+                            }}
+                          >
+                            Edit
+                          </Sbutton>
+                          <Sbutton
+                            className="mt-2"
+                            onClick={(e) => {
+                              props.callBackFunction.performAccordionAction(
+                                props.row,
+                                'removeJoint',
+                              );
+                            }}
+                          >
+                            Delete
+                          </Sbutton>
+                        </>
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <br />
               </div>
-              <div className="col-5">
-                <Textarea
-                  labelText='Notes:'
-                  visualPlaceholder='No notes set.'
-                  value={props.row.notes}
-                />
-              </div>
-              <div className="col-2 mt-4 d-flex flex-column action-buttons">
-                {props.isEditModeActive && (
-                  <>
-                    <Sbutton
-                      onClick={(e) => {
-                        props.callBackFunction.performAccordionAction(
-                          props.row,
-                          'openJointDetails',
-                        );
-                      }}
-                    >
-                      Edit
-                    </Sbutton>
-                    <Sbutton
-                      className="mt-2"
-                      onClick={(e) => {
-                        props.callBackFunction.performAccordionAction(
-                          props.row,
-                          'removeJoint',
-                        );
-                      }}
-                    >
-                      Delete
-                    </Sbutton>
-                  </>
-                )}
-              </div>
-            </div>
           </Collapse>
         </TableCell>
       </StyledTableRow>
@@ -180,7 +186,7 @@ function Row(props: {
 
 export default function JointListingAccordion(props: any) {
   useEffect(() => {
-console.log('props changed', props);
+//console.log('props changed', props);
   }, [props]);
   const nodeMappingsInput = props.nodeMappings;
   return (
