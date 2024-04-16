@@ -140,7 +140,7 @@ export default function SchemaFormModal({
     const inputErrors = getErrors(t, errors);
     if (resultSchemaFull.isError) {
       const errorMessage = getApiError(resultSchemaFull.error);
-      console.log('the error is' + errorMessage);
+      // console.log('the error is' + errorMessage);
       return [...inputErrors, errorMessage];
     }
     return inputErrors;
@@ -149,14 +149,13 @@ export default function SchemaFormModal({
   function renderButton() {
     return (
        <Button
-            variant="secondary"
-            icon={<IconPlus />}
-            style={{ height: 'min-content' }}
-            onClick={() => handleOpen()}
-          >
-            {t('register-schema')}
-          </Button>
-      
+          variant="secondary"
+          icon={<IconPlus />}
+          style={{ height: 'min-content' }}
+          onClick={() => handleOpen()}
+        >
+          {t('register-schema')}
+        </Button>
     );
   }
 
@@ -175,8 +174,8 @@ export default function SchemaFormModal({
         ) : (
               <div/>
         ))}
-        
-      
+
+
       <Modal
         appElementId="__next"
         visible={visible}

@@ -107,7 +107,7 @@ export default function CrosswalkFormModal({
       groupContent,
       pid,
       authenticatedUser);
-    console.log('payload: ', payload);
+    // console.log('payload: ', payload);
     if (!createNew && fileData) {
       const crosswalkFormData = new FormData();
       crosswalkFormData.append('metadata', JSON.stringify(payload));

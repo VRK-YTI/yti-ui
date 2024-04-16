@@ -1,11 +1,12 @@
 import {TFunction, useTranslation} from 'next-i18next';
 import {ChangeEvent, useEffect, useRef, useState} from 'react';
 import {
+  Block,
   Button,
   IconRemove,
   InlineAlert,
   Paragraph,
-  Text,
+  Text
 } from 'suomifi-ui-components';
 import {
   CaptionText,
@@ -127,13 +128,13 @@ export default function FileDropAreaMscr({
         <FileBlockWrapper>
           {isSchemaUpload && (
             <>
-              <Paragraph marginBottomSpacing="xxs">
+              <Block>
                 <WideTextInput
                   labelText={t('register-schema-file-uri-reference')}
                   onChange={(value) => setFileUriField(value?.toString() ?? '')}
                   value={fileUriField}
                 />
-              </Paragraph>
+              </Block>
               <Text smallScreen>
                 {'OR'}
               </Text>
@@ -141,16 +142,13 @@ export default function FileDropAreaMscr({
               <CaptionText>{t('upload-documents')}</CaptionText>
             </>
           )}
-          <Paragraph marginBottomSpacing="l"></Paragraph>
 
           <FileBlock padding="m" id="file-drop-block">
-            <Paragraph marginBottomSpacing="l">
-            </Paragraph>
             {file === null ? (
               <>
                 <CircleIcon></CircleIcon>
                 <UploadIcon></UploadIcon>
-                <Paragraph marginBottomSpacing="xxs">
+                <Paragraph>
                   <Text variant="bold" smallScreen>
                     {t('drag-files-to-upload')}
                   </Text>

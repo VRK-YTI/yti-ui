@@ -1,5 +1,4 @@
-import { PaginatedQuery, Type } from '@app/common/interfaces/search.interface';
-import { useGetOrgContentQuery } from '@app/common/components/organization/organization.slice';
+import { Type } from '@app/common/interfaces/search.interface';
 import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
 import WorkspaceTable from '@app/modules/workspace/workspace-table';
@@ -10,12 +9,16 @@ import {
 } from 'yti-common-ui/components/title/title.styles';
 import Separator from 'yti-common-ui/components/separator';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
-import { useState } from 'react';
 import Pagination from '@app/common/components/pagination';
 import CrosswalkFormModal from '@app/modules/form/crosswalk-form/crosswalk-form-modal';
 import SchemaFormModal from '@app/modules/form/schema-form/schema-form-modal';
 import { ButtonBlock } from '../workspace.styles';
-
+import useUrlState from '@app/common/utils/hooks/use-url-state';
+import {
+  mscrSearchApi,
+  useGetOrgContentQuery,
+} from '@app/common/components/mscr-search/mscr-search.slice';
+import { useStoreDispatch } from '@app/store';
 
 interface GroupHomeProps {
   user: MscrUser;
@@ -27,25 +30,31 @@ export default function GroupWorkspace({
   pid,
   contentType,
 }: GroupHomeProps) {
-  const { t, i18n } = useTranslation('common');
+  const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
-  const [currentPage, setCurrentPage] = useState(1);
+  const { urlState } = useUrlState();
+  const dispatch = useStoreDispatch();
   const pageSize = 20;
-  const query: PaginatedQuery = {
+  const { data, isLoading } = useGetOrgContentQuery({
     type: contentType,
-    ownerOrg: pid,
     pageSize,
-    pageFrom: (currentPage - 1) * pageSize,
-  };
-  const { data, isLoading } = useGetOrgContentQuery(query);
+    urlState,
+    ownerOrg: pid,
+  });
   const lastPage = data?.hits.total?.value
     ? Math.ceil(data?.hits.total.value / pageSize)
     : 0;
 
-   // Need to decide what data we want to fetch loading the application
   const refetchInfo = () => {
-  }
-  
+    setTimeout(
+      () =>
+        dispatch(
+          mscrSearchApi.util.invalidateTags(['OrgContent', 'MscrSearch'])
+        ),
+      300
+    );
+  };
+
   if (isLoading) {
     return <div> Is Loading </div>; //ToDo: A loading circle or somesuch
   } else if (!user || user.anonymous || !user.rolesInOrganizations[pid]) {
@@ -65,23 +74,31 @@ export default function GroupWorkspace({
           }
         />
         <Separator isLarge />
-        {/* ToDo: From these buttons you should create content with this org as owner */}
         <div>
-        <ButtonBlock>
-          {contentType == 'SCHEMA' ? (
-            <SchemaFormModal refetch={refetchInfo} groupContent={true} pid={pid}></SchemaFormModal>
-          ) : (
-            <>
-                <CrosswalkFormModal refetch={refetchInfo} groupContent={true} pid={pid}></CrosswalkFormModal>
-                <CrosswalkFormModal groupContent={true} pid={pid}
+          <ButtonBlock>
+            {contentType == 'SCHEMA' ? (
+              <SchemaFormModal
                 refetch={refetchInfo}
-                createNew={true}
-              ></CrosswalkFormModal>
-          
-            </>
-          )}
+                groupContent={true}
+                pid={pid}
+              ></SchemaFormModal>
+            ) : (
+              <>
+                <CrosswalkFormModal
+                  refetch={refetchInfo}
+                  groupContent={true}
+                  pid={pid}
+                ></CrosswalkFormModal>
+                <CrosswalkFormModal
+                  refetch={refetchInfo}
+                  groupContent={true}
+                  pid={pid}
+                  createNew={true}
+                ></CrosswalkFormModal>
+              </>
+            )}
           </ButtonBlock>
-          </div>
+        </div>
         <Separator isLarge />
         {data?.hits.hits && data?.hits.hits.length < 1 ? (
           <div>
@@ -92,13 +109,7 @@ export default function GroupWorkspace({
         ) : (
           <WorkspaceTable data={data} contentType={contentType} />
         )}
-        {lastPage > 1 && (
-          <Pagination
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            lastPage={lastPage}
-          />
-        )}
+        {lastPage > 1 && <Pagination lastPage={lastPage} />}
       </main>
     );
   }

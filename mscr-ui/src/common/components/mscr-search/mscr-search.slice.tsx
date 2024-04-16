@@ -1,10 +1,23 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
-import { MscrSearchResults } from '@app/common/interfaces/search.interface';
+import {
+  MscrSearchResults,
+  PaginatedQuery,
+} from '@app/common/interfaces/search.interface';
 import { UrlState } from '@app/common/utils/hooks/use-url-state';
 
-function createUrl(urlState: UrlState) {
+function createUrl(
+  scope: string,
+  { type, pageSize, urlState, ownerOrg }: PaginatedQuery
+) {
+  const pageFrom = (urlState.page - 1) * pageSize;
+  return `/frontend/mscrSearch${scope}Content?query=&type=${type}${
+    scope === 'Org' ? `&ownerOrg=${ownerOrg}` : ''
+  }&pageSize=${pageSize}&pageFrom=${pageFrom}`;
+}
+
+function createSearchUrl(urlState: UrlState) {
   let baseQuery = '/frontend/mscrSearch?';
 
   baseQuery = baseQuery.concat(`query=${urlState.q}`);
@@ -35,7 +48,7 @@ function createUrl(urlState: UrlState) {
 export const mscrSearchApi = createApi({
   reducerPath: 'mscrSearchApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['mscrSearch'],
+  tagTypes: ['MscrSearch', 'OrgContent', 'PersonalContent'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];
@@ -44,16 +57,34 @@ export const mscrSearchApi = createApi({
   endpoints: (builder) => ({
     getMscrSearchResults: builder.query<MscrSearchResults, UrlState>({
       query: (urlState) => ({
-        url: createUrl(urlState),
+        url: createSearchUrl(urlState),
         method: 'GET',
       }),
+      providesTags: ['MscrSearch'],
+    }),
+    getOrgContent: builder.query<MscrSearchResults, PaginatedQuery>({
+      query: (query) => ({
+        url: createUrl('Org', query),
+        method: 'GET',
+      }),
+      providesTags: ['OrgContent'],
+    }),
+    getPersonalContent: builder.query<MscrSearchResults, PaginatedQuery>({
+      query: (query) => ({
+        url: createUrl('Personal', query),
+        method: 'GET',
+      }),
+      providesTags: ['PersonalContent'],
     }),
   }),
 });
 
-export const { getMscrSearchResults } = mscrSearchApi.endpoints;
+export const { getMscrSearchResults, getOrgContent, getPersonalContent } =
+  mscrSearchApi.endpoints;
 
 export const {
   useGetMscrSearchResultsQuery,
+  useGetOrgContentQuery,
+  useGetPersonalContentQuery,
   util: { getRunningQueriesThunk },
 } = mscrSearchApi;
