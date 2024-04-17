@@ -1,11 +1,17 @@
 import { SerializedError } from '@reduxjs/toolkit';
 import { AxiosBaseQueryError } from 'yti-common-ui/interfaces/axios-base-query.interface';
+import { MSCRError } from '../interfaces/error.interface';
+
+
 
 export default function getApiError(
   error: AxiosBaseQueryError | SerializedError
-): string {
-  let errorStatus = '';
-  let errorMessage = '';
+): MSCRError {
+ 
+  const mscrError: MSCRError = {};
+  mscrError.staus = '';
+  mscrError.message = '';
+  console.log(error);
 
   if (
     'data' in error &&
@@ -13,15 +19,21 @@ export default function getApiError(
     error.data !== null
   ) {
     if ('status' in error.data && typeof error.data.status === 'string') {
-      errorStatus = error.data.status ?? 'GENERAL_ERROR';
+      mscrError.staus = error.data.status ?? 'GENERAL_ERROR';
+      console.log(error.data.status);
+    } else if(('status' in error.data && typeof error.data.status === 'number') ) {
+      mscrError.staus = error.data.status.toString();
     }
     if ('message' in error.data && typeof error.data.message === 'string') {
-      errorMessage = error.data.message ?? 'Unexpected error occured';
+      mscrError.message = error.data.message ?? 'Unexpected error occured';
     }
-  } else {
-    errorStatus = 'GENERAL_ERROR';
-    errorMessage = 'Unexpected error occured';
+    if ('title' in error.data && typeof error.data.title === 'string') {
+      mscrError.message = error.data.title ?? 'Unexpected error occured';
+    }
+    if ('detail' in error.data && typeof error.data.detail === 'string') {
+      mscrError.detail = error.data.detail ?? 'Server Error';
+    }
   }
-
-  return `${errorStatus}: ${errorMessage}`;
+  
+  return mscrError;
 }

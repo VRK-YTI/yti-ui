@@ -129,7 +129,7 @@
   "missing-language-title": "Title is missing in language",
   "missing-languages": "Language hasn't been set",
   "missing-name": "Name hasn't been set",
-  "missing-file": "Add file to register",
+  "missing-file": "You need to add file or URI of the file to register",
   "missing-organizations": "Organizations haven't been set",
   "missing-prefix": "Prefix hasn't been set",
   "missing-source-schema": "Source schema hasn't been selected",
