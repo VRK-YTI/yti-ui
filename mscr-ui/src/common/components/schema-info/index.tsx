@@ -271,7 +271,7 @@ export default function SchemaInfo(props: {
 
   return (
     <>
-      <div className='row d-flex justify-content-between'>
+      <div className='row d-flex justify-content-between mb-2'>
         <div className='col-6'>
           <SchemaHeading variant='h2'>
             {getSchemaData?.metadata.label
@@ -283,7 +283,7 @@ export default function SchemaInfo(props: {
           </SchemaHeading>
 
         </div>
-        <div className='col-6  d-flex justify-content-end my-1'>
+        <div className='col-6 d-flex flex-row justify-content-end align-self-end my-1 pe-3'>
 
 {/*        <span className='me-2'>Qname</span>
           <ToggleButton
@@ -301,7 +301,7 @@ export default function SchemaInfo(props: {
         </div>
       </div>
 
-      <TreeviewWrapper className="row ps-2">
+      <TreeviewWrapper className="row gx-0">
         <div className="col-7 px-0">
           <div className="d-flex justify-content-between mb-2 ps-3 pe-2">
             <SearchWrapper className="w-100">
@@ -360,7 +360,7 @@ export default function SchemaInfo(props: {
             </Box>
           </div>
         </div>
-        <NodeInfoWrapper className="col-5 px-0">
+        <NodeInfoWrapper className="col-5 px-0 me-0">
           <NodeInfo
             treeData={selectedTreeNodes}
             // performNodeInfoAction={performNodeInfoAction}

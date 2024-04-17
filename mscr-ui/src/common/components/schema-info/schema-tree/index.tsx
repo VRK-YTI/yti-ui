@@ -7,7 +7,6 @@ import { useTranslation } from 'next-i18next';
 import { RenderTree } from '@app/common/interfaces/crosswalk-connection.interface';
 
 function toTree(nodes: RenderTree, showQname: boolean) {
-  console.log('toTree', nodes);
   let ret = undefined;
   if (Array.isArray(nodes)) {
     return nodes.map((node) => {

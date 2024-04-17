@@ -50,8 +50,8 @@
   },
   "confirm-page-leave": "Are you sure you want to leave the page? Changes you made won't be saved.",
   "crosswalk-editor": {
-    "search-from-source-schema": "Search from source schema",
-    "search-from-target-schema": "Search from target schema"
+    "search-from-source-schema": "Filter from source schema",
+    "search-from-target-schema": "Filter from target schema"
   },
   "datamodel-title": "",
   "datamodels-all": "",
@@ -110,6 +110,10 @@
   "library": "",
   "library-variant": "",
   "link-opens-new-window-external": "",
+  "mappings-accordion": {
+    "clear": "Clear",
+    "filter-from-mappings": "Filter from mappings"
+  },
   "metadata": {
     "contact": "Contact",
     "created": "Created",

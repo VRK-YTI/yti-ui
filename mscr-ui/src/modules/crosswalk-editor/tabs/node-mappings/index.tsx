@@ -84,6 +84,7 @@ export default function NodeMappings(props: {
   function generateMappingPayload() {
     //TODO: add rest of the attributes and fix dropdowns
     let mappings = mappingPayloadInit;
+    console.log('id', props.selectedCrosswalk.source.id);
     mappings.source.push({
       id: props.selectedCrosswalk.source.id,
       label: props.selectedCrosswalk.source.name,
@@ -102,9 +103,6 @@ export default function NodeMappings(props: {
   function closeModal() {
     setNotesValue('');
     props.performMappingsModalAction('closeModal', null, null);
-  }
-
-  function setSourceFilterValue(value: any) {
   }
 
   function generatePropertiesDropdownItems(input: any) {
