@@ -6,7 +6,8 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useTranslation } from 'next-i18next';
 import { RenderTree } from '@app/common/interfaces/crosswalk-connection.interface';
 
-function toTree(nodes: RenderTree) {
+function toTree(nodes: RenderTree, showQname: boolean) {
+  console.log('toTree', nodes);
   let ret = undefined;
   if (Array.isArray(nodes)) {
     return nodes.map((node) => {
@@ -14,11 +15,11 @@ function toTree(nodes: RenderTree) {
         <TreeItem
           key={node.id}
           nodeId={node.id}
-          label={node.name}
+          label={showQname ? node.qname : node.name}
           className="linked-tree-item"
         >
           {Array.isArray(node.children)
-            ? node.children.map((node: RenderTree) => toTree(node))
+            ? node.children.map((node: RenderTree) => toTree(node, showQname))
             : null}
         </TreeItem>
       );
@@ -28,11 +29,11 @@ function toTree(nodes: RenderTree) {
       <TreeItem
         key={nodes.id}
         nodeId={nodes.id}
-        label={nodes.name}
+        label={showQname ? nodes.qname : nodes.name}
         className="linked-tree-item"
       >
         {Array.isArray(nodes.children)
-          ? nodes.children.map((node: RenderTree) => toTree(node))
+          ? nodes.children.map((node: RenderTree) => toTree(node, showQname))
           : null}
       </TreeItem>
     );
@@ -44,12 +45,13 @@ export default function SchemaTree({
   nodes,
   treeSelectedArray,
   treeExpanded,
-  performTreeAction,
+  performTreeAction, showQname,
 }: {
   nodes: RenderTree;
   treeSelectedArray: string[];
   treeExpanded: string[];
   performTreeAction: (action: string, nodeIds: string[]) => void;
+  showQname: boolean;
 }) {
   const { t } = useTranslation('common');
 
@@ -80,7 +82,7 @@ export default function SchemaTree({
         className="linked-tree-item"
       >
         {Array.isArray(nodes.children)
-          ? nodes.children.map((node: RenderTree) => toTree(node))
+          ? nodes.children.map((node: RenderTree) => toTree(node, showQname))
           : null}
       </TreeItem>
     </TreeView>

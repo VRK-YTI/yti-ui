@@ -65,6 +65,7 @@ export default function CrosswalkEditor({
     id: '',
     visualTreeId: '',
     properties: undefined,
+    uri: '',
     children: [],
   };
 
@@ -72,7 +73,7 @@ export default function CrosswalkEditor({
     source: emptyTreeSelection,
     target: emptyTreeSelection,
     id: '0',
-    description: '',
+    notes: '',
     isSelected: false,
     isDraft: false,
     sourceJsonPath: undefined,
@@ -125,7 +126,7 @@ export default function CrosswalkEditor({
   const [lastPatchCrosswalkId, setLastPatchCrosswalkId] =
     React.useState<string>('');
   const [lastPutMappingPid, setLastPutMappingPid] = React.useState<string>('');
-  const [lastPatchMappingPid, setLastPatchMappingPid] =
+  const [lastPatchMappingReqId, setLastPatchMappingReqId] =
     React.useState<string>('');
   const [lastDeleteMappingPid, setLastDeleteMappingPid] =
     React.useState<string>('');
@@ -241,6 +242,7 @@ export default function CrosswalkEditor({
     isSuccess: getMappingsDataIsSuccess,
     isError: getMappingsIsError,
     error: getMappingsError,
+    refetch: refetchMappings,
   } = useGetMappingsQuery(crosswalkId);
 
   useEffect(() => {
@@ -259,9 +261,9 @@ export default function CrosswalkEditor({
   }
 
   if (patchMappingResponse.isSuccess) {
-    //TODO: add success and error notification?
-    // if (lastPatchMappingPid !== patchMappingResponse.data.pid) {
-    // }
+    if (lastPatchMappingReqId !== patchMappingResponse.requestId) {
+      addMappingToAccordion(patchMappingResponse, false);
+    }
   }
 
   if (deleteMappingResponse.isSuccess) {
@@ -294,7 +296,17 @@ export default function CrosswalkEditor({
         setLastPutMappingPid(response.data.pid);
       } else {
         // This is needed in the future for showing success or error status
-        setLastPatchMappingPid(response.data.pid);
+        setLastPatchMappingReqId(response.requestId);
+        const patchedMapping = patchMappingResponse.data as NodeMapping;
+
+        const filteredMappings = [
+          ...nodeMappings.filter((item) => {
+            return item.pid !== patchMappingResponse?.originalArgs?.pid;
+          }),
+        ];
+        setNodeMappings((mappings) => {
+          return [patchedMapping, ...filteredMappings];
+        });
       }
     }
   }
@@ -307,7 +319,6 @@ export default function CrosswalkEditor({
         source: sourceNode,
         target: selectedTargetNodes[0],
         id: '',
-        description: '',
         isSelected: true,
         isDraft: true,
         sourceJsonPath: undefined,
@@ -316,6 +327,7 @@ export default function CrosswalkEditor({
         sourceProcessing: undefined,
         targetPredicate: undefined,
         targetProcessing: undefined,
+        notes: undefined,
       };
       jointsToBeAdded.push(joint);
     });
@@ -327,13 +339,16 @@ export default function CrosswalkEditor({
     targetNodes: RenderTree[],
     patchPid: string,
   ) {
+
+    const originalMapping: NodeMapping[] = nodeMappings.filter(item => item.pid === patchPid);
+
     const jointsToBeAdded: CrosswalkConnectionNew[] = [];
     sourceNodes.forEach((sourceNode) => {
       const joint: CrosswalkConnectionNew = {
         source: sourceNode,
         target: targetNodes[0],
         id: patchPid,
-        description: '',
+        notes: originalMapping.length > 0 ? originalMapping[0].notes : '',
         isSelected: true,
         isDraft: true,
         sourceJsonPath: undefined,
