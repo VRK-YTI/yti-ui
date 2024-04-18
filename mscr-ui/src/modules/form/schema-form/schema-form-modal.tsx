@@ -24,7 +24,7 @@ import { usePutSchemaFullMutation } from '@app/common/components/schema/schema.s
 import SchemaFormFields from './schema-form-fields';
 import Separator from 'yti-common-ui/components/separator';
 import getErrors from '@app/common/utils/get-errors';
-import {fileExtensionsAvailableForSchemaRegistration} from '@app/common/interfaces/format.interface';
+import { fileExtensionsAvailableForSchemaRegistration } from '@app/common/interfaces/format.interface';
 import FileDropAreaMscr from '@app/common/components/file-drop-area-mscr';
 import * as React from 'react';
 
@@ -110,8 +110,7 @@ export default function SchemaFormModal({
       if (fileUri && fileUri.length > 0) {
         schemaFormData.append('contentURL', fileUri);
         putSchemaFull(schemaFormData);
-      }
-      else if (fileData) {
+      } else if (fileData) {
         schemaFormData.append('file', fileData);
         putSchemaFull(schemaFormData);
       } else {
@@ -126,9 +125,7 @@ export default function SchemaFormModal({
     }
     const errors = validateSchemaForm(formData, fileData, fileUri);
     setErrors(errors);
-    //console.log(errors);
   }, [userPosted, formData, fileData]);
-
 
   // This part was checking the user permission and based on that showing the button in every render
   /* if (groupContent && !HasPermission({ actions: ['CREATE_SCHEMA'] })) {
@@ -136,36 +133,53 @@ export default function SchemaFormModal({
     return null;
   } */
 
-  function gatherErrorMessages() {
+  function gatherInputError() {
     const inputErrors = getErrors(t, errors);
-    if (resultSchemaFull.isError) {
-      const errorMessage = getApiError(resultSchemaFull.error);
-      // console.log('the error is' + errorMessage);
-      return [...inputErrors, errorMessage];
-    }
     return inputErrors;
+  }
+
+  function gatherApiError() {
+    if (resultSchemaFull.isError) {
+      const errorObject = getApiError(resultSchemaFull.error);
+      let errorMessage = '';
+
+      if (errorObject.staus && errorObject.message) {
+        errorMessage = `${errorObject.staus}: ${errorObject.message}`;
+        return errorMessage;
+      }
+    }
+  }
+
+  function getErrorDetail() {
+    if (resultSchemaFull.isError) {
+      const errorObject = getApiError(resultSchemaFull.error);
+      if (errorObject.detail) {
+        return errorObject.detail;
+      }
+    }
   }
 
   function renderButton() {
     return (
-       <Button
-          variant="secondary"
-          icon={<IconPlus />}
-          style={{ height: 'min-content' }}
-          onClick={() => handleOpen()}
-        >
-          {t('register-schema')}
-        </Button>
+      <Button
+        variant="secondary"
+        icon={<IconPlus />}
+        style={{ height: 'min-content' }}
+        onClick={() => handleOpen()}
+      >
+        {t('register-schema')}
+      </Button>
     );
   }
 
   return (
     <>
       {/*Sending group pid as targetOrganization to check content creation right*/}
-      {groupContent && HasPermission({ actions: ['CREATE_SCHEMA'],targetOrganization:pid }) ? (
-        <div>
-          {renderButton()}
-        </div>
+      {groupContent &&
+      HasPermission({ actions: ['CREATE_SCHEMA'], targetOrganization: pid }) ? (
+        <div>{renderButton()}</div>
+      ) : !groupContent ? (
+        <div>{renderButton()}</div>
       ) : (
         !groupContent ? (
             <div>
@@ -185,14 +199,32 @@ export default function SchemaFormModal({
         <ModalContent>
           <ModalTitle>{t('register-schema')}</ModalTitle>
           <Text>{t('register-schema-file-required') + ' '}</Text>
-          <Text>{t('register-schema-supported-file-formats') + fileExtensionsAvailableForSchemaRegistration.slice(0, fileExtensionsAvailableForSchemaRegistration.length - 1).join(', ').toUpperCase() + ' ' + t('and') + (' ') + fileExtensionsAvailableForSchemaRegistration.slice(fileExtensionsAvailableForSchemaRegistration.length - 1).toString().toUpperCase() + ('.')}</Text>
+          <Text>
+            {t('register-schema-supported-file-formats') +
+              fileExtensionsAvailableForSchemaRegistration
+                .slice(
+                  0,
+                  fileExtensionsAvailableForSchemaRegistration.length - 1
+                )
+                .join(', ')
+                .toUpperCase() +
+              ' ' +
+              t('and') +
+              ' ' +
+              fileExtensionsAvailableForSchemaRegistration
+                .slice(fileExtensionsAvailableForSchemaRegistration.length - 1)
+                .toString()
+                .toUpperCase() +
+              '.'}
+          </Text>
           <FileDropAreaMscr
             setFileData={setFileData}
             setIsValid={setIsValid}
             validFileTypes={fileExtensionsAvailableForSchemaRegistration}
             translateFileUploadError={translateFileUploadError}
             isSchemaUpload={true}
-            setFileUri={setFileUri}/>
+            setFileUri={setFileUri}
+          />
           <br></br>
 
           <SchemaFormFields
@@ -203,7 +235,6 @@ export default function SchemaFormModal({
             errors={userPosted ? errors : undefined}
           />
           <Separator></Separator>
-
         </ModalContent>
         <ModalFooter>
           {authenticatedUser && authenticatedUser.anonymous && (
@@ -211,11 +242,18 @@ export default function SchemaFormModal({
               {t('error-unauthenticated')}
             </InlineAlert>
           )}
-          {userPosted && (
+          {userPosted &&  gatherInputError() && (
             <FormFooterAlert
               labelText={'Something went wrong'}
-              alerts={gatherErrorMessages()}
+              alerts={gatherInputError()}
             />
+          )}
+          {/*Showing API Error if only input form error is not present*/}
+          {userPosted && gatherInputError().length < 1 && resultSchemaFull.error &&(
+            <div>
+              <InlineAlert status="error">{gatherApiError()}</InlineAlert>
+              <InlineAlert>{getErrorDetail()}</InlineAlert>
+            </div>
           )}
 
           <Button onClick={() => handleSubmit()}>{t('register-schema')}</Button>

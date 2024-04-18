@@ -26,6 +26,7 @@ export function translateResourceType(type: ResourceType, t: TFunction) {
 }
 
 export function translateModelFormErrors(error: string, t: TFunction) {
+  console.log(error);
   switch (error) {
     case 'languageAmount':
       return t('missing-languages', { ns: 'admin' });
@@ -45,6 +46,10 @@ export function translateModelFormErrors(error: string, t: TFunction) {
       return t('missing-description', { ns: 'admin' });
     case 'name':
       return t('missing-name', { ns: 'admin' });
+    case 'fileData':
+      return t('missing-file', { ns: 'admin' });
+    case 'format':
+      return t('missing-format', { ns: 'admin' });
     default:
       return t('missing-general', { ns: 'admin' });
   }

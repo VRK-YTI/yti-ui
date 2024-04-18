@@ -8,6 +8,7 @@ export interface FormErrors {
   prefix: boolean;
   serviceCategories: boolean;
   fileData: boolean;
+  format: boolean;
 }
 
 export function validateSchemaForm(
@@ -22,6 +23,7 @@ export function validateSchemaForm(
     prefix: false,
     serviceCategories: false,
     fileData: false,
+    format:false
   };
 
   const selectedLanguages = data.languages.filter(
@@ -48,6 +50,11 @@ export function validateSchemaForm(
 
   if (!fileData && !fileUri) {
     errors.fileData = true;
+  }
+
+  // Should check the selected format and file format
+  if (!data.format) {
+    errors.format = true;
   }
 
   return errors;
