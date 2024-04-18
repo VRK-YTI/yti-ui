@@ -44,6 +44,7 @@ export const formatsAvailableForSchemaRegistration: Format[] = [
   Format.Skosrdf,
   Format.Xsd,
   Format.Owl,
+  Format.Shacl
 ];
 
 export const fileExtensionsAvailableForCrosswalkRegistrationAttachments: FileExtensions[] =
