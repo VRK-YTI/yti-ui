@@ -9,5 +9,6 @@ export interface ResourceReferencesResult {
 interface ResourceReference {
   resourceURI: UriData;
   property: string;
+  target: string;
   type: ResourceType;
 }

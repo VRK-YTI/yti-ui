@@ -269,6 +269,8 @@
   "release-errors-general-info": "",
   "release-missing-reference-to-library-info": "",
   "release-missing-reference-to-library-title": "",
+  "release-references-not-exist-title": "",
+  "release-references-not-exist-info": "",
   "release-version-number": "",
   "release-version-number-hint": "",
   "remove": "",

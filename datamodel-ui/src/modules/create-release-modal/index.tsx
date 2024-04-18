@@ -139,9 +139,15 @@ export default function CreateReleaseModal({
                 </Heading>
                 <Text>{translateValidationError(`${key}-info`, t)}</Text>
                 <ul>
-                  {resources.map((uri) => (
-                    <li key={uri.uri}>
-                      <UriInfo uri={uri} lang={i18n.language} />
+                  {resources.map((resource) => (
+                    <li key={resource.resourceURI.uri}>
+                      <UriInfo
+                        uri={resource.resourceURI}
+                        lang={i18n.language}
+                      />
+                      <div style={{ fontSize: '14px' }}>
+                        {resource.property} = {resource.target}
+                      </div>
                     </li>
                   ))}
                 </ul>
