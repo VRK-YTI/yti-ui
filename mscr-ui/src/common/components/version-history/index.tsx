@@ -16,7 +16,7 @@ export default function VersionHistory({
     t('metadata.state'),
   ];
 
-  let revisionsFormatted = revisions.map((revision) => ({versionLabel: revision.versionLabel, pid: revision.pid, created: <FormattedDate date={revision.created}/>, state: revision.state}));
+  const revisionsFormatted = revisions.map((revision) => ({versionLabel: revision.versionLabel, pid: revision.pid, created: <FormattedDate date={revision.created}/>, state: revision.state}));
 
   return (
     <><GenericTable items={revisionsFormatted} headings={headers}
