@@ -1,12 +1,7 @@
-import TableContainer from '@mui/material/TableContainer';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import TableBody from '@mui/material/TableBody';
 import { useTranslation } from 'next-i18next';
 import { ContentRevision } from '@app/common/interfaces/content-revision.interface';
 import FormattedDate from 'yti-common-ui/components/formatted-date';
+import GenericTable from "@app/common/components/generic-table";
 
 export default function VersionHistory({
   revisions,
@@ -20,29 +15,11 @@ export default function VersionHistory({
     t('metadata.created'),
     t('metadata.state'),
   ];
+
+  let revisionsFormatted = revisions.map((revision) => ({versionLabel: revision.versionLabel, pid: revision.pid, created: <FormattedDate date={revision.created}/>, state: revision.state}));
+
   return (
-    <TableContainer>
-      <Table aria-label={t('metadata.versions')}>
-        <TableHead>
-          <TableRow>
-            {headers.map((header) => (
-              <TableCell key={header}>{header}</TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {revisions.map((revision) => (
-            <TableRow key={revision.versionLabel}>
-              <TableCell>{revision.versionLabel}</TableCell>
-              <TableCell>{revision.pid}</TableCell>
-              <TableCell>
-                <FormattedDate date={revision.created} />
-              </TableCell>
-              <TableCell>{revision.state}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <><GenericTable items={revisionsFormatted} headings={headers}
+                    caption={t('metadata.versions')}></GenericTable></>
   );
 }
