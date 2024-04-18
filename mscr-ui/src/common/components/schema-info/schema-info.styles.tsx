@@ -3,10 +3,6 @@ import { Heading } from 'suomifi-ui-components';
 
 export const SchemaHeading = styled(Heading)`
   margin: 0 110px 5px 5px;
-  // Compensate for edit button
-  &&.raise-heading {
-    margin-top: -40px;
-  }
   color: ${(props) => props.theme.suomifi.colors.depthDark2};
 `;
 

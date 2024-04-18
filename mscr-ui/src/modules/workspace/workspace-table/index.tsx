@@ -5,7 +5,7 @@ import {
   Type,
 } from '@app/common/interfaces/search.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import GenericTable, { TableItem } from '@app/common/components/generic-table';
+import GenericTable from '@app/common/components/generic-table';
 
 export default function WorkspaceTable({
   data,
@@ -20,34 +20,38 @@ export default function WorkspaceTable({
 
   if (!data) return <></>;
 
-  const caption = contentType == 'SCHEMA'
-    ? t('workspace.schemas')
-    : t('workspace.crosswalks');
+  const caption =
+    contentType == 'SCHEMA'
+      ? t('workspace.schemas')
+      : t('workspace.crosswalks');
 
-  const headings = [t('workspace.label'), t('workspace.namespace'), t('workspace.state'), t('workspace.numberOfRevisions'), t('workspace.pid'), ''];
+  const headings = [
+    t('workspace.label'),
+    t('workspace.namespace'),
+    t('workspace.state'),
+    t('workspace.numberOfRevisions'),
+    t('workspace.pid'),
+    '',
+  ];
 
-  const items: TableItem[] = data.hits.hits.map(
-    (result) => {
-      const info = result._source;
-      const linkUrl = contentType == 'SCHEMA'
+  const items = data.hits.hits.map((result) => {
+    const info = result._source;
+    const linkUrl =
+      contentType == 'SCHEMA'
         ? router.basePath + '/schema/' + info.id
         : router.basePath + '/crosswalk/' + info.id;
-      const item: TableItem = {
-        label: getLanguageVersion({
-          data: info.label,
-          lang,
-        }),
-        namespace: info.namespace,
-        state: info.state,
-        numberOfRevisions: info.numberOfRevisions.toString(),
-        pid: info.handle ?? t('metadata.not-available'),
-        linkUrl: <a href={linkUrl}>{t('workspace.view')}</a>,
-      };
-      return item;
-    }
-  );
+    return {
+      label: getLanguageVersion({
+        data: info.label,
+        lang,
+      }),
+      namespace: info.namespace,
+      state: info.state,
+      numberOfRevisions: info.numberOfRevisions.toString(),
+      pid: info.handle ?? t('metadata.not-available'),
+      linkUrl: <a href={linkUrl}>{t('workspace.view')}</a>,
+    };
+  });
 
-  return (
-    <GenericTable items={items} headings={headings} caption={caption} />
-  );
+  return <GenericTable items={items} headings={headings} caption={caption} />;
 }
