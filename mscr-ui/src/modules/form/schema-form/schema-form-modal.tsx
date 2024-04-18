@@ -242,14 +242,14 @@ export default function SchemaFormModal({
               {t('error-unauthenticated')}
             </InlineAlert>
           )}
-          {userPosted && (
+          {userPosted &&  gatherInputError() && (
             <FormFooterAlert
               labelText={'Something went wrong'}
               alerts={gatherInputError()}
             />
           )}
           {/*Showing API Error if only input form error is not present*/}
-          {userPosted && gatherInputError().length < 1 && (
+          {userPosted && gatherInputError().length < 1 && resultSchemaFull.error &&(
             <div>
               <InlineAlert status="error">{gatherApiError()}</InlineAlert>
               <InlineAlert>{getErrorDetail()}</InlineAlert>
