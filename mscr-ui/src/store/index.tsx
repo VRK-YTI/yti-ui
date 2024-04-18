@@ -26,9 +26,7 @@ import {
   crosswalkSlice,
 } from '@app/common/components/crosswalk/crosswalk.slice';
 import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
-import { mscrSearchPersonalContentApi } from '@app/common/components/personal/personal.slice';
 import { crosswalkMappingFunctionsApi } from '@app/common/components/crosswalk-functions/crosswalk-functions.slice';
-import { mscrSearchOrgContentApi } from '@app/common/components/organization/organization.slice';
 import { notificationsSlice } from '@app/common/components/notifications/notifications.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
@@ -60,9 +58,6 @@ export function makeStore(ctx: NextIronContext) {
       [crosswalkMappingFunctionsApi.reducerPath]:
         crosswalkMappingFunctionsApi.reducer,
       [mscrSearchApi.reducerPath]: mscrSearchApi.reducer,
-      [mscrSearchPersonalContentApi.reducerPath]:
-        mscrSearchPersonalContentApi.reducer,
-      [mscrSearchOrgContentApi.reducerPath]: mscrSearchOrgContentApi.reducer,
       [notificationsSlice.name]: notificationsSlice.reducer,
     },
 
@@ -82,9 +77,7 @@ export function makeStore(ctx: NextIronContext) {
         fakeableUsersApi.middleware,
         importApi.middleware,
         crosswalkMappingFunctionsApi.middleware,
-        mscrSearchApi.middleware,
-        mscrSearchPersonalContentApi.middleware,
-        mscrSearchOrgContentApi.middleware
+        mscrSearchApi.middleware
       ),
 
     // Development tools should be available only in development environments

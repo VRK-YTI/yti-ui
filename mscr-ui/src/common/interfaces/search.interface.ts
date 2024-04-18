@@ -2,6 +2,7 @@ import { Organization } from '@app/common/interfaces/organizations.interface';
 import { State } from '@app/common/interfaces/state.interface';
 import { Format } from '@app/common/interfaces/format.interface';
 import { ContentRevision } from '@app/common/interfaces/content-revision.interface';
+import { UrlState } from '@app/common/utils/hooks/use-url-state';
 
 export interface Label {
   [key: string]: string;
@@ -41,7 +42,7 @@ export interface PaginatedQuery {
   type?: Type;
   ownerOrg?: string;
   pageSize: number;
-  pageFrom: number;
+  urlState: UrlState;
 }
 
 export interface MscrSearchResult {

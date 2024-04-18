@@ -181,8 +181,14 @@ export default function SchemaFormModal({
       ) : !groupContent ? (
         <div>{renderButton()}</div>
       ) : (
-        <div />
-      )}
+        !groupContent ? (
+            <div>
+              {renderButton()}
+          </div>
+        ) : (
+              <div/>
+        ))}
+
 
       <Modal
         appElementId="__next"
