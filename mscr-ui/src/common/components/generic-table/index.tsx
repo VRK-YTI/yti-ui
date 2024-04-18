@@ -6,13 +6,23 @@ import {
 } from '@mui/material';
 import * as React from 'react';
 import {StyledTableCell, StyledTableRow, StyledTableHead} from '@app/common/components/generic-table/generic-table.styles';
+import Link from 'next/link';
 
 // Usage: items can be an array of typed items e.g. FilesRow[]. Heading names are taken from the interface property names. Headings can be over-ridden with using headings array.
 
+export interface TableItem {
+  [s: string]: unknown;
+}
+
+export interface TableItemWithLink extends TableItem {
+  linkUrl: string;
+}
+
 export default function GenericTable(props: {
-  items: any;
+  items: TableItem[];
   headings: string[];
   caption: string;
+  asLinks: boolean;
 }) {
 
   function createColumnHeadings(items: any) {
@@ -52,20 +62,30 @@ export default function GenericTable(props: {
     return head;
   }
 
-  function createColumns(items: any) {
+  function createColumns(items: TableItem[]) {
     const rows: JSX.Element[] = [];
-    items.forEach((col: { [s: string]: unknown }) => {
+    items.forEach((col : TableItem) => {
       const temp = [];
       for (const [key, value] of Object.entries(col)) {
+        if (props.asLinks && key === 'linkUrl') {
+          continue;
+        }
         temp.push(
           <StyledTableCell key={self.crypto.randomUUID()}>
             {value}
-          </StyledTableCell>,
+          </StyledTableCell>);
+      }
+      if (props.asLinks && 'linkUrl' in (col as TableItemWithLink)) {
+        rows.push(
+          <Link key={self.crypto.randomUUID()} href={(col as TableItemWithLink).linkUrl} passHref>
+            <StyledTableRow>{temp}</StyledTableRow>
+          </Link>
+        );
+      } else {
+        rows.push(
+          <StyledTableRow key={self.crypto.randomUUID()}>{temp}</StyledTableRow>,
         );
       }
-      rows.push(
-        <StyledTableRow key={self.crypto.randomUUID()}>{temp}</StyledTableRow>,
-      );
     });
     return <TableBody>{rows}</TableBody>;
   }

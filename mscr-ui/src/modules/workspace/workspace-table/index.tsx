@@ -14,6 +14,7 @@ import {
 } from '@app/common/interfaces/search.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { Typography } from '@mui/material';
+import GenericTable, { TableItemWithLink } from '@app/common/components/generic-table';
 
 export interface TableContent {
   ariaLabel: string;
@@ -41,21 +42,44 @@ export default function WorkspaceTable({
   const { t } = useTranslation('common');
   const router = useRouter();
   const lang = router.locale ?? '';
-  const items: { [key: string]: string }[] | undefined = data?.hits.hits.map(
+
+  if (!data) return <></>;
+
+  const items: TableItemWithLink[] = data.hits.hits.map(
     (result) => {
       const info = result._source;
-      const itemDisplay: { [key: string]: string } = {};
-      itemDisplay.label = getLanguageVersion({
+      const item: TableItemWithLink = {
+        label: getLanguageVersion({
+          data: info.label,
+          lang,
+        }),
+        namespace: info.namespace,
+        state: info.state,
+        numberOfRevisions: info.numberOfRevisions.toString(),
+        pid: info.handle ?? t('metadata.not-available'),
+        linkUrl: contentType == 'SCHEMA'
+          ? router.basePath + '/schema/' + info.id
+          : router.basePath + '/crosswalk/' + info.id
+      };
+      item.label = getLanguageVersion({
         data: info.label,
         lang,
       });
-      itemDisplay.namespace = info.namespace;
-      itemDisplay.state = info.state;
-      itemDisplay.numberOfRevisions = info.numberOfRevisions.toString();
-      itemDisplay.pid = info.id;
-      return itemDisplay;
+      // itemDisplay.namespace = info.namespace;
+      // itemDisplay.state = info.state;
+      // itemDisplay.numberOfRevisions = info.numberOfRevisions.toString();
+      // itemDisplay.pid = info.id;
+      // itemDisplay.linkUrl = contentType == 'SCHEMA'
+      //   ? router.basePath + '/schema/' + info.id
+      //   : router.basePath + '/crosswalk/' + info.id;
+      return item;
     }
   );
+  const caption = contentType == 'SCHEMA'
+    ? t('workspace.schemas')
+    : t('workspace.crosswalks');
+  const headings = [t('workspace.label'), t('workspace.namespace'), t('workspace.state'), t('workspace.numberOfRevisions'), t('workspace.pid')];
+
 
   const keysWithTranslations = [
     {
@@ -108,6 +132,7 @@ export default function WorkspaceTable({
 
   return (
     <>
+      <GenericTable items={items} headings={headings} caption={caption} asLinks={true} />
       <Typography marginTop={5}>{content.ariaLabel}</Typography>
       <TableContainer>
         <Table aria-label={content.ariaLabel}>

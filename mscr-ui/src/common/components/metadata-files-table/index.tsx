@@ -161,7 +161,7 @@ export default function MetadataFilesTable({
               t('metadata.file.name'),
               t('metadata.file.format'),
               t('metadata.file.size'),
-              'File',
+              t('metadata.file.download-file'),
             ]}
             caption={t('metadata.file.label')}
           ></GenericTable>
