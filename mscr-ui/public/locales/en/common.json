@@ -120,6 +120,7 @@
     "crosswalk-details": "Crosswalk details",
     "description": "Description",
     "file": {
+      "download-file": "File",
       "format": "Format",
       "label": "Files",
       "name": "Filename",
@@ -334,6 +335,7 @@
     "personal": "Personal workspace",
     "pid": "PID",
     "schemas": "Schemas",
-    "state": "State"
+    "state": "State",
+    "view": "View"
   }
 }

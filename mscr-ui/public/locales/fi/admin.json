@@ -124,6 +124,8 @@
   "language-input-text": "Tietomallin nimi",
   "language-swedish-with-suffix": "ruotsi SV",
   "missing-description": "Kuvausta ei ole määritelty",
+  "missing-file": "",
+  "missing-format": "",
   "missing-general": "Tietomallin kaikkia tietoja ei ole määritelty",
   "missing-information-domain": "Tietomallin tietoaluetta ei ole määritelty",
   "missing-language-title": "Tietomallin nimi puuttuu kieleltä",

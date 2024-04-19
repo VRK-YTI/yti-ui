@@ -1,15 +1,15 @@
-import {useTranslation} from 'next-i18next';
-import {ContentRevision} from '@app/common/interfaces/content-revision.interface';
+import { useTranslation } from 'next-i18next';
+import { ContentRevision } from '@app/common/interfaces/content-revision.interface';
 import FormattedDate from 'yti-common-ui/components/formatted-date';
-import GenericTable from "@app/common/components/generic-table";
-import {VersionHistoryContainer} from "@app/common/components/version-history/version-history.styles";
+import GenericTable from '@app/common/components/generic-table';
+import { VersionHistoryContainer } from '@app/common/components/version-history/version-history.styles';
 
 export default function VersionHistory({
-                                         revisions,
-                                       }: {
+  revisions,
+}: {
   revisions: ContentRevision[];
 }) {
-  const {t} = useTranslation('common');
+  const { t } = useTranslation('common');
   const headers = [
     t('metadata.version-label'),
     t('metadata.pid'),
@@ -20,12 +20,19 @@ export default function VersionHistory({
   const revisionsFormatted = revisions.map((revision) => ({
     versionLabel: revision.versionLabel,
     pid: revision.pid,
-    created: <FormattedDate date={revision.created}/>,
-    state: revision.state
+    created: <FormattedDate date={revision.created} />,
+    state: revision.state,
   }));
 
   return (
-    <><VersionHistoryContainer><GenericTable items={revisionsFormatted} headings={headers}
-                                             caption={t('metadata.versions')}></GenericTable></VersionHistoryContainer></>
+    <>
+      <VersionHistoryContainer>
+        <GenericTable
+          items={revisionsFormatted}
+          headings={headers}
+          caption={t('metadata.versions')}
+        ></GenericTable>
+      </VersionHistoryContainer>
+    </>
   );
 }

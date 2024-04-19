@@ -1,21 +1,18 @@
-import {
-  Grid,
-  Table,
-  TableBody,
-  TableContainer,
-} from '@mui/material';
+import { Grid, Table, TableBody, TableContainer } from '@mui/material';
 import * as React from 'react';
-import {StyledTableCell, StyledTableRow, StyledTableHead} from '@app/common/components/generic-table/generic-table.styles';
+import {
+  StyledTableCell,
+  StyledTableRow,
+  StyledTableHead,
+} from '@app/common/components/generic-table/generic-table.styles';
 
 // Usage: items can be an array of typed items e.g. FilesRow[]. Heading names are taken from the interface property names. Headings can be over-ridden with using headings array.
-
 export default function GenericTable(props: {
-  items: any;
+  items: unknown[];
   headings: string[];
   caption: string;
 }) {
-
-  function createColumnHeadings(items: any) {
+  function createColumnHeadings(items: { [s: string]: unknown }[]) {
     const head: JSX.Element[] = [];
     const cells: JSX.Element[] = [];
     if (props.headings && props.headings.length > 0) {
@@ -24,7 +21,7 @@ export default function GenericTable(props: {
         cells.push(
           <StyledTableCell key={self.crypto.randomUUID()}>
             {heading}
-          </StyledTableCell>,
+          </StyledTableCell>
         );
       });
       head.push(
@@ -32,39 +29,41 @@ export default function GenericTable(props: {
           <StyledTableRow key={self.crypto.randomUUID()}>
             {cells}
           </StyledTableRow>
-        </StyledTableHead>,
+        </StyledTableHead>
       );
     } else if (items.length > 0) {
       // Take heading names from interface property names
-      for (const [key, value] of Object.entries(items[0])) {
+      for (const [key] of Object.entries(items[0])) {
         cells.push(
           <StyledTableCell key={self.crypto.randomUUID()}>
             {key[0].toUpperCase() + key.slice(1)}
-          </StyledTableCell>,
+          </StyledTableCell>
         );
       }
       head.push(
         <StyledTableHead key={self.crypto.randomUUID()}>
-          <StyledTableRow key={self.crypto.randomUUID()}>{cells}</StyledTableRow>
-        </StyledTableHead>,
+          <StyledTableRow key={self.crypto.randomUUID()}>
+            {cells}
+          </StyledTableRow>
+        </StyledTableHead>
       );
     }
     return head;
   }
 
-  function createColumns(items: any) {
+  function createColumns(items: { [s: string]: unknown }[]) {
     const rows: JSX.Element[] = [];
-    items.forEach((col: { [s: string]: unknown }) => {
+    items.forEach((col) => {
       const temp = [];
-      for (const [key, value] of Object.entries(col)) {
+      for (const [, value] of Object.entries(col)) {
         temp.push(
           <StyledTableCell key={self.crypto.randomUUID()}>
             {value}
-          </StyledTableCell>,
+          </StyledTableCell>
         );
       }
       rows.push(
-        <StyledTableRow key={self.crypto.randomUUID()}>{temp}</StyledTableRow>,
+        <StyledTableRow key={self.crypto.randomUUID()}>{temp}</StyledTableRow>
       );
     });
     return <TableBody>{rows}</TableBody>;
@@ -76,10 +75,10 @@ export default function GenericTable(props: {
         <Grid container>
           <h2>{props.caption}</h2>
         </Grid>
-        <TableContainer >
+        <TableContainer>
           <Table aria-label={props.caption}>
-            {createColumnHeadings(props.items)}
-            {createColumns(props.items)}
+            {createColumnHeadings(props.items as { [s: string]: unknown }[])}
+            {createColumns(props.items as { [s: string]: unknown }[])}
           </Table>
         </TableContainer>
       </Grid>

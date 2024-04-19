@@ -1,7 +1,9 @@
 import { Type } from '@app/common/interfaces/search.interface';
 import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
-import WorkspaceTable from '@app/modules/workspace/workspace-table';
+import WorkspaceTable, {
+  ContentRow,
+} from '@app/modules/workspace/workspace-table';
 import Title from 'yti-common-ui/components/title';
 import {
   Description,
@@ -19,6 +21,9 @@ import {
   useGetOrgContentQuery,
 } from '@app/common/components/mscr-search/mscr-search.slice';
 import { useStoreDispatch } from '@app/store';
+import { useEffect, useMemo, useState } from 'react';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { useRouter } from 'next/router';
 
 interface GroupHomeProps {
   user: MscrUser;
@@ -31,10 +36,13 @@ export default function GroupWorkspace({
   contentType,
 }: GroupHomeProps) {
   const { t } = useTranslation('common');
+  const router = useRouter();
+  const lang = router.locale ?? '';
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
   const dispatch = useStoreDispatch();
   const pageSize = 20;
+  const [content, setContent] = useState(new Array<ContentRow>());
   const { data, isLoading } = useGetOrgContentQuery({
     type: contentType,
     pageSize,
@@ -44,6 +52,35 @@ export default function GroupWorkspace({
   const lastPage = data?.hits.total?.value
     ? Math.ceil(data?.hits.total.value / pageSize)
     : 0;
+
+  const fetchedContent = useMemo(() => {
+    if (data) {
+      return data.hits.hits.map((result) => {
+        const info = result._source;
+        const linkUrl =
+          contentType == 'SCHEMA'
+            ? router.basePath + '/schema/' + info.id
+            : router.basePath + '/crosswalk/' + info.id;
+        return {
+          label: getLanguageVersion({
+            data: info.label,
+            lang,
+          }),
+          namespace: info.namespace,
+          state: info.state,
+          numberOfRevisions: info.numberOfRevisions.toString(),
+          pid: info.handle ?? t('metadata.not-available'),
+          linkUrl: <a href={linkUrl}>{t('workspace.view')}</a>,
+        };
+      });
+    } else {
+      return [];
+    }
+  }, [contentType, data, lang, router.basePath, t]);
+
+  useEffect(() => {
+    setContent(fetchedContent);
+  }, [fetchedContent]);
 
   const refetchInfo = () => {
     setTimeout(
@@ -107,7 +144,7 @@ export default function GroupWorkspace({
               : t('workspace.no-crosswalks')}
           </div>
         ) : (
-          <WorkspaceTable data={data} contentType={contentType} />
+          <WorkspaceTable content={content} contentType={contentType} />
         )}
         {lastPage > 1 && <Pagination lastPage={lastPage} />}
       </main>

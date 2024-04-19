@@ -123,9 +123,12 @@ export default function CrosswalkFormModal({
       const crosswalkFormData = new FormData();
       crosswalkFormData.append('metadata', JSON.stringify(payload));
       crosswalkFormData.append('file', fileData);
+
       Promise.all([spinnerDelay(), putCrosswalkFull(crosswalkFormData)]).then((values) => {
         setSubmitAnimationVisible(false);
       });
+
+      putCrosswalkFull(crosswalkFormData);
 
     } else if (createNew) {
       Promise.all([spinnerDelay(), putCrosswalk(payload)]).then((values) => {

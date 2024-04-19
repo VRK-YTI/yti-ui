@@ -10,16 +10,17 @@ export interface Label {
 
 export enum Visibility {
   Private = 'PRIVATE',
-  Public = 'PUBLIC'
+  Public = 'PUBLIC',
 }
 
 export enum Type {
   Crosswalk = 'CROSSWALK',
-  Schema = 'SCHEMA'
+  Schema = 'SCHEMA',
 }
 
 export interface ResultInfo {
   id: string;
+  handle: string;
   label: Label;
   state: State;
   comment: { [key: string]: string };
