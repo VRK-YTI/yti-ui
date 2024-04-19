@@ -1,7 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import {
-  Type,
-} from '@app/common/interfaces/search.interface';
+import { Type } from '@app/common/interfaces/search.interface';
 import GenericTable from '@app/common/components/generic-table';
 import { State } from '@app/common/interfaces/state.interface';
 

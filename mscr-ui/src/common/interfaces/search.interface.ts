@@ -10,12 +10,12 @@ export interface Label {
 
 export enum Visibility {
   Private = 'PRIVATE',
-  Public = 'PUBLIC'
+  Public = 'PUBLIC',
 }
 
 export enum Type {
   Crosswalk = 'CROSSWALK',
-  Schema = 'SCHEMA'
+  Schema = 'SCHEMA',
 }
 
 export interface ResultInfo {

@@ -12,7 +12,7 @@ export default function GenericTable(props: {
   headings: string[];
   caption: string;
 }) {
-  function createColumnHeadings(items: {[s: string]: unknown}[]) {
+  function createColumnHeadings(items: { [s: string]: unknown }[]) {
     const head: JSX.Element[] = [];
     const cells: JSX.Element[] = [];
     if (props.headings && props.headings.length > 0) {
@@ -51,7 +51,7 @@ export default function GenericTable(props: {
     return head;
   }
 
-  function createColumns(items: {[s: string]: unknown}[]) {
+  function createColumns(items: { [s: string]: unknown }[]) {
     const rows: JSX.Element[] = [];
     items.forEach((col) => {
       const temp = [];
@@ -77,8 +77,8 @@ export default function GenericTable(props: {
         </Grid>
         <TableContainer>
           <Table aria-label={props.caption}>
-            {createColumnHeadings(props.items as {[s: string]: unknown}[])}
-            {createColumns(props.items as {[s: string]: unknown}[])}
+            {createColumnHeadings(props.items as { [s: string]: unknown }[])}
+            {createColumns(props.items as { [s: string]: unknown }[])}
           </Table>
         </TableContainer>
       </Grid>

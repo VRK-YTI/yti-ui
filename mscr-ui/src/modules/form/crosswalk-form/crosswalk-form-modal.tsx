@@ -112,7 +112,7 @@ export default function CrosswalkFormModal({
       const crosswalkFormData = new FormData();
       crosswalkFormData.append('metadata', JSON.stringify(payload));
       crosswalkFormData.append('file', fileData);
-      console.log(crosswalkFormData);
+      // console.log(crosswalkFormData);
       putCrosswalkFull(crosswalkFormData);
     } else if (createNew) {
       putCrosswalk(payload);
@@ -130,7 +130,7 @@ export default function CrosswalkFormModal({
     setErrors(errors);
   }, [userPosted, formData]);
 
- 
+
   function gatherErrorMessages() {
     const inputErrors = getErrors(t, errors);
     const result = createNew ? newCrosswalkResult : registerCrosswalkResult;

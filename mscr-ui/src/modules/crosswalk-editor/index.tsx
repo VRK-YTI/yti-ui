@@ -526,7 +526,7 @@ export default function CrosswalkEditor({
   };
 
   if (getCrosswalkDataIsError) {
-    console.log('Error: ', getCrosswalkDataError);
+    // console.log('Error: ', getCrosswalkDataError);
   }
 
   if (getCrosswalkDataIsError) {

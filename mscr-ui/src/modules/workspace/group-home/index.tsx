@@ -1,7 +1,9 @@
 import { Type } from '@app/common/interfaces/search.interface';
 import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
-import WorkspaceTable, { ContentRow } from '@app/modules/workspace/workspace-table';
+import WorkspaceTable, {
+  ContentRow,
+} from '@app/modules/workspace/workspace-table';
 import Title from 'yti-common-ui/components/title';
 import {
   Description,
