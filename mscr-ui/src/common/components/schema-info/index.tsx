@@ -272,7 +272,7 @@ export default function SchemaInfo(props: {
   return (
     <>
       <div className='row d-flex justify-content-between mb-2'>
-        <div className='col-6'>
+        <div className='col-8'>
           <SchemaHeading variant='h2'>
             {getSchemaData?.metadata.label
               ? getLanguageVersion({
@@ -281,16 +281,8 @@ export default function SchemaInfo(props: {
               })
               : t('schema-tree.no-label')}
           </SchemaHeading>
-
         </div>
-        <div className='col-6 d-flex flex-row justify-content-end align-self-end my-1 pe-3'>
-
-{/*        <span className='me-2'>Qname</span>
-          <ToggleButton
-            checked={showAttributeNames}
-            onClick={(checked) => setShowAttributeNames(checked)}
-          >Title
-          </ToggleButton>*/}
+        <div className='col-4 d-flex flex-row justify-content-end align-self-end my-1 pe-3'>
           <Checkbox
             checked={showAttributeNames}
             onClick={(newState) => {

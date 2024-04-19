@@ -6,6 +6,9 @@ export const SchemaHeading = styled(Heading)`
     font-size: 1.2rem;
   }
   color: ${(props) => props.theme.suomifi.colors.depthDark2};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const TreeviewWrapper = styled.div`
