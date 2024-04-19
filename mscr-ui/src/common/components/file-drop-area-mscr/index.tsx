@@ -29,8 +29,9 @@ interface FileDropAreaProps {
     fileTypes: string[],
     t: TFunction,
   ) => string | undefined;
-  setFileUri: (uri: string | null) => void;
+  setFileUri?: (uri: string | null) => void;
   isSchemaUpload?: boolean;
+  disabled?: boolean
 }
 
 export default function FileDropAreaMscr({
@@ -40,6 +41,7 @@ export default function FileDropAreaMscr({
   translateFileUploadError,
   setFileUri,
   isSchemaUpload,
+  disabled,
 }: FileDropAreaProps) {
   const {t} = useTranslation('admin');
   const input = useRef<HTMLInputElement>(null);
@@ -133,6 +135,7 @@ export default function FileDropAreaMscr({
                   labelText={t('register-schema-file-uri-reference')}
                   onChange={(value) => setFileUriField(value?.toString() ?? '')}
                   value={fileUriField}
+                  disabled={disabled}
                 />
               </Block>
               <Text smallScreen>
@@ -158,6 +161,7 @@ export default function FileDropAreaMscr({
                   ref={input}
                   accept={validFileTypes.map((type) => `.${type}`).join(',')}
                   style={{display: 'none'}}
+                  disabled={disabled}
                   onChange={(e) => {
                     handleUpload(e);
                   }}
@@ -173,6 +177,7 @@ export default function FileDropAreaMscr({
                     input.current && input.current.click();
                   }}
                   id="add-file-button"
+                  disabled={disabled}
                 >
                   {'Browse files'}
                 </Button>
@@ -202,6 +207,7 @@ export default function FileDropAreaMscr({
                   icon={<IconRemove/>}
                   onClick={() => setFile(null)}
                   id="remove-file-button"
+                  disabled={disabled}
                 >
                   {t('remove')}
                 </FileRemoveButton>
