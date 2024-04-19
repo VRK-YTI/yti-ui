@@ -10,13 +10,13 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { styled } from '@mui/material';
+import {styled} from '@mui/material';
 import TableCell, {tableCellClasses} from '@mui/material/TableCell';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import { Button as Sbutton, Textarea, TextInput } from 'suomifi-ui-components';
+import {Button as Sbutton, SearchInput, Textarea, TextInput} from 'suomifi-ui-components';
 import Button from '@mui/material/Button';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import CheckIcon from '@mui/icons-material/Check';
@@ -25,6 +25,8 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import {NodeMapping} from '@app/common/interfaces/crosswalk-connection.interface';
 import {InfoIcon} from '@app/common/components/shared-icons';
 import {useEffect} from 'react';
+import {useTranslation} from 'next-i18next';
+import {SearchWrapper} from "@app/modules/crosswalk-editor/mappings-accordion/mappings-accordion.styles";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({}));
 
@@ -43,6 +45,7 @@ function Row(props: {
   viewOnlyMode: boolean;
   isEditModeActive: boolean;
   callBackFunction: any;
+  showAttributeNames: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -62,7 +65,7 @@ function Row(props: {
               e.stopPropagation();
             }}
           >
-            {props.row.source[0].label}
+            {props.showAttributeNames ? props.row.source[0].label : props.row.source[0].id}
           </Button>
         </StyledTableCell>
 
@@ -86,7 +89,7 @@ function Row(props: {
               e.stopPropagation();
             }}
           >
-            {props.row.target[0].label}
+            <span>{props.showAttributeNames ? props.row.target[0].label : props.row.target[0].id}</span>
           </Button>
         </StyledTableCell>
 
@@ -124,59 +127,59 @@ function Row(props: {
             timeout="auto"
             unmountOnExit
           >
-              <div className="row row ms-2 mt-2 mb-3">
-                <div className='row col-12'>
-                  <div className="col-5 gx-0">
-                    {/*                                <Box sx={{margin: 1}}>
+            <div className="row row ms-2 mt-2 mb-3">
+              <div className='row col-12'>
+                <div className="col-5 gx-0">
+                  {/*                                <Box sx={{margin: 1}}>
                                     <div className='fw-bold mt-3 mb-2' style={{fontSize: '0.9em'}}>Mapping type: <span
                                         className='fw-normal'>exact match</span></div>
                                     <br/>
                                 </Box>*/}
-                    <div className="ms-0 mt-1 mb-2">
-                      <div>Mapping type:</div>
-                      <div className="fw-normal mt-2">exact match</div>
-                    </div>
-                    <br/>
+                  <div className="ms-0 mt-1 mb-2">
+                    <div>Mapping type:</div>
+                    <div className="fw-normal mt-2">exact match</div>
                   </div>
-                  <div className="col-5 mt-1 mx-3">
-                    {props.row.notes &&
-                        <>
-                            <div>Notes:</div>
-                            <div className="fw-normal mt-2">{props.row.notes}</div>
-                        </>
-                    }
-                  </div>
-                  <div className='col mt-4 d-flex flex-row gx-0 justify-content-end'>
-                    <div className="d-flex flex-column action-buttons">
-                      {props.isEditModeActive && (
-                        <>
-                          <Sbutton
-                            onClick={(e) => {
-                              props.callBackFunction.performAccordionAction(
-                                props.row,
-                                'openJointDetails',
-                              );
-                            }}
-                          >
-                            Edit
-                          </Sbutton>
-                          <Sbutton
-                            className="mt-2"
-                            onClick={(e) => {
-                              props.callBackFunction.performAccordionAction(
-                                props.row,
-                                'removeJoint',
-                              );
-                            }}
-                          >
-                            Delete
-                          </Sbutton>
-                        </>
-                      )}
-                    </div>
+                  <br/>
+                </div>
+                <div className="col-5 mt-1 mx-3">
+                  {props.row.notes &&
+                      <>
+                          <div>Notes:</div>
+                          <div className="fw-normal mt-2">{props.row.notes}</div>
+                      </>
+                  }
+                </div>
+                <div className='col mt-4 d-flex flex-row gx-0 justify-content-end'>
+                  <div className="d-flex flex-column action-buttons">
+                    {props.isEditModeActive && (
+                      <>
+                        <Sbutton
+                          onClick={(e) => {
+                            props.callBackFunction.performAccordionAction(
+                              props.row,
+                              'openMappingDetails',
+                            );
+                          }}
+                        >
+                          Edit
+                        </Sbutton>
+                        <Sbutton
+                          className="mt-2"
+                          onClick={(e) => {
+                            props.callBackFunction.performAccordionAction(
+                              props.row,
+                              'removeMapping',
+                            );
+                          }}
+                        >
+                          Delete
+                        </Sbutton>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
+            </div>
           </Collapse>
         </TableCell>
       </StyledTableRow>
@@ -184,9 +187,20 @@ function Row(props: {
   );
 }
 
-export default function JointListingAccordion(props: any) {
+function filterMappings(nodeMappingsInput: NodeMapping[], value: string, showAttributeNames: boolean) {
+  return nodeMappingsInput.filter(item => {
+    const searchString = value.toLowerCase();
+    return (item.source[0].label.toLowerCase().includes(searchString) || item.target[0].label.toLowerCase().includes(searchString) || (item?.notes && item.notes.toLowerCase().includes(searchString)));
+  });
+}
+
+export default function MappingsAccordion(props: any) {
+  const {t} = useTranslation('common');
+  const [mappingData, setMappingData] = React.useState<NodeMapping[]>([]);
+  const [showAttributeNames, setShowAttributeNames] = React.useState<boolean>(true);
   useEffect(() => {
-//console.log('props changed', props);
+    setMappingData(props.nodeMappings);
+    setShowAttributeNames(props.showAttributeNames);
   }, [props]);
   const nodeMappingsInput = props.nodeMappings;
   return (
@@ -202,13 +216,33 @@ export default function JointListingAccordion(props: any) {
                 <span className="fw-bold ps-4">Target</span>
               </StyledTableCell>
               <StyledTableCell className="col-1"></StyledTableCell>
-              <StyledTableCell className="col-2"></StyledTableCell>
+              <StyledTableCell className="col-2">
+                <SearchWrapper className="w-100">
+                  <SearchInput
+                    labelText={''}
+                    labelMode='hidden'
+                    searchButtonLabel={t('mappings-accordion.filter-from-mappings')}
+                    clearButtonLabel={t('mappings-accordion.clear')}
+                    visualPlaceholder={t('mappings-accordion.filter-from-mappings')}
+                    onSearch={(value) => {
+                      if (typeof value === 'string') {
+                        setMappingData(filterMappings(nodeMappingsInput, value, showAttributeNames));
+                      }
+                    }}
+                    onChange={(value) => {
+                      if (!value) {
+                        setMappingData(props.nodeMappings);
+                      }
+                    }}
+                  />
+                </SearchWrapper>
+              </StyledTableCell>
             </TableRow>
           </TableHead>
 
-          {nodeMappingsInput?.length > 0 && (
+          {mappingData?.length > 0 && (
             <TableBody>
-              {nodeMappingsInput.map((row: NodeMapping) => {
+              {mappingData.map((row: NodeMapping) => {
                 return (
                   <Row
                     key={row.pid}
@@ -216,6 +250,7 @@ export default function JointListingAccordion(props: any) {
                     viewOnlyMode={props.viewOnlyMode}
                     isEditModeActive={props.isEditModeActive}
                     callBackFunction={props}
+                    showAttributeNames={showAttributeNames}
                   />
                 );
               })}

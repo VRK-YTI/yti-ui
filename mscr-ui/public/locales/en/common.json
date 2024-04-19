@@ -110,6 +110,10 @@
   "library": "",
   "library-variant": "",
   "link-opens-new-window-external": "",
+  "mappings-accordion": {
+    "clear": "Clear",
+    "filter-from-mappings": "Filter from mappings"
+  },
   "metadata": {
     "contact": "Contact",
     "created": "Created",

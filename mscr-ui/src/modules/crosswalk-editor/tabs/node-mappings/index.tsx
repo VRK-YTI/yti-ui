@@ -104,9 +104,6 @@ export default function NodeMappings(props: {
     props.performMappingsModalAction('closeModal', null, null);
   }
 
-  function setSourceFilterValue(value: any) {
-  }
-
   function generatePropertiesDropdownItems(input: any) {
     let keys = [];
     for (let key in input) {
