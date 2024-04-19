@@ -84,7 +84,6 @@ export default function NodeMappings(props: {
   function generateMappingPayload() {
     //TODO: add rest of the attributes and fix dropdowns
     let mappings = mappingPayloadInit;
-    console.log('id', props.selectedCrosswalk.source.id);
     mappings.source.push({
       id: props.selectedCrosswalk.source.id,
       label: props.selectedCrosswalk.source.name,

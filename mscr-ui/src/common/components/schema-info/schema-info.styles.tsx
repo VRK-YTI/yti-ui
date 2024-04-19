@@ -2,7 +2,9 @@ import styled from 'styled-components';
 import { Heading } from 'suomifi-ui-components';
 
 export const SchemaHeading = styled(Heading)`
-  font-size: 1.2rem !important;
+  && {
+    font-size: 1.2rem;
+  }
   color: ${(props) => props.theme.suomifi.colors.depthDark2};
 `;
 

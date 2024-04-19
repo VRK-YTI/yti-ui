@@ -202,7 +202,7 @@ export default function MappingsAccordion(props: any) {
     setMappingData(props.nodeMappings);
     setShowAttributeNames(props.showAttributeNames);
   }, [props]);
-  let nodeMappingsInput = props.nodeMappings;
+  const nodeMappingsInput = props.nodeMappings;
   return (
     <>
       <TableContainer component={Paper} className="gx-0">
@@ -219,7 +219,8 @@ export default function MappingsAccordion(props: any) {
               <StyledTableCell className="col-2">
                 <SearchWrapper className="w-100">
                   <SearchInput
-                    labelText={props.caption}
+                    labelText={''}
+                    labelMode='hidden'
                     searchButtonLabel={t('mappings-accordion.filter-from-mappings')}
                     clearButtonLabel={t('mappings-accordion.clear')}
                     visualPlaceholder={t('mappings-accordion.filter-from-mappings')}

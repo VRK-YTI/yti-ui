@@ -360,7 +360,7 @@ export default function SchemaInfo(props: {
             </Box>
           </div>
         </div>
-        <NodeInfoWrapper className="col-5 px-0 me-0">
+        <NodeInfoWrapper className="col-5 px-0">
           <NodeInfo
             treeData={selectedTreeNodes}
             // performNodeInfoAction={performNodeInfoAction}
