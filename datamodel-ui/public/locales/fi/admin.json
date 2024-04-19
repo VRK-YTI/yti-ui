@@ -269,7 +269,7 @@
   "release-errors-general-info": "Tietomallissa on puutteellisia resursseja. Siirry korjaamaan viittaukset tai jatka julkaisua.",
   "release-missing-reference-to-library-info": "Tietomallissa on resursseja, jotka eivät viittaa mihinkään ydintietomalliin.",
   "release-missing-reference-to-library-title": "Viittaus ydintietomalliin",
-  "release-references-not-exist-title": "Viittauksia resurseihin, joita ei ole olemassa",
+  "release-references-not-exist-title": "Viittauksia resursseihin, joita ei ole olemassa",
   "release-references-not-exist-info": "",
   "release-version-number": "Tietomallin versionumero",
   "release-version-number-hint": "Kirjoita versionumero muodossa x.y.z (esimerkiksi 1.1.0)",

@@ -131,29 +131,31 @@ export default function CreateReleaseModal({
 
           <Text>{t('release-errors-general-info')}</Text>
 
-          {Object.entries(validationErrors).map(([key, resources]) => {
-            return (
-              <ReleaseValidationErrors key={key}>
-                <Heading variant="h4">
-                  {translateValidationError(key, t)}
-                </Heading>
-                <Text>{translateValidationError(`${key}-info`, t)}</Text>
-                <ul>
-                  {resources.map((resource) => (
-                    <li key={resource.resourceURI.uri}>
-                      <UriInfo
-                        uri={resource.resourceURI}
-                        lang={i18n.language}
-                      />
-                      <div style={{ fontSize: '14px' }}>
-                        {resource.property} = {resource.target}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </ReleaseValidationErrors>
-            );
-          })}
+          <ReleaseValidationErrors>
+            {Object.entries(validationErrors).map(([key, resources]) => {
+              return (
+                <>
+                  <Heading variant="h4">
+                    {translateValidationError(key, t)}
+                  </Heading>
+                  <Text>{translateValidationError(`${key}-info`, t)}</Text>
+                  <ul>
+                    {resources.map((resource) => (
+                      <li key={resource.resourceURI.uri}>
+                        <UriInfo
+                          uri={resource.resourceURI}
+                          lang={i18n.language}
+                        />
+                        <div style={{ fontSize: '14px' }}>
+                          {resource.property} = {resource.target}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              );
+            })}
+          </ReleaseValidationErrors>
           <ButtonFooter>
             <Button id="skip-errors-continue-button" onClick={handleContinue}>
               {t('continue')}
