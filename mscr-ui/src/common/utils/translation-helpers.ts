@@ -26,7 +26,7 @@ export function translateResourceType(type: ResourceType, t: TFunction) {
 }
 
 export function translateModelFormErrors(error: string, t: TFunction) {
-  console.log(error);
+  // console.log(error);
   switch (error) {
     case 'languageAmount':
       return t('missing-languages', { ns: 'admin' });

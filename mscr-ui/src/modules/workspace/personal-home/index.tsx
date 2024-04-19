@@ -1,5 +1,4 @@
 import { Type } from '@app/common/interfaces/search.interface';
-import WorkspaceTable from 'src/modules/workspace/workspace-table';
 import { useTranslation } from 'next-i18next';
 import Title from 'yti-common-ui/components/title';
 import {
@@ -18,17 +17,24 @@ import {
   useGetPersonalContentQuery,
 } from '@app/common/components/mscr-search/mscr-search.slice';
 import { useStoreDispatch } from '@app/store';
+import { useRouter } from 'next/router';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { useEffect, useMemo, useState } from 'react';
+import WorkspaceTable, { ContentRow } from '@app/modules/workspace/workspace-table';
 
 export default function PersonalWorkspace({
   contentType,
 }: {
   contentType: Type;
 }) {
-  const { t, i18n } = useTranslation('common');
+  const { t } = useTranslation('common');
+  const router = useRouter();
+  const lang = router.locale ?? '';
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
   const dispatch = useStoreDispatch();
   const pageSize = 20;
+  const [content, setContent] = useState(new Array<ContentRow>());
   const { data, isLoading } = useGetPersonalContentQuery({
     type: contentType,
     pageSize,
@@ -37,6 +43,35 @@ export default function PersonalWorkspace({
   const lastPage = data?.hits.total?.value
     ? Math.ceil(data?.hits.total.value / pageSize)
     : 0;
+
+  const fetchedContent = useMemo(() => {
+    if (data) {
+      return data.hits.hits.map((result) => {
+        const info = result._source;
+        const linkUrl =
+          contentType == 'SCHEMA'
+            ? router.basePath + '/schema/' + info.id
+            : router.basePath + '/crosswalk/' + info.id;
+        return {
+          label: getLanguageVersion({
+            data: info.label,
+            lang,
+          }),
+          namespace: info.namespace,
+          state: info.state,
+          numberOfRevisions: info.numberOfRevisions.toString(),
+          pid: info.handle ?? t('metadata.not-available'),
+          linkUrl: <a href={linkUrl}>{t('workspace.view')}</a>,
+        };
+      });
+    } else {
+      return [];
+    }
+  }, [contentType, data, lang, router.basePath, t]);
+
+  useEffect(() => {
+    setContent(fetchedContent);
+  }, [fetchedContent]);
 
   // Need to decide what data we want to fetch loading the application
   const refetchInfo = () => {
@@ -96,7 +131,10 @@ export default function PersonalWorkspace({
               : t('workspace.no-crosswalks')}
           </div>
         ) : (
-          <WorkspaceTable data={data} contentType={contentType} />
+          <WorkspaceTable
+            content={content}
+            contentType={contentType}
+          />
         )}
         {lastPage > 1 && <Pagination lastPage={lastPage} />}
       </main>

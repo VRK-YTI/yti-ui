@@ -7,11 +7,11 @@ import { MSCRError } from '../interfaces/error.interface';
 export default function getApiError(
   error: AxiosBaseQueryError | SerializedError
 ): MSCRError {
- 
+
   const mscrError: MSCRError = {};
   mscrError.staus = '';
   mscrError.message = '';
-  console.log(error);
+  // console.log(error);
 
   if (
     'data' in error &&
@@ -20,7 +20,7 @@ export default function getApiError(
   ) {
     if ('status' in error.data && typeof error.data.status === 'string') {
       mscrError.staus = error.data.status ?? 'GENERAL_ERROR';
-      console.log(error.data.status);
+      // console.log(error.data.status);
     } else if(('status' in error.data && typeof error.data.status === 'number') ) {
       mscrError.staus = error.data.status.toString();
     }
@@ -34,6 +34,6 @@ export default function getApiError(
       mscrError.detail = error.data.detail ?? 'Server Error';
     }
   }
-  
+
   return mscrError;
 }

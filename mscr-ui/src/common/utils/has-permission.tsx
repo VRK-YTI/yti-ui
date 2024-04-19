@@ -105,15 +105,15 @@ export function checkPermission({
   actions,
   targetOrganizations,
 }: checkPermissionProps) {
-  
+
   const rolesInOrganizations = Object.keys(user.organizationsInRole);
- 
+
   const rolesInTargetOrganizations =
     targetOrganizations &&
     targetOrganizations
       ?.flatMap((org) => user.rolesInOrganizations[org])
       .filter((t) => t);
-  
+
   // Return true if user is superuser
   if (user.superuser) {
     return true;
@@ -124,14 +124,14 @@ export function checkPermission({
     return true;
   }
 
-  console.log(rolesInTargetOrganizations);
+  // console.log(rolesInTargetOrganizations);
   // Return true if user has data model editor role in target organization
   if (
     rolesInTargetOrganizations?.includes(Roles.dataModelEditor)||rolesInTargetOrganizations?.includes(Roles.admin)
   ) {
     return true;
   }
-  
+
 
   return false;
 }
@@ -139,18 +139,18 @@ export function checkPermission({
 export function checkEditPermission({
   user,
   owner
-}: checkPermissionProps) { 
+}: checkPermissionProps) {
   if (owner?.includes(user.id)) {
     //user is the owner, Check for personal Contents
     return true;
   } else {
     //Gruop Content
-    
+
     if (owner && user.organizationsInRole[Roles.admin]&& user.organizationsInRole[Roles.admin].includes(owner[0])) {
       // User has admin right for this group
       return true;
     }
-    
+
     if (
       owner &&user.organizationsInRole[Roles.dataModelEditor]&&
       user.organizationsInRole[Roles.dataModelEditor].includes(owner[0])
@@ -158,7 +158,7 @@ export function checkEditPermission({
       return true;
     }
   }
-  
+
 
   return false;
 }
