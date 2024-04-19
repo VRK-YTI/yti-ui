@@ -141,6 +141,7 @@ export default function MscrLanguageSelector(
             defaultValue={item.title}
             id={`name-input-${item.uniqueItemId}`}
             maxLength={TEXT_INPUT_MAX}
+            disabled={props.disabled}
           />
           <DescriptionInput
             labelText={props.translations.textDescription}
@@ -152,6 +153,7 @@ export default function MscrLanguageSelector(
             defaultValue={item.description}
             id={`description-input-${item.uniqueItemId}`}
             maxLength={TEXT_AREA_MAX}
+            disabled={props.disabled}
           />
         </LanguageBlock>
       ))}

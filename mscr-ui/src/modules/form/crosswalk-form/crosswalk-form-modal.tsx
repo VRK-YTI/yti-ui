@@ -27,6 +27,7 @@ import CrosswalkForm from './crosswalk-form-fields';
 import getErrors from '@app/common/utils/get-errors';
 import FileDropAreaMscr from '@app/common/components/file-drop-area-mscr';
 import {fileExtensionsAvailableForCrosswalkRegistrationAttachments} from "@app/common/interfaces/format.interface";
+import SpinnerOverlay, {delay, SpinnerType} from "@app/common/components/spinner-overlay";
 
 interface CrosswalkFormModalProps {
   refetch: () => void;
@@ -38,11 +39,11 @@ interface CrosswalkFormModalProps {
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
 export default function CrosswalkFormModal({
-  refetch,
-  createNew = false,
-  groupContent,
-  pid
-}: CrosswalkFormModalProps) {
+                                             refetch,
+                                             createNew = false,
+                                             groupContent,
+                                             pid
+                                           }: CrosswalkFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
@@ -60,6 +61,8 @@ export default function CrosswalkFormModal({
   const [putCrosswalk, newCrosswalkResult] = usePutCrosswalkMutation();
   const [, setIsValid] = useState(false);
   const [fileData, setFileData] = useState<File | null>();
+  const [submitAnimationVisible, setSubmitAnimationVisible] = useState<boolean>(false);
+
 
   const handleOpen = () => {
     setSkip(false);
@@ -76,7 +79,7 @@ export default function CrosswalkFormModal({
 
   useEffect(() => {
     const result = createNew ? newCrosswalkResult : registerCrosswalkResult;
-    if (userPosted && result.isSuccess) {
+    if (userPosted && result.isSuccess && !submitAnimationVisible) {
       refetch();
       handleClose();
       router.push(`/crosswalk/${result.data.pid}`);
@@ -89,9 +92,17 @@ export default function CrosswalkFormModal({
     router,
     createNew,
     newCrosswalkResult,
+    submitAnimationVisible
   ]);
 
+  const spinnerDelay = async () => {
+    setSubmitAnimationVisible(true);
+    await delay(2000);
+    return Promise.resolve();
+  };
+
   const handleSubmit = () => {
+    scrollToModalTop();
     setUserPosted(true);
     if (!formData) {
       return;
@@ -112,10 +123,15 @@ export default function CrosswalkFormModal({
       const crosswalkFormData = new FormData();
       crosswalkFormData.append('metadata', JSON.stringify(payload));
       crosswalkFormData.append('file', fileData);
-      // console.log(crosswalkFormData);
-      putCrosswalkFull(crosswalkFormData);
+
+      Promise.all([spinnerDelay(), putCrosswalkFull(crosswalkFormData)]).then((values) => {
+        setSubmitAnimationVisible(false);
+      });
+
     } else if (createNew) {
-      putCrosswalk(payload);
+      Promise.all([spinnerDelay(), putCrosswalk(payload)]).then((values) => {
+        setSubmitAnimationVisible(false);
+      });
     } else {
       return;
     }
@@ -144,29 +160,36 @@ export default function CrosswalkFormModal({
   function renderButton() {
     return (
       <Button
-      variant="secondary"
-      icon={<IconPlus />}
-      style={{ height: 'min-content' }}
-      onClick={() => handleOpen()}
-    >
-      {createNew ? t('crosswalk-form.create') : t('crosswalk-form.register')}
-    </Button>
+        variant="secondary"
+        icon={<IconPlus />}
+        style={{ height: 'min-content' }}
+        onClick={() => handleOpen()}
+      >
+        {createNew ? t('crosswalk-form.create') : t('crosswalk-form.register')}
+      </Button>
     )
+  }
+
+  function scrollToModalTop(){
+    const modalTop = document.getElementById('modalTop');
+    if (modalTop) {
+      modalTop.scrollIntoView();
+    }
   }
 
   return (
     <>
-       {groupContent && HasPermission({ actions: ['CREATE_CROSSWALK'],targetOrganization:pid }) ? (
+      {groupContent && HasPermission({ actions: ['CREATE_CROSSWALK'],targetOrganization:pid }) ? (
         <div>
           {renderButton()}
         </div>
       ) : (
-          !groupContent ? (
-            <div>
-              {renderButton()}
-            </div>
+        !groupContent ? (
+          <div>
+            {renderButton()}
+          </div>
         ) : (
-              <div></div>
+          <div></div>
         ))}
       <Modal
         appElementId="__next"
@@ -175,6 +198,10 @@ export default function CrosswalkFormModal({
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
+          <>
+            <SpinnerOverlay animationVisible={submitAnimationVisible} type={createNew ? SpinnerType.CrosswalkCreationModal : SpinnerType.CrosswalkRegistrationModal}></SpinnerOverlay>
+          </>
+          <div id={'modalTop'}></div>
           <ModalTitle>
             {
               createNew
@@ -190,7 +217,7 @@ export default function CrosswalkFormModal({
             setFormData={setFormData}
             createNew={createNew}
             userPosted={userPosted}
-            disabled={authenticatedUser && authenticatedUser.anonymous}
+            disabled={authenticatedUser && authenticatedUser.anonymous || submitAnimationVisible}
             errors={userPosted ? errors : undefined}
           />
           {!createNew && (
@@ -199,23 +226,24 @@ export default function CrosswalkFormModal({
               setIsValid={setIsValid}
               validFileTypes={fileExtensionsAvailableForCrosswalkRegistrationAttachments}
               translateFileUploadError={translateFileUploadError}
+              disabled={submitAnimationVisible}
             />
           )}
         </ModalContent>
         <ModalFooter>
-          {authenticatedUser && authenticatedUser.anonymous && (
+          {authenticatedUser && authenticatedUser.anonymous && !submitAnimationVisible && (
             <InlineAlert status="error" role="alert" id="unauthenticated-alert">
               {t('error-unauthenticated')}
             </InlineAlert>
           )}
-          {userPosted && (
+          {userPosted && !submitAnimationVisible && (
             <FormFooterAlert
               labelText={'Required Fields are missing'}
               alerts={gatherErrorMessages()}
             />
           )}
 
-          <Button onClick={() => handleSubmit()}>
+          <Button disabled={submitAnimationVisible} onClick={() => handleSubmit()}>
             {createNew
               ? t('crosswalk-form.create')
               : t('crosswalk-form.register')}

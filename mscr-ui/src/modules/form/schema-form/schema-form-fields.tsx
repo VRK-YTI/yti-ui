@@ -50,6 +50,7 @@ SchemaFormProps) {
           labelText={t('schema-form.format-label')}
           visualPlaceholder={t('schema-form.format-placeholder')}
           defaultValue={formData.format ?? ''}
+          disabled={disabled}
           onChange={(e: Format) =>
             setFormData({
               ...formData,
@@ -112,6 +113,7 @@ SchemaFormProps) {
           labelText={t('schema-form.status')}
           visualPlaceholder={t('schema-form.status-select')}
           defaultValue={''}
+          disabled={disabled}
           onChange={(e) =>
             setFormData({
               ...formData,

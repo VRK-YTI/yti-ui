@@ -27,6 +27,7 @@ import getErrors from '@app/common/utils/get-errors';
 import { fileExtensionsAvailableForSchemaRegistration } from '@app/common/interfaces/format.interface';
 import FileDropAreaMscr from '@app/common/components/file-drop-area-mscr';
 import * as React from 'react';
+import SpinnerOverlay, {SpinnerType, delay} from "@app/common/components/spinner-overlay";
 
 interface SchemaFormModalProps {
   refetch: () => void;
@@ -37,10 +38,10 @@ interface SchemaFormModalProps {
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
 export default function SchemaFormModal({
-  refetch,
-  groupContent,
-  pid,
-}: SchemaFormModalProps) {
+                                          refetch,
+                                          groupContent,
+                                          pid,
+                                        }: SchemaFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
@@ -58,6 +59,7 @@ export default function SchemaFormModal({
   const [userPosted, setUserPosted] = useState(false);
   // Why are we using a mutation here? Why is that even implemented as a mutation, when the method is GET?
   const [putSchemaFull, resultSchemaFull] = usePutSchemaFullMutation();
+  const [submitAnimationVisible, setSubmitAnimationVisible] = useState<boolean>(false);
 
   const handleOpen = () => {
     setSkip(false);
@@ -74,19 +76,26 @@ export default function SchemaFormModal({
   }, [schemaFormInitialData]);
 
   useEffect(() => {
-    if (userPosted && resultSchemaFull.isSuccess) {
+    if (userPosted && resultSchemaFull.isSuccess && !submitAnimationVisible) {
       //Get the pid from the result
       handleClose();
-      if (resultSchemaFull && resultSchemaFull.data.pid) {
+      if (resultSchemaFull && resultSchemaFull.data.pid && !submitAnimationVisible) {
         router.push(`/schema/${resultSchemaFull.data.pid}`);
       }
 
       // After post route to  saved schema get by PID
       // Later we should show the created schema in the list
     }
-  }, [resultSchemaFull, refetch, userPosted, handleClose, router, formData]);
+  }, [resultSchemaFull, refetch, userPosted, handleClose, router, formData, submitAnimationVisible]);
+
+  const spinnerDelay = async () => {
+    setSubmitAnimationVisible(true);
+    await delay(2000);
+    return Promise.resolve();
+  };
 
   const handleSubmit = () => {
+    scrollToModalTop();
     setUserPosted(true);
     if (!formData) {
       return;
@@ -110,9 +119,15 @@ export default function SchemaFormModal({
       if (fileUri && fileUri.length > 0) {
         schemaFormData.append('contentURL', fileUri);
         putSchemaFull(schemaFormData);
-      } else if (fileData) {
+        Promise.all([spinnerDelay(), putSchemaFull(schemaFormData)]).then((values) => {
+          setSubmitAnimationVisible(false);
+        });
+      }
+      else if (fileData) {
         schemaFormData.append('file', fileData);
-        putSchemaFull(schemaFormData);
+        Promise.all([spinnerDelay(), putSchemaFull(schemaFormData)]).then((values) => {
+          setSubmitAnimationVisible(false);
+        });
       } else {
         return;
       }
@@ -125,7 +140,9 @@ export default function SchemaFormModal({
     }
     const errors = validateSchemaForm(formData, fileData, fileUri);
     setErrors(errors);
+    //console.log(errors);
   }, [userPosted, formData, fileData]);
+
 
   // This part was checking the user permission and based on that showing the button in every render
   /* if (groupContent && !HasPermission({ actions: ['CREATE_SCHEMA'] })) {
@@ -161,15 +178,23 @@ export default function SchemaFormModal({
 
   function renderButton() {
     return (
-      <Button
-        variant="secondary"
-        icon={<IconPlus />}
-        style={{ height: 'min-content' }}
-        onClick={() => handleOpen()}
-      >
-        {t('register-schema')}
-      </Button>
+       <Button
+            variant="secondary"
+            icon={<IconPlus />}
+            style={{ height: 'min-content' }}
+            onClick={() => handleOpen()}
+          >
+            {t('register-schema')}
+          </Button>
+
     );
+  }
+
+  function scrollToModalTop(){
+    const modalTop = document.getElementById('modalTop');
+    if (modalTop) {
+      modalTop.scrollIntoView();
+    }
   }
 
   return (
@@ -197,6 +222,11 @@ export default function SchemaFormModal({
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
+          <>
+            {submitAnimationVisible && (<SpinnerOverlay animationVisible={submitAnimationVisible} type={SpinnerType.SchemaRegistrationModal}></SpinnerOverlay>
+            )}
+          </>
+          <div id={'modalTop'}></div>
           <ModalTitle>{t('register-schema')}</ModalTitle>
           <Text>{t('register-schema-file-required') + ' '}</Text>
           <Text>
@@ -224,6 +254,7 @@ export default function SchemaFormModal({
             translateFileUploadError={translateFileUploadError}
             isSchemaUpload={true}
             setFileUri={setFileUri}
+            disabled={submitAnimationVisible}
           />
           <br></br>
 
@@ -231,32 +262,32 @@ export default function SchemaFormModal({
             formData={formData}
             setFormData={setFormData}
             userPosted={userPosted}
-            disabled={authenticatedUser && authenticatedUser.anonymous}
+            disabled={authenticatedUser && authenticatedUser.anonymous  || submitAnimationVisible}
             errors={userPosted ? errors : undefined}
           />
           <Separator></Separator>
         </ModalContent>
         <ModalFooter>
-          {authenticatedUser && authenticatedUser.anonymous && (
+          {authenticatedUser && authenticatedUser.anonymous && !submitAnimationVisible && (
             <InlineAlert status="error" role="alert" id="unauthenticated-alert">
               {t('error-unauthenticated')}
             </InlineAlert>
           )}
-          {userPosted &&  gatherInputError() && (
+          {userPosted &&  gatherInputError() && !submitAnimationVisible && (
             <FormFooterAlert
               labelText={'Something went wrong'}
               alerts={gatherInputError()}
             />
           )}
           {/*Showing API Error if only input form error is not present*/}
-          {userPosted && gatherInputError().length < 1 && resultSchemaFull.error &&(
+          {userPosted && gatherInputError().length < 1 && resultSchemaFull.error && !submitAnimationVisible && (
             <div>
               <InlineAlert status="error">{gatherApiError()}</InlineAlert>
               <InlineAlert>{getErrorDetail()}</InlineAlert>
             </div>
           )}
 
-          <Button onClick={() => handleSubmit()}>{t('register-schema')}</Button>
+          <Button disabled={submitAnimationVisible} onClick={() => handleSubmit()}>{t('register-schema')}</Button>
           <Button variant="secondary" onClick={() => handleClose()}>
             {t('cancel')}
           </Button>
