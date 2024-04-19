@@ -20,7 +20,7 @@ export enum Type {
 
 export interface ResultInfo {
   id: string;
-  handle?: string;
+  handle: string;
   label: Label;
   state: State;
   comment: { [key: string]: string };

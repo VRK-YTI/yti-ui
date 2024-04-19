@@ -39,7 +39,7 @@ export const schemaApi = createApi({
         },
       }),
     }),
-    putSchemaFull: builder.mutation<any, FormData>({
+    putSchemaFull: builder.mutation<SchemaWithVersionInfo, FormData>({
       query: (file) => ({
         url: '/schemaFull',
         method: 'PUT',

@@ -7,17 +7,12 @@ import {
 } from '@app/common/components/generic-table/generic-table.styles';
 
 // Usage: items can be an array of typed items e.g. FilesRow[]. Heading names are taken from the interface property names. Headings can be over-ridden with using headings array.
-
-export interface TableItem {
-  [s: string]: unknown;
-}
-
 export default function GenericTable(props: {
-  items: TableItem[];
+  items: unknown[];
   headings: string[];
   caption: string;
 }) {
-  function createColumnHeadings(items: TableItem[]) {
+  function createColumnHeadings(items: {[s: string]: unknown}[]) {
     const head: JSX.Element[] = [];
     const cells: JSX.Element[] = [];
     if (props.headings && props.headings.length > 0) {
@@ -38,7 +33,7 @@ export default function GenericTable(props: {
       );
     } else if (items.length > 0) {
       // Take heading names from interface property names
-      for (const [key, value] of Object.entries(items[0])) {
+      for (const [key] of Object.entries(items[0])) {
         cells.push(
           <StyledTableCell key={self.crypto.randomUUID()}>
             {key[0].toUpperCase() + key.slice(1)}
@@ -56,11 +51,11 @@ export default function GenericTable(props: {
     return head;
   }
 
-  function createColumns(items: TableItem[]) {
+  function createColumns(items: {[s: string]: unknown}[]) {
     const rows: JSX.Element[] = [];
-    items.forEach((col: TableItem) => {
+    items.forEach((col) => {
       const temp = [];
-      for (const [key, value] of Object.entries(col)) {
+      for (const [, value] of Object.entries(col)) {
         temp.push(
           <StyledTableCell key={self.crypto.randomUUID()}>
             {value}
@@ -82,8 +77,8 @@ export default function GenericTable(props: {
         </Grid>
         <TableContainer>
           <Table aria-label={props.caption}>
-            {createColumnHeadings(props.items)}
-            {createColumns(props.items)}
+            {createColumnHeadings(props.items as {[s: string]: unknown}[])}
+            {createColumns(props.items as {[s: string]: unknown}[])}
           </Table>
         </TableContainer>
       </Grid>
