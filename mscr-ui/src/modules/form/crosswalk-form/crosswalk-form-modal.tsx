@@ -128,8 +128,6 @@ export default function CrosswalkFormModal({
         setSubmitAnimationVisible(false);
       });
 
-      putCrosswalkFull(crosswalkFormData);
-
     } else if (createNew) {
       Promise.all([spinnerDelay(), putCrosswalk(payload)]).then((values) => {
         setSubmitAnimationVisible(false);

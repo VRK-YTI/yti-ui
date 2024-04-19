@@ -24,7 +24,7 @@ export default function SpinnerOverlay(props: {
           visible={true}
           height="190"
           width="190"
-          color="blue"
+          strokeColor="#2a6ebb"
           strokeWidth="4"
           animationDuration="1"
           ariaLabel="loading"
