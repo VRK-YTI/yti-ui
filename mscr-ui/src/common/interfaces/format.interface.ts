@@ -28,6 +28,7 @@ export const formatsAvailableForCrosswalkCreation: Format[] = [
   Format.Xsd,
   Format.Shacl,
   Format.Owl,
+  Format.Mscr,
 ];
 
 export const formatsAvailableForCrosswalkRegistration: Format[] = [
