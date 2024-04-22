@@ -27,7 +27,7 @@ import getErrors from '@app/common/utils/get-errors';
 import { fileExtensionsAvailableForSchemaRegistration } from '@app/common/interfaces/format.interface';
 import FileDropAreaMscr from '@app/common/components/file-drop-area-mscr';
 import * as React from 'react';
-import SpinnerOverlay, {SpinnerType, delay} from "@app/common/components/spinner-overlay";
+import SpinnerOverlay, {SpinnerType, delay} from '@app/common/components/spinner-overlay';
 
 interface SchemaFormModalProps {
   refetch: () => void;
@@ -118,7 +118,6 @@ export default function SchemaFormModal({
       schemaFormData.append('metadata', JSON.stringify(payload));
       if (fileUri && fileUri.length > 0) {
         schemaFormData.append('contentURL', fileUri);
-        putSchemaFull(schemaFormData);
         Promise.all([spinnerDelay(), putSchemaFull(schemaFormData)]).then((values) => {
           setSubmitAnimationVisible(false);
         });
