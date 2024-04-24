@@ -130,12 +130,13 @@ body {
       height: calc(100% - 70vh);
     }
   }
-  &.crosswalk-editor-tree {
+  &.schema-tree {
     position: absolute;
     width: auto;
     height: 335px;
-    margin-left: 20px;
-    z-index: 20000;
+    max-width: 160px;
+    padding: 0px;
+    margin-top: 74px;
   }
 }
 

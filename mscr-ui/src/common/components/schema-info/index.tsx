@@ -339,7 +339,9 @@ export default function SchemaInfo(props: {
                 overflowY: 'auto',
               }}
             ><>
-              <SpinnerOverlay animationVisible={!isTreeDataFetched} type={SpinnerType.CrosswalkEditorTree}></SpinnerOverlay>
+              <div className='d-flex justify-content-center'>
+              <SpinnerOverlay animationVisible={!isTreeDataFetched} type={SpinnerType.SchemaTree}></SpinnerOverlay>
+              </div>
             </>
               {isTreeDataFetched && (
                 <SchemaTree
