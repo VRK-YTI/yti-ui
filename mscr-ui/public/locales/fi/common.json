@@ -154,6 +154,11 @@
   "no-filters": "",
   "no-languages-available": "",
   "no-subscribed-items": "",
+  "node-info": {
+    "loading": "",
+    "select-a-node": "",
+    "selected-node-info": ""
+  },
   "not-recommended-synonym": "",
   "notifications": {
     "crosswalk-deleted": "",
@@ -210,7 +215,6 @@
     "error-info": "",
     "expand": "",
     "no-label": "",
-    "node-info": "",
     "search": "",
     "search-placeholder": "",
     "search-schema": "",

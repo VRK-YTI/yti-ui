@@ -29,6 +29,7 @@ body {
 }
 
 .empty-mappings-table {
+  display: flex;
   font-size: 0.9rem;
   height: 200px;
   padding: 20px;
@@ -128,6 +129,13 @@ body {
     @media screen and (min-height: 1150px) {
       height: calc(100% - 70vh);
     }
+  }
+  &.crosswalk-editor-tree {
+    position: absolute;
+    width: auto;
+    height: 335px;
+    margin-left: 20px;
+    z-index: 20000;
   }
 }
 

@@ -21,6 +21,7 @@ import {
 } from '@app/common/components/schema-info/schema-info.styles';
 import { useRouter } from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import SpinnerOverlay, {SpinnerType} from "@app/common/components/spinner-overlay";
 
 export default function SchemaInfo(props: {
   updateTreeNodeSelectionsOutput?: (
@@ -283,20 +284,20 @@ export default function SchemaInfo(props: {
           </SchemaHeading>
         </div>
         <div className='col-4 d-flex flex-row justify-content-end align-self-end my-1 pe-3'>
-          <Checkbox
+          {isTreeDataFetched && <Checkbox
             checked={showAttributeNames}
             onClick={(newState) => {
               setShowAttributeNames(newState.checkboxState);
             }}
           >Show node titles
-          </Checkbox>
+          </Checkbox>}
         </div>
       </div>
 
       <TreeviewWrapper className="row gx-0">
         <div className="col-7 px-0">
           <div className="d-flex justify-content-between mb-2 ps-3 pe-2">
-            <SearchWrapper className="w-100">
+            {isTreeDataFetched && (<><SearchWrapper className="w-100">
               <SearchInput
                 className="py-2"
                 labelText={props.caption}
@@ -312,10 +313,8 @@ export default function SchemaInfo(props: {
                   if (!value) {
                     clearTreeSearch();
                   }
-                }}
-              />
-            </SearchWrapper>
-            <ExpandButtonWrapper>
+                }}/>
+            </SearchWrapper><ExpandButtonWrapper>
               <IconButton
                 onClick={() => handleExpandClick()}
                 aria-label={t('schema-tree.expand')}
@@ -323,12 +322,12 @@ export default function SchemaInfo(props: {
                 size="large"
               >
                 {treeExpandedArray.length === 0 ? (
-                  <ExpandMoreIcon />
+                  <ExpandMoreIcon/>
                 ) : (
-                  <ExpandLessIcon />
+                  <ExpandLessIcon/>
                 )}
               </IconButton>
-            </ExpandButtonWrapper>
+            </ExpandButtonWrapper></>)}
           </div>
           <div>
             <Box
@@ -339,7 +338,9 @@ export default function SchemaInfo(props: {
                 maxWidth: 700,
                 overflowY: 'auto',
               }}
-            >
+            ><>
+              <SpinnerOverlay animationVisible={!isTreeDataFetched} type={SpinnerType.CrosswalkEditorTree}></SpinnerOverlay>
+            </>
               {isTreeDataFetched && (
                 <SchemaTree
                   nodes={treeData[0]}
@@ -355,6 +356,7 @@ export default function SchemaInfo(props: {
         <NodeInfoWrapper className="col-5 px-0">
           <NodeInfo
             treeData={selectedTreeNodes}
+            dataIsLoaded={isTreeDataFetched}
             // performNodeInfoAction={performNodeInfoAction}
           ></NodeInfo>
         </NodeInfoWrapper>
