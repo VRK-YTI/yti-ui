@@ -708,5 +708,9 @@ export function translateValidationError(key: string, t: TFunction) {
       return t('release-missing-reference-to-library-title', { ns: 'admin' });
     case 'missing-reference-to-library-info':
       return t('release-missing-reference-to-library-info', { ns: 'admin' });
+    case 'references-not-exist':
+      return t('release-references-not-exist-title', { ns: 'admin' });
+    case 'references-not-exist-info':
+      return t('release-references-not-exist-info', { ns: 'admin' });
   }
 }

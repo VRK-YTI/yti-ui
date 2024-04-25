@@ -269,6 +269,8 @@
   "release-errors-general-info": "There are incomplete resources in the data model. You can fix errors or continue publishing.",
   "release-missing-reference-to-library-info": "There are resources in the data model, which don't refer to any core data model resource",
   "release-missing-reference-to-library-title": "Reference to core data model",
+  "release-references-not-exist-title": "References to non-existing resources",
+  "release-references-not-exist-info": "",
   "release-version-number": "Release version number",
   "release-version-number-hint": "Write version number for the release in format x.y.z (for example 1.1.0)",
   "remove": "Remove",

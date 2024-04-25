@@ -8,7 +8,7 @@ import {
 } from '@app/common/interfaces/model.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
-import { UriData } from '@app/common/interfaces/uri.interface';
+import { ResourceReferencesResult } from '@app/common/interfaces/resource-reference.interface';
 
 export const modelApi = createApi({
   reducerPath: 'modelApi',
@@ -107,9 +107,7 @@ export const modelApi = createApi({
       }),
     }),
     getValidationErrors: builder.query<
-      {
-        [key: string]: UriData[];
-      },
+      ResourceReferencesResult,
       { modelId: string }
     >({
       query: (value) => ({
