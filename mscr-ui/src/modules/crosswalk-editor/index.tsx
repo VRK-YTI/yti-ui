@@ -731,7 +731,11 @@ export default function CrosswalkEditor({
                 </>
               )}
               {selectedTab === 2 && (
-                <VersionHistory revisions={getCrosswalkData.revisions}/>
+                <VersionHistory
+                  revisions={getCrosswalkData.revisions}
+                  contentType={Type.Crosswalk}
+                  currentRevision={crosswalkId}
+                />
               )}
             </div>
           </>
