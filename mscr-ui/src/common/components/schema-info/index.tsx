@@ -22,6 +22,7 @@ import {
 import { useRouter } from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import SpinnerOverlay, {SpinnerType} from "@app/common/components/spinner-overlay";
+import Tooltip from '@mui/material/Tooltip';
 
 export default function SchemaInfo(props: {
   updateTreeNodeSelectionsOutput?: (
@@ -274,6 +275,12 @@ export default function SchemaInfo(props: {
     <>
       <div className='row d-flex justify-content-between mb-2'>
         <div className='col-8'>
+          <Tooltip title={getSchemaData?.metadata.label
+            ? getLanguageVersion({
+              data: getSchemaData.metadata.label,
+              lang,
+            })
+            : t('schema-tree.no-label')} placement="top-start">
           <SchemaHeading variant='h2'>
             {getSchemaData?.metadata.label
               ? getLanguageVersion({
@@ -282,6 +289,7 @@ export default function SchemaInfo(props: {
               })
               : t('schema-tree.no-label')}
           </SchemaHeading>
+          </Tooltip>
         </div>
         <div className='col-4 d-flex flex-row justify-content-end align-self-end my-1 pe-3'>
           {isTreeDataFetched && <Checkbox
