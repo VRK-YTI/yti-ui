@@ -20,6 +20,7 @@ export default function MetadataAndFiles(props: {
         refetchMetadata={props.refetch}
         hasEditPermission={hasEditRights}
       />
+      <br/>
       <MetadataFilesTable
         filesRowInput={props.crosswalkData.fileMetadata}
         crosswalkData={props.crosswalkData}

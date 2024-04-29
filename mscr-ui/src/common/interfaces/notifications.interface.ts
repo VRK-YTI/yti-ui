@@ -9,6 +9,10 @@ export type NotificationKeys =
   | 'SCHEMA_SAVE'
   | 'CROSSWALK_PUBLISH'
   | 'SCHEMA_PUBLISH'
+  | 'CROSSWALK_DEPRECATE'
+  | 'SCHEMA_DEPRECATE'
+  | 'CROSSWALK_INVALIDATE'
+  | 'SCHEMA_INVALIDATE'
   | 'CROSSWALK_DELETE'
   | 'SCHEMA_DELETE';
   // ToDo: Add more notifications, like these below:

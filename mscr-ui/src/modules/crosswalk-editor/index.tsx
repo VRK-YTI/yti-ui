@@ -5,9 +5,7 @@ import {useEffect} from 'react';
 import {
   Notification,
   Button as Sbutton,
-  ActionMenuItem,
-  ActionMenu,
-  Text, Checkbox
+  Text
 } from 'suomifi-ui-components';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -33,14 +31,16 @@ import {
 import {
   useGetCrosswalkMappingFunctionsQuery
 } from '@app/common/components/crosswalk-functions/crosswalk-functions.slice';
-import {createTheme, ThemeProvider} from '@mui/material';
+import {createTheme, Grid, ThemeProvider} from '@mui/material';
 import HasPermission from '@app/common/utils/has-permission';
 import VersionHistory from '@app/common/components/version-history';
 import SchemaInfo from '@app/common/components/schema-info';
 import {useTranslation} from 'next-i18next';
 import {State} from '@app/common/interfaces/state.interface';
 import MetadataStub from '@app/modules/form/metadata-form/metadata-stub';
-import {Type} from '@app/common/interfaces/search.interface';
+import {ActionMenuTypes, Type} from '@app/common/interfaces/search.interface';
+import SchemaAndCrosswalkActionMenu from "@app/common/components/schema-and-crosswalk-actionmenu";
+import {ActionMenuWrapper} from "@app/modules/crosswalk-editor/crosswalk-editor.styles";
 
 export default function CrosswalkEditor({
                                           crosswalkId,
@@ -442,6 +442,14 @@ export default function CrosswalkEditor({
     }
   };
 
+  const performCallbackFromActionMenu = (
+    action: any,
+  ) => {
+    if (action === 'edit') {
+      isEditModeActive ? setEditModeActive(false) : setEditModeActive(true);
+    }
+  };
+
   const performCallbackFromMappingsModal = (
     action: any,
     mappingPayload: any,
@@ -567,7 +575,7 @@ export default function CrosswalkEditor({
             </CustomTabPanel>
             <CustomTabPanel value={selectedTab} index={2}>
             </CustomTabPanel>*/}
-            <div className="row d-flex justify-content-between mt-2 crosswalk-editor">
+            <div className="row d-flex h-0">
               {crosswalkPublished && publishNotificationVisible && (
                 <Notification
                   closeText="Close"
@@ -595,25 +603,18 @@ export default function CrosswalkEditor({
                 }
               >
                 {hasEditRights && (
-                  <ActionMenu className="mb-2" buttonText="Actions">
-                    <ActionMenuItem
-                      onClick={() => setEditModeActive(true)}
-                      className={isEditModeActive ? 'd-none' : ''}
-                    >
-                      Edit
-                    </ActionMenuItem>
-                    <ActionMenuItem
-                      onClick={() => setEditModeActive(false)}
-                      className={isEditModeActive ? '' : 'd-none'}
-                    >
-                      Finish editing
-                    </ActionMenuItem>
-                  </ActionMenu>
+                  <>
+                    <ActionMenuWrapper>
+                      <SchemaAndCrosswalkActionMenu buttonCallbackFunction={performCallbackFromActionMenu} metadata={getCrosswalkData} isMappingsEditModeActive={isEditModeActive} refetchMetadata={refetchCrosswalkData} type={ActionMenuTypes.CrosswalkEditor}></SchemaAndCrosswalkActionMenu>
+                    </ActionMenuWrapper>
+                    </>
                 )}
               </div>
+              </div>
+              <div className="row d-flex justify-content-between crosswalk-editor">
 
               {/*  LEFT COLUMN */}
-              <div className={selectedTab === 1 ? 'col-12 mx-2' : 'd-none'}>
+              <div className={selectedTab === 1 ? 'col-12 mx-1 mt-3' : 'd-none'}>
                 <>
                   <div className="row gx-0">
                     {/*  SOURCE TREE */}
@@ -670,6 +671,7 @@ export default function CrosswalkEditor({
                         )}
                         schemaUrn={targetSchemaUrn}
                         raiseHeading={hasEditRights}
+                        reserveSpaceForActionMenu={true}
                       ></SchemaInfo>
                     </div>
                   </div>
@@ -731,7 +733,25 @@ export default function CrosswalkEditor({
                 </>
               )}
               {selectedTab === 2 && (
-                <VersionHistory revisions={getCrosswalkData.revisions}/>
+                <>
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <h2 className='ms-2'>{t('metadata.versions')}</h2>
+                    </Grid>
+                    <Grid item xs={6} className="d-flex justify-content-end">
+                      <div className='mt-3 me-2'>
+                      <SchemaAndCrosswalkActionMenu buttonCallbackFunction={performCallbackFromActionMenu}
+                                                    metadata={getCrosswalkData}
+                                                    isMappingsEditModeActive={isEditModeActive}
+                                                    refetchMetadata={refetchCrosswalkData}
+                                                    type={ActionMenuTypes.CrosswalkVersionInfo}></SchemaAndCrosswalkActionMenu>
+                      </div>
+                    </Grid>
+                    <Grid item xs={12}>
+                  <VersionHistory revisions={getCrosswalkData.revisions}/>
+                    </Grid>
+                  </Grid>
+                </>
               )}
             </div>
           </>

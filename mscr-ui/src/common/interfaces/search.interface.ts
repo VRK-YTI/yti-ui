@@ -18,6 +18,14 @@ export enum Type {
   Schema = 'SCHEMA',
 }
 
+export enum ActionMenuTypes {
+  CrosswalkEditor = 'CROSSWALK_EDITOR',
+  CrosswalkMetadata = 'CROSSWALK_METADATA',
+  CrosswalkVersionInfo = 'CROSSWALK_VERSIONINFO',
+  Schema = 'SCHEMA',
+  SchemaMetadata = 'SCHEMA_METADATA',
+}
+
 export interface ResultInfo {
   id: string;
   handle: string;

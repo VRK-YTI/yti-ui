@@ -41,6 +41,10 @@ export const DropdownWrapper = styled.div`
   }
 `;
 
+export const CheckboxWrapper = styled.div`
+  margin: 7px 0px 12px 16px;
+`;
+
 export const NodeInfoWrapper = styled.div`
   color: #6b6b6b;
   background: #d8e3f4;

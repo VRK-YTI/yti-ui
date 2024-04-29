@@ -30,7 +30,7 @@ export default function VersionHistory({
         <GenericTable
           items={revisionsFormatted}
           headings={headers}
-          caption={t('metadata.versions')}
+          caption={''}
         ></GenericTable>
       </VersionHistoryContainer>
     </>
