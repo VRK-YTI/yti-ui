@@ -218,7 +218,7 @@ export default function MetadataForm({
                                             metadata={metadata}
                                             isMappingsEditModeActive={isEditModeActive}
                                             refetchMetadata={refetchMetadata}
-                                            type={type === Type.Schema ? ActionMenuTypes.Schema : ActionMenuTypes.CrosswalkMetadata}></SchemaAndCrosswalkActionMenu>
+                                            type={type === Type.Schema ? ActionMenuTypes.SchemaMetadata : ActionMenuTypes.CrosswalkMetadata}></SchemaAndCrosswalkActionMenu>
             </>
           )}
         </Grid>

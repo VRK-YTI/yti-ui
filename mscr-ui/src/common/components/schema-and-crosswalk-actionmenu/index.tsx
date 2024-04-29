@@ -197,7 +197,7 @@ export default function SchemaAndCrosswalkActionMenu({
       </ActionMenuItem>
       <ActionMenuItem
         onClick={() => buttonCallbackFunction('edit')}
-        className={(type === ActionMenuTypes.CrosswalkMetadata || type === ActionMenuTypes.SchemaMetadata) && !isEditModeActive ? '' : 'd-none'}
+        className={(type === ActionMenuTypes.CrosswalkMetadata || type === ActionMenuTypes.SchemaMetadata) ? '' : 'd-none'}
       >
         {t('actionmenu.edit-metadata')}
       </ActionMenuItem>
