@@ -5,6 +5,16 @@ import GenericTable from '@app/common/components/generic-table';
 import { VersionHistoryContainer } from '@app/common/components/version-history/version-history.styles';
 import { Type } from '@app/common/interfaces/search.interface';
 import { useRouter } from 'next/router';
+import { State } from '@app/common/interfaces/state.interface';
+
+interface RevisionRow {
+  versionLabel: string;
+  pid: string;
+  created: JSX.Element | undefined;
+  state: State | undefined;
+  linkUrl: JSX.Element | string;
+  highlight?: boolean;
+}
 
 export default function VersionHistory({
   revisions,
@@ -30,13 +40,17 @@ export default function VersionHistory({
       contentType == 'SCHEMA'
         ? router.basePath + '/schema/' + revision.pid
         : router.basePath + '/crosswalk/' + revision.pid;
-    return {
+    const revisionRow : RevisionRow = {
       versionLabel: revision.versionLabel,
       pid: revision.pid,
       created: <FormattedDate date={revision.created} />,
       state: revision.state,
       linkUrl: currentRevision == revision.pid ? t('metadata.viewing') : <a href={linkUrl}>{t('metadata.view')}</a>,
     };
+    if (currentRevision == revision.pid) {
+      revisionRow.highlight = true;
+    }
+    return revisionRow;
   });
 
   return (
@@ -46,6 +60,7 @@ export default function VersionHistory({
           items={revisionsFormatted}
           headings={headers}
           caption={t('metadata.versions')}
+          staticHighlight={true}
         ></GenericTable>
       </VersionHistoryContainer>
     </>

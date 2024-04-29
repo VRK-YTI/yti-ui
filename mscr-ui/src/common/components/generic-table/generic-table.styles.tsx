@@ -25,4 +25,7 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&.MuiTableRow-hover:hover': {
     opacity: '1',
   },
+  '&&.Mui-selected': {
+    backgroundColor: theme.suomifi.colors.successSecondary,
+  }
 }));
