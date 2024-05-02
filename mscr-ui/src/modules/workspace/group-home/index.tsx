@@ -58,7 +58,7 @@ export default function GroupWorkspace({
       return data.hits.hits.map((result) => {
         const info = result._source;
         const linkUrl =
-          contentType == 'SCHEMA'
+          contentType == Type.Schema
             ? router.basePath + '/schema/' + info.id
             : router.basePath + '/crosswalk/' + info.id;
         return {
@@ -66,7 +66,7 @@ export default function GroupWorkspace({
             data: info.label,
             lang,
           }),
-          namespace: info.namespace,
+          ...(contentType == Type.Schema && { namespace: info.namespace }),
           state: info.state,
           numberOfRevisions: info.numberOfRevisions.toString(),
           pid: info.handle ?? t('metadata.not-available'),
