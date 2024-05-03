@@ -25,6 +25,10 @@ export default withIronSessionApiRoute(
         mimeType = 'application/vnd+oai+openapi+json';
         filename += '.json';
         break;
+      case 'JSONSchema':
+        mimeType = 'application/schema+json';
+        filename += '.schema.json';
+        break;
       case 'LD+JSON':
       default:
         mimeType = 'application/ld+json';
