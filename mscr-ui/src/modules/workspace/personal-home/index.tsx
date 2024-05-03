@@ -20,7 +20,9 @@ import { useStoreDispatch } from '@app/store';
 import { useRouter } from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useEffect, useMemo, useState } from 'react';
-import WorkspaceTable, { ContentRow } from '@app/modules/workspace/workspace-table';
+import WorkspaceTable, {
+  ContentRow,
+} from '@app/modules/workspace/workspace-table';
 
 export default function PersonalWorkspace({
   contentType,
@@ -49,7 +51,7 @@ export default function PersonalWorkspace({
       return data.hits.hits.map((result) => {
         const info = result._source;
         const linkUrl =
-          contentType == 'SCHEMA'
+          contentType == Type.Schema
             ? router.basePath + '/schema/' + info.id
             : router.basePath + '/crosswalk/' + info.id;
         return {
@@ -57,7 +59,7 @@ export default function PersonalWorkspace({
             data: info.label,
             lang,
           }),
-          namespace: info.namespace,
+          ...(contentType == Type.Schema && { namespace: info.namespace }),
           state: info.state,
           numberOfRevisions: info.numberOfRevisions.toString(),
           pid: info.handle ?? t('metadata.not-available'),
@@ -131,10 +133,7 @@ export default function PersonalWorkspace({
               : t('workspace.no-crosswalks')}
           </div>
         ) : (
-          <WorkspaceTable
-            content={content}
-            contentType={contentType}
-          />
+          <WorkspaceTable content={content} contentType={contentType} />
         )}
         {lastPage > 1 && <Pagination lastPage={lastPage} />}
       </main>

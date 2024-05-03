@@ -764,7 +764,11 @@ export default function CrosswalkEditor({
                       </div>
                     </Grid>
                     <Grid item xs={12}>
-                      <VersionHistory revisions={getCrosswalkData.revisions} />
+                      <VersionHistory
+                        revisions={getCrosswalkData.revisions}
+                        contentType={Type.Crosswalk}
+                        currentRevision={crosswalkId}
+                      />
                     </Grid>
                   </Grid>
                 </>

@@ -159,6 +159,8 @@
     "target-schema": "Target schema",
     "version-label": "Version label",
     "versions": "Versions",
+    "view": "View",
+    "viewing": "Viewing",
     "visibility": "Visibility"
   },
   "mscr-title": "Metadata Schema and Crosswalk Registry",

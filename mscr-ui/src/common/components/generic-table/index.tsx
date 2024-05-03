@@ -11,6 +11,7 @@ export default function GenericTable(props: {
   items: unknown[];
   headings: string[];
   caption: string;
+  staticHighlight: boolean;
 }) {
   function createColumnHeadings(items: { [s: string]: unknown }[]) {
     const head: JSX.Element[] = [];
@@ -55,7 +56,10 @@ export default function GenericTable(props: {
     const rows: JSX.Element[] = [];
     items.forEach((col) => {
       const temp = [];
-      for (const [, value] of Object.entries(col)) {
+      // Separate the highlight property and don't create a cell for it, if staticHighlight is passed as true
+      // Used to highlight the currently viewed version in the version history table
+      const { highlight, ...cells } = col;
+      for (const [, value] of Object.entries(props.staticHighlight ? cells : col)) {
         temp.push(
           <StyledTableCell key={self.crypto.randomUUID()}>
             {value}
@@ -63,7 +67,7 @@ export default function GenericTable(props: {
         );
       }
       rows.push(
-        <StyledTableRow key={self.crypto.randomUUID()}>{temp}</StyledTableRow>
+        <StyledTableRow key={self.crypto.randomUUID()} selected={props.staticHighlight && highlight == true}>{temp}</StyledTableRow>
       );
     });
     return <TableBody>{rows}</TableBody>;

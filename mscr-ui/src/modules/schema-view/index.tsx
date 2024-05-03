@@ -136,7 +136,11 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
                   </div>
                 </Grid>
                 <Grid item xs={12}>
-                  <VersionHistory revisions={schemaDetails.revisions} />
+                  <VersionHistory
+                    revisions={schemaDetails.revisions}
+                    contentType={Type.Schema}
+                    currentRevision={schemaId}
+                  />
                 </Grid>
               </Grid>
             )}
