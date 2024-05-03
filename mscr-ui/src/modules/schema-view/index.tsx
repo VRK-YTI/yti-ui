@@ -115,7 +115,11 @@ export default function SchemaView({
               />
             )}
             {selectedTab === 2 && (
-              <VersionHistory revisions={schemaDetails.revisions} />
+              <VersionHistory
+                revisions={schemaDetails.revisions}
+                contentType={Type.Schema}
+                currentRevision={schemaId}
+              />
             )}
           </>
         )}
