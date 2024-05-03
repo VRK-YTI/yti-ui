@@ -2,7 +2,6 @@ import { FakeableUser } from 'yti-common-ui/interfaces/fakeable-user.interface';
 import { default as CommonLayout } from './layout';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import Notification from '@app/common/components/notifications';
-import React from 'react';
 
 interface LayoutProps {
   user?: MscrUser | null;
