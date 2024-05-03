@@ -14,10 +14,11 @@
   },
   "actionmenu": {
     "delete-crosswalk": "",
+    "delete-draft": "",
     "delete-schema": "",
     "deprecate-crosswalk": "",
     "deprecate-schema": "",
-    "edit-mappings'": "",
+    "edit-mappings": "",
     "edit-metadata": "",
     "finish-editing": "",
     "invalidate-crosswalk": "",
@@ -52,6 +53,9 @@
   },
   "confirm-modal": {
     "delete-crosswalk": "",
+    "delete-draft": "",
+    "delete-draft-info": "",
+    "delete-info": "",
     "delete-schema": "",
     "deprecate-crosswalk": "",
     "deprecate-schema": "",
@@ -172,9 +176,15 @@
   "not-recommended-synonym": "",
   "notifications": {
     "crosswalk-deleted": "",
+    "crosswalk-deprecated": "",
+    "crosswalk-invalidated": "",
     "crosswalk-published": "",
     "crosswalk-saved": "",
+    "mappings-edit": "",
+    "mappings-finish": "",
     "schema-deleted": "",
+    "schema-deprecated": "",
+    "schema-invalidated": "",
     "schema-published": "",
     "schema-saved": ""
   },

@@ -1,12 +1,14 @@
-import {initialMetadataForm, Metadata, MetadataFormType,} from '@app/common/interfaces/metadata.interface';
-import {useDeleteCrosswalkMutation, usePatchCrosswalkMutation,} from '@app/common/components/crosswalk/crosswalk.slice';
-import {useDeleteSchemaMutation, usePatchSchemaMutation,} from '@app/common/components/schema/schema.slice';
-import {useTranslation} from 'next-i18next';
-import {useRouter} from 'next/router';
-import {Grid} from '@mui/material';
 import {
-  ActionMenu,
-  ActionMenuItem,
+  initialMetadataForm,
+  Metadata,
+  MetadataFormType,
+} from '@app/common/interfaces/metadata.interface';
+import { usePatchCrosswalkMutation } from '@app/common/components/crosswalk/crosswalk.slice';
+import { usePatchSchemaMutation } from '@app/common/components/schema/schema.slice';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import { Grid } from '@mui/material';
+import {
   Button as Sbutton,
   Dropdown,
   DropdownItem,
@@ -14,14 +16,20 @@ import {
   TextInput,
 } from 'suomifi-ui-components';
 import * as React from 'react';
-import {useCallback, useEffect, useState} from 'react';
-import {getLanguageVersion} from '@app/common/utils/get-language-version';
-import {ActionMenuTypes, Type, Visibility} from '@app/common/interfaces/search.interface';
-import {State} from '@app/common/interfaces/state.interface';
+import { useCallback, useEffect, useState } from 'react';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import {
+  ActionMenuTypes,
+  Type,
+  Visibility,
+} from '@app/common/interfaces/search.interface';
+import { State } from '@app/common/interfaces/state.interface';
 import ConfirmModal from '@app/common/components/confirmation-modal';
-import {useStoreDispatch} from '@app/store';
-import {clearNotification, setNotification,} from '@app/common/components/notifications/notifications.slice';
-import Notification from '@app/common/components/notifications';
+import { useStoreDispatch } from '@app/store';
+import {
+  clearNotification,
+  setNotification,
+} from '@app/common/components/notifications/notifications.slice';
 import FormattedDate from 'yti-common-ui/components/formatted-date';
 import {
   MetadataAttribute,
@@ -30,8 +38,8 @@ import {
   MetadataLabel,
   MetadataRow,
 } from '@app/modules/form/metadata-form/metadata-form.styles';
-import {mscrSearchApi} from '@app/common/components/mscr-search/mscr-search.slice';
-import SchemaAndCrosswalkActionMenu from "@app/common/components/schema-and-crosswalk-actionmenu";
+import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
+import SchemaAndCrosswalkActionMenu from '@app/common/components/schema-and-crosswalk-actionmenu';
 
 interface MetadataFormProps {
   type: Type;
@@ -52,59 +60,30 @@ export default function MetadataForm({
   const [isEditModeActive, setIsEditModeActive] = useState(false);
   const [patchCrosswalk] = usePatchCrosswalkMutation();
   const [patchSchema] = usePatchSchemaMutation();
-  const [deleteSchema] = useDeleteSchemaMutation();
-  const [deleteCrosswalk] = useDeleteCrosswalkMutation();
   const [isSaveConfirmModalOpen, setSaveConfirmModalOpen] = useState(false);
-  const [isPublishConfirmModalOpen, setPublishConfirmModalOpen] =
-    useState(false);
-  const [isInvalidateConfirmModalOpen, setInvalidateConfirmModalOpen] =
-    useState(false);
-  const [isDeprecateConfirmModalOpen, setDeprecateConfirmModalOpen] =
-    useState(false);
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [formData, setFormData] =
     useState<MetadataFormType>(initialMetadataForm);
 
   const performModalAction = (action: string) => {
     setSaveConfirmModalOpen(false);
-    setPublishConfirmModalOpen(false);
-    setDeleteModalOpen(false);
     if (action === 'close') {
       return;
     }
-    let payload = generatePayload();
-    if (action === 'publish') {
-      payload = {
-        ...payload,
-        state: State.Published,
-        visibility: Visibility.Public,
-      };
-    }
-    if (action === 'deprecate') {
-      payload = {
-        ...payload,
-        state: State.Deprecated,
-        visibility: Visibility.Public,
-      };
-    }
-    if (action === 'invalidate') {
-      payload = {
-        ...payload,
-        state: State.Invalid,
-        visibility: Visibility.Public,
-      };
-    }
-    if (action === 'save' || action === 'publish' || action === 'invalidate' || action === 'deprecate') {
-      setIsEditModeActive(false);
+    setIsEditModeActive(false);
+    const payload = generatePayload();
+    if (action === 'save') {
       if (type === Type.Crosswalk) {
         patchCrosswalk({ payload: payload, pid: metadata.pid })
           .unwrap()
           .then(() => {
             dispatch(
-              setNotification(
-                action === 'publish' ? 'CROSSWALK_PUBLISH' : 'save' ? 'CROSSWALK_SAVE' : 'invalidate' ? 'CROSSWALK_SAVE' : 'CROSSWALK_SAVE'
-              )
+              mscrSearchApi.util.invalidateTags([
+                'PersonalContent',
+                'OrgContent',
+                'MscrSearch',
+              ])
             );
+            dispatch(setNotification('CROSSWALK_SAVE'));
             refetchMetadata();
           });
         // ToDo: Error notifications with .catch
@@ -113,32 +92,16 @@ export default function MetadataForm({
           .unwrap()
           .then(() => {
             dispatch(
-              setNotification(
-                action === 'publish' ? 'SCHEMA_PUBLISH' : 'save' ? 'SCHEMA_SAVE' : 'invalidate' ? 'SCHEMA_SAVE' : 'SCHEMA_SAVE'
-              )
+              mscrSearchApi.util.invalidateTags([
+                'PersonalContent',
+                'OrgContent',
+                'MscrSearch',
+              ])
             );
+            dispatch(setNotification('SCHEMA_SAVE'));
             refetchMetadata();
           });
       }
-    }
-    if (action === 'deleteCrosswalk') {
-      deleteCrosswalk(metadata.pid.toString())
-        .unwrap()
-        .then(() => {
-          dispatch(mscrSearchApi.util.invalidateTags(['MscrSearch', 'OrgContent', 'PersonalContent']));
-          dispatch(setNotification('CROSSWALK_DELETE'));
-          refetchMetadata();
-        });
-      // ToDo: Error notifications with .catch
-    } else if (action === 'deleteSchema') {
-      deleteSchema(metadata.pid.toString())
-        .unwrap()
-        .then(() => {
-          dispatch(mscrSearchApi.util.invalidateTags(['MscrSearch', 'OrgContent', 'PersonalContent']));
-          dispatch(setNotification('SCHEMA_DELETE'));
-          refetchMetadata();
-        });
-      // ToDo: Error notifications with .catch
     }
   };
 
@@ -192,33 +155,36 @@ export default function MetadataForm({
     setFormData(newFormData);
   }
 
-  const performCallbackFromActionMenu = (
-    action: any,
-  ) => {
+  const performCallbackFromActionMenu = (action: string) => {
     if (action === 'edit') {
-       setIsEditModeActive(true);
+      setIsEditModeActive(true);
     }
   };
 
   return (
     <MetadataContainer>
-      <Notification />
       <Grid container>
         <Grid item xs={6}>
-        {type === Type.Crosswalk ? (
-          <h2>{t('metadata.crosswalk-details')}</h2>
-        ) : (
-          <h2>{t('metadata.schema-details')}</h2>
-        )}
+          {type === Type.Crosswalk ? (
+            <h2>{t('metadata.crosswalk-details')}</h2>
+          ) : (
+            <h2>{t('metadata.schema-details')}</h2>
+          )}
         </Grid>
         <Grid item xs={6} className="d-flex justify-content-end my-3">
           {hasEditPermission && (
             <>
-              <SchemaAndCrosswalkActionMenu buttonCallbackFunction={performCallbackFromActionMenu}
-                                            metadata={metadata}
-                                            isMappingsEditModeActive={isEditModeActive}
-                                            refetchMetadata={refetchMetadata}
-                                            type={type === Type.Schema ? ActionMenuTypes.SchemaMetadata : ActionMenuTypes.CrosswalkMetadata}></SchemaAndCrosswalkActionMenu>
+              <SchemaAndCrosswalkActionMenu
+                buttonCallbackFunction={performCallbackFromActionMenu}
+                metadata={metadata}
+                isMappingsEditModeActive={isEditModeActive}
+                refetchMetadata={refetchMetadata}
+                type={
+                  type === Type.Schema
+                    ? ActionMenuTypes.SchemaMetadata
+                    : ActionMenuTypes.CrosswalkMetadata
+                }
+              ></SchemaAndCrosswalkActionMenu>
             </>
           )}
         </Grid>
@@ -397,8 +363,7 @@ export default function MetadataForm({
               {!isEditModeActive && <p>{formData.description}</p>}
             </MetadataRow>
             <Grid item xs={6} md={5}>
-              <Grid container direction="row" justifyContent="flex-end">
-              </Grid>
+              <Grid container direction="row" justifyContent="flex-end"></Grid>
             </Grid>
           </Grid>
         </Grid>

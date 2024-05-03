@@ -39,8 +39,10 @@ import {useTranslation} from 'next-i18next';
 import {State} from '@app/common/interfaces/state.interface';
 import MetadataStub from '@app/modules/form/metadata-form/metadata-stub';
 import {ActionMenuTypes, Type} from '@app/common/interfaces/search.interface';
-import SchemaAndCrosswalkActionMenu from "@app/common/components/schema-and-crosswalk-actionmenu";
-import {ActionMenuWrapper} from "@app/modules/crosswalk-editor/crosswalk-editor.styles";
+import SchemaAndCrosswalkActionMenu from '@app/common/components/schema-and-crosswalk-actionmenu';
+import { ActionMenuWrapper } from '@app/modules/crosswalk-editor/crosswalk-editor.styles';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { useStoreDispatch } from '@app/store';
 
 export default function CrosswalkEditor({
                                           crosswalkId,
@@ -59,6 +61,7 @@ export default function CrosswalkEditor({
   });
 
   const {t} = useTranslation('common');
+  const dispatch = useStoreDispatch();
 
   const emptyTreeSelection: RenderTree = {
     elementPath: '',
@@ -446,7 +449,13 @@ export default function CrosswalkEditor({
     action: any,
   ) => {
     if (action === 'edit') {
-      isEditModeActive ? setEditModeActive(false) : setEditModeActive(true);
+      if (isEditModeActive) {
+        dispatch(setNotification('FINISH_EDITING_MAPPINGS'));
+        setEditModeActive(false);
+      } else {
+        dispatch(setNotification('EDIT_MAPPINGS'));
+        setEditModeActive(true);
+      }
     }
   };
 
@@ -605,14 +614,19 @@ export default function CrosswalkEditor({
                 {hasEditRights && (
                   <>
                     <ActionMenuWrapper>
-                      <SchemaAndCrosswalkActionMenu buttonCallbackFunction={performCallbackFromActionMenu} metadata={getCrosswalkData} isMappingsEditModeActive={isEditModeActive} refetchMetadata={refetchCrosswalkData} type={ActionMenuTypes.CrosswalkEditor}></SchemaAndCrosswalkActionMenu>
+                      <SchemaAndCrosswalkActionMenu
+                        buttonCallbackFunction={performCallbackFromActionMenu}
+                        metadata={getCrosswalkData}
+                        isMappingsEditModeActive={isEditModeActive}
+                        refetchMetadata={refetchCrosswalkData}
+                        type={ActionMenuTypes.CrosswalkEditor}
+                      />
                     </ActionMenuWrapper>
-                    </>
+                  </>
                 )}
               </div>
-              </div>
-              <div className="row d-flex justify-content-between crosswalk-editor">
-
+            </div>
+            <div className="row d-flex justify-content-between crosswalk-editor">
               {/*  LEFT COLUMN */}
               <div className={selectedTab === 1 ? 'col-12 mx-1 mt-3' : 'd-none'}>
                 <>
@@ -739,16 +753,18 @@ export default function CrosswalkEditor({
                       <h2 className='ms-2'>{t('metadata.versions')}</h2>
                     </Grid>
                     <Grid item xs={6} className="d-flex justify-content-end">
-                      <div className='mt-3 me-2'>
-                      <SchemaAndCrosswalkActionMenu buttonCallbackFunction={performCallbackFromActionMenu}
-                                                    metadata={getCrosswalkData}
-                                                    isMappingsEditModeActive={isEditModeActive}
-                                                    refetchMetadata={refetchCrosswalkData}
-                                                    type={ActionMenuTypes.CrosswalkVersionInfo}></SchemaAndCrosswalkActionMenu>
+                      <div className="mt-3 me-2">
+                        <SchemaAndCrosswalkActionMenu
+                          buttonCallbackFunction={performCallbackFromActionMenu}
+                          metadata={getCrosswalkData}
+                          isMappingsEditModeActive={isEditModeActive}
+                          refetchMetadata={refetchCrosswalkData}
+                          type={ActionMenuTypes.CrosswalkVersionInfo}
+                        ></SchemaAndCrosswalkActionMenu>
                       </div>
                     </Grid>
                     <Grid item xs={12}>
-                  <VersionHistory revisions={getCrosswalkData.revisions}/>
+                      <VersionHistory revisions={getCrosswalkData.revisions} />
                     </Grid>
                   </Grid>
                 </>
@@ -768,7 +784,10 @@ export default function CrosswalkEditor({
               </Box>
 
               {getCrosswalkData && (
-                <MetadataStub metadata={getCrosswalkData} type={Type.Crosswalk}/>
+                <MetadataStub
+                  metadata={getCrosswalkData}
+                  type={Type.Crosswalk}
+                />
               )}
             </>
           )

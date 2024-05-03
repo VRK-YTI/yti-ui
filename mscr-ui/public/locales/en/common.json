@@ -14,10 +14,11 @@
   },
   "actionmenu": {
     "delete-crosswalk": "Delete crosswalk",
+    "delete-draft": "Delete draft",
     "delete-schema": "Delete schema",
     "deprecate-crosswalk": "Deprecate crosswalk",
     "deprecate-schema": "Deprecate schema",
-    "edit-mappings'": "Edit mappings",
+    "edit-mappings": "Edit mappings",
     "edit-metadata": "Edit metadata",
     "finish-editing": "Finish editing",
     "invalidate-crosswalk": "Invalidate crosswalk",
@@ -52,6 +53,9 @@
   },
   "confirm-modal": {
     "delete-crosswalk": "Are you sure you want to delete the crosswalk?",
+    "delete-draft": "Are you sure you want to delete the draft?",
+    "delete-draft-info": "The content and metadata will be erased.",
+    "delete-info": "Content will be erased and only a limited metadata view will be accessible.",
     "delete-schema": "Are you sure you want to delete the schema?",
     "deprecate-crosswalk": "Are you sure you want to deprecate the crosswalk?",
     "deprecate-schema": "Are you sure you want to deprecate the schema?",
@@ -172,9 +176,15 @@
   "not-recommended-synonym": "",
   "notifications": {
     "crosswalk-deleted": "Crosswalk was removed",
+    "crosswalk-deprecated": "Crosswalk deprecated",
+    "crosswalk-invalidated": "Crosswalk invalidated",
     "crosswalk-published": "Crosswalk published successfully",
     "crosswalk-saved": "Crosswalk metadata saved successfully",
+    "mappings-edit": "Mapping controls enabled",
+    "mappings-finish": "Mapping controls disabled",
     "schema-deleted": "Schema was removed",
+    "schema-deprecated": "Schema deprecated",
+    "schema-invalidated": "Schema invalidated",
     "schema-published": "Schema published successfully",
     "schema-saved": "Schema metadata saved successfully"
   },
