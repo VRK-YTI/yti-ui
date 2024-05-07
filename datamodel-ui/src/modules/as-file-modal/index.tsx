@@ -43,6 +43,7 @@ export default function AsFileModal({
   const fileTypes = ['JSON-LD', 'RDF', 'Turtle' /*'XML'*/];
   if (applicationProfile) {
     fileTypes.push('OpenAPI');
+    fileTypes.push('JSON Schema');
   }
 
   const [chosenFileType, setChosenFileType] = useState('JSON-LD');
