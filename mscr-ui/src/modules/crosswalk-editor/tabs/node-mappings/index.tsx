@@ -22,13 +22,51 @@ export default function NodeMappings(props: {
   modalOpen: boolean;
   isJointPatchOperation: boolean;
 }) {
+  const EXACT_MATCH_DROPDOWN_DEFAULT = 'http://www.w3.org/2004/02/skos/core#exactMatch';
+
   let sourceSelectionInit = '';
   let targetSelectionInit = '';
 
   const predicateValues = [
     {
+      name: 'Broad match',
+      id: 'http://www.w3.org/2004/02/skos/core#broadMatch',
+    },
+    {
+      name: 'Broader',
+      id: 'http://www.w3.org/2004/02/skos/core#broader',
+    },
+    {
+      name: 'Broader transitive',
+      id: 'http://www.w3.org/2004/02/skos/core#broaderTransitive',
+    },
+    {
+      name: 'Close match',
+      id: 'http://www.w3.org/2004/02/skos/core#closeMatch',
+    },
+    {
       name: 'Exact match',
-      id: 1,
+      id: 'http://www.w3.org/2004/02/skos/core#exactMatch',
+    },
+    {
+      name: 'Narrow match',
+      id: 'http://www.w3.org/2004/02/skos/core#narrowMatch',
+    },
+    {
+      name: 'Narrower',
+      id: 'http://www.w3.org/2004/02/skos/core#narrower',
+    },
+    {
+      name: 'Narrower transitive',
+      id: 'http://www.w3.org/2004/02/skos/core#narrowerTransitive',
+    },
+    {
+      name: 'Related',
+      id: 'http://www.w3.org/2004/02/skos/core#related',
+    },
+    {
+      name: 'Related match',
+      id: 'http://www.w3.org/2004/02/skos/core#relatedMatch',
     },
   ];
 
@@ -47,8 +85,15 @@ export default function NodeMappings(props: {
     if (props?.selectedCrosswalk?.notes) {
       setNotesValue(props.selectedCrosswalk.notes);
     }
+    if (props?.selectedCrosswalk?.predicate) {
+      setPredicateValue(props.selectedCrosswalk.predicate);
+    }
+    if (!props?.isJointPatchOperation) {
+      setPredicateValue(EXACT_MATCH_DROPDOWN_DEFAULT);
+    }
 
     setVisible(props?.modalOpen);
+
   }, [props]);
 
   const [sourceInputValue, setSourceInputValue] = useState(sourceSelectionInit);
@@ -56,7 +101,7 @@ export default function NodeMappings(props: {
   const [targetOperationValue, setTargetOperationValue] = useState('');
   const [mappingOperationValue, setMappingOperationValue] = useState('');
   const [predicateValue, setPredicateValue] = useState<string>(
-    'http://www.w3.org/2004/02/skos/core#exactMatch',
+    EXACT_MATCH_DROPDOWN_DEFAULT,
   );
 
   const [filterTarget, setFilterTarget] = useState(filterTargetSelectInit);
@@ -290,11 +335,13 @@ export default function NodeMappings(props: {
                       labelText="Predicate"
                       visualPlaceholder="Exact match"
                       value={predicateValue}
-                      defaultValue={'Exact match'}
-                      onChange={(newValue) => setPredicateValue(newValue)}
+                      defaultValue={props.selectedCrosswalk.predicate}
+                      onChange={(newValue) => {
+                        setPredicateValue(newValue)}
+                      }
                     >
                       {predicateValues.map((rt) => (
-                        <DropdownItem key={rt.id} value={rt.name}>
+                        <DropdownItem key={rt.id} value={rt.id}>
                           {rt.name}
                         </DropdownItem>
                       ))}

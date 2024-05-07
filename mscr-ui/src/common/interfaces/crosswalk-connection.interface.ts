@@ -47,6 +47,7 @@ export interface CrosswalkConnectionNew {
     target: RenderTree;
     id: string;
     notes: string | undefined;
+    predicate: string;
     isSelected: boolean;
     isDraft: boolean;
     sourceJsonPath: string | undefined;
