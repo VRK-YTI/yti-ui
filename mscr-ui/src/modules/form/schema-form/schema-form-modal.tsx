@@ -77,6 +77,7 @@ export default function SchemaFormModal({
 
   useEffect(() => {
     if (userPosted && resultSchemaFull.isSuccess && !submitAnimationVisible) {
+      refetch();
       //Get the pid from the result
       handleClose();
       if (resultSchemaFull && resultSchemaFull.data.pid && !submitAnimationVisible) {

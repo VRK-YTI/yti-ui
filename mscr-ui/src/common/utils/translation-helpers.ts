@@ -324,6 +324,18 @@ export function translateNotification(
       return t('notifications.crosswalk-deleted');
     case 'SCHEMA_DELETE':
       return t('notifications.schema-deleted');
+    case 'CROSSWALK_INVALIDATE':
+      return t('notifications.crosswalk-invalidated');
+    case 'SCHEMA_INVALIDATE':
+      return t('notifications.schema-invalidated');
+    case 'CROSSWALK_DEPRECATE':
+      return t('notifications.crosswalk-deprecated');
+    case 'SCHEMA_DEPRECATE':
+      return t('notifications.schema-deprecated');
+    case 'EDIT_MAPPINGS':
+      return t('notifications.mappings-edit');
+    case 'FINISH_EDITING_MAPPINGS':
+      return t('notifications.mappings-finish');
     default:
       return '';
   }

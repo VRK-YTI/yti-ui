@@ -76,9 +76,10 @@ export default function GenericTable(props: {
   return (
     <>
       <Grid container direction="row">
-        <Grid container>
+        {props.caption.length > 0 && (<Grid container>
           <h2>{props.caption}</h2>
         </Grid>
+        )}
         <TableContainer>
           <Table aria-label={props.caption}>
             {createColumnHeadings(props.items as { [s: string]: unknown }[])}
