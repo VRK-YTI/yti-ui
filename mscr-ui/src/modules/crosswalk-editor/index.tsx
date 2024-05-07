@@ -75,21 +75,6 @@ export default function CrosswalkEditor({
     qname: ''
   };
 
-  const crosswalkConnectionNewInit: CrosswalkConnectionNew = {
-    source: emptyTreeSelection,
-    target: emptyTreeSelection,
-    id: '0',
-    notes: '',
-    isSelected: false,
-    isDraft: false,
-    sourceJsonPath: undefined,
-    targetJsonPath: undefined,
-    sourcePredicate: undefined,
-    sourceProcessing: undefined,
-    targetPredicate: undefined,
-    targetProcessing: undefined,
-  };
-
   // STATE VARIABLES
   const [sourceSchemaUrn, setSourceSchemaUrn] = React.useState<string>('');
   const [targetSchemaUrn, setTargetSchemaUrn] = React.useState<string>('');
@@ -325,6 +310,7 @@ export default function CrosswalkEditor({
         targetPredicate: undefined,
         targetProcessing: undefined,
         notes: undefined,
+        predicate: '',
       };
       jointsToBeAdded.push(joint);
     });
@@ -346,6 +332,7 @@ export default function CrosswalkEditor({
         target: targetNodes[0],
         id: patchPid,
         notes: originalMapping.length > 0 ? originalMapping[0].notes : '',
+        predicate: originalMapping.length > 0 ? originalMapping[0].predicate : '',
         isSelected: true,
         isDraft: true,
         sourceJsonPath: undefined,
@@ -685,7 +672,6 @@ export default function CrosswalkEditor({
                         )}
                         schemaUrn={targetSchemaUrn}
                         raiseHeading={hasEditRights}
-                        reserveSpaceForActionMenu={true}
                       ></SchemaInfo>
                     </div>
                   </div>

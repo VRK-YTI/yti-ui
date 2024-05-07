@@ -137,7 +137,7 @@ function Row(props: {
                                 </Box>*/}
                   <div className="ms-0 mt-1 mb-2">
                     <div>Mapping type:</div>
-                    <div className="fw-normal mt-2">exact match</div>
+                    <div className="fw-normal mt-2">{props.row.predicate}</div>
                   </div>
                   <br/>
                 </div>
