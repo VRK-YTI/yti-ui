@@ -10,6 +10,8 @@ import { useStoreDispatch } from '@app/store';
 import { translateNotification } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { NotificationKeys } from '@app/common/interfaces/notifications.interface';
+import Tooltip from '@mui/material/Tooltip';
+import {getLanguageVersion} from "@app/common/utils/get-language-version";
 
 export default function Notification() {
   const { t } = useTranslation('common');
@@ -32,7 +34,11 @@ export default function Notification() {
   }
 
   return (
+    <Tooltip
+      title={t('click-to-dismiss')}
+      placement="top-end">
     <NotificationWrapper
+      onClick={() => {dispatch(clearNotification())}}
       onAnimationEnd={() => {
         setShowToast(false);
         dispatch(clearNotification());
@@ -41,13 +47,17 @@ export default function Notification() {
       key={Object.keys(activeNotification)[0]}
     >
       {showToast && (
+
         <Toast>
+
           {translateNotification(
             Object.keys(activeNotification)?.[0] as NotificationKeys,
             t
           )}
         </Toast>
+
       )}
     </NotificationWrapper>
+    </Tooltip>
   );
 }
