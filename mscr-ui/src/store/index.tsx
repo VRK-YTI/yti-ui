@@ -17,10 +17,7 @@ import { countApi } from '@app/common/components/counts/counts.slice';
 import { visualizationApi } from '@app/common/components/visualization/visualization.slice';
 import { activeSlice } from '@app/common/components/active/active.slice';
 import { importApi } from '@app/common/components/import/import.slice';
-import {
-  schemaApi,
-  schemaSlice,
-} from '@app/common/components/schema/schema.slice';
+import { schemaApi } from '@app/common/components/schema/schema.slice';
 import {
   crosswalkApi,
   crosswalkSlice,
@@ -43,7 +40,6 @@ export function makeStore(ctx: NextIronContext) {
       [fakeableUsersApi.reducerPath]: fakeableUsersApi.reducer,
       [prefixApi.reducerPath]: prefixApi.reducer,
       [schemaApi.reducerPath]: schemaApi.reducer,
-      [schemaSlice.name]: schemaSlice.reducer,
       [crosswalkApi.reducerPath]: crosswalkApi.reducer,
       [crosswalkSlice.name]: crosswalkSlice.reducer,
       [searchInternalResourcesApi.reducerPath]:

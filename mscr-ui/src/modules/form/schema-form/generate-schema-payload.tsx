@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
-import { SchemaFormType } from '@app/common/interfaces/schema.interface';
+import { Schema, SchemaFormType } from '@app/common/interfaces/schema.interface';
 
 // here we can create the schema payload
 
@@ -9,7 +9,7 @@ export default function generateSchemaPayload(
   groupContent: boolean,
   pid?: string,
   user?: MscrUser
-): any {
+): Partial<Schema> {
   data.organizations = [];
   if (user && groupContent && pid) {
     const ownerOrg = user?.organizations.find((x) => x.id == pid);
