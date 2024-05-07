@@ -284,7 +284,7 @@ export default function SchemaInfo(props: {
                   })
                 : t('schema-tree.no-label')
             }
-            placement="top-start"
+            placement="bottom-start"
           >
             <SchemaHeading variant="h2">
               {getSchemaData?.metadata.label

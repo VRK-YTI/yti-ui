@@ -19,6 +19,8 @@ const fadeOut = keyframes`
 
 export const NotificationWrapper = styled.div<{ $visible?: boolean }>`
   position: absolute;
+  z-index: 200;
+  cursor: pointer;
   top: 20px;
   left: 50%;
   transform: translate(-50%, 0);
