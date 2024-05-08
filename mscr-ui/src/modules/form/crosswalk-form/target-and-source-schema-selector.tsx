@@ -1,18 +1,23 @@
-import { SingleSelect } from 'suomifi-ui-components';
+import { SingleSelect, TextInput } from 'suomifi-ui-components';
 import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import * as React from 'react';
-import { useGetPublicSchemasQuery } from '@app/common/components/schema/schema.slice';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import {
+  useGetPublicSchemasQuery,
+  useGetSchemaQuery,
+} from '@app/common/components/schema/schema.slice';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { MscrSearchResult } from '@app/common/interfaces/search.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { ModelFormContainer } from '@app/modules/form/form.styles';
 import { formatsAvailableForCrosswalkCreation } from '@app/common/interfaces/format.interface';
+import { useTranslation } from 'next-i18next';
 
 interface CrosswalkFormProps {
   formData: CrosswalkFormType;
-  setFormData: Dispatch<SetStateAction<CrosswalkFormType>>;
+  setFormData: (value: CrosswalkFormType) => void;
   createNew: boolean;
+  schemaSelectorDisabled?: boolean;
 }
 
 interface SelectableSchema {
@@ -24,18 +29,43 @@ export default function TargetAndSourceSchemaSelector({
   formData,
   setFormData,
   createNew,
+  schemaSelectorDisabled,
 }: CrosswalkFormProps) {
   const formatRestrictions = createNew
     ? formatsAvailableForCrosswalkCreation
     : [];
   const { data, isSuccess } = useGetPublicSchemasQuery(formatRestrictions);
+  const { data: sourceSchemaData } = useGetSchemaQuery(
+    formData.sourceSchema,
+    { skip: !schemaSelectorDisabled }
+  );
+  const { data: targetSchemaData } = useGetSchemaQuery(
+    formData.targetSchema,
+    { skip: !schemaSelectorDisabled }
+  );
   //defaultSchemas.push({ labelText: 'test', uniqueItemId: 'test'});
   const [dataLoaded, setDataLoaded] = useState(false);
   const [defaultSchemas, setDefaultSchemas] = useState(
     Array<SelectableSchema>()
   );
+  const [defaultSourceSchema, setDefaultSourceSchema] = useState('');
+  const [defaultTargetSchema, setDefaultTargetSchema] = useState('');
   const router = useRouter();
   const lang = router.locale ?? '';
+  const { t } = useTranslation('common');
+
+  useEffect(() => {
+    if (schemaSelectorDisabled && sourceSchemaData && targetSchemaData) {
+      setDefaultSourceSchema(getLanguageVersion({
+        data: sourceSchemaData.label,
+        lang,
+      }));
+      setDefaultTargetSchema(getLanguageVersion({
+        data: targetSchemaData.label,
+        lang,
+      }));
+    }
+  }, [lang, schemaSelectorDisabled, sourceSchemaData, targetSchemaData]);
 
   useEffect(() => {
     const fetchedSchemas: { labelText: string; uniqueItemId: string }[] = [];
@@ -78,19 +108,28 @@ export default function TargetAndSourceSchemaSelector({
         {dataLoaded && (
           <div className="row">
             <div className="col-6">
-              <SingleSelect
-                className="source-select-dropdown"
-                labelText="Select source schema"
-                hintText=""
-                clearButtonLabel="Clear selection"
-                items={defaultSchemas}
-                visualPlaceholder="Search or select"
-                noItemsText="No items"
-                ariaOptionsAvailableTextFunction={(amount) =>
-                  amount === 1 ? 'option available' : 'options available'
-                }
-                onItemSelect={setSource}
-              />
+              {!schemaSelectorDisabled && (
+                <SingleSelect
+                  className="source-select-dropdown"
+                  labelText="Select source schema"
+                  hintText=""
+                  clearButtonLabel="Clear selection"
+                  items={defaultSchemas}
+                  visualPlaceholder="Search or select"
+                  noItemsText="No items"
+                  ariaOptionsAvailableTextFunction={(amount) =>
+                    amount === 1 ? 'option available' : 'options available'
+                  }
+                  onItemSelect={setSource}
+                />
+              )}
+              {schemaSelectorDisabled && (
+                <TextInput
+                  labelText={t('metadata.source-schema')}
+                  disabled
+                  defaultValue={defaultSourceSchema}
+                />
+              )}
               {/*<Box*/}
               {/*  className="source-select-info-box"*/}
               {/*  sx={{ height: 180, flexGrow: 1 }}*/}
@@ -102,19 +141,28 @@ export default function TargetAndSourceSchemaSelector({
             </div>
 
             <div className="col-6">
-              <SingleSelect
-                className="source-select-dropdown"
-                labelText="Select target schema"
-                hintText=""
-                clearButtonLabel="Clear selection"
-                items={defaultSchemas}
-                visualPlaceholder="Search or select"
-                noItemsText="No items"
-                ariaOptionsAvailableTextFunction={(amount) =>
-                  amount === 1 ? 'option available' : 'options available'
-                }
-                onItemSelect={setTarget}
-              />
+              {!schemaSelectorDisabled && (
+                <SingleSelect
+                  className="source-select-dropdown"
+                  labelText="Select target schema"
+                  hintText=""
+                  clearButtonLabel="Clear selection"
+                  items={defaultSchemas}
+                  visualPlaceholder="Search or select"
+                  noItemsText="No items"
+                  ariaOptionsAvailableTextFunction={(amount) =>
+                    amount === 1 ? 'option available' : 'options available'
+                  }
+                  onItemSelect={setTarget}
+                />
+              )}
+              {schemaSelectorDisabled && (
+                <TextInput
+                  labelText={t('metadata.target-schema')}
+                  disabled
+                  defaultValue={defaultTargetSchema}
+                />
+              )}
               {/*<Box*/}
               {/*  className="source-select-info-box"*/}
               {/*  sx={{ height: 180, flexGrow: 1 }}*/}

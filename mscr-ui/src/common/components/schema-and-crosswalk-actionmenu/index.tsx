@@ -1,4 +1,3 @@
-import { Metadata } from '@app/common/interfaces/metadata.interface';
 import {
   useDeleteCrosswalkMutation,
   usePatchCrosswalkMutation,
@@ -11,7 +10,7 @@ import { useTranslation } from 'next-i18next';
 import { ActionMenu, ActionMenuItem } from 'suomifi-ui-components';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { ActionMenuTypes } from '@app/common/interfaces/search.interface';
+import { ActionMenuTypes, Type } from '@app/common/interfaces/search.interface';
 import { State } from '@app/common/interfaces/state.interface';
 import ConfirmModal from '@app/common/components/confirmation-modal';
 import { useStoreDispatch } from '@app/store';
@@ -22,10 +21,11 @@ import {
 import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
 import { CrosswalkWithVersionInfo } from '@app/common/interfaces/crosswalk.interface';
 import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
+import RevisionFormModal from '@app/modules/form/revision-form-modal';
 
 interface SchemaAndCrosswalkActionmenuProps {
   type: ActionMenuTypes;
-  metadata: SchemaWithVersionInfo | CrosswalkWithVersionInfo | Metadata;
+  metadata: SchemaWithVersionInfo | CrosswalkWithVersionInfo;
   isMappingsEditModeActive: boolean;
   refetchMetadata: () => void;
   buttonCallbackFunction?: (action: string) => void;
@@ -53,19 +53,22 @@ export default function SchemaAndCrosswalkActionMenu({
     useState(false);
   const [isDeprecateConfirmModalOpen, setDeprecateConfirmModalOpen] =
     useState(false);
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [isRemoveModalOpen, setRemoveModalOpen] = useState(false);
+  const [isDeleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState(false);
+  const [isRemoveConfirmModalOpen, setRemoveConfirmModalOpen] = useState(false);
+  const [isRevisionModalOpen, setRevisionModalOpen] = useState(false);
 
   const performModalAction = (action: string) => {
     setPublishConfirmModalOpen(false);
-    setDeleteModalOpen(false);
-    setRemoveModalOpen(false);
+    setDeleteConfirmModalOpen(false);
+    setRemoveConfirmModalOpen(false);
     setInvalidateConfirmModalOpen(false);
     setDeprecateConfirmModalOpen(false);
     if (action === 'close') {
       return;
     }
-    const payload: { versionLabel: string; state?: State } = {versionLabel: metadata.versionLabel};
+    const payload: { versionLabel: string; state?: State } = {
+      versionLabel: metadata.versionLabel,
+    };
     switch (action) {
       case 'publish':
         payload.state = State.Published;
@@ -238,31 +241,33 @@ export default function SchemaAndCrosswalkActionMenu({
             : t('actionmenu.deprecate-crosswalk')}
         </ActionMenuItem>
         <ActionMenuItem
-          className={
-            (metadata && metadata.state == State.Draft)
-              ? ''
-              : 'd-none'
-          }
-          onClick={() => setDeleteModalOpen(true)}
+          className={metadata && metadata.state == State.Draft ? '' : 'd-none'}
+          onClick={() => setDeleteConfirmModalOpen(true)}
         >
           {t('actionmenu.delete-draft')}
         </ActionMenuItem>
         <ActionMenuItem
           className={
-            metadata && metadata.state && (metadata.state == State.Invalid || metadata.state == State.Deprecated)
+            metadata &&
+            metadata.state &&
+            (metadata.state == State.Invalid ||
+              metadata.state == State.Deprecated)
               ? ''
               : 'd-none'
           }
-          onClick={() => setRemoveModalOpen(true)}
+          onClick={() => setRemoveConfirmModalOpen(true)}
         >
           {type === ActionMenuTypes.Schema ||
           type === ActionMenuTypes.SchemaMetadata
             ? t('actionmenu.delete-schema')
             : t('actionmenu.delete-crosswalk')}
         </ActionMenuItem>
+        <ActionMenuItem onClick={() => setRevisionModalOpen(true)}>
+          {t('actionmenu.revision')}
+        </ActionMenuItem>
       </ActionMenu>
       <ConfirmModal
-        isVisible={isDeleteModalOpen}
+        isVisible={isDeleteConfirmModalOpen}
         actionName={
           type === ActionMenuTypes.Schema ||
           type === ActionMenuTypes.SchemaMetadata
@@ -283,7 +288,7 @@ export default function SchemaAndCrosswalkActionMenu({
       />
 
       <ConfirmModal
-        isVisible={isRemoveModalOpen}
+        isVisible={isRemoveConfirmModalOpen}
         actionName={'remove'}
         actionText={
           type === ActionMenuTypes.Schema ||
@@ -354,6 +359,18 @@ export default function SchemaAndCrosswalkActionMenu({
             : t('confirm-modal.deprecate-crosswalk')
         }
         text2={undefined}
+      />
+
+      <RevisionFormModal
+        initialData={metadata}
+        visible={isRevisionModalOpen}
+        setVisible={setRevisionModalOpen}
+        type={
+          type === ActionMenuTypes.Schema ||
+          type === ActionMenuTypes.SchemaMetadata
+            ? Type.Schema
+            : Type.Crosswalk
+        }
       />
     </>
   );

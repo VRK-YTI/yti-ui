@@ -9,7 +9,6 @@ import { Organization } from './organizations.interface';
 
 export interface Crosswalk extends Metadata {
   status?: string | undefined;
-  languages?: string[];
   organizations?: string[];
   sourceSchema: string;
   targetSchema: string;
@@ -21,17 +20,12 @@ export interface CrosswalkWithVersionInfo extends Crosswalk {
 }
 
 export interface CrosswalkFormType {
-  pid?: string;
   format: Format;
-  label: string;
   state: State;
   languages: (LanguageBlockType & { selected: boolean })[];
-  organizations?: Organization[];
   sourceSchema: string;
   targetSchema: string;
-  description?: string;
   versionLabel?: string;
-  visibility: Visibility;
 }
 
 export interface CrosswalkFormMockupType {

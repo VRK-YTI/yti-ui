@@ -24,7 +24,8 @@
     "invalidate-crosswalk": "",
     "invalidate-schema": "",
     "publish-crosswalk": "",
-    "publish-schema": ""
+    "publish-schema": "",
+    "revision": ""
   },
   "association": "",
   "attribute": "",

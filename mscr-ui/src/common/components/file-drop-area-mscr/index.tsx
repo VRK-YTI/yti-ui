@@ -50,7 +50,7 @@ export default function FileDropAreaMscr({
   const [fileUriField, setFileUriField] = useState<string>('');
 
   useEffect(() => {
-    if (fileUriField) {
+    if (fileUriField && setFileUri) {
       setFileUri(fileUriField);
     }
     if (file) {

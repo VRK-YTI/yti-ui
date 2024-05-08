@@ -20,10 +20,7 @@ import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import { useInitialSchemaForm } from '@app/common/utils/hooks/use-initial-schema-form';
-import {
-  usePutSchemaFullMutation,
-  usePutSchemaRevisionMutation,
-} from '@app/common/components/schema/schema.slice';
+import { usePutSchemaFullMutation } from '@app/common/components/schema/schema.slice';
 import SchemaFormFields from './schema-form-fields';
 import Separator from 'yti-common-ui/components/separator';
 import getErrors from '@app/common/utils/get-errors';
@@ -39,8 +36,6 @@ import { Schema } from '@app/common/interfaces/schema.interface';
 interface SchemaFormModalProps {
   refetch: () => void;
   groupContent: boolean;
-  isRevision: boolean;
-  initialData?: Schema;
   pid?: string;
 }
 
@@ -49,8 +44,6 @@ interface SchemaFormModalProps {
 export default function SchemaFormModal({
   refetch,
   groupContent,
-  isRevision,
-  initialData,
   pid,
 }: SchemaFormModalProps) {
   const { t } = useTranslation('admin');
@@ -58,7 +51,7 @@ export default function SchemaFormModal({
   const router = useRouter();
   const [visible, setVisible] = useState(false);
   const [, setIsValid] = useState(false);
-  const [schemaFormInitialData] = useState(useInitialSchemaForm(initialData));
+  const [schemaFormInitialData] = useState(useInitialSchemaForm());
   const [formData, setFormData] = useState(schemaFormInitialData);
   const [fileData, setFileData] = useState<File | null>();
   const [fileUri, setFileUri] = useState<string | null>();
@@ -70,8 +63,6 @@ export default function SchemaFormModal({
   const [userPosted, setUserPosted] = useState(false);
   // Why are we using a mutation here? Why is that even implemented as a mutation, when the method is GET?
   const [putSchemaFull, resultSchemaFull] = usePutSchemaFullMutation();
-  const [putSchemaRevision, resultSchemaRevision] =
-    usePutSchemaRevisionMutation();
   const [submitAnimationVisible, setSubmitAnimationVisible] =
     useState<boolean>(false);
 
@@ -90,7 +81,7 @@ export default function SchemaFormModal({
   }, [schemaFormInitialData]);
 
   useEffect(() => {
-    if (userPosted && (resultSchemaFull.isSuccess || resultSchemaRevision.isSuccess) && !submitAnimationVisible) {
+    if (userPosted && resultSchemaFull.isSuccess && !submitAnimationVisible) {
       refetch();
       //Get the pid from the result
       handleClose();
@@ -102,20 +93,11 @@ export default function SchemaFormModal({
         router.push(`/schema/${resultSchemaFull.data.pid}`);
       }
 
-      if (
-        resultSchemaRevision &&
-        resultSchemaRevision.data &&
-        resultSchemaRevision.data.pid
-      ) {
-        router.push(`/schema/${resultSchemaRevision.data.pid}`);
-      }
-
       // After post route to  saved schema get by PID
       // Later we should show the created schema in the list
     }
   }, [
     resultSchemaFull,
-    resultSchemaRevision,
     refetch,
     userPosted,
     handleClose,
@@ -159,21 +141,12 @@ export default function SchemaFormModal({
       } else {
         return;
       }
-      if (isRevision && initialData) {
-        Promise.all([
-          spinnerDelay(),
-          putSchemaRevision({ pid: initialData.pid, data: schemaFormData }),
-        ]).then((values) => {
+
+      Promise.all([spinnerDelay(), putSchemaFull(schemaFormData)]).then(
+        (values) => {
           setSubmitAnimationVisible(false);
-        });
-        // TODO: What if isRevision but initialData missing?
-      } else {
-        Promise.all([spinnerDelay(), putSchemaFull(schemaFormData)]).then(
-          (values) => {
-            setSubmitAnimationVisible(false);
-          }
-        );
-      }
+        }
+      );
     }
   };
 
@@ -193,8 +166,7 @@ export default function SchemaFormModal({
   } */
 
   function gatherInputError() {
-    const inputErrors = getErrors(t, errors);
-    return inputErrors;
+    return getErrors(t, errors);
   }
 
   function gatherApiError() {
@@ -202,8 +174,8 @@ export default function SchemaFormModal({
       const errorObject = getApiError(resultSchemaFull.error);
       let errorMessage = '';
 
-      if (errorObject.staus && errorObject.message) {
-        errorMessage = `${errorObject.staus}: ${errorObject.message}`;
+      if (errorObject.status && errorObject.message) {
+        errorMessage = `${errorObject.status}: ${errorObject.message}`;
         return errorMessage;
       }
     }
@@ -268,7 +240,7 @@ export default function SchemaFormModal({
             )}
           </>
           <div id={'modalTop'}></div>
-          <ModalTitle>{isRevision ? t('register-schema-revision') : t('register-schema')}</ModalTitle>
+          <ModalTitle>{t('register-schema')}</ModalTitle>
           <Text>{t('register-schema-file-required') + ' '}</Text>
           <Text>
             {t('register-schema-supported-file-formats') +
@@ -308,6 +280,7 @@ export default function SchemaFormModal({
               submitAnimationVisible
             }
             errors={userPosted ? errors : undefined}
+            isRevision={false}
           />
           <Separator></Separator>
         </ModalContent>

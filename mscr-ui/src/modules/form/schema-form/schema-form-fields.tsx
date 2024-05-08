@@ -20,6 +20,7 @@ interface SchemaFormProps {
   disabled?: boolean;
   errors?: FormErrors;
   editMode?: boolean;
+  isRevision?: boolean;
 }
 
 export default function SchemaFormFields({
@@ -28,6 +29,7 @@ export default function SchemaFormFields({
   userPosted,
   disabled,
   errors,
+  isRevision,
 }: // editMode,
 SchemaFormProps) {
   const { t } = useTranslation();
@@ -38,19 +40,20 @@ SchemaFormProps) {
       {renderSchemaFormat()}
       {renderLanguages()}
       {/*!editMode && renderContributors()*/}
-      {renderStatus()}
+      {renderState()}
       {/*editMode && renderContributors()*/}
     </ModelFormContainer>
   );
 
   function renderSchemaFormat() {
+    console.log('formdata in form fields: ', formData.format);
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
           labelText={t('schema-form.format-label')}
-          visualPlaceholder={t('schema-form.format-placeholder')}
+          visualPlaceholder={isRevision ? formData.format : t('schema-form.format-placeholder')}
           defaultValue={formData.format ?? ''}
-          disabled={disabled}
+          disabled={disabled || isRevision}
           onChange={(e: Format) =>
             setFormData({
               ...formData,
@@ -106,14 +109,14 @@ SchemaFormProps) {
     );
   }
 
-  function renderStatus() {
+  function renderState() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
           labelText={t('schema-form.status')}
           visualPlaceholder={t('schema-form.status-select')}
-          defaultValue={''}
-          disabled={disabled}
+          defaultValue={State.Draft}
+          disabled={disabled || isRevision}
           onChange={(e) =>
             setFormData({
               ...formData,

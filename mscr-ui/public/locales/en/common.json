@@ -24,7 +24,8 @@
     "invalidate-crosswalk": "Invalidate crosswalk",
     "invalidate-schema": "Invalidate schema",
     "publish-crosswalk": "Publish crosswalk",
-    "publish-schema": "Publish schema"
+    "publish-schema": "Publish schema",
+    "revision": "Add new revision"
   },
   "association": "",
   "attribute": "",
