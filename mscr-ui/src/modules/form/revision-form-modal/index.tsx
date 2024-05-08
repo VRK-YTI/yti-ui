@@ -119,6 +119,7 @@ export default function RevisionFormModal({
         },
       ],
       state: State.Draft,
+      versionLabel: initialData.versionLabel,
     };
     if (
       type == Type.Crosswalk &&
@@ -220,6 +221,7 @@ export default function RevisionFormModal({
     const validatedFormData: SchemaFormType = {
       format: formData.format,
       languages: formData.languages,
+      versionLabel: formData.versionLabel,
       state: State.Draft,
     };
 

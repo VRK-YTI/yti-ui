@@ -59,7 +59,8 @@
     "register-revision": "",
     "registerTitle": "",
     "revision": "",
-    "supported-file-formats": ""
+    "supported-file-formats": "",
+    "version-label": ""
   },
   "data-model": "",
   "data-models-added-to-this-model": "",

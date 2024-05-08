@@ -45,7 +45,7 @@ export default function generateSchemaPayload(
     status: 'DRAFT',
     format: data.format,
     state: data.state,
-    versionLabel: '1',
+    versionLabel: data.versionLabel ?? '1',
   };
 
   if (isRevision) {

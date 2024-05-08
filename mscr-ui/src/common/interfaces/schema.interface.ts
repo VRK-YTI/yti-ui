@@ -31,6 +31,7 @@ export interface SchemaFormType {
   languages: (LanguageBlockType & { selected: boolean })[];
   filedata?: any;
   state: State;
+  versionLabel?: string;
 }
 
 export interface FilesRowInput {

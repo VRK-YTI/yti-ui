@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { useTranslation } from 'next-i18next';
-import { Dropdown, DropdownItem } from 'suomifi-ui-components';
+import { Dropdown, DropdownItem, TextInput } from 'suomifi-ui-components';
 import { ModelFormContainer } from '../form.styles';
 import LanguageSelector from 'yti-common-ui/components/form/language-selector';
 import { FormErrors } from './validate-schema-form';
@@ -8,7 +8,7 @@ import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 import {
   Format,
   formatsAvailableForCrosswalkRegistration,
-  formatsAvailableForSchemaRegistration
+  formatsAvailableForSchemaRegistration,
 } from '@app/common/interfaces/format.interface';
 import { State } from '@app/common/interfaces/state.interface';
 import MscrLanguageSelector from '@app/common/components/language-selector/mscr-language-selector';
@@ -40,18 +40,20 @@ SchemaFormProps) {
       {renderSchemaFormat()}
       {renderLanguages()}
       {/*!editMode && renderContributors()*/}
+      {renderVersionLabel()}
       {renderState()}
       {/*editMode && renderContributors()*/}
     </ModelFormContainer>
   );
 
   function renderSchemaFormat() {
-    console.log('formdata in form fields: ', formData.format);
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
           labelText={t('schema-form.format-label')}
-          visualPlaceholder={isRevision ? formData.format : t('schema-form.format-placeholder')}
+          visualPlaceholder={
+            isRevision ? formData.format : t('schema-form.format-placeholder')
+          }
           defaultValue={formData.format ?? ''}
           disabled={disabled || isRevision}
           onChange={(e: Format) =>
@@ -62,7 +64,9 @@ SchemaFormProps) {
           }
         >
           {formatsAvailableForSchemaRegistration.map((format) => (
-            <DropdownItem key={format} value={format}>{format}</DropdownItem>
+            <DropdownItem key={format} value={format}>
+              {format}
+            </DropdownItem>
           ))}
         </Dropdown>
       </div>
@@ -106,6 +110,21 @@ SchemaFormProps) {
           )}
         />
       </div>
+    );
+  }
+
+  function renderVersionLabel() {
+    return (
+      <TextInput
+        labelText={t('schema-form.version-label')}
+        value={formData.versionLabel ?? '1'}
+        onChange={(value) =>
+          setFormData({
+            ...formData,
+            versionLabel: value as string,
+          })
+        }
+      />
     );
   }
 

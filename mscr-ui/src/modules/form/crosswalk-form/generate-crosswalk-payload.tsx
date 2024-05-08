@@ -47,7 +47,7 @@ export default function generateCrosswalkPayload(
     state: data.state,
     sourceSchema: data.sourceSchema,
     targetSchema: data.targetSchema,
-    versionLabel: '1',
+    versionLabel: data.versionLabel ?? '1',
     visibility:
       data.state !== State.Draft ? Visibility.Public : Visibility.Private,
     organizations: organizations.map((o: { id: any }) => o.id),

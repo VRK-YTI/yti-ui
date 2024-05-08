@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { Dropdown, DropdownItem, Text } from 'suomifi-ui-components';
+import { Dropdown, DropdownItem, Text, TextInput } from 'suomifi-ui-components';
 import { FormErrors } from './validate-crosswalk-form';
 import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import TargetAndSourceSchemaSelector from './target-and-source-schema-selector';
@@ -57,6 +57,7 @@ export default function CrosswalkFormFields({
       )}
       {!createNew && renderCrosswalkFormat()}
       {renderLanguages()}
+      {renderVersionLabel()}
       {!createNew && renderState()}
     </ModelFormContainer>
   );
@@ -123,6 +124,21 @@ export default function CrosswalkFormFields({
           )}
         />
       </div>
+    );
+  }
+
+  function renderVersionLabel() {
+    return (
+      <TextInput
+        labelText={t('crosswalk-form.version-label')}
+        value={formData.versionLabel ?? '1'}
+        onChange={(value) =>
+          setFormData({
+            ...formData,
+            versionLabel: value as string,
+          })
+        }
+      />
     );
   }
 

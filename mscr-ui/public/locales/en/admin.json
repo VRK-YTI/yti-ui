@@ -59,7 +59,8 @@
     "register-revision": "Register revision of crosswalk",
     "registerTitle": "Register existing crosswalk",
     "revision": "Register revision",
-    "supported-file-formats": "Supported crosswalk file formats are "
+    "supported-file-formats": "Supported crosswalk file formats are ",
+    "version-label": "Version label"
   },
   "data-model": "Data model",
   "data-models-added-to-this-model": "Data models added to this model",
