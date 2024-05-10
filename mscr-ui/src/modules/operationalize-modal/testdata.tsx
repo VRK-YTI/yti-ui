@@ -1,5 +1,3 @@
-
-
 export const xmlContent = `
 <resource xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.1/metadata.xsd">
         <identifier identifierType="DOI">10.5072/example-full</identifier>
