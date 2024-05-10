@@ -1,4 +1,5 @@
 import { useTranslation } from 'next-i18next';
+import { Dispatch, SetStateAction } from 'react';
 import { Dropdown, DropdownItem, Text, TextInput } from 'suomifi-ui-components';
 import { FormErrors } from './validate-crosswalk-form';
 import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
@@ -17,6 +18,7 @@ import {
   formatsAvailableForCrosswalkCreation,
   formatsAvailableForCrosswalkRegistration,
 } from '@app/common/interfaces/format.interface';
+import {WideDropdown} from "@app/modules/form/crosswalk-form/crosswalk-form.styles";
 
 interface RegisterCrosswalkFormProps {
   formData: CrosswalkFormType;
@@ -55,36 +57,56 @@ export default function CrosswalkFormFields({
           {formatsAvailableForCrosswalkCreation.join(', ')}
         </Text>
       )}
-      {!createNew && renderCrosswalkFormat()}
       {renderLanguages()}
       {renderVersionLabel()}
-      {!createNew && renderState()}
+
+      {!createNew && renderCrosswalkFormatAndState()}
     </ModelFormContainer>
   );
 
-  function renderCrosswalkFormat() {
+  function renderCrosswalkFormatAndState() {
     // may be load the formats from an array
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <Dropdown
-          labelText={'Format'}
-          defaultValue={formData.format ?? ''}
-          disabled={isRevision}
-          visualPlaceholder={isRevision ? formData.format : 'Select Crosswalk File Format'}
-          onChange={(e: Format) =>
-            setFormData({
+      <>
+        <div className='row'>
+        <div className='col-6'>
+          <WideDropdown
+            disabled={isRevision}
+            labelText={'Format'}
+            defaultValue={formData.format ?? ''}
+            visualPlaceholder={'Select Crosswalk File Format'}
+            onChange={(e: Format) => setFormData({
               ...formData,
               format: e,
-            })
-          }
-        >
-          {formatsAvailableForCrosswalkRegistration.map((format) => (
-            <DropdownItem key={format} value={format}>
-              {format}
-            </DropdownItem>
-          ))}
-        </Dropdown>
-      </div>
+            })}
+          >
+            {formatsAvailableForCrosswalkRegistration.map((format) => (
+              <DropdownItem key={format} value={format}>
+                {format}
+              </DropdownItem>
+            ))}
+          </WideDropdown>
+        </div>
+        <div className='col-6'>
+          <WideDropdown
+            disabled={isRevision}
+            labelText={'State'}
+            visualPlaceholder={'Select state'}
+            defaultValue={formData.state ?? ''}
+            onChange={(e: State) => setFormData({
+              ...formData,
+              state: e,
+            })}
+          >
+            {possibleStatesAtRegistration.map((state) => (
+              <DropdownItem key={state} value={state}>
+                {state}
+              </DropdownItem>
+            ))}
+          </WideDropdown>
+        </div>
+        </div>
+      </>
     );
   }
 

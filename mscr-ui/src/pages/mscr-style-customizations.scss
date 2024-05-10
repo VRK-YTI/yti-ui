@@ -299,20 +299,4 @@ body {
   .selected-row {
     background: #eaf2fa;
   }
-
-  /* CROSSWALK SELECTION */
-  .crosswalk-selection-modal {
-    font-size: 0.85rem;
-
-    .source-select-dropdown {
-      width: 100% !important;
-    }
-
-    .source-select-info-box {
-      margin-top: 15px;
-      padding: 5px;
-      width: 100%;
-      background: #e2f1fd;
-    }
-  }
 }

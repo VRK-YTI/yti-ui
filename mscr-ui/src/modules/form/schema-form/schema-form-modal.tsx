@@ -141,7 +141,6 @@ export default function SchemaFormModal({
       } else {
         return;
       }
-
       Promise.all([spinnerDelay(), putSchemaFull(schemaFormData)]).then(
         (values) => {
           setSubmitAnimationVisible(false);

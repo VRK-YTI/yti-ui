@@ -142,6 +142,7 @@
   "missing-target-schema": "Target schema hasn't been selected",
   "modified": "Modified",
   "optional": "optional",
+  "register-crosswalk-file-uri-reference": "Provide crosswalk file URI reference",
   "register-schema": "Register Schema",
   "register-schema-file-required": "You must provide a schema file to register a schema.",
   "register-schema-file-uri-reference": "Provide schema file URI reference",

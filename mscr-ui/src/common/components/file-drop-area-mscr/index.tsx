@@ -128,11 +128,11 @@ export default function FileDropAreaMscr({
     >
       <div>
         <FileBlockWrapper>
-          {isSchemaUpload && (
+
             <>
               <Block>
                 <WideTextInput
-                  labelText={t('register-schema-file-uri-reference')}
+                  labelText={isSchemaUpload ? t('register-schema-file-uri-reference') : t('register-crosswalk-file-uri-reference')}
                   onChange={(value) => setFileUriField(value?.toString() ?? '')}
                   value={fileUriField}
                   disabled={disabled}
@@ -144,7 +144,7 @@ export default function FileDropAreaMscr({
               <br/>
               <CaptionText>{t('upload-documents')}</CaptionText>
             </>
-          )}
+
 
           <FileBlock padding="m" id="file-drop-block">
             {file === null ? (

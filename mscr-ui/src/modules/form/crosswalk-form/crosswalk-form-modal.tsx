@@ -26,27 +26,27 @@ import {
 import CrosswalkForm from './crosswalk-form-fields';
 import getErrors from '@app/common/utils/get-errors';
 import FileDropAreaMscr from '@app/common/components/file-drop-area-mscr';
-import { fileExtensionsAvailableForCrosswalkRegistrationAttachments } from '@app/common/interfaces/format.interface';
-import SpinnerOverlay, {
-  delay,
-  SpinnerType,
-} from '@app/common/components/spinner-overlay';
+import {
+  fileExtensionsAvailableForCrosswalkRegistrationAttachments,
+  fileExtensionsAvailableForSchemaRegistration
+} from "@app/common/interfaces/format.interface";
+import SpinnerOverlay, {delay, SpinnerType} from "@app/common/components/spinner-overlay";
 
 interface CrosswalkFormModalProps {
   refetch: () => void;
   createNew?: boolean;
   groupContent: boolean;
-  pid?: string;
+  pid?: string
 }
 
 // For the time being, using as schema metadata form, Need to update the props accordingly
 
 export default function CrosswalkFormModal({
-  refetch,
-  createNew = false,
-  groupContent,
-  pid,
-}: CrosswalkFormModalProps) {
+                                             refetch,
+                                             createNew = false,
+                                             groupContent,
+                                             pid
+                                           }: CrosswalkFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
@@ -64,8 +64,8 @@ export default function CrosswalkFormModal({
   const [putCrosswalk, newCrosswalkResult] = usePutCrosswalkMutation();
   const [, setIsValid] = useState(false);
   const [fileData, setFileData] = useState<File | null>();
-  const [submitAnimationVisible, setSubmitAnimationVisible] =
-    useState<boolean>(false);
+  const [fileUri, setFileUri] = useState<string | null>('');
+  const [submitAnimationVisible, setSubmitAnimationVisible] = useState<boolean>(false);
 
   const handleOpen = () => {
     setSkip(false);
@@ -78,6 +78,7 @@ export default function CrosswalkFormModal({
     setUserPosted(false);
     setFormData(crosswalkFormInitialData);
     setFileData(null);
+    setFileUri(null);
   }, [crosswalkFormInitialData]);
 
   useEffect(() => {
@@ -104,6 +105,14 @@ export default function CrosswalkFormModal({
     return Promise.resolve();
   };
 
+  function isFormValid() {
+    if (errors) {
+      return !Object.values(errors).includes(true);
+    } else {
+      return false;
+    }
+  }
+
   const handleSubmit = () => {
     scrollToModalTop();
     setUserPosted(true);
@@ -121,20 +130,22 @@ export default function CrosswalkFormModal({
       formData,
       groupContent,
       pid,
-      authenticatedUser
-    );
-    // console.log('payload: ', payload);
-    if (!createNew && fileData) {
-      const crosswalkFormData = new FormData();
-      crosswalkFormData.append('metadata', JSON.stringify(payload));
-      crosswalkFormData.append('file', fileData);
+      authenticatedUser);
+    const crosswalkFormData = new FormData();
+    crosswalkFormData.append('metadata', JSON.stringify(payload));
 
-      Promise.all([spinnerDelay(), putCrosswalkFull(crosswalkFormData)]).then(
-        (values) => {
-          setSubmitAnimationVisible(false);
-        }
-      );
-    } else if (createNew) {
+    if (isFormValid() && !createNew && fileUri && fileUri.length > 0) {
+      crosswalkFormData.append('contentURL', fileUri);
+      Promise.all([spinnerDelay(), putCrosswalkFull(crosswalkFormData)]).then((values) => {
+        setSubmitAnimationVisible(false);
+      });
+    } else if (isFormValid() && !createNew && fileData) {
+      crosswalkFormData.append('file', fileData);
+      Promise.all([spinnerDelay(), putCrosswalkFull(crosswalkFormData)]).then((values) => {
+        setSubmitAnimationVisible(false);
+      });
+
+    } else if (isFormValid() && createNew) {
       Promise.all([spinnerDelay(), putCrosswalk(payload)]).then((values) => {
         setSubmitAnimationVisible(false);
       });
@@ -156,6 +167,10 @@ export default function CrosswalkFormModal({
     const inputErrors = getErrors(t, errors);
     const result = createNew ? newCrosswalkResult : registerCrosswalkResult;
     if (result.isError) {
+      const errorObject = getApiError(result.error);
+      if (errorObject.status && errorObject.message) {
+        inputErrors.push(`${errorObject.status}: ${errorObject.message}`);
+      }
       const errorMessage = getApiError(result.error).message;
       if (errorMessage) return [...inputErrors, errorMessage];
     }
@@ -242,6 +257,8 @@ export default function CrosswalkFormModal({
                 fileExtensionsAvailableForCrosswalkRegistrationAttachments
               }
               translateFileUploadError={translateFileUploadError}
+              isSchemaUpload={true}
+              setFileUri={setFileUri}
               disabled={submitAnimationVisible}
             />
           )}
