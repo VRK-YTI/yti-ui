@@ -59,8 +59,7 @@
     "register-revision": "",
     "registerTitle": "",
     "revision": "",
-    "supported-file-formats": "",
-    "version-label": ""
+    "supported-file-formats": ""
   },
   "data-model": "",
   "data-models-added-to-this-model": "",
@@ -168,6 +167,9 @@
     "terminology-removed": "",
     "terminology-title": "",
     "terminology-warning": ""
+  },
+  "schema-form": {
+    "version-label": ""
   },
   "select-class": "",
   "select-information-description-languages": "",

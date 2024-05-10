@@ -1,22 +1,14 @@
-import { useGetAuthenticatedUserQuery } from '@app/common/components/login/login.slice';
+import {useGetAuthenticatedUserQuery} from '@app/common/components/login/login.slice';
 import * as React from 'react';
-import { useCallback, useEffect, useState } from 'react';
-import {
-  Button,
-  InlineAlert,
-  Modal,
-  ModalContent,
-  ModalFooter,
-  ModalTitle,
-  Text,
-} from 'suomifi-ui-components';
-import { useBreakpoints } from 'yti-common-ui/components/media-query';
+import {useCallback, useEffect, useState} from 'react';
+import {Button, InlineAlert, Modal, ModalContent, ModalFooter, ModalTitle, Text,} from 'suomifi-ui-components';
+import {useBreakpoints} from 'yti-common-ui/components/media-query';
 import FormFooterAlert from 'yti-common-ui/components/form-footer-alert';
-import { translateFileUploadError } from '@app/common/utils/translation-helpers';
-import { useTranslation } from 'next-i18next';
+import {translateFileUploadError} from '@app/common/utils/translation-helpers';
+import {useTranslation} from 'next-i18next';
 import getApiError from '@app/common/utils/getApiErrors';
-import { useRouter } from 'next/router';
-import { usePutSchemaRevisionMutation } from '@app/common/components/schema/schema.slice';
+import {useRouter} from 'next/router';
+import {usePutSchemaRevisionMutation} from '@app/common/components/schema/schema.slice';
 import Separator from 'yti-common-ui/components/separator';
 import getErrors from '@app/common/utils/get-errors';
 import {
@@ -25,30 +17,18 @@ import {
   Format,
 } from '@app/common/interfaces/format.interface';
 import FileDropAreaMscr from '@app/common/components/file-drop-area-mscr';
-import SpinnerOverlay, {
-  delay,
-  SpinnerType,
-} from '@app/common/components/spinner-overlay';
-import {
-  Schema,
-  SchemaFormType,
-} from '@app/common/interfaces/schema.interface';
-import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
-import { useStoreDispatch } from '@app/store';
-import {
-  FormErrors as SchemaErrors,
-  validateSchemaForm,
-} from '@app/modules/form/schema-form/validate-schema-form';
+import SpinnerOverlay, {delay, SpinnerType,} from '@app/common/components/spinner-overlay';
+import {Schema, SchemaFormType,} from '@app/common/interfaces/schema.interface';
+import {mscrSearchApi} from '@app/common/components/mscr-search/mscr-search.slice';
+import {useStoreDispatch} from '@app/store';
+import {FormErrors as SchemaErrors, validateSchemaForm,} from '@app/modules/form/schema-form/validate-schema-form';
 import generateSchemaPayload from '@app/modules/form/schema-form/generate-schema-payload';
 import SchemaFormFields from '@app/modules/form/schema-form/schema-form-fields';
-import {
-  Crosswalk,
-  CrosswalkFormType,
-} from '@app/common/interfaces/crosswalk.interface';
-import { Type } from '@app/common/interfaces/search.interface';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { State } from '@app/common/interfaces/state.interface';
-import { useInitialCrosswalkForm } from '@app/common/utils/hooks/use-initial-crosswalk-form';
+import {Crosswalk, CrosswalkFormType,} from '@app/common/interfaces/crosswalk.interface';
+import {Type} from '@app/common/interfaces/search.interface';
+import {getLanguageVersion} from '@app/common/utils/get-language-version';
+import {State} from '@app/common/interfaces/state.interface';
+import {useInitialCrosswalkForm} from '@app/common/utils/hooks/use-initial-crosswalk-form';
 import {
   usePutCrosswalkFullRevisionMutation,
   usePutCrosswalkRevisionMutation,
@@ -58,7 +38,7 @@ import {
   validateCrosswalkForm,
 } from '@app/modules/form/crosswalk-form/validate-crosswalk-form';
 import CrosswalkForm from '@app/modules/form/crosswalk-form/crosswalk-form-fields';
-import { Metadata } from '@app/common/interfaces/metadata.interface';
+import {Metadata} from '@app/common/interfaces/metadata.interface';
 
 export default function RevisionFormModal({
                                             initialData,
@@ -196,7 +176,7 @@ export default function RevisionFormModal({
 
   const spinnerDelay = async () => {
     setSubmitAnimationVisible(true);
-    await delay(2000);
+    await delay(20000);
     return Promise.resolve();
   };
 
@@ -398,7 +378,7 @@ export default function RevisionFormModal({
           {submitAnimationVisible && (
             <SpinnerOverlay
               animationVisible={submitAnimationVisible}
-              type={SpinnerType.CrosswalkRevisionModal}
+              type={type == Type.Schema ? SpinnerType.SchemaRevisionModal : SpinnerType.CrosswalkRevisionModal}
             ></SpinnerOverlay>
           )}
         </>

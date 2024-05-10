@@ -2,12 +2,9 @@ import { SerializedError } from '@reduxjs/toolkit';
 import { AxiosBaseQueryError } from 'yti-common-ui/interfaces/axios-base-query.interface';
 import { MSCRError } from '../interfaces/error.interface';
 
-
-
 export default function getApiError(
   error: AxiosBaseQueryError | SerializedError
 ): MSCRError {
-  console.log(typeof  error, error);
   const mscrError: MSCRError = {};
   mscrError.status = '';
   mscrError.message = '';
@@ -34,6 +31,5 @@ export default function getApiError(
       mscrError.detail = error.data.detail ?? 'Server Error';
     }
   }
-  console.log('errori', mscrError);
   return mscrError;
 }

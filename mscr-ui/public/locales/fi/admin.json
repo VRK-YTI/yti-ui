@@ -59,8 +59,7 @@
     "register-revision": "",
     "registerTitle": "",
     "revision": "",
-    "supported-file-formats": "",
-    "version-label": ""
+    "supported-file-formats": ""
   },
   "data-model": "Tietomalli",
   "data-models-added-to-this-model": "Tähän tietomalliin lisätyt tietomallit",
@@ -168,6 +167,9 @@
     "terminology-removed": "",
     "terminology-title": "",
     "terminology-warning": ""
+  },
+  "schema-form": {
+    "version-label": ""
   },
   "select-class": "Valitse luokka",
   "select-information-description-languages": "Valitse tietomallin kielet",

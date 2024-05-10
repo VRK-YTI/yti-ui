@@ -134,21 +134,39 @@ body {
     }
   }
   &.crosswalk-revision-modal {
+    height: calc(100% - 44vh);
+    @media screen and (min-height: 600px) {
+      height: calc(100% - 40vh);
+    }
+    @media screen and (min-height: 650px) {
+      height: calc(100% - 40vh);
+    }
+    @media screen and (min-height: 800px) {
+      height: calc(100% - 53vh);
+    }
+    @media screen and (min-height: 950px) {
+      height: calc(100% - 58vh);
+    }
+    @media screen and (min-height: 1150px) {
+      height: calc(100% - 65vh);
+    }
+  }
+  &.schema-revision-modal {
     height: calc(100% - 48vh);
     @media screen and (min-height: 600px) {
       height: calc(100% - 40vh);
     }
     @media screen and (min-height: 650px) {
-      height: calc(100% - 48vh);
+      height: calc(100% - 40vh);
     }
     @media screen and (min-height: 800px) {
-      height: calc(100% - 57vh);
+      height: calc(100% - 30vh);
     }
-    @media screen and (min-height: 950px) {
-      height: calc(100% - 64vh);
+    @media screen and (min-height: 1000px) {
+      height: calc(100% - 26vh);
     }
     @media screen and (min-height: 1150px) {
-      height: calc(100% - 70vh);
+      height: calc(100% - 30vh);
     }
   }
 }

@@ -126,7 +126,7 @@ export default function CrosswalkFormFields({
               languages: e,
             })
           }
-          versionLabelCaption={t('schema-form.version-label')}
+          versionLabelCaption={t('crosswalk-form.version-label')}
           versionLabel={formData.versionLabel ?? '1'}
           setVersionLabel={(e) =>
             setVersionLabel(e)
@@ -154,7 +154,6 @@ export default function CrosswalkFormFields({
   }
 
   function setVersionLabel(value: any) {
-    console.log('setting version label', value);
     setFormData({
       ...formData,
       versionLabel: value as string});
