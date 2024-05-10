@@ -24,7 +24,8 @@
     "invalidate-crosswalk": "",
     "invalidate-schema": "",
     "publish-crosswalk": "",
-    "publish-schema": ""
+    "publish-schema": "",
+    "revision": ""
   },
   "association": "",
   "attribute": "",
@@ -228,7 +229,8 @@
     "information-description-languages-hint-text": "",
     "name": "",
     "status": "",
-    "status-select": ""
+    "status-select": "",
+    "version-label": ""
   },
   "schema-tree": {
     "clear": "",

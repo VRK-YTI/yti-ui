@@ -7,7 +7,6 @@ import { Organization } from './organizations.interface';
 
 export interface Schema extends Metadata {
   status?: string;
-  languages?: string[];
   organizations: Organization[];
   owner?: string[];
 }
@@ -28,12 +27,11 @@ export interface SchemaWithVersionInfo extends Schema {
 // ToDo: Proper typing
 export interface SchemaFormType {
   namespace?: string;
-  pid?: string;
   format: Format;
   languages: (LanguageBlockType & { selected: boolean })[];
-  organizations: Organization[];
   filedata?: any;
   state: State;
+  versionLabel?: string;
 }
 
 export interface FilesRowInput {

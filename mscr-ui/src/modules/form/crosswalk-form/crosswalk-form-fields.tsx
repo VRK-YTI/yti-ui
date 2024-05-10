@@ -1,6 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction } from 'react';
-import { Dropdown, DropdownItem, Text } from 'suomifi-ui-components';
+import { Dropdown, DropdownItem, Text, TextInput } from 'suomifi-ui-components';
 import { FormErrors } from './validate-crosswalk-form';
 import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import TargetAndSourceSchemaSelector from './target-and-source-schema-selector';
@@ -21,8 +20,9 @@ import {
 
 interface RegisterCrosswalkFormProps {
   formData: CrosswalkFormType;
-  setFormData: Dispatch<SetStateAction<CrosswalkFormType>>;
+  setFormData: (value: CrosswalkFormType) => void;
   createNew: boolean;
+  isRevision?: boolean;
   userPosted: boolean;
   disabled?: boolean;
   errors?: FormErrors;
@@ -33,6 +33,7 @@ export default function CrosswalkFormFields({
   formData,
   setFormData,
   createNew,
+  isRevision,
   userPosted,
   disabled,
   errors,
@@ -46,6 +47,7 @@ export default function CrosswalkFormFields({
         formData={formData}
         setFormData={setFormData}
         createNew={createNew}
+        schemaSelectorDisabled={isRevision}
       ></TargetAndSourceSchemaSelector>
       {createNew && (
         <Text>
@@ -55,6 +57,7 @@ export default function CrosswalkFormFields({
       )}
       {!createNew && renderCrosswalkFormat()}
       {renderLanguages()}
+      {renderVersionLabel()}
       {!createNew && renderState()}
     </ModelFormContainer>
   );
@@ -66,7 +69,8 @@ export default function CrosswalkFormFields({
         <Dropdown
           labelText={'Format'}
           defaultValue={formData.format ?? ''}
-          visualPlaceholder={'Select Crosswalk File Format'}
+          disabled={isRevision}
+          visualPlaceholder={isRevision ? formData.format : 'Select Crosswalk File Format'}
           onChange={(e: Format) =>
             setFormData({
               ...formData,
@@ -123,6 +127,21 @@ export default function CrosswalkFormFields({
     );
   }
 
+  function renderVersionLabel() {
+    return (
+      <TextInput
+        labelText={t('crosswalk-form.version-label')}
+        value={formData.versionLabel ?? '1'}
+        onChange={(value) =>
+          setFormData({
+            ...formData,
+            versionLabel: value as string,
+          })
+        }
+      />
+    );
+  }
+
   function renderState() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -130,6 +149,7 @@ export default function CrosswalkFormFields({
           labelText={'State'}
           visualPlaceholder={'Select state'}
           defaultValue={formData.state ?? ''}
+          disabled={isRevision}
           onChange={(e: State) =>
             setFormData({
               ...formData,

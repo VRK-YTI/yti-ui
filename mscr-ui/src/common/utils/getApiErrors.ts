@@ -9,7 +9,7 @@ export default function getApiError(
 ): MSCRError {
 
   const mscrError: MSCRError = {};
-  mscrError.staus = '';
+  mscrError.status = '';
   mscrError.message = '';
   // console.log(error);
 
@@ -19,10 +19,10 @@ export default function getApiError(
     error.data !== null
   ) {
     if ('status' in error.data && typeof error.data.status === 'string') {
-      mscrError.staus = error.data.status ?? 'GENERAL_ERROR';
+      mscrError.status = error.data.status ?? 'GENERAL_ERROR';
       // console.log(error.data.status);
     } else if(('status' in error.data && typeof error.data.status === 'number') ) {
-      mscrError.staus = error.data.status.toString();
+      mscrError.status = error.data.status.toString();
     }
     if ('message' in error.data && typeof error.data.message === 'string') {
       mscrError.message = error.data.message ?? 'Unexpected error occured';

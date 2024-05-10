@@ -11,9 +11,7 @@ export function useInitialCrosswalkForm(): CrosswalkFormType {
   const { t } = useTranslation('admin');
 
   return {
-    pid: '',
     format: Format.Mscr,
-    label: '',
     state: State.Draft,
     languages: [
       // Hiding Swedish and Finnish for now
@@ -37,12 +35,6 @@ export function useInitialCrosswalkForm(): CrosswalkFormType {
         title: '',
         description: '',
         selected: true,
-      },
-    ],
-    organizations: [
-      {
-        uniqueItemId: '7d3a3c00-5a6b-489b-a3ed-63bb58c26a63',
-        labelText: 'Interoperabilty Platform',
       },
     ],
     sourceSchema: '',

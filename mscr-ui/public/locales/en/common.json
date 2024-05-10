@@ -24,7 +24,8 @@
     "invalidate-crosswalk": "Invalidate crosswalk",
     "invalidate-schema": "Invalidate schema",
     "publish-crosswalk": "Publish crosswalk",
-    "publish-schema": "Publish schema"
+    "publish-schema": "Publish schema",
+    "revision": "Add new revision"
   },
   "association": "",
   "attribute": "",
@@ -228,7 +229,8 @@
     "information-description-languages-hint-text": "Select languages in which the content of the schema is described",
     "name": "Name (required)",
     "status": "Status",
-    "status-select": "Select status"
+    "status-select": "Select status",
+    "version-label": "Version label"
   },
   "schema-tree": {
     "clear": "Clear",

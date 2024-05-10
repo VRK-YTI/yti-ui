@@ -53,9 +53,14 @@
   "crosswalk-form": {
     "create": "Create Crosswalk",
     "createTitle": "Create and register new crosswalk",
+    "file-required": "You must provide a crosswalk file to register",
     "format-note": "NOTE: Public schemas in following formats are available for crosswalk creation: ",
     "register": "Register Crosswalk",
-    "registerTitle": "Register existing crosswalk"
+    "register-revision": "Register revision of crosswalk",
+    "registerTitle": "Register existing crosswalk",
+    "revision": "Register revision",
+    "supported-file-formats": "Supported crosswalk file formats are ",
+    "version-label": "Version label"
   },
   "data-model": "Data model",
   "data-models-added-to-this-model": "Data models added to this model",
@@ -140,6 +145,7 @@
   "register-schema": "Register Schema",
   "register-schema-file-required": "You must provide a schema file to register a schema.",
   "register-schema-file-uri-reference": "Provide schema file URI reference",
+  "register-schema-revision": "Register schema revision",
   "register-schema-supported-file-formats": "Supported schema file formats are ",
   "remove": "Remove",
   "remove-modal": {

@@ -11,7 +11,7 @@ export default function GenericTable(props: {
   items: unknown[];
   headings: string[];
   caption: string;
-  staticHighlight: boolean;
+  staticHighlight?: boolean;
 }) {
   function createColumnHeadings(items: { [s: string]: unknown }[]) {
     const head: JSX.Element[] = [];

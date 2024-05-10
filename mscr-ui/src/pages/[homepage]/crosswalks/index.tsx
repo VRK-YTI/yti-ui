@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import PersonalWorkspace from 'src/modules/workspace/personal-home';
 import GroupWorkspace from 'src/modules/workspace/group-home';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
+import { Type } from '@app/common/interfaces/search.interface';
 
 interface CrosswalksPageProps extends CommonContextState {
   user: MscrUser;
@@ -33,9 +34,9 @@ export default function CrosswalksPage(props: CrosswalksPageProps) {
           description={t('service-description')}
         />
         {contentOwner == 'personal' ? (
-          <PersonalWorkspace contentType={'CROSSWALK'} />
+          <PersonalWorkspace contentType={Type.Crosswalk} />
         ) : (
-          <GroupWorkspace user={props.user} pid={contentOwner} contentType={'CROSSWALK'} />
+          <GroupWorkspace user={props.user} pid={contentOwner} contentType={Type.Crosswalk} />
         )}
       </Layout>
     </CommonContextProvider>

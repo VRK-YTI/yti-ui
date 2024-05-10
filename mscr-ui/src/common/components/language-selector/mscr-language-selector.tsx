@@ -38,29 +38,29 @@ export default function MscrLanguageSelector(
     (MultiSelectData & LanguageBlockType)[]
   >(props.defaultSelectedItems ?? []);
 
-  const handleSelectedChange = (
-    value: (MultiSelectData & LanguageBlockType)[]
-  ) => {
-    setSelectedItems(value);
-
-    const selectedIds = value.map((item) => item.uniqueItemId);
-
-    props.setLanguages(
-      props.items.map((item) => {
-        if (!selectedIds.includes(item.uniqueItemId)) {
-          return {
-            ...item,
-            selected: false,
-          };
-        }
-
-        return {
-          ...item,
-          selected: true,
-        };
-      })
-    );
-  };
+  // const handleSelectedChange = (
+  //   value: (MultiSelectData & LanguageBlockType)[]
+  // ) => {
+  //   setSelectedItems(value);
+  //
+  //   const selectedIds = value.map((item) => item.uniqueItemId);
+  //
+  //   props.setLanguages(
+  //     props.items.map((item) => {
+  //       if (!selectedIds.includes(item.uniqueItemId)) {
+  //         return {
+  //           ...item,
+  //           selected: false,
+  //         };
+  //       }
+  //
+  //       return {
+  //         ...item,
+  //         selected: true,
+  //       };
+  //     })
+  //   );
+  // };
 
   const handleTitleChange = (value: string, id: string) => {
     props.setLanguages(
