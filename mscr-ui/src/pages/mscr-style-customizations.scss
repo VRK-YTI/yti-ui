@@ -133,6 +133,24 @@ body {
       height: calc(100% - 70vh);
     }
   }
+  &.crosswalk-revision-modal {
+    height: calc(100% - 48vh);
+    @media screen and (min-height: 600px) {
+      height: calc(100% - 40vh);
+    }
+    @media screen and (min-height: 650px) {
+      height: calc(100% - 48vh);
+    }
+    @media screen and (min-height: 800px) {
+      height: calc(100% - 57vh);
+    }
+    @media screen and (min-height: 950px) {
+      height: calc(100% - 64vh);
+    }
+    @media screen and (min-height: 1150px) {
+      height: calc(100% - 70vh);
+    }
+  }
 }
 
 .crosswalk-editor {

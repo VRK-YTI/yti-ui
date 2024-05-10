@@ -61,11 +61,11 @@ import CrosswalkForm from '@app/modules/form/crosswalk-form/crosswalk-form-field
 import { Metadata } from '@app/common/interfaces/metadata.interface';
 
 export default function RevisionFormModal({
-  initialData,
-  visible,
-  setVisible,
-  type,
-}: {
+                                            initialData,
+                                            visible,
+                                            setVisible,
+                                            type,
+                                          }: {
   initialData: Schema | Crosswalk;
   visible: boolean;
   setVisible: (visible: boolean) => void;
@@ -80,7 +80,7 @@ export default function RevisionFormModal({
   const [, setIsValid] = useState(false);
   const [formData, setFormData] = useState<
     SchemaFormType | CrosswalkFormType
-  >();
+    >();
   const [fileData, setFileData] = useState<File | null>();
   const [fileUri, setFileUri] = useState<string | null>();
   const [errors, setErrors] = useState<SchemaErrors | CrosswalkErrors>();
@@ -398,7 +398,7 @@ export default function RevisionFormModal({
           {submitAnimationVisible && (
             <SpinnerOverlay
               animationVisible={submitAnimationVisible}
-              type={SpinnerType.SchemaRegistrationModal}
+              type={SpinnerType.CrosswalkRevisionModal}
             ></SpinnerOverlay>
           )}
         </>

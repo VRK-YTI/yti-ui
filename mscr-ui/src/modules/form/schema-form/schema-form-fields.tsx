@@ -24,14 +24,14 @@ interface SchemaFormProps {
 }
 
 export default function SchemaFormFields({
-  formData,
-  setFormData,
-  userPosted,
-  disabled,
-  errors,
-  isRevision,
-}: // editMode,
-SchemaFormProps) {
+                                           formData,
+                                           setFormData,
+                                           userPosted,
+                                           disabled,
+                                           errors,
+                                           isRevision,
+                                         }: // editMode,
+                                           SchemaFormProps) {
   const { t } = useTranslation();
 
   // Creating the actual schema Input form
@@ -39,8 +39,6 @@ SchemaFormProps) {
     <ModelFormContainer>
       {renderSchemaFormat()}
       {renderLanguages()}
-      {/*!editMode && renderContributors()*/}
-      {renderVersionLabel()}
       {renderState()}
       {/*editMode && renderContributors()*/}
     </ModelFormContainer>
@@ -97,6 +95,11 @@ SchemaFormProps) {
             textDescription: t('schema-form.description'),
             optionalText: '',
           }}
+          versionLabelCaption={t('schema-form.version-label')}
+          versionLabel={formData.versionLabel ?? '1'}
+          setVersionLabel={(e) =>
+            setVersionLabel(e)
+          }
           allowItemAddition={false}
           ariaChipActionLabel={''}
           ariaSelectedAmountText={''}
@@ -113,19 +116,11 @@ SchemaFormProps) {
     );
   }
 
-  function renderVersionLabel() {
-    return (
-      <TextInput
-        labelText={t('schema-form.version-label')}
-        value={formData.versionLabel ?? '1'}
-        onChange={(value) =>
-          setFormData({
-            ...formData,
-            versionLabel: value as string,
-          })
-        }
-      />
-    );
+  function setVersionLabel(value: any){
+    setFormData({
+      ...formData,
+      versionLabel: value as string,
+    });
   }
 
   function renderState() {
@@ -150,35 +145,4 @@ SchemaFormProps) {
       </div>
     );
   }
-
-  // function renderContributors() {
-  //   return (
-  //     <WideMultiSelect
-  //       chipListVisible={true}
-  //       labelText={t('schema-form.contributors')}
-  //       visualPlaceholder={t('schema-form.contributors-select')}
-  //       removeAllButtonLabel={t(
-  //         'schema-form.contributors-clear-all-selections'
-  //       )}
-  //       allowItemAddition={false}
-  //       onItemSelectionsChange={(e) =>
-  //         setFormData({
-  //           ...formData,
-  //           organizations: e,
-  //         })
-  //       }
-  //       items={formData.organizations}
-  //       status={
-  //         'default'
-  //         /* Old value below, can it be perma-removed? (leftover from https://github.com/CSCfi/mscr-ui-monorepo/pull/17)
-  //                   {userPosted && errors?.organizations ? 'error' : 'default'}*/
-  //       }
-  //       ariaChipActionLabel={''}
-  //       ariaSelectedAmountText={''}
-  //       ariaOptionsAvailableText={''}
-  //       ariaOptionChipRemovedText={''}
-  //       noItemsText={''}
-  //     />
-  //   );
-  // }
 }

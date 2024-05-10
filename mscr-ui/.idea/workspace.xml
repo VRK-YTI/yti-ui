@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5559f118-5591-4a3e-910f-c4190bc12e53" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/common/components/language-selector/mscr-language-selector.styles.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/components/language-selector/mscr-language-selector.styles.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/components/language-selector/mscr-language-selector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/components/language-selector/mscr-language-selector.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/components/spinner-overlay/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/components/spinner-overlay/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/interfaces/crosswalk.interface.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/interfaces/crosswalk.interface.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/form/crosswalk-form/crosswalk-form-fields.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/form/crosswalk-form/crosswalk-form-fields.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/form/revision-form-modal/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/form/revision-form-modal/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/form/schema-form/schema-form-fields.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/form/schema-form/schema-form-fields.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/mscr-style-customizations.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/mscr-style-customizations.scss" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2fHILdbF21f6UizjAv7fwV2QRcZ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/kkonola/Desktop/mscr-ui4/mscr-ui-monorepo/mscr-ui&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/WebStorm.app/Contents/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5559f118-5591-4a3e-910f-c4190bc12e53" name="Changes" comment="" />
+      <created>1713451521557</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1713451521557</updated>
+      <workItem from="1713451522686" duration="73204000" />
+      <workItem from="1714397173603" duration="9051000" />
+      <workItem from="1715073730640" duration="2430000" />
+      <workItem from="1715076612695" duration="598000" />
+      <workItem from="1715080510653" duration="41346000" />
+      <workItem from="1715344692050" duration="492000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
