@@ -118,6 +118,7 @@ export default function GroupWorkspace({
                 refetch={refetchInfo}
                 groupContent={true}
                 pid={pid}
+                isRevision={false}
               ></SchemaFormModal>
             ) : (
               <>

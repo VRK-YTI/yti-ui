@@ -109,6 +109,7 @@ export default function PersonalWorkspace({
               <SchemaFormModal
                 refetch={refetchInfo}
                 groupContent={false}
+                isRevision={false}
               ></SchemaFormModal>
             </>
           ) : (

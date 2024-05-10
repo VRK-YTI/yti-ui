@@ -7,7 +7,7 @@ import {
   ModalTitleH1,
 } from 'yti-common-ui/components/login-modal/login-modal.styles';
 
-export default function ConfirmModal(props: { isVisible: boolean; heading: string, text1: string, text2?:string, actionName: string, actionText: string, cancelText: string, performConfirmModalAction: any}) {
+export default function ConfirmModal(props: { isVisible: boolean; heading: string; text1: string; text2?:string; actionName: string; actionText: string; cancelText: string; performConfirmModalAction: (action: string) => void}) {
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
 

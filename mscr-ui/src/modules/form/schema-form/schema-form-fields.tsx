@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { useTranslation } from 'next-i18next';
-import { Dropdown, DropdownItem } from 'suomifi-ui-components';
+import { Dropdown, DropdownItem, TextInput } from 'suomifi-ui-components';
 import { ModelFormContainer } from '../form.styles';
 import LanguageSelector from 'yti-common-ui/components/form/language-selector';
 import { FormErrors } from './validate-schema-form';
@@ -8,7 +8,7 @@ import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 import {
   Format,
   formatsAvailableForCrosswalkRegistration,
-  formatsAvailableForSchemaRegistration
+  formatsAvailableForSchemaRegistration,
 } from '@app/common/interfaces/format.interface';
 import { State } from '@app/common/interfaces/state.interface';
 import MscrLanguageSelector from '@app/common/components/language-selector/mscr-language-selector';
@@ -20,6 +20,7 @@ interface SchemaFormProps {
   disabled?: boolean;
   errors?: FormErrors;
   editMode?: boolean;
+  isRevision?: boolean;
 }
 
 export default function SchemaFormFields({
@@ -28,6 +29,7 @@ export default function SchemaFormFields({
   userPosted,
   disabled,
   errors,
+  isRevision,
 }: // editMode,
 SchemaFormProps) {
   const { t } = useTranslation();
@@ -38,7 +40,8 @@ SchemaFormProps) {
       {renderSchemaFormat()}
       {renderLanguages()}
       {/*!editMode && renderContributors()*/}
-      {renderStatus()}
+      {renderVersionLabel()}
+      {renderState()}
       {/*editMode && renderContributors()*/}
     </ModelFormContainer>
   );
@@ -48,9 +51,11 @@ SchemaFormProps) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
           labelText={t('schema-form.format-label')}
-          visualPlaceholder={t('schema-form.format-placeholder')}
+          visualPlaceholder={
+            isRevision ? formData.format : t('schema-form.format-placeholder')
+          }
           defaultValue={formData.format ?? ''}
-          disabled={disabled}
+          disabled={disabled || isRevision}
           onChange={(e: Format) =>
             setFormData({
               ...formData,
@@ -59,7 +64,9 @@ SchemaFormProps) {
           }
         >
           {formatsAvailableForSchemaRegistration.map((format) => (
-            <DropdownItem key={format} value={format}>{format}</DropdownItem>
+            <DropdownItem key={format} value={format}>
+              {format}
+            </DropdownItem>
           ))}
         </Dropdown>
       </div>
@@ -106,14 +113,29 @@ SchemaFormProps) {
     );
   }
 
-  function renderStatus() {
+  function renderVersionLabel() {
+    return (
+      <TextInput
+        labelText={t('schema-form.version-label')}
+        value={formData.versionLabel ?? '1'}
+        onChange={(value) =>
+          setFormData({
+            ...formData,
+            versionLabel: value as string,
+          })
+        }
+      />
+    );
+  }
+
+  function renderState() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <Dropdown
           labelText={t('schema-form.status')}
           visualPlaceholder={t('schema-form.status-select')}
-          defaultValue={''}
-          disabled={disabled}
+          defaultValue={State.Draft}
+          disabled={disabled || isRevision}
           onChange={(e) =>
             setFormData({
               ...formData,

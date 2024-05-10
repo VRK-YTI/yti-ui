@@ -53,9 +53,14 @@
   "crosswalk-form": {
     "create": "",
     "createTitle": "",
+    "file-required": "",
     "format-note": "",
     "register": "",
-    "registerTitle": ""
+    "register-revision": "",
+    "registerTitle": "",
+    "revision": "",
+    "supported-file-formats": "",
+    "version-label": ""
   },
   "data-model": "",
   "data-models-added-to-this-model": "",
@@ -140,6 +145,7 @@
   "register-schema": "",
   "register-schema-file-required": "",
   "register-schema-file-uri-reference": "",
+  "register-schema-revision": "",
   "register-schema-supported-file-formats": "",
   "remove": "",
   "remove-modal": {

@@ -17,6 +17,7 @@ import {
   SchemaVisualizationWrapper,
   VersionsHeading,
 } from '@app/modules/schema-view/schema-view-styles';
+import SchemaFormModal from '@app/modules/form/schema-form/schema-form-modal';
 
 export default function SchemaView({ schemaId }: { schemaId: string }) {
   const { t } = useTranslation('common');

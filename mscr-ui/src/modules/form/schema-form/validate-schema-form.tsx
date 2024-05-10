@@ -8,7 +8,7 @@ export interface FormErrors {
   prefix: boolean;
   serviceCategories: boolean;
   fileData: boolean;
-  format: boolean;
+  format?: boolean;
 }
 
 export function validateSchemaForm(

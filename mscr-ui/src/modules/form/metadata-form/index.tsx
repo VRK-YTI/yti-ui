@@ -40,10 +40,12 @@ import {
 } from '@app/modules/form/metadata-form/metadata-form.styles';
 import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
 import SchemaAndCrosswalkActionMenu from '@app/common/components/schema-and-crosswalk-actionmenu';
+import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
+import { CrosswalkWithVersionInfo } from '@app/common/interfaces/crosswalk.interface';
 
 interface MetadataFormProps {
   type: Type;
-  metadata: Metadata;
+  metadata: SchemaWithVersionInfo | CrosswalkWithVersionInfo;
   refetchMetadata: () => void;
   hasEditPermission: boolean;
 }

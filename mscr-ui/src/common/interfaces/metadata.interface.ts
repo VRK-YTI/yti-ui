@@ -11,6 +11,7 @@ export interface Metadata {
   description: {
     [key: string]: string;
   };
+  languages?: string[];
   format: Format;
   visibility: Visibility;
   state: State;
