@@ -10,8 +10,9 @@ import {
   formatsAvailableForCrosswalkRegistration,
   formatsAvailableForSchemaRegistration,
 } from '@app/common/interfaces/format.interface';
-import { State } from '@app/common/interfaces/state.interface';
+import {possibleStatesAtRegistration, State} from '@app/common/interfaces/state.interface';
 import MscrLanguageSelector from '@app/common/components/language-selector/mscr-language-selector';
+import {WideDropdown} from "@app/modules/form/crosswalk-form/crosswalk-form.styles";
 
 interface SchemaFormProps {
   formData: SchemaFormType;
@@ -37,37 +38,61 @@ export default function SchemaFormFields({
   // Creating the actual schema Input form
   return (
     <ModelFormContainer>
-      {renderSchemaFormat()}
       {renderLanguages()}
-      {renderState()}
+      {renderFormatAndState()}
       {/*editMode && renderContributors()*/}
     </ModelFormContainer>
   );
 
-  function renderSchemaFormat() {
+  function renderFormatAndState() {
+    // may be load the formats from an array
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <Dropdown
-          labelText={t('schema-form.format-label')}
-          visualPlaceholder={
-            isRevision ? formData.format : t('schema-form.format-placeholder')
-          }
-          defaultValue={formData.format ?? ''}
-          disabled={disabled || isRevision}
-          onChange={(e: Format) =>
-            setFormData({
-              ...formData,
-              format: e,
-            })
-          }
-        >
-          {formatsAvailableForSchemaRegistration.map((format) => (
-            <DropdownItem key={format} value={format}>
-              {format}
-            </DropdownItem>
-          ))}
-        </Dropdown>
-      </div>
+      <>
+        <div className='row'>
+          <div className='col-6'>
+            <WideDropdown
+              labelText={t('schema-form.format-label')}
+              visualPlaceholder={
+                isRevision ? formData.format : t('schema-form.format-placeholder')
+              }
+              defaultValue={formData.format ?? ''}
+              disabled={disabled || isRevision}
+              onChange={(e: Format) =>
+                setFormData({
+                  ...formData,
+                  format: e,
+                })
+              }
+            >
+              {formatsAvailableForSchemaRegistration.map((format) => (
+                <DropdownItem key={format} value={format}>
+                  {format}
+                </DropdownItem>
+              ))}
+            </WideDropdown>
+          </div>
+          <div className='col-6'>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <WideDropdown
+                labelText={t('schema-form.status')}
+                visualPlaceholder={t('schema-form.status-select')}
+                defaultValue={State.Draft}
+                disabled={disabled || isRevision}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    state: e as State,
+                  })
+                }
+              >
+                <DropdownItem value={'DRAFT'}>{'DRAFT'}</DropdownItem>
+                <DropdownItem value={'PUBLISHED'}>{'PUBLISHED'}</DropdownItem>
+                <DropdownItem value={'DEPRECATED'}>{'DEPRECATED'}</DropdownItem>
+              </WideDropdown>
+            </div>
+          </div>
+        </div>
+      </>
     );
   }
 
@@ -121,28 +146,5 @@ export default function SchemaFormFields({
       ...formData,
       versionLabel: value as string,
     });
-  }
-
-  function renderState() {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <Dropdown
-          labelText={t('schema-form.status')}
-          visualPlaceholder={t('schema-form.status-select')}
-          defaultValue={State.Draft}
-          disabled={disabled || isRevision}
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              state: e as State,
-            })
-          }
-        >
-          <DropdownItem value={'DRAFT'}>{'DRAFT'}</DropdownItem>
-          <DropdownItem value={'PUBLISHED'}>{'PUBLISHED'}</DropdownItem>
-          <DropdownItem value={'DEPRECATED'}>{'DEPRECATED'}</DropdownItem>
-        </Dropdown>
-      </div>
-    );
   }
 }

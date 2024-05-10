@@ -176,9 +176,16 @@ export default function RevisionFormModal({
 
   const spinnerDelay = async () => {
     setSubmitAnimationVisible(true);
-    await delay(20000);
+    await delay(2000);
     return Promise.resolve();
   };
+
+  function isFormValid() {
+    if (errors && Object.values(errors).includes(true)){
+      return false
+    }
+    else return true;
+  }
 
   const handleSubmit = () => {
     scrollToModalTop();

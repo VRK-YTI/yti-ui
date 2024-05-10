@@ -154,19 +154,19 @@ body {
   &.schema-revision-modal {
     height: calc(100% - 48vh);
     @media screen and (min-height: 600px) {
-      height: calc(100% - 40vh);
+      height: calc(100% - 39vh);
     }
     @media screen and (min-height: 650px) {
-      height: calc(100% - 40vh);
+      height: calc(100% - 36vh);
     }
     @media screen and (min-height: 800px) {
       height: calc(100% - 30vh);
     }
     @media screen and (min-height: 1000px) {
-      height: calc(100% - 26vh);
+      height: calc(100% - 30vh);
     }
     @media screen and (min-height: 1150px) {
-      height: calc(100% - 30vh);
+      height: calc(100% - 41vh);
     }
   }
 }
