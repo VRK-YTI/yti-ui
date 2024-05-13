@@ -63,7 +63,7 @@ export default function OperationalizeModal({
         onEscKeyDown={() => handleClose()}
       >
         <ModalContent>
-          <ModalTitle>{'Test Croswalk'}</ModalTitle>
+          <ModalTitle>{'Test Crosswalk'}</ModalTitle>
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <div>
