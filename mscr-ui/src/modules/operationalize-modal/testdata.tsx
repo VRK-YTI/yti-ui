@@ -1,4 +1,4 @@
-export const xmlContent = `
+export const sourceXmlContent = `
 <resource xsi:schemaLocation="http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.1/metadata.xsd">
         <identifier identifierType="DOI">10.5072/example-full</identifier>
     <creators>
@@ -105,3 +105,25 @@ XML example of all DataCite Metadata Schema v4.1 properties.
 </fundingReference>
 </fundingReferences>
 </resource>`;
+
+export const targetXMLContent = `
+<oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" 
+    xmlns:dc="http://purl.org/dc/elements/1.1/" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
+    <dc:identifier>https://doi.org/10.5072/example-full</dc:identifier>
+    <dc:language>en-US</dc:language>
+    <dc:date>2017-09-13</dc:date>
+    <dc:rights>http://creativecommons.org/publicdomain/zero/1.0/</dc:rights>
+    <dc:type>Software</dc:type>
+    <dc:type>XML</dc:type>
+    <dc:rights>https://creativecommons.org/licenses/by-nc/4.0/</dc:rights>
+    <dc:title>Full DataCite XML Example - Demonstration of DataCite Properties.</dc:title>
+    <dc:description>XML example of all DataCite Metadata Schema v4.1 properties. </dc:description>
+    <dc:publisher>DataCite</dc:publisher>
+    <dc:creator>Miller, Elizabeth</dc:creator>
+    <dc:contributor>Starr, Joan</dc:contributor>
+    <dc:subject>000 computer science</dc:subject>
+</oai_dc:dc>
+`;
+

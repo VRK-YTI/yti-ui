@@ -8,9 +8,9 @@ import {
   ModalTitle,
   Text,
 } from 'suomifi-ui-components';
-import { BorderedText, Test } from './operationalize-modal.styles';
+import { BorderedText } from './operationalize-modal.styles';
 import { Grid } from '@mui/material';
-import { xmlContent } from './testdata';
+import { sourceXmlContent,targetXMLContent } from './testdata';
 import { ButtonBlock } from '../workspace/workspace.styles';
 
 interface OperationalizeProps {
@@ -23,8 +23,6 @@ export default function OperationalizeModal({
   targetSchemaPid,
   crosswalkPid,
 }: OperationalizeProps) {
-  const router = useRouter();
-  const [fileData, setFileData] = useState<File | null>();
   const [visible, setVisible] = useState(false);
   const [, setIsValid] = useState(false);
   const [documentViewArea, setDocumentViewArea] = useState(false);
@@ -35,7 +33,6 @@ export default function OperationalizeModal({
 
   const handleClose = useCallback(() => {
     setVisible(false);
-    setFileData(null);
     setDocumentViewArea(false);
   }, []);
 
@@ -72,7 +69,7 @@ export default function OperationalizeModal({
               <div>
                 <label>Source Document</label>
                 <BorderedText>
-                  <Text>{xmlContent}</Text>
+                  <Text>{sourceXmlContent}</Text>
                 </BorderedText>
               </div>
             </Grid>
@@ -82,7 +79,7 @@ export default function OperationalizeModal({
                 <div>
                   <label>Target Document</label>
                   <BorderedText>
-                    <Text>{xmlContent}</Text>
+                    <Text>{targetXMLContent}</Text>
                   </BorderedText>
                 </div>
               )}
