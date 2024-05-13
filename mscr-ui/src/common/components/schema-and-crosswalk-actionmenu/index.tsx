@@ -174,6 +174,7 @@ export default function SchemaAndCrosswalkActionMenu({
     }
   };
 
+
   useEffect(() => {
     setIsEditModeActive(isMappingsEditModeActive);
   }, [isMappingsEditModeActive]);
@@ -181,6 +182,8 @@ export default function SchemaAndCrosswalkActionMenu({
   useEffect(() => {
     dispatch(clearNotification());
   }, [dispatch]);
+
+ 
 
   return (
     <>
