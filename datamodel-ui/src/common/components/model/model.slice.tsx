@@ -51,9 +51,14 @@ export const modelApi = createApi({
       }),
       invalidatesTags: ['Model'],
     }),
-    deleteModel: builder.mutation<string, string>({
+    deleteModel: builder.mutation<
+      string,
+      { modelId: string; version?: string }
+    >({
       query: (value) => ({
-        url: `/model/${value}`,
+        url: `/model/${value.modelId}${
+          value.version ? `?version=${value.version}` : ''
+        }`,
         method: 'DELETE',
       }),
     }),

@@ -170,6 +170,7 @@
     "deleting-class": "Poistetaan luokkaa",
     "deleting-model": "Poistetaan tietomallia",
     "model-description": "Haluatko poistaa tietomallin {{targetName}}?",
+    "model-description-version": "Haluatko poistaa version {{targetVersion}} tietomallista {{targetName}}?",
     "model-error": "Tietomallin {{targetName}} poistamisessa ilmeni ongelma",
     "model-success": "Tietomalli {{targetName}} poistettu",
     "model-title": "Poista tietomalli"

@@ -261,14 +261,21 @@ export function translateDeleteModalTitle(
 export function translateDeleteModalDescription(
   type: 'model' | 'class' | 'association' | 'attribute',
   t: TFunction,
-  targetName?: string
+  targetName?: string,
+  targetVersion?: string
 ) {
   switch (type) {
     case 'model':
-      return t('delete-modal.model-description', {
-        ns: 'admin',
-        targetName: targetName,
-      });
+      return !targetVersion
+        ? t('delete-modal.model-description', {
+            ns: 'admin',
+            targetName: targetName,
+          })
+        : t('delete-modal.model-description-version', {
+            ns: 'admin',
+            targetName: targetName,
+            targetVersion: targetVersion,
+          });
     case 'class':
       return t('delete-modal.class-description', {
         ns: 'admin',
