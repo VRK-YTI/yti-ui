@@ -22,6 +22,10 @@ import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.sl
 import { CrosswalkWithVersionInfo } from '@app/common/interfaces/crosswalk.interface';
 import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
 import RevisionFormModal from '@app/modules/form/revision-form-modal';
+import {
+  ActionMenuWrapper,
+  StyledActionMenu
+} from "@app/common/components/schema-and-crosswalk-actionmenu/schema-and-crosswalk-actionmenu.styles";
 
 interface SchemaAndCrosswalkActionmenuProps {
   type: ActionMenuTypes;
@@ -32,14 +36,14 @@ interface SchemaAndCrosswalkActionmenuProps {
 }
 
 export default function SchemaAndCrosswalkActionMenu({
-  type,
-  metadata,
-  isMappingsEditModeActive,
-  refetchMetadata,
-  buttonCallbackFunction = () => {
-    return;
-  },
-}: SchemaAndCrosswalkActionmenuProps) {
+                                                       type,
+                                                       metadata,
+                                                       isMappingsEditModeActive,
+                                                       refetchMetadata,
+                                                       buttonCallbackFunction = () => {
+                                                         return;
+                                                       },
+                                                     }: SchemaAndCrosswalkActionmenuProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const [isEditModeActive, setIsEditModeActive] = useState(false);
@@ -103,10 +107,10 @@ export default function SchemaAndCrosswalkActionMenu({
                 action === 'publish'
                   ? 'CROSSWALK_PUBLISH'
                   : action === 'invalidate'
-                  ? 'CROSSWALK_INVALIDATE'
-                  : action === 'deprecate'
-                  ? 'CROSSWALK_DEPRECATE'
-                  : 'CROSSWALK_DELETE'
+                    ? 'CROSSWALK_INVALIDATE'
+                    : action === 'deprecate'
+                      ? 'CROSSWALK_DEPRECATE'
+                      : 'CROSSWALK_DELETE'
               )
             );
             refetchMetadata();
@@ -131,10 +135,10 @@ export default function SchemaAndCrosswalkActionMenu({
                 action === 'publish'
                   ? 'SCHEMA_PUBLISH'
                   : action === 'invalidate'
-                  ? 'SCHEMA_INVALIDATE'
-                  : action === 'deprecate'
-                  ? 'SCHEMA_DEPRECATE'
-                  : 'SCHEMA_DELETE'
+                    ? 'SCHEMA_INVALIDATE'
+                    : action === 'deprecate'
+                      ? 'SCHEMA_DEPRECATE'
+                      : 'SCHEMA_DELETE'
               )
             );
             refetchMetadata();
@@ -174,7 +178,6 @@ export default function SchemaAndCrosswalkActionMenu({
     }
   };
 
-
   useEffect(() => {
     setIsEditModeActive(isMappingsEditModeActive);
   }, [isMappingsEditModeActive]);
@@ -183,92 +186,92 @@ export default function SchemaAndCrosswalkActionMenu({
     dispatch(clearNotification());
   }, [dispatch]);
 
- 
-
   return (
     <>
-      <ActionMenu buttonText={t('action.actions')}>
-        <ActionMenuItem
-          className={
-            type === ActionMenuTypes.CrosswalkEditor &&
-            metadata.state == State.Draft
-              ? ''
-              : 'd-none'
-          }
-          onClick={() => buttonCallbackFunction('edit')}
-        >
-          {isEditModeActive
-            ? t('actionmenu.finish-editing')
-            : t('actionmenu.edit-mappings')}
-        </ActionMenuItem>
-        <ActionMenuItem
-          onClick={() => buttonCallbackFunction('edit')}
-          className={
-            type === ActionMenuTypes.CrosswalkMetadata ||
+      <ActionMenuWrapper>
+        <ActionMenu buttonText={t('action.actions')}>
+          <ActionMenuItem
+            className={
+              type === ActionMenuTypes.CrosswalkEditor &&
+              metadata.state == State.Draft
+                ? ''
+                : 'd-none'
+            }
+            onClick={() => buttonCallbackFunction('edit')}
+          >
+            {isEditModeActive
+              ? t('actionmenu.finish-editing')
+              : t('actionmenu.edit-mappings')}
+          </ActionMenuItem>
+          <ActionMenuItem
+            onClick={() => buttonCallbackFunction('edit')}
+            className={
+              type === ActionMenuTypes.CrosswalkMetadata ||
+              type === ActionMenuTypes.SchemaMetadata
+                ? ''
+                : 'd-none'
+            }
+          >
+            {t('actionmenu.edit-metadata')}
+          </ActionMenuItem>
+          <ActionMenuItem
+            className={metadata && metadata.state == State.Draft ? '' : 'd-none'}
+            onClick={() => setPublishConfirmModalOpen(true)}
+          >
+            {type === ActionMenuTypes.Schema ||
             type === ActionMenuTypes.SchemaMetadata
-              ? ''
-              : 'd-none'
-          }
-        >
-          {t('actionmenu.edit-metadata')}
-        </ActionMenuItem>
-        <ActionMenuItem
-          className={metadata && metadata.state == State.Draft ? '' : 'd-none'}
-          onClick={() => setPublishConfirmModalOpen(true)}
-        >
-          {type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('actionmenu.publish-schema')
-            : t('actionmenu.publish-crosswalk')}
-        </ActionMenuItem>
-        <ActionMenuItem
-          className={
-            metadata && metadata.state == State.Published ? '' : 'd-none'
-          }
-          onClick={() => setInvalidateConfirmModalOpen(true)}
-        >
-          {type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('actionmenu.invalidate-schema')
-            : t('actionmenu.invalidate-crosswalk')}
-        </ActionMenuItem>
-        <ActionMenuItem
-          className={
-            metadata && metadata.state == State.Published ? '' : 'd-none'
-          }
-          onClick={() => setDeprecateConfirmModalOpen(true)}
-        >
-          {type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('actionmenu.deprecate-schema')
-            : t('actionmenu.deprecate-crosswalk')}
-        </ActionMenuItem>
-        <ActionMenuItem
-          className={metadata && metadata.state == State.Draft ? '' : 'd-none'}
-          onClick={() => setDeleteConfirmModalOpen(true)}
-        >
-          {t('actionmenu.delete-draft')}
-        </ActionMenuItem>
-        <ActionMenuItem
-          className={
-            metadata &&
-            metadata.state &&
-            (metadata.state == State.Invalid ||
-              metadata.state == State.Deprecated)
-              ? ''
-              : 'd-none'
-          }
-          onClick={() => setRemoveConfirmModalOpen(true)}
-        >
-          {type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('actionmenu.delete-schema')
-            : t('actionmenu.delete-crosswalk')}
-        </ActionMenuItem>
-        <ActionMenuItem onClick={() => setRevisionModalOpen(true)}>
-          {t('actionmenu.revision')}
-        </ActionMenuItem>
-      </ActionMenu>
+              ? t('actionmenu.publish-schema')
+              : t('actionmenu.publish-crosswalk')}
+          </ActionMenuItem>
+          <ActionMenuItem
+            className={
+              metadata && metadata.state == State.Published ? '' : 'd-none'
+            }
+            onClick={() => setInvalidateConfirmModalOpen(true)}
+          >
+            {type === ActionMenuTypes.Schema ||
+            type === ActionMenuTypes.SchemaMetadata
+              ? t('actionmenu.invalidate-schema')
+              : t('actionmenu.invalidate-crosswalk')}
+          </ActionMenuItem>
+          <ActionMenuItem
+            className={
+              metadata && metadata.state == State.Published ? '' : 'd-none'
+            }
+            onClick={() => setDeprecateConfirmModalOpen(true)}
+          >
+            {type === ActionMenuTypes.Schema ||
+            type === ActionMenuTypes.SchemaMetadata
+              ? t('actionmenu.deprecate-schema')
+              : t('actionmenu.deprecate-crosswalk')}
+          </ActionMenuItem>
+          <ActionMenuItem
+            className={metadata && metadata.state == State.Draft ? '' : 'd-none'}
+            onClick={() => setDeleteConfirmModalOpen(true)}
+          >
+            {t('actionmenu.delete-draft')}
+          </ActionMenuItem>
+          <ActionMenuItem
+            className={
+              metadata &&
+              metadata.state &&
+              (metadata.state == State.Invalid ||
+                metadata.state == State.Deprecated)
+                ? ''
+                : 'd-none'
+            }
+            onClick={() => setRemoveConfirmModalOpen(true)}
+          >
+            {type === ActionMenuTypes.Schema ||
+            type === ActionMenuTypes.SchemaMetadata
+              ? t('actionmenu.delete-schema')
+              : t('actionmenu.delete-crosswalk')}
+          </ActionMenuItem>
+          <ActionMenuItem onClick={() => setRevisionModalOpen(true)}>
+            {t('actionmenu.revision')}
+          </ActionMenuItem>
+        </ActionMenu>
+      </ActionMenuWrapper>
       <ConfirmModal
         isVisible={isDeleteConfirmModalOpen}
         actionName={
