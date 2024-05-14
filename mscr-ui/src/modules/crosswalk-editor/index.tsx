@@ -113,10 +113,6 @@ export default function CrosswalkEditor({
 
   const [crosswalkPublished, setCrosswalkPublished] =
     React.useState<boolean>(true);
-  const [publishNotificationVisible, setPublishNotificationVisible] =
-    React.useState<boolean>(false);
-  const [saveNotificationVisible, setSaveNotificationVisible] =
-    React.useState<boolean>(false);
   const [lastPatchCrosswalkId, setLastPatchCrosswalkId] =
     React.useState<string>('');
   const [lastPutMappingPid, setLastPutMappingPid] = React.useState<string>('');
@@ -126,7 +122,6 @@ export default function CrosswalkEditor({
     React.useState<string>('');
   const [showAttributeNames, setShowAttributeNames] = React.useState(true);
 
-  const [patchCrosswalk, crosswalkPatchResponse] = usePatchCrosswalkMutation();
   const [putMapping, putMappingResponse] = usePutMappingMutation();
   const [deleteMapping, deleteMappingResponse] = useDeleteMappingMutation();
   const [patchMapping, patchMappingResponse] = usePatchMappingMutation();
@@ -171,28 +166,6 @@ export default function CrosswalkEditor({
         : null}
     </TreeItem>
   );
-
-  if (crosswalkPatchResponse.isSuccess) {
-    if (
-      !crosswalkPublished &&
-      crosswalkPatchResponse?.originalArgs?.payload?.state === 'PUBLISHED'
-    ) {
-      setCrosswalkPublished(true);
-      setPublishNotificationVisible(true);
-      setEditModeActive(false);
-      setLastPatchCrosswalkId(crosswalkPatchResponse.requestId);
-      refetchCrosswalkData();
-      setSelectedTab(0);
-    } else if (
-      !saveNotificationVisible &&
-      lastPatchCrosswalkId !== crosswalkPatchResponse.requestId
-    ) {
-      // Operation is regular patch without publishing (save)
-      setLastPatchCrosswalkId(crosswalkPatchResponse.requestId);
-      refetchCrosswalkData();
-      setSaveNotificationVisible(true);
-    }
-  }
 
   useEffect(() => {
     // Reset initial state when tab changed.
@@ -449,6 +422,9 @@ export default function CrosswalkEditor({
   };
 
   const performCallbackFromActionMenu = (action: any) => {
+    if (action === 'disableEdit') {
+      setEditModeActive(false);
+    }
     if (action === 'edit') {
       if (isEditModeActive) {
         dispatch(setNotification('FINISH_EDITING_MAPPINGS'));
@@ -586,24 +562,6 @@ export default function CrosswalkEditor({
             <CustomTabPanel value={selectedTab} index={2}>
             </CustomTabPanel>*/}
             <div className="row d-flex h-0">
-              {crosswalkPublished && publishNotificationVisible && (
-                <Notification
-                  closeText="Close"
-                  headingText="Crosswalk published successfully"
-                  smallScreen
-                  onCloseButtonClick={() =>
-                    setPublishNotificationVisible(false)
-                  }
-                ></Notification>
-              )}
-              {saveNotificationVisible && (
-                <Notification
-                  closeText="Close"
-                  headingText="Crosswalk saved successfully"
-                  smallScreen
-                  onCloseButtonClick={() => setSaveNotificationVisible(false)}
-                ></Notification>
-              )}
               <div className={selectedTab === 1 ? 'col-10' : 'd-none'}></div>
               <div
                 className={
