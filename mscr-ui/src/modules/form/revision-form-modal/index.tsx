@@ -176,15 +176,30 @@ export default function RevisionFormModal({
 
   const spinnerDelay = async () => {
     setSubmitAnimationVisible(true);
-    await delay(2000);
+    if (!(errors && Object.values(errors).includes(true))) {
+      await delay(2000);
+    }
     return Promise.resolve();
   };
 
   function isFormValid() {
     if (errors && Object.values(errors).includes(true)){
       return false
+    } else if (gatherInputError().length > 0){
+      return false;
     }
     else return true;
+  }
+
+  function validateForm(){
+    let errors;
+    if (type == Type.Schema && formData) {
+      errors = validateSchemaForm(formData, fileData, fileUri);
+      setErrors(errors);
+    } else if (formData) {
+      errors = validateCrosswalkForm(formData as CrosswalkFormType);
+      setErrors(errors);
+    }
   }
 
   const handleSubmit = () => {
@@ -193,16 +208,9 @@ export default function RevisionFormModal({
     if (!formData) {
       return;
     }
-    let errors;
-    if (type == Type.Schema) {
-      errors = validateSchemaForm(formData, fileData, fileUri);
-      setErrors(errors);
-    } else {
-      errors = validateCrosswalkForm(formData as CrosswalkFormType);
-      setErrors(errors);
-    }
+    validateForm();
 
-    if (Object.values(errors).includes(true)) {
+    if (errors && Object.values(errors).includes(true)) {
       return;
     }
     const validatedFormData: SchemaFormType = {
@@ -273,7 +281,6 @@ export default function RevisionFormModal({
       errors = validateCrosswalkForm(formData as CrosswalkFormType);
       setErrors(errors);
     }
-    //console.log(errors);
   }, [userPosted, formData, fileData, fileUri, type]);
 
   // This part was checking the user permission and based on that showing the button in every render
@@ -296,12 +303,13 @@ export default function RevisionFormModal({
     } else if (resultCrosswalkFullRevision.isError) {
       errorObject = getApiError(resultCrosswalkFullRevision.error);
     } else {
-      return;
+      return '';
     }
     if (errorObject.status && errorObject.message) {
       errorMessage = `${errorObject.status}: ${errorObject.message}`;
       return errorMessage;
     }
+    return '';
   }
 
   function getErrorDetail() {
@@ -436,21 +444,17 @@ export default function RevisionFormModal({
             </InlineAlert>
           )}
         {userPosted && gatherInputError() && !submitAnimationVisible && (
-          <FormFooterAlert
+          <><FormFooterAlert
             labelText={'Something went wrong'}
-            alerts={gatherInputError()}
-          />
+            alerts={gatherInputError()}/></>
         )}
         {/*Showing API Error if only input form error is not present*/}
-        {userPosted &&
-          gatherInputError().length < 1 &&
-          resultSchemaRevision.error &&
-          !submitAnimationVisible && (
-            <div>
-              <InlineAlert status="error">{gatherApiError()}</InlineAlert>
-              <InlineAlert>{getErrorDetail()}</InlineAlert>
-            </div>
-          )}
+        {userPosted && !submitAnimationVisible && isFormValid() && gatherApiError()?.length > 0 && (
+          <div>
+            <InlineAlert status="error">{gatherApiError()}</InlineAlert>
+            <InlineAlert>{getErrorDetail()}</InlineAlert>
+          </div>
+        )}
 
         <Button
           disabled={submitAnimationVisible}
