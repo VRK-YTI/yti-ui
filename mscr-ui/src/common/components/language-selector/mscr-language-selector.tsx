@@ -1,26 +1,27 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import {
   MultiSelectData,
   MultiSelectProps,
   Paragraph,
-  Text, TextInput,
+  Text,
+  TextInput,
 } from 'suomifi-ui-components';
 import {
   LanguageBlock,
   MultiSelect,
-  DescriptionInput, WideTextInput,
+  DescriptionInput,
+  WideTextInput,
 } from './mscr-language-selector.styles';
-import {TEXT_AREA_MAX, TEXT_INPUT_MAX} from 'yti-common-ui/utils/constants';
-import {LanguageBlockType} from "@app/common/interfaces/crosswalk.interface";
-
+import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
+import { LanguageBlockType } from 'yti-common-ui/components/form/language-selector';
 
 export default function MscrLanguageSelector(
   props: MultiSelectProps<LanguageBlockType> & {
     setLanguages: (value: LanguageBlockType[]) => void;
     userPosted: boolean;
     setVersionLabel: (value: string) => void;
-    versionLabel: string,
-    versionLabelCaption: string,
+    versionLabel: string;
+    versionLabelCaption: string;
     translations: {
       textInput: string;
       textDescription: string;
@@ -30,7 +31,9 @@ export default function MscrLanguageSelector(
     isWide?: boolean;
   }
 ) {
-  const [selectedItems, setSelectedItems] = useState<(MultiSelectData & LanguageBlockType)[]>(props.defaultSelectedItems ?? []);
+  const [selectedItems, setSelectedItems] = useState<
+    (MultiSelectData & LanguageBlockType)[]
+  >(props.defaultSelectedItems ?? []);
 
   // const handleSelectedChange = (
   //   value: (MultiSelectData & LanguageBlockType)[]
@@ -119,40 +122,49 @@ export default function MscrLanguageSelector(
           id={`language-block-${item.uniqueItemId}`}
         >
           {/*  <Paragraph marginBottomSpacing="m">
-      <Text variant="bold">{item.labelText}</Text>
-    </Paragraph> */}
-          <div className='row'>
-            <div className='col-6'>
+                 <Text variant="bold">{item.labelText}</Text>
+               </Paragraph> */}
+          <div className="row">
+            <div className="col-6">
               <WideTextInput
                 labelText={props.translations.textInput}
                 className={'name-input'}
-                onBlur={(e) => handleTitleChange(e.target.value, item.uniqueItemId)}
-                status={props.userPosted &&
-                props.items.find((l) => l.uniqueItemId === item.uniqueItemId)
-                  ?.title === ''
-                  ? 'error'
-                  : 'default'}
+                onBlur={(e) =>
+                  handleTitleChange(e.target.value, item.uniqueItemId)
+                }
+                status={
+                  props.userPosted &&
+                  props.items.find((l) => l.uniqueItemId === item.uniqueItemId)
+                    ?.title === ''
+                    ? 'error'
+                    : 'default'
+                }
                 defaultValue={item.title}
                 id={`name-input-${item.uniqueItemId}`}
                 maxLength={TEXT_INPUT_MAX}
-                disabled={props.disabled}/>
+                disabled={props.disabled}
+              />
             </div>
-            <div className='col-6'>
+            <div className="col-6">
               <WideTextInput
                 labelText={props.versionLabelCaption}
                 defaultValue={props.versionLabel ?? '1'}
                 onBlur={(e) => props.setVersionLabel(e.target.value)}
-              /></div>
-            <div className='col-12'>
+              />
+            </div>
+            <div className="col-12">
               <DescriptionInput
                 labelText={props.translations.textDescription}
                 className={'description-input'}
                 optionalText={props.translations.optionalText}
-                onBlur={(e) => handleDescriptionChange(e.target.value, item.uniqueItemId)}
+                onBlur={(e) =>
+                  handleDescriptionChange(e.target.value, item.uniqueItemId)
+                }
                 defaultValue={item.description}
                 id={`description-input-${item.uniqueItemId}`}
                 maxLength={TEXT_AREA_MAX}
-                disabled={props.disabled}/>
+                disabled={props.disabled}
+              />
             </div>
           </div>
         </LanguageBlock>

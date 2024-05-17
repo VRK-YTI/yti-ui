@@ -1,18 +1,16 @@
 /* eslint-disable */
 import { useTranslation } from 'next-i18next';
-import { Dropdown, DropdownItem, TextInput } from 'suomifi-ui-components';
+import { DropdownItem } from 'suomifi-ui-components';
 import { ModelFormContainer } from '../form.styles';
-import LanguageSelector from 'yti-common-ui/components/form/language-selector';
 import { FormErrors } from './validate-schema-form';
 import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 import {
   Format,
-  formatsAvailableForCrosswalkRegistration,
   formatsAvailableForSchemaRegistration,
 } from '@app/common/interfaces/format.interface';
-import {possibleStatesAtRegistration, State} from '@app/common/interfaces/state.interface';
+import { State } from '@app/common/interfaces/state.interface';
 import MscrLanguageSelector from '@app/common/components/language-selector/mscr-language-selector';
-import {WideDropdown} from "@app/modules/form/crosswalk-form/crosswalk-form.styles";
+import { WideDropdown } from '@app/modules/form/crosswalk-form/crosswalk-form.styles';
 
 interface SchemaFormProps {
   formData: SchemaFormType;
@@ -25,14 +23,14 @@ interface SchemaFormProps {
 }
 
 export default function SchemaFormFields({
-                                           formData,
-                                           setFormData,
-                                           userPosted,
-                                           disabled,
-                                           errors,
-                                           isRevision,
-                                         }: // editMode,
-                                           SchemaFormProps) {
+  formData,
+  setFormData,
+  userPosted,
+  disabled,
+  errors,
+  isRevision,
+}: // editMode,
+SchemaFormProps) {
   const { t } = useTranslation();
 
   // Creating the actual schema Input form
@@ -48,12 +46,14 @@ export default function SchemaFormFields({
     // may be load the formats from an array
     return (
       <>
-        <div className='row'>
-          <div className='col-6'>
+        <div className="row">
+          <div className="col-6">
             <WideDropdown
               labelText={t('schema-form.format-label')}
               visualPlaceholder={
-                isRevision ? formData.format : t('schema-form.format-placeholder')
+                isRevision
+                  ? formData.format
+                  : t('schema-form.format-placeholder')
               }
               defaultValue={formData.format ?? ''}
               disabled={disabled || isRevision}
@@ -71,8 +71,10 @@ export default function SchemaFormFields({
               ))}
             </WideDropdown>
           </div>
-          <div className='col-6'>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div className="col-6">
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
+            >
               <WideDropdown
                 labelText={t('schema-form.status')}
                 visualPlaceholder={t('schema-form.status-select')}
@@ -122,9 +124,7 @@ export default function SchemaFormFields({
           }}
           versionLabelCaption={t('schema-form.version-label')}
           versionLabel={formData.versionLabel ?? '1'}
-          setVersionLabel={(e) =>
-            setVersionLabel(e)
-          }
+          setVersionLabel={(e) => setVersionLabel(e)}
           allowItemAddition={false}
           ariaChipActionLabel={''}
           ariaSelectedAmountText={''}
@@ -141,7 +141,7 @@ export default function SchemaFormFields({
     );
   }
 
-  function setVersionLabel(value: any){
+  function setVersionLabel(value: any) {
     setFormData({
       ...formData,
       versionLabel: value as string,

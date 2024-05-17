@@ -1,5 +1,4 @@
-import { SingleSelect, TextInput } from 'suomifi-ui-components';
-import { DropdownItem } from 'suomifi-ui-components';
+import { DropdownItem, TextInput } from 'suomifi-ui-components';
 import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import * as React from 'react';
 import {
@@ -12,12 +11,12 @@ import { MscrSearchResult } from '@app/common/interfaces/search.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { ModelFormContainer } from '@app/modules/form/form.styles';
 import { useTranslation } from 'next-i18next';
+import { formatsAvailableForCrosswalkCreation } from '@app/common/interfaces/format.interface';
 import {
-  Format,
-  formatsAvailableForCrosswalkCreation,
-  formatsAvailableForCrosswalkRegistration
-} from '@app/common/interfaces/format.interface';
-import {CrosswalkModal, WideDropdown, WideSingleSelect} from "@app/modules/form/crosswalk-form/crosswalk-form.styles";
+  CrosswalkModal,
+  WideDropdown,
+  WideSingleSelect,
+} from '@app/modules/form/crosswalk-form/crosswalk-form.styles';
 
 interface CrosswalkFormProps {
   formData: CrosswalkFormType;
@@ -48,31 +47,28 @@ export default function TargetAndSourceSchemaSelector({
     : [];
   const { data, isSuccess } = useGetPublicSchemasQuery(formatRestrictions);
 
-  const { data: sourceSchemaData } = useGetSchemaQuery(
-    formData.sourceSchema,
-    { skip: !schemaSelectorDisabled }
-  );
-  const { data: targetSchemaData } = useGetSchemaQuery(
-    formData.targetSchema,
-    { skip: !schemaSelectorDisabled }
-  );
+  const { data: sourceSchemaData } = useGetSchemaQuery(formData.sourceSchema, {
+    skip: !schemaSelectorDisabled,
+  });
+  const { data: targetSchemaData } = useGetSchemaQuery(formData.targetSchema, {
+    skip: !schemaSelectorDisabled,
+  });
   //defaultSchemas.push({ labelText: 'test', uniqueItemId: 'test'});
   const [dataLoaded, setDataLoaded] = useState(false);
   const [defaultSchemas, setDefaultSchemas] = useState(
     Array<SelectableSchema>()
   );
-  const [sourceSchemas, setSourceSchemas] = useState(
-    Array<SelectableSchema>()
-  );
-  const [targetSchemas, setTargetSchemas] = useState(
-    Array<SelectableSchema>()
-  );
+  const [sourceSchemas, setSourceSchemas] = useState(Array<SelectableSchema>());
+  const [targetSchemas, setTargetSchemas] = useState(Array<SelectableSchema>());
 
   const workspaceValuesInit: SelectableWorkspace[] = [];
-  const [workspaceValues, setWorkspaceValues] = useState<SelectableWorkspace[]>(workspaceValuesInit);
+  const [workspaceValues, setWorkspaceValues] =
+    useState<SelectableWorkspace[]>(workspaceValuesInit);
 
-  const [selectedSourceWorkspace, setSelectedSourceWorkspace] = useState<string>('');
-  const [selectedTargetWorkspace, setSelectedTargetWorkspace] = useState<string>('');
+  const [selectedSourceWorkspace, setSelectedSourceWorkspace] =
+    useState<string>('');
+  const [selectedTargetWorkspace, setSelectedTargetWorkspace] =
+    useState<string>('');
 
   const [defaultSourceSchema, setDefaultSourceSchema] = useState('');
   const [defaultTargetSchema, setDefaultTargetSchema] = useState('');
@@ -82,14 +78,18 @@ export default function TargetAndSourceSchemaSelector({
 
   useEffect(() => {
     if (schemaSelectorDisabled && sourceSchemaData && targetSchemaData) {
-      setDefaultSourceSchema(getLanguageVersion({
-        data: sourceSchemaData.label,
-        lang,
-      }));
-      setDefaultTargetSchema(getLanguageVersion({
-        data: targetSchemaData.label,
-        lang,
-      }));
+      setDefaultSourceSchema(
+        getLanguageVersion({
+          data: sourceSchemaData.label,
+          lang,
+        })
+      );
+      setDefaultTargetSchema(
+        getLanguageVersion({
+          data: targetSchemaData.label,
+          lang,
+        })
+      );
     }
   }, [lang, schemaSelectorDisabled, sourceSchemaData, targetSchemaData]);
 
@@ -122,7 +122,14 @@ export default function TargetAndSourceSchemaSelector({
         data: item._source.label,
         lang,
       });
-      const schema = { labelText: label, uniqueItemId: item._source.id, organization: item._source.organizations.length > 0 ? item._source.organizations[0].id : '' };
+      const schema = {
+        labelText: label,
+        uniqueItemId: item._source.id,
+        organization:
+          item._source.organizations.length > 0
+            ? item._source.organizations[0].id
+            : '',
+      };
       fetchedSchemas.push(schema);
     });
     setDefaultSchemas(fetchedSchemas);
@@ -138,26 +145,30 @@ export default function TargetAndSourceSchemaSelector({
   }, [data?.hits.hits, isSuccess, lang]);
 
   useEffect(() => {
-      if (selectedSourceWorkspace === 'all'){
-        setSourceSchemas(defaultSchemas);
-      }
-      else if (selectedSourceWorkspace === 'personalWorkspace'){
-        setSourceSchemas(defaultSchemas.filter(item => item.organization === ''));
-      }
-      else {
-        setSourceSchemas(defaultSchemas.filter(item => item.organization !== ''));
-      }
+    if (selectedSourceWorkspace === 'all') {
+      setSourceSchemas(defaultSchemas);
+    } else if (selectedSourceWorkspace === 'personalWorkspace') {
+      setSourceSchemas(
+        defaultSchemas.filter((item) => item.organization === '')
+      );
+    } else {
+      setSourceSchemas(
+        defaultSchemas.filter((item) => item.organization !== '')
+      );
+    }
   }, [selectedSourceWorkspace]);
 
   useEffect(() => {
-    if (selectedTargetWorkspace === 'all'){
+    if (selectedTargetWorkspace === 'all') {
       setTargetSchemas(defaultSchemas);
-    }
-    else if (selectedTargetWorkspace === 'personalWorkspace'){
-      setTargetSchemas(defaultSchemas.filter(item => item.organization === ''));
-    }
-    else {
-      setTargetSchemas(defaultSchemas.filter(item => item.organization !== ''));
+    } else if (selectedTargetWorkspace === 'personalWorkspace') {
+      setTargetSchemas(
+        defaultSchemas.filter((item) => item.organization === '')
+      );
+    } else {
+      setTargetSchemas(
+        defaultSchemas.filter((item) => item.organization !== '')
+      );
     }
   }, [selectedTargetWorkspace]);
 
@@ -188,16 +199,19 @@ export default function TargetAndSourceSchemaSelector({
               <div className="col-6">
                 {!schemaSelectorDisabled && (
                   <>
-                    <div className='mb-3'>
+                    <div className="mb-3">
                       <WideDropdown
                         labelText={'Source schema workspace'}
                         defaultValue={'all'}
-                        onChange={(e: any) => {
+                        onChange={(e: string) => {
                           setSelectedSourceWorkspace(e);
                         }}
                       >
                         {workspaceValues.map((format) => (
-                          <DropdownItem key={format.labelText} value={format.uniqueItemId}>
+                          <DropdownItem
+                            key={format.labelText}
+                            value={format.uniqueItemId}
+                          >
                             {format.labelText}
                           </DropdownItem>
                         ))}
@@ -211,8 +225,12 @@ export default function TargetAndSourceSchemaSelector({
                       items={sourceSchemas}
                       visualPlaceholder="Search or select"
                       noItemsText="No items"
-                      ariaOptionsAvailableTextFunction={(amount) => amount === 1 ? 'option available' : 'options available'}
-                      onItemSelect={setSource}/></>
+                      ariaOptionsAvailableTextFunction={(amount) =>
+                        amount === 1 ? 'option available' : 'options available'
+                      }
+                      onItemSelect={setSource}
+                    />
+                  </>
                 )}
                 {schemaSelectorDisabled && (
                   <TextInput
@@ -234,16 +252,19 @@ export default function TargetAndSourceSchemaSelector({
               <div className="col-6">
                 {!schemaSelectorDisabled && (
                   <>
-                    <div className='mb-3'>
+                    <div className="mb-3">
                       <WideDropdown
                         labelText={'Target schema workspace'}
                         defaultValue={'all'}
-                        onChange={(e: any) => {
+                        onChange={(e: string) => {
                           setSelectedTargetWorkspace(e);
                         }}
                       >
                         {workspaceValues.map((format) => (
-                          <DropdownItem key={format.labelText} value={format.uniqueItemId}>
+                          <DropdownItem
+                            key={format.labelText}
+                            value={format.uniqueItemId}
+                          >
                             {format.labelText}
                           </DropdownItem>
                         ))}
@@ -257,16 +278,20 @@ export default function TargetAndSourceSchemaSelector({
                       items={targetSchemas}
                       visualPlaceholder="Search or select"
                       noItemsText="No items"
-                      ariaOptionsAvailableTextFunction={(amount) => amount === 1 ? 'option available' : 'options available'}
-                      onItemSelect={setTarget}/></>
-                  )}
+                      ariaOptionsAvailableTextFunction={(amount) =>
+                        amount === 1 ? 'option available' : 'options available'
+                      }
+                      onItemSelect={setTarget}
+                    />
+                  </>
+                )}
                 {schemaSelectorDisabled && (
                   <TextInput
-                  labelText={t('metadata.target-schema')}
-                  disabled
-                  defaultValue={defaultTargetSchema}
+                    labelText={t('metadata.target-schema')}
+                    disabled
+                    defaultValue={defaultTargetSchema}
                   />
-                  )}
+                )}
                 {/*<Box*/}
                 {/*  className="source-select-info-box"*/}
                 {/*  sx={{ height: 180, flexGrow: 1 }}*/}

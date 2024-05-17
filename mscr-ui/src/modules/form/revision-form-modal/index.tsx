@@ -1,14 +1,22 @@
-import {useGetAuthenticatedUserQuery} from '@app/common/components/login/login.slice';
+import { useGetAuthenticatedUserQuery } from '@app/common/components/login/login.slice';
 import * as React from 'react';
-import {useCallback, useEffect, useState} from 'react';
-import {Button, InlineAlert, Modal, ModalContent, ModalFooter, ModalTitle, Text,} from 'suomifi-ui-components';
-import {useBreakpoints} from 'yti-common-ui/components/media-query';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  Button,
+  InlineAlert,
+  Modal,
+  ModalContent,
+  ModalFooter,
+  ModalTitle,
+  Text,
+} from 'suomifi-ui-components';
+import { useBreakpoints } from 'yti-common-ui/components/media-query';
 import FormFooterAlert from 'yti-common-ui/components/form-footer-alert';
-import {translateFileUploadError} from '@app/common/utils/translation-helpers';
-import {useTranslation} from 'next-i18next';
+import { translateFileUploadError } from '@app/common/utils/translation-helpers';
+import { useTranslation } from 'next-i18next';
 import getApiError from '@app/common/utils/getApiErrors';
-import {useRouter} from 'next/router';
-import {usePutSchemaRevisionMutation} from '@app/common/components/schema/schema.slice';
+import { useRouter } from 'next/router';
+import { usePutSchemaRevisionMutation } from '@app/common/components/schema/schema.slice';
 import Separator from 'yti-common-ui/components/separator';
 import getErrors from '@app/common/utils/get-errors';
 import {
@@ -17,18 +25,30 @@ import {
   Format,
 } from '@app/common/interfaces/format.interface';
 import FileDropAreaMscr from '@app/common/components/file-drop-area-mscr';
-import SpinnerOverlay, {delay, SpinnerType,} from '@app/common/components/spinner-overlay';
-import {Schema, SchemaFormType,} from '@app/common/interfaces/schema.interface';
-import {mscrSearchApi} from '@app/common/components/mscr-search/mscr-search.slice';
-import {useStoreDispatch} from '@app/store';
-import {FormErrors as SchemaErrors, validateSchemaForm,} from '@app/modules/form/schema-form/validate-schema-form';
+import SpinnerOverlay, {
+  delay,
+  SpinnerType,
+} from '@app/common/components/spinner-overlay';
+import {
+  Schema,
+  SchemaFormType,
+} from '@app/common/interfaces/schema.interface';
+import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
+import { useStoreDispatch } from '@app/store';
+import {
+  FormErrors as SchemaErrors,
+  validateSchemaForm,
+} from '@app/modules/form/schema-form/validate-schema-form';
 import generateSchemaPayload from '@app/modules/form/schema-form/generate-schema-payload';
 import SchemaFormFields from '@app/modules/form/schema-form/schema-form-fields';
-import {Crosswalk, CrosswalkFormType,} from '@app/common/interfaces/crosswalk.interface';
-import {Type} from '@app/common/interfaces/search.interface';
-import {getLanguageVersion} from '@app/common/utils/get-language-version';
-import {State} from '@app/common/interfaces/state.interface';
-import {useInitialCrosswalkForm} from '@app/common/utils/hooks/use-initial-crosswalk-form';
+import {
+  Crosswalk,
+  CrosswalkFormType,
+} from '@app/common/interfaces/crosswalk.interface';
+import { Type } from '@app/common/interfaces/search.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { State } from '@app/common/interfaces/state.interface';
+import { useInitialCrosswalkForm } from '@app/common/utils/hooks/use-initial-crosswalk-form';
 import {
   usePutCrosswalkFullRevisionMutation,
   usePutCrosswalkRevisionMutation,
@@ -38,14 +58,14 @@ import {
   validateCrosswalkForm,
 } from '@app/modules/form/crosswalk-form/validate-crosswalk-form';
 import CrosswalkForm from '@app/modules/form/crosswalk-form/crosswalk-form-fields';
-import {Metadata} from '@app/common/interfaces/metadata.interface';
+import { Metadata } from '@app/common/interfaces/metadata.interface';
 
 export default function RevisionFormModal({
-                                            initialData,
-                                            visible,
-                                            setVisible,
-                                            type,
-                                          }: {
+  initialData,
+  visible,
+  setVisible,
+  type,
+}: {
   initialData: Schema | Crosswalk;
   visible: boolean;
   setVisible: (visible: boolean) => void;
@@ -60,7 +80,7 @@ export default function RevisionFormModal({
   const [, setIsValid] = useState(false);
   const [formData, setFormData] = useState<
     SchemaFormType | CrosswalkFormType
-    >();
+  >();
   const [fileData, setFileData] = useState<File | null>();
   const [fileUri, setFileUri] = useState<string | null>();
   const [errors, setErrors] = useState<SchemaErrors | CrosswalkErrors>();
@@ -183,15 +203,14 @@ export default function RevisionFormModal({
   };
 
   function isFormValid() {
-    if (errors && Object.values(errors).includes(true)){
-      return false
-    } else if (gatherInputError().length > 0){
+    if (errors && Object.values(errors).includes(true)) {
       return false;
-    }
-    else return true;
+    } else if (gatherInputError().length > 0) {
+      return false;
+    } else return true;
   }
 
-  function validateForm(){
+  function validateForm() {
     let errors;
     if (type == Type.Schema && formData) {
       errors = validateSchemaForm(formData, fileData, fileUri);
@@ -393,7 +412,11 @@ export default function RevisionFormModal({
           {submitAnimationVisible && (
             <SpinnerOverlay
               animationVisible={submitAnimationVisible}
-              type={type == Type.Schema ? SpinnerType.SchemaRevisionModal : SpinnerType.CrosswalkRevisionModal}
+              type={
+                type == Type.Schema
+                  ? SpinnerType.SchemaRevisionModal
+                  : SpinnerType.CrosswalkRevisionModal
+              }
             ></SpinnerOverlay>
           )}
         </>
@@ -444,17 +467,23 @@ export default function RevisionFormModal({
             </InlineAlert>
           )}
         {userPosted && gatherInputError() && !submitAnimationVisible && (
-          <><FormFooterAlert
-            labelText={'Something went wrong'}
-            alerts={gatherInputError()}/></>
+          <>
+            <FormFooterAlert
+              labelText={'Something went wrong'}
+              alerts={gatherInputError()}
+            />
+          </>
         )}
         {/*Showing API Error if only input form error is not present*/}
-        {userPosted && !submitAnimationVisible && isFormValid() && gatherApiError()?.length > 0 && (
-          <div>
-            <InlineAlert status="error">{gatherApiError()}</InlineAlert>
-            <InlineAlert>{getErrorDetail()}</InlineAlert>
-          </div>
-        )}
+        {userPosted &&
+          !submitAnimationVisible &&
+          isFormValid() &&
+          gatherApiError()?.length > 0 && (
+            <div>
+              <InlineAlert status="error">{gatherApiError()}</InlineAlert>
+              <InlineAlert>{getErrorDetail()}</InlineAlert>
+            </div>
+          )}
 
         <Button
           disabled={submitAnimationVisible}
