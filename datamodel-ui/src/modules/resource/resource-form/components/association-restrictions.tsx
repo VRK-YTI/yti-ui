@@ -99,6 +99,7 @@ export default function AssociationRestrictions({
               }
               initialSelected={data.classType?.uri}
               applicationProfile
+              limitToModelType="LIBRARY"
             />
           }
           handleRemoval={() => handleUpdate('classType', undefined)}

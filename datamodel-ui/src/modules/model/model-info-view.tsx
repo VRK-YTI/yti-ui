@@ -211,6 +211,13 @@ export default function ModelInfoView({
             ) : (
               <></>
             )}
+            {hasPermission && (user.superuser || !modelInfo.version) ? (
+              <ActionMenuItem onClick={() => handleModalChange('delete', true)}>
+                {t('remove', { ns: 'admin' })}
+              </ActionMenuItem>
+            ) : (
+              <></>
+            )}
             {hasPermission ? <ActionMenuDivider /> : <></>}
             <ActionMenuItem
               onClick={() => handleModalChange('showAsFile', true)}
@@ -409,6 +416,7 @@ export default function ModelInfoView({
               <>
                 <DeleteModal
                   modelId={modelId}
+                  modelVersion={version}
                   label={getLanguageVersion({
                     data: modelInfo.label,
                     lang: i18n.language,

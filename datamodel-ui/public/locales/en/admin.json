@@ -170,6 +170,7 @@
     "deleting-class": "Removing class",
     "deleting-model": "Removing model",
     "model-description": "Remove model {{targetName}}",
+    "model-description-version": "Remove version {{targetVersion}} from model {{targetName}}?",
     "model-error": "An error occurrred while removing model {{targetName}}",
     "model-success": "Model {{targetName}} removed",
     "model-title": "Remove model"
