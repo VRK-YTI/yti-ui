@@ -61,6 +61,7 @@ export default function SchemaAndCrosswalkActionMenu({
   const [isRevisionModalOpen, setRevisionModalOpen] = useState(false);
   const [isCrosswalkPublished, setCrosswalkPublished] =
     React.useState<boolean>(false);
+  const [isLatestVersion, setIsLatestVersion] = useState(false);
 
   if (!isCrosswalkPublished && crosswalkPatchResponse.isSuccess) {
     if (
@@ -197,6 +198,16 @@ export default function SchemaAndCrosswalkActionMenu({
     dispatch(clearNotification());
   }, [dispatch]);
 
+  useEffect(() => {
+    const revisions = metadata.revisions;
+    const latestVersion = revisions[revisions.length - 1].pid;
+    if (metadata.pid == latestVersion) {
+      setIsLatestVersion(true);
+    } else {
+      setIsLatestVersion(false);
+    }
+  }, [metadata.revisions, metadata.pid]);
+
   return (
     <>
       <ActionMenuWrapper>
@@ -278,7 +289,9 @@ export default function SchemaAndCrosswalkActionMenu({
               ? t('actionmenu.delete-schema')
               : t('actionmenu.delete-crosswalk')}
           </ActionMenuItem>
-          <ActionMenuItem onClick={() => setRevisionModalOpen(true)}>
+          <ActionMenuItem
+            className={isLatestVersion ? '' : 'd-none'}
+            onClick={() => setRevisionModalOpen(true)}>
             {t('actionmenu.revision')}
           </ActionMenuItem>
         </ActionMenu>
