@@ -24,7 +24,7 @@ import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
 import RevisionFormModal from '@app/modules/form/revision-form-modal';
 import {
   ActionMenuWrapper,
-} from "@app/common/components/schema-and-crosswalk-actionmenu/schema-and-crosswalk-actionmenu.styles";
+} from '@app/common/components/schema-and-crosswalk-actionmenu/schema-and-crosswalk-actionmenu.styles';
 
 interface SchemaAndCrosswalkActionmenuProps {
   type: ActionMenuTypes;
