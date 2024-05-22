@@ -24,7 +24,6 @@ import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
 import RevisionFormModal from '@app/modules/form/revision-form-modal';
 import {
   ActionMenuWrapper,
-  StyledActionMenu
 } from "@app/common/components/schema-and-crosswalk-actionmenu/schema-and-crosswalk-actionmenu.styles";
 
 interface SchemaAndCrosswalkActionmenuProps {
@@ -36,14 +35,14 @@ interface SchemaAndCrosswalkActionmenuProps {
 }
 
 export default function SchemaAndCrosswalkActionMenu({
-                                                       type,
-                                                       metadata,
-                                                       isMappingsEditModeActive,
-                                                       refetchMetadata,
-                                                       buttonCallbackFunction = () => {
-                                                         return;
-                                                       },
-                                                     }: SchemaAndCrosswalkActionmenuProps) {
+  type,
+  metadata,
+  isMappingsEditModeActive,
+  refetchMetadata,
+  buttonCallbackFunction = () => {
+    return;
+  },
+}: SchemaAndCrosswalkActionmenuProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const [isEditModeActive, setIsEditModeActive] = useState(false);
