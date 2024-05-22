@@ -21,7 +21,7 @@ import {
 } from '@app/common/components/schema-info/schema-info.styles';
 import { useRouter } from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import SpinnerOverlay, {SpinnerType} from "@app/common/components/spinner-overlay";
+import SpinnerOverlay, { SpinnerType } from "@app/common/components/spinner-overlay";
 import Tooltip from '@mui/material/Tooltip';
 
 export default function SchemaInfo(props: {
@@ -67,9 +67,7 @@ export default function SchemaInfo(props: {
   const [treeSelectedArray, setTreeSelections] = React.useState<string[]>([]);
 
   // These are used by datamodel
-  const [selectedTreeNodes, setSelectedTreeNodes] = React.useState<
-    RenderTree[]
-  >([emptyTreeSelection]);
+  const [selectedTreeNodes, setSelectedTreeNodes] = React.useState<RenderTree[]>([emptyTreeSelection]);
 
   const [isTreeDataFetched, setTreeDataFetched] =
     React.useState<boolean>(false);
@@ -281,22 +279,22 @@ export default function SchemaInfo(props: {
               lang,
             })
             : t('schema-tree.no-label')} placement="top-start">
-          <SchemaHeading variant='h2'>
-            {getSchemaData?.metadata.label
-              ? getLanguageVersion({
-                data: getSchemaData.metadata.label,
-                lang,
-              })
-              : t('schema-tree.no-label')}
-          </SchemaHeading>
+            <SchemaHeading variant='h2'>
+              {getSchemaData?.metadata.label
+                ? getLanguageVersion({
+                  data: getSchemaData.metadata.label,
+                  lang,
+                })
+                : t('schema-tree.no-label')}
+            </SchemaHeading>
           </Tooltip>
         </div>
         <div className='col-4 d-flex flex-row justify-content-end align-self-end my-1 pe-3'>
           {isTreeDataFetched && <Checkbox
-            checked={showAttributeNames}
-            onClick={(newState) => {
-              setShowAttributeNames(newState.checkboxState);
-            }}
+              checked={showAttributeNames}
+              onClick={(newState) => {
+                setShowAttributeNames(newState.checkboxState);
+              }}
           >Show node titles
           </Checkbox>}
         </div>
@@ -348,7 +346,7 @@ export default function SchemaInfo(props: {
               }}
             ><>
               <div className='d-flex justify-content-center'>
-              <SpinnerOverlay animationVisible={!isTreeDataFetched} type={SpinnerType.SchemaTree}></SpinnerOverlay>
+                <SpinnerOverlay animationVisible={!isTreeDataFetched} type={SpinnerType.SchemaTree}></SpinnerOverlay>
               </div>
             </>
               {isTreeDataFetched && (
