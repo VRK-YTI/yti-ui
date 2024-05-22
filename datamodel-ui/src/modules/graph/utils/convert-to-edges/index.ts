@@ -181,6 +181,7 @@ export default function convertToEdges(
                   identifier: assoc.identifier,
                   params: getEdgeParams(firstCornerNodeId, assoc),
                   applicationProfile,
+                  origin: assoc.identifier,
                 });
               }
 
@@ -278,20 +279,23 @@ export default function convertToEdges(
             identifier: reference.identifier,
             params: getEdgeParams(firstCornerNodeId, reference),
             applicationProfile,
+            origin: node.identifier,
           });
         }
+
+        const edgeIdentifier = ['ATTRIBUTE_DOMAIN', 'PARENT_CLASS'].includes(
+          reference.referenceType
+        )
+          ? node.identifier
+          : reference.identifier;
 
         return createEdge({
           modelId: modelId,
           label: label,
-          identifier: ['ATTRIBUTE_DOMAIN', 'PARENT_CLASS'].includes(
-            reference.referenceType
-          )
-            ? node.identifier
-            : reference.identifier,
+          identifier: edgeIdentifier,
           params: getEdgeParams(node.identifier, reference),
           applicationProfile,
-          origin: node.identifier,
+          origin: edgeIdentifier,
         });
       }),
     ]);

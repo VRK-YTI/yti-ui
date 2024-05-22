@@ -9,6 +9,7 @@ import {
   ReactFlowProvider,
   useReactFlow,
   Node,
+  useStoreApi,
 } from 'reactflow';
 import {
   useGetVisualizationQuery,
@@ -87,6 +88,9 @@ const GraphContent = ({
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
+  const store = useStoreApi();
+  const { addSelectedNodes } = store.getState();
+
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
@@ -126,7 +130,8 @@ const GraphContent = ({
       target: string,
       x: number,
       y: number,
-      referenceType: ReferenceType
+      referenceType: ReferenceType,
+      origin: string
     ) => {
       const { top, left } = reactFlowWrapper.current
         ? reactFlowWrapper.current.getBoundingClientRect()
@@ -142,6 +147,7 @@ const GraphContent = ({
         referenceType,
         source,
         target,
+        origin,
         deleteNodeById,
         setEdges,
         setNodes,
@@ -168,7 +174,8 @@ const GraphContent = ({
         edge.target,
         e.clientX,
         e.clientY,
-        edge.referenceType
+        edge.referenceType,
+        edge.data.origin
       );
       dispatch(setGraphHasChanges(true));
     },
@@ -428,6 +435,8 @@ const GraphContent = ({
   return (
     <FlowWrapper ref={reactFlowWrapper} $isSmall={isSmall}>
       <ModelFlow
+        snapToGrid
+        snapGrid={[10, 10]}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}

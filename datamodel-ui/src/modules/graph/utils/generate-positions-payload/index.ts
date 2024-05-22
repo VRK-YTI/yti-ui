@@ -3,7 +3,10 @@ import {
   CornerNodeDataType,
   EdgeDataType,
 } from '@app/common/interfaces/graph.interface';
-import { VisualizationPutType } from '@app/common/interfaces/visualization.interface';
+import {
+  ReferenceTarget,
+  VisualizationPutType,
+} from '@app/common/interfaces/visualization.interface';
 import { Edge, Node } from 'reactflow';
 
 export default function generatePositionsPayload(
@@ -23,10 +26,13 @@ export default function generatePositionsPayload(
           (edge.source.startsWith('#corner') &&
             !edge.target.startsWith('#corner'))
         ) {
-          return cleanCornerIdentifier(edge.target);
+          return {
+            target: cleanCornerIdentifier(edge.target),
+            origin: edge.data?.origin,
+          };
         }
       })
-      .filter((value) => typeof value === 'string' && value !== '') as string[];
+      .filter((value) => value && value.target) as ReferenceTarget[];
 
     return {
       identifier: cleanCornerIdentifier(node.id),

@@ -13,6 +13,7 @@ export function splitEdgeFn({
   referenceType,
   source,
   target,
+  origin,
   deleteNodeById,
   setEdges,
   setNodes,
@@ -26,6 +27,7 @@ export function splitEdgeFn({
   referenceType: ReferenceType;
   source: string;
   target: string;
+  origin: string;
   deleteNodeById: (value: string) => void;
   setEdges: (edges: SetStateAction<Edge[]>) => void;
   setNodes: (nodes: SetStateAction<Node[]>) => void;
@@ -56,6 +58,7 @@ export function splitEdgeFn({
       },
       isCorner: true,
       applicationProfile,
+      origin: origin,
     }),
   ];
 
@@ -72,6 +75,7 @@ export function splitEdgeFn({
         },
         isCorner: true,
         applicationProfile,
+        origin: origin,
       })
     );
   }
@@ -82,6 +86,7 @@ export function splitEdgeFn({
         if (
           edge.target === target &&
           edge.source === source &&
+          edge.data.origin === origin &&
           !target.includes('corner') &&
           !edge.target.includes('corner')
         ) {
@@ -95,7 +100,14 @@ export function splitEdgeFn({
 
         return edge;
       })
-      .filter((edge) => !(edge.source === source && edge.target === target)),
+      .filter(
+        (edge) =>
+          !(
+            edge.source === source &&
+            edge.target === target &&
+            edge.data.origin === origin
+          )
+      ),
     ...newEdges,
   ]);
 }

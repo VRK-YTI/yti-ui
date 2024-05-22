@@ -42,7 +42,7 @@ export interface VisualizationPutType {
   identifier: string;
   x: number;
   y: number;
-  referenceTargets: string[];
+  referenceTargets?: ReferenceTarget[];
 }
 
 export interface VisualizationHiddenNode {
@@ -59,4 +59,9 @@ export interface VisualizationHiddenNode {
 export interface VisualizationResult {
   nodes: VisualizationType[];
   hiddenNodes: VisualizationHiddenNode[];
+}
+
+export interface ReferenceTarget {
+  target: string;
+  origin: string;
 }

@@ -309,7 +309,7 @@ export const expectedLibraryEdges = {
         label: { fi: 'onOsoite' },
         identifier: 'is-address',
         modelId: 'modelId',
-        origin: 'person',
+        origin: 'is-address',
       },
     },
     {
