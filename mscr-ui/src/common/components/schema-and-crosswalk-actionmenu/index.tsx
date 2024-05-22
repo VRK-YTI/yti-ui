@@ -43,7 +43,7 @@ export default function SchemaAndCrosswalkActionMenu({
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const [isEditModeActive, setIsEditModeActive] = useState(false);
-  const [patchCrosswalk] = usePatchCrosswalkMutation();
+  const [patchCrosswalk, crosswalkPatchResponse] = usePatchCrosswalkMutation();
   const [patchSchema] = usePatchSchemaMutation();
   const [deleteSchema] = useDeleteSchemaMutation();
   const [deleteCrosswalk] = useDeleteCrosswalkMutation();
@@ -56,6 +56,18 @@ export default function SchemaAndCrosswalkActionMenu({
   const [isDeleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState(false);
   const [isRemoveConfirmModalOpen, setRemoveConfirmModalOpen] = useState(false);
   const [isRevisionModalOpen, setRevisionModalOpen] = useState(false);
+  const [isCrosswalkPublished, setCrosswalkPublished] =
+    React.useState<boolean>(false);
+
+  if (!isCrosswalkPublished && crosswalkPatchResponse.isSuccess) {
+    if (
+      crosswalkPatchResponse?.originalArgs?.payload?.state === State.Published
+    ) {
+      buttonCallbackFunction('disableEdit');
+      setIsEditModeActive(false);
+      setCrosswalkPublished(true);
+    }
+  }
 
   const performModalAction = (action: string) => {
     setPublishConfirmModalOpen(false);
@@ -174,7 +186,6 @@ export default function SchemaAndCrosswalkActionMenu({
     }
   };
 
-
   useEffect(() => {
     setIsEditModeActive(isMappingsEditModeActive);
   }, [isMappingsEditModeActive]);
@@ -182,8 +193,6 @@ export default function SchemaAndCrosswalkActionMenu({
   useEffect(() => {
     dispatch(clearNotification());
   }, [dispatch]);
-
- 
 
   return (
     <>
