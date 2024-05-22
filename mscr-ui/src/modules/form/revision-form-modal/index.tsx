@@ -457,7 +457,7 @@ export default function RevisionFormModal({
         {/*Showing API Error if only input form error is not present*/}
         {userPosted &&
           gatherInputError().length < 1 &&
-          resultSchemaRevision.error &&
+          (resultSchemaRevision.error || resultCrosswalkRevision.error || resultCrosswalkFullRevision.error) &&
           !submitAnimationVisible && (
             <div>
               <InlineAlert status="error">{gatherApiError()}</InlineAlert>
