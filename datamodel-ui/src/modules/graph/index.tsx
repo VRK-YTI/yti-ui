@@ -9,7 +9,6 @@ import {
   ReactFlowProvider,
   useReactFlow,
   Node,
-  useStoreApi,
 } from 'reactflow';
 import {
   useGetVisualizationQuery,
@@ -88,9 +87,6 @@ const GraphContent = ({
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
-  const store = useStoreApi();
-  const { addSelectedNodes } = store.getState();
-
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,

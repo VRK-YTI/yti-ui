@@ -14,8 +14,11 @@ import { useEffect, useRef, useState } from 'react';
 import { SearchInput, Text } from 'suomifi-ui-components';
 import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
-import { classTypeToClassForm, internalClassToClassForm } from './utils';
-import { OWL_THING } from './utils';
+import {
+  classTypeToClassForm,
+  internalClassToClassForm,
+  OWL_THING,
+} from './utils';
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
