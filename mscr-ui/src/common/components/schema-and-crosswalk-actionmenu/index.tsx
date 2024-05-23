@@ -195,10 +195,6 @@ export default function SchemaAndCrosswalkActionMenu({
   }, [isMappingsEditModeActive]);
 
   useEffect(() => {
-    dispatch(clearNotification());
-  }, [dispatch]);
-
-  useEffect(() => {
     const revisions = metadata.revisions;
     const latestVersion = revisions[revisions.length - 1].pid;
     if (metadata.pid == latestVersion) {

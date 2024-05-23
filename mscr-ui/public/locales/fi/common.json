@@ -179,6 +179,8 @@
   "no-subscribed-items": "",
   "not-recommended-synonym": "",
   "notifications": {
+    "add-crosswalk-revision": "",
+    "add-schema-revision": "",
     "crosswalk-deleted": "",
     "crosswalk-deprecated": "",
     "crosswalk-invalidated": "",
