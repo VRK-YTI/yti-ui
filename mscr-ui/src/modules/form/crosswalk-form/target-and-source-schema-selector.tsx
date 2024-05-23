@@ -18,6 +18,11 @@ import {
   WideSingleSelect,
 } from '@app/modules/form/crosswalk-form/crosswalk-form.styles';
 
+import {
+  selectLogin,
+} from '@app/common/components/login/login.slice';
+import { useSelector } from 'react-redux';
+
 interface CrosswalkFormProps {
   formData: CrosswalkFormType;
   setFormData: (value: CrosswalkFormType) => void;
@@ -29,6 +34,7 @@ interface SelectableSchema {
   labelText: string;
   uniqueItemId: string;
   organization: string;
+  owner: string[];
 }
 
 interface SelectableWorkspace {
@@ -42,6 +48,7 @@ export default function TargetAndSourceSchemaSelector({
   createNew,
   schemaSelectorDisabled,
 }: CrosswalkFormProps) {
+  const user: any = useSelector(selectLogin());
   const formatRestrictions = createNew
     ? formatsAvailableForCrosswalkCreation
     : [];
@@ -122,6 +129,7 @@ export default function TargetAndSourceSchemaSelector({
         data: item._source.label,
         lang,
       });
+
       const schema = {
         labelText: label,
         uniqueItemId: item._source.id,
@@ -129,6 +137,10 @@ export default function TargetAndSourceSchemaSelector({
           item._source.organizations.length > 0
             ? item._source.organizations[0].id
             : '',
+        owner:
+          item._source?.owner && item._source?.owner?.length > 0
+            ? item._source.owner
+            : [],
       };
       fetchedSchemas.push(schema);
     });
@@ -136,6 +148,8 @@ export default function TargetAndSourceSchemaSelector({
     setSourceSchemas(fetchedSchemas);
     setTargetSchemas(fetchedSchemas);
     setDataLoaded(true);
+    setSelectedSourceWorkspace('all');
+    setSelectedTargetWorkspace('all');
 
     if (router.asPath.includes('personal')) {
       setWorkspaceValues([...workspaceValuesPersonalCrosswalks]);
@@ -149,7 +163,7 @@ export default function TargetAndSourceSchemaSelector({
       setSourceSchemas(defaultSchemas);
     } else if (selectedSourceWorkspace === 'personalWorkspace') {
       setSourceSchemas(
-        defaultSchemas.filter((item) => item.organization === '')
+        defaultSchemas.filter((item) => item.owner.includes(user.id))
       );
     } else {
       setSourceSchemas(
@@ -163,7 +177,7 @@ export default function TargetAndSourceSchemaSelector({
       setTargetSchemas(defaultSchemas);
     } else if (selectedTargetWorkspace === 'personalWorkspace') {
       setTargetSchemas(
-        defaultSchemas.filter((item) => item.organization === '')
+        defaultSchemas.filter((item) => item.owner.includes(user.id))
       );
     } else {
       setTargetSchemas(
