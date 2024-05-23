@@ -179,6 +179,8 @@
   "no-subscribed-items": "",
   "not-recommended-synonym": "",
   "notifications": {
+    "add-crosswalk-revision": "New crosswalk version added",
+    "add-schema-revision": "New schema version added",
     "crosswalk-deleted": "Crosswalk was removed",
     "crosswalk-deprecated": "Crosswalk deprecated",
     "crosswalk-invalidated": "Crosswalk invalidated",
