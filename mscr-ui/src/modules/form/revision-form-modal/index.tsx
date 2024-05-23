@@ -59,6 +59,7 @@ import {
 } from '@app/modules/form/crosswalk-form/validate-crosswalk-form';
 import CrosswalkForm from '@app/modules/form/crosswalk-form/crosswalk-form-fields';
 import { Metadata } from '@app/common/interfaces/metadata.interface';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 
 export default function RevisionFormModal({
   initialData,
@@ -169,18 +170,27 @@ export default function RevisionFormModal({
         resultSchemaRevision.data.pid
       ) {
         router.push(`/schema/${resultSchemaRevision.data.pid}`);
+        dispatch(
+          setNotification('SCHEMA_REVISION')
+        );
       } else if (
         resultCrosswalkRevision &&
         resultCrosswalkRevision.data &&
         resultCrosswalkRevision.data.pid
       ) {
         router.push(`/crosswalk/${resultCrosswalkRevision.data.pid}`);
+        dispatch(
+          setNotification('CROSSWALK_REVISION')
+        );
       } else if (
         resultCrosswalkFullRevision &&
         resultCrosswalkFullRevision.data &&
         resultCrosswalkFullRevision.data.pid
       ) {
         router.push(`/crosswalk/${resultCrosswalkFullRevision.data.pid}`);
+        dispatch(
+          setNotification('CROSSWALK_REVISION')
+        );
       }
     }
   }, [
@@ -476,9 +486,9 @@ export default function RevisionFormModal({
         )}
         {/*Showing API Error if only input form error is not present*/}
         {userPosted &&
-          !submitAnimationVisible &&
-          isFormValid() &&
-          gatherApiError()?.length > 0 && (
+          gatherInputError().length < 1 &&
+          (resultSchemaRevision.error || resultCrosswalkRevision.error || resultCrosswalkFullRevision.error) &&
+          !submitAnimationVisible && (
             <div>
               <InlineAlert status="error">{gatherApiError()}</InlineAlert>
               <InlineAlert>{getErrorDetail()}</InlineAlert>

@@ -144,10 +144,6 @@ export default function MetadataForm({
     setFormValuesFromData();
   }, [setFormValuesFromData]);
 
-  useEffect(() => {
-    dispatch(clearNotification());
-  }, [dispatch]);
-
   function updateFormData(
     attributeName: keyof MetadataFormType,
     value: string | number | undefined
