@@ -13,14 +13,16 @@ import {
   MscrSideNavigationLevel1,
 } from './side-navigation.styles';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import getOrganizations from '@app/common/utils/get-organizations';
+import { SearchContext } from '@app/common/components/search-context-provider';
 
 export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const { breakpoint } = useBreakpoints();
   const { t } = useTranslation('common');
+  const { setIsSearchActive } = useContext(SearchContext);
   const [openGroup, setOpenGroup] = useState('');
   const router = useRouter();
   const lang = router.locale ?? '';
@@ -50,7 +52,12 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
               selected={router.asPath.startsWith(personalSchemasPath)}
               content={
                 <Link href={personalSchemasPath} passHref>
-                  <RouterLink onClick={() => setOpenGroup('')}>
+                  <RouterLink
+                    onClick={() => {
+                      setOpenGroup('');
+                      setIsSearchActive(false);
+                    }}
+                  >
                     {t('workspace.schemas')}
                   </RouterLink>
                 </Link>
@@ -62,7 +69,12 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
               selected={router.asPath.startsWith(personalCrosswalksPath)}
               content={
                 <Link href={personalCrosswalksPath} passHref>
-                  <RouterLink onClick={() => setOpenGroup('')}>
+                  <RouterLink
+                    onClick={() => {
+                      setOpenGroup('');
+                      setIsSearchActive(false);
+                    }}
+                  >
                     {t('workspace.crosswalks')}
                   </RouterLink>
                 </Link>
@@ -119,24 +131,32 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                 selected={router.asPath.startsWith('/' + group.id + '/schemas')}
                 content={
                   <Link href={'/' + group.id + '/schemas'} passHref>
-                    <RouterLink>{t('workspace.schemas')}</RouterLink>
+                    <RouterLink onClick={() => setIsSearchActive(false)}>
+                      {t('workspace.schemas')}
+                    </RouterLink>
                   </Link>
                 }
               />
               <MscrSideNavigationLevel3
                 className="group"
                 subLevel={3}
-                selected={router.asPath.startsWith('/' + group.id + '/crosswalks')}
+                selected={router.asPath.startsWith(
+                  '/' + group.id + '/crosswalks'
+                )}
                 content={
                   <Link href={'/' + group.id + '/crosswalks'} passHref>
-                    <RouterLink>{t('workspace.crosswalks')}</RouterLink>
+                    <RouterLink onClick={() => setIsSearchActive(false)}>
+                      {t('workspace.crosswalks')}
+                    </RouterLink>
                   </Link>
                 }
               />
               <MscrSideNavigationLevel3
                 className="group"
                 subLevel={3}
-                selected={router.asPath.startsWith('/' + group.id + '/settings')}
+                selected={router.asPath.startsWith(
+                  '/' + group.id + '/settings'
+                )}
                 content={''}
                 // content={
                 //   <Link href={'/' + group.id + '/settings'} passHref>
