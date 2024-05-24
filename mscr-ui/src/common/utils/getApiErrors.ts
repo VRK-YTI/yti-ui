@@ -2,12 +2,9 @@ import { SerializedError } from '@reduxjs/toolkit';
 import { AxiosBaseQueryError } from 'yti-common-ui/interfaces/axios-base-query.interface';
 import { MSCRError } from '../interfaces/error.interface';
 
-
-
 export default function getApiError(
   error: AxiosBaseQueryError | SerializedError
 ): MSCRError {
-
   const mscrError: MSCRError = {};
   mscrError.status = '';
   mscrError.message = '';
@@ -25,15 +22,14 @@ export default function getApiError(
       mscrError.status = error.data.status.toString();
     }
     if ('message' in error.data && typeof error.data.message === 'string') {
-      mscrError.message = error.data.message ?? 'Unexpected error occured';
+      mscrError.message = error.data.message ?? 'Unexpected error occurred';
     }
     if ('title' in error.data && typeof error.data.title === 'string') {
-      mscrError.message = error.data.title ?? 'Unexpected error occured';
+      mscrError.message = error.data.title ?? 'Unexpected error occurred';
     }
     if ('detail' in error.data && typeof error.data.detail === 'string') {
       mscrError.detail = error.data.detail ?? 'Server Error';
     }
   }
-
   return mscrError;
 }

@@ -64,6 +64,7 @@ export default function CrosswalkFormModal({
   const [putCrosswalk, newCrosswalkResult] = usePutCrosswalkMutation();
   const [, setIsValid] = useState(false);
   const [fileData, setFileData] = useState<File | null>();
+  const [fileUri, setFileUri] = useState<string | null>('');
   const [submitAnimationVisible, setSubmitAnimationVisible] =
     useState<boolean>(false);
 
@@ -78,6 +79,7 @@ export default function CrosswalkFormModal({
     setUserPosted(false);
     setFormData(crosswalkFormInitialData);
     setFileData(null);
+    setFileUri(null);
   }, [crosswalkFormInitialData]);
 
   useEffect(() => {
@@ -104,6 +106,14 @@ export default function CrosswalkFormModal({
     return Promise.resolve();
   };
 
+  function isFormValid() {
+    if (errors) {
+      return !Object.values(errors).includes(true);
+    } else {
+      return false;
+    }
+  }
+
   const handleSubmit = () => {
     scrollToModalTop();
     setUserPosted(true);
@@ -123,18 +133,24 @@ export default function CrosswalkFormModal({
       pid,
       authenticatedUser
     );
-    // console.log('payload: ', payload);
-    if (!createNew && fileData) {
-      const crosswalkFormData = new FormData();
-      crosswalkFormData.append('metadata', JSON.stringify(payload));
-      crosswalkFormData.append('file', fileData);
+    const crosswalkFormData = new FormData();
+    crosswalkFormData.append('metadata', JSON.stringify(payload));
 
+    if (isFormValid() && !createNew && fileUri && fileUri.length > 0) {
+      crosswalkFormData.append('contentURL', fileUri);
       Promise.all([spinnerDelay(), putCrosswalkFull(crosswalkFormData)]).then(
         (values) => {
           setSubmitAnimationVisible(false);
         }
       );
-    } else if (createNew) {
+    } else if (isFormValid() && !createNew && fileData) {
+      crosswalkFormData.append('file', fileData);
+      Promise.all([spinnerDelay(), putCrosswalkFull(crosswalkFormData)]).then(
+        (values) => {
+          setSubmitAnimationVisible(false);
+        }
+      );
+    } else if (isFormValid() && createNew) {
       Promise.all([spinnerDelay(), putCrosswalk(payload)]).then((values) => {
         setSubmitAnimationVisible(false);
       });
@@ -156,6 +172,10 @@ export default function CrosswalkFormModal({
     const inputErrors = getErrors(t, errors);
     const result = createNew ? newCrosswalkResult : registerCrosswalkResult;
     if (result.isError) {
+      const errorObject = getApiError(result.error);
+      if (errorObject.status && errorObject.message) {
+        inputErrors.push(`${errorObject.status}: ${errorObject.message}`);
+      }
       const errorMessage = getApiError(result.error).message;
       if (errorMessage) return [...inputErrors, errorMessage];
     }
@@ -233,6 +253,7 @@ export default function CrosswalkFormModal({
               submitAnimationVisible
             }
             errors={userPosted ? errors : undefined}
+            groupWorkspacePid={pid}
           />
           {!createNew && (
             <FileDropAreaMscr
@@ -242,6 +263,8 @@ export default function CrosswalkFormModal({
                 fileExtensionsAvailableForCrosswalkRegistrationAttachments
               }
               translateFileUploadError={translateFileUploadError}
+              isSchemaUpload={false}
+              setFileUri={setFileUri}
               disabled={submitAnimationVisible}
             />
           )}

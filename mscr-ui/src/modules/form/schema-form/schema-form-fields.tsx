@@ -1,17 +1,16 @@
 /* eslint-disable */
 import { useTranslation } from 'next-i18next';
-import { Dropdown, DropdownItem, TextInput } from 'suomifi-ui-components';
+import { DropdownItem } from 'suomifi-ui-components';
 import { ModelFormContainer } from '../form.styles';
-import LanguageSelector from 'yti-common-ui/components/form/language-selector';
 import { FormErrors } from './validate-schema-form';
 import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 import {
   Format,
-  formatsAvailableForCrosswalkRegistration,
   formatsAvailableForSchemaRegistration,
 } from '@app/common/interfaces/format.interface';
 import { State } from '@app/common/interfaces/state.interface';
 import MscrLanguageSelector from '@app/common/components/language-selector/mscr-language-selector';
+import { WideDropdown } from '@app/modules/form/crosswalk-form/crosswalk-form.styles';
 
 interface SchemaFormProps {
   formData: SchemaFormType;
@@ -37,39 +36,65 @@ SchemaFormProps) {
   // Creating the actual schema Input form
   return (
     <ModelFormContainer>
-      {renderSchemaFormat()}
       {renderLanguages()}
-      {/*!editMode && renderContributors()*/}
-      {renderVersionLabel()}
-      {renderState()}
+      {renderFormatAndState()}
       {/*editMode && renderContributors()*/}
     </ModelFormContainer>
   );
 
-  function renderSchemaFormat() {
+  function renderFormatAndState() {
+    // may be load the formats from an array
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <Dropdown
-          labelText={t('schema-form.format-label')}
-          visualPlaceholder={
-            isRevision ? formData.format : t('schema-form.format-placeholder')
-          }
-          defaultValue={formData.format ?? ''}
-          disabled={disabled || isRevision}
-          onChange={(e: Format) =>
-            setFormData({
-              ...formData,
-              format: e,
-            })
-          }
-        >
-          {formatsAvailableForSchemaRegistration.map((format) => (
-            <DropdownItem key={format} value={format}>
-              {format}
-            </DropdownItem>
-          ))}
-        </Dropdown>
-      </div>
+      <>
+        <div className="row">
+          <div className="col-6">
+            <WideDropdown
+              labelText={t('schema-form.format-label')}
+              visualPlaceholder={
+                isRevision
+                  ? formData.format
+                  : t('schema-form.format-placeholder')
+              }
+              defaultValue={formData.format ?? ''}
+              disabled={disabled || isRevision}
+              onChange={(e: Format) =>
+                setFormData({
+                  ...formData,
+                  format: e,
+                })
+              }
+            >
+              {formatsAvailableForSchemaRegistration.map((format) => (
+                <DropdownItem key={format} value={format}>
+                  {format}
+                </DropdownItem>
+              ))}
+            </WideDropdown>
+          </div>
+          <div className="col-6">
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
+            >
+              <WideDropdown
+                labelText={t('schema-form.status')}
+                visualPlaceholder={t('schema-form.status-select')}
+                defaultValue={State.Draft}
+                disabled={disabled || isRevision}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    state: e as State,
+                  })
+                }
+              >
+                <DropdownItem value={'DRAFT'}>{'DRAFT'}</DropdownItem>
+                <DropdownItem value={'PUBLISHED'}>{'PUBLISHED'}</DropdownItem>
+                <DropdownItem value={'DEPRECATED'}>{'DEPRECATED'}</DropdownItem>
+              </WideDropdown>
+            </div>
+          </div>
+        </div>
+      </>
     );
   }
 
@@ -97,6 +122,9 @@ SchemaFormProps) {
             textDescription: t('schema-form.description'),
             optionalText: '',
           }}
+          versionLabelCaption={t('schema-form.version-label')}
+          versionLabel={formData.versionLabel ?? '1'}
+          setVersionLabel={(e) => setVersionLabel(e)}
           allowItemAddition={false}
           ariaChipActionLabel={''}
           ariaSelectedAmountText={''}
@@ -113,72 +141,10 @@ SchemaFormProps) {
     );
   }
 
-  function renderVersionLabel() {
-    return (
-      <TextInput
-        labelText={t('schema-form.version-label')}
-        value={formData.versionLabel ?? '1'}
-        onChange={(value) =>
-          setFormData({
-            ...formData,
-            versionLabel: value as string,
-          })
-        }
-      />
-    );
+  function setVersionLabel(value: any) {
+    setFormData({
+      ...formData,
+      versionLabel: value as string,
+    });
   }
-
-  function renderState() {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <Dropdown
-          labelText={t('schema-form.status')}
-          visualPlaceholder={t('schema-form.status-select')}
-          defaultValue={State.Draft}
-          disabled={disabled || isRevision}
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              state: e as State,
-            })
-          }
-        >
-          <DropdownItem value={'DRAFT'}>{'DRAFT'}</DropdownItem>
-          <DropdownItem value={'PUBLISHED'}>{'PUBLISHED'}</DropdownItem>
-          <DropdownItem value={'DEPRECATED'}>{'DEPRECATED'}</DropdownItem>
-        </Dropdown>
-      </div>
-    );
-  }
-
-  // function renderContributors() {
-  //   return (
-  //     <WideMultiSelect
-  //       chipListVisible={true}
-  //       labelText={t('schema-form.contributors')}
-  //       visualPlaceholder={t('schema-form.contributors-select')}
-  //       removeAllButtonLabel={t(
-  //         'schema-form.contributors-clear-all-selections'
-  //       )}
-  //       allowItemAddition={false}
-  //       onItemSelectionsChange={(e) =>
-  //         setFormData({
-  //           ...formData,
-  //           organizations: e,
-  //         })
-  //       }
-  //       items={formData.organizations}
-  //       status={
-  //         'default'
-  //         /* Old value below, can it be perma-removed? (leftover from https://github.com/CSCfi/mscr-ui-monorepo/pull/17)
-  //                   {userPosted && errors?.organizations ? 'error' : 'default'}*/
-  //       }
-  //       ariaChipActionLabel={''}
-  //       ariaSelectedAmountText={''}
-  //       ariaOptionsAvailableText={''}
-  //       ariaOptionChipRemovedText={''}
-  //       noItemsText={''}
-  //     />
-  //   );
-  // }
 }

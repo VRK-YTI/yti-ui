@@ -133,6 +133,42 @@ body {
       height: calc(100% - 70vh);
     }
   }
+  &.crosswalk-revision-modal {
+    height: calc(100% - 44vh);
+    @media screen and (min-height: 600px) {
+      height: calc(100% - 40vh);
+    }
+    @media screen and (min-height: 650px) {
+      height: calc(100% - 40vh);
+    }
+    @media screen and (min-height: 800px) {
+      height: calc(100% - 53vh);
+    }
+    @media screen and (min-height: 950px) {
+      height: calc(100% - 58vh);
+    }
+    @media screen and (min-height: 1150px) {
+      height: calc(100% - 65vh);
+    }
+  }
+  &.schema-revision-modal {
+    height: calc(100% - 48vh);
+    @media screen and (min-height: 600px) {
+      height: calc(100% - 39vh);
+    }
+    @media screen and (min-height: 650px) {
+      height: calc(100% - 36vh);
+    }
+    @media screen and (min-height: 800px) {
+      height: calc(100% - 30vh);
+    }
+    @media screen and (min-height: 1000px) {
+      height: calc(100% - 30vh);
+    }
+    @media screen and (min-height: 1150px) {
+      height: calc(100% - 41vh);
+    }
+  }
 }
 
 .crosswalk-editor {
@@ -298,21 +334,5 @@ body {
 
   .selected-row {
     background: #eaf2fa;
-  }
-
-  /* CROSSWALK SELECTION */
-  .crosswalk-selection-modal {
-    font-size: 0.85rem;
-
-    .source-select-dropdown {
-      width: 100% !important;
-    }
-
-    .source-select-info-box {
-      margin-top: 15px;
-      padding: 5px;
-      width: 100%;
-      background: #e2f1fd;
-    }
   }
 }

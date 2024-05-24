@@ -44,6 +44,7 @@ export interface ResultInfo {
   versionLabel: string;
   namespace: string;
   format?: Format;
+  owner: [] | undefined;
 }
 
 export interface PaginatedQuery {

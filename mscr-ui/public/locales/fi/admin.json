@@ -142,6 +142,7 @@
   "missing-target-schema": "Kohdeskeemaa ei ole määritelty",
   "modified": "Muokattu",
   "optional": "valinnainen",
+  "register-crosswalk-file-uri-reference": "",
   "register-schema": "",
   "register-schema-file-required": "",
   "register-schema-file-uri-reference": "",
