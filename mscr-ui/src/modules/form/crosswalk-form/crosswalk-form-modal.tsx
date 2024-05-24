@@ -253,6 +253,7 @@ export default function CrosswalkFormModal({
               submitAnimationVisible
             }
             errors={userPosted ? errors : undefined}
+            groupWorkspacePid={pid}
           />
           {!createNew && (
             <FileDropAreaMscr

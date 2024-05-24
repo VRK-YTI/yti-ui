@@ -28,6 +28,7 @@ interface RegisterCrosswalkFormProps {
   disabled?: boolean;
   errors?: FormErrors;
   editMode?: boolean;
+  groupWorkspacePid: string | undefined;
 }
 
 export default function CrosswalkFormFields({
@@ -37,7 +38,8 @@ export default function CrosswalkFormFields({
   isRevision,
   userPosted,
   disabled,
-  errors,
+  errors, groupWorkspacePid
+
 }: RegisterCrosswalkFormProps) {
   const { t } = useTranslation('admin');
 
@@ -48,6 +50,7 @@ export default function CrosswalkFormFields({
         setFormData={setFormData}
         createNew={createNew}
         schemaSelectorDisabled={isRevision}
+        groupWorkspacePid={groupWorkspacePid}
       ></TargetAndSourceSchemaSelector>
       {createNew && (
         <Text>

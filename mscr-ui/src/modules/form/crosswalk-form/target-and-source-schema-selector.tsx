@@ -22,12 +22,14 @@ import {
   selectLogin,
 } from '@app/common/components/login/login.slice';
 import { useSelector } from 'react-redux';
+import { User } from 'yti-common-ui/interfaces/user.interface';
 
 interface CrosswalkFormProps {
   formData: CrosswalkFormType;
   setFormData: (value: CrosswalkFormType) => void;
   createNew: boolean;
   schemaSelectorDisabled?: boolean;
+  groupWorkspacePid: string | undefined;
 }
 
 interface SelectableSchema {
@@ -46,9 +48,9 @@ export default function TargetAndSourceSchemaSelector({
   formData,
   setFormData,
   createNew,
-  schemaSelectorDisabled,
+  schemaSelectorDisabled, groupWorkspacePid
 }: CrosswalkFormProps) {
-  const user: any = useSelector(selectLogin());
+  const user: User = useSelector(selectLogin());
   const formatRestrictions = createNew
     ? formatsAvailableForCrosswalkCreation
     : [];
@@ -167,10 +169,10 @@ export default function TargetAndSourceSchemaSelector({
       );
     } else {
       setSourceSchemas(
-        defaultSchemas.filter((item) => item.organization !== '')
+        defaultSchemas.filter((item) => item.organization === groupWorkspacePid)
       );
     }
-  }, [selectedSourceWorkspace]);
+  }, [selectedSourceWorkspace, groupWorkspacePid]);
 
   useEffect(() => {
     if (selectedTargetWorkspace === 'all') {
@@ -181,10 +183,10 @@ export default function TargetAndSourceSchemaSelector({
       );
     } else {
       setTargetSchemas(
-        defaultSchemas.filter((item) => item.organization !== '')
+        defaultSchemas.filter((item) => item.organization === groupWorkspacePid)
       );
     }
-  }, [selectedTargetWorkspace]);
+  }, [selectedTargetWorkspace, groupWorkspacePid]);
 
   function setSource(selectedSchemaId: string | null) {
     if (selectedSchemaId) {
