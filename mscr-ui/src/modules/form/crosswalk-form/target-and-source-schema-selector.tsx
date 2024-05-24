@@ -171,7 +171,7 @@ export default function TargetAndSourceSchemaSelector({
       setSourceSchemas(
         defaultSchemas.filter((item) => {
           if (groupWorkspacePid) {
-             return item.organizations.includes(groupWorkspacePid);
+             return item.organizationIds.includes(groupWorkspacePid);
           }
         })
       );
@@ -189,7 +189,7 @@ export default function TargetAndSourceSchemaSelector({
       setTargetSchemas(
         defaultSchemas.filter((item) => {
           if (groupWorkspacePid) {
-            return item.organizations.includes(groupWorkspacePid);
+            return item.organizationIds.includes(groupWorkspacePid);
           }
         })
       );
