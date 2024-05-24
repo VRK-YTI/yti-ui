@@ -13,7 +13,7 @@ import { ResourceReferencesResult } from '@app/common/interfaces/resource-refere
 export const modelApi = createApi({
   reducerPath: 'modelApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['Model', 'Class', 'Resource'],
+  tagTypes: ['Model', 'Class', 'Resource', 'Subscription'],
   endpoints: (builder) => ({
     createModel: builder.mutation<string, NewModel>({
       query: (value) => ({
@@ -122,6 +122,29 @@ export const modelApi = createApi({
 
       providesTags: ['Model', 'Class', 'Resource'],
     }),
+    getSubscription: builder.query<string, { modelId: string }>({
+      query: (value) => ({
+        url: `/subscribe/${value.modelId}`,
+        method: 'GET',
+      }),
+      providesTags: ['Subscription'],
+    }),
+    subscribe: builder.mutation<string, { modelId: string }>({
+      query: (value) => ({
+        url: `/subscribe/${value.modelId}`,
+        method: 'POST',
+      }),
+    }),
+    unsubscribe: builder.mutation<string, { subscriptionArn: string }>({
+      query: (value) => ({
+        url: '/subscribe',
+        method: 'DELETE',
+        params: {
+          subscriptionArn: value.subscriptionArn,
+        },
+      }),
+      invalidatesTags: ['Subscription'],
+    }),
   }),
 });
 
@@ -134,6 +157,9 @@ export const {
   useGetPriorVersionsQuery,
   useUpdateVersionedModelMutation,
   useGetValidationErrorsQuery,
+  useGetSubscriptionQuery,
+  useSubscribeMutation,
+  useUnsubscribeMutation,
   util: { getRunningQueriesThunk },
 } = modelApi;
 

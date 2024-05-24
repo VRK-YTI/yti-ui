@@ -5,6 +5,9 @@ import {
   setDisplayGraphHasChanges,
   setHasChanges,
   useGetModelQuery,
+  useGetSubscriptionQuery,
+  useSubscribeMutation,
+  useUnsubscribeMutation,
 } from '@app/common/components/model/model.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -86,6 +89,14 @@ export default function ModelInfoView({
     version: version,
   });
 
+  const [subscriptionData, setSubscriptionData] = useState<string>();
+  const { data: subscriptionArn } = useGetSubscriptionQuery(
+    { modelId },
+    { skip: user.anonymous }
+  );
+  const [subscribe, subscribeResult] = useSubscribeMutation();
+  const [unsubscribe] = useUnsubscribeMutation();
+
   useEffect(() => {
     if (modelInfo) {
       setFormData({
@@ -160,6 +171,16 @@ export default function ModelInfoView({
     }
   }, [query.ver, version]);
 
+  useEffect(() => {
+    if (subscriptionArn) {
+      setSubscriptionData(subscriptionArn);
+    }
+
+    if (subscribeResult.data) {
+      setSubscriptionData(subscribeResult.data);
+    }
+  }, [subscribeResult, subscriptionArn]);
+
   if (!modelInfo) {
     return <DrawerContent />;
   }
@@ -176,6 +197,13 @@ export default function ModelInfoView({
       />
     );
   }
+
+  const handleUnsubscribe = () => {
+    if (subscriptionData) {
+      unsubscribe({ subscriptionArn: subscriptionData });
+      setSubscriptionData(undefined);
+    }
+  };
 
   return (
     <>
@@ -229,15 +257,21 @@ export default function ModelInfoView({
             >
               {t('download-as-file')}
             </ActionMenuItem>
-            {/*!user.anonymous ? (
+            {!user.anonymous ? (
               <ActionMenuItem
-                onClick={() => handleModalChange('getEmailNotification', true)}
+                onClick={() =>
+                  subscriptionData
+                    ? handleUnsubscribe()
+                    : subscribe({ modelId })
+                }
               >
-                {t('add-email-subscription')}
+                {subscriptionData
+                  ? t('remove-email-subscriptions')
+                  : t('add-email-subscription')}
               </ActionMenuItem>
             ) : (
               <></>
-            )*/}
+            )}
           </ActionMenu>
         </div>
         {renderModals()}
