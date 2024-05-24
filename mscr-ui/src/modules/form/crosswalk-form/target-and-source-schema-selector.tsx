@@ -35,7 +35,7 @@ interface CrosswalkFormProps {
 interface SelectableSchema {
   labelText: string;
   uniqueItemId: string;
-  organization: string;
+  organizationIds: string[];
   owner: string[];
 }
 
@@ -135,10 +135,10 @@ export default function TargetAndSourceSchemaSelector({
       const schema = {
         labelText: label,
         uniqueItemId: item._source.id,
-        organization:
+        organizationIds:
           item._source.organizations.length > 0
-            ? item._source.organizations[0].id
-            : '',
+            ? item._source.organizations.map(organization => organization.id)
+            : [''],
         owner:
           item._source?.owner && item._source?.owner?.length > 0
             ? item._source.owner
@@ -169,7 +169,11 @@ export default function TargetAndSourceSchemaSelector({
       );
     } else {
       setSourceSchemas(
-        defaultSchemas.filter((item) => item.organization === groupWorkspacePid)
+        defaultSchemas.filter((item) => {
+          if (groupWorkspacePid) {
+             return item.organizations.includes(groupWorkspacePid);
+          }
+        })
       );
     }
   }, [selectedSourceWorkspace, groupWorkspacePid]);
@@ -183,7 +187,11 @@ export default function TargetAndSourceSchemaSelector({
       );
     } else {
       setTargetSchemas(
-        defaultSchemas.filter((item) => item.organization === groupWorkspacePid)
+        defaultSchemas.filter((item) => {
+          if (groupWorkspacePid) {
+            return item.organizations.includes(groupWorkspacePid);
+          }
+        })
       );
     }
   }, [selectedTargetWorkspace, groupWorkspacePid]);
