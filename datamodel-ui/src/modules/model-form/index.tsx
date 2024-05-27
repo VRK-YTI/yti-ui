@@ -62,6 +62,7 @@ export default function ModelForm({
     i18n.language
   );
   const { data: organizationsData } = useGetOrganizationsQuery({
+    includeChildOrganizations: true,
     sortLang: i18n.language,
   });
   const { data: languages, isSuccess } = useGetLanguagesQuery();
