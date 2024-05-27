@@ -553,6 +553,10 @@ export function translateNotification(
       return t('link-edited', { ns: 'admin' });
     case 'POSITION_SAVE':
       return t('position-saved', { ns: 'admin' });
+    case 'SUBSCRIPTION_ADD':
+      return t('email-subscriptions-on', { ns: 'common' });
+    case 'SUBSCRIPTION_DELETE':
+      return t('email-subscriptions-off', { ns: 'common' });
     default:
       return '';
   }

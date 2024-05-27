@@ -50,6 +50,7 @@ import PriorVersions from './prior-versions';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import UnsavedAlertModal from '../unsaved-alert-modal';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 
 export default function ModelInfoView({
   organizationIds,
@@ -198,10 +199,16 @@ export default function ModelInfoView({
     );
   }
 
+  const handleSubscribe = () => {
+    subscribe({ modelId });
+    dispatch(setNotification('SUBSCRIPTION_ADD'));
+  };
+
   const handleUnsubscribe = () => {
     if (subscriptionData) {
       unsubscribe({ subscriptionArn: subscriptionData });
       setSubscriptionData(undefined);
+      dispatch(setNotification('SUBSCRIPTION_DELETE'));
     }
   };
 
@@ -260,9 +267,7 @@ export default function ModelInfoView({
             {!user.anonymous ? (
               <ActionMenuItem
                 onClick={() =>
-                  subscriptionData
-                    ? handleUnsubscribe()
-                    : subscribe({ modelId })
+                  subscriptionData ? handleUnsubscribe() : handleSubscribe()
                 }
               >
                 {subscriptionData
