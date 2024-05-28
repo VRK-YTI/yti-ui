@@ -413,6 +413,7 @@ export default function ModelInfoView({
 
         <BasicBlock title={t('contributors')}>
           {modelInfo.organizations
+            .filter((org) => !org.parentOrganization)
             .map((org) =>
               getLanguageVersion({ data: org.label, lang: i18n.language })
             )
