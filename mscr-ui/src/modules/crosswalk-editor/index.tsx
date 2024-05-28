@@ -581,16 +581,13 @@ export default function CrosswalkEditor({
                         type={ActionMenuTypes.CrosswalkEditor}
                       />
                     </ActionMenuWrapper>
-                    <TestButton>
-                    
-                        <OperationalizeModal
-                          sourceSchemaPid=""
-                          targetSchemaPid=""
-                          crosswalkPid=""
-                          ></OperationalizeModal>
-                         
-                     
-                    </TestButton>
+                    {/*<TestButton>*/}
+                    {/*    <OperationalizeModal*/}
+                    {/*      sourceSchemaPid=""*/}
+                    {/*      targetSchemaPid=""*/}
+                    {/*      crosswalkPid=""*/}
+                    {/*      ></OperationalizeModal>*/}
+                    {/*</TestButton>*/}
                   </>
                 )}
               </div>
