@@ -557,6 +557,8 @@ export function translateNotification(
       return t('email-subscriptions-on', { ns: 'common' });
     case 'SUBSCRIPTION_DELETE':
       return t('email-subscriptions-off', { ns: 'common' });
+    case 'REQUEST_ADD':
+      return t('access-request-sent', { ns: 'common' });
     default:
       return '';
   }
