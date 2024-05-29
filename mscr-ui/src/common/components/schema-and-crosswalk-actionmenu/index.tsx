@@ -196,11 +196,13 @@ export default function SchemaAndCrosswalkActionMenu({
 
   useEffect(() => {
     const revisions = metadata.revisions;
-    const latestVersion = revisions[revisions.length - 1].pid;
-    if (metadata.pid == latestVersion) {
-      setIsLatestVersion(true);
-    } else {
-      setIsLatestVersion(false);
+    if (revisions.length > 0) {
+      const latestVersion = revisions[revisions.length - 1].pid;
+      if (metadata.pid == latestVersion) {
+        setIsLatestVersion(true);
+      } else {
+        setIsLatestVersion(false);
+      }
     }
   }, [metadata.revisions, metadata.pid]);
 

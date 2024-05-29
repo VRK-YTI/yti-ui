@@ -29,6 +29,7 @@ body {
 }
 
 .empty-mappings-table {
+  display: flex;
   font-size: 0.9rem;
   height: 200px;
   padding: 20px;
@@ -58,10 +59,6 @@ body {
     min-width: 69px;
     margin: 20px 15px 10px 10px;
   }
-}
-
-.h-0 {
-  height: 0px;
 }
 
 .modal-busy-overlay {
@@ -132,6 +129,24 @@ body {
     @media screen and (min-height: 1150px) {
       height: calc(100% - 70vh);
     }
+  }
+  &.schema-tree-single {
+    position: absolute;
+    width: auto;
+    height: 260px;
+    max-width: 160px;
+    padding: 0px;
+    margin-top: 150px;
+    margin-left: 33%;
+  }
+  &.schema-tree-double {
+    position: absolute;
+    width: auto;
+    height: 260px;
+    max-width: 160px;
+    padding: 0px;
+    margin-top: 150px;
+    margin-left: 16.5%;
   }
   &.crosswalk-revision-modal {
     height: calc(100% - 44vh);

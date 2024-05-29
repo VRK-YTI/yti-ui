@@ -22,6 +22,7 @@ import {
 } from '@app/common/components/schema-info/schema-info.styles';
 import { useRouter } from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import SpinnerOverlay, { SpinnerType } from "@app/common/components/spinner-overlay";
 import Tooltip from '@mui/material/Tooltip';
 
 export default function SchemaInfo(props: {
@@ -34,6 +35,7 @@ export default function SchemaInfo(props: {
   caption: string;
   schemaUrn: string;
   raiseHeading?: boolean;
+  isSingleTree?: boolean;
 }) {
   const { t } = useTranslation('common');
   const lang = useRouter().locale ?? '';
@@ -67,9 +69,7 @@ export default function SchemaInfo(props: {
   const [treeSelectedArray, setTreeSelections] = React.useState<string[]>([]);
 
   // These are used by datamodel
-  const [selectedTreeNodes, setSelectedTreeNodes] = React.useState<
-    RenderTree[]
-  >([emptyTreeSelection]);
+  const [selectedTreeNodes, setSelectedTreeNodes] = React.useState<RenderTree[]>([emptyTreeSelection]);
 
   const [isTreeDataFetched, setTreeDataFetched] =
     React.useState<boolean>(false);
@@ -301,7 +301,7 @@ export default function SchemaInfo(props: {
       <TreeviewWrapper className="row gx-0">
         <div className="col-7 px-0">
           <div className="d-flex justify-content-between mb-2 ps-3 pe-2">
-            <SearchWrapper className="w-100">
+            {isTreeDataFetched && (<><SearchWrapper className="w-100">
               <SearchInput
                 className="py-2"
                 labelText={props.caption}
@@ -317,10 +317,8 @@ export default function SchemaInfo(props: {
                   if (!value) {
                     clearTreeSearch();
                   }
-                }}
-              />
-            </SearchWrapper>
-            <ExpandButtonWrapper>
+                }}/>
+            </SearchWrapper><ExpandButtonWrapper>
               <IconButton
                 onClick={() => handleExpandClick()}
                 aria-label={t('schema-tree.expand')}
@@ -328,12 +326,12 @@ export default function SchemaInfo(props: {
                 size="large"
               >
                 {treeExpandedArray.length === 0 ? (
-                  <ExpandMoreIcon />
+                  <ExpandMoreIcon/>
                 ) : (
-                  <ExpandLessIcon />
+                  <ExpandLessIcon/>
                 )}
               </IconButton>
-            </ExpandButtonWrapper>
+            </ExpandButtonWrapper></>)}
           </div>
           <div>
             <Box
@@ -344,7 +342,11 @@ export default function SchemaInfo(props: {
                 maxWidth: 700,
                 overflowY: 'auto',
               }}
-            >
+            ><>
+              <div className='d-flex justify-content-center'>
+                <SpinnerOverlay animationVisible={!isTreeDataFetched} type={props.isSingleTree ? SpinnerType.SchemaTreeSingle : SpinnerType.SchemaTreeDouble}></SpinnerOverlay>
+              </div>
+            </>
               {isTreeDataFetched && (
                 <SchemaTree
                   nodes={treeData[0]}
@@ -361,7 +363,7 @@ export default function SchemaInfo(props: {
           <NodeInfo
             treeData={selectedTreeNodes}
             // performNodeInfoAction={performNodeInfoAction}
-          ></NodeInfo>
+           dataIsLoaded={isTreeDataFetched}></NodeInfo>
           <CheckboxWrapper>
             <Checkbox
               checked={showAttributeNames}

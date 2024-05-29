@@ -8,6 +8,7 @@ import { DropdownWrapper } from '@app/common/components/schema-info/schema-info.
 
 export default function NodeInfo(props: {
   treeData: RenderTree[];
+  dataIsLoaded: boolean
   // performNodeInfoAction: any;
 }) {
   const { t } = useTranslation('common');
@@ -19,8 +20,12 @@ export default function NodeInfo(props: {
       setDropdownValue(props.treeData[0].id);
       // console.log('props.sourceData');
     }
+    if (props.dataIsLoaded) {
+      setDataIsLoaded(true);
+    }
   }, [props]);
 
+  const [dataIsLoaded, setDataIsLoaded] = useState(false);
   const [sourceDropdownValue, setDropdownValue] = useState(sourceSelectionInit);
   const [selectedNode] = props.treeData.filter(
     (item) => item.id === sourceDropdownValue
@@ -63,7 +68,7 @@ export default function NodeInfo(props: {
 
   return (
     <div className="row d-flex justify-content-between node-info-box">
-      <h3>{t('schema-tree.node-info')}</h3>
+      <h3>{t('node-info.selected-node-info')}</h3>
       <div className="col flex-column d-flex justify-content-between side-bar-wrap">
         <div className="mb-2"></div>
         <Box
@@ -83,11 +88,17 @@ export default function NodeInfo(props: {
                     <InfoIcon></InfoIcon>
                   </div>
                 </div>
-                <div className="col-10">
-                  <div>
-                    Nothing to show just now. Select an entity to view
-                    information.
-                  </div>
+                <div className="col-10 d-flex align-self-center">
+                  {!dataIsLoaded &&
+                      <div>
+                        {t('node-info.loading')}
+                      </div>
+                  }
+                  {dataIsLoaded &&
+                      <div>
+                        {t('node-info.select-a-node')}
+                      </div>
+                  }
                 </div>
               </div>
             </>
