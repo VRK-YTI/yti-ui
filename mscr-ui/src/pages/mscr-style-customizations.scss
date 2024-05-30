@@ -2,6 +2,33 @@ body {
   font-family: 'Source Sans Pro', 'Helvetica Neue', 'Arial', sans-serif !important;
 }
 
+@keyframes fadeInAnimation
+{
+  0%
+  {
+    opacity: 0;
+  }
+
+  100%
+  {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOutAnimation
+{
+  0%
+  {
+    opacity: 1;
+  }
+
+  100%
+  {
+    opacity: 0;
+  }
+}
+
+
 .fi-dropdown_popover {
   margin-top: 0px !important;
 }
@@ -350,4 +377,20 @@ body {
   .selected-row {
     background: #eaf2fa;
   }
+}
+
+.sidebar-animate-fadein {
+  animation: fadeInAnimation ease 1700ms;
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+}
+
+.sidebar-animate-fadeout {
+  animation: fadeOutAnimation ease 400ms;
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+}
+
+.w-0 {
+  width: 0px;
 }
