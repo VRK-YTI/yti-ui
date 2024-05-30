@@ -31,7 +31,7 @@ export default function SchemaVisualization({
       <>
         <div className="row">
           <div className="col-10">
-            <SchemaInfo caption={filterLabel} schemaUrn={pid} />
+            <SchemaInfo caption={filterLabel} schemaUrn={pid} isSingleTree={true} />
           </div>
           <div className="col-2 d-flex justify-content-end flex-row pe-3 pb-2">
             {!hasEditRights && (

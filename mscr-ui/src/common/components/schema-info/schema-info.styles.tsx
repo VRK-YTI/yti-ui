@@ -94,6 +94,6 @@ export const NodeInfoWrapper = styled.div`
     background: #fff;
     padding: 15px;
     min-height: 377px;
-    max-width: 500px;
+    max-width: 100%;
   }
 `;
