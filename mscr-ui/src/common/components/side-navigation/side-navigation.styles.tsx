@@ -24,6 +24,7 @@ export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint,  $i
   transition: 0.6s;
   transition-timing-function: ease-in-out;
   transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+  border-right: 3px solid ${(props) => props.theme.suomifi.colors.highlightLight3};
 `;
 
 // Modify the style of an existing suomifi component
@@ -48,6 +49,7 @@ export const MscrSideNavigation = styled(SideNavigation)`
     display: none;
   }
   height: 100vh;
+  ul {padding: 1px !important;}
 `;
 
 export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`

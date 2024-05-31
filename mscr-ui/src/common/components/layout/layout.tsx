@@ -81,7 +81,7 @@ export default function Layout({
               <>
                 <div className={'d-flex w-100'}>
                   <SideNavigationPanel user={user}/>
-                  <ContentContainer>
+                  <ContentContainer className={'w-100'}>
                     {alerts && alerts}
                     <MarginContainer
                       $breakpoint={breakpoint}
@@ -97,7 +97,7 @@ export default function Layout({
             ) : (
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <ContentContainer>
+                  <ContentContainer className={'w-100'}>
                     {alerts && alerts}
                     <MarginContainer
                       $breakpoint={breakpoint}
