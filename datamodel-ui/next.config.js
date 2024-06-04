@@ -20,6 +20,7 @@ module.exports = () => {
     },
     i18n,
     transpilePackages: ['common-ui'],
+    skipTrailingSlashRedirect: true,
     async headers() {
       const isProd = process.env.NODE_ENV === 'production';
       const matomoUrl = process.env.MATOMO_URL ?? '';
@@ -92,6 +93,15 @@ module.exports = () => {
       async rewrites() {
         return [
           {
+            source: '/model/:modelId/:resourceId/',
+            destination:
+              '/api/v1-redirect?modelId=:modelId&resourceId=:resourceId',
+          },
+          {
+            source: '/model/:modelId/',
+            destination: '/api/v1-redirect?modelId=:modelId',
+          },
+          {
             source: '/datamodel-api/:path*',
             destination: 'http://localhost:9004/datamodel-api/:path*',
           },
@@ -120,6 +130,15 @@ module.exports = () => {
       // https://nextjs.org/docs/api-reference/next.config.js/rewrites
       async rewrites() {
         return [
+          {
+            source: '/model/:modelId/:resourceId/',
+            destination:
+              '/api/v1-redirect?modelId=:modelId&resourceId=:resourceId',
+          },
+          {
+            source: '/model/:modelId/',
+            destination: '/api/v1-redirect?modelId=:modelId',
+          },
           {
             source: '/datamodel-api/:path*',
             destination: 'http://yti-datamodel-api:9004/datamodel-api/:path*',
