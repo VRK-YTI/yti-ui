@@ -68,7 +68,6 @@ interface ResourceFormProps {
   isEdit?: boolean;
   currentModelId: string;
   applicationProfile?: boolean;
-  refetch?: () => void;
   handleReturn: () => void;
   handleFollowUp?: (identifier: string, type: ResourceType) => void;
 }
@@ -80,7 +79,6 @@ export default function ResourceForm({
   isEdit,
   currentModelId,
   applicationProfile,
-  refetch,
   handleReturn,
   handleFollowUp,
 }: ResourceFormProps) {
@@ -314,10 +312,6 @@ export default function ResourceForm({
         data.identifier
       );
 
-      if (isEdit && refetch) {
-        refetch();
-      }
-
       router.replace(
         `${modelId}/${
           data.type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
@@ -349,7 +343,6 @@ export default function ResourceForm({
     router,
     modelId,
     data,
-    refetch,
     isEdit,
     setView,
   ]);

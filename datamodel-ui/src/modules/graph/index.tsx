@@ -102,16 +102,11 @@ const GraphContent = ({
     }),
     []
   );
-  const { data, isFetching, isSuccess, refetch } = useGetVisualizationQuery({
+  const { data, isFetching, isSuccess } = useGetVisualizationQuery({
     modelid: modelId,
     version: version,
   });
   const [putPositions, result] = usePutPositionsMutation();
-
-  const refetchNodes = useCallback(() => {
-    refetch();
-    dispatch(setGraphHasChanges(false));
-  }, [refetch, dispatch]);
 
   const deleteNodeById = useCallback(
     (id: string) => {
@@ -251,7 +246,6 @@ const GraphContent = ({
         modelId,
         deleteNodeById,
         applicationProfile,
-        refetchNodes,
         organizationIds
       ),
       ...(loopNodes ? loopNodes : []),
@@ -269,7 +263,6 @@ const GraphContent = ({
     dispatch,
     modelId,
     organizationIds,
-    refetchNodes,
     resetPosition,
     setEdges,
     setNodes,
@@ -312,7 +305,6 @@ const GraphContent = ({
             modelId,
             deleteNodeById,
             applicationProfile,
-            refetchNodes,
             organizationIds
           ),
           ...(loopNodes ? loopNodes : []),
@@ -332,7 +324,6 @@ const GraphContent = ({
     dispatch,
     modelId,
     organizationIds,
-    refetchNodes,
     resetPosition,
     setEdges,
     setNodes,
@@ -412,12 +403,6 @@ const GraphContent = ({
       setCleanUnusedCorners(false);
     }
   }, [cleanUnusedCorners, edges, nodes, setNodes]);
-
-  useEffect(() => {
-    if (updateVisualization) {
-      refetchNodes();
-    }
-  }, [updateVisualization, refetchNodes, dispatch]);
 
   useEffect(() => {
     if (resetPosition) {

@@ -12,19 +12,12 @@ const getNodeByType = (
   node: VisualizationType,
   modelId: string,
   applicationProfile?: boolean,
-  refetch?: () => void,
   organizationIds?: string[]
 ) => {
   if (node.type === 'CLASS') {
-    return createClassNode(
-      node,
-      modelId,
-      applicationProfile,
-      refetch,
-      organizationIds
-    );
+    return createClassNode(node, modelId, applicationProfile, organizationIds);
   } else if (node.type === 'ATTRIBUTE') {
-    return createAttributeNode(node, modelId, refetch);
+    return createAttributeNode(node, modelId);
   } else {
     return createExternalNode(node, applicationProfile);
   }
@@ -37,7 +30,6 @@ export function updateNodes(
   modelId: string,
   handleNodeDelete: (id: string) => void,
   applicationProfile?: boolean,
-  refetch?: () => void,
   organizationIds?: string[]
 ): Node[] {
   const mappedNodes = convertToNodes(
@@ -46,7 +38,6 @@ export function updateNodes(
     modelId,
     handleNodeDelete,
     applicationProfile,
-    refetch,
     organizationIds
   );
 
@@ -70,7 +61,6 @@ export default function convertToNodes(
   modelId: string,
   handleNodeDelete: (id: string) => void,
   applicationProfile?: boolean,
-  refetch?: () => void,
   organizationIds?: string[]
 ): Node[] {
   if (!nodes || nodes.length < 1) {
@@ -79,13 +69,13 @@ export default function convertToNodes(
 
   if (!hiddenNodes || hiddenNodes.length < 1) {
     return nodes.map((node) =>
-      getNodeByType(node, modelId, applicationProfile, refetch, organizationIds)
+      getNodeByType(node, modelId, applicationProfile, organizationIds)
     );
   }
 
   return [
     ...nodes.map((node) =>
-      getNodeByType(node, modelId, applicationProfile, refetch, organizationIds)
+      getNodeByType(node, modelId, applicationProfile, organizationIds)
     ),
     ...hiddenNodes.map((node) =>
       createCornerNode(node, handleNodeDelete, applicationProfile)

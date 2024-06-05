@@ -4,8 +4,7 @@ import { Node } from 'reactflow';
 
 export default function createAttributeNode(
   node: VisualizationType,
-  modelId: string,
-  refetch?: () => void
+  modelId: string
 ): Node<AttributeNodeType> {
   return {
     id: node.identifier,
@@ -16,7 +15,6 @@ export default function createAttributeNode(
       label: node.label,
       uri: node.uri,
       dataType: node.dataType,
-      ...(refetch ? { refetch: refetch } : {}),
     },
     type: 'attributeNode',
   };

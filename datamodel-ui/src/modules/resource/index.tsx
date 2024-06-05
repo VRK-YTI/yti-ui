@@ -95,11 +95,7 @@ export default function ResourceView({
     fromVersion: version,
   });
 
-  const {
-    data: resourceData,
-    refetch: refetchResource,
-    isError: resourceIsError,
-  } = useGetResourceQuery(
+  const { data: resourceData, isError: resourceIsError } = useGetResourceQuery(
     {
       modelId: globalSelected.modelId ?? modelId,
       resourceIdentifier: globalSelected.id ?? '',
@@ -113,7 +109,7 @@ export default function ResourceView({
     }
   );
 
-  const { data: inUse, refetch: refetchInUse } = useGetResourceActiveQuery(
+  const { data: inUse } = useGetResourceActiveQuery(
     {
       prefix: modelId,
       uri: `${SUOMI_FI_NAMESPACE}${globalSelected.modelId}/${globalSelected.id}`,
@@ -349,7 +345,6 @@ export default function ResourceView({
         handleEdit={handleEdit}
         handleReturn={handleReturn}
         handleShowResource={handleShowResource}
-        handleRefetch={refetchInUse}
         isPartOfCurrentModel={globalSelected.modelId === modelId}
         applicationProfile={applicationProfile}
         currentModelId={
@@ -374,10 +369,6 @@ export default function ResourceView({
         applicationProfile={applicationProfile}
         currentModelId={modelId}
         isEdit={view.edit}
-        refetch={() => {
-          refetchResource();
-          refetchInUse();
-        }}
         handleReturn={view.edit ? handleFormReturn : handleReturn}
       />
     );
