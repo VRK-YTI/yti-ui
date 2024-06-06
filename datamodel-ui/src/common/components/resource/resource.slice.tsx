@@ -119,6 +119,7 @@ export const resourceApi = createApi({
         url: `/class/toggle-deactivate/${props.modelId}?propertyUri=${props.uri}`,
         method: 'PUT',
       }),
+      invalidatesTags: ['Resource'],
     }),
     makeLocalCopyPropertyShape: builder.mutation<
       null,
