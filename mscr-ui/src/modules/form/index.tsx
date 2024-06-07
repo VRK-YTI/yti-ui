@@ -303,7 +303,6 @@ export default function FormModal({
     scrollToModalTop();
     setUserPosted(true);
     if (!formData) {
-      console.log('no formdata found');
       return;
     }
     const formErrors = validateForm(
@@ -316,12 +315,10 @@ export default function FormModal({
     setErrors(formErrors);
 
     if (errors && Object.values(errors).includes(true)) {
-      console.log('errors found: ', errors);
       return;
     }
 
     if (authenticatedUser) {
-      console.log('creating payload');
       const payload = generatePayload(
         formData,
         contentType,
@@ -329,7 +326,6 @@ export default function FormModal({
         modalType,
         organizationPid
       );
-      console.log('payload: ', payload);
       const newFormData = new FormData();
       newFormData.append('metadata', JSON.stringify(payload));
       if (fileUri && fileUri.length > 0) {
@@ -339,7 +335,6 @@ export default function FormModal({
       } else if (formData.format !== Format.Mscr) {
         return;
       }
-      console.log('payload assembled: ', newFormData);
 
       // Choose the api call and parameters according to content type and modal type
       let makeApiCall;
@@ -392,12 +387,6 @@ export default function FormModal({
     );
     setErrors(formErrors);
   }, [userPosted, formData, fileData, fileUri, contentType, modalType]);
-
-  // This part was checking the user permission and based on that showing the button in every render
-  /* if (groupContent && !HasPermission({ actions: ['CREATE_SCHEMA'] })) {
-    console.log(HasPermission({actions:['CREATE_SCHEMA']}));
-    return null;
-  } */
 
   function gatherInputError() {
     return getErrors(t, errors);
