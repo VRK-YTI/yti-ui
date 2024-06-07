@@ -27,6 +27,7 @@
     "publish-schema": "",
     "revision": ""
   },
+  "and": "",
   "association": "",
   "attribute": "",
   "breadcrumb": "",
@@ -70,9 +71,54 @@
     "save": ""
   },
   "confirm-page-leave": "",
+  "content-form": {
+    "button": {
+      "crosswalk-create": "",
+      "crosswalk-register": "",
+      "crosswalk-revision": "",
+      "mscr-copy": "",
+      "schema-register": "",
+      "schema-revision": ""
+    },
+    "description": "",
+    "format-label": "",
+    "format-placeholder": "",
+    "information-description-languages": "",
+    "information-description-languages-hint-text": "",
+    "information-description-languages-placeholder": "",
+    "optional": "",
+    "state": "",
+    "state-select": "",
+    "title": {
+      "crosswalk-create": "",
+      "crosswalk-mscr-copy": "",
+      "crosswalk-register": "",
+      "crosswalk-revision": "",
+      "schema-mscr-copy": "",
+      "schema-register": "",
+      "schema-revision": ""
+    },
+    "version-label": ""
+  },
   "crosswalk-editor": {
     "search-from-source-schema": "",
     "search-from-target-schema": ""
+  },
+  "crosswalk-form": {
+    "all": "",
+    "clear-selection": "",
+    "file-required": "",
+    "format-note": "",
+    "group-workspace": "",
+    "name": "",
+    "no-items": "",
+    "option-available": "",
+    "options-available": "",
+    "personal-workspace": "",
+    "search-or-select": "",
+    "source-schema-workspace": "",
+    "supported-file-formats": "",
+    "target-schema-workspace": ""
   },
   "datamodel-title": "",
   "datamodels-all": "",
@@ -87,6 +133,7 @@
     "not-found": ""
   },
   "error-occured": "",
+  "error-unauthenticated": "",
   "feedback-terminologies": "",
   "filter-by-language": "",
   "filter-character-not-allowed": "",
@@ -122,6 +169,7 @@
     "title": "",
     "what-can-do": ""
   },
+  "language-english-with-suffix": "",
   "languages": {
     "en": "",
     "fi": "",
@@ -184,8 +232,12 @@
   },
   "not-recommended-synonym": "",
   "notifications": {
+    "add-crosswalk": "",
     "add-crosswalk-revision": "",
+    "add-schema": "",
     "add-schema-revision": "",
+    "copy-crosswalk": "",
+    "copy-schema": "",
     "crosswalk-deleted": "",
     "crosswalk-deprecated": "",
     "crosswalk-invalidated": "",
@@ -229,15 +281,9 @@
     "terminology-editor": ""
   },
   "schema-form": {
-    "description": "",
-    "format-label": "",
-    "format-placeholder": "",
-    "information-description-languages": "",
-    "information-description-languages-hint-text": "",
+    "file-required": "",
     "name": "",
-    "status": "",
-    "status-select": "",
-    "version-label": ""
+    "supported-file-formats": ""
   },
   "schema-tree": {
     "clear": "",

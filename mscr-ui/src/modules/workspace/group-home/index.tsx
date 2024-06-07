@@ -12,8 +12,6 @@ import {
 import Separator from 'yti-common-ui/components/separator';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import Pagination from '@app/common/components/pagination';
-import CrosswalkFormModal from '@app/modules/form/crosswalk-form/crosswalk-form-modal';
-import SchemaFormModal from '@app/modules/form/schema-form/schema-form-modal';
 import { ButtonBlock } from '../workspace.styles';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
 import {
@@ -24,6 +22,8 @@ import { useStoreDispatch } from '@app/store';
 import { useEffect, useMemo, useState } from 'react';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useRouter } from 'next/router';
+import { ModalVisibilityButton } from '@app/modules/form/modal-visibility-button';
+import FormModal, { ModalType } from '@app/modules/form';
 
 interface GroupHomeProps {
   user: MscrUser;
@@ -42,6 +42,12 @@ export default function GroupWorkspace({
   const { urlState } = useUrlState();
   const dispatch = useStoreDispatch();
   const pageSize = 20;
+  const [registerCrosswalkModalVisible, setRegisterCrosswalkModalVisible] =
+    useState(false);
+  const [createCrosswalkModalVisible, setCreateCrosswalkModalVisible] =
+    useState(false);
+  const [registerSchemaModalVisible, setRegisterSchemaModalVisible] =
+    useState(false);
   const [content, setContent] = useState(new Array<ContentRow>());
   const { data, isLoading } = useGetOrgContentQuery({
     type: contentType,
@@ -114,25 +120,43 @@ export default function GroupWorkspace({
         <div>
           <ButtonBlock>
             {contentType == 'SCHEMA' ? (
-              <SchemaFormModal
-                refetch={refetchInfo}
-                groupContent={true}
-                pid={pid}
-                isRevision={false}
-              ></SchemaFormModal>
+              <>
+                <ModalVisibilityButton
+                  setVisible={setRegisterSchemaModalVisible}
+                  label={t('content-form.button.schema-register')}
+                />
+                <FormModal
+                  modalType={ModalType.RegisterNewFull}
+                  contentType={Type.Schema}
+                  visible={registerSchemaModalVisible}
+                  setVisible={setRegisterSchemaModalVisible}
+                  organizationPid={pid}
+                />
+              </>
             ) : (
               <>
-                <CrosswalkFormModal
-                  refetch={refetchInfo}
-                  groupContent={true}
-                  pid={pid}
-                ></CrosswalkFormModal>
-                <CrosswalkFormModal
-                  refetch={refetchInfo}
-                  groupContent={true}
-                  pid={pid}
-                  createNew={true}
-                ></CrosswalkFormModal>
+                <ModalVisibilityButton
+                  setVisible={setRegisterCrosswalkModalVisible}
+                  label={t('content-form.button.crosswalk-register')}
+                />
+                <FormModal
+                  modalType={ModalType.RegisterNewFull}
+                  contentType={Type.Crosswalk}
+                  visible={registerCrosswalkModalVisible}
+                  setVisible={setRegisterCrosswalkModalVisible}
+                  organizationPid={pid}
+                />
+                <ModalVisibilityButton
+                  setVisible={setCreateCrosswalkModalVisible}
+                  label={t('content-form.button.crosswalk-create')}
+                />
+                <FormModal
+                  modalType={ModalType.RegisterNewMscr}
+                  contentType={Type.Crosswalk}
+                  visible={createCrosswalkModalVisible}
+                  setVisible={setCreateCrosswalkModalVisible}
+                  organizationPid={pid}
+                />
               </>
             )}
           </ButtonBlock>
