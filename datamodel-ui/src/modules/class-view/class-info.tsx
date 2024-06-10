@@ -530,7 +530,9 @@ export default function ClassInfo({
                 handleFollowUp={handleFollowUp}
                 applicationProfile={applicationProfile}
                 limitToSelect={!applicationProfile}
-                hiddenResources={data.association?.map((assoc) => assoc.uri)}
+                hiddenResources={data.association
+                  ?.filter((assoc) => !assoc.range)
+                  .map((assoc) => assoc.uri)}
               />
             </div>
           ) : (

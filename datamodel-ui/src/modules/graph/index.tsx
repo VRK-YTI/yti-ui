@@ -126,7 +126,8 @@ const GraphContent = ({
       target: string,
       x: number,
       y: number,
-      referenceType: ReferenceType
+      referenceType: ReferenceType,
+      origin: string
     ) => {
       const { top, left } = reactFlowWrapper.current
         ? reactFlowWrapper.current.getBoundingClientRect()
@@ -142,6 +143,7 @@ const GraphContent = ({
         referenceType,
         source,
         target,
+        origin,
         deleteNodeById,
         setEdges,
         setNodes,
@@ -168,7 +170,8 @@ const GraphContent = ({
         edge.target,
         e.clientX,
         e.clientY,
-        edge.referenceType
+        edge.referenceType,
+        edge.data.origin
       );
       dispatch(setGraphHasChanges(true));
     },
@@ -428,6 +431,8 @@ const GraphContent = ({
   return (
     <FlowWrapper ref={reactFlowWrapper} $isSmall={isSmall}>
       <ModelFlow
+        snapToGrid
+        snapGrid={[10, 10]}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}

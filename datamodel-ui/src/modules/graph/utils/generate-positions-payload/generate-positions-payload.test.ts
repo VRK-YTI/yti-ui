@@ -70,11 +70,17 @@ describe('generate-positions-payload', () => {
           id: 'edge-1-corner-1',
           source: 'node-1',
           target: '#corner-1',
+          data: {
+            origin: 'assoc-1',
+          },
         },
         {
           id: 'edge-corner-1-2',
           source: '#corner-1',
           target: 'node-2',
+          data: {
+            origin: 'assoc-1',
+          },
         },
       ]
     );
@@ -82,7 +88,12 @@ describe('generate-positions-payload', () => {
     expect(returned).toStrictEqual([
       {
         identifier: 'node-1',
-        referenceTargets: ['corner-1'],
+        referenceTargets: [
+          {
+            target: 'corner-1',
+            origin: 'assoc-1',
+          },
+        ],
         x: 0,
         y: 0,
       },
@@ -100,7 +111,12 @@ describe('generate-positions-payload', () => {
       },
       {
         identifier: 'corner-1',
-        referenceTargets: ['node-2'],
+        referenceTargets: [
+          {
+            target: 'node-2',
+            origin: 'assoc-1',
+          },
+        ],
         x: 25,
         y: 25,
       },
