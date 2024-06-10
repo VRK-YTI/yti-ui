@@ -18,8 +18,10 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
   IconApplicationProfile,
   IconGrid,
+  Link,
   Modal,
   ModalContent,
+  Paragraph,
   SingleSelectData,
 } from 'suomifi-ui-components';
 import useUrlState, {
@@ -230,6 +232,11 @@ export default function FrontPage() {
           <TitleDescriptionWrapper $isSmall={isSmall}>
             <Description id="page-description">
               {t('service-description')}
+              <Paragraph style={{ marginTop: '10px' }}>
+                <Link target="_blank" href="https://tietomallit.suomi.fi">
+                  {t('service-description-old-version')}
+                </Link>
+              </Paragraph>
             </Description>
           </TitleDescriptionWrapper>
         }
