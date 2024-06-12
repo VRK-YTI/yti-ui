@@ -340,6 +340,14 @@ export function translateNotification(
       return t('notifications.add-crosswalk-revision');
     case 'SCHEMA_REVISION':
       return t('notifications.add-schema-revision');
+    case 'CROSSWALK_ADD':
+      return t('notifications.add-crosswalk');
+    case 'SCHEMA_ADD':
+      return t('notifications.add-schema');
+    case 'CROSSWALK_COPY':
+      return t('notifications.copy-crosswalk');
+    case 'SCHEMA_COPY':
+      return t('notifications.copy-schema');
     default:
       return '';
   }

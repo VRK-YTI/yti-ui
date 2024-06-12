@@ -1,19 +1,17 @@
-import { FormErrors as CrosswalkFormErrors } from '@app/modules/form/crosswalk-form/validate-crosswalk-form';
-import { FormErrors as SchemaFormErrors } from '@app/modules/form/schema-form/validate-schema-form';
 import {
   translateLanguage,
   translateModelFormErrors,
 } from '@app/common/utils/translation-helpers';
 import { TFunction } from 'next-i18next';
+import { InputErrors } from '@app/modules/form/validate-form';
 
 export default function getErrors(
   t: TFunction,
-  errors?: CrosswalkFormErrors | SchemaFormErrors
+  errors?: InputErrors
 ): string[] {
   if (!errors) {
     return [];
   }
-
 
   const langsWithError = Object.entries(errors)
     .filter(([_, value]) => Array.isArray(value))

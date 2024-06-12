@@ -18,8 +18,11 @@ export type NotificationKeys =
   | 'EDIT_MAPPINGS'
   | 'FINISH_EDITING_MAPPINGS'
   | 'CROSSWALK_REVISION'
-  | 'SCHEMA_REVISION';
+  | 'SCHEMA_REVISION'
+  | 'CROSSWALK_ADD'
+  | 'SCHEMA_ADD'
+  | 'CROSSWALK_COPY'
+  | 'SCHEMA_COPY';
   // ToDo: Add more notifications, like these below:
   // | 'MAPPING_ADD'
-  // | 'MAPPING_EDIT'
   // | 'MAPPING_DELETE'

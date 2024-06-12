@@ -1,5 +1,4 @@
 import { DropdownItem, TextInput } from 'suomifi-ui-components';
-import { CrosswalkFormType } from '@app/common/interfaces/crosswalk.interface';
 import * as React from 'react';
 import {
   useGetPublicSchemasQuery,
@@ -18,15 +17,14 @@ import {
   WideSingleSelect,
 } from '@app/modules/form/crosswalk-form/crosswalk-form.styles';
 
-import {
-  selectLogin,
-} from '@app/common/components/login/login.slice';
+import { selectLogin } from '@app/common/components/login/login.slice';
 import { useSelector } from 'react-redux';
 import { User } from 'yti-common-ui/interfaces/user.interface';
+import { FormType } from '@app/common/utils/hooks/use-initial-form';
 
 interface CrosswalkFormProps {
-  formData: CrosswalkFormType;
-  setFormData: (value: CrosswalkFormType) => void;
+  formData: FormType;
+  setFormData: (value: FormType) => void;
   createNew: boolean;
   schemaSelectorDisabled?: boolean;
   groupWorkspacePid: string | undefined;
@@ -48,7 +46,8 @@ export default function TargetAndSourceSchemaSelector({
   formData,
   setFormData,
   createNew,
-  schemaSelectorDisabled, groupWorkspacePid
+  schemaSelectorDisabled,
+  groupWorkspacePid,
 }: CrosswalkFormProps) {
   const user: User = useSelector(selectLogin());
   const formatRestrictions = createNew
@@ -56,12 +55,18 @@ export default function TargetAndSourceSchemaSelector({
     : [];
   const { data, isSuccess } = useGetPublicSchemasQuery(formatRestrictions);
 
-  const { data: sourceSchemaData } = useGetSchemaQuery(formData.sourceSchema, {
-    skip: !schemaSelectorDisabled,
-  });
-  const { data: targetSchemaData } = useGetSchemaQuery(formData.targetSchema, {
-    skip: !schemaSelectorDisabled,
-  });
+  const { data: sourceSchemaData } = useGetSchemaQuery(
+    formData.sourceSchema ?? '',
+    {
+      skip: !schemaSelectorDisabled,
+    }
+  );
+  const { data: targetSchemaData } = useGetSchemaQuery(
+    formData.targetSchema ?? '',
+    {
+      skip: !schemaSelectorDisabled,
+    }
+  );
   //defaultSchemas.push({ labelText: 'test', uniqueItemId: 'test'});
   const [dataLoaded, setDataLoaded] = useState(false);
   const [defaultSchemas, setDefaultSchemas] = useState(
@@ -104,22 +109,22 @@ export default function TargetAndSourceSchemaSelector({
 
   const workspaceValuesPersonalCrosswalks: SelectableWorkspace[] = [
     {
-      labelText: 'All',
+      labelText: t('crosswalk-form.all'),
       uniqueItemId: 'all',
     },
     {
-      labelText: 'Personal workspace',
+      labelText: t('crosswalk-form.personal-workspace'),
       uniqueItemId: 'personalWorkspace',
     },
   ];
 
   const workspaceValuesGroupCrosswalks: SelectableWorkspace[] = [
     {
-      labelText: 'All',
+      labelText: t('crosswalk-form.all'),
       uniqueItemId: 'all',
     },
     {
-      labelText: 'Group workspace',
+      labelText: t('crosswalk-form.group-workspace'),
       uniqueItemId: 'groupWorkspace',
     },
   ];
@@ -137,7 +142,7 @@ export default function TargetAndSourceSchemaSelector({
         uniqueItemId: item._source.id,
         organizationIds:
           item._source.organizations.length > 0
-            ? item._source.organizations.map(organization => organization.id)
+            ? item._source.organizations.map((organization) => organization.id)
             : [''],
         owner:
           item._source?.owner && item._source?.owner?.length > 0
@@ -171,7 +176,7 @@ export default function TargetAndSourceSchemaSelector({
       setSourceSchemas(
         defaultSchemas.filter((item) => {
           if (groupWorkspacePid) {
-             return item.organizationIds.includes(groupWorkspacePid);
+            return item.organizationIds.includes(groupWorkspacePid);
           }
         })
       );
@@ -225,7 +230,7 @@ export default function TargetAndSourceSchemaSelector({
                   <>
                     <div className="mb-3">
                       <WideDropdown
-                        labelText={'Source schema workspace'}
+                        labelText={t('crosswalk-form.source-schema-workspace')}
                         defaultValue={'all'}
                         onChange={(e: string) => {
                           setSelectedSourceWorkspace(e);
@@ -243,14 +248,16 @@ export default function TargetAndSourceSchemaSelector({
                     </div>
                     <WideSingleSelect
                       className="source-select-dropdown"
-                      labelText="Source schema"
+                      labelText={t('metadata.source-schema')}
                       hintText=""
-                      clearButtonLabel="Clear selection"
+                      clearButtonLabel={t('crosswalk-form.clear-selection')}
                       items={sourceSchemas}
-                      visualPlaceholder="Search or select"
-                      noItemsText="No items"
+                      visualPlaceholder={t('crosswalk-form.search-or-select')}
+                      noItemsText={t('crosswalk-form.no-items')}
                       ariaOptionsAvailableTextFunction={(amount) =>
-                        amount === 1 ? 'option available' : 'options available'
+                        amount === 1
+                          ? t('crosswalk-form.option-available')
+                          : t('crosswalk-form.options-available')
                       }
                       onItemSelect={setSource}
                     />
@@ -278,7 +285,7 @@ export default function TargetAndSourceSchemaSelector({
                   <>
                     <div className="mb-3">
                       <WideDropdown
-                        labelText={'Target schema workspace'}
+                        labelText={t('crosswalk-form.target-schema-workspace')}
                         defaultValue={'all'}
                         onChange={(e: string) => {
                           setSelectedTargetWorkspace(e);
@@ -296,14 +303,16 @@ export default function TargetAndSourceSchemaSelector({
                     </div>
                     <WideSingleSelect
                       className="source-select-dropdown"
-                      labelText="Target schema"
+                      labelText={t('metadata.target-schema')}
                       hintText=""
-                      clearButtonLabel="Clear selection"
+                      clearButtonLabel={t('crosswalk-form.clear-selection')}
                       items={targetSchemas}
-                      visualPlaceholder="Search or select"
-                      noItemsText="No items"
+                      visualPlaceholder={t('crosswalk-form.search-or-select')}
+                      noItemsText={t('crosswalk-form.no-items')}
                       ariaOptionsAvailableTextFunction={(amount) =>
-                        amount === 1 ? 'option available' : 'options available'
+                        amount === 1
+                          ? t('crosswalk-form.option-available')
+                          : t('crosswalk-form.options-available')
                       }
                       onItemSelect={setTarget}
                     />

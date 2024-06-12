@@ -27,6 +27,7 @@
     "publish-schema": "Publish schema",
     "revision": "Add new revision"
   },
+  "and": "and",
   "association": "",
   "attribute": "",
   "breadcrumb": "",
@@ -72,9 +73,54 @@
     "save": "Are you sure you want to save changes?"
   },
   "confirm-page-leave": "Are you sure you want to leave the page? Changes you made won't be saved.",
+  "content-form": {
+    "button": {
+      "crosswalk-create": "Create Crosswalk",
+      "crosswalk-register": "Register Crosswalk",
+      "crosswalk-revision": "Register revision",
+      "mscr-copy": "Register MSCR Copy",
+      "schema-register": "Register Schema",
+      "schema-revision": "Register revision"
+    },
+    "description": "Description",
+    "format-label": "Format",
+    "format-placeholder": "Select file format",
+    "information-description-languages": "Information description languages",
+    "information-description-languages-hint-text": "Select information description languages in which the content of the data model is described.",
+    "information-description-languages-placeholder": "Select languages for information description",
+    "optional": "optional",
+    "state": "State",
+    "state-select": "Select state",
+    "title": {
+      "crosswalk-create": "Create and register new crosswalk",
+      "crosswalk-mscr-copy": "Register MSCR copy of crosswalk",
+      "crosswalk-register": "Register existing crosswalk",
+      "crosswalk-revision": "Register revision of crosswalk",
+      "schema-mscr-copy": "Register MSCR copy of schema",
+      "schema-register": "Register schema",
+      "schema-revision": "Register revision of schema"
+    },
+    "version-label": "Version label"
+  },
   "crosswalk-editor": {
     "search-from-source-schema": "Search from source schema",
     "search-from-target-schema": "Search from target schema"
+  },
+  "crosswalk-form": {
+    "all": "All",
+    "clear-selection": "Clear selection",
+    "file-required": "You must provide a crosswalk file to register.",
+    "format-note": "NOTE: Public schemas in following formats are available for crosswalk creation: ",
+    "group-workspace": "Group workspace",
+    "name": "Crosswalk name (required)",
+    "no-items": "No items",
+    "option-available": "option available",
+    "options-available": "options available",
+    "personal-workspace": "Personal workspace",
+    "search-or-select": "Search or select",
+    "source-schema-workspace": "Source schema workspace",
+    "supported-file-formats": "Supported crosswalk file formats are ",
+    "target-schema-workspace": "Target schema workspace"
   },
   "datamodel-title": "",
   "datamodels-all": "",
@@ -89,6 +135,7 @@
     "not-found": "Not found"
   },
   "error-occured": "",
+  "error-unauthenticated": "An error occured with login information verification. Please login to the service again.",
   "feedback-terminologies": "",
   "filter-by-language": "",
   "filter-character-not-allowed": "",
@@ -124,6 +171,7 @@
     "title": "Metadata Schema and Crosswalk Registry (MSCR)",
     "what-can-do": "What can you do in MSCR?"
   },
+  "language-english-with-suffix": "English EN",
   "languages": {
     "en": "English",
     "fi": "Finnish",
@@ -186,8 +234,12 @@
   },
   "not-recommended-synonym": "",
   "notifications": {
+    "add-crosswalk": "New crosswalk added",
     "add-crosswalk-revision": "New crosswalk version added",
+    "add-schema": "New schema added",
     "add-schema-revision": "New schema version added",
+    "copy-crosswalk": "MSCR copy of crosswalk added",
+    "copy-schema": "MSCR copy of schema added",
     "crosswalk-deleted": "Crosswalk was removed",
     "crosswalk-deprecated": "Crosswalk deprecated",
     "crosswalk-invalidated": "Crosswalk invalidated",
@@ -231,15 +283,9 @@
     "terminology-editor": ""
   },
   "schema-form": {
-    "description": "Description",
-    "format-label": "Format",
-    "format-placeholder": "Select file format",
-    "information-description-languages": "Languages",
-    "information-description-languages-hint-text": "Select languages in which the content of the schema is described",
-    "name": "Name (required)",
-    "status": "Status",
-    "status-select": "Select status",
-    "version-label": "Version label"
+    "file-required": "You must provide a schema file to register.",
+    "name": "Schema name (required)",
+    "supported-file-formats": "Supported schema file formats are "
   },
   "schema-tree": {
     "clear": "Clear",

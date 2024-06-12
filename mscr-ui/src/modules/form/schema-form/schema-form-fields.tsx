@@ -2,8 +2,6 @@
 import { useTranslation } from 'next-i18next';
 import { DropdownItem } from 'suomifi-ui-components';
 import { ModelFormContainer } from '../form.styles';
-import { FormErrors } from './validate-schema-form';
-import { SchemaFormType } from '@app/common/interfaces/schema.interface';
 import {
   Format,
   formatsAvailableForSchemaRegistration,
@@ -11,15 +9,17 @@ import {
 import { State } from '@app/common/interfaces/state.interface';
 import MscrLanguageSelector from '@app/common/components/language-selector/mscr-language-selector';
 import { WideDropdown } from '@app/modules/form/crosswalk-form/crosswalk-form.styles';
+import { FormType } from '@app/common/utils/hooks/use-initial-form';
+import { InputErrors } from '@app/modules/form/validate-form';
 
 interface SchemaFormProps {
-  formData: SchemaFormType;
-  setFormData: (value: SchemaFormType) => void;
+  formData: FormType;
+  setFormData: (value: FormType) => void;
   userPosted: boolean;
   disabled?: boolean;
-  errors?: FormErrors;
+  errors?: InputErrors;
   editMode?: boolean;
-  isRevision?: boolean;
+  hasInitialData?: boolean;
 }
 
 export default function SchemaFormFields({
@@ -28,7 +28,7 @@ export default function SchemaFormFields({
   userPosted,
   disabled,
   errors,
-  isRevision,
+  hasInitialData,
 }: // editMode,
 SchemaFormProps) {
   const { t } = useTranslation();
@@ -49,14 +49,14 @@ SchemaFormProps) {
         <div className="row">
           <div className="col-6">
             <WideDropdown
-              labelText={t('schema-form.format-label')}
+              labelText={t('content-form.format-label')}
               visualPlaceholder={
-                isRevision
+                hasInitialData
                   ? formData.format
-                  : t('schema-form.format-placeholder')
+                  : t('content-form.format-placeholder')
               }
               defaultValue={formData.format ?? ''}
-              disabled={disabled || isRevision}
+              disabled={disabled || hasInitialData}
               onChange={(e: Format) =>
                 setFormData({
                   ...formData,
@@ -76,10 +76,10 @@ SchemaFormProps) {
               style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
             >
               <WideDropdown
-                labelText={t('schema-form.status')}
-                visualPlaceholder={t('schema-form.status-select')}
+                labelText={t('content-form.state')}
+                visualPlaceholder={t('content-form.state-select')}
                 defaultValue={State.Draft}
-                disabled={disabled || isRevision}
+                disabled={disabled || hasInitialData}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -105,9 +105,9 @@ SchemaFormProps) {
       <div>
         <MscrLanguageSelector
           items={formData.languages}
-          labelText={t('schema-form.information-description-languages')}
+          labelText={t('content-form.information-description-languages')}
           visualPlaceholder={t(
-            'schema-form.information-description-languages-hint-text'
+            'content-form.information-description-languages-hint-text'
           )}
           isWide={true}
           setLanguages={(e) =>
@@ -119,10 +119,10 @@ SchemaFormProps) {
           userPosted={userPosted}
           translations={{
             textInput: t('schema-form.name'),
-            textDescription: t('schema-form.description'),
-            optionalText: '',
+            textDescription: t('content-form.description'),
+            optionalText: t('content-form.optional'),
           }}
-          versionLabelCaption={t('schema-form.version-label')}
+          versionLabelCaption={t('content-form.version-label')}
           versionLabel={formData.versionLabel ?? '1'}
           setVersionLabel={(e) => setVersionLabel(e)}
           allowItemAddition={false}

@@ -14,17 +14,13 @@ import { ActionMenuTypes, Type } from '@app/common/interfaces/search.interface';
 import { State } from '@app/common/interfaces/state.interface';
 import ConfirmModal from '@app/common/components/confirmation-modal';
 import { useStoreDispatch } from '@app/store';
-import {
-  clearNotification,
-  setNotification,
-} from '@app/common/components/notifications/notifications.slice';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
 import { CrosswalkWithVersionInfo } from '@app/common/interfaces/crosswalk.interface';
 import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
-import RevisionFormModal from '@app/modules/form/revision-form-modal';
-import {
-  ActionMenuWrapper,
-} from '@app/common/components/schema-and-crosswalk-actionmenu/schema-and-crosswalk-actionmenu.styles';
+import { ActionMenuWrapper } from '@app/common/components/schema-and-crosswalk-actionmenu/schema-and-crosswalk-actionmenu.styles';
+import FormModal, { ModalType } from '@app/modules/form';
+import { Format } from '@app/common/interfaces/format.interface';
 
 interface SchemaAndCrosswalkActionmenuProps {
   type: ActionMenuTypes;
@@ -235,7 +231,9 @@ export default function SchemaAndCrosswalkActionMenu({
             {t('actionmenu.edit-metadata')}
           </ActionMenuItem>
           <ActionMenuItem
-            className={metadata && metadata.state == State.Draft ? '' : 'd-none'}
+            className={
+              metadata && metadata.state == State.Draft ? '' : 'd-none'
+            }
             onClick={() => setPublishConfirmModalOpen(true)}
           >
             {type === ActionMenuTypes.Schema ||
@@ -266,7 +264,9 @@ export default function SchemaAndCrosswalkActionMenu({
               : t('actionmenu.deprecate-crosswalk')}
           </ActionMenuItem>
           <ActionMenuItem
-            className={metadata && metadata.state == State.Draft ? '' : 'd-none'}
+            className={
+              metadata && metadata.state == State.Draft ? '' : 'd-none'
+            }
             onClick={() => setDeleteConfirmModalOpen(true)}
           >
             {t('actionmenu.delete-draft')}
@@ -289,7 +289,8 @@ export default function SchemaAndCrosswalkActionMenu({
           </ActionMenuItem>
           <ActionMenuItem
             className={isLatestVersion ? '' : 'd-none'}
-            onClick={() => setRevisionModalOpen(true)}>
+            onClick={() => setRevisionModalOpen(true)}
+          >
             {t('actionmenu.revision')}
           </ActionMenuItem>
         </ActionMenu>
@@ -389,16 +390,21 @@ export default function SchemaAndCrosswalkActionMenu({
         text2={undefined}
       />
 
-      <RevisionFormModal
-        initialData={metadata}
-        visible={isRevisionModalOpen}
-        setVisible={setRevisionModalOpen}
-        type={
+      <FormModal
+        modalType={
+          metadata.format == Format.Mscr
+            ? ModalType.RevisionMscr
+            : ModalType.RevisionFull
+        }
+        contentType={
           type === ActionMenuTypes.Schema ||
           type === ActionMenuTypes.SchemaMetadata
             ? Type.Schema
             : Type.Crosswalk
         }
+        visible={isRevisionModalOpen}
+        setVisible={setRevisionModalOpen}
+        initialData={metadata}
       />
     </>
   );

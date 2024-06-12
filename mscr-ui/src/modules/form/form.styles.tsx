@@ -11,29 +11,6 @@ export const ModelFormContainer = styled(Block)`
   }
 `;
 
-export const BlockContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${(props) => props.theme.suomifi.spacing.m};
-`;
-
 export const WideMultiSelect = styled(MultiSelect)`
   min-width: 100%;
-`;
-
-export const AddBlockWrapper = styled(Block)`
-  display: flex;
-  flex-direction: column;
-
-  > .fi-label {
-    margin-bottom: 6px;
-  }
-
-  > button {
-    width: max-content;
-
-    :not(:last-child) {
-      margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
-    }
-  }
 `;

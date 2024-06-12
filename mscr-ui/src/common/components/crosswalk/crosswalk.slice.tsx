@@ -21,7 +21,7 @@ export const crosswalkApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putCrosswalk: builder.mutation<any, any>({
+    putCrosswalk: builder.mutation<Crosswalk, Partial<Metadata>>({
       query: (value) => ({
         url: '/crosswalk',
         method: 'PUT',
@@ -29,7 +29,7 @@ export const crosswalkApi = createApi({
       }),
     }),
     //Register Crosswalk with file
-    putCrosswalkFull: builder.mutation<any, FormData>({
+    putCrosswalkFull: builder.mutation<Crosswalk, FormData>({
       query: (file) => ({
         url: '/crosswalkFull',
         method: 'PUT',
