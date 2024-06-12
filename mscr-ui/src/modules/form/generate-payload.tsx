@@ -68,8 +68,6 @@ export default function generatePayload(
       return revisionPayload;
     } else if (contentType == Type.Crosswalk) {
       const { organizations, ...revisionPayload } = crosswalkPayload;
-      console.log('crosswalkfullpayload: ', crosswalkPayload);
-      console.log('revisionfullpayload: ', revisionPayload);
       return revisionPayload;
     }
   } else if (modalType == ModalType.RevisionMscr) {
@@ -79,8 +77,6 @@ export default function generatePayload(
       return revisionPayload;
     } else if (contentType == Type.Crosswalk) {
       const { organizations, format, ...revisionPayload } = crosswalkPayload;
-      console.log('crosswalkmscrpayload: ', crosswalkPayload);
-      console.log('revisionmscrpayload: ', revisionPayload);
       return revisionPayload;
     }
   } else if (

@@ -112,7 +112,7 @@
   "language-swedish-with-suffix": "Swedish SV",
   "missing-description": "Description hasn't been set",
   "missing-file": "You need to add file or URI of the file to register",
-  "missing-format": "",
+  "missing-format": "Format hasn't been selected",
   "missing-general": "Model is missing information",
   "missing-information-domain": "Information domain hasn't been set",
   "missing-language-title": "Title is missing in language",

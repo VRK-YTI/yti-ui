@@ -314,7 +314,7 @@ export default function FormModal({
     );
     setErrors(formErrors);
 
-    if (errors && Object.values(errors).includes(true)) {
+    if (formErrors && (Object.values(formErrors).includes(true) || formErrors.titleAmount.length > 0)) {
       return;
     }
 
