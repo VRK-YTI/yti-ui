@@ -202,21 +202,17 @@ export default function TargetAndSourceSchemaSelector({
   }, [selectedTargetWorkspace, groupWorkspacePid]);
 
   function setSource(selectedSchemaId: string | null) {
-    if (selectedSchemaId) {
       setFormData({
         ...formData,
-        sourceSchema: selectedSchemaId,
+        sourceSchema: selectedSchemaId ?? '',
       });
-    }
   }
 
   function setTarget(selectedSchemaId: string | null) {
-    if (selectedSchemaId) {
       setFormData({
         ...formData,
-        targetSchema: selectedSchemaId,
+        targetSchema: selectedSchemaId ?? '',
       });
-    }
   }
 
   return (
