@@ -20,7 +20,7 @@ export const MarginContainer = styled.div<{
 export const SiteContainer = styled.div`
   width: 100%;
   margin: auto;
-  height: 100%;
+  height: 100vh;
 `;
 
 export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`

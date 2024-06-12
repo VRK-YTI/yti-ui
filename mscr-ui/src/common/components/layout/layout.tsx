@@ -78,27 +78,26 @@ export default function Layout({
               )}
             />
             {!sideNavigationHidden && user && !user.anonymous ? (
-              <Grid container spacing={2}>
-                <Grid item xs={2}>
-                  <SideNavigationPanel user={user} />
-                </Grid>
-                <Grid item xs={10}>
-                  <ContentContainer>
+              <>
+                <div className={'d-flex w-100'}>
+                  <SideNavigationPanel user={user}/>
+                  <ContentContainer className={'w-100'}>
                     {alerts && alerts}
                     <MarginContainer
                       $breakpoint={breakpoint}
                       className={isSearchActive ? 'hidden' : ''}
                     >
-                      {isSearchActive && <SearchScreen />}
+                      {isSearchActive && <SearchScreen/>}
                       {children}
                     </MarginContainer>
                   </ContentContainer>
-                </Grid>
-              </Grid>
+                </div>
+              </>
+
             ) : (
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <ContentContainer>
+                  <ContentContainer className={'w-100'}>
                     {alerts && alerts}
                     <MarginContainer
                       $breakpoint={breakpoint}

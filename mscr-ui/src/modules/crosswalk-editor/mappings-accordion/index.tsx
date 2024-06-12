@@ -261,11 +261,13 @@ export default function MappingsAccordion(props: any) {
               <TableRow className="">
                 <td>
                   <div className="empty-mappings-table">
-                    <span className="info-icon">
+                    <div className="info-icon">
                       <InfoIcon></InfoIcon>
-                    </span>
+                    </div>
+                    <div>
                     No elements have been mapped yet. Mappings will appear in
                     this table.
+                    </div>
                   </div>
                 </td>
               </TableRow>

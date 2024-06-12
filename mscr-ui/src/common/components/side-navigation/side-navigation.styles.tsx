@@ -7,11 +7,12 @@ import {
   SideNavigationItem,
 } from 'suomifi-ui-components';
 
-export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
+export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint,  $isSidebarFolded: boolean }>`
   // Width and positioning for now, need adjusting when overall layout structure is decided
   flex-grow: 1;
   width: 100%;
   max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
+  width: ${(props) => (props.$isSidebarFolded ? '50px' : '100%')};
   left: 0;
   top: 76px;
   background-color: white;
@@ -19,6 +20,11 @@ export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
   padding-top: ${(props) => props.theme.suomifi.spacing.m};
   padding-bottom: ${(props) => props.theme.suomifi.spacing.m};
   margin-right: ${(props) => props.theme.suomifi.spacing.m};
+  height: 100vh;
+  transition: 0.6s;
+  transition-timing-function: ease-in-out;
+  transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+  border-right: 3px solid ${(props) => props.theme.suomifi.colors.highlightLight3};
 `;
 
 // Modify the style of an existing suomifi component
@@ -42,6 +48,8 @@ export const MscrSideNavigation = styled(SideNavigation)`
   .fi-side-navigation_divider {
     display: none;
   }
+  height: 100vh;
+  ul {padding: 1px !important;}
 `;
 
 export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`
@@ -115,5 +123,36 @@ export const GroupOpenButton = styled.button`
   // Hovered group name is blue
   &:hover h3 {
     color: ${(props) => props.theme.suomifi.colors.highlightBase};
+  }
+`;
+
+export const GroupOpenBtn = styled.div`
+  &&&&& {
+    // override suomifi default blue background
+    background-color: transparent;
+  }
+  // Hovered group name is blue
+  &:hover h3 {
+    color: ${(props) => props.theme.suomifi.colors.highlightBase};
+  }
+`;
+
+export const FoldButtonWrapper = styled.div`
+  width: 20px;
+  z-index: 200;
+  margin-left: -75px;
+`;
+
+export const FoldButton = styled.div`
+  height: 30px;
+  width: 20px;
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  div {
+    width: 3px;
+    height: 30px;
+    margin-left: 2px;
+    background: ${(props) => props.theme.suomifi.colors.highlightLight2};
   }
 `;

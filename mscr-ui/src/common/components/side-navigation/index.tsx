@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { RouterLink } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
+import Tooltip from '@mui/material/Tooltip';
 import {
   NavigationHeading,
   SideNavigationWrapper,
@@ -11,6 +12,9 @@ import {
   GroupHeading,
   GroupOpenButton,
   MscrSideNavigationLevel1,
+  FoldButton,
+  FoldButtonWrapper,
+  GroupOpenBtn,
 } from './side-navigation.styles';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
@@ -32,10 +36,22 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const personalSettingsPath = '/personal/settings';
   // Group settings path is form '/' + group.id + '/settings'
   const organizations = getOrganizations(user?.organizations, lang);
+  const [isSidebarMinimized, setSidebarMinimized] = useState(false);
+  const [isFirstPageLoad, setFirstPageLoad] = useState(true);
+
+  function sidebarFoldButtonClick() {
+    //console.log('is folded', isSidebarFolded);
+    setSidebarMinimized(!isSidebarMinimized);
+    setFirstPageLoad(false);
+  }
 
   return (
-    <SideNavigationWrapper $breakpoint={breakpoint} id="sidebar">
-      <MscrSideNavigation heading="" aria-label={t('workspace.navigation')}>
+    <SideNavigationWrapper $breakpoint={breakpoint} $isSidebarFolded={isSidebarMinimized} id="sidebar">
+      <div className={'d-flex justify-content-between'}>
+        <div className={''}>
+          <div className={!isSidebarMinimized && !isFirstPageLoad ? "sidebar-animate-fadein" :  undefined}>
+            <MscrSideNavigation heading="" aria-label={t('workspace.navigation')}
+                                className={isSidebarMinimized ? "sidebar-animate-fadeout" : undefined}>
         <MscrSideNavigationLevel1
           subLevel={1}
           expanded
@@ -157,6 +173,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                 selected={router.asPath.startsWith(
                   '/' + group.id + '/settings'
                 )}
+
                 content={''}
                 // content={
                 //   <Link href={'/' + group.id + '/settings'} passHref>
@@ -169,7 +186,27 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
             </MscrSideNavigationLevel2>
           ))}
         </MscrSideNavigationLevel1>
-      </MscrSideNavigation>
+            </MscrSideNavigation>
+          </div>
+        </div>
+        <FoldButtonWrapper className={'col-1 d-flex justify-content-center flex-column'} onClick={() => {
+        }}>
+          <Tooltip
+            title={isSidebarMinimized ? t('click-to-expand-sidebar') : t('click-to-minimize-sidebar')}
+            placement="top-end"
+            className={undefined}>
+            <FoldButton
+              aria-label="fold"
+              onClick={(e) => {
+                sidebarFoldButtonClick();
+                e.stopPropagation();
+              }}>
+              <div></div>
+              <div></div>
+            </FoldButton>
+          </Tooltip>
+        </FoldButtonWrapper>
+      </div>
     </SideNavigationWrapper>
   );
 }
