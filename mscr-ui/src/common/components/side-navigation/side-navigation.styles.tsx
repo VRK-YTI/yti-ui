@@ -139,7 +139,7 @@ export const GroupOpenBtn = styled.div`
 
 export const FoldButtonWrapper = styled.div`
   width: 20px;
-  z-index: 200;
+  z-index: 0;
   margin-left: -75px;
 `;
 
