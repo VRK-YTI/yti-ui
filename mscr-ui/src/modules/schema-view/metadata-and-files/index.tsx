@@ -12,9 +12,10 @@ export default function MetadataAndFiles({
   refetch: () => void;
 }) {
   const hasEditPermission = HasPermission({
-    actions: ['EDIT_SCHEMA_METADATA'],
+    action: 'EDIT_CONTENT',
     owner: schemaDetails?.owner
   });
+  const hasCopyPermission = HasPermission({action: 'MAKE_MSCR_COPY'});
   const schemaFiles = schemaDetails?.fileMetadata;
 
   return (
@@ -24,6 +25,7 @@ export default function MetadataAndFiles({
         metadata={schemaDetails}
         refetchMetadata={refetch}
         hasEditPermission={hasEditPermission}
+        hasCopyPermission={hasCopyPermission}
       />
       <MetadataFilesTable
         filesRowInput={schemaFiles}

@@ -55,6 +55,7 @@ export default function SchemaAndCrosswalkActionMenu({
   const [isDeleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState(false);
   const [isRemoveConfirmModalOpen, setRemoveConfirmModalOpen] = useState(false);
   const [isRevisionModalOpen, setRevisionModalOpen] = useState(false);
+  const [isMscrCopyModalOpen, setMscrCopyModalOpen] = useState(false);
   const [isCrosswalkPublished, setCrosswalkPublished] =
     React.useState<boolean>(false);
   const [isLatestVersion, setIsLatestVersion] = useState(false);
@@ -202,6 +203,10 @@ export default function SchemaAndCrosswalkActionMenu({
     }
   }, [metadata.revisions, metadata.pid]);
 
+  if (type == ActionMenuTypes.NoEditPermission) {
+    return renderStubMenu();
+  }
+
   return (
     <>
       <ActionMenuWrapper>
@@ -292,6 +297,17 @@ export default function SchemaAndCrosswalkActionMenu({
             onClick={() => setRevisionModalOpen(true)}
           >
             {t('actionmenu.revision')}
+          </ActionMenuItem>
+          <ActionMenuItem
+            className={
+              type === ActionMenuTypes.Schema ||
+              type === ActionMenuTypes.SchemaMetadata
+                ? ''
+                : 'd-none'
+            }
+            onClick={() => setMscrCopyModalOpen(true)}
+          >
+            {t('actionmenu.mscr-copy')}
           </ActionMenuItem>
         </ActionMenu>
       </ActionMenuWrapper>
@@ -406,6 +422,36 @@ export default function SchemaAndCrosswalkActionMenu({
         setVisible={setRevisionModalOpen}
         initialData={metadata}
       />
+      <FormModal
+        modalType={ModalType.McsrCopy}
+        contentType={Type.Schema}
+        visible={isMscrCopyModalOpen}
+        setVisible={setMscrCopyModalOpen}
+        initialData={metadata}
+      />
     </>
   );
+
+  function renderStubMenu() {
+    return (
+      <>
+        <ActionMenuWrapper>
+          <ActionMenu buttonText={t('action.actions')}>
+            <ActionMenuItem
+              onClick={() => setMscrCopyModalOpen(true)}
+            >
+              {t('actionmenu.mscr-copy')}
+            </ActionMenuItem>
+          </ActionMenu>
+        </ActionMenuWrapper>
+        <FormModal
+          modalType={ModalType.McsrCopy}
+          contentType={Type.Schema}
+          visible={isMscrCopyModalOpen}
+          setVisible={setMscrCopyModalOpen}
+          initialData={metadata}
+        />
+      </>
+    );
+  }
 }

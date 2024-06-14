@@ -150,7 +150,7 @@ export default function CrosswalkEditor({
   } = useGetCrosswalkWithRevisionsQuery(crosswalkId);
 
   const hasEditRights = HasPermission({
-    actions: ['EDIT_CROSSWALK_MAPPINGS'],
+    action: 'EDIT_CONTENT',
     owner: getCrosswalkData?.owner,
   });
 
@@ -723,13 +723,17 @@ export default function CrosswalkEditor({
                     </Grid>
                     <Grid item xs={6} className="d-flex justify-content-end">
                       <div className="mt-3 me-2">
-                        <SchemaAndCrosswalkActionMenu
-                          buttonCallbackFunction={performCallbackFromActionMenu}
-                          metadata={getCrosswalkData}
-                          isMappingsEditModeActive={isEditModeActive}
-                          refetchMetadata={refetchCrosswalkData}
-                          type={ActionMenuTypes.CrosswalkVersionInfo}
-                        ></SchemaAndCrosswalkActionMenu>
+                        {hasEditRights &&
+                          <SchemaAndCrosswalkActionMenu
+                            buttonCallbackFunction={
+                              performCallbackFromActionMenu
+                            }
+                            metadata={getCrosswalkData}
+                            isMappingsEditModeActive={isEditModeActive}
+                            refetchMetadata={refetchCrosswalkData}
+                            type={ActionMenuTypes.CrosswalkVersionInfo}
+                          />
+                        }
                       </div>
                     </Grid>
                     <Grid item xs={12}>

@@ -12,13 +12,15 @@ import { ActionMenuTypes } from '@app/common/interfaces/search.interface';
 export default function SchemaVisualization({
   pid,
   format,
-  hasEditRights,
+  hasEditPermission,
+  hasCopyPermission,
   metadata,
   refetchMetadata,
 }: {
   pid: string;
   format: Format;
-  hasEditRights?: boolean;
+  hasEditPermission?: boolean;
+  hasCopyPermission?: boolean;
   metadata: SchemaWithVersionInfo | CrosswalkWithVersionInfo;
   refetchMetadata: () => void;
 }) {
@@ -34,16 +36,22 @@ export default function SchemaVisualization({
             <SchemaInfo caption={filterLabel} schemaUrn={pid} isSingleTree={true} />
           </div>
           <div className="col-2 d-flex justify-content-end flex-row pe-3 pb-2">
-            {!hasEditRights && (
-              <>
-                <SchemaAndCrosswalkActionMenu
-                  isMappingsEditModeActive
-                  metadata={metadata}
-                  refetchMetadata={refetchMetadata}
-                  type={ActionMenuTypes.Schema}
-                ></SchemaAndCrosswalkActionMenu>
-              </>
+            {hasEditPermission && (
+              <SchemaAndCrosswalkActionMenu
+                isMappingsEditModeActive
+                metadata={metadata}
+                refetchMetadata={refetchMetadata}
+                type={ActionMenuTypes.Schema}
+              />
             )}
+            {!hasEditPermission && hasCopyPermission &&
+              <SchemaAndCrosswalkActionMenu
+                metadata={metadata}
+                isMappingsEditModeActive={false}
+                refetchMetadata={refetchMetadata}
+                type={ActionMenuTypes.NoEditPermission}
+              />
+            }
           </div>
         </div>
       </>
