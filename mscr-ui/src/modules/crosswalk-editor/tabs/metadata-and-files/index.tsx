@@ -16,7 +16,6 @@ export default function MetadataAndFiles(props: {
     action: 'EDIT_CONTENT',
     owner: props.crosswalkData.owner,
   });
-  const hasCopyPermission = HasPermission({ action: 'MAKE_MSCR_COPY' });
 
   return (
     <>
@@ -25,7 +24,7 @@ export default function MetadataAndFiles(props: {
         metadata={props.crosswalkData}
         refetchMetadata={props.refetch}
         hasEditPermission={hasEditRights}
-        hasCopyPermission={hasCopyPermission}
+        isMscrCopyAvailable={false}
       />
       <br />
       <MetadataFilesTable

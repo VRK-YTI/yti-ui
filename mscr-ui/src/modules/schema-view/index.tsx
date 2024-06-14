@@ -18,6 +18,7 @@ import {
   VersionsHeading,
 } from '@app/modules/schema-view/schema-view-styles';
 import HasPermission from '@app/common/utils/has-permission';
+import { formatsAvailableForMscrCopy } from '@app/common/interfaces/format.interface';
 
 export default function SchemaView({ schemaId }: { schemaId: string }) {
   const { t } = useTranslation('common');
@@ -36,6 +37,10 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
     owner: schemaDetails?.owner,
   });
   const hasCopyPermission = HasPermission({ action: 'MAKE_MSCR_COPY' });
+  const isMscrCopyAvailable =
+    hasCopyPermission &&
+    schemaDetails &&
+    formatsAvailableForMscrCopy.includes(schemaDetails.format);
 
   const theme = createTheme({
     typography: {
@@ -111,6 +116,8 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
               <MetadataAndFiles
                 schemaDetails={schemaDetails}
                 refetch={refetch}
+                hasEditPermission={hasEditPermission}
+                isMscrCopyAvailable={isMscrCopyAvailable}
               />
             )}
             {selectedTab === 1 && (
@@ -122,7 +129,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
                     refetchMetadata={refetch}
                     metadata={schemaDetails}
                     hasEditPermission={hasEditPermission}
-                    hasCopyPermission={hasCopyPermission}
+                    isMscrCopyAvailable={isMscrCopyAvailable}
                   />
                 </SchemaVisualizationWrapper>
               </>
@@ -144,7 +151,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
                         type={ActionMenuTypes.Schema}
                       />
                     )}
-                    {!hasEditPermission && hasCopyPermission && (
+                    {!hasEditPermission && isMscrCopyAvailable && (
                       <SchemaAndCrosswalkActionMenu
                         metadata={schemaDetails}
                         isMappingsEditModeActive={false}

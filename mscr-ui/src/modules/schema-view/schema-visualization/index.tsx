@@ -13,14 +13,14 @@ export default function SchemaVisualization({
   pid,
   format,
   hasEditPermission,
-  hasCopyPermission,
+  isMscrCopyAvailable,
   metadata,
   refetchMetadata,
 }: {
   pid: string;
   format: Format;
   hasEditPermission?: boolean;
-  hasCopyPermission?: boolean;
+  isMscrCopyAvailable?: boolean;
   metadata: SchemaWithVersionInfo | CrosswalkWithVersionInfo;
   refetchMetadata: () => void;
 }) {
@@ -48,7 +48,7 @@ export default function SchemaVisualization({
                 type={ActionMenuTypes.Schema}
               />
             )}
-            {!hasEditPermission && hasCopyPermission && (
+            {!hasEditPermission && isMscrCopyAvailable && (
               <SchemaAndCrosswalkActionMenu
                 metadata={metadata}
                 isMappingsEditModeActive={false}

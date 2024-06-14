@@ -20,7 +20,7 @@ import { CrosswalkWithVersionInfo } from '@app/common/interfaces/crosswalk.inter
 import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
 import { ActionMenuWrapper } from '@app/common/components/schema-and-crosswalk-actionmenu/schema-and-crosswalk-actionmenu.styles';
 import FormModal, { ModalType } from '@app/modules/form';
-import { Format } from '@app/common/interfaces/format.interface';
+import { Format, formatsAvailableForMscrCopy } from '@app/common/interfaces/format.interface';
 
 interface SchemaAndCrosswalkActionmenuProps {
   type: ActionMenuTypes;
@@ -300,8 +300,9 @@ export default function SchemaAndCrosswalkActionMenu({
           </ActionMenuItem>
           <ActionMenuItem
             className={
-              type === ActionMenuTypes.Schema ||
-              type === ActionMenuTypes.SchemaMetadata
+              formatsAvailableForMscrCopy.includes(metadata.format) &&
+              (type === ActionMenuTypes.Schema ||
+                type === ActionMenuTypes.SchemaMetadata)
                 ? ''
                 : 'd-none'
             }

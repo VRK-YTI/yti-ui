@@ -48,14 +48,14 @@ interface MetadataFormProps {
   metadata: SchemaWithVersionInfo | CrosswalkWithVersionInfo;
   refetchMetadata: () => void;
   hasEditPermission: boolean;
-  hasCopyPermission?: boolean;
+  isMscrCopyAvailable?: boolean;
 }
 export default function MetadataForm({
   type,
   metadata,
   refetchMetadata,
   hasEditPermission,
-  hasCopyPermission,
+  isMscrCopyAvailable,
 }: MetadataFormProps) {
   const { t } = useTranslation('common');
   const router = useRouter();
@@ -185,7 +185,7 @@ export default function MetadataForm({
               }
             />
           )}
-          {!hasEditPermission && hasCopyPermission && type == Type.Schema && (
+          {!hasEditPermission && isMscrCopyAvailable && (
             <SchemaAndCrosswalkActionMenu
               metadata={metadata}
               isMappingsEditModeActive={isEditModeActive}

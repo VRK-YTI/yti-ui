@@ -48,6 +48,14 @@ export const formatsAvailableForSchemaRegistration: Format[] = [
   Format.Shacl
 ];
 
+export const formatsAvailableForMscrCopy: Format[] = [
+  Format.Csv,
+  Format.Jsonschema,
+  Format.Mscr,
+  Format.Shacl,
+  Format.Xsd
+];
+
 export const fileExtensionsAvailableForCrosswalkRegistrationAttachments: FileExtensions[] =
   [FileExtensions.Csv, FileExtensions.Xslt, FileExtensions.Pdf];
 
