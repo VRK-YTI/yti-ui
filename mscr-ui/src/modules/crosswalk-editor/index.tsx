@@ -723,7 +723,7 @@ export default function CrosswalkEditor({
                     </Grid>
                     <Grid item xs={6} className="d-flex justify-content-end">
                       <div className="mt-3 me-2">
-                        {hasEditRights &&
+                        {hasEditRights && (
                           <SchemaAndCrosswalkActionMenu
                             buttonCallbackFunction={
                               performCallbackFromActionMenu
@@ -733,7 +733,7 @@ export default function CrosswalkEditor({
                             refetchMetadata={refetchCrosswalkData}
                             type={ActionMenuTypes.CrosswalkVersionInfo}
                           />
-                        }
+                        )}
                       </div>
                     </Grid>
                     <Grid item xs={12}>

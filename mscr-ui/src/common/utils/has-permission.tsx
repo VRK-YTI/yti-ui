@@ -22,7 +22,7 @@ const actions = [
   // 'EDIT_CROSSWALK_FILES',
   // 'DELETE_CROSSWALK',
   'EDIT_CONTENT',
-  'MAKE_MSCR_COPY'
+  'MAKE_MSCR_COPY',
 ] as const;
 
 export type Action = typeof actions[number];
@@ -38,10 +38,7 @@ export interface checkPermissionProps {
   owner?: string[];
 }
 
-export default function HasPermission({
-  action,
-  owner,
-}: hasPermissionProps) {
+export default function HasPermission({ action, owner }: hasPermissionProps) {
   const { data: authenticatedUser } = useGetAuthenticatedUserQuery();
   const dispatch = useStoreDispatch();
   const user = useSelector(selectLogin());
@@ -75,15 +72,11 @@ export default function HasPermission({
   return checkPermission({
     user,
     action,
-    owner
+    owner,
   });
 }
 
-export function checkPermission({
-  user,
-  action,
-  owner
-}: checkPermissionProps) {
+export function checkPermission({ user, action, owner }: checkPermissionProps) {
   if (action == 'MAKE_MSCR_COPY') {
     return true;
   } else if (action == 'EDIT_CONTENT') {
@@ -92,13 +85,18 @@ export function checkPermission({
       return true;
     } else {
       //Group Content
-      if (owner && user.organizationsInRole[Roles.admin] && user.organizationsInRole[Roles.admin].includes(owner[0])) {
+      if (
+        owner &&
+        user.organizationsInRole[Roles.admin] &&
+        user.organizationsInRole[Roles.admin].includes(owner[0])
+      ) {
         // User has admin right for this group
         return true;
       }
 
       if (
-        owner && user.organizationsInRole[Roles.dataModelEditor] &&
+        owner &&
+        user.organizationsInRole[Roles.dataModelEditor] &&
         user.organizationsInRole[Roles.dataModelEditor].includes(owner[0])
       ) {
         // User has data model editor right for this group

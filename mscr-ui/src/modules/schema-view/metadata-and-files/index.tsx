@@ -5,17 +5,17 @@ import HasPermission from '@app/common/utils/has-permission';
 import MetadataFilesTable from '@app/common/components/metadata-files-table';
 
 export default function MetadataAndFiles({
-                                           schemaDetails,
-                                           refetch,
-                                         }: {
+  schemaDetails,
+  refetch,
+}: {
   schemaDetails: SchemaWithVersionInfo;
   refetch: () => void;
 }) {
   const hasEditPermission = HasPermission({
     action: 'EDIT_CONTENT',
-    owner: schemaDetails?.owner
+    owner: schemaDetails?.owner,
   });
-  const hasCopyPermission = HasPermission({action: 'MAKE_MSCR_COPY'});
+  const hasCopyPermission = HasPermission({ action: 'MAKE_MSCR_COPY' });
   const schemaFiles = schemaDetails?.fileMetadata;
 
   return (

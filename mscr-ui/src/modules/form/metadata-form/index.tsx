@@ -185,7 +185,7 @@ export default function MetadataForm({
               }
             />
           )}
-          {!hasEditPermission && hasCopyPermission && type == Type.Schema &&
+          {!hasEditPermission && hasCopyPermission && type == Type.Schema && (
             <SchemaAndCrosswalkActionMenu
               metadata={metadata}
               isMappingsEditModeActive={isEditModeActive}
@@ -196,7 +196,7 @@ export default function MetadataForm({
                   : ActionMenuTypes.CrosswalkMetadata
               }
             />
-          }
+          )}
         </Grid>
       </Grid>
       <MetadataFormContainer container>

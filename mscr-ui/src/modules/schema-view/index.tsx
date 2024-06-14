@@ -35,7 +35,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
     action: 'EDIT_CONTENT',
     owner: schemaDetails?.owner,
   });
-  const hasCopyPermission = HasPermission({action: 'MAKE_MSCR_COPY'});
+  const hasCopyPermission = HasPermission({ action: 'MAKE_MSCR_COPY' });
 
   const theme = createTheme({
     typography: {
@@ -136,22 +136,22 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
                 </Grid>
                 <Grid item xs={6} className="d-flex justify-content-end">
                   <div className="mt-3 me-2">
-                    {hasEditPermission &&
+                    {hasEditPermission && (
                       <SchemaAndCrosswalkActionMenu
                         metadata={schemaDetails}
                         isMappingsEditModeActive={false}
                         refetchMetadata={refetch}
                         type={ActionMenuTypes.Schema}
                       />
-                    }
-                    {!hasEditPermission && hasCopyPermission &&
+                    )}
+                    {!hasEditPermission && hasCopyPermission && (
                       <SchemaAndCrosswalkActionMenu
                         metadata={schemaDetails}
                         isMappingsEditModeActive={false}
                         refetchMetadata={refetch}
                         type={ActionMenuTypes.NoEditPermission}
                       />
-                    }
+                    )}
                   </div>
                 </Grid>
                 <Grid item xs={12}>

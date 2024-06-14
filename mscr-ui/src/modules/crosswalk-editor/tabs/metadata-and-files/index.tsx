@@ -4,14 +4,19 @@ import { Type } from '@app/common/interfaces/search.interface';
 import { CrosswalkWithVersionInfo } from '@app/common/interfaces/crosswalk.interface';
 import MetadataFilesTable from '@app/common/components/metadata-files-table';
 
-
 export default function MetadataAndFiles(props: {
   crosswalkData: CrosswalkWithVersionInfo;
   refetch: () => void;
 }) {
-  const hasEditRights = HasPermission({ action: 'EDIT_CONTENT',owner:props.crosswalkData.owner});
-  const hasFileRights = HasPermission({ action: 'EDIT_CONTENT',owner:props.crosswalkData.owner });
-  const hasCopyPermission = HasPermission({action: 'MAKE_MSCR_COPY'});
+  const hasEditRights = HasPermission({
+    action: 'EDIT_CONTENT',
+    owner: props.crosswalkData.owner,
+  });
+  const hasFileRights = HasPermission({
+    action: 'EDIT_CONTENT',
+    owner: props.crosswalkData.owner,
+  });
+  const hasCopyPermission = HasPermission({ action: 'MAKE_MSCR_COPY' });
 
   return (
     <>
@@ -22,7 +27,7 @@ export default function MetadataAndFiles(props: {
         hasEditPermission={hasEditRights}
         hasCopyPermission={hasCopyPermission}
       />
-      <br/>
+      <br />
       <MetadataFilesTable
         filesRowInput={props.crosswalkData.fileMetadata}
         crosswalkData={props.crosswalkData}

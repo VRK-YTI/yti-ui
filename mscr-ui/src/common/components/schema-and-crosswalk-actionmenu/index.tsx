@@ -437,9 +437,7 @@ export default function SchemaAndCrosswalkActionMenu({
       <>
         <ActionMenuWrapper>
           <ActionMenu buttonText={t('action.actions')}>
-            <ActionMenuItem
-              onClick={() => setMscrCopyModalOpen(true)}
-            >
+            <ActionMenuItem onClick={() => setMscrCopyModalOpen(true)}>
               {t('actionmenu.mscr-copy')}
             </ActionMenuItem>
           </ActionMenu>

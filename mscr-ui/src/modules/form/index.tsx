@@ -112,7 +112,8 @@ export default function FormModal({
   const formDataFromInitialData = useCallback(() => {
     if (!initialData) return;
     const existingData: FormType = {
-      format: modalType == ModalType.McsrCopy ? Format.Mscr : initialData.format,
+      format:
+        modalType == ModalType.McsrCopy ? Format.Mscr : initialData.format,
       languages: [
         {
           labelText: t('language-english-with-suffix'),
@@ -376,14 +377,22 @@ export default function FormModal({
         ]).then((_values) => {
           setSubmitAnimationVisible(false);
         });
-      } else if (initialData && modalType == ModalType.McsrCopy && contentType == Type.Schema) {
+      } else if (
+        initialData &&
+        modalType == ModalType.McsrCopy &&
+        contentType == Type.Schema
+      ) {
         Promise.all([
           spinnerDelay(),
           putSchemaMscrCopy({ pid: initialData.pid, data: payload }),
         ]).then((_values) => {
           setSubmitAnimationVisible(false);
         });
-      } else if (initialData && modalType == ModalType.RevisionMscr && contentType == Type.Crosswalk) {
+      } else if (
+        initialData &&
+        modalType == ModalType.RevisionMscr &&
+        contentType == Type.Crosswalk
+      ) {
         Promise.all([
           spinnerDelay(),
           putCrosswalkRevision({ pid: initialData.pid, data: payload }),

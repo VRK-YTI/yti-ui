@@ -33,7 +33,11 @@ export default function SchemaVisualization({
       <>
         <div className="row">
           <div className="col-10">
-            <SchemaInfo caption={filterLabel} schemaUrn={pid} isSingleTree={true} />
+            <SchemaInfo
+              caption={filterLabel}
+              schemaUrn={pid}
+              isSingleTree={true}
+            />
           </div>
           <div className="col-2 d-flex justify-content-end flex-row pe-3 pb-2">
             {hasEditPermission && (
@@ -44,14 +48,14 @@ export default function SchemaVisualization({
                 type={ActionMenuTypes.Schema}
               />
             )}
-            {!hasEditPermission && hasCopyPermission &&
+            {!hasEditPermission && hasCopyPermission && (
               <SchemaAndCrosswalkActionMenu
                 metadata={metadata}
                 isMappingsEditModeActive={false}
                 refetchMetadata={refetchMetadata}
                 type={ActionMenuTypes.NoEditPermission}
               />
-            }
+            )}
           </div>
         </div>
       </>
