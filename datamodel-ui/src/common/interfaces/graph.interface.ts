@@ -17,7 +17,6 @@ export interface ClassNodeDataType {
     minCount?: number | null;
   }[];
   organizationIds?: string[];
-  refetch?: () => void;
 }
 
 export interface AttributeNodeType {
@@ -26,7 +25,6 @@ export interface AttributeNodeType {
   uri: string;
   modelId: string;
   dataType?: string;
-  refetch?: () => void;
 }
 
 export interface CornerNodeDataType {
