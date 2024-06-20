@@ -24,6 +24,7 @@ export enum ActionMenuTypes {
   CrosswalkVersionInfo = 'CROSSWALK_VERSIONINFO',
   Schema = 'SCHEMA',
   SchemaMetadata = 'SCHEMA_METADATA',
+  NoEditPermission = 'NO_EDIT_PERMISSION',
 }
 
 export interface ResultInfo {

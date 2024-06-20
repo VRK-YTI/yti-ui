@@ -56,6 +56,16 @@ export const schemaApi = createApi({
         },
       })
     }),
+    putSchemaMscrCopy: builder.mutation<Schema, { pid: string; data: Partial<Metadata> }>({
+      query: ({pid, data }) => ({
+        url: `/schema?action=mscrCopyOf&target=${pid}`,
+        method: 'PUT',
+        data: data,
+        headers: {
+          'content-Type': 'application/json;',
+        },
+      }),
+    }),
     patchSchema: builder.mutation<
       Metadata,
       {
@@ -141,6 +151,7 @@ export const {
   useGetSchemasQuery,
   usePutSchemaFullMutation,
   usePutSchemaRevisionMutation,
+  usePutSchemaMscrCopyMutation,
   usePatchSchemaMutation,
   util: { getRunningQueriesThunk },
 } = schemaApi;

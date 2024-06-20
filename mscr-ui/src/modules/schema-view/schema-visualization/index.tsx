@@ -12,13 +12,15 @@ import { ActionMenuTypes } from '@app/common/interfaces/search.interface';
 export default function SchemaVisualization({
   pid,
   format,
-  hasEditRights,
+  hasEditPermission,
+  isMscrCopyAvailable,
   metadata,
   refetchMetadata,
 }: {
   pid: string;
   format: Format;
-  hasEditRights?: boolean;
+  hasEditPermission?: boolean;
+  isMscrCopyAvailable?: boolean;
   metadata: SchemaWithVersionInfo | CrosswalkWithVersionInfo;
   refetchMetadata: () => void;
 }) {
@@ -31,18 +33,28 @@ export default function SchemaVisualization({
       <>
         <div className="row">
           <div className="col-10">
-            <SchemaInfo caption={filterLabel} schemaUrn={pid} isSingleTree={true} />
+            <SchemaInfo
+              caption={filterLabel}
+              schemaUrn={pid}
+              isSingleTree={true}
+            />
           </div>
           <div className="col-2 d-flex justify-content-end flex-row pe-3 pb-2">
-            {!hasEditRights && (
-              <>
-                <SchemaAndCrosswalkActionMenu
-                  isMappingsEditModeActive
-                  metadata={metadata}
-                  refetchMetadata={refetchMetadata}
-                  type={ActionMenuTypes.Schema}
-                ></SchemaAndCrosswalkActionMenu>
-              </>
+            {hasEditPermission && (
+              <SchemaAndCrosswalkActionMenu
+                isMappingsEditModeActive
+                metadata={metadata}
+                refetchMetadata={refetchMetadata}
+                type={ActionMenuTypes.Schema}
+              />
+            )}
+            {!hasEditPermission && isMscrCopyAvailable && (
+              <SchemaAndCrosswalkActionMenu
+                metadata={metadata}
+                isMappingsEditModeActive={false}
+                refetchMetadata={refetchMetadata}
+                type={ActionMenuTypes.NoEditPermission}
+              />
             )}
           </div>
         </div>

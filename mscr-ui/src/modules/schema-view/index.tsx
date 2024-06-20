@@ -17,6 +17,8 @@ import {
   SchemaVisualizationWrapper,
   VersionsHeading,
 } from '@app/modules/schema-view/schema-view-styles';
+import HasPermission from '@app/common/utils/has-permission';
+import { formatsAvailableForMscrCopy } from '@app/common/interfaces/format.interface';
 
 export default function SchemaView({ schemaId }: { schemaId: string }) {
   const { t } = useTranslation('common');
@@ -29,6 +31,16 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
     isError,
     error,
   } = useGetSchemaWithRevisionsQuery(schemaId);
+
+  const hasEditPermission = HasPermission({
+    action: 'EDIT_CONTENT',
+    owner: schemaDetails?.owner,
+  });
+  const hasCopyPermission = HasPermission({ action: 'MAKE_MSCR_COPY' });
+  const isMscrCopyAvailable =
+    hasCopyPermission &&
+    schemaDetails &&
+    formatsAvailableForMscrCopy.includes(schemaDetails.format);
 
   const theme = createTheme({
     typography: {
@@ -104,6 +116,8 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
               <MetadataAndFiles
                 schemaDetails={schemaDetails}
                 refetch={refetch}
+                hasEditPermission={hasEditPermission}
+                isMscrCopyAvailable={isMscrCopyAvailable}
               />
             )}
             {selectedTab === 1 && (
@@ -114,6 +128,8 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
                     format={schemaDetails.format}
                     refetchMetadata={refetch}
                     metadata={schemaDetails}
+                    hasEditPermission={hasEditPermission}
+                    isMscrCopyAvailable={isMscrCopyAvailable}
                   />
                 </SchemaVisualizationWrapper>
               </>
@@ -127,12 +143,22 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
                 </Grid>
                 <Grid item xs={6} className="d-flex justify-content-end">
                   <div className="mt-3 me-2">
-                    <SchemaAndCrosswalkActionMenu
-                      metadata={schemaDetails}
-                      isMappingsEditModeActive={false}
-                      refetchMetadata={refetch}
-                      type={ActionMenuTypes.Schema}
-                    />
+                    {hasEditPermission && (
+                      <SchemaAndCrosswalkActionMenu
+                        metadata={schemaDetails}
+                        isMappingsEditModeActive={false}
+                        refetchMetadata={refetch}
+                        type={ActionMenuTypes.Schema}
+                      />
+                    )}
+                    {!hasEditPermission && isMscrCopyAvailable && (
+                      <SchemaAndCrosswalkActionMenu
+                        metadata={schemaDetails}
+                        isMappingsEditModeActive={false}
+                        refetchMetadata={refetch}
+                        type={ActionMenuTypes.NoEditPermission}
+                      />
+                    )}
                   </div>
                 </Grid>
                 <Grid item xs={12}>

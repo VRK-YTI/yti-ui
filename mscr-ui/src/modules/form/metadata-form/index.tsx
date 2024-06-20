@@ -48,12 +48,14 @@ interface MetadataFormProps {
   metadata: SchemaWithVersionInfo | CrosswalkWithVersionInfo;
   refetchMetadata: () => void;
   hasEditPermission: boolean;
+  isMscrCopyAvailable?: boolean;
 }
 export default function MetadataForm({
   type,
   metadata,
   refetchMetadata,
   hasEditPermission,
+  isMscrCopyAvailable,
 }: MetadataFormProps) {
   const { t } = useTranslation('common');
   const router = useRouter();
@@ -171,19 +173,25 @@ export default function MetadataForm({
         </Grid>
         <Grid item xs={6} className="d-flex justify-content-end my-3">
           {hasEditPermission && (
-            <>
-              <SchemaAndCrosswalkActionMenu
-                buttonCallbackFunction={performCallbackFromActionMenu}
-                metadata={metadata}
-                isMappingsEditModeActive={isEditModeActive}
-                refetchMetadata={refetchMetadata}
-                type={
-                  type === Type.Schema
-                    ? ActionMenuTypes.SchemaMetadata
-                    : ActionMenuTypes.CrosswalkMetadata
-                }
-              ></SchemaAndCrosswalkActionMenu>
-            </>
+            <SchemaAndCrosswalkActionMenu
+              buttonCallbackFunction={performCallbackFromActionMenu}
+              metadata={metadata}
+              isMappingsEditModeActive={isEditModeActive}
+              refetchMetadata={refetchMetadata}
+              type={
+                type === Type.Schema
+                  ? ActionMenuTypes.SchemaMetadata
+                  : ActionMenuTypes.CrosswalkMetadata
+              }
+            />
+          )}
+          {!hasEditPermission && isMscrCopyAvailable && (
+            <SchemaAndCrosswalkActionMenu
+              metadata={metadata}
+              isMappingsEditModeActive={isEditModeActive}
+              refetchMetadata={refetchMetadata}
+              type={ActionMenuTypes.NoEditPermission}
+            />
           )}
         </Grid>
       </Grid>

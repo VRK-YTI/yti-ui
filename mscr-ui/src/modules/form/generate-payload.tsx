@@ -81,7 +81,8 @@ export default function generatePayload(
     }
   } else if (
     modalType == ModalType.RegisterNewFull ||
-    modalType == ModalType.RegisterNewMscr
+    modalType == ModalType.RegisterNewMscr ||
+    modalType == ModalType.McsrCopy
   ) {
     if (contentType == Type.Schema) {
       return schemaPayload;

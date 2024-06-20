@@ -9,40 +9,36 @@ import {
 import { User } from 'yti-common-ui/interfaces/user.interface';
 import { Roles } from '../interfaces/format.interface';
 
-// Need to specify the acctions permitted for each type of user
+// Need to specify the actions permitted for each type of user
 const actions = [
-  'CREATE_SCHEMA',
-  'EDIT_SCHEMA',
-  'EDIT_SCHEMA_METADATA',
-  'EDIT_SCHEMA_FILES',
-  'DELETE_SCHEMA',
-  'CREATE_CROSSWALK',
-  'EDIT_CROSSWALK_MAPPINGS',
-  'EDIT_CROSSWALK_METADATA',
-  'EDIT_CROSSWALK_FILES',
-  'DELETE_CROSSWALK',
+  // 'CREATE_SCHEMA',
+  // 'EDIT_SCHEMA',
+  // 'EDIT_SCHEMA_METADATA',
+  // 'EDIT_SCHEMA_FILES',
+  // 'DELETE_SCHEMA',
+  // 'CREATE_CROSSWALK',
+  // 'EDIT_CROSSWALK_MAPPINGS',
+  // 'EDIT_CROSSWALK_METADATA',
+  // 'EDIT_CROSSWALK_FILES',
+  // 'DELETE_CROSSWALK',
+  'EDIT_CONTENT',
+  'MAKE_MSCR_COPY',
 ] as const;
 
-export type Actions = typeof actions[number];
+export type Action = typeof actions[number];
 
 export interface hasPermissionProps {
-  actions: Actions | Actions[];
-  targetOrganization?: string;
+  action: Action;
   owner?: string[];
 }
 
 export interface checkPermissionProps {
   user: User;
-  actions: Actions[];
-  targetOrganizations?: string[];
+  action: Action;
   owner?: string[];
 }
 
-export default function HasPermission({
-  actions,
-  targetOrganization,
-  owner,
-}: hasPermissionProps) {
+export default function HasPermission({ action, owner }: hasPermissionProps) {
   const { data: authenticatedUser } = useGetAuthenticatedUserQuery();
   const dispatch = useStoreDispatch();
   const user = useSelector(selectLogin());
@@ -66,99 +62,48 @@ export default function HasPermission({
     return false;
   }
 
-  //No Target Organization
-  if (!targetOrganization) {
-    if (owner && owner.length) {
-      //Editing Step as already has owner
-      return checkEditPermission({
-        user,
-        actions: Array.isArray(actions) ? actions : [actions],
-        owner,
-      });
-    }
+  if (!owner || owner.length == 0) {
     return checkPermission({
       user,
-      actions: Array.isArray(actions) ? actions : [actions],
+      action,
     });
   }
 
-  //If there is target organization
-  if (owner && owner.length) {
-    //Editing Step as already has owner
-    return checkEditPermission({
-      user,
-      actions: Array.isArray(actions) ? actions : [actions],
-      targetOrganizations: [targetOrganization],
-      owner,
-    });
-  }
   return checkPermission({
-    //Content Creation
     user,
-    actions: Array.isArray(actions) ? actions : [actions],
-    targetOrganizations: [targetOrganization],
+    action,
+    owner,
   });
 }
 
-export function checkPermission({
-  user,
-  actions,
-  targetOrganizations,
-}: checkPermissionProps) {
-
-  const rolesInOrganizations = Object.keys(user.organizationsInRole);
-
-  const rolesInTargetOrganizations =
-    targetOrganizations &&
-    targetOrganizations
-      ?.flatMap((org) => user.rolesInOrganizations[org])
-      .filter((t) => t);
-
-  // Return true if user is superuser
-  if (user.superuser) {
+export function checkPermission({ user, action, owner }: checkPermissionProps) {
+  if (action == 'MAKE_MSCR_COPY') {
     return true;
-  }
-
-  // Return true if target organization is undefined and user has admin role
-  if (rolesInOrganizations.includes(Roles.admin) && !targetOrganizations) {
-    return true;
-  }
-
-  // console.log(rolesInTargetOrganizations);
-  // Return true if user has data model editor role in target organization
-  if (
-    rolesInTargetOrganizations?.includes(Roles.dataModelEditor)||rolesInTargetOrganizations?.includes(Roles.admin)
-  ) {
-    return true;
-  }
-
-
-  return false;
-}
-
-export function checkEditPermission({
-  user,
-  owner
-}: checkPermissionProps) {
-  if (owner?.includes(user.id)) {
-    //user is the owner, Check for personal Contents
-    return true;
-  } else {
-    //Gruop Content
-
-    if (owner && user.organizationsInRole[Roles.admin]&& user.organizationsInRole[Roles.admin].includes(owner[0])) {
-      // User has admin right for this group
+  } else if (action == 'EDIT_CONTENT') {
+    if (owner?.includes(user.id)) {
+      //user is the owner, Check for personal Contents
       return true;
-    }
+    } else {
+      //Group Content
+      if (
+        owner &&
+        user.organizationsInRole[Roles.admin] &&
+        user.organizationsInRole[Roles.admin].includes(owner[0])
+      ) {
+        // User has admin right for this group
+        return true;
+      }
 
-    if (
-      owner &&user.organizationsInRole[Roles.dataModelEditor]&&
-      user.organizationsInRole[Roles.dataModelEditor].includes(owner[0])
-    ) {
-      return true;
+      if (
+        owner &&
+        user.organizationsInRole[Roles.dataModelEditor] &&
+        user.organizationsInRole[Roles.dataModelEditor].includes(owner[0])
+      ) {
+        // User has data model editor right for this group
+        return true;
+      }
     }
   }
-
 
   return false;
 }

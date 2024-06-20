@@ -18,6 +18,7 @@ import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
 import {
   usePutSchemaFullMutation,
+  usePutSchemaMscrCopyMutation,
   usePutSchemaRevisionMutation,
 } from '@app/common/components/schema/schema.slice';
 import Separator from 'yti-common-ui/components/separator';
@@ -103,13 +104,16 @@ export default function FormModal({
     usePutCrosswalkRevisionMutation();
   const [putCrosswalkFullRevision, resultCrosswalkFullRevision] =
     usePutCrosswalkFullRevisionMutation();
+  const [putSchemaMscrCopy, resultSchemaMscrCopy] =
+    usePutSchemaMscrCopyMutation();
   const [submitAnimationVisible, setSubmitAnimationVisible] =
     useState<boolean>(false);
 
   const formDataFromInitialData = useCallback(() => {
     if (!initialData) return;
     const existingData: FormType = {
-      format: initialData.format,
+      format:
+        modalType == ModalType.McsrCopy ? Format.Mscr : initialData.format,
       languages: [
         {
           labelText: t('language-english-with-suffix'),
@@ -141,7 +145,7 @@ export default function FormModal({
       existingData.targetSchema = initialData.targetSchema ?? '';
     }
     return existingData;
-  }, [contentType, initialData, lang, t]);
+  }, [contentType, initialData, lang, modalType, t]);
 
   useEffect(() => {
     if (
@@ -198,7 +202,6 @@ export default function FormModal({
           ) {
             pid = resultCrosswalkRevision.data.pid;
           }
-          // TODO: Api slice for mscr schema revision, then the pid retrieval here
           break;
         case ModalType.RevisionFull:
           if (
@@ -216,7 +219,15 @@ export default function FormModal({
           }
           break;
         case ModalType.McsrCopy:
-        // TODO: MscrCopy API slice and then pid retrieval for schema and crosswalk here
+          if (
+            contentType == Type.Schema &&
+            resultSchemaMscrCopy.isSuccess &&
+            resultSchemaMscrCopy.data
+          ) {
+            pid = resultSchemaMscrCopy.data.pid;
+          }
+          break;
+        // TODO: MscrCopy API slice and then pid retrieval for crosswalk here
       }
       return pid;
     },
@@ -231,6 +242,8 @@ export default function FormModal({
       resultCrosswalkRevision.isSuccess,
       resultSchemaFull.data,
       resultSchemaFull.isSuccess,
+      resultSchemaMscrCopy.data,
+      resultSchemaMscrCopy.isSuccess,
       resultSchemaRevision.data,
       resultSchemaRevision.isSuccess,
     ]
@@ -246,7 +259,6 @@ export default function FormModal({
           'MscrSearch',
         ])
       );
-      //Get the pid from the result
       handleClose();
       let notificationKey: NotificationKeys;
       if (contentType == Type.Schema) {
@@ -314,7 +326,11 @@ export default function FormModal({
     );
     setErrors(formErrors);
 
-    if (formErrors && (Object.values(formErrors).includes(true) || formErrors.titleAmount.length > 0)) {
+    if (
+      formErrors &&
+      (Object.values(formErrors).includes(true) ||
+        formErrors.titleAmount.length > 0)
+    ) {
       return;
     }
 
@@ -361,8 +377,22 @@ export default function FormModal({
         ]).then((_values) => {
           setSubmitAnimationVisible(false);
         });
-      } else if (initialData) {
-        // Todo: Add mscrCopy option here
+      } else if (
+        initialData &&
+        modalType == ModalType.McsrCopy &&
+        contentType == Type.Schema
+      ) {
+        Promise.all([
+          spinnerDelay(),
+          putSchemaMscrCopy({ pid: initialData.pid, data: payload }),
+        ]).then((_values) => {
+          setSubmitAnimationVisible(false);
+        });
+      } else if (
+        initialData &&
+        modalType == ModalType.RevisionMscr &&
+        contentType == Type.Crosswalk
+      ) {
         Promise.all([
           spinnerDelay(),
           putCrosswalkRevision({ pid: initialData.pid, data: payload }),
@@ -370,6 +400,7 @@ export default function FormModal({
           setSubmitAnimationVisible(false);
         });
       }
+      // Missing scenarios: MSCR copy of a crosswalk, revision of an MSCR copy
     }
   };
 
@@ -406,8 +437,9 @@ export default function FormModal({
       errorObject = getApiError(resultCrosswalkFull.error);
     } else if (resultSchemaFull.isError) {
       errorObject = getApiError(resultSchemaFull.error);
+    } else if (resultSchemaMscrCopy.isError) {
+      errorObject = getApiError(resultSchemaMscrCopy.error);
     } else {
-      // Todo: Add mscr copy error
       return undefined;
     }
     return errorObject;
