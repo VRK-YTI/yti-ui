@@ -87,6 +87,9 @@
   "codelist": "Koodisto",
   "codelist-contents": "Koodiston sisältö",
   "codelist-delete-warning": "Haluatko poistaa koodiston {{name}}. Koodistosta valitut arvot poistetaan myös muista kentistä.",
+  "codelist-remove-confirm": "Haluatko poistaa koodiston {{name}}?",
+  "codelist-added": "Koodisto lisätty",
+  "codelist-removed": "Koodisto poistettu",
   "commentable-version": "Kommentoitava versio",
   "common-form": {
     "add-equivalent-association": "Lisää vastaava assosiaatio",

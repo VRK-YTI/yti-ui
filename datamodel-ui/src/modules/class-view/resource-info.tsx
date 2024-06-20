@@ -31,7 +31,10 @@ import {
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import { UriData } from '@app/common/interfaces/uri.interface';
-import { useUpdateClassResrictionTargetMutation } from '@app/common/components/class/class.slice';
+import {
+  useAddCodeListMutation,
+  useUpdateClassResrictionTargetMutation,
+} from '@app/common/components/class/class.slice';
 import getApiError from '@app/common/utils/get-api-errors';
 import { useEffect, useState } from 'react';
 import ResourceError from '@app/common/components/resource-error';
@@ -39,6 +42,10 @@ import { useRouter } from 'next/router';
 import { getSlugAsString } from '@app/common/utils/parse-slug';
 import { useSelector } from 'react-redux';
 import ExternalResourceInfo from './external-resource-info';
+import CodeListModal from '../code-list-modal';
+import { ModelCodeList } from '@app/common/interfaces/model.interface';
+import RemoveCodeListModal from './remove-code-list-modal';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 
 interface ResourceInfoProps {
   data: SimpleResource;
@@ -70,6 +77,9 @@ export default function ResourceInfo({
   const [open, setOpen] = useState(false);
   const dispatch = useStoreDispatch();
   const router = useRouter();
+  const [showCodeListRemoveModal, setShowRemoveCodeListModal] = useState(false);
+  const [showCodeListAddModal, setShowAddCodeListModal] = useState(false);
+  const [removedCodeList, setRemovedCodeList] = useState<string>();
 
   const {
     data: resourceData,
@@ -86,6 +96,7 @@ export default function ResourceInfo({
   );
 
   const [updateTarget, updateResult] = useUpdateClassResrictionTargetMutation();
+  const [addCodeList, addCodeListResult] = useAddCodeListMutation();
 
   const handleEdit = () => {
     if (isSuccess) {
@@ -105,11 +116,31 @@ export default function ResourceInfo({
     });
   };
 
+  const handleAddCodeList = (selectedCodeLists: ModelCodeList[]) => {
+    addCodeList({
+      prefix: modelId,
+      classIdentifier: classId,
+      attributeUri: data.uri,
+      codeLists: selectedCodeLists.map((c) => c.id),
+    });
+  };
+
+  const handleShowRemoveCodeListModal = (codeList: string) => {
+    setShowRemoveCodeListModal(true);
+    setRemovedCodeList(codeList);
+  };
+
   useEffect(() => {
     if (handlePropertiesUpdate && updateResult.isSuccess) {
       handlePropertiesUpdate();
     }
   }, [updateResult, handlePropertiesUpdate]);
+
+  useEffect(() => {
+    if (addCodeListResult.isSuccess) {
+      dispatch(setNotification('CODE_LIST_ADDED'));
+    }
+  }, [addCodeListResult]);
 
   function renderTitleButtonContent() {
     return (
@@ -162,6 +193,15 @@ export default function ResourceInfo({
               ) : (
                 <></>
               )}
+
+              {!applicationProfile && attribute ? (
+                <ActionMenuItem onClick={() => setShowAddCodeListModal(true)}>
+                  {t('add-reference-data', { ns: 'admin' })}
+                </ActionMenuItem>
+              ) : (
+                <></>
+              )}
+
               {!data.fromShNode || !applicationProfile ? (
                 <RemoveReferenceModal
                   modelId={modelId}
@@ -185,6 +225,24 @@ export default function ResourceInfo({
               )}
             </ActionMenu>
           )}
+
+        <CodeListModal
+          extendedView
+          modalTitle={t('add-reference-data')}
+          initialData={[]}
+          setData={(value) => handleAddCodeList(value)}
+          hideAddButton={true}
+          isOpen={showCodeListAddModal}
+          setOpen={setShowAddCodeListModal}
+        />
+        <RemoveCodeListModal
+          modelId={modelId}
+          classId={classId}
+          attributeUri={data.uri}
+          showModal={showCodeListRemoveModal}
+          setShowModal={setShowRemoveCodeListModal}
+          codeList={removedCodeList}
+        />
       </>
     );
   }
@@ -210,6 +268,9 @@ export default function ResourceInfo({
             renderActions={renderActions}
             handleChangeTarget={handleChangeTarget}
             targetInClassRestriction={targetInClassRestriction}
+            simpleResourceCodeLists={data.codeLists}
+            disableEdit={disableEdit}
+            handleRemoveCodeList={handleShowRemoveCodeListModal}
           />
         )}
         {!data.modelId && (

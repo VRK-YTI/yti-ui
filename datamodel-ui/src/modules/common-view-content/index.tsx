@@ -13,6 +13,7 @@ import {
   ExpanderTitleButton,
   ExternalLink,
   IconCopy,
+  IconRemove,
   Link,
   Text,
 } from 'suomifi-ui-components';
@@ -48,6 +49,9 @@ export default function CommonViewContent({
   handleChangeTarget,
   targetInClassRestriction,
   organizationIds,
+  simpleResourceCodeLists,
+  disableEdit,
+  handleRemoveCodeList,
 }: {
   modelId: string;
   inUse?: boolean;
@@ -59,6 +63,9 @@ export default function CommonViewContent({
   handleChangeTarget?: (value?: InternalClassInfo) => void;
   targetInClassRestriction?: UriData;
   organizationIds?: string[];
+  simpleResourceCodeLists?: string[];
+  disableEdit?: boolean;
+  handleRemoveCodeList?: (value: string) => void;
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
@@ -363,6 +370,39 @@ export default function CommonViewContent({
       <>
         {data.type === ResourceType.ATTRIBUTE && (
           <>
+            <BasicBlock title={t('codelist', { ns: 'admin' })}>
+              {simpleResourceCodeLists && simpleResourceCodeLists.length > 0
+                ? simpleResourceCodeLists.map((codeList) => (
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                      }}
+                      key={codeList}
+                    >
+                      <Text style={{ marginTop: '5px' }}>
+                        <Link
+                          key={codeList}
+                          href={`${codeList}${getEnvParam(codeList, true)}`}
+                        >
+                          {codeList.split('/').slice(-2).join(':')}
+                        </Link>
+                      </Text>
+                      {hasPermission &&
+                        !disableEdit &&
+                        handleRemoveCodeList && (
+                          <Button
+                            icon={<IconRemove />}
+                            variant="secondaryNoBorder"
+                            onClick={() => handleRemoveCodeList(codeList)}
+                          >
+                            {t('remove')}
+                          </Button>
+                        )}
+                    </div>
+                  ))
+                : t('not-defined')}
+            </BasicBlock>
             <BasicBlock
               title={t('data-type')}
               tooltip={{
@@ -546,24 +586,26 @@ export default function CommonViewContent({
               title={t('association-target-in-this-class', { ns: 'admin' })}
               largeGap
               extra={
-                <div
-                  style={{
-                    width: 'max-content',
-                  }}
-                >
-                  <ClassModal
-                    modalButtonLabel={t('choose-association-target', {
-                      ns: 'admin',
-                    })}
-                    mode="select"
-                    handleFollowUp={handleChangeTarget}
-                    modelId={getSlugAsString(router.query.slug) ?? modelId}
-                    applicationProfile={applicationProfile}
-                  />
-                </div>
+                !disableEdit && (
+                  <div
+                    style={{
+                      width: 'max-content',
+                    }}
+                  >
+                    <ClassModal
+                      modalButtonLabel={t('choose-association-target', {
+                        ns: 'admin',
+                      })}
+                      mode="select"
+                      handleFollowUp={handleChangeTarget}
+                      modelId={getSlugAsString(router.query.slug) ?? modelId}
+                      applicationProfile={applicationProfile}
+                    />
+                  </div>
+                )
               }
             >
-              {targetInClassRestriction && (
+              {targetInClassRestriction ? (
                 <NextLink
                   href={`${targetInClassRestriction.uri}${getEnvParam(
                     targetInClassRestriction.uri,
@@ -581,6 +623,8 @@ export default function CommonViewContent({
                     <br />({targetInClassRestriction.curie})
                   </Link>
                 </NextLink>
+              ) : (
+                t('not-defined')
               )}
             </BasicBlock>
             <Separator />

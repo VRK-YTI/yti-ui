@@ -559,6 +559,10 @@ export function translateNotification(
       return t('email-subscriptions-off', { ns: 'common' });
     case 'REQUEST_ADD':
       return t('access-request-sent', { ns: 'common' });
+    case 'CODE_LIST_ADDED':
+      return t('codelist-added', { ns: 'admin' });
+    case 'CODE_LIST_REMOVED':
+      return t('codelist-removed', { ns: 'admin' });
     default:
       return '';
   }
