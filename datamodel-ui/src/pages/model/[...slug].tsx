@@ -5,7 +5,7 @@ import {
 import { SSRConfig } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import PageHead from 'yti-common-ui/page-head';
-import Model from '@app/modules/model';
+import Model, { isDraftModel } from '@app/modules/model';
 import ModelHeader from '@app/modules/model/model-header';
 import {
   ViewList,
@@ -72,6 +72,7 @@ export default function ModelPage(props: IndexPageProps) {
   const { data } = useGetModelQuery({
     modelId: props.modelId,
     version: version,
+    draft: isDraftModel(query),
   });
   const fullScreen = useSelector(selectFullScreen());
 
@@ -103,6 +104,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Missing query for page');
     }
 
+    const isDraft = isDraftModel(query);
     const modelId = getSlugAsString(query.slug);
     const version = getSlugAsString(query.ver);
 
@@ -111,7 +113,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     store.dispatch(getAuthenticatedUser.initiate());
-    store.dispatch(getModel.initiate({ modelId: modelId, version: version }));
+    store.dispatch(
+      getModel.initiate({ modelId: modelId, version: version, draft: isDraft })
+    );
     store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
     store.dispatch(getOrganizations.initiate({ sortLang: locale ?? 'fi' }));
     store.dispatch(
@@ -166,7 +170,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(store.dispatch(getVisualizationRunningQueriesThunk()));
 
     const model = store.getState().modelApi.queries[
-      `getModel({"modelId":"${modelId}"${
+      `getModel({"draft":${isDraft},"modelId":"${modelId}"${
         version ? `,"version":"${version}"` : ''
       }})`
     ]?.data as ModelType | undefined | null;
@@ -228,9 +232,11 @@ export const getServerSideProps = createCommonGetServerSideProps(
       )
     );
 
+    let resourceId;
+
     if (query.slug.length >= 3) {
       const resourceType = query.slug[1];
-      const resourceId = query.slug[2];
+      resourceId = query.slug[2];
 
       const modelType = model.type;
 
@@ -297,6 +303,17 @@ export const getServerSideProps = createCommonGetServerSideProps(
       data: model.description,
       lang: locale ?? 'fi',
     });
+
+    if (model.version && !version && !isDraft) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/model/${modelId}${
+            query.slug[1] ? `/${query.slug[1]}` : ''
+          }${resourceId ? `/${resourceId}` : ''}?ver=${model.version}`,
+        },
+      };
+    }
 
     return {
       props: {

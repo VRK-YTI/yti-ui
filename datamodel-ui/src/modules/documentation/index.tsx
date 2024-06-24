@@ -65,6 +65,8 @@ import { IconBold, IconItalics, IconQuotes } from 'suomifi-icons';
 import HasPermission from '@app/common/utils/has-permission';
 import UnsavedAlertModal from '../unsaved-alert-modal';
 import { useBreakpoints } from 'yti-common-ui/media-query';
+import { isDraftModel } from '../model';
+import { useRouter } from 'next/router';
 
 export default function Documentation({
   modelId,
@@ -116,10 +118,12 @@ export default function Documentation({
     start: 0,
     end: 0,
   });
+  const { query } = useRouter();
 
   const { data: modelData } = useGetModelQuery({
     modelId: modelId,
     version: version,
+    draft: isDraftModel(query),
   });
   const [updateModel, result] = useUpdateModelMutation();
   const [updateVersionedModel, versionedResult] =

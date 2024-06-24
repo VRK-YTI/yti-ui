@@ -3,6 +3,7 @@ import {
   ViewListItem,
   setView as setReduxView,
 } from '@app/common/components/model/model.slice';
+import { isDraftModel } from '@app/modules/model';
 import { useStoreDispatch } from '@app/store';
 import { useRouter } from 'next/router';
 
@@ -24,6 +25,7 @@ export default function useSetView() {
     const query = {
       ...(router.query.lang && { lang: router.query.lang }),
       ...(router.query.ver && { ver: router.query.ver }),
+      ...(isDraftModel(router.query) && { draft: router.query.draft }),
     };
 
     if (key === 'info' || !subkey || subkey === 'list') {

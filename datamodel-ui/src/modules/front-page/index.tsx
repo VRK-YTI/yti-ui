@@ -168,7 +168,7 @@ export default function FrontPage() {
           appendLocale: true,
         }),
         titleLink: `/model/${object.prefix}${
-          object.version ? `?ver=${object.version}` : ''
+          object.version ? `?ver=${object.version}` : '?draft'
         }`,
         type: translateModelType(object.type, t),
       };

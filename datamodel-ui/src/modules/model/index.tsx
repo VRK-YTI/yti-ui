@@ -29,10 +29,15 @@ import { useRouter } from 'next/router';
 import { useStoreDispatch } from '@app/store';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { getSlugAsString } from '@app/common/utils/parse-slug';
+import { ParsedUrlQuery } from 'querystring';
 
 interface ModelProps {
   modelId: string;
   fullScreen?: boolean;
+}
+
+export function isDraftModel(query: ParsedUrlQuery) {
+  return Object.keys(query).includes('draft');
 }
 
 export default function Model({ modelId, fullScreen }: ModelProps) {
@@ -46,6 +51,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
   const { data: modelInfo } = useGetModelQuery({
     modelId: modelId,
     version: version,
+    draft: isDraftModel(router.query),
   });
 
   const organizationIds = useMemo(() => {
