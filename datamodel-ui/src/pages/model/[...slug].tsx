@@ -125,6 +125,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
         pageSize: 20,
         pageFrom: 0,
         resourceTypes: [ResourceType.CLASS],
+        ...(version && { fromVersion: version }),
       })
     );
     store.dispatch(
@@ -134,6 +135,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
         pageSize: 20,
         pageFrom: 0,
         resourceTypes: [ResourceType.ASSOCIATION],
+        ...(version && { fromVersion: version }),
       })
     );
     store.dispatch(
@@ -143,6 +145,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
         pageSize: 20,
         pageFrom: 0,
         resourceTypes: [ResourceType.ATTRIBUTE],
+        ...(version && { fromVersion: version }),
       })
     );
     store.dispatch(
@@ -152,6 +155,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
         pageSize: 20,
         pageFrom: 0,
         resourceTypes: [],
+        ...(version && { fromVersion: version }),
       })
     );
     store.dispatch(
@@ -247,6 +251,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
             modelId: modelId,
             classId: resourceId,
             applicationProfile: modelType === 'PROFILE' ?? false,
+            version,
           })
         );
         store.dispatch(setSelected(resourceId, 'classes', modelId));
@@ -260,7 +265,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
         let resourceModelId = modelId;
         let identifier = resourceId;
-        let version;
+        let extModelVersion;
 
         const resourceParts = resourceId.split(':');
         if (resourceParts.length === 2) {
@@ -272,18 +277,25 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
           if (ns) {
             const match = ns.namespace.match(/\/(\d\.\d\.\d)\//);
-            version = match ? match[1] : undefined;
+            extModelVersion = match ? match[1] : undefined;
           }
         }
         store.dispatch(setView(view, 'info'));
-        store.dispatch(setSelected(identifier, view, resourceModelId, version));
+        store.dispatch(
+          setSelected(
+            identifier,
+            view,
+            resourceModelId,
+            extModelVersion ?? version
+          )
+        );
 
         store.dispatch(
           getResource.initiate({
             modelId: resourceModelId,
             resourceIdentifier: identifier,
             applicationProfile: modelType === 'PROFILE',
-            version,
+            version: resourceModelId !== modelId ? extModelVersion : version,
           })
         );
 
