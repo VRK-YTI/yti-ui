@@ -34,12 +34,18 @@ export default function CodeListModal({
   modalTitle,
   showConfirmModal,
   setData,
+  hideAddButton,
+  isOpen,
+  setOpen,
 }: {
   initialData: ModelCodeList[];
   extendedView?: boolean;
   showConfirmModal?: boolean;
   modalTitle?: string;
   setData: (value: ModelCodeList[]) => void;
+  hideAddButton?: boolean;
+  isOpen?: boolean;
+  setOpen?: (open: boolean) => void;
 }) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -49,7 +55,14 @@ export default function CodeListModal({
   const handleClose = () => {
     setVisible(false);
     setConfirmed(false);
+    if (setOpen) {
+      setOpen(false);
+    }
   };
+
+  useEffect(() => {
+    setVisible(isOpen ? isOpen : false);
+  }, [isOpen]);
 
   const renderConfirmModal = () => (
     <NarrowModal
@@ -112,15 +125,18 @@ export default function CodeListModal({
 
   return (
     <>
-      <Button
-        variant="secondary"
-        icon={<IconPlus />}
-        onClick={() => setVisible(true)}
-        id="add-reference-data-button"
-      >
-        {t('add-reference-data')}
-      </Button>
-
+      {hideAddButton ? (
+        <></>
+      ) : (
+        <Button
+          variant="secondary"
+          icon={<IconPlus />}
+          onClick={() => setVisible(true)}
+          id="add-reference-data-button"
+        >
+          {t('add-reference-data')}
+        </Button>
+      )}
       {showConfirmModal && !confirmed && renderConfirmModal()}
       {(confirmed || !showConfirmModal) && extendedView && renderWideModal()}
       {(confirmed || !showConfirmModal) && !extendedView && renderModal()}

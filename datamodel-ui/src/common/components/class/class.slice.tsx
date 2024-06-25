@@ -183,6 +183,44 @@ export const classApi = createApi({
       }),
       invalidatesTags: ['Class'],
     }),
+    addCodeList: builder.mutation<
+      string,
+      {
+        prefix: string;
+        classIdentifier: string;
+        attributeUri: string;
+        codeLists: string[];
+      }
+    >({
+      query: (value) => ({
+        url: `/class/library/${value.prefix}/${value.classIdentifier}/codeList`,
+        data: {
+          attributeUri: value.attributeUri,
+          codeLists: value.codeLists,
+        },
+        method: 'PUT',
+      }),
+      invalidatesTags: ['Class'],
+    }),
+    removeCodeList: builder.mutation<
+      string,
+      {
+        prefix: string;
+        classIdentifier: string;
+        attributeUri: string;
+        codeList: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/class/library/${value.prefix}/${value.classIdentifier}/codeList`,
+        params: {
+          attributeUri: value.attributeUri,
+          codeListUri: value.codeList,
+        },
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Class'],
+    }),
   }),
 });
 
@@ -222,6 +260,8 @@ export const {
   useDeletePropertyReferenceMutation,
   useRenameClassMutation,
   useUpdateClassResrictionTargetMutation,
+  useAddCodeListMutation,
+  useRemoveCodeListMutation,
   util: { getRunningQueriesThunk },
 } = classApi;
 

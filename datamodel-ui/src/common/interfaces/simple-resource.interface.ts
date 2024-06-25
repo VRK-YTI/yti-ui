@@ -14,4 +14,5 @@ export interface SimpleResource {
   version?: string;
   versionIri?: string;
   range?: UriData;
+  codeLists?: string[];
 }

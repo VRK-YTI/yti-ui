@@ -87,6 +87,9 @@
   "codelist": "Code list",
   "codelist-contents": "Code list contents",
   "codelist-delete-warning": "Are you sure you want to delete codelist {{name}}. Codes in codelist will also be removed from other fields.",
+  "codelist-remove-confirm": "Are you sure you want to delete codelist?",
+  "codelist-added": "Code list added",
+  "codelist-removed": "Code list removed",
   "commentable-version": "commentable version",
   "common-form": {
     "add-equivalent-association": "Add equivelant association",

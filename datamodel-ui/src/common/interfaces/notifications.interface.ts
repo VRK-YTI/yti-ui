@@ -18,4 +18,6 @@ export type NotificationKeys =
   | 'POSITION_SAVE'
   | 'SUBSCRIPTION_ADD'
   | 'SUBSCRIPTION_DELETE'
-  | 'REQUEST_ADD';
+  | 'REQUEST_ADD'
+  | 'CODE_LIST_ADDED'
+  | 'CODE_LIST_REMOVED';
