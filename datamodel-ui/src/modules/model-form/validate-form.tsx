@@ -1,5 +1,6 @@
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import isEmail from 'validator/lib/isEmail';
+import { MODEL_PREFIX_MAX } from 'yti-common-ui/utils/constants';
 
 export interface FormErrors {
   languageAmount: boolean;
@@ -58,7 +59,7 @@ export function validateForm(data: ModelFormType) {
   if (
     data.prefix &&
     data.prefix !== '' &&
-    (data.prefix.length < 2 || data.prefix.length > 32)
+    (data.prefix.length < 2 || data.prefix.length > MODEL_PREFIX_MAX)
   ) {
     errors.prefixLength = true;
   }

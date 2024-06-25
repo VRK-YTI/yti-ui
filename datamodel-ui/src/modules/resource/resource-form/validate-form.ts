@@ -1,4 +1,5 @@
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
+import { IDENTIFIER_MAX } from 'yti-common-ui/utils/constants';
 
 export interface CommonFormErrors {
   label: boolean;
@@ -58,7 +59,7 @@ export default function validateForm(data: ResourceFormType): CommonFormErrors {
     errors.identifierInitChar = false;
   }
 
-  if (data.identifier.length > 1 && data.identifier.length < 33) {
+  if (data.identifier.length > 1 && data.identifier.length <= IDENTIFIER_MAX) {
     errors.identifierLength = false;
   }
 
