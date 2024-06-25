@@ -51,7 +51,11 @@ import { ResourceFormType } from '@app/common/interfaces/resource-form.interface
 import ResourceModal from '../resource-modal';
 import useSetView from '@app/common/utils/hooks/use-set-view';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
-import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
+import {
+  IDENTIFIER_MAX,
+  TEXT_AREA_MAX,
+  TEXT_INPUT_MAX,
+} from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import {
@@ -538,7 +542,7 @@ export default function ResourceForm({
               isSuccess && resourceAlreadyExists ? t('error-prefix-taken') : ''
             }
             id="prefix-input"
-            maxLength={32}
+            maxLength={IDENTIFIER_MAX}
           />
 
           <RangeAndDomain

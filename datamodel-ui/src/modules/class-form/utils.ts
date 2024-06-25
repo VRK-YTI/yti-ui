@@ -1,4 +1,5 @@
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
+import { IDENTIFIER_MAX } from 'yti-common-ui/utils/constants';
 
 export interface ClassFormErrors {
   identifier: boolean;
@@ -36,7 +37,7 @@ export function validateClassForm(data: ClassFormType): ClassFormErrors {
     };
   }
 
-  if (data.identifier.length > 1 && data.identifier.length < 33) {
+  if (data.identifier.length > 1 && data.identifier.length <= IDENTIFIER_MAX) {
     returnErrors.identifierLength = false;
   }
 

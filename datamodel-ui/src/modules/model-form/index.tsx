@@ -36,6 +36,7 @@ import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
 import { checkPermission } from '@app/common/utils/has-permission';
+import { MODEL_PREFIX_MAX } from 'yti-common-ui/utils/constants';
 
 interface ModelFormProps {
   formData: ModelFormType;
@@ -358,7 +359,7 @@ export default function ModelForm({
           noAuto
           fullWidth
           minLength={2}
-          maxLength={32}
+          maxLength={MODEL_PREFIX_MAX}
         />
         <Separator />
       </>
