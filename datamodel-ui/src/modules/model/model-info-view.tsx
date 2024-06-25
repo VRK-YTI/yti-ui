@@ -51,6 +51,7 @@ import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import UnsavedAlertModal from '../unsaved-alert-modal';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { isDraftModel } from '.';
 
 export default function ModelInfoView({
   organizationIds,
@@ -88,6 +89,7 @@ export default function ModelInfoView({
   const { data: modelInfo } = useGetModelQuery({
     modelId: modelId,
     version: version,
+    draft: isDraftModel(query),
   });
 
   const [subscriptionData, setSubscriptionData] = useState<string>();
@@ -231,7 +233,7 @@ export default function ModelInfoView({
             {hasPermission ? (
               version ? (
                 <ActionMenuItem
-                  onClick={() => router.push(`/model/${modelId}`)}
+                  onClick={() => router.push(`/model/${modelId}?draft`)}
                 >
                   {t('to-draft', { ns: 'admin' })}
                 </ActionMenuItem>

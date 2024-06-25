@@ -5,7 +5,7 @@ import {
 import { SSRConfig } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import PageHead from 'yti-common-ui/page-head';
-import Model from '@app/modules/model';
+import Model, { isDraftModel } from '@app/modules/model';
 import ModelHeader from '@app/modules/model/model-header';
 import {
   ViewList,
@@ -72,6 +72,7 @@ export default function ModelPage(props: IndexPageProps) {
   const { data } = useGetModelQuery({
     modelId: props.modelId,
     version: version,
+    draft: isDraftModel(query),
   });
   const fullScreen = useSelector(selectFullScreen());
 
@@ -103,6 +104,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Missing query for page');
     }
 
+    const isDraft = isDraftModel(query);
     const modelId = getSlugAsString(query.slug);
     const version = getSlugAsString(query.ver);
 
@@ -111,7 +113,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     store.dispatch(getAuthenticatedUser.initiate());
-    store.dispatch(getModel.initiate({ modelId: modelId, version: version }));
+    store.dispatch(
+      getModel.initiate({ modelId: modelId, version: version, draft: isDraft })
+    );
     store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
     store.dispatch(getOrganizations.initiate({ sortLang: locale ?? 'fi' }));
     store.dispatch(
@@ -121,6 +125,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
         pageSize: 20,
         pageFrom: 0,
         resourceTypes: [ResourceType.CLASS],
+        ...(version && { fromVersion: version }),
       })
     );
     store.dispatch(
@@ -130,6 +135,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
         pageSize: 20,
         pageFrom: 0,
         resourceTypes: [ResourceType.ASSOCIATION],
+        ...(version && { fromVersion: version }),
       })
     );
     store.dispatch(
@@ -139,6 +145,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
         pageSize: 20,
         pageFrom: 0,
         resourceTypes: [ResourceType.ATTRIBUTE],
+        ...(version && { fromVersion: version }),
       })
     );
     store.dispatch(
@@ -148,6 +155,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
         pageSize: 20,
         pageFrom: 0,
         resourceTypes: [],
+        ...(version && { fromVersion: version }),
       })
     );
     store.dispatch(
@@ -166,7 +174,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(store.dispatch(getVisualizationRunningQueriesThunk()));
 
     const model = store.getState().modelApi.queries[
-      `getModel({"modelId":"${modelId}"${
+      `getModel({"draft":${isDraft},"modelId":"${modelId}"${
         version ? `,"version":"${version}"` : ''
       }})`
     ]?.data as ModelType | undefined | null;
@@ -228,9 +236,11 @@ export const getServerSideProps = createCommonGetServerSideProps(
       )
     );
 
+    let resourceId;
+
     if (query.slug.length >= 3) {
       const resourceType = query.slug[1];
-      const resourceId = query.slug[2];
+      resourceId = query.slug[2];
 
       const modelType = model.type;
 
@@ -241,6 +251,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
             modelId: modelId,
             classId: resourceId,
             applicationProfile: modelType === 'PROFILE' ?? false,
+            version,
           })
         );
         store.dispatch(setSelected(resourceId, 'classes', modelId));
@@ -254,7 +265,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
         let resourceModelId = modelId;
         let identifier = resourceId;
-        let version;
+        let extModelVersion;
 
         const resourceParts = resourceId.split(':');
         if (resourceParts.length === 2) {
@@ -266,18 +277,25 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
           if (ns) {
             const match = ns.namespace.match(/\/(\d\.\d\.\d)\//);
-            version = match ? match[1] : undefined;
+            extModelVersion = match ? match[1] : undefined;
           }
         }
         store.dispatch(setView(view, 'info'));
-        store.dispatch(setSelected(identifier, view, resourceModelId, version));
+        store.dispatch(
+          setSelected(
+            identifier,
+            view,
+            resourceModelId,
+            extModelVersion ?? version
+          )
+        );
 
         store.dispatch(
           getResource.initiate({
             modelId: resourceModelId,
             resourceIdentifier: identifier,
             applicationProfile: modelType === 'PROFILE',
-            version,
+            version: resourceModelId !== modelId ? extModelVersion : version,
           })
         );
 
@@ -297,6 +315,17 @@ export const getServerSideProps = createCommonGetServerSideProps(
       data: model.description,
       lang: locale ?? 'fi',
     });
+
+    if (model.version && !version && !isDraft) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/model/${modelId}${
+            query.slug[1] ? `/${query.slug[1]}` : ''
+          }${resourceId ? `/${resourceId}` : ''}?ver=${model.version}`,
+        },
+      };
+    }
 
     return {
       props: {

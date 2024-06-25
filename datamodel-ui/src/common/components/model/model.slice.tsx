@@ -22,13 +22,17 @@ export const modelApi = createApi({
         data: value,
       }),
     }),
-    getModel: builder.query<ModelType, { modelId: string; version?: string }>({
+    getModel: builder.query<
+      ModelType,
+      { modelId: string; version?: string; draft?: boolean }
+    >({
       query: (value) => ({
-        url: `/model/${value.modelId}`,
+        url: `/model/${value.modelId}${value.draft ? '/draft' : ''}`,
         params: {
-          ...(value.version && {
-            version: value.version,
-          }),
+          ...(value.version &&
+            !value.draft && {
+              version: value.version,
+            }),
         },
         method: 'GET',
       }),

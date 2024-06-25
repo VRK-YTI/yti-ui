@@ -64,6 +64,7 @@ import {
 } from '@app/common/components/resource/utils';
 import PropertyToggle from './components/property-toggle';
 import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
+import { isDraftModel } from '@app/modules/model';
 
 interface ResourceFormProps {
   modelId: string;
@@ -316,11 +317,15 @@ export default function ResourceForm({
         data.identifier
       );
 
-      router.replace(
-        `${modelId}/${
+      const query = {
+        ...(isDraftModel(router.query) && { draft: router.query.draft }),
+      };
+      router.replace({
+        pathname: `${modelId}/${
           data.type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
-        }/${data.identifier}`
-      );
+        }/${data.identifier}`,
+        query: query,
+      });
       dispatch(setUpdateVisualization(true));
     }
 
