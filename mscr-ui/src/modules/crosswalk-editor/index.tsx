@@ -40,8 +40,9 @@ import MetadataStub from '@app/modules/form/metadata-form/metadata-stub';
 import { ActionMenuTypes, Type } from '@app/common/interfaces/search.interface';
 import SchemaAndCrosswalkActionMenu from '@app/common/components/schema-and-crosswalk-actionmenu';
 import {
+  ActionMenuContainer,
   ActionMenuWrapper,
-  TestButton,
+  TestButton
 } from '@app/modules/crosswalk-editor/crosswalk-editor.styles';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { useStoreDispatch } from '@app/store';
@@ -561,7 +562,7 @@ export default function CrosswalkEditor({
             </CustomTabPanel>
             <CustomTabPanel value={selectedTab} index={2}>
             </CustomTabPanel>*/}
-            <div className="row d-flex h-0">
+            <ActionMenuContainer className="row d-flex h-0">
               <div className={selectedTab === 1 ? 'col-10' : 'd-none'}></div>
               <div
                 className={
@@ -591,7 +592,7 @@ export default function CrosswalkEditor({
                   </>
                 )}
               </div>
-            </div>
+            </ActionMenuContainer>
             <div className="row d-flex justify-content-between crosswalk-editor">
               {/*  LEFT COLUMN */}
               <div

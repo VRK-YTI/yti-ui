@@ -7,6 +7,11 @@ export const ActionMenuWrapper = styled.div`
   position: relative;
 `;
 
+export const ActionMenuContainer = styled.div`
+  position: relative;
+  z-index: 1;
+`;
+
 export const TestButton =  styled.div`
   margin-bottom: -40px;
   margin-top: 18px;
