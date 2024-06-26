@@ -37,7 +37,9 @@ interface ModelProps {
 }
 
 export function isDraftModel(query: ParsedUrlQuery) {
-  return Object.keys(query).includes('draft');
+  return (
+    Object.keys(query).includes('draft') || Object.keys(query).includes('new')
+  );
 }
 
 export default function Model({ modelId, fullScreen }: ModelProps) {
