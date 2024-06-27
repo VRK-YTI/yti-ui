@@ -263,10 +263,6 @@ const GraphContent = ({
       dispatch(setResetPosition(false));
       dispatch(setGraphHasChanges(false));
     }
-
-    if (zoomToClass) {
-      centerNode(zoomToClass);
-    }
   }, [
     applicationProfile,
     data,
@@ -278,9 +274,13 @@ const GraphContent = ({
     setEdges,
     setNodes,
     t,
-    zoomToClass,
-    centerNode,
   ]);
+
+  useEffect(() => {
+    if (zoomToClass) {
+      centerNode(zoomToClass);
+    }
+  }, [setNodePositions, zoomToClass, centerNode]);
 
   const nodeDragStop = useCallback(
     (_: React.MouseEvent, node: Node) => {
