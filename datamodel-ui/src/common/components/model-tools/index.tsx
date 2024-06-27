@@ -30,7 +30,6 @@ import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 import {
   selectModelTools,
-  selectSelected,
   setModelTools,
   setResetPosition,
   setSavePosition,
@@ -38,6 +37,7 @@ import {
 import HasPermission from '@app/common/utils/has-permission';
 import DownloadPicture from './download-picture';
 import { translateTooltip } from '@app/common/utils/translation-helpers';
+import useCenterNode from './useCenterNode';
 
 export default function ModelTools({
   modelId,
@@ -54,17 +54,17 @@ export default function ModelTools({
     actions: 'EDIT_DATA_MODEL',
     targetOrganization: organisations,
   });
-  const { setViewport, setCenter, getNode } = useReactFlow();
+  const { setViewport } = useReactFlow();
   const dispatch = useStoreDispatch();
   const tools = useSelector(selectModelTools());
-  const globalSelected = useSelector(selectSelected());
   const transform = useStore((state) => state.transform);
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const [ref, setRef] = useState<HTMLButtonElement | null>(null);
   const [showHover, setShowHover] = useState(false);
+  const { centerNode } = useCenterNode();
 
   const zoomLevels = [
-    0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4, 5,
+    0.1, 0.15, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4, 5,
   ];
 
   const zoom = (currentZoom: number, direction: 'in' | 'out'): number => {
@@ -81,26 +81,6 @@ export default function ModelTools({
 
   const handleResetPosition = () => {
     dispatch(setResetPosition(true));
-  };
-
-  const handleCenterNode = () => {
-    if (!globalSelected.id || globalSelected.id === '') {
-      return;
-    }
-
-    const node = getNode(globalSelected.id);
-
-    if (!node) {
-      return;
-    }
-
-    const x = node.positionAbsolute ? node.positionAbsolute.x : node.position.x;
-    const y = node.positionAbsolute ? node.positionAbsolute.y : node.position.y;
-
-    setCenter(x + (node.width ?? 1) / 2, y + (node.height ?? 1), {
-      duration: 500,
-      zoom: 1.5,
-    });
   };
 
   useEffect(() => {
@@ -181,7 +161,7 @@ export default function ModelTools({
             <Button
               id="graph-tools_zoom-to"
               icon={<IconMapMyLocation />}
-              onClick={() => handleCenterNode()}
+              onClick={() => centerNode()}
               onMouseEnter={(ref) => setRef(ref.currentTarget)}
               onMouseLeave={() => setRef(null)}
             />
