@@ -663,27 +663,29 @@ export default function ResourceForm({
 
           {!applicationProfile && (
             <>
-              <PropertyToggle
-                label={`${translateCommonForm(
-                  'functional',
-                  data.type,
-                  t
-                )} (owl:FunctionalProperty)`}
-                tooltip={{
-                  text: translateCommonTooltips('functional', data.type, t),
-                  ariaCloseButtonLabelText: '',
-                  ariaToggleButtonLabelText: '',
-                }}
-                handleUpdate={(value) =>
-                  handleUpdate({
-                    ...data,
-                    functionalProperty: value ?? undefined,
-                  })
-                }
-                value={data.functionalProperty}
-                id="functional-property-toggle"
-                optionalText={t('optional')}
-              />
+              {data.type === ResourceType.ATTRIBUTE && (
+                <PropertyToggle
+                  label={`${translateCommonForm(
+                    'functional',
+                    data.type,
+                    t
+                  )} (owl:FunctionalProperty)`}
+                  tooltip={{
+                    text: translateCommonTooltips('functional', data.type, t),
+                    ariaCloseButtonLabelText: '',
+                    ariaToggleButtonLabelText: '',
+                  }}
+                  handleUpdate={(value) =>
+                    handleUpdate({
+                      ...data,
+                      functionalProperty: value ?? undefined,
+                    })
+                  }
+                  value={data.functionalProperty}
+                  id="functional-property-toggle"
+                  optionalText={t('optional')}
+                />
+              )}
               {data.type === ResourceType.ASSOCIATION && (
                 <>
                   <PropertyToggle
