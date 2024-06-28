@@ -3,11 +3,12 @@ import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { SearchModels } from '@app/common/interfaces/search-models.interface';
 import { UrlState } from 'yti-common-ui/utils/hooks/use-url-state';
 import { inUseStatusList } from '@app/common/utils/status-list';
+import { PAGE_SIZE_LARGE } from 'yti-common-ui/utils/constants';
 
 function getUrl(urlState: UrlState, lang?: string) {
   const validEntries = Object.entries({
-    pageFrom: Math.max(0, (urlState.page - 1) * 50),
-    pageSize: 50,
+    pageFrom: urlState.page,
+    pageSize: PAGE_SIZE_LARGE,
     searchResources: true,
     sortLang: lang ?? 'fi',
     query: urlState.q,

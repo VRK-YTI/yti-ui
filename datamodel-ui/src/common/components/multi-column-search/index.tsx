@@ -22,6 +22,10 @@ import {
   usedStatusList,
 } from '@app/common/utils/status-list';
 import { Status } from '@app/common/interfaces/status.interface';
+import {
+  DEFAULT_START_PAGE,
+  PAGE_SIZE_LARGE,
+} from 'yti-common-ui/utils/constants';
 
 interface MultiColumnSearchProps {
   primaryColumnName: string;
@@ -146,7 +150,7 @@ export default function MultiColumnSearch({
         ...searchParams,
         ['limitToDataModel']: modelId,
         ['fromAddedNamespaces']: true,
-        pageFrom: 0,
+        pageFrom: DEFAULT_START_PAGE,
       });
     } else {
       setSearchParams({
@@ -154,7 +158,7 @@ export default function MultiColumnSearch({
         ['limitToDataModel']: '',
         ['fromAddedNamespaces']: false,
         ['includeDraftFrom']: [modelId],
-        pageFrom: 0,
+        pageFrom: DEFAULT_START_PAGE,
       });
     }
 
@@ -166,7 +170,11 @@ export default function MultiColumnSearch({
     value: (typeof searchParams)[keyof InternalResourcesSearchParams]
   ) => {
     if (key === 'groups' && isEqual(value, ['-1'])) {
-      setSearchParams({ ...searchParams, [key]: [] });
+      setSearchParams({
+        ...searchParams,
+        [key]: [],
+        pageFrom: DEFAULT_START_PAGE,
+      });
       return;
     }
 
@@ -182,19 +190,23 @@ export default function MultiColumnSearch({
       setSearchParams({
         ...searchParams,
         [key]: setStatuses,
-        pageFrom: 0,
+        pageFrom: DEFAULT_START_PAGE,
       });
 
       return;
     }
 
-    setSearchParams({ ...searchParams, [key]: value, pageFrom: 0 });
+    setSearchParams({
+      ...searchParams,
+      [key]: value,
+      pageFrom: DEFAULT_START_PAGE,
+    });
     setCurrentPage(1);
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    setSearchParams({ ...searchParams, pageFrom: page - 1 });
+    setSearchParams({ ...searchParams, pageFrom: page });
   };
 
   return (
@@ -381,8 +393,8 @@ export default function MultiColumnSearch({
 
       <DetachedPagination
         currentPage={currentPage}
-        maxPages={Math.ceil((result.totalHitCount ?? 0) / 50)}
-        maxTotal={50}
+        maxPages={Math.ceil((result.totalHitCount ?? 0) / PAGE_SIZE_LARGE)}
+        maxTotal={PAGE_SIZE_LARGE}
         setCurrentPage={(number) => handlePageChange(number)}
       />
     </div>

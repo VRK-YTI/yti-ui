@@ -56,6 +56,7 @@ import {
   getRunningQueriesThunk as getAuthenticatedUserRunningQueriesThunk,
 } from '@app/common/components/login/login.slice';
 import { checkPermission } from '@app/common/utils/has-permission';
+import { PAGE_SIZE_SMALL } from 'yti-common-ui/utils/constants';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -122,8 +123,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       queryInternalResources.initiate({
         query: '',
         limitToDataModel: modelId,
-        pageSize: 20,
-        pageFrom: 0,
+        pageSize: PAGE_SIZE_SMALL,
         resourceTypes: [ResourceType.CLASS],
         ...(version && { fromVersion: version }),
       })
@@ -132,8 +132,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       queryInternalResources.initiate({
         query: '',
         limitToDataModel: modelId,
-        pageSize: 20,
-        pageFrom: 0,
+        pageSize: PAGE_SIZE_SMALL,
         resourceTypes: [ResourceType.ASSOCIATION],
         ...(version && { fromVersion: version }),
       })
@@ -142,8 +141,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       queryInternalResources.initiate({
         query: '',
         limitToDataModel: modelId,
-        pageSize: 20,
-        pageFrom: 0,
+        pageSize: PAGE_SIZE_SMALL,
         resourceTypes: [ResourceType.ATTRIBUTE],
         ...(version && { fromVersion: version }),
       })
@@ -152,8 +150,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       queryInternalResources.initiate({
         query: '',
         limitToDataModel: modelId,
-        pageSize: 20,
-        pageFrom: 0,
+        pageSize: PAGE_SIZE_SMALL,
         resourceTypes: [],
         ...(version && { fromVersion: version }),
       })
