@@ -220,7 +220,7 @@ export default function CrosswalkEditor({
       const nodeMappings = mappingsFromBackend as NodeMapping[];
       setNodeMappings(nodeMappings);
     }
-  }, [getMappingsDataIsSuccess]);
+  }, [getMappingsDataIsSuccess, mappingsFromBackend]);
 
   // Add mapping to accordion
   if (putMappingResponse.isSuccess) {
