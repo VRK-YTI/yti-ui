@@ -317,13 +317,6 @@ export default function convertToEdges(
       });
     }
 
-    if (node.referenceTarget.includes(':')) {
-      return createEdge({
-        params: getEdgeParams(nodeIdentifier, node),
-        origin: node.origin,
-      });
-    }
-
     // remove element from referenceLabels because there might be several references
     // with the same target id. E.g. two associations with the same source (domain) and target (range)
     let associationInfo;
