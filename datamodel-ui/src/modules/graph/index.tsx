@@ -23,6 +23,7 @@ import {
   selectSavePosition,
   selectSelected,
   selectUpdateVisualization,
+  selectZoomToClass,
   setGraphHasChanges,
   setHighlighted,
   setResetPosition,
@@ -55,6 +56,7 @@ import {
   toggleShowAttributes,
 } from './utils/graph-utils';
 import { checkPermission } from '@app/common/utils/has-permission';
+import useCenterNode from '@app/common/components/model-tools/useCenterNode';
 
 interface GraphProps {
   modelId: string;
@@ -80,6 +82,7 @@ const GraphContent = ({
   const globalSelected = useSelector(selectSelected());
   const savePosition = useSelector(selectSavePosition());
   const resetPosition = useSelector(selectResetPosition());
+  const zoomToClass = useSelector(selectZoomToClass());
   const updateVisualization = useSelector(selectUpdateVisualization());
   const tools = useSelector(selectModelTools());
   const user = useSelector(selectLogin());
@@ -87,6 +90,7 @@ const GraphContent = ({
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
+  const { centerNode } = useCenterNode();
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
@@ -272,6 +276,12 @@ const GraphContent = ({
     t,
   ]);
 
+  useEffect(() => {
+    if (zoomToClass) {
+      centerNode(zoomToClass);
+    }
+  }, [setNodePositions, zoomToClass, centerNode]);
+
   const nodeDragStop = useCallback(
     (_: React.MouseEvent, node: Node) => {
       if (
@@ -436,10 +446,10 @@ const GraphContent = ({
         // for larger data models
         fitViewOptions={{
           maxZoom: 1.2,
-          minZoom: 1,
+          minZoom: 0.15,
         }}
         maxZoom={5}
-        minZoom={0.25}
+        minZoom={0.1}
       >
         <GraphNotification hasChanges={graphHasChanges} />
         {children}

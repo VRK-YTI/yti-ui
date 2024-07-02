@@ -35,6 +35,7 @@ import {
   selectSelected,
   setHovered,
   setSelected,
+  setZoomToClass,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
 import ApplicationProfileFlow from './application-profile-flow';
@@ -203,6 +204,7 @@ export default function ClassView({
   const handleFollowUp = (classId: string) => {
     setView('classes', 'info', classId);
     dispatch(setSelected(classId, 'classes', modelId));
+    dispatch(setZoomToClass(classId));
   };
 
   const handleActive = (classId: string) => {

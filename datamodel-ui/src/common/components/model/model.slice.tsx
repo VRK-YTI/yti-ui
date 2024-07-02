@@ -249,6 +249,7 @@ const initialState = {
   addResourceRestrictionToClass: false,
   updateVisualization: false,
   updateClassData: false,
+  zoomToClass: undefined,
   tools: {
     fullScreen: false,
     resetPosition: false,
@@ -378,6 +379,12 @@ export const modelSlice = createSlice({
       return {
         ...state,
         updateClassData: action.payload,
+      };
+    },
+    setZoomToClass(state, action) {
+      return {
+        ...state,
+        zoomToClass: action.payload,
       };
     },
     setTools(state, action) {
@@ -550,6 +557,14 @@ export function setResetPosition(value: boolean): AppThunk {
 
 export function selectResetPosition() {
   return (state: AppState) => state.model.tools.resetPosition;
+}
+
+export function setZoomToClass(classId?: string): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setZoomToClass(classId));
+}
+
+export function selectZoomToClass() {
+  return (state: AppState) => state.model.zoomToClass;
 }
 
 export function setAddResourceRestrictionToClass(value: boolean): AppThunk {
