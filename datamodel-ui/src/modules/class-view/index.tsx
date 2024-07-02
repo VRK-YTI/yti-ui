@@ -43,6 +43,7 @@ import useSetView from '@app/common/utils/hooks/use-set-view';
 import useSetPage from '@app/common/utils/hooks/use-set-page';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 import ResourceError from '@app/common/components/resource-error';
+import { PAGE_SIZE_SMALL } from 'yti-common-ui/utils/constants';
 
 interface ClassViewProps {
   modelId: string;
@@ -89,8 +90,8 @@ export default function ClassView({
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
-    pageSize: 20,
-    pageFrom: currentPage - 1,
+    pageSize: PAGE_SIZE_SMALL,
+    pageFrom: currentPage,
     resourceTypes: [ResourceType.CLASS],
     fromVersion: version,
   });

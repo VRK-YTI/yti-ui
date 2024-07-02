@@ -45,6 +45,7 @@ import getConnectedElements from '../graph/utils/get-connected-elements';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import ResourceError from '@app/common/components/resource-error';
 import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
+import { PAGE_SIZE_SMALL } from 'yti-common-ui/utils/constants';
 
 interface ResourceViewProps {
   modelId: string;
@@ -89,8 +90,8 @@ export default function ResourceView({
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
-    pageSize: 20,
-    pageFrom: currentPage - 1,
+    pageSize: PAGE_SIZE_SMALL,
+    pageFrom: currentPage,
     resourceTypes: [type],
     fromVersion: version,
   });

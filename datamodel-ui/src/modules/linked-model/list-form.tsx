@@ -14,6 +14,10 @@ import {
   ModalTitle,
   Paragraph,
 } from 'suomifi-ui-components';
+import {
+  PAGE_SIZE_LARGE,
+  DEFAULT_START_PAGE,
+} from 'yti-common-ui/utils/constants';
 
 interface ListFormProps {
   initialData: {
@@ -47,7 +51,7 @@ export default function ListForm({
     useState<InternalResourcesSearchParams>({
       groups: [],
       pageFrom: 0,
-      pageSize: 50,
+      pageSize: PAGE_SIZE_LARGE,
       query: '',
       resourceTypes: [],
       sortLang: i18n.language,
@@ -60,7 +64,7 @@ export default function ListForm({
       domain: searchParams.groups ?? [],
       lang: contentLanguage ?? i18n.language,
       organization: '',
-      page: searchParams.pageFrom ?? 0,
+      page: searchParams.pageFrom ?? DEFAULT_START_PAGE,
       q: searchParams.query,
       status: searchParams.status ?? [],
       type: '',
@@ -74,8 +78,8 @@ export default function ListForm({
   const resetToInit = () => {
     setSearchParams({
       groups: [],
-      pageFrom: 0,
-      pageSize: 50,
+      pageFrom: DEFAULT_START_PAGE,
+      pageSize: PAGE_SIZE_LARGE,
       query: '',
       resourceTypes: [],
       sortLang: i18n.language,

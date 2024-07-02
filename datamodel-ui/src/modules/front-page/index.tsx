@@ -41,6 +41,7 @@ import ModelFormModal from '../model-form/model-form-modal';
 import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
 import { useGetCountQuery } from '@app/common/components/counts/counts.slice';
 import { inUseStatusList } from '@app/common/utils/status-list';
+import { PAGE_SIZE_LARGE } from 'yti-common-ui/utils/constants';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -313,7 +314,9 @@ export default function FrontPage() {
             }}
           />
           <Pagination
-            maxPages={Math.ceil((searchModels?.totalHitCount ?? 1) / 50)}
+            maxPages={Math.ceil(
+              (searchModels?.totalHitCount ?? 1) / PAGE_SIZE_LARGE
+            )}
           />
         </ResultAndStatsWrapper>
       </ResultAndFilterContainer>
