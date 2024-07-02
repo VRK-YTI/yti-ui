@@ -93,6 +93,10 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
             version={version}
             applicationProfile={modelInfo?.type === 'PROFILE'}
             organizationIds={organizationIds}
+            namespaces={[
+              ...modelInfo.internalNamespaces,
+              ...modelInfo.externalNamespaces,
+            ]}
           >
             <ModelTools
               modelId={modelId}
@@ -221,6 +225,10 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
           applicationProfile={modelInfo?.type === 'PROFILE'}
           organizationIds={organizationIds}
           drawer={<Drawer views={views} />}
+          namespaces={[
+            ...(modelInfo?.internalNamespaces ?? []),
+            ...(modelInfo?.externalNamespaces ?? []),
+          ]}
         >
           <ModelTools
             modelId={modelId}
