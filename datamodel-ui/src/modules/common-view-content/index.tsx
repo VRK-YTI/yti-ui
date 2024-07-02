@@ -380,10 +380,11 @@ export default function CommonViewContent({
                       }}
                       key={codeList}
                     >
-                      <Text style={{ marginTop: '5px' }}>
+                      <Text style={{ marginTop: '8px' }}>
                         <Link
                           key={codeList}
                           href={`${codeList}${getEnvParam(codeList, true)}`}
+                          target="_blank"
                         >
                           {codeList.split('/').slice(-2).join(':')}
                         </Link>
