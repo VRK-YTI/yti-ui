@@ -502,17 +502,18 @@ export default function CommonViewContent({
 
         {!applicationProfile && (
           <>
-            <BasicBlock
-              title={translateCommonForm('functional', data.type, t)}
-              tooltip={{
-                text: translateCommonTooltips('functional', data.type, t),
-                ariaCloseButtonLabelText: '',
-                ariaToggleButtonLabelText: '',
-              }}
-            >
-              {data.functionalProperty ? t('yes') : t('no')}
-            </BasicBlock>
-
+            {data.type === ResourceType.ATTRIBUTE && (
+              <BasicBlock
+                title={translateCommonForm('functional', data.type, t)}
+                tooltip={{
+                  text: translateCommonTooltips('functional', data.type, t),
+                  ariaCloseButtonLabelText: '',
+                  ariaToggleButtonLabelText: '',
+                }}
+              >
+                {data.functionalProperty ? t('yes') : t('no')}
+              </BasicBlock>
+            )}
             {data.type === ResourceType.ASSOCIATION && (
               <>
                 <BasicBlock
