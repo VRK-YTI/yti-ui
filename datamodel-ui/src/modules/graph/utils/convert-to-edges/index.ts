@@ -202,20 +202,23 @@ export default function convertToEdges(
         }
 
         if (reference.referenceTarget.startsWith('corner-')) {
+          const sourceIdentifier = [
+            'ATTRIBUTE_DOMAIN',
+            'PARENT_CLASS',
+          ].includes(reference.referenceType)
+            ? node.identifier
+            : reference.identifier;
+
           referenceLabels.push({
             targetId: getEndEdge(reference.referenceTarget),
-            identifier: ['ATTRIBUTE_DOMAIN', 'PARENT_CLASS'].includes(
-              reference.referenceType
-            )
-              ? node.identifier
-              : reference.identifier,
+            identifier: sourceIdentifier,
             label: label,
           });
 
           return createEdge({
             params: getEdgeParams(node.identifier, reference, true),
             isCorner: true,
-            origin: node.identifier,
+            origin: sourceIdentifier,
           });
         }
 
@@ -336,6 +339,15 @@ export default function convertToEdges(
 
     if (index) {
       referenceLabels.splice(index, 1);
+    }
+
+    if (node.referenceTarget.includes(':')) {
+      return createEdge({
+        label: associationInfo.label,
+        identifier: associationInfo.identifier,
+        params: getEdgeParams(nodeIdentifier, node),
+        origin: node.origin,
+      });
     }
 
     return createEdge({

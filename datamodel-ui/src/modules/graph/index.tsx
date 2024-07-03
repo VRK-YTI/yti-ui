@@ -159,12 +159,17 @@ const GraphContent = ({
 
   const onEdgeClick = useCallback(
     (e, edge) => {
-      if (edge.data.identifier && globalSelected.id !== edge.data.identifier) {
+      const identifier = edge.data.identifier ?? edge.data.origin;
+      if (
+        identifier &&
+        globalSelected.id !== identifier &&
+        globalSelected.modelId + ':' + globalSelected.id !== identifier
+      ) {
         let selectedModelId = modelId;
-        let selectedResourceId = edge.data.identifier;
+        let selectedResourceId = identifier;
         let externalResourceVersion;
 
-        const parts = edge.data.identifier.split(':');
+        const parts = identifier.split(':');
         if (parts.length === 2) {
           selectedModelId = parts[0];
           selectedResourceId = parts[1];
