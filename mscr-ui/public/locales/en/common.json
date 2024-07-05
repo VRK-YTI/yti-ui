@@ -300,6 +300,7 @@
     "search-placeholder": "Find an attribute...",
     "search-schema": "Search from schema",
     "selected-node": "Selected node:",
+    "show-titles": "Show node titles",
     "tree-label": "Schema tree"
   },
   "search": {
