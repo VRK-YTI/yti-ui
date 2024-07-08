@@ -57,6 +57,10 @@ import {
 } from './utils/graph-utils';
 import { checkPermission } from '@app/common/utils/has-permission';
 import useCenterNode from '@app/common/components/model-tools/useCenterNode';
+import {
+  ExternalNamespace,
+  InternalNamespace,
+} from '@app/common/interfaces/model.interface';
 
 interface GraphProps {
   modelId: string;
@@ -65,6 +69,7 @@ interface GraphProps {
   organizationIds?: string[];
   drawer?: JSX.Element;
   children: JSX.Element | JSX.Element[];
+  namespaces?: (InternalNamespace | ExternalNamespace)[];
 }
 
 const GraphContent = ({
@@ -73,6 +78,7 @@ const GraphContent = ({
   applicationProfile,
   organizationIds,
   children,
+  namespaces,
 }: GraphProps) => {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
@@ -153,12 +159,33 @@ const GraphContent = ({
 
   const onEdgeClick = useCallback(
     (e, edge) => {
-      if (edge.data.identifier && globalSelected.id !== edge.data.identifier) {
+      const identifier = edge.data.identifier ?? edge.data.origin;
+      if (
+        identifier &&
+        globalSelected.id !== identifier &&
+        globalSelected.modelId + ':' + globalSelected.id !== identifier
+      ) {
+        let selectedModelId = modelId;
+        let selectedResourceId = identifier;
+        let externalResourceVersion;
+
+        const parts = identifier.split(':');
+        if (parts.length === 2) {
+          selectedModelId = parts[0];
+          selectedResourceId = parts[1];
+
+          const namespace = namespaces?.find(
+            (ns) => ns.prefix === selectedModelId
+          );
+          externalResourceVersion =
+            namespace?.namespace?.match(/\/(\d\.\d\.\d)\//);
+        }
         dispatch(
           setSelected(
-            edge.data.identifier,
+            selectedResourceId,
             edge.referenceType === 'PARENT_CLASS' ? 'classes' : 'associations',
-            modelId
+            selectedModelId,
+            externalResourceVersion ? externalResourceVersion[1] : undefined
           )
         );
         return;
@@ -466,6 +493,7 @@ export default function Graph({
   organizationIds,
   drawer,
   children,
+  namespaces,
 }: GraphProps) {
   return (
     <>
@@ -477,6 +505,7 @@ export default function Graph({
           version={version}
           applicationProfile={applicationProfile}
           organizationIds={organizationIds}
+          namespaces={namespaces}
         >
           {children}
         </GraphContent>

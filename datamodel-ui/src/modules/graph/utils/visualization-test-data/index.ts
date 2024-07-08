@@ -361,7 +361,7 @@ export const expectedLibraryEdges = {
         width: 20,
         color: '#212121',
       },
-      data: { origin: 'is-spouse' },
+      data: { origin: 'is-spouse', identifier: 'is-spouse' },
     },
     {
       source: '#corner-3',

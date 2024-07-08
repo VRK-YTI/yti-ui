@@ -376,7 +376,7 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
         : '';
 
     if (!data.applicationProfile) {
-      return `${label} ${dataType}`;
+      return <div>{`${label} ${dataType}`}</div>;
     } else {
       const codeListsText =
         resource.codeLists && resource.codeLists.length > 0
