@@ -187,88 +187,6 @@ export default function CommonViewContent({
                 <Text variant="bold">{t('restrictions')}</Text>
               </div>
 
-              <BasicBlock title={t('codelist', { ns: 'admin' })}>
-                {data.codeLists && data.codeLists?.length > 0
-                  ? data.codeLists.map((codeList) => (
-                      <Link
-                        key={codeList}
-                        href={`${codeList}${getEnvParam(codeList, true)}`}
-                      >
-                        {codeList.split('/').slice(-2).join(':')}
-                      </Link>
-                    ))
-                  : t('not-defined')}
-              </BasicBlock>
-
-              <BasicBlock
-                title={t('allowed-values', { ns: 'admin' })}
-                tooltip={{
-                  text: t('tooltip.allowed-values'),
-                  ariaCloseButtonLabelText: '',
-                  ariaToggleButtonLabelText: '',
-                }}
-              >
-                {data.allowedValues && data.allowedValues.length > 0 ? (
-                  <ul
-                    style={{ padding: '0', margin: '0', paddingLeft: '20px' }}
-                  >
-                    {data.allowedValues.map((value) => (
-                      <li key={value}>{getCodeListLabel(value)}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  t('not-defined')
-                )}
-              </BasicBlock>
-
-              <BasicBlock
-                title={t('default-value', { ns: 'admin' })}
-                tooltip={{
-                  text: t('tooltip.default-value'),
-                  ariaCloseButtonLabelText: '',
-                  ariaToggleButtonLabelText: '',
-                }}
-              >
-                {data.defaultValue
-                  ? getCodeListLabel(data.defaultValue)
-                  : t('not-defined')}
-              </BasicBlock>
-
-              <BasicBlock
-                title={t('required-value', { ns: 'admin' })}
-                tooltip={{
-                  text: t('tooltip.required-value'),
-                  ariaCloseButtonLabelText: '',
-                  ariaToggleButtonLabelText: '',
-                }}
-              >
-                {data.hasValue
-                  ? getCodeListLabel(data.hasValue)
-                  : t('not-defined')}
-              </BasicBlock>
-
-              <BasicBlock
-                title={t('minimum-length', { ns: 'admin' })}
-                tooltip={{
-                  text: t('tooltip.minimum-length'),
-                  ariaCloseButtonLabelText: '',
-                  ariaToggleButtonLabelText: '',
-                }}
-              >
-                {data.minLength ?? t('not-defined')}
-              </BasicBlock>
-
-              <BasicBlock
-                title={t('maximum-length', { ns: 'admin' })}
-                tooltip={{
-                  text: t('tooltip.maximum-length'),
-                  ariaCloseButtonLabelText: '',
-                  ariaToggleButtonLabelText: '',
-                }}
-              >
-                {data.maxLength ?? t('not-defined')}
-              </BasicBlock>
-
               <BasicBlock
                 title={t('minimum-count')}
                 tooltip={{
@@ -291,74 +209,170 @@ export default function CommonViewContent({
                 {data.maxCount ?? t('not-defined')}
               </BasicBlock>
 
-              <BasicBlock
-                title={t('larger-or-as-large-as', { ns: 'admin' })}
-                tooltip={{
-                  text: t('tooltip.larger-or-as-large-as', { ns: 'common' }),
-                  ariaCloseButtonLabelText: '',
-                  ariaToggleButtonLabelText: '',
-                }}
-              >
-                {data.minInclusive ?? t('not-defined')}
-              </BasicBlock>
-
-              <BasicBlock
-                title={t('smaller-or-as-small-as', { ns: 'admin' })}
-                tooltip={{
-                  text: t('tooltip.smaller-or-as-small-as', { ns: 'common' }),
-                  ariaCloseButtonLabelText: '',
-                  ariaToggleButtonLabelText: '',
-                }}
-              >
-                {data.maxInclusive ?? t('not-defined')}
-              </BasicBlock>
-
-              <BasicBlock
-                title={t('larger-than', { ns: 'admin' })}
-                tooltip={{
-                  text: t('tooltip.larger-than', { ns: 'common' }),
-                  ariaCloseButtonLabelText: '',
-                  ariaToggleButtonLabelText: '',
-                }}
-              >
-                {data.minExclusive ?? t('not-defined')}
-              </BasicBlock>
-
-              <BasicBlock
-                title={t('smaller-than', { ns: 'admin' })}
-                tooltip={{
-                  text: t('tooltip.smaller-than', { ns: 'common' }),
-                  ariaCloseButtonLabelText: '',
-                  ariaToggleButtonLabelText: '',
-                }}
-              >
-                {data.maxExclusive ?? t('not-defined')}
-              </BasicBlock>
-
-              <BasicBlock
-                title={t('string-attribute-format', { ns: 'admin' })}
-                tooltip={{
-                  text: t('tooltip.string-attribute-format'),
-                  ariaCloseButtonLabelText: '',
-                  ariaToggleButtonLabelText: '',
-                }}
-              >
-                {data.pattern ?? t('not-defined')}
-              </BasicBlock>
-
-              <BasicBlock
-                title={t('string-attribute-languages', { ns: 'admin' })}
-                tooltip={{
-                  text: t('tooltip.string-attribute-languages'),
-                  ariaCloseButtonLabelText: '',
-                  ariaToggleButtonLabelText: '',
-                }}
-              >
-                {data.languageIn
-                  ? data.languageIn.join(', ')
+              <BasicBlock title={t('codelist', { ns: 'admin' })}>
+                {data.codeLists && data.codeLists?.length > 0
+                  ? data.codeLists.map((codeList) => (
+                      <Link
+                        key={codeList}
+                        href={`${codeList}${getEnvParam(codeList, true)}`}
+                      >
+                        {codeList.split('/').slice(-2).join(':')}
+                      </Link>
+                    ))
                   : t('not-defined')}
               </BasicBlock>
 
+              <Expander style={{ marginTop: '20px' }}>
+                <ExpanderTitleButton>
+                  {t('more-restrictions')}
+                </ExpanderTitleButton>
+                <ExpanderContent>
+                  <BasicBlock
+                    title={t('allowed-values', { ns: 'admin' })}
+                    tooltip={{
+                      text: t('tooltip.allowed-values'),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
+                  >
+                    {data.allowedValues && data.allowedValues.length > 0 ? (
+                      <ul
+                        style={{
+                          padding: '0',
+                          margin: '0',
+                          paddingLeft: '20px',
+                        }}
+                      >
+                        {data.allowedValues.map((value) => (
+                          <li key={value}>{getCodeListLabel(value)}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      t('not-defined')
+                    )}
+                  </BasicBlock>
+
+                  <BasicBlock
+                    title={t('default-value', { ns: 'admin' })}
+                    tooltip={{
+                      text: t('tooltip.default-value'),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
+                  >
+                    {data.defaultValue
+                      ? getCodeListLabel(data.defaultValue)
+                      : t('not-defined')}
+                  </BasicBlock>
+
+                  <BasicBlock
+                    title={t('required-value', { ns: 'admin' })}
+                    tooltip={{
+                      text: t('tooltip.required-value'),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
+                  >
+                    {data.hasValue
+                      ? getCodeListLabel(data.hasValue)
+                      : t('not-defined')}
+                  </BasicBlock>
+
+                  <BasicBlock
+                    title={t('minimum-length', { ns: 'admin' })}
+                    tooltip={{
+                      text: t('tooltip.minimum-length'),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
+                  >
+                    {data.minLength ?? t('not-defined')}
+                  </BasicBlock>
+
+                  <BasicBlock
+                    title={t('maximum-length', { ns: 'admin' })}
+                    tooltip={{
+                      text: t('tooltip.maximum-length'),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
+                  >
+                    {data.maxLength ?? t('not-defined')}
+                  </BasicBlock>
+
+                  <BasicBlock
+                    title={t('larger-or-as-large-as', { ns: 'admin' })}
+                    tooltip={{
+                      text: t('tooltip.larger-or-as-large-as', {
+                        ns: 'common',
+                      }),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
+                  >
+                    {data.minInclusive ?? t('not-defined')}
+                  </BasicBlock>
+
+                  <BasicBlock
+                    title={t('smaller-or-as-small-as', { ns: 'admin' })}
+                    tooltip={{
+                      text: t('tooltip.smaller-or-as-small-as', {
+                        ns: 'common',
+                      }),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
+                  >
+                    {data.maxInclusive ?? t('not-defined')}
+                  </BasicBlock>
+
+                  <BasicBlock
+                    title={t('larger-than', { ns: 'admin' })}
+                    tooltip={{
+                      text: t('tooltip.larger-than', { ns: 'common' }),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
+                  >
+                    {data.minExclusive ?? t('not-defined')}
+                  </BasicBlock>
+
+                  <BasicBlock
+                    title={t('smaller-than', { ns: 'admin' })}
+                    tooltip={{
+                      text: t('tooltip.smaller-than', { ns: 'common' }),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
+                  >
+                    {data.maxExclusive ?? t('not-defined')}
+                  </BasicBlock>
+
+                  <BasicBlock
+                    title={t('string-attribute-format', { ns: 'admin' })}
+                    tooltip={{
+                      text: t('tooltip.string-attribute-format'),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
+                  >
+                    {data.pattern ?? t('not-defined')}
+                  </BasicBlock>
+
+                  <BasicBlock
+                    title={t('string-attribute-languages', { ns: 'admin' })}
+                    tooltip={{
+                      text: t('tooltip.string-attribute-languages'),
+                      ariaCloseButtonLabelText: '',
+                      ariaToggleButtonLabelText: '',
+                    }}
+                  >
+                    {data.languageIn && data.languageIn.length > 0
+                      ? data.languageIn.join(', ')
+                      : t('not-defined')}
+                  </BasicBlock>
+                </ExpanderContent>
+              </Expander>
               <Separator />
             </>
           )}
