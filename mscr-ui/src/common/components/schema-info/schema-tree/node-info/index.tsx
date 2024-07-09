@@ -1,5 +1,5 @@
 import { RenderTree } from '@app/common/interfaces/crosswalk-connection.interface';
-import { Dropdown, DropdownItem } from 'suomifi-ui-components';
+import { Dropdown, DropdownItem, ToggleButton } from 'suomifi-ui-components';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { InfoIcon } from '@app/common/components/shared-icons';
@@ -8,46 +8,35 @@ import { DropdownWrapper } from '@app/common/components/schema-info/schema-info.
 
 export default function NodeInfo(props: {
   treeData: RenderTree[];
-  dataIsLoaded: boolean
+  dataIsLoaded: boolean;
   // performNodeInfoAction: any;
 }) {
   const { t } = useTranslation('common');
-  let sourceSelectionInit = '';
+  const [selectedNode, setSelectedNode] = useState<RenderTree>();
+  const [dropDownList, setDropDownList] = useState<RenderTree[]>([]);
 
   useEffect(() => {
     if (props.treeData && props.treeData.length > 0) {
-      sourceSelectionInit = props.treeData[0].id;
-      setDropdownValue(props.treeData[0].id);
-      // console.log('props.sourceData');
+      setDropDownList(props.treeData);
+      setSelectedNode(props.treeData[0]);
+    } else {
+      setSelectedNode(undefined);
     }
-    if (props.dataIsLoaded) {
-      setDataIsLoaded(true);
-    }
-  }, [props]);
+  }, [props.treeData]);
 
-  const [dataIsLoaded, setDataIsLoaded] = useState(false);
-  const [sourceDropdownValue, setDropdownValue] = useState(sourceSelectionInit);
-  const [selectedNode] = props.treeData.filter(
-    (item) => item.id === sourceDropdownValue
-  );
+  const handleDropDownSelect = (nodeId: string) => {
+    const newSelectedNode = props.treeData.find((item) => item.id === nodeId);
+    setSelectedNode(newSelectedNode ?? selectedNode);
+  };
 
-  let dropdownInit: { id: string; name?: string }[] = [
-    {
-      id: '1',
-    },
-  ];
-  if (props.treeData && props.treeData.length > 0) {
-    dropdownInit = props.treeData;
-  }
-
-  interface constantAttribute {
+  interface ConstantAttribute {
     name: string;
     value: string | undefined;
   }
 
-  const nodeProperties: constantAttribute[] = [];
-  if (props.treeData.length > 0 && props.treeData[0]?.properties) {
-    for (const [key, value] of Object.entries(props.treeData[0]?.properties)) {
+  const nodeProperties: ConstantAttribute[] = [];
+  if (selectedNode && selectedNode.properties) {
+    for (const [key, value] of Object.entries(selectedNode.properties)) {
       nodeProperties.push({
         name: key,
         value: typeof value === 'string' ? value.toString() : undefined,
@@ -89,32 +78,26 @@ export default function NodeInfo(props: {
                   </div>
                 </div>
                 <div className="col-10 d-flex align-self-center">
-                  {!dataIsLoaded &&
-                      <div>
-                        {t('node-info.loading')}
-                      </div>
-                  }
-                  {dataIsLoaded &&
-                      <div>
-                        {t('node-info.select-a-node')}
-                      </div>
-                  }
+                  {!props.dataIsLoaded && <div>{t('node-info.loading')}</div>}
+                  {props.dataIsLoaded && (
+                    <div>{t('node-info.select-a-node')}</div>
+                  )}
                 </div>
               </div>
             </>
           )}
-          {props.treeData.length > 1 && (
+          {dropDownList.length > 1 && (
             <DropdownWrapper>
               <Dropdown
                 labelText={t('schema-tree.dropdown-label')}
                 labelMode={'hidden'}
                 className="mt-2"
                 visualPlaceholder={t('schema-tree.dropdown-placeholder')}
-                value={sourceDropdownValue}
-                onChange={(newValue) => setDropdownValue(newValue)}
+                value={selectedNode?.id ?? ''}
+                onChange={(newValue) => handleDropDownSelect(newValue)}
               >
-                {dropdownInit.map((rt) => (
-                  <DropdownItem key={rt.id} value={rt.id}>
+                {dropDownList.map((rt) => (
+                  <DropdownItem key={rt.visualTreeId} value={rt.id}>
                     {rt.name}
                   </DropdownItem>
                 ))}

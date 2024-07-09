@@ -1,14 +1,12 @@
-import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {Checkbox, SearchInput, ToggleButton} from 'suomifi-ui-components';
+import { Checkbox, SearchInput } from 'suomifi-ui-components';
 import IconButton from '@mui/material/IconButton';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Box from '@mui/material/Box';
 import SchemaTree from '@app/common/components/schema-info/schema-tree';
 import NodeInfo from '@app/common/components/schema-info/schema-tree/node-info';
 import { RenderTree } from '@app/common/interfaces/crosswalk-connection.interface';
-import { cloneDeep } from 'lodash';
 import { generateTreeFromJson } from '@app/common/components/schema-info/schema-tree/schema-tree-renderer';
 import { useGetFrontendSchemaQuery } from '@app/common/components/schema/schema.slice';
 import { useTranslation } from 'next-i18next';
@@ -22,7 +20,9 @@ import {
 } from '@app/common/components/schema-info/schema-info.styles';
 import { useRouter } from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import SpinnerOverlay, { SpinnerType } from "@app/common/components/spinner-overlay";
+import SpinnerOverlay, {
+  SpinnerType,
+} from '@app/common/components/spinner-overlay';
 import Tooltip from '@mui/material/Tooltip';
 
 export default function SchemaInfo(props: {
@@ -39,52 +39,37 @@ export default function SchemaInfo(props: {
 }) {
   const { t } = useTranslation('common');
   const lang = useRouter().locale ?? '';
-  const emptyTreeSelection: RenderTree = {
-    elementPath: '',
-    qname: 'empty',
-    parentElementPath: undefined,
-    name: '',
-    id: '',
-    visualTreeId: '',
-    properties: undefined,
-    children: [],
-    uri: '',
-  };
 
-  const {
-    data: getSchemaData,
-    isLoading: getSchemaDataIsLoading,
-    isSuccess: getSchemaDataIsSuccess,
-    isError: getSchemaDataIsError,
-    error: getSchemaDataError,
-  } = useGetFrontendSchemaQuery(props.schemaUrn);
+  const { data: getSchemaData, isSuccess: getSchemaDataIsSuccess } =
+    useGetFrontendSchemaQuery(props.schemaUrn);
 
-  const [treeDataOriginal, setTreeDataOriginal] = React.useState<RenderTree[]>(
-    []
-  );
-  const [treeData, setTreeData] = React.useState<RenderTree[]>([]);
-  const [treeExpandedArray, setTreeExpanded] = React.useState<string[]>([]);
-
+  const [treeData, setTreeData] = useState<RenderTree[]>([]);
+  const [nodeIdToNodeDictionary, setNodeIdToNodeDictionary] = useState<{
+    [key: string]: RenderTree[];
+  }>({});
   // These are used by tree visualization
-  const [treeSelectedArray, setTreeSelections] = React.useState<string[]>([]);
-
+  const [treeSelectedArray, setTreeSelectedArray] = useState<string[]>([]);
+  const [treeExpandedArray, setTreeExpandedArray] = useState<string[]>([]);
   // These are used by datamodel
-  const [selectedTreeNodes, setSelectedTreeNodes] = React.useState<RenderTree[]>([emptyTreeSelection]);
+  const [selectedTreeNodes, setSelectedTreeNodes] = useState<RenderTree[]>([]);
 
-  const [isTreeDataFetched, setTreeDataFetched] =
-    React.useState<boolean>(false);
+  const [isTreeDataFetched, setTreeDataFetched] = useState<boolean>(false);
 
-  const [showAttributeNames, setShowAttributeNames] = React.useState(true);
+  const [showAttributeNames, setShowAttributeNames] = useState(true);
 
   useEffect(() => {
     if (getSchemaData?.content) {
-      generateTreeFromJson(getSchemaData).then((res) => {
+      // Get two different representations of attributes: a tree and a dictionary with keys being the node ids and
+      // values being the nodes that have that id, with no children attached
+      const { generatedTree, nodeIdToShallowNode } =
+        generateTreeFromJson(getSchemaData);
+      generatedTree.then((res) => {
         if (res) {
           // Expand tree when data is loaded
-          setExpanded();
-          setTreeDataOriginal(cloneDeep(res));
+          setPartlyExpanded();
           setTreeData(res);
           setTreeDataFetched(true);
+          setNodeIdToNodeDictionary(nodeIdToShallowNode);
           //refetchOriginalSourceSchemaData();
         }
       });
@@ -93,7 +78,7 @@ export default function SchemaInfo(props: {
 
   // Expand tree when data is loaded
   useEffect(() => {
-    setExpanded();
+    setPartlyExpanded();
   }, [isTreeDataFetched]);
 
   // Expand and select nodes when input changed (from mappings accordion)
@@ -105,159 +90,116 @@ export default function SchemaInfo(props: {
 
   useEffect(() => {
     // Update selections for node info and parent component for mappings
-    const selectedTreeNodeIds = getTreeNodesByIds(treeSelectedArray);
+    const selectedNodes = treeSelectedArray
+      .map((nodeId) => nodeIdToNodeDictionary[nodeId])
+      .flat();
     if (
       props.updateTreeNodeSelectionsOutput &&
       props.isSourceTree !== undefined
     ) {
-      props.updateTreeNodeSelectionsOutput(
-        selectedTreeNodeIds,
-        props.isSourceTree
-      );
+      props.updateTreeNodeSelectionsOutput(selectedNodes, props.isSourceTree);
     }
-    setSelectedTreeNodes(selectedTreeNodeIds);
+    setSelectedTreeNodes(selectedNodes);
   }, [treeSelectedArray]);
 
-  const setExpanded = () => {
-    const retData: string[] = [];
+  const setPartlyExpanded = () => {
+    const nodeIdsToExpand: string[] = [];
     treeData.forEach(({ children, id }) => {
-      if (children && children?.length > 0) {
-        retData.push(id.toString());
+      if (children && children.length > 0) {
+        nodeIdsToExpand.push(id);
+        if (children.length === 1) {
+          nodeIdsToExpand.push(children[0].id);
+        }
       }
     });
-    setTreeExpanded(() => {
-      return retData;
-    });
+    setTreeExpandedArray(nodeIdsToExpand);
   };
 
-  // Used to generate data for mappings modal
-  function getTreeNodesByIds(nodeIds: string[]) {
-    const foundSourceNodes: RenderTree[] = [];
-    return findNodesFromTree(treeDataOriginal, nodeIds, foundSourceNodes);
-  }
-
-  // Used to tree filtering
-  function findNodesFromTree(
-    tree: RenderTree[],
-    itemsToFind: string[],
-    results: RenderTree[]
-  ) {
-    tree.forEach((item: RenderTree) => {
-      if (itemsToFind.includes(item.id)) {
-        results.push(item);
-      } else {
-        if (item.children && item.children.length > 0) {
-          return findNodesFromTree(item.children, itemsToFind, results);
-        }
-      }
-    });
-    return results;
-  }
-
   function clearTreeSearch() {
-    setTreeSelections([]);
-    setTreeData(cloneDeep(treeDataOriginal));
-    setExpanded();
-  }
-
-  function doFiltering(
-    tree: RenderTree[],
-    nameToFind: string,
-    results: { nodeIds: string[]; childNodeIds: string[] }
-  ) {
-    tree.forEach((item) => {
-      if (showAttributeNames &&
-        item.name &&
-        item.name.toLowerCase().includes(nameToFind.toLowerCase()) || !showAttributeNames &&
-        item.qname &&
-        item.qname.toLowerCase().includes(nameToFind.toLowerCase())
-      ) {
-        results.nodeIds.push(item.id);
-        if (item.children && item.children.length > 0) {
-          item.children.forEach((child) => {
-            results.childNodeIds.push(child.id);
-          });
-        }
-      }
-      if (item.children && item.children.length > 0) {
-        return doFiltering(item.children, nameToFind, results);
-      }
-    });
-    return results;
-  }
-
-  function getElementPathsFromTree(
-    treeData: RenderTree[],
-    nodeIds: string[],
-    results: string[]
-  ) {
-    treeData.forEach((item) => {
-      if (nodeIds.includes(item.id)) {
-        if (item.elementPath != null) {
-          results.push(item.elementPath);
-        }
-      }
-      if (item.children && item.children.length > 0) {
-        return getElementPathsFromTree(item.children, nodeIds, results);
-      }
-    });
-    return results;
+    setTreeSelectedArray([]);
+    setPartlyExpanded();
+    setSelectedTreeNodes([]);
   }
 
   // Used by tree select and filtering
   function getAllNodeIdsOnPathToLeaf(nodeIds: string[]) {
-    const elementPaths = getElementPathsFromTree(treeData, nodeIds, []);
-    const nodesToSelect: Set<string> = new Set();
+    const elementPaths: string[] = [];
+    nodeIds.forEach((nodeId) => {
+      const nodes = nodeIdToNodeDictionary[nodeId];
+      nodes.map((node) => elementPaths.push(node.elementPath));
+    });
 
+    const nodesToSelect: Set<string> = new Set();
     elementPaths.forEach((path) => {
-      const nodes = path.split('.');
-      nodes.forEach((node) => {
-        nodesToSelect.add(node);
+      const nodeIdsOnPath = path.split('.');
+      nodeIdsOnPath.forEach((nodeId) => {
+        nodesToSelect.add(nodeId);
       });
     });
+
     return Array.from(nodesToSelect);
   }
 
   const handleExpandClick = () => {
-    const allTreeNodes: string[] = [];
-    treeData.forEach(({ children, id }) => {
-      if (children && children?.length > 0) {
-        allTreeNodes.push(id.toString());
-      }
-    });
-    setTreeExpanded((oldExpanded) => {
-      return oldExpanded.length === 0 ? allTreeNodes : [];
-    });
+    if (treeExpandedArray.length === 0) {
+      setPartlyExpanded();
+    } else {
+      setTreeExpandedArray([]);
+    }
   };
 
   function expandAndSelectNodes(nodeIds: string[]) {
     if (nodeIds.length > 0) {
       const nodeIdsToExpand = getAllNodeIdsOnPathToLeaf(nodeIds);
-      setTreeExpanded(nodeIdsToExpand);
-      setTreeSelections(nodeIds);
+      setTreeExpandedArray(nodeIdsToExpand);
+      setTreeSelectedArray(nodeIds);
     }
   }
 
   function searchFromTree(input: string) {
     clearTreeSearch();
-    const hits = { nodeIds: [], childNodeIds: [] };
-    doFiltering(treeData, input.toString(), hits);
-    expandAndSelectNodes(hits.nodeIds);
+    // The nodeIdToNodeDictionary values are arrays of nodes, because there can be nodes in a schema with identical
+    // ids but different paths. It's enough to check matching to one of them.
+    const hits: string[] = [];
+    Object.values(nodeIdToNodeDictionary).map((nodesWithSameId) => {
+      if (
+        (showAttributeNames &&
+          nodesWithSameId[0].name &&
+          nodesWithSameId[0].name
+            .toLowerCase()
+            .includes(input.toLowerCase())) ||
+        (!showAttributeNames &&
+          nodesWithSameId[0].qname &&
+          nodesWithSameId[0].qname.toLowerCase().includes(input.toLowerCase()))
+      ) {
+        hits.push(nodesWithSameId[0].id);
+      }
+    });
+    expandAndSelectNodes(hits);
   }
 
   function handleTreeClick(nodeIds: string[]) {
-    setTreeSelections(nodeIds);
+    setTreeSelectedArray(nodeIds);
+    // If there's several nodes with the same id, expand paths to all
+    const isMultiple = nodeIds
+      .map(
+        (nodeId) =>
+          nodeIdToNodeDictionary[nodeId] &&
+          nodeIdToNodeDictionary[nodeId].length > 1
+      )
+      .some((b) => b);
+    if (isMultiple) {
+      const newExpanded = new Set(treeExpandedArray);
+      getAllNodeIdsOnPathToLeaf(nodeIds).forEach((nodeIdToAdd) =>
+        newExpanded.add(nodeIdToAdd)
+      );
+      setTreeExpandedArray(Array.from(newExpanded));
+    }
   }
 
   function handleTreeToggle(nodeIds: string[]) {
-    setTreeExpanded(nodeIds);
+    setTreeExpandedArray(nodeIds);
   }
-
-  // const selectFromTreeById = (nodeId: string) => {
-  //   const nodeIds = [];
-  //   nodeIds.push(nodeId);
-  //   expandAndSelectNodes(nodeIds);
-  // };
 
   const performCallbackFromTreeAction = (action: string, nodeIds: string[]) => {
     if (action === 'handleSelect') {
@@ -266,10 +208,6 @@ export default function SchemaInfo(props: {
       handleTreeToggle(nodeIds);
     }
   };
-
-  // const performNodeInfoAction = (nodeId: any, isSourceTree: boolean) => {
-  //   selectFromTreeById(nodeId);
-  // };
 
   return (
     <>
@@ -301,37 +239,43 @@ export default function SchemaInfo(props: {
       <TreeviewWrapper className="row gx-0">
         <div className="col-7 px-0">
           <div className="d-flex justify-content-between mb-2 ps-3 pe-2">
-            {isTreeDataFetched && (<><SearchWrapper className="w-100">
-              <SearchInput
-                className="py-2"
-                labelText={props.caption}
-                searchButtonLabel={t('schema-tree.search')}
-                clearButtonLabel={t('schema-tree.clear')}
-                visualPlaceholder={t('schema-tree.search-placeholder')}
-                onSearch={(value) => {
-                  if (typeof value === 'string') {
-                    searchFromTree(value);
-                  }
-                }}
-                onChange={(value) => {
-                  if (!value) {
-                    clearTreeSearch();
-                  }
-                }}/>
-            </SearchWrapper><ExpandButtonWrapper>
-              <IconButton
-                onClick={() => handleExpandClick()}
-                aria-label={t('schema-tree.expand')}
-                color="primary"
-                size="large"
-              >
-                {treeExpandedArray.length === 0 ? (
-                  <ExpandMoreIcon/>
-                ) : (
-                  <ExpandLessIcon/>
-                )}
-              </IconButton>
-            </ExpandButtonWrapper></>)}
+            {isTreeDataFetched && (
+              <>
+                <SearchWrapper className="w-100">
+                  <SearchInput
+                    className="py-2"
+                    labelText={props.caption}
+                    searchButtonLabel={t('schema-tree.search')}
+                    clearButtonLabel={t('schema-tree.clear')}
+                    visualPlaceholder={t('schema-tree.search-placeholder')}
+                    onSearch={(value) => {
+                      if (typeof value === 'string') {
+                        searchFromTree(value);
+                      }
+                    }}
+                    onChange={(value) => {
+                      if (!value) {
+                        clearTreeSearch();
+                      }
+                    }}
+                  />
+                </SearchWrapper>
+                <ExpandButtonWrapper>
+                  <IconButton
+                    onClick={() => handleExpandClick()}
+                    aria-label={t('schema-tree.expand')}
+                    color="primary"
+                    size="large"
+                  >
+                    {treeExpandedArray.length === 0 ? (
+                      <ExpandMoreIcon />
+                    ) : (
+                      <ExpandLessIcon />
+                    )}
+                  </IconButton>
+                </ExpandButtonWrapper>
+              </>
+            )}
           </div>
           <div>
             <Box
@@ -342,11 +286,17 @@ export default function SchemaInfo(props: {
                 maxWidth: 700,
                 overflowY: 'auto',
               }}
-            ><>
-              <div className='d-flex justify-content-center'>
-                <SpinnerOverlay animationVisible={!isTreeDataFetched} type={props.isSingleTree ? SpinnerType.SchemaTreeSingle : SpinnerType.SchemaTreeDouble}></SpinnerOverlay>
+            >
+              <div className="d-flex justify-content-center">
+                <SpinnerOverlay
+                  animationVisible={!isTreeDataFetched}
+                  type={
+                    props.isSingleTree
+                      ? SpinnerType.SchemaTreeSingle
+                      : SpinnerType.SchemaTreeDouble
+                  }
+                />
               </div>
-            </>
               {isTreeDataFetched && (
                 <SchemaTree
                   nodes={treeData[0]}
@@ -363,7 +313,8 @@ export default function SchemaInfo(props: {
           <NodeInfo
             treeData={selectedTreeNodes}
             // performNodeInfoAction={performNodeInfoAction}
-           dataIsLoaded={isTreeDataFetched}></NodeInfo>
+            dataIsLoaded={isTreeDataFetched}
+          />
           <CheckboxWrapper>
             <Checkbox
               checked={showAttributeNames}
@@ -371,7 +322,7 @@ export default function SchemaInfo(props: {
                 setShowAttributeNames(newState.checkboxState);
               }}
             >
-              Show node titles
+              {t('schema-tree.show-titles')}
             </Checkbox>
           </CheckboxWrapper>
         </NodeInfoWrapper>
