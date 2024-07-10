@@ -47,6 +47,7 @@ import {
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { useStoreDispatch } from '@app/store';
 import OperationalizeModal from '../operationalize-modal';
+import { updateActionMenu } from '@app/common/components/schema-and-crosswalk-actionmenu/update-action-menu';
 
 export default function CrosswalkEditor({
   crosswalkId,
@@ -154,6 +155,10 @@ export default function CrosswalkEditor({
     action: 'EDIT_CONTENT',
     owner: getCrosswalkData?.owner,
   });
+
+  useEffect(() => {
+    updateActionMenu(dispatch, Type.Crosswalk,getCrosswalkData, hasEditRights);
+  }, [dispatch, getCrosswalkData, hasEditRights]);
 
   const fromTree = (nodes: any) => (
     <TreeItem

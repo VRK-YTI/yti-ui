@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useGetSchemaWithRevisionsQuery } from '@app/common/components/schema/schema.slice';
 import MetadataAndFiles from './metadata-and-files';
@@ -19,9 +19,14 @@ import {
 } from '@app/modules/schema-view/schema-view-styles';
 import HasPermission from '@app/common/utils/has-permission';
 import { formatsAvailableForMscrCopy } from '@app/common/interfaces/format.interface';
+import { useStoreDispatch } from '@app/store';
+import { resetMenuList, selectMenuList, setMenuList } from '@app/common/components/actionmenu/actionmenu.slice';
+import { useSelector } from 'react-redux';
+import { updateActionMenu } from '@app/common/components/schema-and-crosswalk-actionmenu/update-action-menu';
 
 export default function SchemaView({ schemaId }: { schemaId: string }) {
   const { t } = useTranslation('common');
+  const dispatch = useStoreDispatch();
 
   const {
     data: schemaDetails,
@@ -41,6 +46,43 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
     hasCopyPermission &&
     schemaDetails &&
     formatsAvailableForMscrCopy.includes(schemaDetails.format);
+
+  useEffect(() => {
+    updateActionMenu(dispatch, Type.Schema, schemaDetails, hasEditPermission, isMscrCopyAvailable);
+  }, [dispatch, hasEditPermission, isMscrCopyAvailable, schemaDetails]);
+  const menuState = useSelector(selectMenuList());
+
+  // useEffect(() => {
+  //   dispatch(resetMenuList());
+  //   console.log('resetting');
+  //   if (!schemaDetails || schemaDetails.state === State.Removed) {
+  //     return;
+  //   }
+  //   if (isMscrCopyAvailable) {
+  //     dispatch(setMenuList(['mscrCopy']));
+  //   }
+  //   if (!hasEditPermission) return;
+  //   dispatch(setMenuList(['editMetadata']));
+  //   switch (schemaDetails.state) {
+  //     case State.Draft:
+  //       dispatch(setMenuList(['deleteDraft', 'publish']));
+  //       break;
+  //     case State.Published:
+  //       dispatch(setMenuList(['deprecate', 'invalidate']));
+  //       break;
+  //     default:
+  //       dispatch(setMenuList(['remove']));
+  //   }
+  //   const revisions = schemaDetails.revisions;
+  //   if (revisions.length > 0) {
+  //     const latestVersion = revisions[revisions.length - 1].pid;
+  //     if (schemaDetails.pid === latestVersion) {
+  //       dispatch(setMenuList(['version']));
+  //     }
+  //   }
+  // }, [dispatch, hasEditPermission, isMscrCopyAvailable, schemaDetails]);
+
+  console.log('menu state', menuState);
 
   const theme = createTheme({
     typography: {

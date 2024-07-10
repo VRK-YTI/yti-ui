@@ -25,7 +25,7 @@ export default function SchemaPage(props: IndexPageProps) {
         user={props.user ?? undefined}
         fakeableUsers={props.fakeableUsers}
       >
-        <SchemaView schemaId={schemaId} user={props.user} />
+        <SchemaView schemaId={schemaId} />
       </Layout>
     </CommonContextProvider>
   );

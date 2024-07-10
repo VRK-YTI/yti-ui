@@ -9,7 +9,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import { ActionMenu, ActionMenuItem } from 'suomifi-ui-components';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { ActionMenuTypes, Type } from '@app/common/interfaces/search.interface';
 import { State } from '@app/common/interfaces/state.interface';
 import ConfirmModal from '@app/common/components/confirmation-modal';
@@ -21,6 +21,8 @@ import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
 import { ActionMenuWrapper } from '@app/common/components/schema-and-crosswalk-actionmenu/schema-and-crosswalk-actionmenu.styles';
 import FormModal, { ModalType } from '@app/modules/form';
 import { Format, formatsAvailableForMscrCopy } from '@app/common/interfaces/format.interface';
+import { useSelector } from 'react-redux';
+import { selectMenuList } from '@app/common/components/actionmenu/actionmenu.slice';
 
 interface SchemaAndCrosswalkActionmenuProps {
   type: ActionMenuTypes;
@@ -46,6 +48,7 @@ export default function SchemaAndCrosswalkActionMenu({
   const [patchSchema] = usePatchSchemaMutation();
   const [deleteSchema] = useDeleteSchemaMutation();
   const [deleteCrosswalk] = useDeleteCrosswalkMutation();
+  const menuState = useSelector(selectMenuList());
   const [isPublishConfirmModalOpen, setPublishConfirmModalOpen] =
     useState(false);
   const [isInvalidateConfirmModalOpen, setInvalidateConfirmModalOpen] =
@@ -58,7 +61,7 @@ export default function SchemaAndCrosswalkActionMenu({
   const [isMscrCopyModalOpen, setMscrCopyModalOpen] = useState(false);
   const [isCrosswalkPublished, setCrosswalkPublished] =
     React.useState<boolean>(false);
-  const [isLatestVersion, setIsLatestVersion] = useState(false);
+  // const [isLatestVersion, setIsLatestVersion] = useState(false);
 
   if (!isCrosswalkPublished && crosswalkPatchResponse.isSuccess) {
     if (
@@ -191,127 +194,140 @@ export default function SchemaAndCrosswalkActionMenu({
     setIsEditModeActive(isMappingsEditModeActive);
   }, [isMappingsEditModeActive]);
 
-  useEffect(() => {
-    const revisions = metadata.revisions;
-    if (revisions.length > 0) {
-      const latestVersion = revisions[revisions.length - 1].pid;
-      if (metadata.pid == latestVersion) {
-        setIsLatestVersion(true);
-      } else {
-        setIsLatestVersion(false);
-      }
-    }
-  }, [metadata.revisions, metadata.pid]);
+  // useEffect(() => {
+  //   const revisions = metadata.revisions;
+  //   if (revisions.length > 0) {
+  //     const latestVersion = revisions[revisions.length - 1].pid;
+  //     if (metadata.pid == latestVersion) {
+  //       setIsLatestVersion(true);
+  //     } else {
+  //       setIsLatestVersion(false);
+  //     }
+  //   }
+  // }, [metadata.revisions, metadata.pid]);
 
-  if (type == ActionMenuTypes.NoEditPermission) {
-    return renderStubMenu();
+  // if (type == ActionMenuTypes.NoEditPermission) {
+  //   return renderStubMenu();
+  // }
+
+  function getActionMenuItems() {
+    const items: ReactElement[] = [];
+    if (menuState.editContent) {
+      items.push(
+        <ActionMenuItem
+          key={'editContent'}
+          onClick={() => buttonCallbackFunction('edit')}
+        >
+          {isEditModeActive
+            ? t('actionmenu.finish-editing')
+            : t('actionmenu.edit-mappings')}
+        </ActionMenuItem>
+      );
+    }
+    if (menuState.editMetadata) {
+      items.push(
+        <ActionMenuItem
+          key={'editMetadata'}
+          onClick={() => buttonCallbackFunction('edit')}
+        >
+          {t('actionmenu.edit-metadata')}
+        </ActionMenuItem>
+      );
+    }
+    if (menuState.publish) {
+      items.push(
+        <ActionMenuItem
+          key={'publish'}
+          onClick={() => setPublishConfirmModalOpen(true)}
+        >
+          {type === ActionMenuTypes.Schema ||
+          type === ActionMenuTypes.SchemaMetadata
+            ? t('actionmenu.publish-schema')
+            : t('actionmenu.publish-crosswalk')}
+        </ActionMenuItem>
+      );
+    }
+    if (menuState.invalidate) {
+      items.push(
+        <ActionMenuItem
+          key={'invalidate'}
+          onClick={() => setInvalidateConfirmModalOpen(true)}
+        >
+          {type === ActionMenuTypes.Schema ||
+          type === ActionMenuTypes.SchemaMetadata
+            ? t('actionmenu.invalidate-schema')
+            : t('actionmenu.invalidate-crosswalk')}
+        </ActionMenuItem>
+      );
+    }
+    if (menuState.deprecate) {
+      items.push(
+        <ActionMenuItem
+          key={'deprecate'}
+          onClick={() => setDeprecateConfirmModalOpen(true)}
+        >
+          {type === ActionMenuTypes.Schema ||
+          type === ActionMenuTypes.SchemaMetadata
+            ? t('actionmenu.deprecate-schema')
+            : t('actionmenu.deprecate-crosswalk')}
+        </ActionMenuItem>
+      );
+    }
+    if (menuState.remove) {
+      items.push(
+        <ActionMenuItem
+          key={'remove'}
+          onClick={() => setRemoveConfirmModalOpen(true)}
+        >
+          {type === ActionMenuTypes.Schema ||
+          type === ActionMenuTypes.SchemaMetadata
+            ? t('actionmenu.delete-schema')
+            : t('actionmenu.delete-crosswalk')}
+        </ActionMenuItem>
+      );
+    }
+    if (menuState.version) {
+      items.push(
+        <ActionMenuItem
+          key={'version'}
+          onClick={() => setRevisionModalOpen(true)}
+        >
+          {t('actionmenu.revision')}
+        </ActionMenuItem>
+      );
+    }
+    if (menuState.mscrCopy) {
+      items.push(
+        <ActionMenuItem
+          key={'mscrCopy'}
+          onClick={() => setMscrCopyModalOpen(true)}
+        >
+          {t('actionmenu.mscr-copy')}
+        </ActionMenuItem>
+      );
+    }
+    if (menuState.deleteDraft) {
+      items.push(
+        <ActionMenuItem
+          key={'deleteDraft'}
+          onClick={() => setDeleteConfirmModalOpen(true)}
+        >
+          {t('actionmenu.delete-draft')}
+        </ActionMenuItem>
+      );
+    }
+    return items;
   }
 
   return (
     <>
-      <ActionMenuWrapper>
-        <ActionMenu buttonText={t('action.actions')}>
-          <ActionMenuItem
-            className={
-              type === ActionMenuTypes.CrosswalkEditor &&
-              metadata.state == State.Draft
-                ? ''
-                : 'd-none'
-            }
-            onClick={() => buttonCallbackFunction('edit')}
-          >
-            {isEditModeActive
-              ? t('actionmenu.finish-editing')
-              : t('actionmenu.edit-mappings')}
-          </ActionMenuItem>
-          <ActionMenuItem
-            onClick={() => buttonCallbackFunction('edit')}
-            className={
-              type === ActionMenuTypes.CrosswalkMetadata ||
-              type === ActionMenuTypes.SchemaMetadata
-                ? ''
-                : 'd-none'
-            }
-          >
-            {t('actionmenu.edit-metadata')}
-          </ActionMenuItem>
-          <ActionMenuItem
-            className={
-              metadata && metadata.state == State.Draft ? '' : 'd-none'
-            }
-            onClick={() => setPublishConfirmModalOpen(true)}
-          >
-            {type === ActionMenuTypes.Schema ||
-            type === ActionMenuTypes.SchemaMetadata
-              ? t('actionmenu.publish-schema')
-              : t('actionmenu.publish-crosswalk')}
-          </ActionMenuItem>
-          <ActionMenuItem
-            className={
-              metadata && metadata.state == State.Published ? '' : 'd-none'
-            }
-            onClick={() => setInvalidateConfirmModalOpen(true)}
-          >
-            {type === ActionMenuTypes.Schema ||
-            type === ActionMenuTypes.SchemaMetadata
-              ? t('actionmenu.invalidate-schema')
-              : t('actionmenu.invalidate-crosswalk')}
-          </ActionMenuItem>
-          <ActionMenuItem
-            className={
-              metadata && metadata.state == State.Published ? '' : 'd-none'
-            }
-            onClick={() => setDeprecateConfirmModalOpen(true)}
-          >
-            {type === ActionMenuTypes.Schema ||
-            type === ActionMenuTypes.SchemaMetadata
-              ? t('actionmenu.deprecate-schema')
-              : t('actionmenu.deprecate-crosswalk')}
-          </ActionMenuItem>
-          <ActionMenuItem
-            className={
-              metadata && metadata.state == State.Draft ? '' : 'd-none'
-            }
-            onClick={() => setDeleteConfirmModalOpen(true)}
-          >
-            {t('actionmenu.delete-draft')}
-          </ActionMenuItem>
-          <ActionMenuItem
-            className={
-              metadata &&
-              metadata.state &&
-              (metadata.state == State.Invalid ||
-                metadata.state == State.Deprecated)
-                ? ''
-                : 'd-none'
-            }
-            onClick={() => setRemoveConfirmModalOpen(true)}
-          >
-            {type === ActionMenuTypes.Schema ||
-            type === ActionMenuTypes.SchemaMetadata
-              ? t('actionmenu.delete-schema')
-              : t('actionmenu.delete-crosswalk')}
-          </ActionMenuItem>
-          <ActionMenuItem
-            className={isLatestVersion ? '' : 'd-none'}
-            onClick={() => setRevisionModalOpen(true)}
-          >
-            {t('actionmenu.revision')}
-          </ActionMenuItem>
-          <ActionMenuItem
-            className={
-              formatsAvailableForMscrCopy.includes(metadata.format) &&
-              (type === ActionMenuTypes.Schema ||
-                type === ActionMenuTypes.SchemaMetadata)
-                ? ''
-                : 'd-none'
-            }
-            onClick={() => setMscrCopyModalOpen(true)}
-          >
-            {t('actionmenu.mscr-copy')}
-          </ActionMenuItem>
-        </ActionMenu>
-      </ActionMenuWrapper>
+      {Object.values(menuState).some((isTrue) => isTrue) && (
+        <ActionMenuWrapper>
+          <ActionMenu buttonText={t('action.actions')}>
+            {getActionMenuItems()}
+          </ActionMenu>
+        </ActionMenuWrapper>
+      )}
       <ConfirmModal
         isVisible={isDeleteConfirmModalOpen}
         actionName={
