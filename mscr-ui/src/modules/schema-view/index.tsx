@@ -3,7 +3,11 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { useGetSchemaWithRevisionsQuery } from '@app/common/components/schema/schema.slice';
+import {
+  useDeleteSchemaMutation,
+  useGetSchemaWithRevisionsQuery,
+  usePatchSchemaMutation
+} from '@app/common/components/schema/schema.slice';
 import MetadataAndFiles from './metadata-and-files';
 import { createTheme, Grid, ThemeProvider } from '@mui/material';
 import VersionHistory from 'src/common/components/version-history';
@@ -20,13 +24,27 @@ import {
 import HasPermission from '@app/common/utils/has-permission';
 import { formatsAvailableForMscrCopy } from '@app/common/interfaces/format.interface';
 import { useStoreDispatch } from '@app/store';
-import { resetMenuList, selectMenuList, setMenuList } from '@app/common/components/actionmenu/actionmenu.slice';
+import {
+  resetMenuList,
+  selectMenuList,
+  selectModal, setConfirmState,
+  setMenuList
+} from '@app/common/components/actionmenu/actionmenu.slice';
 import { useSelector } from 'react-redux';
 import { updateActionMenu } from '@app/common/components/schema-and-crosswalk-actionmenu/update-action-menu';
+import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { NotificationKeys } from '@app/common/interfaces/notifications.interface';
+import ConfirmModal from '@app/common/components/confirmation-modal';
+import * as React from 'react';
 
 export default function SchemaView({ schemaId }: { schemaId: string }) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
+  const confirmModalIsOpen = useSelector(selectModal()).confirm;
+  const [patchSchema] = usePatchSchemaMutation();
+  const [deleteSchema] = useDeleteSchemaMutation();
+
 
   const {
     data: schemaDetails,
@@ -50,39 +68,66 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
   useEffect(() => {
     updateActionMenu(dispatch, Type.Schema, schemaDetails, hasEditPermission, isMscrCopyAvailable);
   }, [dispatch, hasEditPermission, isMscrCopyAvailable, schemaDetails]);
-  const menuState = useSelector(selectMenuList());
 
-  // useEffect(() => {
-  //   dispatch(resetMenuList());
-  //   console.log('resetting');
-  //   if (!schemaDetails || schemaDetails.state === State.Removed) {
-  //     return;
-  //   }
-  //   if (isMscrCopyAvailable) {
-  //     dispatch(setMenuList(['mscrCopy']));
-  //   }
-  //   if (!hasEditPermission) return;
-  //   dispatch(setMenuList(['editMetadata']));
-  //   switch (schemaDetails.state) {
-  //     case State.Draft:
-  //       dispatch(setMenuList(['deleteDraft', 'publish']));
-  //       break;
-  //     case State.Published:
-  //       dispatch(setMenuList(['deprecate', 'invalidate']));
-  //       break;
-  //     default:
-  //       dispatch(setMenuList(['remove']));
-  //   }
-  //   const revisions = schemaDetails.revisions;
-  //   if (revisions.length > 0) {
-  //     const latestVersion = revisions[revisions.length - 1].pid;
-  //     if (schemaDetails.pid === latestVersion) {
-  //       dispatch(setMenuList(['version']));
-  //     }
-  //   }
-  // }, [dispatch, hasEditPermission, isMscrCopyAvailable, schemaDetails]);
+  interface StatePayload {
+    versionLabel?: string;
+    state?: State;
+  }
+  const payloadBase: StatePayload = {
+    versionLabel: schemaDetails?.versionLabel,
+  };
 
-  console.log('menu state', menuState);
+  const publishSchema = () => {
+    const publishPayload = {...payloadBase, state: State.Published};
+    changeSchemaState(publishPayload, 'SCHEMA_PUBLISH');
+  };
+
+  const deprecateSchema = () => {
+    const deprecatePayload = {...payloadBase, state: State.Deprecated};
+    changeSchemaState(deprecatePayload, 'SCHEMA_DEPRECATE');
+  };
+
+  const invalidateSchema = () => {
+    const invalidatePayload = {...payloadBase, state: State.Invalid};
+    changeSchemaState(invalidatePayload, 'SCHEMA_INVALIDATE');
+  };
+
+  const removeSchema = () => {
+    const removePayload = {...payloadBase, state: State.Removed};
+    changeSchemaState(removePayload, 'SCHEMA_DELETE');
+  };
+
+  const changeSchemaState = (payload: StatePayload, notificationKey: NotificationKeys) => {
+    if (!schemaDetails) return;
+    patchSchema({ payload: payload, pid: schemaDetails.pid })
+      .unwrap()
+      .then(() => {
+        dispatch(
+          mscrSearchApi.util.invalidateTags([
+            'PersonalContent',
+            'OrgContent',
+            'MscrSearch',
+          ])
+        );
+        dispatch(setNotification(notificationKey));
+      });
+  };
+
+  const deleteSchemaDraft = () => {
+    if (!schemaDetails) return;
+    deleteSchema(schemaDetails.pid)
+      .unwrap()
+      .then(() => {
+        dispatch(
+          mscrSearchApi.util.invalidateTags([
+            'MscrSearch',
+            'OrgContent',
+            'PersonalContent',
+          ])
+        );
+        dispatch(setNotification('SCHEMA_DELETE'));
+      });
+  };
 
   const theme = createTheme({
     typography: {
@@ -213,6 +258,58 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
               </Grid>
             )}
           </>
+        )}
+        {confirmModalIsOpen.deleteDraft && (
+          <ConfirmModal
+            actionText={t('actionmenu.delete-schema')}
+            cancelText={t('action.cancel')}
+            confirmAction={deleteSchemaDraft}
+            onClose={() => dispatch(setConfirmState({key: 'deleteDraft', value: false}))}
+            heading={t('confirm-modal.heading')}
+            text1={t('confirm-modal.delete-draft')}
+            text2={t('confirm-modal.delete-draft-info')}
+          />
+        )}
+        {confirmModalIsOpen.remove && (
+          <ConfirmModal
+            actionText={t('actionmenu.delete-schema')}
+            cancelText={t('action.cancel')}
+            confirmAction={removeSchema}
+            onClose={() => dispatch(setConfirmState({key: 'remove', value: false}))}
+            heading={t('confirm-modal.heading')}
+            text1={t('confirm-modal.delete-schema')}
+            text2={t('confirm-modal.delete-info')}
+          />
+        )}
+        {confirmModalIsOpen.publish && (
+          <ConfirmModal
+            actionText={t('action.publish')}
+            cancelText={t('action.cancel')}
+            confirmAction={publishSchema}
+            onClose={() => dispatch(setConfirmState({key: 'publish', value: false}))}
+            heading={t('confirm-modal.heading')}
+            text1={t('confirm-modal.publish-schema')}
+          />
+        )}
+        {confirmModalIsOpen.invalidate && (
+          <ConfirmModal
+            actionText={t('action.invalidate')}
+            cancelText={t('action.cancel')}
+            confirmAction={invalidateSchema}
+            onClose={() => dispatch(setConfirmState({key: 'invalidate', value: false}))}
+            heading={t('confirm-modal.heading')}
+            text1={t('confirm-modal.invalidate-schema')}
+          />
+        )}
+        {confirmModalIsOpen.deprecate && (
+          <ConfirmModal
+            actionText={t('action.deprecate')}
+            cancelText={t('action.cancel')}
+            confirmAction={deprecateSchema}
+            onClose={() => dispatch(setConfirmState({key: 'deprecate', value: false}))}
+            heading={t('confirm-modal.heading')}
+            text1={t('confirm-modal.deprecate-schema')}
+          />
         )}
       </ThemeProvider>
     );

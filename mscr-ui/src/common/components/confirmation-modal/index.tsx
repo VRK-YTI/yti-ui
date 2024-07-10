@@ -7,21 +7,26 @@ import {
   ModalTitleH1,
 } from 'yti-common-ui/components/login-modal/login-modal.styles';
 
-export default function ConfirmModal(props: { isVisible: boolean; heading: string; text1: string; text2?:string; actionName: string; actionText: string; cancelText: string; performConfirmModalAction: (action: string) => void}) {
+export default function ConfirmModal(props: { isVisible?: boolean; heading: string; text1: string; text2?:string; actionText: string; cancelText: string; confirmAction: () => void; onClose: () => void }) {
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setVisible(props.isVisible);
+    if (props.isVisible === undefined || props.isVisible) {
+      setVisible(true);
+    }
   }, [props.isVisible]);
 
   function performAction(isCloseAction: boolean) {
-    setVisible(false);
-    if (isCloseAction) {
-      props.performConfirmModalAction('close');
-    } else {
-      props.performConfirmModalAction(props.actionName);
+    if (!isCloseAction) {
+      props.confirmAction();
     }
+    props.onClose();
+    // if (isCloseAction) {
+    //   props.performConfirmModalAction('close');
+    // } else {
+    //   props.performConfirmModalAction(props.actionName);
+    // }
   }
 
   return (
@@ -30,7 +35,7 @@ export default function ConfirmModal(props: { isVisible: boolean; heading: strin
         appElementId="__next"
         visible={visible}
         variant={isSmall ? 'smallScreen' : 'default'}
-        onEscKeyDown={() => setVisible(false)}
+        onEscKeyDown={() => performAction(true)}
         scrollable={false}
       >
         <ModalContentSmPadding>

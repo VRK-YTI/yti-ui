@@ -22,7 +22,7 @@ import { ActionMenuWrapper } from '@app/common/components/schema-and-crosswalk-a
 import FormModal, { ModalType } from '@app/modules/form';
 import { Format, formatsAvailableForMscrCopy } from '@app/common/interfaces/format.interface';
 import { useSelector } from 'react-redux';
-import { selectMenuList } from '@app/common/components/actionmenu/actionmenu.slice';
+import { selectMenuList, setConfirmState } from '@app/common/components/actionmenu/actionmenu.slice';
 
 interface SchemaAndCrosswalkActionmenuProps {
   type: ActionMenuTypes;
@@ -238,7 +238,7 @@ export default function SchemaAndCrosswalkActionMenu({
       items.push(
         <ActionMenuItem
           key={'publish'}
-          onClick={() => setPublishConfirmModalOpen(true)}
+          onClick={() => dispatch(setConfirmState({key: 'publish', value: true}))}
         >
           {type === ActionMenuTypes.Schema ||
           type === ActionMenuTypes.SchemaMetadata
@@ -251,7 +251,7 @@ export default function SchemaAndCrosswalkActionMenu({
       items.push(
         <ActionMenuItem
           key={'invalidate'}
-          onClick={() => setInvalidateConfirmModalOpen(true)}
+          onClick={() => dispatch(setConfirmState({key: 'invalidate', value: true}))}
         >
           {type === ActionMenuTypes.Schema ||
           type === ActionMenuTypes.SchemaMetadata
@@ -264,7 +264,7 @@ export default function SchemaAndCrosswalkActionMenu({
       items.push(
         <ActionMenuItem
           key={'deprecate'}
-          onClick={() => setDeprecateConfirmModalOpen(true)}
+          onClick={() => dispatch(setConfirmState({key: 'deprecate', value: true}))}
         >
           {type === ActionMenuTypes.Schema ||
           type === ActionMenuTypes.SchemaMetadata
@@ -277,7 +277,7 @@ export default function SchemaAndCrosswalkActionMenu({
       items.push(
         <ActionMenuItem
           key={'remove'}
-          onClick={() => setRemoveConfirmModalOpen(true)}
+          onClick={() => dispatch(setConfirmState({key: 'remove', value: true}))}
         >
           {type === ActionMenuTypes.Schema ||
           type === ActionMenuTypes.SchemaMetadata
@@ -310,7 +310,7 @@ export default function SchemaAndCrosswalkActionMenu({
       items.push(
         <ActionMenuItem
           key={'deleteDraft'}
-          onClick={() => setDeleteConfirmModalOpen(true)}
+          onClick={() => dispatch(setConfirmState({key: 'deleteDraft', value: true}))}
         >
           {t('actionmenu.delete-draft')}
         </ActionMenuItem>
@@ -328,100 +328,7 @@ export default function SchemaAndCrosswalkActionMenu({
           </ActionMenu>
         </ActionMenuWrapper>
       )}
-      <ConfirmModal
-        isVisible={isDeleteConfirmModalOpen}
-        actionName={
-          type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? 'deleteSchema'
-            : 'deleteCrosswalk'
-        }
-        actionText={
-          type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('actionmenu.delete-schema')
-            : t('actionmenu.delete-crosswalk')
-        }
-        cancelText={t('action.cancel')}
-        performConfirmModalAction={performModalAction}
-        heading={t('confirm-modal.heading')}
-        text1={t('confirm-modal.delete-draft')}
-        text2={t('confirm-modal.delete-draft-info')}
-      />
-
-      <ConfirmModal
-        isVisible={isRemoveConfirmModalOpen}
-        actionName={'remove'}
-        actionText={
-          type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('actionmenu.delete-schema')
-            : t('actionmenu.delete-crosswalk')
-        }
-        cancelText={t('action.cancel')}
-        performConfirmModalAction={performModalAction}
-        heading={t('confirm-modal.heading')}
-        text1={
-          type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('confirm-modal.delete-schema')
-            : t('confirm-modal.delete-crosswalk')
-        }
-        text2={t('confirm-modal.delete-info')}
-      />
-
-      <ConfirmModal
-        isVisible={isPublishConfirmModalOpen}
-        actionName={'publish'}
-        actionText={t('action.publish')}
-        cancelText={t('action.cancel')}
-        performConfirmModalAction={performModalAction}
-        heading={t('confirm-modal.heading')}
-        text1={
-          type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('confirm-modal.publish-schema')
-            : t('confirm-modal.publish-crosswalk1')
-        }
-        text2={
-          type !== ActionMenuTypes.Schema &&
-          type !== ActionMenuTypes.SchemaMetadata
-            ? t('confirm-modal.publish-crosswalk2')
-            : undefined
-        }
-      />
-
-      <ConfirmModal
-        isVisible={isInvalidateConfirmModalOpen}
-        actionName={'invalidate'}
-        actionText={t('action.invalidate')}
-        cancelText={t('action.cancel')}
-        performConfirmModalAction={performModalAction}
-        heading={t('confirm-modal.heading')}
-        text1={
-          type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('confirm-modal.invalidate-schema')
-            : t('confirm-modal.invalidate-crosswalk')
-        }
-        text2={undefined}
-      />
-
-      <ConfirmModal
-        isVisible={isDeprecateConfirmModalOpen}
-        actionName={'deprecate'}
-        actionText={t('action.deprecate')}
-        cancelText={t('action.cancel')}
-        performConfirmModalAction={performModalAction}
-        heading={t('confirm-modal.heading')}
-        text1={
-          type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('confirm-modal.deprecate-schema')
-            : t('confirm-modal.deprecate-crosswalk')
-        }
-        text2={undefined}
-      />
+      {/*() => dispatch(setConfirmState({key: 'publish', value: true}))*/}
 
       <FormModal
         modalType={

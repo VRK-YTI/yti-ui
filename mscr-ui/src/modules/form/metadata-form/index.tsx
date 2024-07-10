@@ -407,7 +407,7 @@ export default function MetadataForm({
         actionName={'save'}
         actionText={t('action.save')}
         cancelText={t('action.cancel')}
-        performConfirmModalAction={performModalAction}
+        confirmAction={performModalAction}
         heading={t('confirm-modal.heading')}
         text1={t('confirm-modal.save')}
       />
