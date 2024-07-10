@@ -207,8 +207,8 @@ function getPositionAndSize(node: Node, offset?: number) {
     return {
       x: node.position.x + 5,
       // 65 here is the height of the classNode title
-      // Multiplier 37.25 is gap (5px) + margin (2 * 2px) + border (0.625px) + height (27px)
-      y: node.position.y + 65 + (offset - 1) * 37.25,
+      // Multiplier 38 is gap (5px) + margin (2 * 2px) + border (2 * 1px) + height (27px)
+      y: node.position.y + 65 + (offset - 1) * 38,
       w: node.width ? node.width - 10 : 0,
       h: 27,
     };
