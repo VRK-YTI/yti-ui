@@ -27,7 +27,7 @@ import {
   useDeleteMappingMutation,
   usePatchMappingMutation,
   useGetMappingsQuery,
-  useGetCrosswalkWithRevisionsQuery,
+  useGetCrosswalkWithRevisionsQuery, useDeleteCrosswalkMutation
 } from '@app/common/components/crosswalk/crosswalk.slice';
 import { useGetCrosswalkMappingFunctionsQuery } from '@app/common/components/crosswalk-functions/crosswalk-functions.slice';
 import { createTheme, Grid, ThemeProvider } from '@mui/material';
@@ -37,7 +37,7 @@ import SchemaInfo from '@app/common/components/schema-info';
 import { useTranslation } from 'next-i18next';
 import { State } from '@app/common/interfaces/state.interface';
 import MetadataStub from '@app/modules/form/metadata-form/metadata-stub';
-import { ActionMenuTypes, Type } from '@app/common/interfaces/search.interface';
+import { Type } from '@app/common/interfaces/search.interface';
 import SchemaAndCrosswalkActionMenu from '@app/common/components/schema-and-crosswalk-actionmenu';
 import {
   ActionMenuContainer,
@@ -48,6 +48,17 @@ import { setNotification } from '@app/common/components/notifications/notificati
 import { useStoreDispatch } from '@app/store';
 import OperationalizeModal from '../operationalize-modal';
 import { updateActionMenu } from '@app/common/components/schema-and-crosswalk-actionmenu/update-action-menu';
+import { NotificationKeys } from '@app/common/interfaces/notifications.interface';
+import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
+import ConfirmModal from '@app/common/components/confirmation-modal';
+import { selectModal, setConfirmState, setFormState } from '@app/common/components/actionmenu/actionmenu.slice';
+import FormModal, { ModalType } from '@app/modules/form';
+import { useSelector } from 'react-redux';
+import { Format } from '@app/common/interfaces/format.interface';
+import {
+  setIsEditContentActive,
+  setIsEditMetadataActive
+} from '@app/common/components/content-view/content-view.slice';
 
 export default function CrosswalkEditor({
   crosswalkId,
@@ -142,6 +153,13 @@ export default function CrosswalkEditor({
   const { data: mappingFilters, isLoading: mappingFiltersIsLoading } =
     useGetCrosswalkMappingFunctionsQuery('FILTERS');
 
+  // ToDo: Create a wrapping component eg CrosswalkView that then calls this component for the editor
+  // ToDo: Then move the following section there, all this concerns the content as a whole
+  const confirmModalIsOpen = useSelector(selectModal()).confirm;
+  const formModalIsOpen = useSelector(selectModal()).form;
+  const [patchCrosswalk, crosswalkPatchResponse] = usePatchCrosswalkMutation();
+  const [deleteCrosswalk] = useDeleteCrosswalkMutation();
+
   const {
     data: getCrosswalkData,
     isLoading: getCrosswalkDataIsLoading,
@@ -157,8 +175,72 @@ export default function CrosswalkEditor({
   });
 
   useEffect(() => {
-    updateActionMenu(dispatch, Type.Crosswalk,getCrosswalkData, hasEditRights);
+    updateActionMenu(dispatch, Type.Crosswalk, getCrosswalkData, hasEditRights);
   }, [dispatch, getCrosswalkData, hasEditRights]);
+
+  interface StatePayload {
+    versionLabel?: string;
+    state?: State;
+  }
+  const payloadBase: StatePayload = {
+    versionLabel: getCrosswalkData?.versionLabel,
+  };
+
+  const publishCrosswalk = () => {
+    const publishPayload = {...payloadBase, state: State.Published};
+    dispatch(setIsEditContentActive(false));
+    changeCrosswalkState(publishPayload, 'CROSSWALK_PUBLISH');
+  };
+
+  const deprecateCrosswalk = () => {
+    const deprecatePayload = {...payloadBase, state: State.Deprecated};
+    changeCrosswalkState(deprecatePayload, 'CROSSWALK_DEPRECATE');
+  };
+
+  const invalidateCrosswalk = () => {
+    const invalidatePayload = {...payloadBase, state: State.Invalid};
+    changeCrosswalkState(invalidatePayload, 'CROSSWALK_INVALIDATE');
+  };
+
+  const removeCrosswalk = () => {
+    const removePayload = {...payloadBase, state: State.Removed};
+    changeCrosswalkState(removePayload, 'CROSSWALK_DELETE');
+  };
+
+  const changeCrosswalkState = (payload: StatePayload, notificationKey: NotificationKeys) => {
+    if (!getCrosswalkData) return;
+    patchCrosswalk({ payload: payload, pid: getCrosswalkData.pid })
+      .unwrap()
+      .then(() => {
+        dispatch(
+          mscrSearchApi.util.invalidateTags([
+            'PersonalContent',
+            'OrgContent',
+            'MscrSearch',
+          ])
+        );
+        dispatch(setNotification(notificationKey));
+      });
+  };
+
+  const deleteCrosswalkDraft = () => {
+    if (!getCrosswalkData) return;
+    deleteCrosswalk(getCrosswalkData.pid)
+      .unwrap()
+      .then(() => {
+        dispatch(
+          mscrSearchApi.util.invalidateTags([
+            'MscrSearch',
+            'OrgContent',
+            'PersonalContent',
+          ])
+        );
+        dispatch(setNotification('CROSSWALK_DELETE'));
+      });
+    // ToDo: handle an exception
+  };
+  // End of whole content level functions
+
 
   const fromTree = (nodes: any) => (
     <TreeItem
@@ -578,15 +660,16 @@ export default function CrosswalkEditor({
               >
                 {hasEditRights && (
                   <>
-                    <ActionMenuWrapper>
-                      <SchemaAndCrosswalkActionMenu
-                        buttonCallbackFunction={performCallbackFromActionMenu}
-                        metadata={getCrosswalkData}
-                        isMappingsEditModeActive={isEditModeActive}
-                        refetchMetadata={refetchCrosswalkData}
-                        type={ActionMenuTypes.CrosswalkEditor}
-                      />
-                    </ActionMenuWrapper>
+                    {/*Todo: Clean up, see if layout needs adjusting*/}
+                    {/*<ActionMenuWrapper>*/}
+                    {/*  <SchemaAndCrosswalkActionMenu*/}
+                    {/*    buttonCallbackFunction={performCallbackFromActionMenu}*/}
+                    {/*    metadata={getCrosswalkData}*/}
+                    {/*    isMappingsEditModeActive={isEditModeActive}*/}
+                    {/*    refetchMetadata={refetchCrosswalkData}*/}
+                    {/*    type={ActionMenuTypes.CrosswalkEditor}*/}
+                    {/*  />*/}
+                    {/*</ActionMenuWrapper>*/}
                     {/*<TestButton>*/}
                     {/*    <OperationalizeModal*/}
                     {/*      sourceSchemaPid=""*/}
@@ -728,19 +811,19 @@ export default function CrosswalkEditor({
                       <h2 className="ms-2">{t('metadata.versions')}</h2>
                     </Grid>
                     <Grid item xs={6} className="d-flex justify-content-end">
-                      <div className="mt-3 me-2">
-                        {hasEditRights && (
-                          <SchemaAndCrosswalkActionMenu
-                            buttonCallbackFunction={
-                              performCallbackFromActionMenu
-                            }
-                            metadata={getCrosswalkData}
-                            isMappingsEditModeActive={isEditModeActive}
-                            refetchMetadata={refetchCrosswalkData}
-                            type={ActionMenuTypes.CrosswalkVersionInfo}
-                          />
-                        )}
-                      </div>
+                      {/*<div className="mt-3 me-2">*/}
+                      {/*  {hasEditRights && (*/}
+                      {/*    <SchemaAndCrosswalkActionMenu*/}
+                      {/*      buttonCallbackFunction={*/}
+                      {/*        performCallbackFromActionMenu*/}
+                      {/*      }*/}
+                      {/*      metadata={getCrosswalkData}*/}
+                      {/*      isMappingsEditModeActive={isEditModeActive}*/}
+                      {/*      refetchMetadata={refetchCrosswalkData}*/}
+                      {/*      type={ActionMenuTypes.CrosswalkVersionInfo}*/}
+                      {/*    />*/}
+                      {/*  )}*/}
+                      {/*</div>*/}
                     </Grid>
                     <Grid item xs={12}>
                       <VersionHistory
@@ -776,6 +859,70 @@ export default function CrosswalkEditor({
           )
         )}
       </>
+      {confirmModalIsOpen.deleteDraft && (
+        <ConfirmModal
+          actionText={t('actionmenu.delete-crosswalk')}
+          cancelText={t('action.cancel')}
+          confirmAction={deleteCrosswalkDraft}
+          onClose={() => dispatch(setConfirmState({key: 'deleteDraft', value: false}))}
+          heading={t('confirm-modal.heading')}
+          text1={t('confirm-modal.delete-draft')}
+          text2={t('confirm-modal.delete-draft-info')}
+        />
+      )}
+      {confirmModalIsOpen.remove && (
+        <ConfirmModal
+          actionText={t('actionmenu.delete-crosswalk')}
+          cancelText={t('action.cancel')}
+          confirmAction={removeCrosswalk}
+          onClose={() => dispatch(setConfirmState({key: 'remove', value: false}))}
+          heading={t('confirm-modal.heading')}
+          text1={t('confirm-modal.delete-crosswalk')}
+          text2={t('confirm-modal.delete-info')}
+        />
+      )}
+      {confirmModalIsOpen.publish && (
+        <ConfirmModal
+          actionText={t('action.publish')}
+          cancelText={t('action.cancel')}
+          confirmAction={publishCrosswalk}
+          onClose={() => dispatch(setConfirmState({key: 'publish', value: false}))}
+          heading={t('confirm-modal.heading')}
+          text1={t('confirm-modal.publish-crosswalk1')}
+          text2={t('confirm-modal.publish-crosswalk2')}
+        />
+      )}
+      {confirmModalIsOpen.invalidate && (
+        <ConfirmModal
+          actionText={t('action.invalidate')}
+          cancelText={t('action.cancel')}
+          confirmAction={invalidateCrosswalk}
+          onClose={() => dispatch(setConfirmState({key: 'invalidate', value: false}))}
+          heading={t('confirm-modal.heading')}
+          text1={t('confirm-modal.invalidate-crosswalk')}
+        />
+      )}
+      {confirmModalIsOpen.deprecate && (
+        <ConfirmModal
+          actionText={t('action.deprecate')}
+          cancelText={t('action.cancel')}
+          confirmAction={deprecateCrosswalk}
+          onClose={() => dispatch(setConfirmState({key: 'deprecate', value: false}))}
+          heading={t('confirm-modal.heading')}
+          text1={t('confirm-modal.deprecate-crosswalk')}
+        />
+      )}
+      <FormModal
+        modalType={
+          getCrosswalkData?.format === Format.Mscr
+            ? ModalType.RevisionMscr
+            : ModalType.RevisionFull
+        }
+        contentType={Type.Crosswalk}
+        visible={formModalIsOpen.version}
+        setVisible={(value) => dispatch(setFormState({key: 'version', value: value}))}
+        initialData={getCrosswalkData}
+      />
     </ThemeProvider>
   );
 }

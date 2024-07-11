@@ -25,6 +25,7 @@ export default function CrosswalkPage(props: IndexPageProps) {
         user={props.user ?? undefined}
         sideNavigationHidden={true}
         fakeableUsers={props.fakeableUsers}
+        isActionMenu={true}
       >
         <CrosswalkEditor crosswalkId={crosswalkId} />
       </Layout>

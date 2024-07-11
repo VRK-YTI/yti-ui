@@ -17,7 +17,6 @@ export function updateActionMenu(
   isMscrCopyAvailable?: boolean
 ) {
   dispatch(resetMenuList());
-  console.log('resetting');
   if (!contentData || contentData.state === State.Removed) {
     return;
   }

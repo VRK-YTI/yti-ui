@@ -1,214 +1,29 @@
-import {
-  useDeleteCrosswalkMutation,
-  usePatchCrosswalkMutation,
-} from '@app/common/components/crosswalk/crosswalk.slice';
-import {
-  useDeleteSchemaMutation,
-  usePatchSchemaMutation,
-} from '@app/common/components/schema/schema.slice';
 import { useTranslation } from 'next-i18next';
 import { ActionMenu, ActionMenuItem } from 'suomifi-ui-components';
-import * as React from 'react';
-import { ReactElement, useEffect, useState } from 'react';
-import { ActionMenuTypes, Type } from '@app/common/interfaces/search.interface';
-import { State } from '@app/common/interfaces/state.interface';
-import ConfirmModal from '@app/common/components/confirmation-modal';
+import { ReactElement } from 'react';
 import { useStoreDispatch } from '@app/store';
-import { setNotification } from '@app/common/components/notifications/notifications.slice';
-import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
-import { CrosswalkWithVersionInfo } from '@app/common/interfaces/crosswalk.interface';
-import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
 import { ActionMenuWrapper } from '@app/common/components/schema-and-crosswalk-actionmenu/schema-and-crosswalk-actionmenu.styles';
-import FormModal, { ModalType } from '@app/modules/form';
-import { Format, formatsAvailableForMscrCopy } from '@app/common/interfaces/format.interface';
 import { useSelector } from 'react-redux';
-import { selectMenuList, setConfirmState } from '@app/common/components/actionmenu/actionmenu.slice';
+import {
+  selectIsCrosswalk,
+  selectMenuList,
+  setConfirmState,
+  setFormState,
+} from '@app/common/components/actionmenu/actionmenu.slice';
+import {
+  selectIsEditContentActive,
+  selectIsEditMetadataActive,
+  setIsEditContentActive,
+  setIsEditMetadataActive,
+} from '@app/common/components/content-view/content-view.slice';
 
-interface SchemaAndCrosswalkActionmenuProps {
-  type: ActionMenuTypes;
-  metadata: SchemaWithVersionInfo | CrosswalkWithVersionInfo;
-  isMappingsEditModeActive: boolean;
-  refetchMetadata: () => void;
-  buttonCallbackFunction?: (action: string) => void;
-}
-
-export default function SchemaAndCrosswalkActionMenu({
-  type,
-  metadata,
-  isMappingsEditModeActive,
-  refetchMetadata,
-  buttonCallbackFunction = () => {
-    return;
-  },
-}: SchemaAndCrosswalkActionmenuProps) {
+export default function SchemaAndCrosswalkActionMenu() {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
-  const [isEditModeActive, setIsEditModeActive] = useState(false);
-  const [patchCrosswalk, crosswalkPatchResponse] = usePatchCrosswalkMutation();
-  const [patchSchema] = usePatchSchemaMutation();
-  const [deleteSchema] = useDeleteSchemaMutation();
-  const [deleteCrosswalk] = useDeleteCrosswalkMutation();
+  const isCrosswalk = useSelector(selectIsCrosswalk());
   const menuState = useSelector(selectMenuList());
-  const [isPublishConfirmModalOpen, setPublishConfirmModalOpen] =
-    useState(false);
-  const [isInvalidateConfirmModalOpen, setInvalidateConfirmModalOpen] =
-    useState(false);
-  const [isDeprecateConfirmModalOpen, setDeprecateConfirmModalOpen] =
-    useState(false);
-  const [isDeleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState(false);
-  const [isRemoveConfirmModalOpen, setRemoveConfirmModalOpen] = useState(false);
-  const [isRevisionModalOpen, setRevisionModalOpen] = useState(false);
-  const [isMscrCopyModalOpen, setMscrCopyModalOpen] = useState(false);
-  const [isCrosswalkPublished, setCrosswalkPublished] =
-    React.useState<boolean>(false);
-  // const [isLatestVersion, setIsLatestVersion] = useState(false);
-
-  if (!isCrosswalkPublished && crosswalkPatchResponse.isSuccess) {
-    if (
-      crosswalkPatchResponse?.originalArgs?.payload?.state === State.Published
-    ) {
-      buttonCallbackFunction('disableEdit');
-      setIsEditModeActive(false);
-      setCrosswalkPublished(true);
-    }
-  }
-
-  const performModalAction = (action: string) => {
-    setPublishConfirmModalOpen(false);
-    setDeleteConfirmModalOpen(false);
-    setRemoveConfirmModalOpen(false);
-    setInvalidateConfirmModalOpen(false);
-    setDeprecateConfirmModalOpen(false);
-    if (action === 'close') {
-      return;
-    }
-    const payload: { versionLabel: string; state?: State } = {
-      versionLabel: metadata.versionLabel,
-    };
-    switch (action) {
-      case 'publish':
-        payload.state = State.Published;
-        break;
-      case 'deprecate':
-        payload.state = State.Deprecated;
-        break;
-      case 'invalidate':
-        payload.state = State.Invalid;
-        break;
-      case 'remove':
-        payload.state = State.Removed;
-    }
-    if (['publish', 'invalidate', 'deprecate', 'remove'].includes(action)) {
-      setIsEditModeActive(false);
-      if (
-        type !== ActionMenuTypes.Schema &&
-        type !== ActionMenuTypes.SchemaMetadata
-      ) {
-        patchCrosswalk({ payload: payload, pid: metadata.pid })
-          .unwrap()
-          .then(() => {
-            dispatch(
-              mscrSearchApi.util.invalidateTags([
-                'PersonalContent',
-                'OrgContent',
-                'MscrSearch',
-              ])
-            );
-            dispatch(
-              setNotification(
-                action === 'publish'
-                  ? 'CROSSWALK_PUBLISH'
-                  : action === 'invalidate'
-                    ? 'CROSSWALK_INVALIDATE'
-                    : action === 'deprecate'
-                      ? 'CROSSWALK_DEPRECATE'
-                      : 'CROSSWALK_DELETE'
-              )
-            );
-            refetchMetadata();
-          });
-        // ToDo: Error notifications with .catch
-      } else if (
-        type === ActionMenuTypes.Schema ||
-        type === ActionMenuTypes.SchemaMetadata
-      ) {
-        patchSchema({ payload: payload, pid: metadata.pid })
-          .unwrap()
-          .then(() => {
-            dispatch(
-              mscrSearchApi.util.invalidateTags([
-                'PersonalContent',
-                'OrgContent',
-                'MscrSearch',
-              ])
-            );
-            dispatch(
-              setNotification(
-                action === 'publish'
-                  ? 'SCHEMA_PUBLISH'
-                  : action === 'invalidate'
-                    ? 'SCHEMA_INVALIDATE'
-                    : action === 'deprecate'
-                      ? 'SCHEMA_DEPRECATE'
-                      : 'SCHEMA_DELETE'
-              )
-            );
-            refetchMetadata();
-          });
-      }
-    }
-    if (action === 'deleteCrosswalk') {
-      deleteCrosswalk(metadata.pid.toString())
-        .unwrap()
-        .then(() => {
-          dispatch(
-            mscrSearchApi.util.invalidateTags([
-              'MscrSearch',
-              'OrgContent',
-              'PersonalContent',
-            ])
-          );
-          dispatch(setNotification('CROSSWALK_DELETE'));
-          refetchMetadata();
-        });
-      // ToDo: Error notifications with .catch
-    } else if (action === 'deleteSchema') {
-      deleteSchema(metadata.pid.toString())
-        .unwrap()
-        .then(() => {
-          dispatch(
-            mscrSearchApi.util.invalidateTags([
-              'MscrSearch',
-              'OrgContent',
-              'PersonalContent',
-            ])
-          );
-          dispatch(setNotification('SCHEMA_DELETE'));
-          refetchMetadata();
-        });
-      // ToDo: Error notifications with .catch
-    }
-  };
-
-  useEffect(() => {
-    setIsEditModeActive(isMappingsEditModeActive);
-  }, [isMappingsEditModeActive]);
-
-  // useEffect(() => {
-  //   const revisions = metadata.revisions;
-  //   if (revisions.length > 0) {
-  //     const latestVersion = revisions[revisions.length - 1].pid;
-  //     if (metadata.pid == latestVersion) {
-  //       setIsLatestVersion(true);
-  //     } else {
-  //       setIsLatestVersion(false);
-  //     }
-  //   }
-  // }, [metadata.revisions, metadata.pid]);
-
-  // if (type == ActionMenuTypes.NoEditPermission) {
-  //   return renderStubMenu();
-  // }
+  const isContentEditActive = useSelector(selectIsEditContentActive());
+  const isMetadataEditActive = useSelector(selectIsEditMetadataActive());
 
   function getActionMenuItems() {
     const items: ReactElement[] = [];
@@ -216,19 +31,21 @@ export default function SchemaAndCrosswalkActionMenu({
       items.push(
         <ActionMenuItem
           key={'editContent'}
-          onClick={() => buttonCallbackFunction('edit')}
+          onClick={() => dispatch(setIsEditContentActive(!isContentEditActive))}
         >
-          {isEditModeActive
+          {isContentEditActive
             ? t('actionmenu.finish-editing')
             : t('actionmenu.edit-mappings')}
         </ActionMenuItem>
       );
     }
-    if (menuState.editMetadata) {
+    if (menuState.editMetadata && !isMetadataEditActive) {
       items.push(
         <ActionMenuItem
           key={'editMetadata'}
-          onClick={() => buttonCallbackFunction('edit')}
+          onClick={() =>
+            dispatch(setIsEditMetadataActive(!isMetadataEditActive))
+          }
         >
           {t('actionmenu.edit-metadata')}
         </ActionMenuItem>
@@ -238,12 +55,13 @@ export default function SchemaAndCrosswalkActionMenu({
       items.push(
         <ActionMenuItem
           key={'publish'}
-          onClick={() => dispatch(setConfirmState({key: 'publish', value: true}))}
+          onClick={() =>
+            dispatch(setConfirmState({ key: 'publish', value: true }))
+          }
         >
-          {type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('actionmenu.publish-schema')
-            : t('actionmenu.publish-crosswalk')}
+          {isCrosswalk
+            ? t('actionmenu.publish-crosswalk')
+            : t('actionmenu.publish-schema')}
         </ActionMenuItem>
       );
     }
@@ -251,12 +69,13 @@ export default function SchemaAndCrosswalkActionMenu({
       items.push(
         <ActionMenuItem
           key={'invalidate'}
-          onClick={() => dispatch(setConfirmState({key: 'invalidate', value: true}))}
+          onClick={() =>
+            dispatch(setConfirmState({ key: 'invalidate', value: true }))
+          }
         >
-          {type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('actionmenu.invalidate-schema')
-            : t('actionmenu.invalidate-crosswalk')}
+          {isCrosswalk
+            ? t('actionmenu.invalidate-crosswalk')
+            : t('actionmenu.invalidate-schema')}
         </ActionMenuItem>
       );
     }
@@ -264,12 +83,13 @@ export default function SchemaAndCrosswalkActionMenu({
       items.push(
         <ActionMenuItem
           key={'deprecate'}
-          onClick={() => dispatch(setConfirmState({key: 'deprecate', value: true}))}
+          onClick={() =>
+            dispatch(setConfirmState({ key: 'deprecate', value: true }))
+          }
         >
-          {type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('actionmenu.deprecate-schema')
-            : t('actionmenu.deprecate-crosswalk')}
+          {isCrosswalk
+            ? t('actionmenu.deprecate-crosswalk')
+            : t('actionmenu.deprecate-schema')}
         </ActionMenuItem>
       );
     }
@@ -277,12 +97,13 @@ export default function SchemaAndCrosswalkActionMenu({
       items.push(
         <ActionMenuItem
           key={'remove'}
-          onClick={() => dispatch(setConfirmState({key: 'remove', value: true}))}
+          onClick={() =>
+            dispatch(setConfirmState({ key: 'remove', value: true }))
+          }
         >
-          {type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? t('actionmenu.delete-schema')
-            : t('actionmenu.delete-crosswalk')}
+          {isCrosswalk
+            ? t('actionmenu.delete-crosswalk')
+            : t('actionmenu.delete-schema')}
         </ActionMenuItem>
       );
     }
@@ -290,7 +111,9 @@ export default function SchemaAndCrosswalkActionMenu({
       items.push(
         <ActionMenuItem
           key={'version'}
-          onClick={() => setRevisionModalOpen(true)}
+          onClick={() =>
+            dispatch(setFormState({ key: 'version', value: true }))
+          }
         >
           {t('actionmenu.revision')}
         </ActionMenuItem>
@@ -300,7 +123,9 @@ export default function SchemaAndCrosswalkActionMenu({
       items.push(
         <ActionMenuItem
           key={'mscrCopy'}
-          onClick={() => setMscrCopyModalOpen(true)}
+          onClick={() =>
+            dispatch(setFormState({ key: 'mscrCopy', value: true }))
+          }
         >
           {t('actionmenu.mscr-copy')}
         </ActionMenuItem>
@@ -310,7 +135,9 @@ export default function SchemaAndCrosswalkActionMenu({
       items.push(
         <ActionMenuItem
           key={'deleteDraft'}
-          onClick={() => dispatch(setConfirmState({key: 'deleteDraft', value: true}))}
+          onClick={() =>
+            dispatch(setConfirmState({ key: 'deleteDraft', value: true }))
+          }
         >
           {t('actionmenu.delete-draft')}
         </ActionMenuItem>
@@ -328,52 +155,6 @@ export default function SchemaAndCrosswalkActionMenu({
           </ActionMenu>
         </ActionMenuWrapper>
       )}
-      {/*() => dispatch(setConfirmState({key: 'publish', value: true}))*/}
-
-      <FormModal
-        modalType={
-          metadata.format == Format.Mscr
-            ? ModalType.RevisionMscr
-            : ModalType.RevisionFull
-        }
-        contentType={
-          type === ActionMenuTypes.Schema ||
-          type === ActionMenuTypes.SchemaMetadata
-            ? Type.Schema
-            : Type.Crosswalk
-        }
-        visible={isRevisionModalOpen}
-        setVisible={setRevisionModalOpen}
-        initialData={metadata}
-      />
-      <FormModal
-        modalType={ModalType.McsrCopy}
-        contentType={Type.Schema}
-        visible={isMscrCopyModalOpen}
-        setVisible={setMscrCopyModalOpen}
-        initialData={metadata}
-      />
     </>
   );
-
-  function renderStubMenu() {
-    return (
-      <>
-        <ActionMenuWrapper>
-          <ActionMenu buttonText={t('action.actions')}>
-            <ActionMenuItem onClick={() => setMscrCopyModalOpen(true)}>
-              {t('actionmenu.mscr-copy')}
-            </ActionMenuItem>
-          </ActionMenu>
-        </ActionMenuWrapper>
-        <FormModal
-          modalType={ModalType.McsrCopy}
-          contentType={Type.Schema}
-          visible={isMscrCopyModalOpen}
-          setVisible={setMscrCopyModalOpen}
-          initialData={metadata}
-        />
-      </>
-    );
-  }
 }

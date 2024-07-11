@@ -14,21 +14,17 @@ import VersionHistory from 'src/common/components/version-history';
 import SchemaVisualization from '@app/modules/schema-view/schema-visualization';
 import { State } from '@app/common/interfaces/state.interface';
 import MetadataStub from '@app/modules/form/metadata-form/metadata-stub';
-import { ActionMenuTypes, Type } from '@app/common/interfaces/search.interface';
+import { Type } from '@app/common/interfaces/search.interface';
 import { Text } from 'suomifi-ui-components';
-import SchemaAndCrosswalkActionMenu from '@app/common/components/schema-and-crosswalk-actionmenu';
 import {
   SchemaVisualizationWrapper,
   VersionsHeading,
 } from '@app/modules/schema-view/schema-view-styles';
 import HasPermission from '@app/common/utils/has-permission';
-import { formatsAvailableForMscrCopy } from '@app/common/interfaces/format.interface';
+import { Format, formatsAvailableForMscrCopy } from '@app/common/interfaces/format.interface';
 import { useStoreDispatch } from '@app/store';
 import {
-  resetMenuList,
-  selectMenuList,
-  selectModal, setConfirmState,
-  setMenuList
+  selectModal, setConfirmState, setFormState,
 } from '@app/common/components/actionmenu/actionmenu.slice';
 import { useSelector } from 'react-redux';
 import { updateActionMenu } from '@app/common/components/schema-and-crosswalk-actionmenu/update-action-menu';
@@ -37,11 +33,13 @@ import { setNotification } from '@app/common/components/notifications/notificati
 import { NotificationKeys } from '@app/common/interfaces/notifications.interface';
 import ConfirmModal from '@app/common/components/confirmation-modal';
 import * as React from 'react';
+import FormModal, { ModalType } from '@app/modules/form';
 
 export default function SchemaView({ schemaId }: { schemaId: string }) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const confirmModalIsOpen = useSelector(selectModal()).confirm;
+  const formModalIsOpen = useSelector(selectModal()).form;
   const [patchSchema] = usePatchSchemaMutation();
   const [deleteSchema] = useDeleteSchemaMutation();
 
@@ -127,6 +125,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
         );
         dispatch(setNotification('SCHEMA_DELETE'));
       });
+    // ToDo: handle an exception
   };
 
   const theme = createTheme({
@@ -229,24 +228,25 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
                   </VersionsHeading>
                 </Grid>
                 <Grid item xs={6} className="d-flex justify-content-end">
-                  <div className="mt-3 me-2">
-                    {hasEditPermission && (
-                      <SchemaAndCrosswalkActionMenu
-                        metadata={schemaDetails}
-                        isMappingsEditModeActive={false}
-                        refetchMetadata={refetch}
-                        type={ActionMenuTypes.Schema}
-                      />
-                    )}
-                    {!hasEditPermission && isMscrCopyAvailable && (
-                      <SchemaAndCrosswalkActionMenu
-                        metadata={schemaDetails}
-                        isMappingsEditModeActive={false}
-                        refetchMetadata={refetch}
-                        type={ActionMenuTypes.NoEditPermission}
-                      />
-                    )}
-                  </div>
+                  {/*Todo: Clean up, maybe remove gridding*/}
+                  {/*<div className="mt-3 me-2">*/}
+                  {/*  {hasEditPermission && (*/}
+                  {/*    <SchemaAndCrosswalkActionMenu*/}
+                  {/*      metadata={schemaDetails}*/}
+                  {/*      isMappingsEditModeActive={false}*/}
+                  {/*      refetchMetadata={refetch}*/}
+                  {/*      type={ActionMenuTypes.Schema}*/}
+                  {/*    />*/}
+                  {/*  )}*/}
+                  {/*  {!hasEditPermission && isMscrCopyAvailable && (*/}
+                  {/*    <SchemaAndCrosswalkActionMenu*/}
+                  {/*      metadata={schemaDetails}*/}
+                  {/*      isMappingsEditModeActive={false}*/}
+                  {/*      refetchMetadata={refetch}*/}
+                  {/*      type={ActionMenuTypes.NoEditPermission}*/}
+                  {/*    />*/}
+                  {/*  )}*/}
+                  {/*</div>*/}
                 </Grid>
                 <Grid item xs={12}>
                   <VersionHistory
@@ -311,6 +311,21 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
             text1={t('confirm-modal.deprecate-schema')}
           />
         )}
+        {/*ToDo: When making a revision of an mscr copy is possible, take that into account here (Modaltype.RevisionMscr)*/}
+        <FormModal
+          modalType={ModalType.RevisionFull}
+          contentType={Type.Schema}
+          visible={formModalIsOpen.version}
+          setVisible={(value) => dispatch(setFormState({key: 'version', value: value}))}
+          initialData={schemaDetails}
+        />
+        <FormModal
+          modalType={ModalType.McsrCopy}
+          contentType={Type.Schema}
+          visible={formModalIsOpen.mscrCopy}
+          setVisible={(value) => dispatch(setFormState({key: 'mscrCopy', value: value}))}
+          initialData={schemaDetails}
+        />
       </ThemeProvider>
     );
   }

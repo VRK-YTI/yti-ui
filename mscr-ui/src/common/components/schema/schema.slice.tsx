@@ -131,6 +131,7 @@ export const schemaApi = createApi({
         url: `/schema/${value}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Schema'],
     }),
     getSchemas: builder.query<Schema[], string>({
       query: (value) => ({
@@ -160,5 +161,3 @@ export const {
 
 export const { putSchema, getSchema, deleteSchema, getSchemas, putSchemaFull, putSchemaRevision } =
   schemaApi.endpoints;
-
-

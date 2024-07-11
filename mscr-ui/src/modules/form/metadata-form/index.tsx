@@ -19,7 +19,6 @@ import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import {
-  ActionMenuTypes,
   Type,
   Visibility,
 } from '@app/common/interfaces/search.interface';
@@ -172,27 +171,27 @@ export default function MetadataForm({
           )}
         </Grid>
         <Grid item xs={6} className="d-flex justify-content-end my-3">
-          {hasEditPermission && (
-            <SchemaAndCrosswalkActionMenu
-              buttonCallbackFunction={performCallbackFromActionMenu}
-              metadata={metadata}
-              isMappingsEditModeActive={isEditModeActive}
-              refetchMetadata={refetchMetadata}
-              type={
-                type === Type.Schema
-                  ? ActionMenuTypes.SchemaMetadata
-                  : ActionMenuTypes.CrosswalkMetadata
-              }
-            />
-          )}
-          {!hasEditPermission && isMscrCopyAvailable && (
-            <SchemaAndCrosswalkActionMenu
-              metadata={metadata}
-              isMappingsEditModeActive={isEditModeActive}
-              refetchMetadata={refetchMetadata}
-              type={ActionMenuTypes.NoEditPermission}
-            />
-          )}
+          {/*{hasEditPermission && (*/}
+          {/*  <SchemaAndCrosswalkActionMenu*/}
+          {/*    buttonCallbackFunction={performCallbackFromActionMenu}*/}
+          {/*    metadata={metadata}*/}
+          {/*    isMappingsEditModeActive={isEditModeActive}*/}
+          {/*    refetchMetadata={refetchMetadata}*/}
+          {/*    type={*/}
+          {/*      type === Type.Schema*/}
+          {/*        ? ActionMenuTypes.SchemaMetadata*/}
+          {/*        : ActionMenuTypes.CrosswalkMetadata*/}
+          {/*    }*/}
+          {/*  />*/}
+          {/*)}*/}
+          {/*{!hasEditPermission && isMscrCopyAvailable && (*/}
+          {/*  <SchemaAndCrosswalkActionMenu*/}
+          {/*    metadata={metadata}*/}
+          {/*    isMappingsEditModeActive={isEditModeActive}*/}
+          {/*    refetchMetadata={refetchMetadata}*/}
+          {/*    type={ActionMenuTypes.NoEditPermission}*/}
+          {/*  />*/}
+          {/*)}*/}
         </Grid>
       </Grid>
       <MetadataFormContainer container>

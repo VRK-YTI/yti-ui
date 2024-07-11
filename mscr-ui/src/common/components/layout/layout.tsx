@@ -16,18 +16,21 @@ import SideNavigationPanel from '../side-navigation';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import { SearchContext } from '@app/common/components/search-context-provider';
 import SearchScreen from 'src/modules/search/search-screen';
+import ActionPanel from '@app/common/components/action-panel';
 
 export default function Layout({
   children,
   sideNavigationHidden,
   user,
   fakeableUsers,
+  isActionMenu,
   alerts,
 }: {
   children: React.ReactNode;
   sideNavigationHidden: boolean;
   user?: MscrUser;
   fakeableUsers?: FakeableUser[] | null;
+  isActionMenu?: boolean;
   alerts?: React.ReactNode;
   fullScreenElements?: React.ReactNode;
 }) {
@@ -61,6 +64,7 @@ export default function Layout({
                   $breakpoint={breakpoint}
                   className={isSearchActive ? 'hidden' : ''}
                 >
+                  <ActionPanel isActionMenu={isActionMenu} />
                   {isSearchActive && <SearchScreen/>}
                   {children}
                 </MarginContainer>
@@ -73,6 +77,7 @@ export default function Layout({
                 $breakpoint={breakpoint}
                 className={isSearchActive ? 'hidden' : ''}
               >
+                <ActionPanel isActionMenu={isActionMenu} />
                 {isSearchActive && <SearchScreen />}
                 {children}
               </MarginContainer>
