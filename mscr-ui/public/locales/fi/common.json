@@ -340,7 +340,6 @@
   "site-logout": "",
   "site-open-link-new-window": "",
   "site-open-new-email": "",
-  "site-page-not-found": "",
   "site-register": "",
   "site-services": "",
   "site-title": "",
@@ -361,11 +360,16 @@
   "subscription-description": "",
   "synonym": "",
   "tabs": {
+    "crosswalk": {
+      "content-and-editor-tab": ""
+    },
+    "history-tab": "",
     "label": "",
     "metadata-and-files": "",
     "metadata-stub": "",
-    "schema": "",
-    "version-history": ""
+    "schema": {
+      "content-and-editor-tab": ""
+    }
   },
   "term-conjugation": {
     "plural": "",

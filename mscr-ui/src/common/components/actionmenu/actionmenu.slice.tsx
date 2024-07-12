@@ -27,17 +27,8 @@ const initialMenuList: MenuList = {
 };
 
 export interface ModalList {
-  form: {
-    mscrCopy: boolean;
-    version: boolean;
-  };
-  confirm: {
-    publish: boolean;
-    invalidate: boolean;
-    deprecate: boolean;
-    remove: boolean;
-    deleteDraft: boolean;
-  };
+  form: FormState;
+  confirm: ConfirmState;
 }
 
 export interface FormState {
@@ -56,6 +47,7 @@ export interface ConfirmState {
   invalidate: boolean;
   publish: boolean;
   remove: boolean;
+  saveMetadata: boolean;
 }
 
 const initialConfirmState: ConfirmState = {
@@ -64,6 +56,7 @@ const initialConfirmState: ConfirmState = {
   invalidate: false,
   publish: false,
   remove: false,
+  saveMetadata: false,
 };
 
 const initialModalList: ModalList = {
@@ -188,10 +181,18 @@ export function selectModal() {
   return (state: AppState) => state.actionmenu.modal;
 }
 
-export function setFormState(formType: {key: keyof FormState; value: boolean}): AppThunk {
+export function selectFormModalState() {
+  return (state: AppState) => state.actionmenu.modal.form;
+}
+
+export function setFormModalState(formType: {key: keyof FormState; value: boolean}): AppThunk {
   return (dispatch) => dispatch(actionmenuSlice.actions.setFormState(formType));
 }
 
-export function setConfirmState(confirmType: {key: keyof ConfirmState; value: boolean}): AppThunk {
+export function selectConfirmModalState() {
+  return (state: AppState) => state.actionmenu.modal.confirm;
+}
+
+export function setConfirmModalState(confirmType: {key: keyof ConfirmState; value: boolean}): AppThunk {
   return (dispatch) => dispatch(actionmenuSlice.actions.setConfirmState(confirmType));
 }

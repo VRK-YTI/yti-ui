@@ -1,5 +1,4 @@
 import { Button, ModalFooter, Paragraph, Text } from 'suomifi-ui-components';
-import {useEffect, useState} from 'react';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
 import {
   ModalContentSmPadding,
@@ -7,33 +6,29 @@ import {
   ModalTitleH1,
 } from 'yti-common-ui/components/login-modal/login-modal.styles';
 
-export default function ConfirmModal(props: { isVisible?: boolean; heading: string; text1: string; text2?:string; actionText: string; cancelText: string; confirmAction: () => void; onClose: () => void }) {
+export default function ConfirmModal(props: {
+  heading: string;
+  text1: string;
+  text2?: string;
+  actionText: string;
+  cancelText: string;
+  confirmAction: () => void;
+  onClose: () => void;
+}) {
   const { isSmall } = useBreakpoints();
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    if (props.isVisible === undefined || props.isVisible) {
-      setVisible(true);
-    }
-  }, [props.isVisible]);
 
   function performAction(isCloseAction: boolean) {
     if (!isCloseAction) {
       props.confirmAction();
     }
     props.onClose();
-    // if (isCloseAction) {
-    //   props.performConfirmModalAction('close');
-    // } else {
-    //   props.performConfirmModalAction(props.actionName);
-    // }
   }
 
   return (
     <>
       <ModalStyled
         appElementId="__next"
-        visible={visible}
+        visible={true}
         variant={isSmall ? 'smallScreen' : 'default'}
         onEscKeyDown={() => performAction(true)}
         scrollable={false}
@@ -44,10 +39,14 @@ export default function ConfirmModal(props: { isVisible?: boolean; heading: stri
             <Text>{props.text1}</Text>
           </Paragraph>
           <br />
-          {props.text2 && <><Paragraph>
-              <Text>{props.text2}</Text>
-          </Paragraph><br/></>
-          }
+          {props.text2 && (
+            <>
+              <Paragraph>
+                <Text>{props.text2}</Text>
+              </Paragraph>
+              <br />
+            </>
+          )}
         </ModalContentSmPadding>
 
         <ModalFooter>

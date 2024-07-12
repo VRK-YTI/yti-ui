@@ -7,8 +7,8 @@ import { useSelector } from 'react-redux';
 import {
   selectIsCrosswalk,
   selectMenuList,
-  setConfirmState,
-  setFormState,
+  setConfirmModalState,
+  setFormModalState,
 } from '@app/common/components/actionmenu/actionmenu.slice';
 import {
   selectIsEditContentActive,
@@ -56,7 +56,7 @@ export default function SchemaAndCrosswalkActionMenu() {
         <ActionMenuItem
           key={'publish'}
           onClick={() =>
-            dispatch(setConfirmState({ key: 'publish', value: true }))
+            dispatch(setConfirmModalState({ key: 'publish', value: true }))
           }
         >
           {isCrosswalk
@@ -70,7 +70,7 @@ export default function SchemaAndCrosswalkActionMenu() {
         <ActionMenuItem
           key={'invalidate'}
           onClick={() =>
-            dispatch(setConfirmState({ key: 'invalidate', value: true }))
+            dispatch(setConfirmModalState({ key: 'invalidate', value: true }))
           }
         >
           {isCrosswalk
@@ -84,7 +84,7 @@ export default function SchemaAndCrosswalkActionMenu() {
         <ActionMenuItem
           key={'deprecate'}
           onClick={() =>
-            dispatch(setConfirmState({ key: 'deprecate', value: true }))
+            dispatch(setConfirmModalState({ key: 'deprecate', value: true }))
           }
         >
           {isCrosswalk
@@ -98,7 +98,7 @@ export default function SchemaAndCrosswalkActionMenu() {
         <ActionMenuItem
           key={'remove'}
           onClick={() =>
-            dispatch(setConfirmState({ key: 'remove', value: true }))
+            dispatch(setConfirmModalState({ key: 'remove', value: true }))
           }
         >
           {isCrosswalk
@@ -112,7 +112,7 @@ export default function SchemaAndCrosswalkActionMenu() {
         <ActionMenuItem
           key={'version'}
           onClick={() =>
-            dispatch(setFormState({ key: 'version', value: true }))
+            dispatch(setFormModalState({ key: 'version', value: true }))
           }
         >
           {t('actionmenu.revision')}
@@ -124,7 +124,7 @@ export default function SchemaAndCrosswalkActionMenu() {
         <ActionMenuItem
           key={'mscrCopy'}
           onClick={() =>
-            dispatch(setFormState({ key: 'mscrCopy', value: true }))
+            dispatch(setFormModalState({ key: 'mscrCopy', value: true }))
           }
         >
           {t('actionmenu.mscr-copy')}
@@ -136,7 +136,7 @@ export default function SchemaAndCrosswalkActionMenu() {
         <ActionMenuItem
           key={'deleteDraft'}
           onClick={() =>
-            dispatch(setConfirmState({ key: 'deleteDraft', value: true }))
+            dispatch(setConfirmModalState({ key: 'deleteDraft', value: true }))
           }
         >
           {t('actionmenu.delete-draft')}

@@ -9,8 +9,3 @@ export const VersionsHeading = styled(Heading)`
   }
   color: ${(props) => props.theme.suomifi.colors.depthDark2};
 `;
-
-export const SchemaVisualizationWrapper = styled.div`
-  margin-top: 35px;
-  margin-left: 10px;
-`;

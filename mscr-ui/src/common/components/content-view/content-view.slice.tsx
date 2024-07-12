@@ -1,14 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
-
-export enum Tab {
-  Metadata = 0,
-  Editor,
-  History,
-}
+import { ContentTab } from '@app/common/interfaces/tabmenu';
 
 const initialState = {
-  selectedTab: Tab.Metadata,
+  selectedTab: ContentTab.Metadata,
   isEditContentActive: false,
   isEditMetadataActive: false,
 };
@@ -18,17 +13,17 @@ export const contentViewSlice = createSlice({
   initialState: initialState,
   reducers: {
     setSelectedTab(state, action) {
-      if (action.payload.tab === Tab.Editor) {
+      if (action.payload.tab === ContentTab.Editor) {
         return {
           ...state,
-          selectedTab: Tab.Editor,
+          selectedTab: ContentTab.Editor,
           isEditMetadataActive: false,
         };
       }
-      if (action.payload.tab === Tab.Metadata) {
+      if (action.payload.tab === ContentTab.Metadata) {
         return {
           ...state,
-          selectedTab: Tab.Metadata,
+          selectedTab: ContentTab.Metadata,
           isEditContentActive: false,
         };
       }
@@ -48,7 +43,7 @@ export const contentViewSlice = createSlice({
       }
       return {
         ...state,
-        selectedTab: Tab.Editor,
+        selectedTab: ContentTab.Editor,
         isEditContentActive: true,
       };
     },
@@ -61,7 +56,7 @@ export const contentViewSlice = createSlice({
       }
       return {
         ...state,
-        selectedTab: Tab.Metadata,
+        selectedTab: ContentTab.Metadata,
         isEditMetadataActive: true,
       };
     },

@@ -51,7 +51,7 @@ import { updateActionMenu } from '@app/common/components/schema-and-crosswalk-ac
 import { NotificationKeys } from '@app/common/interfaces/notifications.interface';
 import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
 import ConfirmModal from '@app/common/components/confirmation-modal';
-import { selectModal, setConfirmState, setFormState } from '@app/common/components/actionmenu/actionmenu.slice';
+import { selectModal, setConfirmModalState, setFormModalState } from '@app/common/components/actionmenu/actionmenu.slice';
 import FormModal, { ModalType } from '@app/modules/form';
 import { useSelector } from 'react-redux';
 import { Format } from '@app/common/interfaces/format.interface';
@@ -864,7 +864,7 @@ export default function CrosswalkEditor({
           actionText={t('actionmenu.delete-crosswalk')}
           cancelText={t('action.cancel')}
           confirmAction={deleteCrosswalkDraft}
-          onClose={() => dispatch(setConfirmState({key: 'deleteDraft', value: false}))}
+          onClose={() => dispatch(setConfirmModalState({key: 'deleteDraft', value: false}))}
           heading={t('confirm-modal.heading')}
           text1={t('confirm-modal.delete-draft')}
           text2={t('confirm-modal.delete-draft-info')}
@@ -875,7 +875,7 @@ export default function CrosswalkEditor({
           actionText={t('actionmenu.delete-crosswalk')}
           cancelText={t('action.cancel')}
           confirmAction={removeCrosswalk}
-          onClose={() => dispatch(setConfirmState({key: 'remove', value: false}))}
+          onClose={() => dispatch(setConfirmModalState({key: 'remove', value: false}))}
           heading={t('confirm-modal.heading')}
           text1={t('confirm-modal.delete-crosswalk')}
           text2={t('confirm-modal.delete-info')}
@@ -886,7 +886,7 @@ export default function CrosswalkEditor({
           actionText={t('action.publish')}
           cancelText={t('action.cancel')}
           confirmAction={publishCrosswalk}
-          onClose={() => dispatch(setConfirmState({key: 'publish', value: false}))}
+          onClose={() => dispatch(setConfirmModalState({key: 'publish', value: false}))}
           heading={t('confirm-modal.heading')}
           text1={t('confirm-modal.publish-crosswalk1')}
           text2={t('confirm-modal.publish-crosswalk2')}
@@ -897,7 +897,7 @@ export default function CrosswalkEditor({
           actionText={t('action.invalidate')}
           cancelText={t('action.cancel')}
           confirmAction={invalidateCrosswalk}
-          onClose={() => dispatch(setConfirmState({key: 'invalidate', value: false}))}
+          onClose={() => dispatch(setConfirmModalState({key: 'invalidate', value: false}))}
           heading={t('confirm-modal.heading')}
           text1={t('confirm-modal.invalidate-crosswalk')}
         />
@@ -907,7 +907,7 @@ export default function CrosswalkEditor({
           actionText={t('action.deprecate')}
           cancelText={t('action.cancel')}
           confirmAction={deprecateCrosswalk}
-          onClose={() => dispatch(setConfirmState({key: 'deprecate', value: false}))}
+          onClose={() => dispatch(setConfirmModalState({key: 'deprecate', value: false}))}
           heading={t('confirm-modal.heading')}
           text1={t('confirm-modal.deprecate-crosswalk')}
         />
@@ -920,7 +920,7 @@ export default function CrosswalkEditor({
         }
         contentType={Type.Crosswalk}
         visible={formModalIsOpen.version}
-        setVisible={(value) => dispatch(setFormState({key: 'version', value: value}))}
+        setVisible={(value) => dispatch(setFormModalState({key: 'version', value: value}))}
         initialData={getCrosswalkData}
       />
     </ThemeProvider>
