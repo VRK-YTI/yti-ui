@@ -40,7 +40,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
   const [deleteSchema] = useDeleteSchemaMutation();
 
   const {
-    data: schemaDetails,
+    data: schemaData,
     isLoading,
     isSuccess,
     refetch,
@@ -50,30 +50,30 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
 
   const hasEditPermission = HasPermission({
     action: 'EDIT_CONTENT',
-    owner: schemaDetails?.owner,
+    owner: schemaData?.owner,
   });
   const hasCopyPermission = HasPermission({ action: 'MAKE_MSCR_COPY' });
   const isMscrCopyAvailable =
     hasCopyPermission &&
-    schemaDetails &&
-    formatsAvailableForMscrCopy.includes(schemaDetails.format);
+    schemaData &&
+    formatsAvailableForMscrCopy.includes(schemaData.format);
 
   useEffect(() => {
     updateActionMenu(
       dispatch,
       Type.Schema,
-      schemaDetails,
+      schemaData,
       hasEditPermission,
       isMscrCopyAvailable
     );
-  }, [dispatch, hasEditPermission, isMscrCopyAvailable, schemaDetails]);
+  }, [dispatch, hasEditPermission, isMscrCopyAvailable, schemaData]);
 
   interface StatePayload {
     versionLabel?: string;
     state?: State;
   }
   const payloadBase: StatePayload = {
-    versionLabel: schemaDetails?.versionLabel,
+    versionLabel: schemaData?.versionLabel,
   };
 
   const publishSchema = () => {
@@ -100,8 +100,8 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
     payload: StatePayload,
     notificationKey: NotificationKeys
   ) => {
-    if (!schemaDetails) return;
-    patchSchema({ payload: payload, pid: schemaDetails.pid })
+    if (!schemaData) return;
+    patchSchema({ payload: payload, pid: schemaData.pid })
       .unwrap()
       .then(() => {
         dispatch(
@@ -116,8 +116,8 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
   };
 
   const deleteSchemaDraft = () => {
-    if (!schemaDetails) return;
-    deleteSchema(schemaDetails.pid)
+    if (!schemaData) return;
+    deleteSchema(schemaData.pid)
       .unwrap()
       .then(() => {
         dispatch(
@@ -158,7 +158,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
   } else if (isSuccess) {
     return (
       <ThemeProvider theme={theme}>
-        {schemaDetails.state === State.Removed ? ( // Stub view if state is REMOVED
+        {schemaData.state === State.Removed ? ( // Stub view if state is REMOVED
           <Tabmenu
             contentType={Type.Schema}
             isRemoved={true}
@@ -167,7 +167,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
                 tabIndex: 0,
                 tabText: 'metadata-and-files-tab',
                 content: (
-                  <MetadataStub metadata={schemaDetails} type={Type.Schema} />
+                  <MetadataStub metadata={schemaData} type={Type.Schema} />
                 ),
               },
             ]}
@@ -181,7 +181,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
                 tabText: 'metadata-and-files-tab',
                 content: (
                   <MetadataAndFiles
-                    schemaDetails={schemaDetails}
+                    schemaDetails={schemaData}
                     refetch={refetch}
                     hasEditPermission={hasEditPermission}
                     isMscrCopyAvailable={isMscrCopyAvailable}
@@ -194,7 +194,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
                 content: (
                   <SchemaVisualization
                     pid={schemaId}
-                    format={schemaDetails.format}
+                    format={schemaData.format}
                   />
                 ),
               },
@@ -203,7 +203,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
                 tabText: 'history-tab',
                 content: (
                   <VersionHistory
-                    revisions={schemaDetails.revisions}
+                    revisions={schemaData.revisions}
                     contentType={Type.Schema}
                     currentRevision={schemaId}
                   />
@@ -286,7 +286,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
           setVisible={(value) =>
             dispatch(setFormModalState({ key: 'version', value: value }))
           }
-          initialData={schemaDetails}
+          initialData={schemaData}
         />
         <FormModal
           modalType={ModalType.McsrCopy}
@@ -295,12 +295,12 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
           setVisible={(value) =>
             dispatch(setFormModalState({ key: 'mscrCopy', value: value }))
           }
-          initialData={schemaDetails}
+          initialData={schemaData}
         />
       </ThemeProvider>
     );
   }
 
-  // TODO: What to return if data fetching returns error?
+  // TODO: What to return if data fetching doesn't work?
   return <Text>{t('error.not-found')}</Text>;
 }

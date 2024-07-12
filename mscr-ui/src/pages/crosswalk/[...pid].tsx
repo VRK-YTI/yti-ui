@@ -7,7 +7,7 @@ import { SSRConfig } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import { useRouter } from 'next/router';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
-import CrosswalkEditor from '@app/modules/crosswalk-editor';
+import CrosswalkView from '@app/modules/crosswalk-view';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -27,7 +27,7 @@ export default function CrosswalkPage(props: IndexPageProps) {
         fakeableUsers={props.fakeableUsers}
         isActionMenu={true}
       >
-        <CrosswalkEditor crosswalkId={crosswalkId} />
+        <CrosswalkView crosswalkId={crosswalkId} />
       </Layout>
     </CommonContextProvider>
   );
