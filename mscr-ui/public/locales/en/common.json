@@ -5,12 +5,13 @@
   "access-request-error": "",
   "access-request-sent": "",
   "action": {
-    "actions": "Actions",
     "cancel": "Cancel",
+    "crosswalk-actions": "Crosswalk actions",
     "deprecate": "Deprecate",
     "invalidate": "Invalidate",
     "publish": "Publish",
-    "save": "Save"
+    "save": "Save",
+    "schema-actions": "Schema actions"
   },
   "actionmenu": {
     "delete-crosswalk": "Delete crosswalk",
@@ -366,10 +367,10 @@
     "history-tab": "Version history",
     "label": "Content tabs",
     "metadata-and-files": "Metadata and files",
-    "metadata-stub": "Metadata",
     "schema": {
       "content-and-editor-tab": "Schema"
-    }
+    },
+    "stub-metadata": "Metadata"
   },
   "term-conjugation": {
     "plural": "",

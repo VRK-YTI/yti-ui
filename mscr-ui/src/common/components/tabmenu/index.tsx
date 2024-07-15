@@ -40,6 +40,7 @@ export default function Tabmenu({
     ),
     'SCHEMA.history-tab': t('tabs.history-tab'),
     'CROSSWALK.history-tab': t('tabs.history-tab'),
+    'stub': t('tabs.stub-metadata'),
   };
 
   function customTabProps(tab: TabText) {
@@ -47,7 +48,7 @@ export default function Tabmenu({
     return {
       id: `simple-tab-tab-${index}`,
       'aria-controls': `simple-tab-tabpanel-${index}`,
-      label: translations[`${contentType}.${tab}`],
+      label: isRemoved ? translations['stub'] : translations[`${contentType}.${tab}`],
     };
   }
 

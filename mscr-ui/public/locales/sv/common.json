@@ -5,12 +5,13 @@
   "access-request-error": "",
   "access-request-sent": "",
   "action": {
-    "actions": "",
     "cancel": "",
+    "crosswalk-actions": "",
     "deprecate": "",
     "invalidate": "",
     "publish": "",
-    "save": ""
+    "save": "",
+    "schema-actions": ""
   },
   "actionmenu": {
     "delete-crosswalk": "",
@@ -366,10 +367,10 @@
     "history-tab": "",
     "label": "",
     "metadata-and-files": "",
-    "metadata-stub": "",
     "schema": {
       "content-and-editor-tab": ""
-    }
+    },
+    "stub-metadata": ""
   },
   "term-conjugation": {
     "plural": "",

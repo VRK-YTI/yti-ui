@@ -135,6 +135,7 @@ export default function SchemaAndCrosswalkActionMenu() {
       items.push(
         <ActionMenuItem
           key={'deleteDraft'}
+          className={'deleteDraft'}
           onClick={() =>
             dispatch(setConfirmModalState({ key: 'deleteDraft', value: true }))
           }
@@ -150,7 +151,7 @@ export default function SchemaAndCrosswalkActionMenu() {
     <>
       {Object.values(menuState).some((isTrue) => isTrue) && (
         <ActionMenuWrapper>
-          <ActionMenu buttonText={t('action.actions')}>
+          <ActionMenu buttonText={isCrosswalk ? t('action.crosswalk-actions') : t('action.schema-actions')}>
             {getActionMenuItems()}
           </ActionMenu>
         </ActionMenuWrapper>
