@@ -14,7 +14,7 @@ import { Metadata } from '@app/common/interfaces/metadata.interface';
 export const crosswalkApi = createApi({
   reducerPath: 'crosswalkApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['Crosswalk'],
+  tagTypes: ['Crosswalk', 'Mappings'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];
@@ -78,6 +78,7 @@ export const crosswalkApi = createApi({
         url: `/crosswalk/${pid}/mapping`,
         method: 'GET',
       }),
+      providesTags: ['Mappings'],
     }),
 
     putMapping: builder.mutation<
@@ -92,6 +93,7 @@ export const crosswalkApi = createApi({
         method: 'PUT',
         data: value.payload,
       }),
+      invalidatesTags: ['Mappings'],
     }),
 
     patchMapping: builder.mutation<
@@ -106,6 +108,7 @@ export const crosswalkApi = createApi({
         method: 'PUT',
         data: value.payload,
       }),
+      invalidatesTags: ['Mappings'],
     }),
 
     deleteMapping: builder.mutation<string, string>({
@@ -113,6 +116,7 @@ export const crosswalkApi = createApi({
         url: `/crosswalk/${value}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Mappings'],
     }),
 
     patchCrosswalk: builder.mutation<
