@@ -1,5 +1,3 @@
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 import {
@@ -10,6 +8,10 @@ import { useTranslation } from 'next-i18next';
 import { Type } from '@app/common/interfaces/search.interface';
 import { TabIndex, TabText, MscrTabs } from '@app/common/interfaces/tabmenu';
 import { ReactNode } from 'react';
+import {
+  StyledTab,
+  StyledTabs,
+} from '@app/common/components/tabmenu/tabmenu.styles';
 
 interface TabPanel {
   tabIndex: TabIndex;
@@ -40,15 +42,18 @@ export default function Tabmenu({
     ),
     'SCHEMA.history-tab': t('tabs.history-tab'),
     'CROSSWALK.history-tab': t('tabs.history-tab'),
-    'stub': t('tabs.stub-metadata'),
+    'stub': t('tabs.stub-metadata'), // If the content is removed, there's only one tab with only metadata.
   };
 
   function customTabProps(tab: TabText) {
     const index = MscrTabs[tab];
     return {
       id: `simple-tab-tab-${index}`,
+      className: tab,
       'aria-controls': `simple-tab-tabpanel-${index}`,
-      label: isRemoved ? translations['stub'] : translations[`${contentType}.${tab}`],
+      label: isRemoved
+        ? translations['stub']
+        : translations[`${contentType}.${tab}`],
     };
   }
 
@@ -58,15 +63,17 @@ export default function Tabmenu({
 
   return (
     <>
-      <Tabs
+      <StyledTabs
         value={selectedTab}
         onChange={handleChange}
         aria-label={t('tabs.label')}
       >
-        <Tab {...customTabProps('metadata-and-files-tab')} />
-        {!isRemoved && <Tab {...customTabProps('content-and-editor-tab')} />}
-        {!isRemoved && <Tab {...customTabProps('history-tab')} />}
-      </Tabs>
+        <StyledTab {...customTabProps('metadata-and-files-tab')} />
+        {!isRemoved && (
+          <StyledTab {...customTabProps('content-and-editor-tab')} />
+        )}
+        {!isRemoved && <StyledTab {...customTabProps('history-tab')} />}
+      </StyledTabs>
       {tabPanels.map((tab) => {
         return (
           <div
