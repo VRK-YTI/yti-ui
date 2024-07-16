@@ -8,6 +8,7 @@ export const VersionHistoryContainer = styled.div`
 export const VersionHeading = styled(Heading)`
   && {
     font-size: 1.2rem;
+    color: ${(props) => props.theme.suomifi.colors.depthDark2};
+    margin-bottom: 0.5em;
   }
-  color: ${(props) => props.theme.suomifi.colors.depthDark2};
 `;

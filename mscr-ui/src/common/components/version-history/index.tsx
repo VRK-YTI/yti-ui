@@ -62,16 +62,14 @@ export default function VersionHistory({
   });
 
   return (
-    <>
-      <VersionHistoryContainer>
-        <VersionHeading variant="h2">{t('metadata.versions')}</VersionHeading>
-        <GenericTable
-          items={revisionsFormatted}
-          headings={headers}
-          caption={''}
-          staticHighlight={true}
-        ></GenericTable>
-      </VersionHistoryContainer>
-    </>
+    <VersionHistoryContainer>
+      <VersionHeading variant="h2">{t('metadata.versions')}</VersionHeading>
+      <GenericTable
+        items={revisionsFormatted}
+        headings={headers}
+        caption={''}
+        staticHighlight={true}
+      />
+    </VersionHistoryContainer>
   );
 }

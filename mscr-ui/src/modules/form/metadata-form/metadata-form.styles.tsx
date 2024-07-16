@@ -9,8 +9,9 @@ export const MetadataContainer = styled.div`
 export const MetadataHeading = styled(Heading)`
   && {
     font-size: 1.2rem;
+    color: ${(props) => props.theme.suomifi.colors.depthDark2};
+    margin-bottom: 0.5em;
   }
-  color: ${(props) => props.theme.suomifi.colors.depthDark2};
 `;
 
 export const MetadataFormContainer = styled(Grid)`

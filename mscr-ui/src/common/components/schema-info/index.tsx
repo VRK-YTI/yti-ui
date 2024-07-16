@@ -34,7 +34,6 @@ export default function SchemaInfo(props: {
   treeSelection?: string[];
   caption: string;
   schemaUrn: string;
-  raiseHeading?: boolean;
   isSingleTree?: boolean;
 }) {
   const { t } = useTranslation('common');
@@ -211,7 +210,7 @@ export default function SchemaInfo(props: {
 
   return (
     <>
-      <div className="row d-flex mb-4">
+      <div className="row d-flex mb-2">
         <div className="col-12">
           <Tooltip
             title={

@@ -20,7 +20,7 @@ import SchemaInfo from '@app/common/components/schema-info';
 import { useTranslation } from 'next-i18next';
 import { CrosswalkWithVersionInfo } from '@app/common/interfaces/crosswalk.interface';
 import { useSelector } from 'react-redux';
-import { selectIsEditContentActive, selectSelectedTab } from '@app/common/components/content-view/content-view.slice';
+import { selectIsEditContentActive } from '@app/common/components/content-view/content-view.slice';
 import { State } from '@app/common/interfaces/state.interface';
 
 export default function CrosswalkEditor({
@@ -34,7 +34,6 @@ export default function CrosswalkEditor({
 }) {
   const { t } = useTranslation('common');
   const isEditModeActive = useSelector(selectIsEditContentActive());
-  const selectedTab = useSelector(selectSelectedTab());
 
   const emptyTreeSelection: RenderTree = {
     elementPath: '',
@@ -361,85 +360,64 @@ export default function CrosswalkEditor({
 
   return (
     <div className="row d-flex justify-content-between crosswalk-editor">
-      {/*  LEFT COLUMN */}
-      <div className={selectedTab === 1 ? 'col-12 mx-1 mt-3' : 'd-none'}>
-        <>
-          <div className="row gx-0">
-            {/*  SOURCE TREE */}
-            <div className="col-5">
-              <SchemaInfo
-                updateTreeNodeSelectionsOutput={performCallbackFromSchemaInfo}
-                isSourceTree={true}
-                treeSelection={sourceTreeSelection}
-                caption={t('crosswalk-editor.search-from-source-schema')}
-                schemaUrn={sourceSchemaUrn}
-                raiseHeading={hasEditPermission}
-              ></SchemaInfo>
-            </div>
-
-            {/*  MID BUTTONS */}
-            <div className="col-2 px-4 mid-buttons">
-              {hasEditPermission && (
-                <Sbutton
-                  className="link-button"
-                  title={
-                    linkingError.length > 1
-                      ? linkingError
-                      : 'Link selected nodes'
-                  }
-                  disabled={
-                    selectedSourceNodes.length < 1 ||
-                    selectedTargetNodes.length < 1 ||
-                    crosswalkData.state === State.Published ||
-                    !isEditModeActive
-                  }
-                  onClick={() => {
-                    addJointButtonClick();
-                  }}
-                >
-                  <LinkIcon></LinkIcon>
-                </Sbutton>
-              )}
-            </div>
-
-            {/*  TARGET TREE */}
-            <div className="col-5 pe-2">
-              <SchemaInfo
-                updateTreeNodeSelectionsOutput={performCallbackFromSchemaInfo}
-                isSourceTree={false}
-                treeSelection={targetTreeSelection}
-                caption={t('crosswalk-editor.search-from-target-schema')}
-                schemaUrn={targetSchemaUrn}
-                raiseHeading={hasEditPermission}
-              ></SchemaInfo>
-            </div>
+      <div className='col-12 mx-1'>
+        <div className="row gx-0">
+          {/*  SOURCE TREE */}
+          <div className="col-5">
+            <SchemaInfo
+              updateTreeNodeSelectionsOutput={performCallbackFromSchemaInfo}
+              isSourceTree={true}
+              treeSelection={sourceTreeSelection}
+              caption={t('crosswalk-editor.search-from-source-schema')}
+              schemaUrn={sourceSchemaUrn}
+            />
           </div>
-        </>
 
-        {jointToBeEdited && (
-          <>
-            <NodeMappingsModal
-              selectedCrosswalk={jointToBeEdited}
-              performMappingsModalAction={performCallbackFromMappingsModal}
-              mappingFilters={mappingFilters}
-              mappingFunctions={mappingFunctions}
-              modalOpen={isNodeMappingsModalOpen}
-              isJointPatchOperation={isJointPatchOperation}
-            ></NodeMappingsModal>
-          </>
-        )}
+          {/*  MID BUTTONS */}
+          <div className="col-2 px-4 mid-buttons">
+            {hasEditPermission && (
+              <Sbutton
+                className="link-button"
+                title={
+                  linkingError.length > 1
+                    ? linkingError
+                    : 'Link selected nodes'
+                }
+                disabled={
+                  selectedSourceNodes.length < 1 ||
+                  selectedTargetNodes.length < 1 ||
+                  crosswalkData.state === State.Published ||
+                  !isEditModeActive
+                }
+                onClick={() => {
+                  addJointButtonClick();
+                }}
+              >
+                <LinkIcon></LinkIcon>
+              </Sbutton>
+            )}
+          </div>
+
+          {/*  TARGET TREE */}
+          <div className="col-5 pe-2">
+            <SchemaInfo
+              updateTreeNodeSelectionsOutput={performCallbackFromSchemaInfo}
+              isSourceTree={false}
+              treeSelection={targetTreeSelection}
+              caption={t('crosswalk-editor.search-from-target-schema')}
+              schemaUrn={targetSchemaUrn}
+            />
+          </div>
+        </div>
       </div>
-      {/*  BOTTOM COLUMN */}
-      {selectedTab === 1 && (
-        <>
-          <div className="col-12 mt-4">
-            <div className="d-flex justify-content-between">
-              <div>
-                <h2 className="mb-0">Mappings</h2>
-              </div>
+      <div className="col-12 mt-4">
+        <div className="d-flex justify-content-between">
+          <div>
+            <h2 className="mb-0">Mappings</h2>
+          </div>
 
-              <div className="align-self-end pe-1">
-                {/*                        // TODO: this can be shown when attribute qnames are available for accordion. Those are temporarily replaced with attribute ids.
+          <div className="align-self-end pe-1">
+            {/*                        // TODO: this can be shown when attribute qnames are available for accordion. Those are temporarily replaced with attribute ids.
                         <Checkbox
                           checked={showAttributeNames}
                           onClick={(newState) => {
@@ -447,25 +425,33 @@ export default function CrosswalkEditor({
                           }}
                         >Show node titles
                         </Checkbox>*/}
-              </div>
-            </div>
-
-            <div className="joint-listing-accordion-wrap my-3">
-              <Box
-                className="mb-4"
-                sx={{ height: 640, flexGrow: 1, overflowY: 'auto' }}
-              >
-                <MappingsAccordion
-                  nodeMappings={nodeMappings}
-                  viewOnlyMode={false}
-                  isEditModeActive={isEditModeActive && crosswalkData.state !== State.Published}
-                  showAttributeNames={showAttributeNames}
-                  performAccordionAction={performCallbackFromAccordionAction}
-                ></MappingsAccordion>
-              </Box>
-            </div>
           </div>
-        </>
+        </div>
+
+        <div className="joint-listing-accordion-wrap my-3">
+          <Box
+            className="mb-4"
+            sx={{ height: 640, flexGrow: 1, overflowY: 'auto' }}
+          >
+            <MappingsAccordion
+              nodeMappings={nodeMappings}
+              viewOnlyMode={false}
+              isEditModeActive={isEditModeActive && crosswalkData.state !== State.Published}
+              showAttributeNames={showAttributeNames}
+              performAccordionAction={performCallbackFromAccordionAction}
+            />
+          </Box>
+        </div>
+      </div>
+      {jointToBeEdited && (
+        <NodeMappingsModal
+          selectedCrosswalk={jointToBeEdited}
+          performMappingsModalAction={performCallbackFromMappingsModal}
+          mappingFilters={mappingFilters}
+          mappingFunctions={mappingFunctions}
+          modalOpen={isNodeMappingsModalOpen}
+          isJointPatchOperation={isJointPatchOperation}
+        />
       )}
     </div>
   );
