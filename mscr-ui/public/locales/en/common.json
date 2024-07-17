@@ -5,12 +5,13 @@
   "access-request-error": "",
   "access-request-sent": "",
   "action": {
-    "actions": "Actions",
     "cancel": "Cancel",
+    "crosswalk-actions": "Crosswalk actions",
     "deprecate": "Deprecate",
     "invalidate": "Invalidate",
     "publish": "Publish",
-    "save": "Save"
+    "save": "Save",
+    "schema-actions": "Schema actions"
   },
   "actionmenu": {
     "delete-crosswalk": "Delete crosswalk",
@@ -340,7 +341,6 @@
   "site-logout": "Log out",
   "site-open-link-new-window": "",
   "site-open-new-email": "",
-  "site-page-not-found": "Content not available, check url",
   "site-register": "",
   "site-services": "",
   "site-title": "Metadata Schema and Crosswalk Regisrtry",
@@ -361,11 +361,16 @@
   "subscription-description": "",
   "synonym": "",
   "tabs": {
+    "crosswalk": {
+      "content-and-editor-tab": "Crosswalk"
+    },
+    "history-tab": "Version history",
     "label": "Content tabs",
-    "metadata-and-files": "Metadata and files",
-    "metadata-stub": "Metadata",
-    "schema": "Schema",
-    "version-history": "Version history"
+    "metadata-and-files": "Metadata & files",
+    "schema": {
+      "content-and-editor-tab": "Schema"
+    },
+    "stub-metadata": "Metadata"
   },
   "term-conjugation": {
     "plural": "",

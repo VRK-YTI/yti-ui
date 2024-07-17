@@ -5,12 +5,13 @@
   "access-request-error": "",
   "access-request-sent": "",
   "action": {
-    "actions": "",
     "cancel": "",
+    "crosswalk-actions": "",
     "deprecate": "",
     "invalidate": "",
     "publish": "",
-    "save": ""
+    "save": "",
+    "schema-actions": ""
   },
   "actionmenu": {
     "delete-crosswalk": "",
@@ -340,7 +341,6 @@
   "site-logout": "",
   "site-open-link-new-window": "",
   "site-open-new-email": "",
-  "site-page-not-found": "",
   "site-register": "",
   "site-services": "",
   "site-title": "",
@@ -361,11 +361,16 @@
   "subscription-description": "",
   "synonym": "",
   "tabs": {
+    "crosswalk": {
+      "content-and-editor-tab": ""
+    },
+    "history-tab": "",
     "label": "",
     "metadata-and-files": "",
-    "metadata-stub": "",
-    "schema": "",
-    "version-history": ""
+    "schema": {
+      "content-and-editor-tab": ""
+    },
+    "stub-metadata": ""
   },
   "term-conjugation": {
     "plural": "",

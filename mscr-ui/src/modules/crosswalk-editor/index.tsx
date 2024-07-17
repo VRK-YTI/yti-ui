@@ -1,19 +1,7 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
-import TreeItem from '@mui/lab/TreeItem';
-import { useEffect } from 'react';
-import {
-  Button,
-  Notification,
-  Button as Sbutton,
-  Text,
-} from 'suomifi-ui-components';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
+import { useEffect, useState } from 'react';
+import { Button as Sbutton } from 'suomifi-ui-components';
 import MappingsAccordion from '@app/modules/crosswalk-editor/mappings-accordion';
-import MetadataAndFiles from '@app/modules/crosswalk-editor/tabs/metadata-and-files';
-
 import {
   CrosswalkConnectionNew,
   RenderTree,
@@ -22,50 +10,30 @@ import {
 import NodeMappingsModal from './tabs/node-mappings';
 import LinkIcon from '@app/common/components/shared-icons';
 import {
-  usePatchCrosswalkMutation,
   usePutMappingMutation,
   useDeleteMappingMutation,
   usePatchMappingMutation,
   useGetMappingsQuery,
-  useGetCrosswalkWithRevisionsQuery,
 } from '@app/common/components/crosswalk/crosswalk.slice';
 import { useGetCrosswalkMappingFunctionsQuery } from '@app/common/components/crosswalk-functions/crosswalk-functions.slice';
-import { createTheme, Grid, ThemeProvider } from '@mui/material';
-import HasPermission from '@app/common/utils/has-permission';
-import VersionHistory from '@app/common/components/version-history';
 import SchemaInfo from '@app/common/components/schema-info';
 import { useTranslation } from 'next-i18next';
+import { CrosswalkWithVersionInfo } from '@app/common/interfaces/crosswalk.interface';
+import { useSelector } from 'react-redux';
+import { selectIsEditContentActive } from '@app/common/components/content-view/content-view.slice';
 import { State } from '@app/common/interfaces/state.interface';
-import MetadataStub from '@app/modules/form/metadata-form/metadata-stub';
-import { ActionMenuTypes, Type } from '@app/common/interfaces/search.interface';
-import SchemaAndCrosswalkActionMenu from '@app/common/components/schema-and-crosswalk-actionmenu';
-import {
-  ActionMenuContainer,
-  ActionMenuWrapper,
-  TestButton
-} from '@app/modules/crosswalk-editor/crosswalk-editor.styles';
-import { setNotification } from '@app/common/components/notifications/notifications.slice';
-import { useStoreDispatch } from '@app/store';
-import OperationalizeModal from '../operationalize-modal';
 
 export default function CrosswalkEditor({
   crosswalkId,
+  crosswalkData,
+  hasEditPermission,
 }: {
   crosswalkId: string;
+  crosswalkData: CrosswalkWithVersionInfo;
+  hasEditPermission: boolean;
 }) {
-  const theme = createTheme({
-    typography: {
-      fontFamily: [
-        'Source Sans Pro',
-        'Helvetica Neue',
-        'Arial',
-        'sans-serif',
-      ].join(','),
-    },
-  });
-
   const { t } = useTranslation('common');
-  const dispatch = useStoreDispatch();
+  const isEditModeActive = useSelector(selectIsEditContentActive());
 
   const emptyTreeSelection: RenderTree = {
     elementPath: '',
@@ -80,100 +48,52 @@ export default function CrosswalkEditor({
   };
 
   // STATE VARIABLES
-  const [sourceSchemaUrn, setSourceSchemaUrn] = React.useState<string>('');
-  const [targetSchemaUrn, setTargetSchemaUrn] = React.useState<string>('');
+  const [sourceSchemaUrn, setSourceSchemaUrn] = useState<string>('');
+  const [targetSchemaUrn, setTargetSchemaUrn] = useState<string>('');
 
-  const [selectedSourceNodes, setSelectedSourceNodes] = React.useState<
-    RenderTree[]
-  >([]);
-  const [selectedTargetNodes, setSelectedTargetNodes] = React.useState<
-    RenderTree[]
-  >([]);
-  const [patchSourceNodes, setPatchSourceNodes] = React.useState<RenderTree[]>([
+  const [selectedSourceNodes, setSelectedSourceNodes] = useState<RenderTree[]>(
+    []
+  );
+  const [selectedTargetNodes, setSelectedTargetNodes] = useState<RenderTree[]>(
+    []
+  );
+  const [patchSourceNodes, setPatchSourceNodes] = useState<RenderTree[]>([
     emptyTreeSelection,
   ]);
-  const [patchTargetNodes, setPatchTargetNodes] = React.useState<RenderTree[]>([
+  const [patchTargetNodes, setPatchTargetNodes] = useState<RenderTree[]>([
     emptyTreeSelection,
   ]);
-  const [patchPid, setPatchPid] = React.useState<string>('');
+  const [patchPid, setPatchPid] = useState<string>('');
 
-  const [nodeMappings, setNodeMappings] = React.useState<NodeMapping[]>([]);
+  const [nodeMappings, setNodeMappings] = useState<NodeMapping[]>([]);
 
-  const [jointToBeEdited, setJointToBeEdited] = React.useState<
+  const [jointToBeEdited, setJointToBeEdited] = useState<
     CrosswalkConnectionNew | undefined
   >(undefined);
 
-  const [linkingError, setLinkingError] = React.useState<string>('');
-  const [selectedTab, setSelectedTab] = React.useState(1);
+  const [linkingError, ] = useState<string>('');
   const [isNodeMappingsModalOpen, setNodeMappingsModalOpen] =
-    React.useState<boolean>(false);
-
-  const [isEditModeActive, setEditModeActive] = React.useState<boolean>(false);
+    useState<boolean>(false);
   const [isJointPatchOperation, setIsJointPatchOperation] =
-    React.useState<boolean>(false);
+    useState<boolean>(false);
 
-  const [crosswalkPublished, setCrosswalkPublished] =
-    React.useState<boolean>(true);
-  const [lastPatchCrosswalkId, setLastPatchCrosswalkId] =
-    React.useState<string>('');
-  const [lastPutMappingPid, setLastPutMappingPid] = React.useState<string>('');
+  const [lastPutMappingPid, setLastPutMappingPid] = useState<string>('');
   const [lastPatchMappingReqId, setLastPatchMappingReqId] =
-    React.useState<string>('');
-  const [lastDeleteMappingPid, setLastDeleteMappingPid] =
-    React.useState<string>('');
-  const [showAttributeNames, setShowAttributeNames] = React.useState(true);
+    useState<string>('');
+  const [lastDeleteMappingPid, setLastDeleteMappingPid] = useState<string>('');
+  const [showAttributeNames, setShowAttributeNames] = useState(true);
+  const [sourceTreeSelection, setSourceTreeSelection] = useState<string[]>([]);
+  const [targetTreeSelection, setTargetTreeSelection] = useState<string[]>([]);
 
   const [putMapping, putMappingResponse] = usePutMappingMutation();
   const [deleteMapping, deleteMappingResponse] = useDeleteMappingMutation();
   const [patchMapping, patchMappingResponse] = usePatchMappingMutation();
 
-  const [sourceTreeSelection, setSourceTreeSelection] = React.useState<
-    string[]
-  >([]);
-
-  const [targetTreeSelection, setTargetTreeSelection] = React.useState<
-    string[]
-  >([]);
-
-  const { data: mappingFunctions, isLoading: mappingFunctionsIsLoading } =
+  const { data: mappingFunctions, /*isLoading: mappingFunctionsIsLoading*/ } =
     useGetCrosswalkMappingFunctionsQuery('');
 
-  const { data: mappingFilters, isLoading: mappingFiltersIsLoading } =
+  const { data: mappingFilters, /*isLoading: mappingFiltersIsLoading*/ } =
     useGetCrosswalkMappingFunctionsQuery('FILTERS');
-
-  const {
-    data: getCrosswalkData,
-    isLoading: getCrosswalkDataIsLoading,
-    isSuccess: getCrosswalkDataIsSuccess,
-    isError: getCrosswalkDataIsError,
-    error: getCrosswalkDataError,
-    refetch: refetchCrosswalkData,
-  } = useGetCrosswalkWithRevisionsQuery(crosswalkId);
-
-  const hasEditRights = HasPermission({
-    action: 'EDIT_CONTENT',
-    owner: getCrosswalkData?.owner,
-  });
-
-  const fromTree = (nodes: any) => (
-    <TreeItem
-      key={nodes.id}
-      nodeId={nodes.id}
-      label={nodes.name}
-      className="linked-tree-item"
-    >
-      {Array.isArray(nodes.children)
-        ? nodes.children.map((node: any) => fromTree(node))
-        : null}
-    </TreeItem>
-  );
-
-  useEffect(() => {
-    // Reset initial state when tab changed.
-    if (selectedTab === 1) {
-      setEditModeActive(false);
-    }
-  }, [selectedTab]);
 
   useEffect(() => {
     if (
@@ -195,24 +115,21 @@ export default function CrosswalkEditor({
   }, [jointToBeEdited]);
 
   useEffect(() => {
-    if (getCrosswalkData?.sourceSchema) {
-      setSourceSchemaUrn(getCrosswalkData.sourceSchema);
+    if (crosswalkData?.sourceSchema) {
+      setSourceSchemaUrn(crosswalkData.sourceSchema);
     }
-    if (getCrosswalkData?.targetSchema) {
-      setTargetSchemaUrn(getCrosswalkData.targetSchema);
+    if (crosswalkData?.targetSchema) {
+      setTargetSchemaUrn(crosswalkData.targetSchema);
     }
-    if (getCrosswalkData && getCrosswalkData?.state !== 'PUBLISHED') {
-      setCrosswalkPublished(false);
-    }
-  }, [getCrosswalkData]);
+  }, [crosswalkData]);
 
   const {
     data: mappingsFromBackend,
-    isLoading: getMappingsDataIsLoading,
+    // isLoading: getMappingsDataIsLoading,
     isSuccess: getMappingsDataIsSuccess,
-    isError: getMappingsIsError,
-    error: getMappingsError,
-    refetch: refetchMappings,
+    // isError: getMappingsIsError,
+    // error: getMappingsError,
+    // refetch: refetchMappings,
   } = useGetMappingsQuery(crosswalkId);
 
   useEffect(() => {
@@ -341,24 +258,6 @@ export default function CrosswalkEditor({
     deleteMapping(jointPid);
   }
 
-  // Used to tree filtering
-  function findNodesFromTree(
-    tree: any,
-    itemsToFind: string[],
-    results: RenderTree[]
-  ) {
-    tree.forEach((item: RenderTree) => {
-      if (itemsToFind.includes(item.id)) {
-        results.push(item);
-      } else {
-        if (item.children && item.children.length > 0) {
-          return findNodesFromTree(item.children, itemsToFind, results);
-        }
-      }
-    });
-    return results;
-  }
-
   // Called from accordion
   const selectFromTreeByNodeMapping = (
     node: NodeMapping | undefined,
@@ -422,21 +321,6 @@ export default function CrosswalkEditor({
     }
   };
 
-  const performCallbackFromActionMenu = (action: any) => {
-    if (action === 'disableEdit') {
-      setEditModeActive(false);
-    }
-    if (action === 'edit') {
-      if (isEditModeActive) {
-        dispatch(setNotification('FINISH_EDITING_MAPPINGS'));
-        setEditModeActive(false);
-      } else {
-        dispatch(setNotification('EDIT_MAPPINGS'));
-        setEditModeActive(true);
-      }
-    }
-  };
-
   const performCallbackFromMappingsModal = (
     action: any,
     mappingPayload: any,
@@ -467,46 +351,6 @@ export default function CrosswalkEditor({
     }
   };
 
-  interface TabPanelProps {
-    children?: React.ReactNode;
-    index: number;
-    value: number;
-  }
-
-  function CustomTabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-  }
-
-  function a11yProps(index: number) {
-    return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
-    };
-  }
-
-  const changeTab = (
-    event: React.SyntheticEvent | undefined,
-    newValue: number
-  ) => {
-    setSelectedTab(newValue);
-  };
-
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -514,177 +358,66 @@ export default function CrosswalkEditor({
     });
   };
 
-  if (getCrosswalkDataIsError) {
-    // console.log('Error: ', getCrosswalkDataError);
-  }
-
-  if (getCrosswalkDataIsError) {
-    if (
-      'status' in getCrosswalkDataError &&
-      getCrosswalkDataError.status === 404
-    ) {
-      return <Text>{t('error.not-found')}</Text>;
-    }
-  }
-
   return (
-    <ThemeProvider theme={theme}>
-      <>
-        {getCrosswalkDataIsSuccess &&
-        getCrosswalkData.state !== State.Removed ? (
-          <>
-            <Box
-              className="mb-3"
-              sx={{ borderBottom: 1, borderColor: 'divider' }}
-            >
-              <Tabs
-                value={selectedTab}
-                onChange={changeTab}
-                aria-label="Category selection"
-              >
-                <Tab label="Metadata & files" {...a11yProps(0)} />
-                <Tab label="Crosswalk" {...a11yProps(1)} />
-                <Tab label="Version history" {...a11yProps(2)} />
-              </Tabs>
-            </Box>
+    <div className="row d-flex justify-content-between crosswalk-editor">
+      <div className='col-12 mx-1'>
+        <div className="row gx-0">
+          {/*  SOURCE TREE */}
+          <div className="col-5">
+            <SchemaInfo
+              updateTreeNodeSelectionsOutput={performCallbackFromSchemaInfo}
+              isSourceTree={true}
+              treeSelection={sourceTreeSelection}
+              caption={t('crosswalk-editor.search-from-source-schema')}
+              schemaUrn={sourceSchemaUrn}
+            />
+          </div>
 
-            {selectedTab === 0 && getCrosswalkData && (
-              <>
-                <MetadataAndFiles
-                  crosswalkData={getCrosswalkData}
-                  refetch={refetchCrosswalkData}
-                />
-              </>
-            )}
-            {/*            <CustomTabPanel value={selectedTab} index={0}>
-            </CustomTabPanel>
-            <CustomTabPanel value={selectedTab} index={1}>
-            </CustomTabPanel>
-            <CustomTabPanel value={selectedTab} index={2}>
-            </CustomTabPanel>*/}
-            <ActionMenuContainer className="row d-flex h-0">
-              <div className={selectedTab === 1 ? 'col-10' : 'd-none'}></div>
-              <div
-                className={
-                  selectedTab === 1
-                    ? 'col-2 d-flex justify-content-end flex-row pe-3 pb-2'
-                    : 'd-none'
+          {/*  MID BUTTONS */}
+          <div className="col-2 px-4 mid-buttons">
+            {hasEditPermission && (
+              <Sbutton
+                className="link-button"
+                title={
+                  linkingError.length > 1
+                    ? linkingError
+                    : 'Link selected nodes'
                 }
+                disabled={
+                  selectedSourceNodes.length < 1 ||
+                  selectedTargetNodes.length < 1 ||
+                  crosswalkData.state === State.Published ||
+                  !isEditModeActive
+                }
+                onClick={() => {
+                  addJointButtonClick();
+                }}
               >
-                {hasEditRights && (
-                  <>
-                    <ActionMenuWrapper>
-                      <SchemaAndCrosswalkActionMenu
-                        buttonCallbackFunction={performCallbackFromActionMenu}
-                        metadata={getCrosswalkData}
-                        isMappingsEditModeActive={isEditModeActive}
-                        refetchMetadata={refetchCrosswalkData}
-                        type={ActionMenuTypes.CrosswalkEditor}
-                      />
-                    </ActionMenuWrapper>
-                    {/*<TestButton>*/}
-                    {/*    <OperationalizeModal*/}
-                    {/*      sourceSchemaPid=""*/}
-                    {/*      targetSchemaPid=""*/}
-                    {/*      crosswalkPid=""*/}
-                    {/*      ></OperationalizeModal>*/}
-                    {/*</TestButton>*/}
-                  </>
-                )}
-              </div>
-            </ActionMenuContainer>
-            <div className="row d-flex justify-content-between crosswalk-editor">
-              {/*  LEFT COLUMN */}
-              <div
-                className={selectedTab === 1 ? 'col-12 mx-1 mt-3' : 'd-none'}
-              >
-                <>
-                  <div className="row gx-0">
-                    {/*  SOURCE TREE */}
-                    <div className="col-5">
-                      <SchemaInfo
-                        updateTreeNodeSelectionsOutput={
-                          performCallbackFromSchemaInfo
-                        }
-                        isSourceTree={true}
-                        treeSelection={sourceTreeSelection}
-                        caption={t(
-                          'crosswalk-editor.search-from-source-schema'
-                        )}
-                        schemaUrn={sourceSchemaUrn}
-                        raiseHeading={hasEditRights}
-                      ></SchemaInfo>
-                    </div>
+                <LinkIcon></LinkIcon>
+              </Sbutton>
+            )}
+          </div>
 
-                    {/*  MID BUTTONS */}
-                    <div className="col-2 px-4 mid-buttons">
-                      {hasEditRights && (
-                        <Sbutton
-                          className="link-button"
-                          title={
-                            linkingError.length > 1
-                              ? linkingError
-                              : 'Link selected nodes'
-                          }
-                          disabled={
-                            selectedSourceNodes.length < 1 ||
-                            selectedTargetNodes.length < 1 ||
-                            crosswalkPublished ||
-                            !isEditModeActive
-                          }
-                          onClick={() => {
-                            addJointButtonClick();
-                          }}
-                        >
-                          <LinkIcon></LinkIcon>
-                        </Sbutton>
-                      )}
-                    </div>
+          {/*  TARGET TREE */}
+          <div className="col-5 pe-2">
+            <SchemaInfo
+              updateTreeNodeSelectionsOutput={performCallbackFromSchemaInfo}
+              isSourceTree={false}
+              treeSelection={targetTreeSelection}
+              caption={t('crosswalk-editor.search-from-target-schema')}
+              schemaUrn={targetSchemaUrn}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="col-12 mt-4">
+        <div className="d-flex justify-content-between">
+          <div>
+            <h2 className="mb-0">Mappings</h2>
+          </div>
 
-                    {/*  TARGET TREE */}
-                    <div className="col-5 pe-2">
-                      <SchemaInfo
-                        updateTreeNodeSelectionsOutput={
-                          performCallbackFromSchemaInfo
-                        }
-                        isSourceTree={false}
-                        treeSelection={targetTreeSelection}
-                        caption={t(
-                          'crosswalk-editor.search-from-target-schema'
-                        )}
-                        schemaUrn={targetSchemaUrn}
-                        raiseHeading={hasEditRights}
-                      ></SchemaInfo>
-                    </div>
-                  </div>
-                </>
-
-                {jointToBeEdited && (
-                  <>
-                    <NodeMappingsModal
-                      selectedCrosswalk={jointToBeEdited}
-                      performMappingsModalAction={
-                        performCallbackFromMappingsModal
-                      }
-                      mappingFilters={mappingFilters}
-                      mappingFunctions={mappingFunctions}
-                      modalOpen={isNodeMappingsModalOpen}
-                      isJointPatchOperation={isJointPatchOperation}
-                    ></NodeMappingsModal>
-                  </>
-                )}
-              </div>
-              {/*  BOTTOM COLUMN */}
-              {selectedTab === 1 && (
-                <>
-                  <div className="col-12 mt-4">
-                    <div className="d-flex justify-content-between">
-                      <div>
-                        <h2 className="mb-0">Mappings</h2>
-                      </div>
-
-                      <div className="align-self-end pe-1">
-                        {/*                        // TODO: this can be shown when attribute qnames are available for accordion. Those are temporarily replaced with attribute ids.
+          <div className="align-self-end pe-1">
+            {/*                        // TODO: this can be shown when attribute qnames are available for accordion. Those are temporarily replaced with attribute ids.
                         <Checkbox
                           checked={showAttributeNames}
                           onClick={(newState) => {
@@ -692,85 +425,34 @@ export default function CrosswalkEditor({
                           }}
                         >Show node titles
                         </Checkbox>*/}
-                      </div>
-                    </div>
+          </div>
+        </div>
 
-                    <div className="joint-listing-accordion-wrap my-3">
-                      <Box
-                        className="mb-4"
-                        sx={{ height: 640, flexGrow: 1, overflowY: 'auto' }}
-                      >
-                        <MappingsAccordion
-                          nodeMappings={nodeMappings}
-                          viewOnlyMode={false}
-                          isEditModeActive={
-                            isEditModeActive && !crosswalkPublished
-                          }
-                          showAttributeNames={showAttributeNames}
-                          performAccordionAction={
-                            performCallbackFromAccordionAction
-                          }
-                        ></MappingsAccordion>
-                      </Box>
-                    </div>
-                  </div>
-                </>
-              )}
-              {selectedTab === 2 && (
-                <>
-                  <Grid container>
-                    <Grid item xs={6}>
-                      <h2 className="ms-2">{t('metadata.versions')}</h2>
-                    </Grid>
-                    <Grid item xs={6} className="d-flex justify-content-end">
-                      <div className="mt-3 me-2">
-                        {hasEditRights && (
-                          <SchemaAndCrosswalkActionMenu
-                            buttonCallbackFunction={
-                              performCallbackFromActionMenu
-                            }
-                            metadata={getCrosswalkData}
-                            isMappingsEditModeActive={isEditModeActive}
-                            refetchMetadata={refetchCrosswalkData}
-                            type={ActionMenuTypes.CrosswalkVersionInfo}
-                          />
-                        )}
-                      </div>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <VersionHistory
-                        revisions={getCrosswalkData.revisions}
-                        contentType={Type.Crosswalk}
-                        currentRevision={crosswalkId}
-                      />
-                    </Grid>
-                  </Grid>
-                </>
-              )}
-            </div>
-          </>
-        ) : (
-          getCrosswalkDataIsSuccess && ( // Stub view if state is REMOVED
-            <>
-              <Box
-                className="mb-3"
-                sx={{ borderBottom: 1, borderColor: 'divider' }}
-              >
-                <Tabs value={0} aria-label={t('tabs.label')}>
-                  <Tab label={t('tabs.metadata-stub')} {...a11yProps(0)} />
-                </Tabs>
-              </Box>
-
-              {getCrosswalkData && (
-                <MetadataStub
-                  metadata={getCrosswalkData}
-                  type={Type.Crosswalk}
-                />
-              )}
-            </>
-          )
-        )}
-      </>
-    </ThemeProvider>
+        <div className="joint-listing-accordion-wrap my-3">
+          <Box
+            className="mb-4"
+            sx={{ height: 640, flexGrow: 1, overflowY: 'auto' }}
+          >
+            <MappingsAccordion
+              nodeMappings={nodeMappings}
+              viewOnlyMode={false}
+              isEditModeActive={isEditModeActive && crosswalkData.state !== State.Published}
+              showAttributeNames={showAttributeNames}
+              performAccordionAction={performCallbackFromAccordionAction}
+            />
+          </Box>
+        </div>
+      </div>
+      {jointToBeEdited && (
+        <NodeMappingsModal
+          selectedCrosswalk={jointToBeEdited}
+          performMappingsModalAction={performCallbackFromMappingsModal}
+          mappingFilters={mappingFilters}
+          mappingFunctions={mappingFunctions}
+          modalOpen={isNodeMappingsModalOpen}
+          isJointPatchOperation={isJointPatchOperation}
+        />
+      )}
+    </div>
   );
 }

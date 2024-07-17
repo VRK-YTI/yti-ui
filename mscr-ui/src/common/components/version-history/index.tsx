@@ -2,7 +2,10 @@ import { useTranslation } from 'next-i18next';
 import { ContentRevision } from '@app/common/interfaces/content-revision.interface';
 import FormattedDate from 'yti-common-ui/components/formatted-date';
 import GenericTable from '@app/common/components/generic-table';
-import { VersionHistoryContainer } from '@app/common/components/version-history/version-history.styles';
+import {
+  VersionHeading,
+  VersionHistoryContainer,
+} from '@app/common/components/version-history/version-history.styles';
 import { Type } from '@app/common/interfaces/search.interface';
 import { useRouter } from 'next/router';
 import { State } from '@app/common/interfaces/state.interface';
@@ -40,12 +43,17 @@ export default function VersionHistory({
       contentType == 'SCHEMA'
         ? router.basePath + '/schema/' + revision.pid
         : router.basePath + '/crosswalk/' + revision.pid;
-    const revisionRow : RevisionRow = {
+    const revisionRow: RevisionRow = {
       versionLabel: revision.versionLabel,
       pid: revision.pid,
       created: <FormattedDate date={revision.created} />,
       state: revision.state,
-      linkUrl: currentRevision == revision.pid ? t('metadata.viewing') : <a href={linkUrl}>{t('metadata.view')}</a>,
+      linkUrl:
+        currentRevision == revision.pid ? (
+          t('metadata.viewing')
+        ) : (
+          <a href={linkUrl}>{t('metadata.view')}</a>
+        ),
     };
     if (currentRevision == revision.pid) {
       revisionRow.highlight = true;
@@ -54,15 +62,14 @@ export default function VersionHistory({
   });
 
   return (
-    <>
-      <VersionHistoryContainer>
-        <GenericTable
-          items={revisionsFormatted}
-          headings={headers}
-          caption={''}
-          staticHighlight={true}
-        ></GenericTable>
-      </VersionHistoryContainer>
-    </>
+    <VersionHistoryContainer>
+      <VersionHeading variant="h2">{t('metadata.versions')}</VersionHeading>
+      <GenericTable
+        items={revisionsFormatted}
+        headings={headers}
+        caption={''}
+        staticHighlight={true}
+      />
+    </VersionHistoryContainer>
   );
 }

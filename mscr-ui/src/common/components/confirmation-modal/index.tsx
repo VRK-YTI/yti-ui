@@ -1,5 +1,4 @@
 import { Button, ModalFooter, Paragraph, Text } from 'suomifi-ui-components';
-import {useEffect, useState} from 'react';
 import { useBreakpoints } from 'yti-common-ui/components/media-query';
 import {
   ModalContentSmPadding,
@@ -7,30 +6,31 @@ import {
   ModalTitleH1,
 } from 'yti-common-ui/components/login-modal/login-modal.styles';
 
-export default function ConfirmModal(props: { isVisible: boolean; heading: string; text1: string; text2?:string; actionName: string; actionText: string; cancelText: string; performConfirmModalAction: (action: string) => void}) {
+export default function ConfirmModal(props: {
+  heading: string;
+  text1: string;
+  text2?: string;
+  actionText: string;
+  cancelText: string;
+  confirmAction: () => void;
+  onClose: () => void;
+}) {
   const { isSmall } = useBreakpoints();
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    setVisible(props.isVisible);
-  }, [props.isVisible]);
 
   function performAction(isCloseAction: boolean) {
-    setVisible(false);
-    if (isCloseAction) {
-      props.performConfirmModalAction('close');
-    } else {
-      props.performConfirmModalAction(props.actionName);
+    if (!isCloseAction) {
+      props.confirmAction();
     }
+    props.onClose();
   }
 
   return (
     <>
       <ModalStyled
         appElementId="__next"
-        visible={visible}
+        visible={true}
         variant={isSmall ? 'smallScreen' : 'default'}
-        onEscKeyDown={() => setVisible(false)}
+        onEscKeyDown={() => performAction(true)}
         scrollable={false}
       >
         <ModalContentSmPadding>
@@ -39,10 +39,14 @@ export default function ConfirmModal(props: { isVisible: boolean; heading: strin
             <Text>{props.text1}</Text>
           </Paragraph>
           <br />
-          {props.text2 && <><Paragraph>
-              <Text>{props.text2}</Text>
-          </Paragraph><br/></>
-          }
+          {props.text2 && (
+            <>
+              <Paragraph>
+                <Text>{props.text2}</Text>
+              </Paragraph>
+              <br />
+            </>
+          )}
         </ModalContentSmPadding>
 
         <ModalFooter>

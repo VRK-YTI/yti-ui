@@ -19,7 +19,7 @@ function createUrl(formatRestrictions: Array<Format>) {
 export const schemaApi = createApi({
   reducerPath: 'schemaApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['schemaApi'],
+  tagTypes: ['Schema'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];
@@ -77,7 +77,8 @@ export const schemaApi = createApi({
         url: `/schema/${value.pid}`,
         method: 'PATCH',
         data: value.payload,
-      })
+      }),
+      invalidatesTags: ['Schema'],
     }),
     getSchema: builder.query<Schema, string>({
       query: (pid) => ({
@@ -90,6 +91,7 @@ export const schemaApi = createApi({
         url: `/schema/${pid}?includeVersionInfo=true`,
         method: 'GET',
       }),
+      providesTags: ['Schema'],
     }),
     // TODO: What is the return type?
     getSchemaOriginal: builder.query<undefined, string>({
@@ -129,6 +131,7 @@ export const schemaApi = createApi({
         url: `/schema/${value}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Schema'],
     }),
     getSchemas: builder.query<Schema[], string>({
       query: (value) => ({
@@ -158,5 +161,3 @@ export const {
 
 export const { putSchema, getSchema, deleteSchema, getSchemas, putSchemaFull, putSchemaRevision } =
   schemaApi.endpoints;
-
-

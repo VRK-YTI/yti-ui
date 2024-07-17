@@ -18,94 +18,88 @@ import {
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import {
-  ActionMenuTypes,
-  Type,
-  Visibility,
-} from '@app/common/interfaces/search.interface';
+import { Type, Visibility } from '@app/common/interfaces/search.interface';
 import { State } from '@app/common/interfaces/state.interface';
 import ConfirmModal from '@app/common/components/confirmation-modal';
 import { useStoreDispatch } from '@app/store';
-import {
-  clearNotification,
-  setNotification,
-} from '@app/common/components/notifications/notifications.slice';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import FormattedDate from 'yti-common-ui/components/formatted-date';
 import {
   MetadataAttribute,
   MetadataContainer,
   MetadataFormContainer,
+  MetadataHeading,
   MetadataLabel,
   MetadataRow,
 } from '@app/modules/form/metadata-form/metadata-form.styles';
 import { mscrSearchApi } from '@app/common/components/mscr-search/mscr-search.slice';
-import SchemaAndCrosswalkActionMenu from '@app/common/components/schema-and-crosswalk-actionmenu';
 import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
 import { CrosswalkWithVersionInfo } from '@app/common/interfaces/crosswalk.interface';
+import {
+  selectIsEditMetadataActive,
+  setIsEditMetadataActive,
+} from '@app/common/components/content-view/content-view.slice';
+import { useSelector } from 'react-redux';
+import {
+  selectConfirmModalState,
+  setConfirmModalState,
+} from '@app/common/components/actionmenu/actionmenu.slice';
 
 interface MetadataFormProps {
   type: Type;
   metadata: SchemaWithVersionInfo | CrosswalkWithVersionInfo;
   refetchMetadata: () => void;
   hasEditPermission: boolean;
-  isMscrCopyAvailable?: boolean;
 }
 export default function MetadataForm({
   type,
   metadata,
   refetchMetadata,
   hasEditPermission,
-  isMscrCopyAvailable,
 }: MetadataFormProps) {
   const { t } = useTranslation('common');
   const router = useRouter();
   const lang = router.locale ?? '';
   const dispatch = useStoreDispatch();
-  const [isEditModeActive, setIsEditModeActive] = useState(false);
+  const isEditModeActive = useSelector(selectIsEditMetadataActive());
+  const confirmModalState = useSelector(selectConfirmModalState());
   const [patchCrosswalk] = usePatchCrosswalkMutation();
   const [patchSchema] = usePatchSchemaMutation();
-  const [isSaveConfirmModalOpen, setSaveConfirmModalOpen] = useState(false);
   const [formData, setFormData] =
     useState<MetadataFormType>(initialMetadataForm);
 
-  const performModalAction = (action: string) => {
-    setSaveConfirmModalOpen(false);
-    if (action === 'close') {
-      return;
-    }
-    setIsEditModeActive(false);
+  const updateMetadata = () => {
+    dispatch(setIsEditMetadataActive(false));
     const payload = generatePayload();
-    if (action === 'save') {
-      if (type === Type.Crosswalk) {
-        patchCrosswalk({ payload: payload, pid: metadata.pid })
-          .unwrap()
-          .then(() => {
-            dispatch(
-              mscrSearchApi.util.invalidateTags([
-                'PersonalContent',
-                'OrgContent',
-                'MscrSearch',
-              ])
-            );
-            dispatch(setNotification('CROSSWALK_SAVE'));
-            refetchMetadata();
-          });
-        // ToDo: Error notifications with .catch
-      } else if (type === Type.Schema) {
-        patchSchema({ payload: payload, pid: metadata.pid })
-          .unwrap()
-          .then(() => {
-            dispatch(
-              mscrSearchApi.util.invalidateTags([
-                'PersonalContent',
-                'OrgContent',
-                'MscrSearch',
-              ])
-            );
-            dispatch(setNotification('SCHEMA_SAVE'));
-            refetchMetadata();
-          });
-      }
+    if (type === Type.Crosswalk) {
+      patchCrosswalk({ payload: payload, pid: metadata.pid })
+        .unwrap()
+        .then(() => {
+          dispatch(
+            mscrSearchApi.util.invalidateTags([
+              'PersonalContent',
+              'OrgContent',
+              'MscrSearch',
+            ])
+          );
+          dispatch(setNotification('CROSSWALK_SAVE'));
+          refetchMetadata();
+        });
+      // ToDo: Error notifications with .catch
+    } else if (type === Type.Schema) {
+      patchSchema({ payload: payload, pid: metadata.pid })
+        .unwrap()
+        .then(() => {
+          dispatch(
+            mscrSearchApi.util.invalidateTags([
+              'PersonalContent',
+              'OrgContent',
+              'MscrSearch',
+            ])
+          );
+          dispatch(setNotification('SCHEMA_SAVE'));
+          refetchMetadata();
+        });
     }
   };
 
@@ -146,6 +140,7 @@ export default function MetadataForm({
     setFormValuesFromData();
   }, [setFormValuesFromData]);
 
+  // Todo: Make a confirm modal for if you try to cancel with unsaved changes
   function updateFormData(
     attributeName: keyof MetadataFormType,
     value: string | number | undefined
@@ -155,43 +150,18 @@ export default function MetadataForm({
     setFormData(newFormData);
   }
 
-  const performCallbackFromActionMenu = (action: string) => {
-    if (action === 'edit') {
-      setIsEditModeActive(true);
-    }
-  };
-
   return (
     <MetadataContainer>
       <Grid container>
         <Grid item xs={6}>
           {type === Type.Crosswalk ? (
-            <h2>{t('metadata.crosswalk-details')}</h2>
+            <MetadataHeading variant={'h2'}>
+              {t('metadata.crosswalk-details')}
+            </MetadataHeading>
           ) : (
-            <h2>{t('metadata.schema-details')}</h2>
-          )}
-        </Grid>
-        <Grid item xs={6} className="d-flex justify-content-end my-3">
-          {hasEditPermission && (
-            <SchemaAndCrosswalkActionMenu
-              buttonCallbackFunction={performCallbackFromActionMenu}
-              metadata={metadata}
-              isMappingsEditModeActive={isEditModeActive}
-              refetchMetadata={refetchMetadata}
-              type={
-                type === Type.Schema
-                  ? ActionMenuTypes.SchemaMetadata
-                  : ActionMenuTypes.CrosswalkMetadata
-              }
-            />
-          )}
-          {!hasEditPermission && isMscrCopyAvailable && (
-            <SchemaAndCrosswalkActionMenu
-              metadata={metadata}
-              isMappingsEditModeActive={isEditModeActive}
-              refetchMetadata={refetchMetadata}
-              type={ActionMenuTypes.NoEditPermission}
-            />
+            <MetadataHeading variant={'h2'}>
+              {t('metadata.schema-details')}
+            </MetadataHeading>
           )}
         </Grid>
       </Grid>
@@ -381,7 +351,9 @@ export default function MetadataForm({
                 className="align-self-end my-3"
                 hidden={!isEditModeActive}
                 onClick={() => {
-                  setSaveConfirmModalOpen(true);
+                  dispatch(
+                    setConfirmModalState({ key: 'saveMetadata', value: true })
+                  );
                 }}
               >
                 {t('action.save')}
@@ -392,7 +364,7 @@ export default function MetadataForm({
                 hidden={!isEditModeActive}
                 variant="secondary"
                 onClick={() => {
-                  setIsEditModeActive(false);
+                  dispatch(setIsEditMetadataActive(false));
                   setFormValuesFromData();
                 }}
               >
@@ -402,15 +374,20 @@ export default function MetadataForm({
           )}
         </Grid>
       </MetadataFormContainer>
-      <ConfirmModal
-        isVisible={isSaveConfirmModalOpen}
-        actionName={'save'}
-        actionText={t('action.save')}
-        cancelText={t('action.cancel')}
-        performConfirmModalAction={performModalAction}
-        heading={t('confirm-modal.heading')}
-        text1={t('confirm-modal.save')}
-      />
+      {confirmModalState.saveMetadata && (
+        <ConfirmModal
+          actionText={t('action.save')}
+          cancelText={t('action.cancel')}
+          confirmAction={updateMetadata}
+          onClose={() =>
+            dispatch(
+              setConfirmModalState({ key: 'saveMetadata', value: false })
+            )
+          }
+          heading={t('confirm-modal.heading')}
+          text1={t('confirm-modal.save')}
+        />
+      )}
     </MetadataContainer>
   );
 }

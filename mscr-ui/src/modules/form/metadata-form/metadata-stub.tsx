@@ -4,6 +4,7 @@ import {
   MetadataAttribute,
   MetadataContainer,
   MetadataFormContainer,
+  MetadataHeading,
   MetadataLabel,
   MetadataRow,
 } from '@app/modules/form/metadata-form/metadata-form.styles';
@@ -76,22 +77,32 @@ export default function MetadataStub({
 
   return (
     <MetadataContainer>
-      <Grid container>
-        {type === Type.Crosswalk ? (
-          <h2>{t('metadata.stub-crosswalk-details')}</h2>
-        ) : (
-          <h2>{t('metadata.stub-schema-details')}</h2>
-        )}
-      </Grid>
+      {type === Type.Crosswalk ? (
+        <MetadataHeading variant={'h2'}>
+          {t('metadata.stub-crosswalk-details')}
+        </MetadataHeading>
+      ) : (
+        <MetadataHeading variant={'h2'}>
+          {t('metadata.stub-schema-details')}
+        </MetadataHeading>
+      )}
       <MetadataFormContainer container>
         <Grid item xs={12} md={7}>
           {metadataRows.map((item) => renderRow(item.label, item.attribute))}
           {type === Type.Crosswalk ? (
             <>
-              {renderRow(t('metadata.source-schema'), metadata.sourceSchema ?? '')}
-              {renderRow(t('metadata.target-schema'), metadata.targetSchema ?? '')}
+              {renderRow(
+                t('metadata.source-schema'),
+                metadata.sourceSchema ?? ''
+              )}
+              {renderRow(
+                t('metadata.target-schema'),
+                metadata.targetSchema ?? ''
+              )}
             </>
-          ) : (<></>)}
+          ) : (
+            <></>
+          )}
         </Grid>
         <Grid item xs={12} md={5}>
           <MetadataRow item xs={6} md={7}>
