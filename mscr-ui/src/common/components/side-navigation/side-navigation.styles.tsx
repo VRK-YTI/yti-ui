@@ -7,17 +7,15 @@ import {
   SideNavigationItem,
 } from 'suomifi-ui-components';
 
-export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint,  $isSidebarFolded: boolean }>`
+export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint; $isSidebarFolded: boolean }>`
   // Width and positioning for now, need adjusting when overall layout structure is decided
   flex-grow: 1;
-  width: 100%;
   max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
   width: ${(props) => (props.$isSidebarFolded ? '50px' : '100%')};
   left: 0;
   top: 76px;
   background-color: white;
   padding-left: ${(props) => props.theme.suomifi.spacing.m};
-  padding-top: ${(props) => props.theme.suomifi.spacing.m};
   padding-bottom: ${(props) => props.theme.suomifi.spacing.m};
   margin-right: ${(props) => props.theme.suomifi.spacing.m};
   height: 100vh;
@@ -25,21 +23,27 @@ export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint,  $i
   transition-timing-function: ease-in-out;
   transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
   border-right: 3px solid ${(props) => props.theme.suomifi.colors.highlightLight3};
+
+  && .sidebar-animate-fadein {
+    animation: fadeInAnimation ease 1700ms;
+    animation-iteration-count: 1;
+    animation-fill-mode: both;
+  }
+
+  && .sidebar-animate-fadeout {
+    animation: fadeOutAnimation ease 400ms;
+    animation-iteration-count: 1;
+    animation-fill-mode: both;
+  }
 `;
 
 // Modify the style of an existing suomifi component
 export const NavigationHeading = styled(Heading)`
   // Adding &-characters increases the specificity so you can override styles
   && {
-    color: ${(props) => props.theme.suomifi.colors.depthDark2};
-    font-size: 16px;
-  }
-`;
-
-export const GroupHeading = styled(Heading)`
-  && {
-    color: ${(props) => props.theme.suomifi.colors.blackBase};
-    ${(props) => props.theme.suomifi.typography.leadTextSmallScreen};
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: normal;
   }
 `;
 
@@ -49,64 +53,79 @@ export const MscrSideNavigation = styled(SideNavigation)`
     display: none;
   }
   height: 100vh;
-  ul {padding: 1px !important;}
 `;
 
 export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`
-  // When the personal navigation subsection is active, there's a blue background and non-selected links are black
-  &.fi-side-navigation-item--child-selected {
-    div {
-      background-color: ${(props) =>
-        props.theme.suomifi.colors.highlightLight3};
-    }
-    && .personal a.fi-link--router {
-      color: ${(props) => props.theme.suomifi.colors.blackBase};
-    }
+  // A 'mask' to hide the bottom part of the gray border on the left when it's the last group in the list
+  & > ul > li:last-child::before {
+    content: "";
+    width:5px;
+    height:50%;
+    background-color:white;
+    position: absolute;
+    left:-1px;
+    bottom:-1px;
   }
 `;
 
 export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
-  && {
-    margin-right: ${(props) => props.theme.suomifi.spacing.m};
+  &&& {
+    margin: 0 ${(props) => props.theme.suomifi.spacing.s};
+    // The decorative line next to group names
+    border-left: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
   }
-  // Remove arrow icon from group buttons
   .fi-icon {
+    // Remove arrow icon from group buttons
     display: none;
   }
-  // Group subsection background is white until a link is selected
   && .fi-side-navigation-item_sub-list {
+    padding: 0;
+    margin-top: 0;
+    // Group subsection background is white
     background-color: transparent;
   }
-  // When the group navigation subsection is active, there's a blue background and non-selected links are black
-  &.fi-side-navigation-item--child-selected {
-    background-color: ${(props) => props.theme.suomifi.colors.highlightLight3};
-    && .group a.fi-link--router {
-      color: ${(props) => props.theme.suomifi.colors.blackBase};
+
+  &.fi-side-navigation-item--child-selected, &.group-selected {
+    // Opened group name is highlight blue
+    && h3 {
+      color: ${(props) => props.theme.suomifi.colors.highlightBase};
     }
+    // Above was defined a 'mask' covering the bottom half of the decorative line on the last group in the list
+    // This is to remove the mask if the group is open
+    &:before {
+      display: none;
+    }
+  }
+
+  && h3 {
+    margin-left: ${(props) => props.theme.suomifi.spacing.xs};
   }
 `;
 
 export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
-  // Links in inactive sections are gray
+  margin: 0;
+
   &&&& a {
-    color: ${(props) => props.theme.suomifi.colors.depthDark2};
-    ${(props) => props.theme.suomifi.typography.actionElementInnerTextBold}
-  }
-  // Currently selected link is blue and has a blue left border
-  &.fi-side-navigation-item--selected {
-    border-left: solid 3px
-      ${(props) => props.theme.suomifi.colors.highlightBase};
-    &&& .fi-link--router {
-      color: ${(props) => props.theme.suomifi.colors.highlightBase};
-    }
-  }
-  &&&&& .fi-link--router {
+    font-size: 16px;
+    font-weight: 600;
+    margin: ${(props) => props.theme.suomifi.spacing.xxs} ${(props) => props.theme.suomifi.spacing.xs};
+    padding: 0 ${(props) => props.theme.suomifi.spacing.xs};
+    // Links in inactive sections are gray
+    color: ${(props) => props.theme.suomifi.colors.depthDark1};
+    // leave room for highlight border
+    border-left: solid 3px transparent;
     // override suomifi default blue background
     background-color: transparent;
     // Hovered link is blue
     &:hover {
       color: ${(props) => props.theme.suomifi.colors.highlightBase};
     }
+  }
+  &&&&&.fi-side-navigation-item--selected a {
+    // Currently selected link is blue and has a blue left border
+    color: ${(props) => props.theme.suomifi.colors.highlightBase};
+    border-left: solid 3px
+      ${(props) => props.theme.suomifi.colors.highlightBase};
   }
 `;
 
@@ -117,23 +136,30 @@ export const PersonalNavigationWrapper = styled.div`
 
 export const GroupOpenButton = styled.button`
   &&&&& {
+    padding: ${(props) => props.theme.suomifi.spacing.xxs} ${(props) => props.theme.suomifi.spacing.xs};
     // override suomifi default blue background
     background-color: transparent;
   }
-  // Hovered group name is blue
+  && h3 {
+    font-size: 16px;
+    // unselected link color override
+    color: ${(props) => props.theme.suomifi.colors.depthDark1};
+  }
   &:hover h3 {
+    // Hovered group name is highlight blue
     color: ${(props) => props.theme.suomifi.colors.highlightBase};
   }
-`;
-
-export const GroupOpenBtn = styled.div`
-  &&&&& {
-    // override suomifi default blue background
-    background-color: transparent;
-  }
-  // Hovered group name is blue
-  &:hover h3 {
-    color: ${(props) => props.theme.suomifi.colors.highlightBase};
+  &&::before {
+    // This is the little dot on the decorative line next to group names
+    content: '';
+    position: absolute;
+    top: 45%;
+    left: -5px;
+    height: 5px;
+    width: 5px;
+    background-color: ${(props) => props.theme.suomifi.colors.depthBase};
+    border-radius: 50%;
+    border: solid 2px white;
   }
 `;
 

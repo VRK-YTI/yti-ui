@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { RouterLink } from 'suomifi-ui-components';
+import { Heading, RouterLink, SideNavigationItem } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import Tooltip from '@mui/material/Tooltip';
 import {
@@ -9,12 +9,9 @@ import {
   MscrSideNavigationLevel3,
   PersonalNavigationWrapper,
   MscrSideNavigation,
-  GroupHeading,
   GroupOpenButton,
-  MscrSideNavigationLevel1,
   FoldButton,
-  FoldButtonWrapper,
-  GroupOpenBtn,
+  FoldButtonWrapper, MscrSideNavigationLevel1
 } from './side-navigation.styles';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
@@ -44,163 +41,174 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
     setSidebarMinimized(!isSidebarMinimized);
     setFirstPageLoad(false);
   }
+  organizations.push({id: 'whateverererereer', label: 'Diligent professionals'});
 
   return (
-    <SideNavigationWrapper $breakpoint={breakpoint} $isSidebarFolded={isSidebarMinimized} id="sidebar">
+    <SideNavigationWrapper
+      $breakpoint={breakpoint}
+      $isSidebarFolded={isSidebarMinimized}
+      id="sidebar"
+    >
       <div className={'d-flex justify-content-between'}>
         <div className={''}>
-          <div className={!isSidebarMinimized && !isFirstPageLoad ? "sidebar-animate-fadein" :  undefined}>
-            <MscrSideNavigation heading="" aria-label={t('workspace.navigation')}
-                                className={isSidebarMinimized ? "sidebar-animate-fadeout" : undefined}>
-        <MscrSideNavigationLevel1
-          subLevel={1}
-          expanded
-          content={
-            <NavigationHeading variant="h2">
-              {t('workspace.personal')}
-            </NavigationHeading>
-          }
-        >
-          <PersonalNavigationWrapper>
-            <MscrSideNavigationLevel3
-              className="personal"
-              subLevel={3}
-              selected={router.asPath.startsWith(personalSchemasPath)}
-              content={
-                <Link href={personalSchemasPath} passHref>
-                  <RouterLink
-                    onClick={() => {
-                      setOpenGroup('');
-                      setIsSearchActive(false);
-                    }}
-                  >
-                    {t('workspace.schemas')}
-                  </RouterLink>
-                </Link>
-              }
-            />
-            <MscrSideNavigationLevel3
-              className="personal"
-              subLevel={3}
-              selected={router.asPath.startsWith(personalCrosswalksPath)}
-              content={
-                <Link href={personalCrosswalksPath} passHref>
-                  <RouterLink
-                    onClick={() => {
-                      setOpenGroup('');
-                      setIsSearchActive(false);
-                    }}
-                  >
-                    {t('workspace.crosswalks')}
-                  </RouterLink>
-                </Link>
-              }
-            />
-            <MscrSideNavigationLevel3
-              className="personal"
-              subLevel={3}
-              selected={router.asPath.startsWith(personalSettingsPath)}
-              content={''}
-              // content={
-              //   <Link href={personalSettingsPath} passHref>
-              //     <RouterLink onClick={() => setOpenGroup('')}>
-              //       {t('workspace-navigation-settings')}
-              //     </RouterLink>
-              //   </Link>
-              // }
-            />
-          </PersonalNavigationWrapper>
-        </MscrSideNavigationLevel1>
-        <MscrSideNavigationLevel1
-          subLevel={1}
-          expanded
-          content={
-            <NavigationHeading variant="h2">
-              {t('workspace.group')}
-            </NavigationHeading>
-          }
-        >
-          {organizations?.map((group) => (
-            <MscrSideNavigationLevel2
-              key={group.id}
-              subLevel={2}
-              selected={openGroup == group.id}
-              content={
-                <RouterLink
-                  // Button opens the children that are links to content
-                  asComponent={GroupOpenButton}
-                  onClick={() => {
-                    if (openGroup == group.id) {
-                      setOpenGroup('');
-                      return;
-                    }
-                    setOpenGroup(group.id);
-                  }}
-                >
-                  <GroupHeading variant="h3">{group.label}</GroupHeading>
-                </RouterLink>
+          <div
+            className={
+              !isSidebarMinimized && !isFirstPageLoad
+                ? 'sidebar-animate-fadein'
+                : undefined
+            }
+          >
+            <MscrSideNavigation
+              heading=""
+              aria-label={t('workspace.navigation')}
+              className={
+                isSidebarMinimized ? 'sidebar-animate-fadeout' : undefined
               }
             >
-              <MscrSideNavigationLevel3
-                className="group"
-                subLevel={3}
-                selected={router.asPath.startsWith('/' + group.id + '/schemas')}
+              <MscrSideNavigationLevel1
+                subLevel={1}
+                expanded
                 content={
-                  <Link href={'/' + group.id + '/schemas'} passHref>
-                    <RouterLink onClick={() => setIsSearchActive(false)}>
-                      {t('workspace.schemas')}
-                    </RouterLink>
-                  </Link>
+                  <NavigationHeading variant="h2">
+                    {t('workspace.personal')}
+                  </NavigationHeading>
                 }
-              />
-              <MscrSideNavigationLevel3
-                className="group"
-                subLevel={3}
-                selected={router.asPath.startsWith(
-                  '/' + group.id + '/crosswalks'
-                )}
+              >
+                <PersonalNavigationWrapper>
+                  <MscrSideNavigationLevel3
+                    className="personal"
+                    subLevel={3}
+                    selected={router.asPath.startsWith(personalCrosswalksPath)}
+                    content={
+                      <Link href={personalCrosswalksPath} passHref>
+                        <RouterLink
+                          onClick={() => {
+                            setOpenGroup('');
+                            setIsSearchActive(false);
+                          }}
+                        >
+                          {t('workspace.crosswalks')}
+                        </RouterLink>
+                      </Link>
+                    }
+                  />
+                  <MscrSideNavigationLevel3
+                    className="personal"
+                    subLevel={3}
+                    selected={router.asPath.startsWith(personalSchemasPath)}
+                    content={
+                      <Link href={personalSchemasPath} passHref>
+                        <RouterLink
+                          onClick={() => {
+                            setOpenGroup('');
+                            setIsSearchActive(false);
+                          }}
+                        >
+                          {t('workspace.schemas')}
+                        </RouterLink>
+                      </Link>
+                    }
+                  />
+                  <MscrSideNavigationLevel3
+                    className="personal"
+                    subLevel={3}
+                    selected={router.asPath.startsWith(personalSettingsPath)}
+                    content={''}
+                  />
+                </PersonalNavigationWrapper>
+              </MscrSideNavigationLevel1>
+              <MscrSideNavigationLevel1
+                subLevel={1}
+                expanded
                 content={
-                  <Link href={'/' + group.id + '/crosswalks'} passHref>
-                    <RouterLink onClick={() => setIsSearchActive(false)}>
-                      {t('workspace.crosswalks')}
-                    </RouterLink>
-                  </Link>
+                  <NavigationHeading variant="h2">
+                    {t('workspace.group')}
+                  </NavigationHeading>
                 }
-              />
-              <MscrSideNavigationLevel3
-                className="group"
-                subLevel={3}
-                selected={router.asPath.startsWith(
-                  '/' + group.id + '/settings'
-                )}
-
-                content={''}
-                // content={
-                //   <Link href={'/' + group.id + '/settings'} passHref>
-                //     <RouterLink>
-                //       {t('workspace-group-navigation-settings')}
-                //     </RouterLink>
-                //   </Link>
-                // }
-              />
-            </MscrSideNavigationLevel2>
-          ))}
-        </MscrSideNavigationLevel1>
+              >
+                {organizations?.map((group) => (
+                  <MscrSideNavigationLevel2
+                    key={group.id}
+                    subLevel={2}
+                    selected={openGroup == group.id}
+                    className={openGroup == group.id ? 'group-selected' : ''}
+                    content={
+                      <RouterLink
+                        // Button opens the children that are links to content
+                        asComponent={GroupOpenButton}
+                        onClick={() => {
+                          if (openGroup == group.id) {
+                            setOpenGroup('');
+                            return;
+                          }
+                          setOpenGroup(group.id);
+                        }}
+                      >
+                        <Heading variant="h3">{group.label}</Heading>
+                      </RouterLink>
+                    }
+                  >
+                    <MscrSideNavigationLevel3
+                      className="group"
+                      subLevel={3}
+                      selected={router.asPath.startsWith(
+                        '/' + group.id + '/crosswalks'
+                      )}
+                      content={
+                        <Link href={'/' + group.id + '/crosswalks'} passHref>
+                          <RouterLink onClick={() => setIsSearchActive(false)}>
+                            {t('workspace.crosswalks')}
+                          </RouterLink>
+                        </Link>
+                      }
+                    />
+                    <MscrSideNavigationLevel3
+                      className="group"
+                      subLevel={3}
+                      selected={router.asPath.startsWith(
+                        '/' + group.id + '/schemas'
+                      )}
+                      content={
+                        <Link href={'/' + group.id + '/schemas'} passHref>
+                          <RouterLink onClick={() => setIsSearchActive(false)}>
+                            {t('workspace.schemas')}
+                          </RouterLink>
+                        </Link>
+                      }
+                    />
+                    <MscrSideNavigationLevel3
+                      className="group"
+                      subLevel={3}
+                      selected={router.asPath.startsWith(
+                        '/' + group.id + '/settings'
+                      )}
+                      content={''}
+                    />
+                  </MscrSideNavigationLevel2>
+                ))}
+              </MscrSideNavigationLevel1>
             </MscrSideNavigation>
           </div>
         </div>
-        <FoldButtonWrapper className={'col-1 d-flex justify-content-center flex-column'} onClick={() => {
-        }}>
+        <FoldButtonWrapper
+          className={'col-1 d-flex justify-content-center flex-column'}
+        >
           <Tooltip
-            title={isSidebarMinimized ? t('click-to-expand-sidebar') : t('click-to-minimize-sidebar')}
+            title={
+              isSidebarMinimized
+                ? t('click-to-expand-sidebar')
+                : t('click-to-minimize-sidebar')
+            }
             placement="top-end"
-            className={undefined}>
+            className={undefined}
+          >
             <FoldButton
               aria-label="fold"
               onClick={(e) => {
                 sidebarFoldButtonClick();
                 e.stopPropagation();
-              }}>
+              }}
+            >
               <div></div>
               <div></div>
             </FoldButton>
