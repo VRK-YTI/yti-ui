@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Heading, RouterLink, SideNavigationItem } from 'suomifi-ui-components';
+import { Heading, RouterLink } from 'suomifi-ui-components';
+import { IconChevronDown } from 'suomifi-icons';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import Tooltip from '@mui/material/Tooltip';
 import {
@@ -11,7 +12,8 @@ import {
   MscrSideNavigation,
   GroupOpenButton,
   FoldButton,
-  FoldButtonWrapper, MscrSideNavigationLevel1
+  FoldButtonWrapper,
+  MscrSideNavigationLevel1,
 } from './side-navigation.styles';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
@@ -41,7 +43,11 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
     setSidebarMinimized(!isSidebarMinimized);
     setFirstPageLoad(false);
   }
-  organizations.push({id: 'whateverererereer', label: 'Diligent professionals'});
+  // ToDo: Remove
+  organizations.push({
+    id: 'whateverererereer',
+    label: 'Diligent professionals',
+  });
 
   return (
     <SideNavigationWrapper
@@ -133,9 +139,8 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                     selected={openGroup == group.id}
                     className={openGroup == group.id ? 'group-selected' : ''}
                     content={
-                      <RouterLink
-                        // Button opens the children that are links to content
-                        asComponent={GroupOpenButton}
+                      <GroupOpenButton
+                        // iconRight={<IconChevronDown />} ToDo: Make work
                         onClick={() => {
                           if (openGroup == group.id) {
                             setOpenGroup('');
@@ -145,7 +150,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                         }}
                       >
                         <Heading variant="h3">{group.label}</Heading>
-                      </RouterLink>
+                      </GroupOpenButton>
                     }
                   >
                     <MscrSideNavigationLevel3

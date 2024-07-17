@@ -2,9 +2,10 @@ import styled from 'styled-components';
 import { Breakpoint } from 'yti-common-ui/media-query';
 import { small } from 'yti-common-ui/media-query/styled-helpers';
 import {
+  Button,
   Heading,
   SideNavigation,
-  SideNavigationItem,
+  SideNavigationItem
 } from 'suomifi-ui-components';
 
 export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint; $isSidebarFolded: boolean }>`
@@ -134,11 +135,13 @@ export const PersonalNavigationWrapper = styled.div`
   margin-right: 20px;
 `;
 
-export const GroupOpenButton = styled.button`
+export const GroupOpenButton = styled(Button)`
   &&&&& {
     padding: ${(props) => props.theme.suomifi.spacing.xxs} ${(props) => props.theme.suomifi.spacing.xs};
-    // override suomifi default blue background
-    background-color: transparent;
+    // override suomifi button defaults
+    background: none;
+    text-shadow: none;
+    border: none;
   }
   && h3 {
     font-size: 16px;
@@ -152,6 +155,7 @@ export const GroupOpenButton = styled.button`
   &&::before {
     // This is the little dot on the decorative line next to group names
     content: '';
+    box-sizing: unset;
     position: absolute;
     top: 45%;
     left: -5px;
