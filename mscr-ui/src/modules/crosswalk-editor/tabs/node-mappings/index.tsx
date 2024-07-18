@@ -3,7 +3,7 @@ import {
   NodeMapping,
 } from '@app/common/interfaces/crosswalk-connection.interface';
 import validateMapping from '@app/modules/crosswalk-editor/mapping-validator';
-import {Dropdown, IconPlus, Textarea, TextInput} from 'suomifi-ui-components';
+import {Dropdown, IconClose, IconPlus, Textarea, TextInput} from 'suomifi-ui-components';
 import {DropdownItem} from 'suomifi-ui-components';
 import {useEffect, useState} from 'react';
 import {
@@ -230,7 +230,17 @@ export default function NodeMappings(props: {
         className="row bg-white edit-mapping-modal"
       >
         <ModalContent className="edit-mapping-modal-content">
-          <ModalTitle>{props.isJointPatchOperation ? 'Edit mapping' : 'Add mapping'}</ModalTitle>
+          <div className='row'>
+            <div className='col-8'>
+            <ModalTitle>{props.isJointPatchOperation ? 'Edit mapping' : 'Add mapping'}</ModalTitle>
+            </div>
+              <div className="col-4">
+                  <Button style={{ float: 'right' }} variant="secondaryNoBorder"
+                    icon={<IconClose />} aria-label="t('cancel')" onClick={() => closeModal()}></Button>
+              </div>
+            </div>
+        
+         
           <div className="col flex-column d-flex justify-content-between">
             <div className="row bg-white">
               {/* SOURCE OPERATIONS */}

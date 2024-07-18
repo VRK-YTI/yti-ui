@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
+  IconClose,
   InlineAlert,
   Modal,
   ModalContent,
@@ -543,7 +544,8 @@ export default function FormModal({
   }
 
   return (
-    <Modal
+    <>
+      <Modal
       appElementId="__next"
       visible={visible}
       onEscKeyDown={() => handleClose()}
@@ -566,69 +568,67 @@ export default function FormModal({
                     ? SpinnerType.CrosswalkRegistrationModal
                     : modalType == ModalType.RegisterNewMscr
                       ? SpinnerType.CrosswalkCreationModal
-                      : SpinnerType.CrosswalkRevisionModal
-              }
+                      : SpinnerType.CrosswalkRevisionModal}
             ></SpinnerOverlay>
           )}
         </>
-        <div id={'modalTop'}></div>
-        <ModalTitle>
-          {contentType == Type.Schema
-            ? modalType == ModalType.RegisterNewFull
-              ? t('content-form.title.schema-register')
-              : modalType == ModalType.McsrCopy
-                ? t('content-form.title.schema-mscr-copy')
-                : t('content-form.title.schema-revision')
-            : modalType == ModalType.RegisterNewFull
-              ? t('content-form.title.crosswalk-register')
-              : modalType == ModalType.RegisterNewMscr
-                ? t('content-form.title.crosswalk-create')
-                : modalType == ModalType.McsrCopy
-                  ? t('content-form.title.crosswalk-mscr-copy')
-                  : t('content-form.title.crosswalk-revision')}
-        </ModalTitle>
+          <div id={'modalTop'}></div>
+         
+        <div className="row">
+            <div className="col-8">
+            <ModalTitle>
+              {contentType == Type.Schema
+                ? modalType == ModalType.RegisterNewFull
+                  ? t('content-form.title.schema-register')
+                  : modalType == ModalType.McsrCopy
+                    ? t('content-form.title.schema-mscr-copy')
+                    : t('content-form.title.schema-revision')
+                : modalType == ModalType.RegisterNewFull
+                  ? t('content-form.title.crosswalk-register')
+                  : modalType == ModalType.RegisterNewMscr
+                    ? t('content-form.title.crosswalk-create')
+                    : modalType == ModalType.McsrCopy
+                      ? t('content-form.title.crosswalk-mscr-copy')
+                        : t('content-form.title.crosswalk-revision')}
+                </ModalTitle>
+          </div>
+          <div className="col-4">
+                <Button style={{ float: 'right' }} variant="secondaryNoBorder"
+                  icon={<IconClose />} aria-label="t('cancel')" onClick={() => handleClose()}></Button>
+        </div>
+        </div>
+            
+      {(modalType == ModalType.RegisterNewFull ||
+        modalType == ModalType.RevisionFull) &&
+        renderFileDropArea()}
 
-        {(modalType == ModalType.RegisterNewFull ||
-          modalType == ModalType.RevisionFull) &&
-          renderFileDropArea()}
-
-        {contentType == Type.Schema && (
-          <SchemaFormFields
-            formData={formData}
-            setFormData={setFormData}
-            userPosted={userPosted}
-            disabled={
-              (authenticatedUser && authenticatedUser.anonymous) ||
-              submitAnimationVisible
-            }
-            errors={userPosted ? errors : undefined}
-            hasInitialData={
-              modalType == ModalType.RevisionMscr ||
-              modalType == ModalType.RevisionFull ||
-              modalType == ModalType.McsrCopy
-            }
-          />
-        )}
-        {contentType == Type.Crosswalk && (
-          <CrosswalkForm
-            formData={formData}
-            setFormData={setFormData}
-            createNew={modalType == ModalType.RegisterNewMscr}
-            hasInitialData={
-              modalType == ModalType.RevisionMscr ||
-              modalType == ModalType.RevisionFull ||
-              modalType == ModalType.McsrCopy
-            }
-            userPosted={userPosted}
-            disabled={
-              (authenticatedUser && authenticatedUser.anonymous) ||
-              submitAnimationVisible
-            }
-            errors={userPosted ? errors : undefined}
-            groupWorkspacePid={undefined}
-          />
-        )}
-        <Separator></Separator>
+      {contentType == Type.Schema && (
+        <SchemaFormFields
+          formData={formData}
+          setFormData={setFormData}
+          userPosted={userPosted}
+          disabled={(authenticatedUser && authenticatedUser.anonymous) ||
+            submitAnimationVisible}
+          errors={userPosted ? errors : undefined}
+          hasInitialData={modalType == ModalType.RevisionMscr ||
+            modalType == ModalType.RevisionFull ||
+            modalType == ModalType.McsrCopy} />
+      )}
+      {contentType == Type.Crosswalk && (
+        <CrosswalkForm
+          formData={formData}
+          setFormData={setFormData}
+          createNew={modalType == ModalType.RegisterNewMscr}
+          hasInitialData={modalType == ModalType.RevisionMscr ||
+            modalType == ModalType.RevisionFull ||
+            modalType == ModalType.McsrCopy}
+          userPosted={userPosted}
+          disabled={(authenticatedUser && authenticatedUser.anonymous) ||
+            submitAnimationVisible}
+          errors={userPosted ? errors : undefined}
+          groupWorkspacePid={undefined} />
+      )}
+      <Separator></Separator>
       </ModalContent>
       <ModalFooter>
         {renderErrorAlerts()}
@@ -654,6 +654,7 @@ export default function FormModal({
           {t('cancel')}
         </Button>
       </ModalFooter>
-    </Modal>
+      </Modal>
+      </>
   );
 }
