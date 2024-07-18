@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Heading, RouterLink } from 'suomifi-ui-components';
-import { IconChevronDown } from 'suomifi-icons';
+import { IconChevronDown, IconChevronUp } from 'suomifi-icons';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import Tooltip from '@mui/material/Tooltip';
 import {
@@ -10,10 +10,10 @@ import {
   MscrSideNavigationLevel3,
   PersonalNavigationWrapper,
   MscrSideNavigation,
-  GroupOpenButton,
   FoldButton,
   FoldButtonWrapper,
   MscrSideNavigationLevel1,
+  GroupButton
 } from './side-navigation.styles';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
@@ -26,9 +26,9 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const { breakpoint } = useBreakpoints();
   const { t } = useTranslation('common');
   const { setIsSearchActive } = useContext(SearchContext);
-  const [openGroup, setOpenGroup] = useState('');
   const router = useRouter();
   const lang = router.locale ?? '';
+  const [openGroup, setOpenGroup] = useState([router.query['homepage']?.toString() ?? '']);
   // Paths for now
   const personalSchemasPath = '/personal/schemas';
   const personalCrosswalksPath = '/personal/crosswalks';
@@ -48,6 +48,19 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
     id: 'whateverererereer',
     label: 'Diligent professionals',
   });
+
+  const handleClickGroup = (groupId: string) => {
+    if (router.asPath.startsWith('/' + groupId)) {
+      return;
+    }
+    if (openGroup.includes(groupId)) {
+      const newOpenGroup = openGroup.filter((id) => id !== groupId);
+      setOpenGroup(newOpenGroup);
+      return;
+    } else {
+      setOpenGroup(openGroup.concat([groupId]));
+    }
+  };
 
   return (
     <SideNavigationWrapper
@@ -89,7 +102,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                       <Link href={personalCrosswalksPath} passHref>
                         <RouterLink
                           onClick={() => {
-                            setOpenGroup('');
+                            setOpenGroup([]);
                             setIsSearchActive(false);
                           }}
                         >
@@ -106,7 +119,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                       <Link href={personalSchemasPath} passHref>
                         <RouterLink
                           onClick={() => {
-                            setOpenGroup('');
+                            setOpenGroup([]);
                             setIsSearchActive(false);
                           }}
                         >
@@ -136,21 +149,16 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                   <MscrSideNavigationLevel2
                     key={group.id}
                     subLevel={2}
-                    selected={openGroup == group.id}
-                    className={openGroup == group.id ? 'group-selected' : ''}
+                    selected={openGroup.includes(group.id)}
+                    className={openGroup.includes(group.id) ? 'group-selected' : ''}
                     content={
-                      <GroupOpenButton
-                        // iconRight={<IconChevronDown />} ToDo: Make work
-                        onClick={() => {
-                          if (openGroup == group.id) {
-                            setOpenGroup('');
-                            return;
-                          }
-                          setOpenGroup(group.id);
-                        }}
+                      <GroupButton
+                        onClick={() => handleClickGroup(group.id)}
                       >
                         <Heading variant="h3">{group.label}</Heading>
-                      </GroupOpenButton>
+                        {openGroup.includes(group.id) && <IconChevronUp />}
+                        {!openGroup.includes(group.id) && <IconChevronDown />}
+                      </GroupButton>
                     }
                   >
                     <MscrSideNavigationLevel3

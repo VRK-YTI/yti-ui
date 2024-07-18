@@ -71,11 +71,11 @@ export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`
 
 export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
   &&& {
-    margin: 0 ${(props) => props.theme.suomifi.spacing.s};
+    margin: 0 0 ${(props) => props.theme.suomifi.spacing.xxs} ${(props) => props.theme.suomifi.spacing.xs};
     // The decorative line next to group names
     border-left: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
   }
-  .fi-icon {
+  && > span > .fi-icon {
     // Remove arrow icon from group buttons
     display: none;
   }
@@ -88,7 +88,7 @@ export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
 
   &.fi-side-navigation-item--child-selected, &.group-selected {
     // Opened group name is highlight blue
-    && h3 {
+    && h3, && .fi-icon {
       color: ${(props) => props.theme.suomifi.colors.highlightBase};
     }
     // Above was defined a 'mask' covering the bottom half of the decorative line on the last group in the list
@@ -96,10 +96,6 @@ export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
     &:before {
       display: none;
     }
-  }
-
-  && h3 {
-    margin-left: ${(props) => props.theme.suomifi.spacing.xs};
   }
 `;
 
@@ -135,23 +131,32 @@ export const PersonalNavigationWrapper = styled.div`
   margin-right: 20px;
 `;
 
-export const GroupOpenButton = styled(Button)`
-  &&&&& {
-    padding: ${(props) => props.theme.suomifi.spacing.xxs} ${(props) => props.theme.suomifi.spacing.xs};
-    // override suomifi button defaults
-    background: none;
-    text-shadow: none;
-    border: none;
-  }
-  && h3 {
-    font-size: 16px;
-    // unselected link color override
+export const GroupButton = styled.button`
+  border: none;
+  background: none;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  &&& .fi-icon {
+    width: 20px;
+    height: 20px;
+    margin: auto 0;
     color: ${(props) => props.theme.suomifi.colors.depthDark1};
   }
-  &:hover h3 {
-    // Hovered group name is highlight blue
+
+  && h3 {
+    font-size: 16px;
+    // unselected group color override
+    color: ${(props) => props.theme.suomifi.colors.depthDark1};
+    margin-left: ${(props) => props.theme.suomifi.spacing.s};
+  }
+
+  &:hover h3, &&:hover .fi-icon {
     color: ${(props) => props.theme.suomifi.colors.highlightBase};
   }
+
   &&::before {
     // This is the little dot on the decorative line next to group names
     content: '';
