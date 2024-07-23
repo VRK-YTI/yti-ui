@@ -46,7 +46,6 @@ body {
   width: 1000px !important;
   .bg-light-blue {
     background: #d5e4f6 !important;
-    height: 460px;
   }
   .edit-mapping-modal-content {
     font-size: 0.9rem;
@@ -301,7 +300,7 @@ body {
   }
 
   // Accordion
-  .joint-listing-accordion-wrap {
+  .mapping-listing-accordion-wrap {
     thead {
       border-bottom: 3px solid #d8e3f4;
       outline: none;
@@ -348,9 +347,6 @@ body {
     width: 100%;
 
     td {
-      height: 52px;
-      display: flex;
-      padding: 0px 20px;
 
       button {
         min-width: 50px;
@@ -397,4 +393,8 @@ body {
 
 .w-100 {
   width: 100%;
+}
+
+.fw-bold {
+  font-weight: bold;
 }
