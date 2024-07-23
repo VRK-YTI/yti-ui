@@ -1,9 +1,10 @@
-import { Grid, Table, TableBody, TableContainer } from '@mui/material';
+import { Grid, Table, TableBody } from '@mui/material';
 import * as React from 'react';
 import {
   StyledTableCell,
   StyledTableRow,
   StyledTableHead,
+  StyledTableContainer
 } from '@app/common/components/generic-table/generic-table.styles';
 
 // Usage: items can be an array of typed items e.g. FilesRow[]. Heading names are taken from the interface property names. Headings can be over-ridden with using headings array.
@@ -80,12 +81,12 @@ export default function GenericTable(props: {
           <h2>{props.caption}</h2>
         </Grid>
         )}
-        <TableContainer>
+        <StyledTableContainer>
           <Table aria-label={props.caption}>
             {createColumnHeadings(props.items as { [s: string]: unknown }[])}
             {createColumns(props.items as { [s: string]: unknown }[])}
           </Table>
-        </TableContainer>
+        </StyledTableContainer>
       </Grid>
     </>
   );

@@ -14,7 +14,6 @@ import { useCallback, useContext, useEffect } from 'react';
 import { SearchContext } from '@app/common/components/search-context-provider';
 import SearchFilterSet from 'src/modules/search/search-filter-set';
 import { useTranslation } from 'next-i18next';
-import { Grid } from '@mui/material';
 
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
@@ -59,31 +58,23 @@ export default function SearchScreen() {
 
   return (
     <SearchContainer>
-      <Grid container justifyContent="space-between">
-        <Grid item xs={2}>
-          <FacetsWrapper>
-            {/* Groups of facets for different contexts, made with search-filter-set */}
-            <SearchFilterSet
-              title={t('search.facets.filter-by')}
-              aggregations={mscrSearchResults?.aggregations}
-            />
-          </FacetsWrapper>
-        </Grid>
-        <Grid item xs={8}>
-          <ResultsWrapper>
-            {/* Only a list of results if searching all of mscr, but later can be two lists if searching own workspace */}
-            {mscrSearchResults?.hits.hits.map((hit) => (
-              <SearchResult key={hit._id} hit={hit} />
-            ))}
-            {!foundHits && <p>{t('search.no-match')}</p>}
-          </ResultsWrapper>
-        </Grid>
-        <Grid item xs={1}>
-          <CloseButton onClick={handleClose}>
-            <IconClose />
-          </CloseButton>
-        </Grid>
-      </Grid>
+      <FacetsWrapper>
+        {/* Groups of facets for different contexts, made with search-filter-set */}
+        <SearchFilterSet
+          title={t('search.facets.filter-by')}
+          aggregations={mscrSearchResults?.aggregations}
+        />
+      </FacetsWrapper>
+      <ResultsWrapper>
+        {/* Only a list of results if searching all of mscr, but later can be two lists if searching own workspace */}
+        {mscrSearchResults?.hits.hits.map((hit) => (
+          <SearchResult key={hit._id} hit={hit} />
+        ))}
+        {!foundHits && <p>{t('search.no-match')}</p>}
+      </ResultsWrapper>
+      <CloseButton onClick={handleClose}>
+        <IconClose />
+      </CloseButton>
     </SearchContainer>
   );
 }

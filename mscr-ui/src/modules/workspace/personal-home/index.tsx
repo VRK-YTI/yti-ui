@@ -108,7 +108,6 @@ export default function PersonalWorkspace({
             </TitleDescriptionWrapper>
           }
         />
-        <Separator isLarge />
         <ButtonBlock>
           {contentType == 'SCHEMA' ? (
             <>
@@ -148,7 +147,6 @@ export default function PersonalWorkspace({
             </>
           )}
         </ButtonBlock>
-        <Separator isLarge />
         {data?.hits.hits && data?.hits.hits.length < 1 ? (
           <div>
             {contentType == 'SCHEMA'
