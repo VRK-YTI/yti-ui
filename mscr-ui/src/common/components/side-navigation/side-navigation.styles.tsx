@@ -10,20 +10,19 @@ import {
 
 export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint; $isSidebarFolded: boolean }>`
   // Width and positioning for now, need adjusting when overall layout structure is decided
-  flex-grow: 1;
-  max-width: ${(props) => small(props.$breakpoint, '100%', '374px')};
-  width: ${(props) => (props.$isSidebarFolded ? '50px' : '100%')};
-  left: 0;
-  top: 76px;
+  flex: 0 0 ${(props) => (props.$isSidebarFolded ? '90px' : '250px')};
   background-color: white;
   padding-left: ${(props) => props.theme.suomifi.spacing.m};
-  padding-bottom: ${(props) => props.theme.suomifi.spacing.m};
-  margin-right: ${(props) => props.theme.suomifi.spacing.m};
+
+  // Keep the white background in place when scrolling
   height: 100vh;
-  transition: 0.6s;
-  transition-timing-function: ease-in-out;
-  transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
-  border-right: 3px solid ${(props) => props.theme.suomifi.colors.highlightLight3};
+  position: sticky;
+  top: 0;
+
+  // transition: 0.6s;
+  // transition-timing-function: ease-in-out;
+  // transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+   border-right: 3px solid ${(props) => props.theme.suomifi.colors.highlightLight2};
 
   && .sidebar-animate-fadein {
     animation: fadeInAnimation ease 1700ms;
@@ -49,11 +48,20 @@ export const NavigationHeading = styled(Heading)`
 `;
 
 export const MscrSideNavigation = styled(SideNavigation)`
-  // Remove line from above navigation
-  .fi-side-navigation_divider {
+  // Remove line and heading from above navigation
+  .fi-side-navigation_divider, && .fi-side-navigation_heading {
     display: none;
   }
-  height: 100vh;
+  nav {
+    position: fixed;
+    // Remove the height of the header banner
+    height: calc(100vh - 1rem*60/18);
+    // Todo: Use the prop to determine width \${(props) => (props.$isSidebarFolded ? '90px' : '250px')}
+    width: 250px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: ${(props) => props.theme.suomifi.colors.depthDark1};
+  }
 `;
 
 export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`
@@ -71,7 +79,8 @@ export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`
 
 export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
   &&& {
-    margin: 0 0 ${(props) => props.theme.suomifi.spacing.xxs} ${(props) => props.theme.suomifi.spacing.xs};
+    margin: 0 0 0 ${(props) => props.theme.suomifi.spacing.xs};
+    padding: 0 0 ${(props) => props.theme.suomifi.spacing.xxs} 0;
     // The decorative line next to group names
     border-left: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
   }
@@ -139,9 +148,12 @@ export const GroupButton = styled.button`
   display: flex;
   justify-content: space-between;
 
+  // The caret
   &&& .fi-icon {
     width: 20px;
     height: 20px;
+    flex-grow: 0;
+    flex-shrink: 0;
     margin: auto 0;
     color: ${(props) => props.theme.suomifi.colors.depthDark1};
   }
@@ -190,4 +202,25 @@ export const FoldButton = styled.div`
     margin-left: 2px;
     background: ${(props) => props.theme.suomifi.colors.highlightLight2};
   }
+`;
+
+export const ExpanderButton = styled.div`
+  //height: 100%;
+  && button {
+    top: 50%;
+    height: 30px;
+    width: 1px;
+    background: none;
+    border-top: none;
+    border-bottom: none;
+    border-left: solid 3px ${(props) => props.theme.suomifi.colors.highlightLight2};
+    border-right: solid 3px ${(props) => props.theme.suomifi.colors.highlightLight2};
+  }
+`;
+
+export const CollapsedNavigationWrapper = styled.div`
+`;
+
+export const PersonalNavButton = styled.button`
+
 `;

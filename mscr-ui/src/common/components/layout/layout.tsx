@@ -5,6 +5,7 @@ import {
   ContentContainer,
   SiteContainer,
   MarginContainer,
+  FlexContainer
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
 import SmartHeader from '../smart-header';
@@ -56,9 +57,9 @@ export default function Layout({
             )}
           />
           {!sideNavigationHidden && user && !user.anonymous ? (
-            <div className={'d-flex w-100'}>
+            <FlexContainer>
               <SideNavigationPanel user={user}/>
-              <ContentContainer className={'w-100'}>
+              <ContentContainer>
                 {alerts && alerts}
                 <MarginContainer
                   $breakpoint={breakpoint}
@@ -69,7 +70,7 @@ export default function Layout({
                   {children}
                 </MarginContainer>
               </ContentContainer>
-            </div>
+            </FlexContainer>
           ) : (
             <ContentContainer className={'w-100'}>
               {alerts && alerts}

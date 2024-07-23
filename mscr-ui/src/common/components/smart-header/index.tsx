@@ -10,6 +10,7 @@ import {
   HeaderWrapper,
   ModalOverlay,
   ModalContent,
+  FlexItemBlock
 } from './smart-header.styles';
 import MobileNavigation from 'yti-common-ui/navigation/mobile-navigation';
 import DesktopLocaleChooser from 'yti-common-ui/locale-chooser/desktop-locale-chooser';
@@ -102,7 +103,7 @@ export default function SmartHeader({
 
   function renderHeader() {
     return (
-      <Block variant="header" role="banner" id="top-header">
+      <FlexItemBlock variant="header" role="banner" id="top-header">
         <HeaderWrapper $breakpoint={breakpoint}>
           {renderLogo()}
           {renderHeaderSearch()}
@@ -111,7 +112,7 @@ export default function SmartHeader({
           {renderDesktopAuthenticationPanel()}
         </HeaderWrapper>
         {renderUserInfo()}
-      </Block>
+      </FlexItemBlock>
     );
   }
 
