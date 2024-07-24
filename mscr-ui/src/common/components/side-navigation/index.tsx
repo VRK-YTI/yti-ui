@@ -10,13 +10,15 @@ import {
   MscrSideNavigationLevel3,
   PersonalNavigationWrapper,
   MscrSideNavigation,
-  FoldButton,
-  FoldButtonWrapper,
   MscrSideNavigationLevel1,
   GroupButton,
   ExpanderButton,
   CollapsedNavigationWrapper,
-  PersonalNavButton
+  PersonalNavButton,
+  ExpanderIcon,
+  GroupNavIcon,
+  CollapsedGroupItem,
+  CollapsedGroupList,
 } from './side-navigation.styles';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
@@ -31,7 +33,9 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const { setIsSearchActive } = useContext(SearchContext);
   const router = useRouter();
   const lang = router.locale ?? '';
-  const [openGroup, setOpenGroup] = useState([router.query['homepage']?.toString() ?? '']);
+  const [openGroup, setOpenGroup] = useState([
+    router.query['homepage']?.toString() ?? '',
+  ]);
   // Paths for now
   const personalSchemasPath = '/personal/schemas';
   const personalCrosswalksPath = '/personal/crosswalks';
@@ -65,27 +69,18 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
     }
   };
 
-  const collapsedMenu = () => {
+  const expandedMenu = () => {
     return (
-      <CollapsedNavigationWrapper>
-        <PersonalNavButton>P</PersonalNavButton>
-      </CollapsedNavigationWrapper>
-    );
-  };
-
-  // return collapsedMenu();
-
-  return (
-    <SideNavigationWrapper
-      $breakpoint={breakpoint}
-      $isSidebarFolded={isSidebarMinimized}
-      id="sidebar"
-    >
       <MscrSideNavigation
+        $isSidebarFolded={isSidebarMinimized}
         heading=""
         aria-label={t('workspace.navigation')}
         className={
-          isSidebarMinimized ? 'sidebar-animate-fadeout' : undefined
+          !isSidebarMinimized && !isFirstPageLoad
+            ? 'sidebar-animate-fadein'
+            : isSidebarMinimized
+              ? 'sidebar-animate-fadeout'
+              : undefined
         }
       >
         <MscrSideNavigationLevel1
@@ -156,9 +151,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
               selected={openGroup.includes(group.id)}
               className={openGroup.includes(group.id) ? 'group-selected' : ''}
               content={
-                <GroupButton
-                  onClick={() => handleClickGroup(group.id)}
-                >
+                <GroupButton onClick={() => handleClickGroup(group.id)}>
                   <Heading variant="h3">{group.label}</Heading>
                   {openGroup.includes(group.id) && <IconChevronUp />}
                   {!openGroup.includes(group.id) && <IconChevronDown />}
@@ -182,9 +175,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
               <MscrSideNavigationLevel3
                 className="group"
                 subLevel={3}
-                selected={router.asPath.startsWith(
-                  '/' + group.id + '/schemas'
-                )}
+                selected={router.asPath.startsWith('/' + group.id + '/schemas')}
                 content={
                   <Link href={'/' + group.id + '/schemas'} passHref>
                     <RouterLink onClick={() => setIsSearchActive(false)}>
@@ -205,44 +196,108 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
           ))}
         </MscrSideNavigationLevel1>
       </MscrSideNavigation>
+    );
+  };
+
+  const collapsedMenu = () => {
+    return (
+      <CollapsedNavigationWrapper
+        className={
+          isSidebarMinimized
+            ? 'sidebar-animate-fadein'
+            : 'sidebar-animate-fadeout'
+        }
+      >
+        <PersonalNavButton>
+          <p>
+            P<IconChevronDown />
+          </p>
+        </PersonalNavButton>
+        <GroupNavIcon>
+          <p>G</p>
+        </GroupNavIcon>
+        <CollapsedGroupList>
+          {organizations.map((group) => (
+            <CollapsedGroupItem key={group.id}>
+              <GroupButton
+                className={'collapsed'}
+                onClick={() => {
+                  return; // Avaa popup-menu
+                }}
+              >
+                <Heading variant="h3">
+                  {group.label.substring(0, 2).toUpperCase()}
+                </Heading>
+                {openGroup.includes(group.id) && <IconChevronUp />}
+                {!openGroup.includes(group.id) && <IconChevronDown />}
+              </GroupButton>
+            </CollapsedGroupItem>
+          ))}
+        </CollapsedGroupList>
+      </CollapsedNavigationWrapper>
+    );
+  };
+
+  return (
+    <SideNavigationWrapper
+      $breakpoint={breakpoint}
+      $isSidebarFolded={isSidebarMinimized}
+      id="sidebar"
+    >
+      {isSidebarMinimized && collapsedMenu()}
+      {!isSidebarMinimized && expandedMenu()}
+
       {/*<div className={'d-flex justify-content-between'}>*/}
 
-        {/*<div className={''}>*/}
-        {/*  <div*/}
-        {/*    className={*/}
-        {/*      !isSidebarMinimized && !isFirstPageLoad*/}
-        {/*        ? 'sidebar-animate-fadein'*/}
-        {/*        : undefined*/}
-        {/*    }*/}
-        {/*  >*/}
-        {/*    */}
-        {/*  </div>*/}
-        {/*</div>*/}
-        {/*<FoldButtonWrapper*/}
-        {/*  className={'col-1 d-flex justify-content-center flex-column'}*/}
-        {/*>*/}
-        {/*  <Tooltip*/}
-        {/*    title={*/}
-        {/*      isSidebarMinimized*/}
-        {/*        ? t('click-to-expand-sidebar')*/}
-        {/*        : t('click-to-minimize-sidebar')*/}
-        {/*    }*/}
-        {/*    placement="top-end"*/}
-        {/*    className={undefined}*/}
-        {/*  >*/}
-        {/*    <FoldButton*/}
-        {/*      aria-label="fold"*/}
-        {/*      onClick={(e) => {*/}
-        {/*        sidebarFoldButtonClick();*/}
-        {/*        e.stopPropagation();*/}
-        {/*      }}*/}
-        {/*    >*/}
-        {/*      <div></div>*/}
-        {/*      <div></div>*/}
-        {/*    </FoldButton>*/}
-        {/*  </Tooltip>*/}
-        {/*</FoldButtonWrapper>*/}
+      {/*<div className={''}>*/}
+      {/*  <div*/}
+      {/*    className={*/}
+      {/*      !isSidebarMinimized && !isFirstPageLoad*/}
+      {/*        ? 'sidebar-animate-fadein'*/}
+      {/*        : undefined*/}
+      {/*    }*/}
+      {/*  >*/}
+      {/*    */}
+      {/*  </div>*/}
       {/*</div>*/}
+      {/*<FoldButtonWrapper*/}
+      {/*  className={'col-1 d-flex justify-content-center flex-column'}*/}
+      {/*>*/}
+      {/*  <Tooltip*/}
+      {/*    title={*/}
+      {/*      isSidebarMinimized*/}
+      {/*        ? t('click-to-expand-sidebar')*/}
+      {/*        : t('click-to-minimize-sidebar')*/}
+      {/*    }*/}
+      {/*    placement="top-end"*/}
+      {/*    className={undefined}*/}
+      {/*  >*/}
+      {/*    <FoldButton*/}
+      {/*      aria-label="fold"*/}
+      {/*      onClick={(e) => {*/}
+      {/*        sidebarFoldButtonClick();*/}
+      {/*        e.stopPropagation();*/}
+      {/*      }}*/}
+      {/*    >*/}
+      {/*      <div></div>*/}
+      {/*      <div></div>*/}
+      {/*    </FoldButton>*/}
+      {/*  </Tooltip>*/}
+      {/*</FoldButtonWrapper>*/}
+      {/*</div>*/}
+      <Tooltip
+        title={
+          isSidebarMinimized
+            ? t('click-to-expand-sidebar')
+            : t('click-to-minimize-sidebar')
+        }
+        placement="right"
+        className={undefined}
+      >
+        <ExpanderButton onClick={() => sidebarFoldButtonClick()}>
+          <ExpanderIcon />
+        </ExpanderButton>
+      </Tooltip>
     </SideNavigationWrapper>
   );
 }

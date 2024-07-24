@@ -1,31 +1,32 @@
 import styled from 'styled-components';
 import { Breakpoint } from 'yti-common-ui/media-query';
-import { small } from 'yti-common-ui/media-query/styled-helpers';
 import {
-  Button,
   Heading,
   SideNavigation,
   SideNavigationItem
 } from 'suomifi-ui-components';
 
 export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint; $isSidebarFolded: boolean }>`
-  // Width and positioning for now, need adjusting when overall layout structure is decided
-  flex: 0 0 ${(props) => (props.$isSidebarFolded ? '90px' : '250px')};
-  background-color: white;
+  flex: 0 0 ${(props) => (props.$isSidebarFolded ? '70px' : '230px')};
   padding-left: ${(props) => props.theme.suomifi.spacing.m};
+  background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
 
   // Keep the white background in place when scrolling
   height: 100vh;
   position: sticky;
   top: 0;
 
-  // transition: 0.6s;
-  // transition-timing-function: ease-in-out;
-  // transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
-   border-right: 3px solid ${(props) => props.theme.suomifi.colors.highlightLight2};
+  // Contain the expand/fold button
+  display: flex;
+  justify-content: space-between;
+
+  transition: 0.6s;
+  transition-timing-function: ease-in-out;
+  //transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+  border-right: 3px solid ${(props) => props.theme.suomifi.colors.highlightLight2};
 
   && .sidebar-animate-fadein {
-    animation: fadeInAnimation ease 1700ms;
+    animation: fadeInAnimation ease 1400ms;
     animation-iteration-count: 1;
     animation-fill-mode: both;
   }
@@ -47,7 +48,7 @@ export const NavigationHeading = styled(Heading)`
   }
 `;
 
-export const MscrSideNavigation = styled(SideNavigation)`
+export const MscrSideNavigation = styled(SideNavigation)<{ $isSidebarFolded: boolean }>`
   // Remove line and heading from above navigation
   .fi-side-navigation_divider, && .fi-side-navigation_heading {
     display: none;
@@ -56,11 +57,11 @@ export const MscrSideNavigation = styled(SideNavigation)`
     position: fixed;
     // Remove the height of the header banner
     height: calc(100vh - 1rem*60/18);
-    // Todo: Use the prop to determine width \${(props) => (props.$isSidebarFolded ? '90px' : '250px')}
-    width: 250px;
+    width: ${(props) => (props.$isSidebarFolded ? '57px' : '217px')};
+    transition: 0.6s;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: ${(props) => props.theme.suomifi.colors.depthDark1};
+    scrollbar-color: ${(props) => props.theme.suomifi.colors.depthDark2} ${(props) => props.theme.suomifi.colors.highlightLight2};
   }
 `;
 
@@ -157,12 +158,19 @@ export const GroupButton = styled.button`
     margin: auto 0;
     color: ${(props) => props.theme.suomifi.colors.depthDark1};
   }
+  &&&.collapsed .fi-icon {
+    width: 12px;
+  }
 
   && h3 {
     font-size: 16px;
     // unselected group color override
     color: ${(props) => props.theme.suomifi.colors.depthDark1};
     margin-left: ${(props) => props.theme.suomifi.spacing.s};
+  }
+  &&.collapsed h3 {
+    font-size: 14px;
+    margin-left: ${(props) => props.theme.suomifi.spacing.xxs};
   }
 
   &:hover h3, &&:hover .fi-icon {
@@ -182,45 +190,84 @@ export const GroupButton = styled.button`
     border-radius: 50%;
     border: solid 2px white;
   }
+  &&.collapsed::before {
+    top: 40%;
+  }
 `;
 
-export const FoldButtonWrapper = styled.div`
-  width: 20px;
-  z-index: 0;
-  margin-left: -75px;
-`;
-
-export const FoldButton = styled.div`
-  height: 30px;
-  width: 20px;
-  display: flex;
-  flex-direction: row;
+export const ExpanderButton = styled.button`
+  border: none;
+  padding: 0 2px 0 3px;
+  background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   cursor: pointer;
-  div {
-    width: 3px;
-    height: 30px;
-    margin-left: 2px;
-    background: ${(props) => props.theme.suomifi.colors.highlightLight2};
-  }
 `;
 
-export const ExpanderButton = styled.div`
-  //height: 100%;
-  && button {
-    top: 50%;
-    height: 30px;
-    width: 1px;
-    background: none;
-    border-top: none;
-    border-bottom: none;
-    border-left: solid 3px ${(props) => props.theme.suomifi.colors.highlightLight2};
-    border-right: solid 3px ${(props) => props.theme.suomifi.colors.highlightLight2};
-  }
+export const ExpanderIcon = styled.div`
+  height: 40px;
+  width: 2px;
+  border-left: solid 3px ${(props) => props.theme.suomifi.colors.highlightLight2};
+  border-right: solid 3px ${(props) => props.theme.suomifi.colors.highlightLight2};
 `;
 
-export const CollapsedNavigationWrapper = styled.div`
+export const CollapsedNavigationWrapper = styled.nav`
+  margin-top: ${(props) => props.theme.suomifi.spacing.m};
 `;
 
 export const PersonalNavButton = styled.button`
+  height: 36px;
+  width: 36px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  background-color: ${(props) => props.theme.suomifi.colors.highlightLight2};
+  p {
+    color: ${(props) => props.theme.suomifi.colors.highlightBase};
+    font-weight: bold;
+    font-size: 22px;
+    margin: 0;
+  }
+  svg {
+    font-size: 16px;
+  }
+  padding: 2px 0 2px 2px;
+`;
 
+export const GroupNavIcon = styled.div`
+  height: 36px;
+  width: 36px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  border: none;
+  background-color: ${(props) => props.theme.suomifi.colors.depthLight2};
+  padding-left: ${(props) => props.theme.suomifi.spacing.xs};
+  p {
+    color: ${(props) => props.theme.suomifi.colors.blackBase};
+    font-weight: bold;
+    font-size: 24px;
+  }
+`;
+
+export const CollapsedGroupList = styled.ul`
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  // Again, the 'mask' to hide the bottom part of the gray border on the left when it's the last group in the list
+  && > li:last-child::before {
+    content: "";
+    width:5px;
+    height:50%;
+    background-color:white;
+    position: absolute;
+    left:-1px;
+    bottom:-1px;
+  }
+`;
+
+export const CollapsedGroupItem = styled.li`
+  position: relative;
+  margin-left: ${(props) => props.theme.suomifi.spacing.xxs};
+  padding: ${(props) => props.theme.suomifi.spacing.xxs} 0;
+  // The decorative line next to group names
+  border-left: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
 `;
