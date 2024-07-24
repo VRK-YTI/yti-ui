@@ -147,6 +147,9 @@ function Row(props: {
       //setSourceOperationValue(operationKey);
       generateSourceOperationValueFields(sourceProcessing.id, mappingId);
     }
+    else {
+      setSourceOperationSelection(props.row.sourceProcessing?.id , props.row.id);
+    }
   }
 
   function setSourceOperationSelection(operationKey: string | undefined, mappingId: string) {

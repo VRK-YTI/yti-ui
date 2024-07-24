@@ -336,6 +336,7 @@ export default function NodeMappings(props: {
           if (node.source.id === mappingId) {
 
             if (action === 'updateSourceOperation') {
+              console.log('UPDATE SOURCE OPERATION');
               const originalParams = getMappingFunctionParams(operationKey);
               let formattedParams: any = {};
               if (originalParams) {
