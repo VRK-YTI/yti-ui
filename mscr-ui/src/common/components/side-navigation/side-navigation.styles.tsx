@@ -149,9 +149,6 @@ export const GroupButton = styled.button`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  &&.collapsed {
-    padding-right: 0;
-  }
 
   // The caret
   &&& .fi-icon {
@@ -162,19 +159,12 @@ export const GroupButton = styled.button`
     margin: auto 0;
     color: ${(props) => props.theme.suomifi.colors.depthDark1};
   }
-  &&&.collapsed .fi-icon {
-    width: 12px;
-  }
 
   && h3 {
     font-size: 16px;
     // unselected group color override
     color: ${(props) => props.theme.suomifi.colors.depthDark1};
     margin-left: ${(props) => props.theme.suomifi.spacing.s};
-  }
-  &&.collapsed h3 {
-    font-size: 14px;
-    margin-left: ${(props) => props.theme.suomifi.spacing.xxs};
   }
 
   &:hover h3, &&:hover .fi-icon {
@@ -193,10 +183,6 @@ export const GroupButton = styled.button`
     background-color: ${(props) => props.theme.suomifi.colors.depthBase};
     border-radius: 50%;
     border: solid 2px white;
-  }
-  &&.collapsed::before {
-    // adjust the dot position for collapsed menu
-    top: 40%;
   }
 `;
 
@@ -229,6 +215,7 @@ export const CollapsedNavigationWrapper = styled.nav`
 `;
 
 export const PopoverNavigationMenu = styled(ActionMenu)`
+  position: relative;
   &&.personal > button {
     height: 36px;
     width: 36px;
@@ -250,6 +237,41 @@ export const PopoverNavigationMenu = styled(ActionMenu)`
     padding: 0 12px 0 0;
     margin: 4px 0 0 4px;
   }
+  &&.group > button {
+    color: ${(props) => props.theme.suomifi.colors.depthDark1};
+    border: none;
+    cursor: pointer;
+    padding: 1px 0 0 ${(props) => props.theme.suomifi.spacing.xs};
+    width: 100%;
+    text-align: justify;
+    & > .fi-button_icon > .fi-icon {
+      position: absolute;
+      right: 0;
+      top: 38%;
+      width: 12px;
+      margin: 0;
+    }
+    &:hover {
+      background: none;
+      color: ${(props) => props.theme.suomifi.colors.highlightBase};
+    }
+    &:focus {
+      position: unset;
+    }
+    &:before {
+      // This is the little dot on the decorative line next to group names
+      content: '';
+      box-sizing: unset;
+      position: absolute;
+      top: 45%;
+      left: -5px;
+      height: 5px;
+      width: 5px;
+      background-color: ${(props) => props.theme.suomifi.colors.depthBase};
+      border-radius: 50%;
+      border: solid 2px white;
+    }
+  }
 
   // Moving the popover to the right side instead of below
   & .fi-action-menu-popover {
@@ -257,6 +279,9 @@ export const PopoverNavigationMenu = styled(ActionMenu)`
     // positioning is set as inline style, so have to use !important
     inset: unset !important;
     transform: translate(50px, -50px) !important;
+  }
+  &.group .fi-action-menu-popover {
+    transform: translate(60px, -50px) !important;
   }
   && .fi-action-menu-popover_popper-arrow {
     transform: translate(-18px, 20px) !important;
@@ -314,7 +339,7 @@ export const CollapsedGroupList = styled.ul`
 export const CollapsedGroupItem = styled.li`
   position: relative;
   margin-left: 8px;
-  padding: ${(props) => props.theme.suomifi.spacing.xxs} 0;
+  padding: ${(props) => props.theme.suomifi.spacing.xxs} 0 0 0;
   // The decorative line next to group names
   border-left: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
 `;

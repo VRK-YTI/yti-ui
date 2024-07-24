@@ -208,9 +208,13 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
               : 'sidebar-animate-fadeout'
           }
         >
-          <PopoverNavigationMenu className='personal' buttonText='P' iconRight={<IconChevronDown />} >
+          <PopoverNavigationMenu
+            className="personal"
+            buttonText="P"
+            iconRight={<IconChevronDown />}
+          >
             <ActionMenuItem
-              key='crosswalks'
+              key="crosswalks"
               onClick={() => {
                 setOpenGroup([]);
                 setIsSearchActive(false);
@@ -221,7 +225,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
               </Link>
             </ActionMenuItem>
             <ActionMenuItem
-              key='schemas'
+              key="schemas"
               onClick={() => {
                 setOpenGroup([]);
                 setIsSearchActive(false);
@@ -238,24 +242,39 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
           <CollapsedGroupList>
             {organizations.map((group) => (
               <CollapsedGroupItem key={group.id}>
-                <GroupButton
-                  className={'collapsed'}
-                  onClick={() => {
-                    return; // Avaa popup-menu
-                  }}
+                <PopoverNavigationMenu
+                  className="group"
+                  buttonText={group.label.substring(0, 2).toUpperCase()}
+                  iconRight={<IconChevronDown />}
                 >
-                  <Heading variant="h3">
-                    {group.label.substring(0, 2).toUpperCase()}
-                  </Heading>
-                  {openGroup.includes(group.id) && <IconChevronUp />}
-                  {!openGroup.includes(group.id) && <IconChevronDown />}
-                </GroupButton>
+                  <ActionMenuItem
+                    key={`${group.id}-crosswalks`}
+                    onClick={() => {
+                      setIsSearchActive(false);
+                      setOpenGroup([group.id]);
+                    }}
+                  >
+                    <Link href={`/${group.id}/crosswalks`} passHref>
+                      {t('workspace.crosswalks')}
+                    </Link>
+                  </ActionMenuItem>
+                  <ActionMenuItem
+                    key={`${group.id}-schemas`}
+                    onClick={() => {
+                      setIsSearchActive(false);
+                      setOpenGroup([group.id]);
+                    }}
+                  >
+                    <Link href={`/${group.id}/schemas`} passHref>
+                      {t('workspace.schemas')}
+                    </Link>
+                  </ActionMenuItem>
+                </PopoverNavigationMenu>
               </CollapsedGroupItem>
             ))}
           </CollapsedGroupList>
         </CollapsedNavigationWrapper>
       </nav>
-
     );
   };
 
