@@ -15,6 +15,7 @@ import {
 } from 'suomifi-ui-components';
 import NodeListingAccordion from "@app/modules/crosswalk-editor/tabs/node-mappings/node-listing-accordion";
 import {MidColumnWrapper} from "@app/modules/crosswalk-editor/tabs/node-mappings/node-mappings.styles";
+import { cloneDeep } from 'lodash';
 
 export default function NodeMappings(props: {
   nodeSelections: CrosswalkConnectionNew[];
@@ -158,7 +159,7 @@ export default function NodeMappings(props: {
         id: mappingNodes[0].source.id,
         label: mappingNodes[0].source.name,
         uri: mappingNodes[0].source.uri,
-        processing: mappingNodes[0].sourceProcessing ? props.nodeSelections[0].sourceProcessing : undefined
+        processing: mappingNodes[0].sourceProcessing ? mappingNodes[0].sourceProcessing : undefined
       });
       mappings.target.push({
           id: mappingNodes[0].target.id,
@@ -292,7 +293,7 @@ export default function NodeMappings(props: {
     setSourceOperationValues(newValues);
   }
 
-  function accordionCallbackFunction(action: string, mappingId: any, operationValue: any, operationKey: any, originalValue: string) {
+  function accordionCallbackFunction(action: string, mappingId: any, operationValue: any, operationKey: any, originalValue: any) {
     console.log('callback called', action, mappingId, operationValue, operationKey, originalValue);
     if (mappingNodes) {
       if (action === 'moveNodeUp' && mappingNodes.length > 1) {
@@ -329,13 +330,16 @@ export default function NodeMappings(props: {
           return node.target.id !== mappingId;
         });
         setMappingNodes(newNodeSelections);
-      } else if (action === 'updateSourceOperation' || action === 'updateSourceOperationValue') {
-        let newNodeSelections = mappingNodes.map(node => {
+      } else if (action === 'updateSourceOperation' || action === 'updateSourceOperationValue' || action === 'updateSourceOperationOriginalValues') {
+        let mappingNodesCopy = cloneDeep(mappingNodes);
+        let newNodeSelections = mappingNodesCopy.map(node => {
           if (node.source.id === mappingId) {
+
             if (action === 'updateSourceOperation') {
               const originalParams = getMappingFunctionParams(operationKey);
               let formattedParams: any = {};
               if (originalParams) {
+                console.log('has original params', originalParams);
                 originalParams.forEach((param: { name: any; defaultValue: any; }) => {
                   formattedParams[param.name] = param.defaultValue ? param.defaultValue : '';
                 });
@@ -348,13 +352,22 @@ export default function NodeMappings(props: {
               operationKey !== 'N/A' ? node.sourceProcessing = processing : node.sourceProcessing = undefined;
             }
 
+            if (action === 'updateSourceOperationOriginalValues') {
+              console.log('updateSourceOperationOriginalValues', originalValue);
+              node.sourceProcessing = originalValue;
+              // @ts-ignore
+              //node.sourceProcessing.params[operationKey] = operationValue;
+            }
+
             if (action === 'updateSourceOperationValue') {
               // @ts-ignore
+              console.log('UPDATE REQUEST', operationKey, operationValue, node.sourceProcessing);
               node.sourceProcessing.params[operationKey] = operationValue;
             }
           }
           return node
         });
+        console.log('new node selections', newNodeSelections);
         setMappingNodes(newNodeSelections);
       }
     }

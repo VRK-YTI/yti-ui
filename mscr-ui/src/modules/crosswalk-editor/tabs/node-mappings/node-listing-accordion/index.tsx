@@ -130,13 +130,23 @@ function Row(props: {
   const [originalValuesInit, setOriginalValuesInit] = useState<boolean>(false);
 
   if (!originalValuesInit) {
-    setSourceOperationSelection(props.row?.sourceProcessingSelection, props.row.id);
+    setSourceOperationOriginalValues(props.row?.sourceProcessing, props.row.id);
+    console.log('ORIGINAL PROPS', props);
     setOriginalValuesInit(true);
   }
 
   function deleteNodeFromMapping() {
     props.isSourceAccordion ? props.callBackFunction('deleteSourceNode', props.row.id) : props.callBackFunction('deleteTargetNode', props.row.id);
     setOpen(false);
+  }
+
+  function setSourceOperationOriginalValues(sourceProcessing: any | undefined, mappingId: string) {
+    if (sourceProcessing) {
+      console.log('setting source operation', sourceProcessing , mappingId);
+      props.callBackFunction('updateSourceOperationOriginalValues', mappingId, '', '', sourceProcessing);
+      //setSourceOperationValue(operationKey);
+      generateSourceOperationValueFields(sourceProcessing.id, mappingId);
+    }
   }
 
   function setSourceOperationSelection(operationKey: string | undefined, mappingId: string) {
