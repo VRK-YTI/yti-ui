@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Heading, RouterLink } from 'suomifi-ui-components';
+import { ActionMenuItem, Heading, RouterLink } from 'suomifi-ui-components';
 import { IconChevronDown, IconChevronUp } from 'suomifi-icons';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import Tooltip from '@mui/material/Tooltip';
@@ -14,11 +14,11 @@ import {
   GroupButton,
   ExpanderButton,
   CollapsedNavigationWrapper,
-  PersonalNavButton,
   ExpanderIcon,
   GroupNavIcon,
   CollapsedGroupItem,
   CollapsedGroupList,
+  PopoverNavigationMenu
 } from './side-navigation.styles';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
@@ -72,7 +72,6 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const expandedMenu = () => {
     return (
       <MscrSideNavigation
-        $isSidebarFolded={isSidebarMinimized}
         heading=""
         aria-label={t('workspace.navigation')}
         className={
@@ -201,40 +200,62 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
 
   const collapsedMenu = () => {
     return (
-      <CollapsedNavigationWrapper
-        className={
-          isSidebarMinimized
-            ? 'sidebar-animate-fadein'
-            : 'sidebar-animate-fadeout'
-        }
-      >
-        <PersonalNavButton>
-          <p>
-            P<IconChevronDown />
-          </p>
-        </PersonalNavButton>
-        <GroupNavIcon>
-          <p>G</p>
-        </GroupNavIcon>
-        <CollapsedGroupList>
-          {organizations.map((group) => (
-            <CollapsedGroupItem key={group.id}>
-              <GroupButton
-                className={'collapsed'}
-                onClick={() => {
-                  return; // Avaa popup-menu
-                }}
-              >
-                <Heading variant="h3">
-                  {group.label.substring(0, 2).toUpperCase()}
-                </Heading>
-                {openGroup.includes(group.id) && <IconChevronUp />}
-                {!openGroup.includes(group.id) && <IconChevronDown />}
-              </GroupButton>
-            </CollapsedGroupItem>
-          ))}
-        </CollapsedGroupList>
-      </CollapsedNavigationWrapper>
+      <nav>
+        <CollapsedNavigationWrapper
+          className={
+            isSidebarMinimized
+              ? 'sidebar-animate-fadein'
+              : 'sidebar-animate-fadeout'
+          }
+        >
+          <PopoverNavigationMenu className='personal' buttonText='P' iconRight={<IconChevronDown />} >
+            <ActionMenuItem
+              key='crosswalks'
+              onClick={() => {
+                setOpenGroup([]);
+                setIsSearchActive(false);
+              }}
+            >
+              <Link href={personalCrosswalksPath} passHref>
+                {t('workspace.crosswalks')}
+              </Link>
+            </ActionMenuItem>
+            <ActionMenuItem
+              key='schemas'
+              onClick={() => {
+                setOpenGroup([]);
+                setIsSearchActive(false);
+              }}
+            >
+              <Link href={personalSchemasPath} passHref>
+                {t('workspace.schemas')}
+              </Link>
+            </ActionMenuItem>
+          </PopoverNavigationMenu>
+          <GroupNavIcon>
+            <p>G</p>
+          </GroupNavIcon>
+          <CollapsedGroupList>
+            {organizations.map((group) => (
+              <CollapsedGroupItem key={group.id}>
+                <GroupButton
+                  className={'collapsed'}
+                  onClick={() => {
+                    return; // Avaa popup-menu
+                  }}
+                >
+                  <Heading variant="h3">
+                    {group.label.substring(0, 2).toUpperCase()}
+                  </Heading>
+                  {openGroup.includes(group.id) && <IconChevronUp />}
+                  {!openGroup.includes(group.id) && <IconChevronDown />}
+                </GroupButton>
+              </CollapsedGroupItem>
+            ))}
+          </CollapsedGroupList>
+        </CollapsedNavigationWrapper>
+      </nav>
+
     );
   };
 

@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 import { Breakpoint } from 'yti-common-ui/media-query';
 import {
+  ActionMenu,
   Heading,
   SideNavigation,
   SideNavigationItem
 } from 'suomifi-ui-components';
 
 export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint; $isSidebarFolded: boolean }>`
-  flex: 0 0 ${(props) => (props.$isSidebarFolded ? '70px' : '230px')};
-  padding-left: ${(props) => props.theme.suomifi.spacing.m};
+  flex: 0 0 ${(props) => (props.$isSidebarFolded ? '74px' : '234px')};
+  padding-left: 16px;
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
 
   // Keep the white background in place when scrolling
@@ -48,7 +49,7 @@ export const NavigationHeading = styled(Heading)`
   }
 `;
 
-export const MscrSideNavigation = styled(SideNavigation)<{ $isSidebarFolded: boolean }>`
+export const MscrSideNavigation = styled(SideNavigation)`
   // Remove line and heading from above navigation
   .fi-side-navigation_divider, && .fi-side-navigation_heading {
     display: none;
@@ -57,8 +58,7 @@ export const MscrSideNavigation = styled(SideNavigation)<{ $isSidebarFolded: boo
     position: fixed;
     // Remove the height of the header banner
     height: calc(100vh - 1rem*60/18);
-    width: ${(props) => (props.$isSidebarFolded ? '57px' : '217px')};
-    transition: 0.6s;
+    width: 222px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: ${(props) => props.theme.suomifi.colors.depthDark2} ${(props) => props.theme.suomifi.colors.highlightLight2};
@@ -66,6 +66,7 @@ export const MscrSideNavigation = styled(SideNavigation)<{ $isSidebarFolded: boo
 `;
 
 export const MscrSideNavigationLevel1 = styled(SideNavigationItem)`
+  padding-right: 4px;
   // A 'mask' to hide the bottom part of the gray border on the left when it's the last group in the list
   & > ul > li:last-child::before {
     content: "";
@@ -148,6 +149,9 @@ export const GroupButton = styled.button`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  &&.collapsed {
+    padding-right: 0;
+  }
 
   // The caret
   &&& .fi-icon {
@@ -191,13 +195,14 @@ export const GroupButton = styled.button`
     border: solid 2px white;
   }
   &&.collapsed::before {
+    // adjust the dot position for collapsed menu
     top: 40%;
   }
 `;
 
 export const ExpanderButton = styled.button`
   border: none;
-  padding: 0 2px 0 3px;
+  padding: 0 2px 0 1px;
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   cursor: pointer;
 `;
@@ -210,27 +215,68 @@ export const ExpanderIcon = styled.div`
 `;
 
 export const CollapsedNavigationWrapper = styled.nav`
-  margin-top: ${(props) => props.theme.suomifi.spacing.m};
+  box-sizing: border-box;
+  padding-top: ${(props) => props.theme.suomifi.spacing.m};
+  padding-bottom: ${(props) => props.theme.suomifi.spacing.s};
+  padding-right: 4px;
+  // Same stuff as with the expanded navigation
+  position: fixed;
+  height: calc(100vh - 1rem*60/18);
+  width: 62px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: ${(props) => props.theme.suomifi.colors.depthDark2} ${(props) => props.theme.suomifi.colors.highlightLight2};
 `;
 
-export const PersonalNavButton = styled.button`
-  height: 36px;
-  width: 36px;
-  box-sizing: border-box;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  background-color: ${(props) => props.theme.suomifi.colors.highlightLight2};
-  p {
+export const PopoverNavigationMenu = styled(ActionMenu)`
+  &&.personal > button {
+    height: 36px;
+    width: 36px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    background-color: ${(props) => props.theme.suomifi.colors.highlightLight2};
     color: ${(props) => props.theme.suomifi.colors.highlightBase};
     font-weight: bold;
-    font-size: 22px;
-    margin: 0;
+    font-size: 24px;
+    position: relative;
+    .fi-icon {
+      font-size: 16px;
+      position: absolute;
+      left: 10px;
+      top: 15px;
+    }
+    padding: 0 12px 0 0;
+    margin: 4px 0 0 4px;
   }
-  svg {
-    font-size: 16px;
+
+  // Moving the popover to the right side instead of below
+  & .fi-action-menu-popover {
+    padding: 0;
+    // positioning is set as inline style, so have to use !important
+    inset: unset !important;
+    transform: translate(50px, -50px) !important;
   }
-  padding: 2px 0 2px 2px;
+  && .fi-action-menu-popover_popper-arrow {
+    transform: translate(-18px, 20px) !important;
+    &::before, &::after {
+      transform: rotate(0.75turn);
+      inset: 0;
+    }
+    &::after {
+      left: 2px;
+      top: 1px;
+    }
+  }
+
+  & .fi-action-menu-item a {
+    text-decoration: none;
+    color: ${(props) => props.theme.suomifi.colors.blackBase};
+  }
+  & .fi-action-menu-item--selected a {
+    color: ${(props) => props.theme.suomifi.colors.whiteBase};
+  }
 `;
 
 export const GroupNavIcon = styled.div`
@@ -241,6 +287,7 @@ export const GroupNavIcon = styled.div`
   border: none;
   background-color: ${(props) => props.theme.suomifi.colors.depthLight2};
   padding-left: ${(props) => props.theme.suomifi.spacing.xs};
+  margin: 4px 0 0 4px;
   p {
     color: ${(props) => props.theme.suomifi.colors.blackBase};
     font-weight: bold;
@@ -266,7 +313,7 @@ export const CollapsedGroupList = styled.ul`
 
 export const CollapsedGroupItem = styled.li`
   position: relative;
-  margin-left: ${(props) => props.theme.suomifi.spacing.xxs};
+  margin-left: 8px;
   padding: ${(props) => props.theme.suomifi.spacing.xxs} 0;
   // The decorative line next to group names
   border-left: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
