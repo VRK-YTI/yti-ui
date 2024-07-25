@@ -26,6 +26,12 @@ import { useRouter } from 'next/router';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import getOrganizations from '@app/common/utils/get-organizations';
 import { SearchContext } from '@app/common/components/search-context-provider';
+import { useStoreDispatch } from '@app/store';
+import { useSelector } from 'react-redux';
+import {
+  selectIsSideNavigationMinimized,
+  setIsSideNavigationMinimized
+} from '@app/common/components/navigation/navigation.slice';
 
 export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const { breakpoint } = useBreakpoints();
@@ -33,6 +39,9 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const { setIsSearchActive } = useContext(SearchContext);
   const router = useRouter();
   const lang = router.locale ?? '';
+  const dispatch = useStoreDispatch();
+  const isSidebarMinimized = useSelector(selectIsSideNavigationMinimized());
+  const [isFirstPageLoad, setFirstPageLoad] = useState(true);
   const [openGroup, setOpenGroup] = useState([
     router.query['homepage']?.toString() ?? '',
   ]);
@@ -203,9 +212,11 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
       <nav>
         <CollapsedNavigationWrapper
           className={
-            isSidebarMinimized
+            isSidebarMinimized && !isFirstPageLoad
               ? 'sidebar-animate-fadein'
-              : 'sidebar-animate-fadeout'
+              : !isSidebarMinimized
+                ? 'sidebar-animate-fadeout'
+                : undefined
           }
         >
           <PopoverNavigationMenu
@@ -286,45 +297,6 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
     >
       {isSidebarMinimized && collapsedMenu()}
       {!isSidebarMinimized && expandedMenu()}
-
-      {/*<div className={'d-flex justify-content-between'}>*/}
-
-      {/*<div className={''}>*/}
-      {/*  <div*/}
-      {/*    className={*/}
-      {/*      !isSidebarMinimized && !isFirstPageLoad*/}
-      {/*        ? 'sidebar-animate-fadein'*/}
-      {/*        : undefined*/}
-      {/*    }*/}
-      {/*  >*/}
-      {/*    */}
-      {/*  </div>*/}
-      {/*</div>*/}
-      {/*<FoldButtonWrapper*/}
-      {/*  className={'col-1 d-flex justify-content-center flex-column'}*/}
-      {/*>*/}
-      {/*  <Tooltip*/}
-      {/*    title={*/}
-      {/*      isSidebarMinimized*/}
-      {/*        ? t('click-to-expand-sidebar')*/}
-      {/*        : t('click-to-minimize-sidebar')*/}
-      {/*    }*/}
-      {/*    placement="top-end"*/}
-      {/*    className={undefined}*/}
-      {/*  >*/}
-      {/*    <FoldButton*/}
-      {/*      aria-label="fold"*/}
-      {/*      onClick={(e) => {*/}
-      {/*        sidebarFoldButtonClick();*/}
-      {/*        e.stopPropagation();*/}
-      {/*      }}*/}
-      {/*    >*/}
-      {/*      <div></div>*/}
-      {/*      <div></div>*/}
-      {/*    </FoldButton>*/}
-      {/*  </Tooltip>*/}
-      {/*</FoldButtonWrapper>*/}
-      {/*</div>*/}
       <Tooltip
         title={
           isSidebarMinimized

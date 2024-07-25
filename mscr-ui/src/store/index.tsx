@@ -26,6 +26,7 @@ import { crosswalkMappingFunctionsApi } from '@app/common/components/crosswalk-f
 import { notificationsSlice } from '@app/common/components/notifications/notifications.slice';
 import { actionmenuSlice } from '@app/common/components/actionmenu/actionmenu.slice';
 import { contentViewSlice } from '@app/common/components/content-view/content-view.slice';
+import { navigationSlice } from '@app/common/components/navigation/navigation.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -56,6 +57,7 @@ export function makeStore(ctx: NextIronContext) {
       [notificationsSlice.name]: notificationsSlice.reducer,
       [actionmenuSlice.name]: actionmenuSlice.reducer,
       [contentViewSlice.name]: contentViewSlice.reducer,
+      [navigationSlice.name]: navigationSlice.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
