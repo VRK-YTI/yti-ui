@@ -21,14 +21,12 @@ import ActionPanel from '@app/common/components/action-panel';
 
 export default function Layout({
   children,
-  sideNavigationHidden,
   user,
   fakeableUsers,
   isActionMenu,
   alerts,
 }: {
   children: React.ReactNode;
-  sideNavigationHidden: boolean;
   user?: MscrUser;
   fakeableUsers?: FakeableUser[] | null;
   isActionMenu?: boolean;
@@ -56,9 +54,8 @@ export default function Layout({
               fakeableUsers
             )}
           />
-          {!sideNavigationHidden && user && !user.anonymous ? (
+          {user && !user.anonymous ? (
             <FlexContainer>
-              <SideNavigationPanel user={user}/>
               <ContentContainer>
                 {alerts && alerts}
                 <MarginContainer
@@ -70,6 +67,7 @@ export default function Layout({
                   {children}
                 </MarginContainer>
               </ContentContainer>
+              <SideNavigationPanel user={user}/>
             </FlexContainer>
           ) : (
             <ContentContainer className={'w-100'}>

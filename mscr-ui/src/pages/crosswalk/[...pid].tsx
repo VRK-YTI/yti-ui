@@ -23,7 +23,6 @@ export default function CrosswalkPage(props: IndexPageProps) {
     <CommonContextProvider value={props}>
       <Layout
         user={props.user ?? undefined}
-        sideNavigationHidden={true}
         fakeableUsers={props.fakeableUsers}
         isActionMenu={true}
       >

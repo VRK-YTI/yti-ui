@@ -5,7 +5,6 @@ import Notification from '@app/common/components/notifications';
 
 interface LayoutProps {
   user?: MscrUser | null;
-  sideNavigationHidden?: boolean;
   fakeableUsers?: FakeableUser[] | null;
   isActionMenu?: boolean;
   children: React.ReactNode;
@@ -13,7 +12,6 @@ interface LayoutProps {
 
 export default function Layout({
   user,
-  sideNavigationHidden,
   fakeableUsers,
   isActionMenu,
   children,
@@ -21,7 +19,6 @@ export default function Layout({
   return (
     <CommonLayout
       user={user ?? undefined}
-      sideNavigationHidden={sideNavigationHidden ?? false}
       fakeableUsers={fakeableUsers ?? []}
       isActionMenu={isActionMenu ?? false}
       alerts={<Notification />}

@@ -32,7 +32,6 @@ export default function UnauthorizedPage(props: unauthorizedPageProps) {
       <Layout
         user={props.user ?? undefined}
         fakeableUsers={props.fakeableUsers}
-        sideNavigationHidden={true}
       >
         <PageHead
           baseUrl="https://mscr-test.rahtiapp.fi"

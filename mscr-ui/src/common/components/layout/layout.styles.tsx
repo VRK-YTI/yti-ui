@@ -24,7 +24,7 @@ export const SiteContainer = styled.div`
 
 export const FlexContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   align-items: start;
 `;
 
