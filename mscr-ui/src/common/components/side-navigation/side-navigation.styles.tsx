@@ -7,25 +7,28 @@ import {
   SideNavigationItem
 } from 'suomifi-ui-components';
 
-export const SideNavigationWrapper = styled.aside<{ $breakpoint: Breakpoint; $isSidebarFolded: boolean }>`
-  flex: 0 0 ${(props) => (props.$isSidebarFolded ? '74px' : '234px')};
+export const SideNavigationWrapper = styled.div<{ $breakpoint: Breakpoint; $isSidebarMinimized: boolean }>`
+  // Breakpoint isn't in use, but could be used for responsiveness
+
   padding-left: 16px;
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
+  border-right: 3px solid ${(props) => props.theme.suomifi.colors.highlightLight2};
 
   // Keep the white background in place when scrolling
   height: 100vh;
   position: sticky;
   top: 0;
 
-  // Contain the expand/fold button
+  // Contain the expand/minimize button
   display: flex;
   justify-content: space-between;
 
+  // Change the width with an animation (width with padding 90px/250px)
+  flex: 0 0 ${(props) => (props.$isSidebarMinimized ? '74px' : '234px')};
   transition: 0.6s;
   transition-timing-function: ease-in-out;
-  //transition-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
-  border-right: 3px solid ${(props) => props.theme.suomifi.colors.highlightLight2};
 
+  // Animations for the content switching between expanded and minimized
   && .sidebar-animate-fadein {
     animation: fadeInAnimation ease 1400ms;
     animation-iteration-count: 1;
@@ -93,7 +96,7 @@ export const MscrSideNavigationLevel2 = styled(SideNavigationItem)`
   && .fi-side-navigation-item_sub-list {
     padding: 0;
     margin-top: 0;
-    // Group subsection background is white
+    // Group subsection background override
     background-color: transparent;
   }
 
@@ -115,7 +118,7 @@ export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
 
   &&&& a {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: bold;
     margin: ${(props) => props.theme.suomifi.spacing.xxs} ${(props) => props.theme.suomifi.spacing.xs};
     padding: 0 ${(props) => props.theme.suomifi.spacing.xs};
     // Links in inactive sections are gray
@@ -139,7 +142,6 @@ export const MscrSideNavigationLevel3 = styled(SideNavigationItem)`
 
 export const PersonalNavigationWrapper = styled.div`
   margin-left: 20px;
-  margin-right: 20px;
 `;
 
 export const GroupButton = styled.button`
@@ -200,7 +202,7 @@ export const ExpanderIcon = styled.div`
   border-right: solid 3px ${(props) => props.theme.suomifi.colors.highlightLight2};
 `;
 
-export const CollapsedNavigationWrapper = styled.nav`
+export const MinimizedNavigationWrapper = styled.nav`
   box-sizing: border-box;
   padding-top: ${(props) => props.theme.suomifi.spacing.m};
   padding-bottom: ${(props) => props.theme.suomifi.spacing.s};
@@ -217,6 +219,7 @@ export const CollapsedNavigationWrapper = styled.nav`
 export const PopoverNavigationMenu = styled(ActionMenu)`
   position: relative;
   &&.personal > button {
+    // Styling of the P button in minimized navigation
     height: 36px;
     width: 36px;
     box-sizing: border-box;
@@ -238,6 +241,7 @@ export const PopoverNavigationMenu = styled(ActionMenu)`
     margin: 4px 0 0 4px;
   }
   &&.group > button {
+    // Styling of the group list items in minimized navigation
     color: ${(props) => props.theme.suomifi.colors.depthDark1};
     border: none;
     cursor: pointer;
@@ -256,10 +260,11 @@ export const PopoverNavigationMenu = styled(ActionMenu)`
       color: ${(props) => props.theme.suomifi.colors.highlightBase};
     }
     &:focus {
+      // Override positioning switch
       position: unset;
     }
     &:before {
-      // This is the little dot on the decorative line next to group names
+      // This is the little dot on the decorative line next to group abbreviations
       content: '';
       box-sizing: unset;
       position: absolute;
@@ -274,9 +279,9 @@ export const PopoverNavigationMenu = styled(ActionMenu)`
   }
 
   // Moving the popover to the right side instead of below
+  // Positioning is set as inline style, so have to use !important
   & .fi-action-menu-popover {
     padding: 0;
-    // positioning is set as inline style, so have to use !important
     inset: unset !important;
     transform: translate(50px, -50px) !important;
   }
@@ -284,6 +289,7 @@ export const PopoverNavigationMenu = styled(ActionMenu)`
     transform: translate(60px, -50px) !important;
   }
   && .fi-action-menu-popover_popper-arrow {
+    // Rotate and correct position of the triangle that points to the opening button
     transform: translate(-18px, 20px) !important;
     &::before, &::after {
       transform: rotate(0.75turn);
@@ -295,6 +301,7 @@ export const PopoverNavigationMenu = styled(ActionMenu)`
     }
   }
 
+  // Override link base styles
   & .fi-action-menu-item a {
     text-decoration: none;
     color: ${(props) => props.theme.suomifi.colors.blackBase};
@@ -305,6 +312,7 @@ export const PopoverNavigationMenu = styled(ActionMenu)`
 `;
 
 export const GroupNavIcon = styled.div`
+  // Styling of the G icon in minimized menu
   height: 36px;
   width: 36px;
   border-radius: 4px;
@@ -320,7 +328,7 @@ export const GroupNavIcon = styled.div`
   }
 `;
 
-export const CollapsedGroupList = styled.ul`
+export const MinimizedGroupList = styled.ul`
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -336,7 +344,7 @@ export const CollapsedGroupList = styled.ul`
   }
 `;
 
-export const CollapsedGroupItem = styled.li`
+export const MinimizedGroupItem = styled.li`
   position: relative;
   margin-left: 8px;
   padding: ${(props) => props.theme.suomifi.spacing.xxs} 0 0 0;

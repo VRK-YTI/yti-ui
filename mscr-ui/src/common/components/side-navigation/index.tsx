@@ -13,12 +13,12 @@ import {
   MscrSideNavigationLevel1,
   GroupButton,
   ExpanderButton,
-  CollapsedNavigationWrapper,
+  MinimizedNavigationWrapper,
   ExpanderIcon,
   GroupNavIcon,
-  CollapsedGroupItem,
-  CollapsedGroupList,
-  PopoverNavigationMenu
+  MinimizedGroupItem,
+  MinimizedGroupList,
+  PopoverNavigationMenu,
 } from './side-navigation.styles';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
@@ -30,7 +30,7 @@ import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 import {
   selectIsSideNavigationMinimized,
-  setIsSideNavigationMinimized
+  setIsSideNavigationMinimized,
 } from '@app/common/components/navigation/navigation.slice';
 
 export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
@@ -48,22 +48,13 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   // Paths for now
   const personalSchemasPath = '/personal/schemas';
   const personalCrosswalksPath = '/personal/crosswalks';
-  const personalSettingsPath = '/personal/settings';
-  // Group settings path is form '/' + group.id + '/settings'
+  // group urls have the group id instead of 'personal'
   const organizations = getOrganizations(user?.organizations, lang);
-  const [isSidebarMinimized, setSidebarMinimized] = useState(false);
-  const [isFirstPageLoad, setFirstPageLoad] = useState(true);
 
-  function sidebarFoldButtonClick() {
-    //console.log('is folded', isSidebarFolded);
-    setSidebarMinimized(!isSidebarMinimized);
+  const handleClickMinimizeButton = () => {
+    dispatch(setIsSideNavigationMinimized(!isSidebarMinimized));
     setFirstPageLoad(false);
-  }
-  // ToDo: Remove
-  organizations.push({
-    id: 'whateverererereer',
-    label: 'Diligent professionals',
-  });
+  };
 
   const handleClickGroup = (groupId: string) => {
     if (router.asPath.startsWith('/' + groupId)) {
@@ -135,12 +126,6 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                 </Link>
               }
             />
-            <MscrSideNavigationLevel3
-              className="personal"
-              subLevel={3}
-              selected={router.asPath.startsWith(personalSettingsPath)}
-              content={''}
-            />
           </PersonalNavigationWrapper>
         </MscrSideNavigationLevel1>
         <MscrSideNavigationLevel1
@@ -192,14 +177,6 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                   </Link>
                 }
               />
-              <MscrSideNavigationLevel3
-                className="group"
-                subLevel={3}
-                selected={router.asPath.startsWith(
-                  '/' + group.id + '/settings'
-                )}
-                content={''}
-              />
             </MscrSideNavigationLevel2>
           ))}
         </MscrSideNavigationLevel1>
@@ -207,10 +184,10 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
     );
   };
 
-  const collapsedMenu = () => {
+  const minimizedMenu = () => {
     return (
-      <nav>
-        <CollapsedNavigationWrapper
+      <div>
+        <MinimizedNavigationWrapper
           className={
             isSidebarMinimized && !isFirstPageLoad
               ? 'sidebar-animate-fadein'
@@ -250,9 +227,9 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
           <GroupNavIcon>
             <p>G</p>
           </GroupNavIcon>
-          <CollapsedGroupList>
+          <MinimizedGroupList>
             {organizations.map((group) => (
-              <CollapsedGroupItem key={group.id}>
+              <MinimizedGroupItem key={group.id}>
                 <PopoverNavigationMenu
                   className="group"
                   buttonText={group.label.substring(0, 2).toUpperCase()}
@@ -281,21 +258,20 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                     </Link>
                   </ActionMenuItem>
                 </PopoverNavigationMenu>
-              </CollapsedGroupItem>
+              </MinimizedGroupItem>
             ))}
-          </CollapsedGroupList>
-        </CollapsedNavigationWrapper>
-      </nav>
+          </MinimizedGroupList>
+        </MinimizedNavigationWrapper>
+      </div>
     );
   };
 
   return (
     <SideNavigationWrapper
       $breakpoint={breakpoint}
-      $isSidebarFolded={isSidebarMinimized}
-      id="sidebar"
+      $isSidebarMinimized={isSidebarMinimized}
     >
-      {isSidebarMinimized && collapsedMenu()}
+      {isSidebarMinimized && minimizedMenu()}
       {!isSidebarMinimized && expandedMenu()}
       <Tooltip
         title={
@@ -304,9 +280,8 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
             : t('click-to-minimize-sidebar')
         }
         placement="right"
-        className={undefined}
       >
-        <ExpanderButton onClick={() => sidebarFoldButtonClick()}>
+        <ExpanderButton onClick={() => handleClickMinimizeButton()}>
           <ExpanderIcon />
         </ExpanderButton>
       </Tooltip>
