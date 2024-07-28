@@ -3,9 +3,15 @@ import {
   NodeMapping,
 } from '@app/common/interfaces/crosswalk-connection.interface';
 import validateMapping from '@app/modules/crosswalk-editor/mapping-validator';
-import {Dropdown, IconPlus, Textarea, TextInput} from 'suomifi-ui-components';
-import {DropdownItem} from 'suomifi-ui-components';
-import {useEffect, useState} from 'react';
+import {
+  Dropdown,
+  IconClose,
+  IconPlus,
+  Textarea,
+  TextInput,
+} from 'suomifi-ui-components';
+import { DropdownItem } from 'suomifi-ui-components';
+import { useEffect, useState } from 'react';
 import {
   Button,
   Modal,
@@ -22,7 +28,8 @@ export default function NodeMappings(props: {
   modalOpen: boolean;
   isJointPatchOperation: boolean;
 }) {
-  const EXACT_MATCH_DROPDOWN_DEFAULT = 'http://www.w3.org/2004/02/skos/core#exactMatch';
+  const EXACT_MATCH_DROPDOWN_DEFAULT =
+    'http://www.w3.org/2004/02/skos/core#exactMatch';
 
   let sourceSelectionInit = '';
   let targetSelectionInit = '';
@@ -93,7 +100,6 @@ export default function NodeMappings(props: {
     }
 
     setVisible(props?.modalOpen);
-
   }, [props]);
 
   const [sourceInputValue, setSourceInputValue] = useState(sourceSelectionInit);
@@ -101,12 +107,12 @@ export default function NodeMappings(props: {
   const [targetOperationValue, setTargetOperationValue] = useState('');
   const [mappingOperationValue, setMappingOperationValue] = useState('');
   const [predicateValue, setPredicateValue] = useState<string>(
-    EXACT_MATCH_DROPDOWN_DEFAULT,
+    EXACT_MATCH_DROPDOWN_DEFAULT
   );
 
   const [filterTarget, setFilterTarget] = useState(filterTargetSelectInit);
   const [filterOperation, setFilterOperation] = useState(
-    filterOperationsSelectInit,
+    filterOperationsSelectInit
   );
   const [filterOperationValue, setFilterOperationValue] = useState('');
 
@@ -132,12 +138,12 @@ export default function NodeMappings(props: {
     mappings.source.push({
       id: props.selectedCrosswalk.source.id,
       label: props.selectedCrosswalk.source.name,
-      uri: props.selectedCrosswalk.source.uri
+      uri: props.selectedCrosswalk.source.uri,
     });
     mappings.target.push({
       id: props.selectedCrosswalk.target.id,
       label: props.selectedCrosswalk.target.name,
-      uri: props.selectedCrosswalk.target.uri
+      uri: props.selectedCrosswalk.target.uri,
     });
     mappings.predicate = predicateValue ? predicateValue : '0';
     mappings.notes = notesValue;
@@ -152,7 +158,7 @@ export default function NodeMappings(props: {
   function generatePropertiesDropdownItems(input: any) {
     let keys = [];
     for (let key in input) {
-      keys.push({name: key});
+      keys.push({ name: key });
     }
     return keys;
   }
@@ -162,23 +168,25 @@ export default function NodeMappings(props: {
     let ret = [];
     let ret2 = [];
     props.mappingFunctions
-      .filter((item: { uri: string; }) => {
+      .filter((item: { uri: string }) => {
         return item.uri === input;
       })
       .map((match: any) => {
         mappingInputFields.push(match);
       });
     if (mappingInputFields.length > 0) {
-      ret = mappingInputFields[0]['parameters'].map((item: { name: any; datatype: any; }) => {
-        return {name: item.name, datatype: item.datatype};
-      });
+      ret = mappingInputFields[0]['parameters'].map(
+        (item: { name: any; datatype: any }) => {
+          return { name: item.name, datatype: item.datatype };
+        }
+      );
     }
     ret.forEach(() => {
       ret2.push(
         <TextInput
           onChange={(value) => null}
           visualPlaceholder="Operation value"
-        />,
+        />
       );
     });
   }
@@ -188,7 +196,7 @@ export default function NodeMappings(props: {
       props.performMappingsModalAction(
         'save',
         generateMappingPayload(),
-        props.selectedCrosswalk.id,
+        props.selectedCrosswalk.id
       );
     } else {
       props.performMappingsModalAction('addJoint', generateMappingPayload());
@@ -222,7 +230,6 @@ export default function NodeMappings(props: {
   ]);
 
   return (
-    <>
       <Modal
         appElementId="__next"
         visible={visible}
@@ -230,7 +237,23 @@ export default function NodeMappings(props: {
         className="row bg-white edit-mapping-modal"
       >
         <ModalContent className="edit-mapping-modal-content">
-          <ModalTitle>{props.isJointPatchOperation ? 'Edit mapping' : 'Add mapping'}</ModalTitle>
+          <div className="row">
+            <div className="col-8">
+              <ModalTitle>
+                {props.isJointPatchOperation ? 'Edit mapping' : 'Add mapping'}
+              </ModalTitle>
+            </div>
+            <div className="col-4">
+              <Button
+                style={{ float: 'right' }}
+                variant="secondaryNoBorder"
+                icon={<IconClose />}
+                aria-label="t('cancel')"
+                onClick={() => closeModal()}
+              ></Button>
+            </div>
+          </div>
+
           <div className="col flex-column d-flex justify-content-between">
             <div className="row bg-white">
               {/* SOURCE OPERATIONS */}
@@ -329,7 +352,7 @@ export default function NodeMappings(props: {
                                   visualPlaceholder="Operation value"
                                 /></div>*/}
                   <div>
-                    <br/>
+                    <br />
                     <Dropdown
                       className="mt-2 node-info-dropdown"
                       labelText="Predicate"
@@ -337,8 +360,8 @@ export default function NodeMappings(props: {
                       value={predicateValue}
                       defaultValue={props.selectedCrosswalk.predicate}
                       onChange={(newValue) => {
-                        setPredicateValue(newValue)}
-                      }
+                        setPredicateValue(newValue);
+                      }}
                     >
                       {predicateValues.map((rt) => (
                         <DropdownItem key={rt.id} value={rt.id}>
@@ -354,7 +377,7 @@ export default function NodeMappings(props: {
                   visualPlaceholder="No notes set. Add free form notes here."
                   value={notesValue}
                 />
-                <br/>
+                <br />
               </div>
 
               {/* TARGET OPERATIONS */}
@@ -374,7 +397,7 @@ export default function NodeMappings(props: {
                       ? props.selectedCrosswalk.target.properties.description
                       : 'N/A'}
                   </p>
-                  <br/>
+                  <br />
                   {/*                                <div><Dropdown className='mt-2 node-info-dropdown'
                                                labelText="Target operation"
                                                visualPlaceholder="Operation not selected"
@@ -393,11 +416,11 @@ export default function NodeMappings(props: {
           </div>
         </ModalContent>
         <ModalFooter>
-          <Button style={{height: 'min-content'}} onClick={() => save()}>
+          <Button style={{ height: 'min-content' }} onClick={() => save()}>
             {'Save'}
           </Button>
           <Button
-            style={{height: 'min-content'}}
+            style={{ height: 'min-content' }}
             variant="secondary"
             onClick={() => closeModal()}
           >
@@ -405,6 +428,5 @@ export default function NodeMappings(props: {
           </Button>
         </ModalFooter>
       </Modal>
-    </>
   );
 }

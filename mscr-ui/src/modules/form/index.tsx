@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
+  IconClose,
   InlineAlert,
   Modal,
   ModalContent,
@@ -563,30 +564,44 @@ export default function FormModal({
                     ? SpinnerType.SchemaRegistrationModal
                     : SpinnerType.SchemaRevisionModal
                   : modalType == ModalType.RegisterNewFull
-                    ? SpinnerType.CrosswalkRegistrationModal
-                    : modalType == ModalType.RegisterNewMscr
-                      ? SpinnerType.CrosswalkCreationModal
-                      : SpinnerType.CrosswalkRevisionModal
+                  ? SpinnerType.CrosswalkRegistrationModal
+                  : modalType == ModalType.RegisterNewMscr
+                  ? SpinnerType.CrosswalkCreationModal
+                  : SpinnerType.CrosswalkRevisionModal
               }
             ></SpinnerOverlay>
           )}
         </>
         <div id={'modalTop'}></div>
-        <ModalTitle>
-          {contentType == Type.Schema
-            ? modalType == ModalType.RegisterNewFull
-              ? t('content-form.title.schema-register')
-              : modalType == ModalType.McsrCopy
-                ? t('content-form.title.schema-mscr-copy')
-                : t('content-form.title.schema-revision')
-            : modalType == ModalType.RegisterNewFull
-              ? t('content-form.title.crosswalk-register')
-              : modalType == ModalType.RegisterNewMscr
+
+        <div className="row">
+          <div className="col-8">
+            <ModalTitle>
+              {contentType == Type.Schema
+                ? modalType == ModalType.RegisterNewFull
+                  ? t('content-form.title.schema-register')
+                  : modalType == ModalType.McsrCopy
+                  ? t('content-form.title.schema-mscr-copy')
+                  : t('content-form.title.schema-revision')
+                : modalType == ModalType.RegisterNewFull
+                ? t('content-form.title.crosswalk-register')
+                : modalType == ModalType.RegisterNewMscr
                 ? t('content-form.title.crosswalk-create')
                 : modalType == ModalType.McsrCopy
-                  ? t('content-form.title.crosswalk-mscr-copy')
-                  : t('content-form.title.crosswalk-revision')}
-        </ModalTitle>
+                ? t('content-form.title.crosswalk-mscr-copy')
+                : t('content-form.title.crosswalk-revision')}
+            </ModalTitle>
+          </div>
+          <div className="col-4">
+            <Button
+              style={{ float: 'right' }}
+              variant="secondaryNoBorder"
+              icon={<IconClose />}
+              aria-label="t('cancel')"
+              onClick={() => handleClose()}
+            ></Button>
+          </div>
+        </div>
 
         {(modalType == ModalType.RegisterNewFull ||
           modalType == ModalType.RevisionFull) &&
@@ -640,15 +655,15 @@ export default function FormModal({
             ? modalType == ModalType.RegisterNewFull
               ? t('content-form.button.schema-register')
               : modalType == ModalType.McsrCopy
-                ? t('content-form.button.mscr-copy')
-                : t('content-form.button.schema-revision')
+              ? t('content-form.button.mscr-copy')
+              : t('content-form.button.schema-revision')
             : modalType == ModalType.RegisterNewFull
-              ? t('content-form.button.crosswalk-register')
-              : modalType == ModalType.RegisterNewMscr
-                ? t('content-form.button.crosswalk-create')
-                : modalType == ModalType.McsrCopy
-                  ? t('content-form.button.mscr-copy')
-                  : t('content-form.button.crosswalk-revision')}
+            ? t('content-form.button.crosswalk-register')
+            : modalType == ModalType.RegisterNewMscr
+            ? t('content-form.button.crosswalk-create')
+            : modalType == ModalType.McsrCopy
+            ? t('content-form.button.mscr-copy')
+            : t('content-form.button.crosswalk-revision')}
         </Button>
         <Button variant="secondary" onClick={() => handleClose()}>
           {t('cancel')}
