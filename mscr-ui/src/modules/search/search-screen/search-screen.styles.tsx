@@ -3,24 +3,22 @@ import { Block } from 'suomifi-ui-components';
 
 export const SearchContainer = styled(Block)`
   visibility: visible;
-  height: 100%;
-  position: absolute;
+  display: flex;
+  align-items: start;
   background-color: ${(props) => props.theme.suomifi.colors.depthLight3};
   z-index: 1;
-  width: 80%;
 `;
 
 export const FacetsWrapper = styled(Block)`
-  // position: absolute;
   padding: 20px 30px 0 30px;
+  flex: 0 0 240px;
 `;
 
 export const ResultsWrapper = styled(Block)`
-  // margin-left: 200px;
+  margin-left: ${(props) => props.theme.suomifi.spacing.xxl};
+  flex: 1;
 `;
 
 export const CloseButton = styled.button`
-  //position: absolute;
-  //top: 85px;
-  //right: 5px;
+  flex: 0;
 `;

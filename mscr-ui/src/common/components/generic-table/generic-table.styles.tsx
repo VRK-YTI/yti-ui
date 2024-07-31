@@ -1,5 +1,10 @@
 import styled from 'styled-components';
-import { TableCell, TableHead, TableRow } from '@mui/material';
+import { TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+
+export const StyledTableContainer = styled(TableContainer)`
+  border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+  border-radius: 3px;
+`;
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({}));
 

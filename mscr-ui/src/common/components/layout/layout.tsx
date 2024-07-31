@@ -5,6 +5,7 @@ import {
   ContentContainer,
   SiteContainer,
   MarginContainer,
+  FlexContainer
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
 import SmartHeader from '../smart-header';
@@ -20,14 +21,12 @@ import ActionPanel from '@app/common/components/action-panel';
 
 export default function Layout({
   children,
-  sideNavigationHidden,
   user,
   fakeableUsers,
   isActionMenu,
   alerts,
 }: {
   children: React.ReactNode;
-  sideNavigationHidden: boolean;
   user?: MscrUser;
   fakeableUsers?: FakeableUser[] | null;
   isActionMenu?: boolean;
@@ -55,10 +54,9 @@ export default function Layout({
               fakeableUsers
             )}
           />
-          {!sideNavigationHidden && user && !user.anonymous ? (
-            <div className={'d-flex w-100'}>
-              <SideNavigationPanel user={user}/>
-              <ContentContainer className={'w-100'}>
+          {user && !user.anonymous ? (
+            <FlexContainer>
+              <ContentContainer>
                 {alerts && alerts}
                 <MarginContainer
                   $breakpoint={breakpoint}
@@ -69,7 +67,8 @@ export default function Layout({
                   {children}
                 </MarginContainer>
               </ContentContainer>
-            </div>
+              <SideNavigationPanel user={user}/>
+            </FlexContainer>
           ) : (
             <ContentContainer className={'w-100'}>
               {alerts && alerts}

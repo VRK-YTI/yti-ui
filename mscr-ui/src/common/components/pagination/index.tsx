@@ -1,6 +1,6 @@
-import { Pagination as SFPagination } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
+import { StyledPagination } from '@app/common/components/pagination/pagination.styles';
 
 interface PaginationProps {
   lastPage: number;
@@ -12,7 +12,7 @@ export default function Pagination({
   const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
   return (
-    <SFPagination
+    <StyledPagination
       aria-label={t('pagination.aria.label')}
       pageIndicatorText={(currentPage, lastPage) =>
         t('pagination.page') + ' ' + currentPage + ' / ' + lastPage

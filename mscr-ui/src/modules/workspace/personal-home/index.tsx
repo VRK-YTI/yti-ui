@@ -23,6 +23,7 @@ import WorkspaceTable, {
 } from '@app/modules/workspace/workspace-table';
 import { ModalVisibilityButton } from '@app/modules/form/modal-visibility-button';
 import FormModal, { ModalType } from '@app/modules/form';
+import Link from 'next/link';
 
 export default function PersonalWorkspace({
   contentType,
@@ -52,24 +53,28 @@ export default function PersonalWorkspace({
     ? Math.ceil(data?.hits.total.value / pageSize)
     : 0;
 
+  // Todo: Refactor workspaces to share code to avoid repeated code
   const fetchedContent = useMemo(() => {
     if (data) {
       return data.hits.hits.map((result) => {
         const info = result._source;
+        const label = getLanguageVersion({
+          data: info.label,
+          lang,
+        });
         const linkUrl =
           contentType == Type.Schema
             ? router.basePath + '/schema/' + info.id
             : router.basePath + '/crosswalk/' + info.id;
+        const linkLabel = `${t('workspace.view')} ${label}`;
         return {
-          label: getLanguageVersion({
-            data: info.label,
-            lang,
-          }),
+          label: label,
           ...(contentType == Type.Schema && { namespace: info.namespace }),
           state: info.state,
           numberOfRevisions: info.numberOfRevisions.toString(),
           pid: info.handle ?? t('metadata.not-available'),
-          linkUrl: <a href={linkUrl}>{t('workspace.view')}</a>,
+          // eslint-disable-next-line jsx-a11y/anchor-is-valid
+          linkUrl: <Link href={linkUrl} passHref><a aria-label={linkLabel}>{t('workspace.view')}</a></Link>,
         };
       });
     } else {
@@ -108,7 +113,6 @@ export default function PersonalWorkspace({
             </TitleDescriptionWrapper>
           }
         />
-        <Separator isLarge />
         <ButtonBlock>
           {contentType == 'SCHEMA' ? (
             <>
@@ -148,7 +152,6 @@ export default function PersonalWorkspace({
             </>
           )}
         </ButtonBlock>
-        <Separator isLarge />
         {data?.hits.hits && data?.hits.hits.length < 1 ? (
           <div>
             {contentType == 'SCHEMA'

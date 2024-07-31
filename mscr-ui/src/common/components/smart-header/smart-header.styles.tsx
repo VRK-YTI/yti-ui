@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Breakpoint } from 'yti-common-ui/media-query';
+import { Block } from 'suomifi-ui-components';
 
 export const HeaderWrapper = styled.div<{
   $breakpoint: Breakpoint;
@@ -9,17 +10,20 @@ export const HeaderWrapper = styled.div<{
   display: flex;
   align-items: center;
   gap: 2rem;
-  height: calc(1rem*60/18);
 
   margin: auto;
   padding-right: 1rem;
   padding-left: 1rem;
-  
+
   ${(props) => `
     background-color: ${props.theme.suomifi.colors.whiteBase};
     border-bottom: 1px solid ${props.theme.suomifi.colors.depthLight1};
-    border-top: 3px solid ${props.theme.suomifi.colors.brandBase}; 
+    border-top: 3px solid ${props.theme.suomifi.colors.brandBase};
   `}
+`;
+
+export const FlexItemBlock = styled(Block)`
+  flex: 0 0 calc(1rem*60/18);
 `;
 
 export const MobileMenuButtonWrapper = styled.div`

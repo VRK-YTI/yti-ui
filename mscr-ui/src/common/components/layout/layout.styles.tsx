@@ -7,10 +7,10 @@ import { small } from 'yti-common-ui/media-query/styled-helpers';
 export const MarginContainer = styled.div<{
   $breakpoint: Breakpoint;
 }>`
+  margin: ${(props) => props.theme.suomifi.spacing.s};
   &&.hidden {
     visibility: hidden;
   }
-  margin: auto;
   padding-right: 1rem;
   padding-left: 1rem;
 `;
@@ -18,9 +18,14 @@ export const MarginContainer = styled.div<{
 // main layout
 
 export const SiteContainer = styled.div`
-  width: 100%;
-  margin: auto;
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const FlexContainer = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: start;
 `;
 
 export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`
@@ -32,7 +37,6 @@ export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`
 // content layout
 
 export const ContentContainer = styled.div<{ $fullScreen?: boolean }>`
-  margin-left: 10px;
   background-color: ${(props) =>
     props.$fullScreen
       ? props.theme.suomifi.colors.whiteBase
