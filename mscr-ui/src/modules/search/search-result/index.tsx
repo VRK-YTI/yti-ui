@@ -12,10 +12,16 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import Link from 'next/link';
 import { useContext } from 'react';
 import { SearchContext } from '@app/common/components/search-context-provider';
+import { useStoreDispatch } from '@app/store';
+import {
+  setIsEditContentActive,
+  setIsEditMetadataActive
+} from '@app/common/components/content-view/content-view.slice';
 
 export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
   const { setIsSearchActive } = useContext(SearchContext);
   const lang = router.locale ?? '';
+  const dispatch = useStoreDispatch();
 
   const result = hit._source;
   const displayResult: Partial<Schema> = {
@@ -48,10 +54,16 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
     chips = chips.concat(result.format);
   }
 
+  const handleNavigate = () => {
+    setIsSearchActive(false);
+    dispatch(setIsEditMetadataActive(false));
+    dispatch(setIsEditContentActive(false));
+  };
+
   return (
     <Link href={url} passHref>
       <StyledRouterLink
-        onClick={() => setIsSearchActive(false)}
+        onClick={() => handleNavigate()}
         aria-label={localizedLabel}
       >
         <Block>

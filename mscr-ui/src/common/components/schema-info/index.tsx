@@ -35,7 +35,7 @@ export default function SchemaInfo(props: {
   caption: string;
   schemaUrn: string;
   isSingleTree?: boolean;
-  isEditable?: boolean;
+  isNodeEditable?: boolean;
 }) {
   const { t } = useTranslation('common');
   const lang = useRouter().locale ?? '';
@@ -313,7 +313,7 @@ export default function SchemaInfo(props: {
           <NodeInfo
             treeData={selectedTreeNodes}
             dataIsLoaded={isTreeDataFetched}
-            isEditable={props.isEditable}
+            isNodeEditable={props.isNodeEditable}
           />
           <CheckboxWrapper>
             <Checkbox

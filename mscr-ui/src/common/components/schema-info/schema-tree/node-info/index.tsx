@@ -5,11 +5,12 @@ import Box from '@mui/material/Box';
 import { InfoIcon } from '@app/common/components/shared-icons';
 import { useTranslation } from 'next-i18next';
 import { DropdownWrapper } from '@app/common/components/schema-info/schema-info.styles';
+import TypeSelector from '@app/common/components/schema-info/schema-tree/node-info/type-selector';
 
 export default function NodeInfo(props: {
   treeData: RenderTree[];
   dataIsLoaded: boolean;
-  isEditable?: boolean;
+  isNodeEditable?: boolean;
 }) {
   const { t } = useTranslation('common');
   const [selectedNode, setSelectedNode] = useState<RenderTree>();
@@ -121,6 +122,9 @@ export default function NodeInfo(props: {
                   <div className="attribute-font">
                     {processHtmlLinks(attrib.value)}
                   </div>
+                  {props.isNodeEditable &&
+                    attrib.name === '@type' &&
+                    selectedNode?.children.length === 0 && <TypeSelector />}
                 </div>
               ))}
             </div>

@@ -13,7 +13,7 @@ import { State } from '@app/common/interfaces/state.interface';
 import { Type } from '@app/common/interfaces/search.interface';
 import { Text } from 'suomifi-ui-components';
 import HasPermission from '@app/common/utils/has-permission';
-import { formatsAvailableForMscrCopy } from '@app/common/interfaces/format.interface';
+import { Format, formatsAvailableForMscrCopy } from '@app/common/interfaces/format.interface';
 import { useStoreDispatch } from '@app/store';
 import {
   selectConfirmModalState,
@@ -30,12 +30,14 @@ import ConfirmModal from '@app/common/components/confirmation-modal';
 import FormModal, { ModalType } from '@app/modules/form';
 import Tabmenu from '@app/common/components/tabmenu';
 import MetadataStub from '@app/modules/form/metadata-form/metadata-stub';
+import { selectIsEditContentActive } from '@app/common/components/content-view/content-view.slice';
 
 export default function SchemaView({ schemaId }: { schemaId: string }) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const confirmModalIsOpen = useSelector(selectConfirmModalState());
   const formModalIsOpen = useSelector(selectFormModalState());
+  const isEditContentActive = useSelector(selectIsEditContentActive());
   const [patchSchema] = usePatchSchemaMutation();
   const [deleteSchema] = useDeleteSchemaMutation();
 
@@ -52,6 +54,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
     action: 'EDIT_CONTENT',
     owner: schemaData?.owner,
   });
+  const isNodeEditable = isEditContentActive && hasEditPermission && schemaData?.format === Format.Mscr;
   const hasCopyPermission = HasPermission({ action: 'MAKE_MSCR_COPY' });
   const isMscrCopyAvailable =
     hasCopyPermission &&
@@ -195,6 +198,7 @@ export default function SchemaView({ schemaId }: { schemaId: string }) {
                   <SchemaVisualization
                     pid={schemaId}
                     format={schemaData.format}
+                    isNodeEditable={isNodeEditable}
                   />
                 ),
               },
