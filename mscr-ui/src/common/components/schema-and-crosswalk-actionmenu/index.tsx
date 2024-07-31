@@ -16,6 +16,7 @@ import {
   setIsEditContentActive,
   setIsEditMetadataActive,
 } from '@app/common/components/content-view/content-view.slice';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 
 export default function SchemaAndCrosswalkActionMenu() {
   const { t } = useTranslation('common');
@@ -31,11 +32,26 @@ export default function SchemaAndCrosswalkActionMenu() {
       items.push(
         <ActionMenuItem
           key={'editContent'}
-          onClick={() => dispatch(setIsEditContentActive(!isContentEditActive))}
+          onClick={() => {
+            dispatch(setIsEditContentActive(!isContentEditActive));
+            dispatch(
+              setNotification(
+                isContentEditActive
+                  ? isCrosswalk
+                    ? 'FINISH_EDITING_MAPPINGS'
+                    : 'FINISH_EDITING_SCHEMA'
+                  : isCrosswalk
+                    ? 'EDIT_MAPPINGS'
+                    : 'EDIT_SCHEMA'
+              )
+            );
+          }}
         >
           {isContentEditActive
             ? t('actionmenu.finish-editing')
-            : t('actionmenu.edit-mappings')}
+            : isCrosswalk
+              ? t('actionmenu.edit-mappings')
+              : t('actionmenu.edit-schema')}
         </ActionMenuItem>
       );
     }
@@ -151,7 +167,13 @@ export default function SchemaAndCrosswalkActionMenu() {
     <>
       {Object.values(menuState).some((isTrue) => isTrue) && (
         <ActionMenuWrapper>
-          <ActionMenu buttonText={isCrosswalk ? t('action.crosswalk-actions') : t('action.schema-actions')}>
+          <ActionMenu
+            buttonText={
+              isCrosswalk
+                ? t('action.crosswalk-actions')
+                : t('action.schema-actions')
+            }
+          >
             {getActionMenuItems()}
           </ActionMenu>
         </ActionMenuWrapper>

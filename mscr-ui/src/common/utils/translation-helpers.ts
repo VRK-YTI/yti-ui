@@ -307,10 +307,7 @@ export function translateFileUploadError(
   }
 }
 
-export function translateNotification(
-  key: NotificationKeys,
-  t: TFunction
-) {
+export function translateNotification(key: NotificationKeys, t: TFunction) {
   switch (key) {
     case 'CROSSWALK_SAVE':
       return t('notifications.crosswalk-saved');
@@ -334,8 +331,12 @@ export function translateNotification(
       return t('notifications.schema-deprecated');
     case 'EDIT_MAPPINGS':
       return t('notifications.mappings-edit');
+    case 'EDIT_SCHEMA':
+      return t('notifications.schema-edit');
     case 'FINISH_EDITING_MAPPINGS':
-      return t('notifications.mappings-finish');
+      return t('notifications.mappings-finish-editing');
+    case 'FINISH_EDITING_SCHEMA':
+      return t('notifications.schema-finish-editing');
     case 'CROSSWALK_REVISION':
       return t('notifications.add-crosswalk-revision');
     case 'SCHEMA_REVISION':

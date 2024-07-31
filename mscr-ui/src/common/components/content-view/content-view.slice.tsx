@@ -45,6 +45,7 @@ export const contentViewSlice = createSlice({
         ...state,
         selectedTab: ContentTab.Editor,
         isEditContentActive: true,
+        isEditMetadataActive: false,
       };
     },
     setEditMetadataActive(state, action) {
@@ -58,6 +59,7 @@ export const contentViewSlice = createSlice({
         ...state,
         selectedTab: ContentTab.Metadata,
         isEditMetadataActive: true,
+        isEditContentActive: false,
       };
     },
   },
@@ -68,7 +70,8 @@ export function selectSelectedTab() {
 }
 
 export function setSelectedTab(tab: number): AppThunk {
-  return (dispatch) => dispatch(contentViewSlice.actions.setSelectedTab({ tab }));
+  return (dispatch) =>
+    dispatch(contentViewSlice.actions.setSelectedTab({ tab }));
 }
 
 export function selectIsEditContentActive() {

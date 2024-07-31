@@ -9,7 +9,7 @@ import { DropdownWrapper } from '@app/common/components/schema-info/schema-info.
 export default function NodeInfo(props: {
   treeData: RenderTree[];
   dataIsLoaded: boolean;
-  // performNodeInfoAction: any;
+  isEditable?: boolean;
 }) {
   const { t } = useTranslation('common');
   const [selectedNode, setSelectedNode] = useState<RenderTree>();

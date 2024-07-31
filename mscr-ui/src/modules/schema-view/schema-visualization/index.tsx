@@ -4,6 +4,8 @@ import {
   Format,
   formatsAvailableForCrosswalkCreation,
 } from '@app/common/interfaces/format.interface';
+import { useSelector } from 'react-redux';
+import { selectIsEditContentActive } from '@app/common/components/content-view/content-view.slice';
 
 export default function SchemaVisualization({
   pid,
@@ -13,12 +15,18 @@ export default function SchemaVisualization({
   format: Format;
 }) {
   const { t } = useTranslation('common');
+  const isEditModeActive = useSelector(selectIsEditContentActive());
   const filterLabel = t('schema-tree.search-schema');
   const visualizationAvailable =
     formatsAvailableForCrosswalkCreation.includes(format);
   if (visualizationAvailable) {
     return (
-      <SchemaInfo caption={filterLabel} schemaUrn={pid} isSingleTree={true} />
+      <SchemaInfo
+        caption={filterLabel}
+        schemaUrn={pid}
+        isSingleTree={true}
+        isEditable={isEditModeActive}
+      />
     );
   } else {
     return (
