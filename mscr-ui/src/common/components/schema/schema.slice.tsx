@@ -126,6 +126,12 @@ export const schemaApi = createApi({
         data: value.payload,
       }),
     }),
+    patchDataType: builder.mutation<Schema, {schemaID: string; target: string; datatype: string }>({
+      query: ({schemaID, target, datatype}) => ({
+        url: `/dtr/schema/${schemaID}/properties?target=${target}&datatype=${datatype}`,
+        method: 'PATCH',
+      }),
+    }),
     deleteSchema: builder.mutation<string, string>({
       query: (value) => ({
         url: `/schema/${value}`,
@@ -156,6 +162,7 @@ export const {
   usePutSchemaRevisionMutation,
   usePutSchemaMscrCopyMutation,
   usePatchSchemaMutation,
+  usePatchDataTypeMutation,
   util: { getRunningQueriesThunk },
 } = schemaApi;
 

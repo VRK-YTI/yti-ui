@@ -14,6 +14,7 @@ export default function NodeInfo(props: {
 }) {
   const { t } = useTranslation('common');
   const [selectedNode, setSelectedNode] = useState<RenderTree>();
+  const isLeafNode = selectedNode?.children.length === 0;
   const [dropDownList, setDropDownList] = useState<RenderTree[]>([]);
 
   useEffect(() => {
@@ -36,8 +37,14 @@ export default function NodeInfo(props: {
   }
 
   const nodeProperties: ConstantAttribute[] = [];
+  // Separate type attribute when it's editable to place it last
+  const nodeTypeAttribute: ConstantAttribute = {name: '@type', value: undefined};
   if (selectedNode && selectedNode.properties) {
     for (const [key, value] of Object.entries(selectedNode.properties)) {
+      if (key === '@type' && isLeafNode && props.isNodeEditable) {
+        nodeTypeAttribute.value = value as string;
+        continue;
+      }
       nodeProperties.push({
         name: key,
         value: typeof value === 'string' ? value.toString() : undefined,
@@ -122,11 +129,20 @@ export default function NodeInfo(props: {
                   <div className="attribute-font">
                     {processHtmlLinks(attrib.value)}
                   </div>
-                  {props.isNodeEditable &&
-                    attrib.name === '@type' &&
-                    selectedNode?.children.length === 0 && <TypeSelector />}
                 </div>
               ))}
+              {props.isNodeEditable &&
+                isLeafNode &&
+                nodeTypeAttribute.value && (
+                  <div className="col-12" key={self.crypto.randomUUID()}>
+                    <div className="">{processHtmlLinks(nodeTypeAttribute.name)}:</div>
+                    <div className="attribute-font">
+                      {processHtmlLinks(nodeTypeAttribute.value)}
+                    </div>
+                    <TypeSelector attributeId={nodeProperties.find((attrib) => attrib.name === '@id')?.value} />
+                  </div>
+                )
+              }
             </div>
           </div>
         </Box>
