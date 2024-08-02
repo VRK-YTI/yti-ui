@@ -6,6 +6,7 @@ import { InfoIcon } from '@app/common/components/shared-icons';
 import { useTranslation } from 'next-i18next';
 import { DropdownWrapper } from '@app/common/components/schema-info/schema-info.styles';
 import TypeSelector from '@app/common/components/schema-info/schema-tree/node-info/type-selector';
+import { IconLinkExternal } from 'suomifi-icons';
 
 export default function NodeInfo(props: {
   treeData: RenderTree[];
@@ -56,10 +57,10 @@ export default function NodeInfo(props: {
   }, [isLeafNode, props.isNodeEditable, selectedNode]);
 
   function processHtmlLinks(input: string | undefined) {
-    if (input && input.startsWith('http://' || 'https://')) {
+    if (input && (input.startsWith('http://') || input.startsWith('https://'))) {
       return (
         <a href={input} target="_blank" rel="noreferrer">
-          {input}
+          {input} <IconLinkExternal />
         </a>
       );
     }
@@ -138,7 +139,7 @@ export default function NodeInfo(props: {
                 isLeafNode &&
                 nodeTypeAttribute !== '' && (
                   <div className="col-12" key={self.crypto.randomUUID()}>
-                    <div className="">{processHtmlLinks('@type')}:</div>
+                    <div className="">@type:</div>
                     <div className="attribute-font">
                       {processHtmlLinks(nodeTypeAttribute)}
                     </div>

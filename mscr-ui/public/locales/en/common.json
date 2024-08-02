@@ -39,6 +39,7 @@
   "change-language-selected-language": "Current language",
   "choose-language": "",
   "class": "",
+  "clear-label": "Clear",
   "clear-language-filter": "",
   "click-to-dismiss": "Click to dismiss",
   "click-to-expand-sidebar": "Click to expand sidebar",
@@ -231,9 +232,15 @@
   "no-languages-available": "",
   "no-subscribed-items": "",
   "node-info": {
+    "link-to-type-registry": "Go to full description",
     "loading": "Loading...",
+    "make-query-and-choose": "Use the search to see type selection",
     "select-a-node": "Nothing to show just now. Select an entity to view information.",
-    "selected-node-info": "Selected node info"
+    "selected-node-info": "Selected node info",
+    "type-search": "Search for data types",
+    "type-search-results-title": "Type search results",
+    "type-to-search": "Type to search",
+    "use-button": "Use"
   },
   "not-recommended-synonym": "",
   "notifications": {
@@ -325,6 +332,7 @@
     "no-match": "No results matching search"
   },
   "search-by-keyword": "",
+  "search-label": "Search",
   "search-term": "",
   "select-at-least-one-service": "",
   "select-organization": "",

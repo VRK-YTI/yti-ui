@@ -39,6 +39,7 @@
   "change-language-selected-language": "",
   "choose-language": "",
   "class": "",
+  "clear-label": "",
   "clear-language-filter": "",
   "click-to-dismiss": "",
   "click-to-expand-sidebar": "",
@@ -231,9 +232,15 @@
   "no-languages-available": "",
   "no-subscribed-items": "",
   "node-info": {
+    "link-to-type-registry": "",
     "loading": "",
+    "make-query-and-choose": "",
     "select-a-node": "",
-    "selected-node-info": ""
+    "selected-node-info": "",
+    "type-search": "",
+    "type-search-results-title": "",
+    "type-to-search": "",
+    "use-button": ""
   },
   "not-recommended-synonym": "",
   "notifications": {
@@ -325,6 +332,7 @@
     "no-match": ""
   },
   "search-by-keyword": "",
+  "search-label": "",
   "search-term": "",
   "select-at-least-one-service": "",
   "select-organization": "",

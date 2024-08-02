@@ -1,27 +1,45 @@
-import { Button, Heading, Paragraph, SearchInput } from 'suomifi-ui-components';
+import {
+  Button,
+  Heading,
+  Paragraph,
+  RouterLink,
+  SearchInput,
+} from 'suomifi-ui-components';
 import { IconLinkExternal } from 'suomifi-icons';
 import { useTranslation } from 'next-i18next';
 import { DataType } from '@app/common/interfaces/data-type.interface';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import {
+  HeadingAndCountWrapper,
+  InstructionParagraph,
+  ResultButton,
   TypeInfoWrapper,
   TypeSearchResultWrapper,
+  TypeSelectorWrapper,
 } from '@app/common/components/schema-info/schema-tree/node-info/type-selector/type-selector.styles';
 import { usePatchDataTypeMutation } from '@app/common/components/schema/schema.slice';
+import Tooltip from '@mui/material/Tooltip';
 
-export default function TypeSelector({
-  nodeId,
-}: {
-  nodeId?: string;
-}) {
-  // Todo: What if target is undefined when you need to make internal change type api call?
+export default function TypeSelector({ nodeId }: { nodeId?: string }) {
   const { t } = useTranslation('common');
+  // ToDo: Implement a slice for pagination parameters and use in eventual api call
+  // const dispatch = useStoreDispatch();
+  // const results = useSelector(selectResults());
   const [skip, setSkip] = useState(true);
   const [query, setQuery] = useState('');
+  // const hitCount = useSelector(selectHitCount());
+  // const currentPage = useSelector(selectPage());
+  // const pageSize = useSelector(selectPageSize());
   const { query: queryRoute } = useRouter();
   const schemaId = (queryRoute?.pid ?? [''])[0];
   const [patchDataType] = usePatchDataTypeMutation();
+  // ToDo: When backend exists, implement api call
+  // const { data, isSuccess } = useGetTypesSearchResultsQuery(
+  //   { query, page: currentPage, pageSize },
+  //   { skip }
+  // );
+  // const lastPage = hitCount ? Math.ceil(hitCount / pageSize) : 0;
 
   const handleInputChange = (value: string) => {
     if (value.length < 3) {
@@ -31,6 +49,7 @@ export default function TypeSelector({
     }
     setQuery(value);
     setSkip(false);
+    // ToDo: Make an api call to the back end with the query to get data types (when back end is ready)
     // console.log('searching with: ', value);
   };
 
@@ -45,21 +64,22 @@ export default function TypeSelector({
       <TypeSearchResultWrapper key={id}>
         <TypeInfoWrapper>
           <Heading variant={'h5'}>{name}</Heading>
-          <Paragraph>
-            {id}
-            <br />
-            {description}
-          </Paragraph>
+          <Paragraph>{description}</Paragraph>
         </TypeInfoWrapper>
-        <Button
+        <ResultButton
           variant={'secondaryNoBorder'}
           onClick={() => handleUseButtonClick(id)}
         >
-          Use
-        </Button>
-        <Button icon={<IconLinkExternal />} variant={'secondaryNoBorder'}>
-          Type Registry
-        </Button>
+          {t('node-info.use-button')}
+        </ResultButton>
+        <Tooltip
+          title={t('node-info.link-to-type-registry')}
+          placement="top-end"
+        >
+          <RouterLink href={'https://hdl.handle.net/' + id}>
+            <IconLinkExternal />
+          </RouterLink>
+        </Tooltip>
       </TypeSearchResultWrapper>
     );
   }
@@ -196,33 +216,60 @@ export default function TypeSelector({
   ];
 
   return (
-    // Todo: Implement the wrapper in styled components
-    // <TypeSelectorWrapper>
-    <>
+    <TypeSelectorWrapper>
       <SearchInput
         labelText={t('node-info.type-search')}
-        clearButtonLabel={t('clear')}
-        searchButtonLabel={t('search')}
+        clearButtonLabel={t('clear-label')}
+        searchButtonLabel={t('search-label')}
         labelMode={'hidden'}
         visualPlaceholder={t('node-info.type-to-search')}
         value={query}
         onChange={(value) => handleInputChange(value as string)}
+        aria-controls={'results'}
       />
-      <Heading variant={'h4'}>
-        {t('node-info.type-search-results-title')}
-      </Heading>
-      {mockResults && (
-        <>
-          {mockResults.map((result) => {
-            return dataTypeSearchResult(
-              result.id,
-              result.name,
-              result.description
-            );
-          })}
-        </>
-      )}
-    </>
-    // </TypeSelectorWrapper>
+      <HeadingAndCountWrapper>
+        <Heading variant={'h4'}>
+          {t('node-info.type-search-results-title')}
+        </Heading>
+        {/*ToDo: Implement result count*/}
+        {/*<Paragraph aria-live={'polite'}>{t('node-info.found-results', { hitCount })}</Paragraph>*/}
+      </HeadingAndCountWrapper>
+      <div id={'results'} aria-labelledby={'results-label'}>
+        {query.length !== 0 && mockResults && (
+          <>
+            {mockResults.map((result) => {
+              return dataTypeSearchResult(
+                result.id,
+                result.name,
+                result.description
+              );
+            })}
+          </>
+        )}
+        {query.length === 0 && (
+          <InstructionParagraph>
+            {t('node-info.make-query-and-choose')}
+          </InstructionParagraph>
+        )}
+      </div>
+      {/*ToDo: Implement pagination*/}
+      {/*{hitCount > pageSize && (*/}
+      {/*  <Pagination*/}
+      {/*    aria-label={t('pagination.aria.label')}*/}
+      {/*    pageIndicatorText={(currentPage, lastPage) =>*/}
+      {/*      t('pagination.page') + ' ' + currentPage + ' / ' + lastPage*/}
+      {/*    }*/}
+      {/*    ariaPageIndicatorText={(currentPage, lastPage) =>*/}
+      {/*      t('pagination.aria.info', { currentPage, lastPage })*/}
+      {/*    }*/}
+      {/*    lastPage={lastPage}*/}
+      {/*    currentPage={currentPage}*/}
+      {/*    onChange={(e) => dispatch(setPage(+e))}*/}
+      {/*    nextButtonAriaLabel={t('pagination.aria.next')}*/}
+      {/*    previousButtonAriaLabel={t('pagination.aria.prev')}*/}
+      {/*    pageInput={false}*/}
+      {/*  />*/}
+      {/*)}*/}
+    </TypeSelectorWrapper>
   );
 }
