@@ -14,8 +14,10 @@ export default function NodeInfo(props: {
 }) {
   const { t } = useTranslation('common');
   const [selectedNode, setSelectedNode] = useState<RenderTree>();
+  const [nodeAttributes, setNodeAttributes] = useState<ConstantAttribute[]>([]);
   const isLeafNode = selectedNode?.children.length === 0;
   const [dropDownList, setDropDownList] = useState<RenderTree[]>([]);
+  const [nodeTypeAttribute, setNodeTypeAttribute] = useState('');
 
   useEffect(() => {
     if (props.treeData && props.treeData.length > 0) {
@@ -36,21 +38,22 @@ export default function NodeInfo(props: {
     value: string | undefined;
   }
 
-  const nodeProperties: ConstantAttribute[] = [];
-  // Separate type attribute when it's editable to place it last
-  const nodeTypeAttribute: ConstantAttribute = {name: '@type', value: undefined};
-  if (selectedNode && selectedNode.properties) {
-    for (const [key, value] of Object.entries(selectedNode.properties)) {
-      if (key === '@type' && isLeafNode && props.isNodeEditable) {
-        nodeTypeAttribute.value = value as string;
-        continue;
+  useEffect(() => {
+    if (selectedNode && selectedNode.properties) {
+      const nodeProperties: ConstantAttribute[] = [];
+      for (const [key, value] of Object.entries(selectedNode.properties)) {
+        if (key === '@type' && isLeafNode && props.isNodeEditable) {
+          setNodeTypeAttribute(value as string);
+          continue;
+        }
+        nodeProperties.push({
+          name: key,
+          value: typeof value === 'string' ? value.toString() : undefined,
+        });
       }
-      nodeProperties.push({
-        name: key,
-        value: typeof value === 'string' ? value.toString() : undefined,
-      });
+      setNodeAttributes(nodeProperties);
     }
-  }
+  }, [isLeafNode, props.isNodeEditable, selectedNode]);
 
   function processHtmlLinks(input: string | undefined) {
     if (input && input.startsWith('http://' || 'https://')) {
@@ -123,7 +126,7 @@ export default function NodeInfo(props: {
                 </>
               )}
 
-              {nodeProperties.map((attrib) => (
+              {nodeAttributes.map((attrib) => (
                 <div className="col-12" key={self.crypto.randomUUID()}>
                   <div className="">{processHtmlLinks(attrib.name)}:</div>
                   <div className="attribute-font">
@@ -133,16 +136,15 @@ export default function NodeInfo(props: {
               ))}
               {props.isNodeEditable &&
                 isLeafNode &&
-                nodeTypeAttribute.value && (
+                nodeTypeAttribute !== '' && (
                   <div className="col-12" key={self.crypto.randomUUID()}>
-                    <div className="">{processHtmlLinks(nodeTypeAttribute.name)}:</div>
+                    <div className="">{processHtmlLinks('@type')}:</div>
                     <div className="attribute-font">
-                      {processHtmlLinks(nodeTypeAttribute.value)}
+                      {processHtmlLinks(nodeTypeAttribute)}
                     </div>
-                    <TypeSelector attributeId={nodeProperties.find((attrib) => attrib.name === '@id')?.value} />
+                    <TypeSelector nodeId={selectedNode?.id} />
                   </div>
-                )
-              }
+                )}
             </div>
           </div>
         </Box>

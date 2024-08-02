@@ -2,18 +2,25 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import {
-  Schema, SchemaWithContent,
-  SchemaWithVersionInfo
+  Schema,
+  SchemaWithContent,
+  SchemaWithVersionInfo,
 } from '@app/common/interfaces/schema.interface';
 import { MscrSearchResults } from '@app/common/interfaces/search.interface';
 import { Format } from '@app/common/interfaces/format.interface';
 import { Metadata } from '@app/common/interfaces/metadata.interface';
 
-function createUrl(formatRestrictions: Array<Format>) {
+function createSearchUrl(formatRestrictions: Array<Format>) {
   const formatString = formatRestrictions.reduce((filterString, fr) => {
     return `${filterString}&format=${fr}`;
   }, '');
   return `/frontend/mscrSearch?type=SCHEMA${formatString}&pageSize=100`;
+}
+
+function createDataTypeUrl({schemaId, target, dataType}: {schemaId: string; target: string; dataType: string}) {
+  const encodedTarget = encodeURIComponent(target);
+  const encodedDataType = encodeURIComponent(dataType);
+  return `/dtr/schema/${schemaId}/properties?target=${encodedTarget}&datatype=${encodedDataType}`;
 }
 
 export const schemaApi = createApi({
@@ -102,7 +109,7 @@ export const schemaApi = createApi({
     }),
     getPublicSchemas: builder.query<MscrSearchResults, Array<Format>>({
       query: (formatRestrictions) => ({
-        url: createUrl(formatRestrictions),
+        url: createSearchUrl(formatRestrictions),
         method: 'GET',
       }),
     }),
@@ -111,6 +118,7 @@ export const schemaApi = createApi({
         url: `/frontend/schema/${pid}`,
         method: 'GET',
       }),
+      providesTags: ['Schema'],
     }),
     postSchema: builder.mutation<
       string,
@@ -126,11 +134,12 @@ export const schemaApi = createApi({
         data: value.payload,
       }),
     }),
-    patchDataType: builder.mutation<Schema, {schemaID: string; target: string; datatype: string }>({
-      query: ({schemaID, target, datatype}) => ({
-        url: `/dtr/schema/${schemaID}/properties?target=${target}&datatype=${datatype}`,
+    patchDataType: builder.mutation<Schema, {schemaId: string; target: string; dataType: string }>({
+      query: ({schemaId, target, dataType}) => ({
+        url: createDataTypeUrl({schemaId, target, dataType}),
         method: 'PATCH',
       }),
+      invalidatesTags: ['Schema'],
     }),
     deleteSchema: builder.mutation<string, string>({
       query: (value) => ({

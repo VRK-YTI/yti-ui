@@ -100,7 +100,7 @@ export default function SchemaInfo(props: {
       props.updateTreeNodeSelectionsOutput(selectedNodes, props.isSourceTree);
     }
     setSelectedTreeNodes(selectedNodes);
-  }, [treeSelectedArray]);
+  }, [treeSelectedArray, nodeIdToNodeDictionary]);
 
   const setPartlyExpanded = () => {
     const nodeIdsToExpand: string[] = [];
