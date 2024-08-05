@@ -46,6 +46,7 @@ export default function TypeSelector({ nodeId }: { nodeId?: string }) {
   const lastPage = hitCount ? Math.ceil(hitCount / pageSize) : 0;
 
   const handleInputChange = (value: string) => {
+    // Skip the api call to the registry until the search query has 3 characters
     if (value.length < 3) {
       setSkip(true);
       dispatch(setQuery(value));
@@ -263,7 +264,7 @@ export default function TypeSelector({ nodeId }: { nodeId?: string }) {
 
   return (
     <TypeSelectorWrapper>
-      {/*ToDo: Remove this disclaimer*/}
+      {/*ToDo: Remove this disclaimer when it's no longer relevant*/}
       This is a mock implementation of the type search
       <SearchInput
         labelText={t('node-info.type-search')}

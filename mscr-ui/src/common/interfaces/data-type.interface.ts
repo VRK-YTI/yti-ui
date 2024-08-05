@@ -9,6 +9,6 @@ export interface DataType {
   name: string;
   description: string;
   origin: string;
-  // Todo: remove unnecessary
+  // Todo: remove unnecessary when real data possible
   [key: string]: any;
 }
