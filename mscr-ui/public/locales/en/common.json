@@ -232,6 +232,7 @@
   "no-languages-available": "",
   "no-subscribed-items": "",
   "node-info": {
+    "found-results": "Found {{hitCount}} results",
     "link-to-type-registry": "Go to full description",
     "loading": "Loading...",
     "make-query-and-choose": "Use the search to see type selection",

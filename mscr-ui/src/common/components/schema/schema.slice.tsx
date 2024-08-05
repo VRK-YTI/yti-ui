@@ -26,7 +26,7 @@ function createDataTypeUrl({schemaId, target, dataType}: {schemaId: string; targ
 export const schemaApi = createApi({
   reducerPath: 'schemaApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['Schema'],
+  tagTypes: ['Schema', 'FrontendSchema'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];
@@ -85,7 +85,7 @@ export const schemaApi = createApi({
         method: 'PATCH',
         data: value.payload,
       }),
-      invalidatesTags: ['Schema'],
+      invalidatesTags: ['Schema', 'FrontendSchema'],
     }),
     getSchema: builder.query<Schema, string>({
       query: (pid) => ({
@@ -118,7 +118,7 @@ export const schemaApi = createApi({
         url: `/frontend/schema/${pid}`,
         method: 'GET',
       }),
-      providesTags: ['Schema'],
+      providesTags: ['FrontendSchema'],
     }),
     postSchema: builder.mutation<
       string,
@@ -139,14 +139,14 @@ export const schemaApi = createApi({
         url: createDataTypeUrl({schemaId, target, dataType}),
         method: 'PATCH',
       }),
-      invalidatesTags: ['Schema'],
+      invalidatesTags: ['FrontendSchema'],
     }),
     deleteSchema: builder.mutation<string, string>({
       query: (value) => ({
         url: `/schema/${value}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Schema'],
+      invalidatesTags: ['Schema', 'FrontendSchema'],
     }),
     getSchemas: builder.query<Schema[], string>({
       query: (value) => ({
