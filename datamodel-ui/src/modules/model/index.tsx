@@ -205,7 +205,17 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
   useEffect(() => {
     if (router.query.new) {
       dispatch(setNotification('MODEL_ADD'));
-      router.replace(`/model/${modelId}`, undefined, { shallow: true });
+      // preserve all query parameters except "new" and replace it with "draft"
+      const { ['new']: newKey, ...query } = router.query;
+      query['draft'] = newKey;
+      router.replace(
+        {
+          pathname: router.pathname,
+          query: query,
+        },
+        undefined,
+        { shallow: true }
+      );
     }
   }, [router, dispatch, modelId]);
 
