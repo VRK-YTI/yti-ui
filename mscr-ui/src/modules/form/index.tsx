@@ -57,6 +57,7 @@ import {
 import { NotificationKeys } from '@app/common/interfaces/notifications.interface';
 import { InputErrors, validateForm } from '@app/modules/form/validate-form';
 import generatePayload from '@app/modules/form/generate-payload';
+import { resetContentView } from '@app/common/components/content-view/content-view.slice';
 
 export enum ModalType {
   RegisterNewFull = 'REGISTER_NEW_FULL',
@@ -165,7 +166,8 @@ export default function FormModal({
     setFormData(emptyForm);
     setFileData(null);
     setFileUri(null);
-  }, [setVisible, emptyForm]);
+    dispatch(resetContentView());
+  }, [setVisible, emptyForm, dispatch]);
 
   const getNewPidFromApi = useCallback(
     (contentType: Type, modalType: ModalType) => {

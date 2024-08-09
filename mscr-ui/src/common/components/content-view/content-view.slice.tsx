@@ -62,6 +62,12 @@ export const contentViewSlice = createSlice({
         isEditContentActive: false,
       };
     },
+    setTabAndEdit(state, action) {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    }
   },
 });
 
@@ -90,4 +96,9 @@ export function selectIsEditMetadataActive() {
 export function setIsEditMetadataActive(isActive?: boolean): AppThunk {
   return (dispatch) =>
     dispatch(contentViewSlice.actions.setEditMetadataActive(isActive ?? false));
+}
+
+export function resetContentView(): AppThunk {
+  return (dispatch) =>
+    dispatch(contentViewSlice.actions.setTabAndEdit(initialState));
 }

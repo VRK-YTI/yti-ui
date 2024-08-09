@@ -17,6 +17,7 @@ import {
   setIsEditMetadataActive,
 } from '@app/common/components/content-view/content-view.slice';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { resetDataTypeSearch } from '@app/common/components/data-type-registry-search/data-type-registry-search.slice';
 
 export default function SchemaAndCrosswalkActionMenu() {
   const { t } = useTranslation('common');
@@ -34,6 +35,7 @@ export default function SchemaAndCrosswalkActionMenu() {
           key={'editContent'}
           onClick={() => {
             dispatch(setIsEditContentActive(!isContentEditActive));
+            dispatch(resetDataTypeSearch());
             dispatch(
               setNotification(
                 isContentEditActive

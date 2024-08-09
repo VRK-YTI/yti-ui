@@ -12,6 +12,7 @@ import {
   StyledTab,
   StyledTabs,
 } from '@app/common/components/tabmenu/tabmenu.styles';
+import { setQuery } from '@app/common/components/data-type-registry-search/data-type-registry-search.slice';
 
 interface TabPanel {
   tabIndex: TabIndex;
@@ -59,6 +60,7 @@ export default function Tabmenu({
 
   const handleChange = (event: React.SyntheticEvent, newValue: TabIndex) => {
     dispatch(setSelectedTab(newValue));
+    dispatch(setQuery(''));
   };
 
   return (

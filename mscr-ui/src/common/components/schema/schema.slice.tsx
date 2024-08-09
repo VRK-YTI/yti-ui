@@ -9,6 +9,7 @@ import {
 import { MscrSearchResults } from '@app/common/interfaces/search.interface';
 import { Format } from '@app/common/interfaces/format.interface';
 import { Metadata } from '@app/common/interfaces/metadata.interface';
+import { DataTypeResults } from '@app/common/interfaces/data-type.interface';
 
 function createSearchUrl(formatRestrictions: Array<Format>) {
   const formatString = formatRestrictions.reduce((filterString, fr) => {
@@ -134,6 +135,12 @@ export const schemaApi = createApi({
         data: value.payload,
       }),
     }),
+    getTypesSearchResults: builder.query<DataTypeResults, { query: string; page: number; pageSize: number }>({
+      query: ({ query, page, pageSize }) => ({
+        url: `/dtr/searchBasicInfoTypes?query=${query}&page=${page}&pageSize=${pageSize}`,
+        method: 'GET',
+      }),
+    }),
     patchDataType: builder.mutation<Schema, {schemaId: string; target: string; dataType: string }>({
       query: ({schemaId, target, dataType}) => ({
         url: createDataTypeUrl({schemaId, target, dataType}),
@@ -171,6 +178,7 @@ export const {
   usePutSchemaRevisionMutation,
   usePutSchemaMscrCopyMutation,
   usePatchSchemaMutation,
+  useGetTypesSearchResultsQuery,
   usePatchDataTypeMutation,
   util: { getRunningQueriesThunk },
 } = schemaApi;

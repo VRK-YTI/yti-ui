@@ -7,7 +7,7 @@ const initialState = {
   hitCount: 0,
   results: new Array<DataType>,
   page: 1,
-  pageSize: 5,
+  pageSize: 10,
 };
 
 export const dataTypeSlice = createSlice({
@@ -44,6 +44,12 @@ export const dataTypeSlice = createSlice({
         pageSize: action.payload.pageSize,
       };
     },
+    setSearch(state, action) {
+      return{
+        ...state,
+        ...action.payload,
+      };
+    }
   },
 });
 
@@ -85,4 +91,8 @@ export function selectPageSize() {
 
 export function setPageSize(pageSize: number): AppThunk {
   return (dispatch) => dispatch(dataTypeSlice.actions.setPageSize({ pageSize }));
+}
+
+export function resetDataTypeSearch(): AppThunk {
+  return (dispatch) => dispatch(dataTypeSlice.actions.setSearch(initialState));
 }
