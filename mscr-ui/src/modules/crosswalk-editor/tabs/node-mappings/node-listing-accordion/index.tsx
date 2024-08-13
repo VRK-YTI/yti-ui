@@ -38,11 +38,10 @@ import {
 import {InfoIcon} from '@app/common/components/shared-icons';
 import {useEffect, useState} from 'react';
 import {useTranslation} from 'next-i18next';
-import {SearchWrapper} from "@app/modules/crosswalk-editor/mappings-accordion/mappings-accordion.styles";
 import {
   Button as SButton,
 } from 'suomifi-ui-components';
-import {getLanguageVersion} from "@app/common/utils/get-language-version";
+
 import validateMapping from "@app/modules/crosswalk-editor/mapping-validator";
 
 const StyledCollapse = styled(Collapse)({
@@ -123,78 +122,67 @@ function Row(props: {
   rowCount: number;
   isSourceAccordion: boolean;
   isOneToManyMapping: boolean;
+  alreadyInitialized: boolean;
 }) {
   const [open, setOpen] = React.useState(props.rowCount < 2 && props.index === 0);
-  const [sourceOperationValueFields, setSourceOperationValueFields] = useState<React.ReactFragment>();
-  const [sourceOperationValue, setSourceOperationValue] = useState<string>('');
-  const [originalValuesInit, setOriginalValuesInit] = useState<boolean>(false);
-
-  if (!originalValuesInit) {
-    setSourceOperationOriginalValues(props.row?.sourceProcessing, props.row.id);
-    console.log('ORIGINAL PROPS', props);
-    setOriginalValuesInit(true);
-  }
 
   function deleteNodeFromMapping() {
     props.isSourceAccordion ? props.callBackFunction('deleteSourceNode', props.row.id) : props.callBackFunction('deleteTargetNode', props.row.id);
     setOpen(false);
   }
 
-  function setSourceOperationOriginalValues(sourceProcessing: any | undefined, mappingId: string) {
-    if (sourceProcessing) {
-      console.log('setting source operation', sourceProcessing , mappingId);
-      props.callBackFunction('updateSourceOperationOriginalValues', mappingId, '', '', sourceProcessing);
-      //setSourceOperationValue(operationKey);
-      generateSourceOperationValueFields(sourceProcessing.id, mappingId);
-    }
-    else {
-      setSourceOperationSelection(props.row.sourceProcessing?.id , props.row.id);
-    }
-  }
-
   function setSourceOperationSelection(operationKey: string | undefined, mappingId: string) {
     if (operationKey) {
-      console.log('setting source operation', operationKey , mappingId);
       props.callBackFunction('updateSourceOperation', mappingId, '', operationKey);
-      //setSourceOperationValue(operationKey);
-      generateSourceOperationValueFields(operationKey, mappingId);
     }
   }
 
-  function updateSourceOperationValue(mappingId: string, newValue: string, inputName: string) {
-    setSourceOperationValue(newValue);
-    props.callBackFunction('updateSourceOperationValue', mappingId, newValue, inputName)
-  }
-
-  function generateSourceOperationValueFields(operationKey: string | undefined, mappingId: string) {
-    const inputFieldParams = props?.mappingFunctions.filter((fnc: { uri: string | undefined; }) => {
-      return fnc.uri === operationKey;
-    })[0].parameters;
-
-    if (operationKey !== 'N/A') {
-      setSourceOperationValueFields(
-        inputFieldParams.map(input => {
-          // If function has a default value, it's hidden form UI.
-          if (!input.defaultValue) {
-            const originalValue = getMappingFunctionOriginalValues(operationKey, input.name);
-            setSourceOperationValue(originalValue);
-            return (<div className='mt-2'><TextInput
-              labelText={input.name}
-              defaultValue={originalValue}
-              //value={sourceOperationValue}
-              onChange={(newValue) => updateSourceOperationValue(mappingId, newValue ? newValue.toString() : '', input.name)}
-              visualPlaceholder="Operation value"
-            /></div>)
-          }
-        }));
+  function updateSourceOperationValue(mappingOperationKey: string | undefined, mappingId: string, newValue: string, inputName: string) {
+    if (inputName) {
+      props.callBackFunction('updateSourceOperationValue', mappingId, newValue, inputName, mappingOperationKey);
     }
   }
 
-  function getMappingFunctionOriginalValues(operationKey: string, paramName: string) {
-      if (props.row.sourceProcessing && props.row.sourceProcessing.id === operationKey) {
-        // @ts-ignore
-        return props.row.sourceProcessing.params[paramName];
+  function generateSourceOperationFields(operationKey: string | undefined, mappingId: string) {
+    if (operationKey && operationKey.length > 0){
+      const inputFieldParams = props?.mappingFunctions.filter((fnc: { uri: string | undefined; }) => {
+        return fnc.uri === operationKey;
+      })[0].parameters;
+
+      if (operationKey !== 'N/A') {
+        const sourceOperationValues =
+          inputFieldParams.map(input => {
+            // If function has a default value, it's hidden form UI.
+            if (!input.defaultValue) {
+              const originalValue = getMappingFunctionOriginalValues(operationKey, input.name);
+              return (<div className='mt-2'><TextInput
+                labelText={input.name}
+                value={originalValue}
+                onChange={(newValue) => updateSourceOperationValue(operationKey, mappingId, newValue ? newValue.toString() : '', input.name)}
+                visualPlaceholder="Operation value"
+              /></div>)
+            }
+          });
+        return sourceOperationValues;
       }
+    }
+    else return '';
+  }
+
+  function moveNode(moveUp: boolean) {
+    if (moveUp){
+      props.callBackFunction('moveNodeUp', props.row.id, props);
+    }
+    else {
+      props.callBackFunction('moveNodeDown', props.row.id, props);
+    }
+  }
+
+  function getMappingFunctionOriginalValues(operationKey: string  | undefined, paramName: string) {
+    if (props.row.sourceProcessing && props.row.sourceProcessingSelection === operationKey) {
+      // @ts-ignore
+      return props.row.sourceProcessing.params[paramName];
+    }
   };
 
   return (
@@ -210,7 +198,7 @@ function Row(props: {
                        placement="left"
               >
                 <StyledArrowCircleUp
-                  onClick={() => props.callBackFunction('moveNodeUp', props.row.id)}></StyledArrowCircleUp>
+                  onClick={() => moveNode(true)}></StyledArrowCircleUp>
               </Tooltip>
             </div>
             <div className={props.isSourceAccordion ? '' : 'ms-3'}>
@@ -220,7 +208,7 @@ function Row(props: {
                       placement="left"
                   >
                       <StyledArrowCircleDown
-                          onClick={() => props.callBackFunction('moveNodeDown', props.row.id)}></StyledArrowCircleDown>
+                          onClick={() => moveNode(false)}></StyledArrowCircleDown>
                   </Tooltip>
               }
             </div>
@@ -256,7 +244,6 @@ function Row(props: {
           <StyledCollapse
             in={open}
             timeout="auto"
-            unmountOnExit
           >
             <div className="row">
               <div className="col-12">
@@ -272,10 +259,10 @@ function Row(props: {
 
                   {props.isSourceAccordion &&
                       <><Dropdown className='mt-2 node-info-dropdown'
-                                  labelText="Source operation"
+                                  labelText={"Source operation"}
                                   visualPlaceholder="Operation not selected"
                                   defaultValue="Operation not selected"
-                                  value={props.row?.sourceProcessingSelection}
+                                  value={props.row?.sourceProcessing?.id}
                                   onChange={(newValue) => setSourceOperationSelection(newValue, props.row.id)}
                       >
                         {props?.mappingFunctions?.map((rt) => (
@@ -284,9 +271,12 @@ function Row(props: {
                           </DropdownItem>
                         ))}
                       </Dropdown>
-                        {sourceOperationValueFields}
+
+
+                          <br/>
                       </>
                   }
+                  {props.isSourceAccordion && generateSourceOperationFields(props.row?.sourceProcessing?.id, props.row.id)}
                 </div>
                 <br/>
               </div>
@@ -313,10 +303,11 @@ function Row(props: {
 
 export default function NodeListingAccordion(props: any) {
   const {t} = useTranslation('common');
-  const [nodeData, setNodeData] = React.useState<NodeListingRow[]>([]);
-  const [showAttributeNames, setShowAttributeNames] = React.useState<boolean>(true);
-  const [mappingFunctions, setMappingFunctions] = React.useState<any>([]);
-  useEffect(() => {
+  const [nodeData, setNodeData] = useState<NodeListingRow[]>([]);
+  const [showAttributeNames, setShowAttributeNames] = useState<boolean>(true);
+  const [mappingFunctions, setMappingFunctions] = useState<any>([]);
+
+  function generateAccordionNodes(){
     let newNodes: NodeListingRow[] = [];
     if (props.isSourceAccordion) {
       // Source
@@ -371,6 +362,10 @@ export default function NodeListingAccordion(props: any) {
       const emptyDefaultValue = {name: '', uri: 'N/A'}
       setMappingFunctions([emptyDefaultValue, ...props.mappingFunctions]);
     }
+  }
+
+  useEffect(() => {
+    generateAccordionNodes();
   }, [props]);
 
   return (
@@ -403,6 +398,7 @@ export default function NodeListingAccordion(props: any) {
                     rowCount={nodeData.length}
                     isSourceAccordion={props.isSourceAccordion}
                     isOneToManyMapping={props.isOneToManyMapping}
+                    alreadyInitialized={props.alreadyInitialized}
                   />
                 );
               })}

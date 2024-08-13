@@ -15,7 +15,7 @@ import {
 } from 'suomifi-ui-components';
 import NodeListingAccordion from "@app/modules/crosswalk-editor/tabs/node-mappings/node-listing-accordion";
 import {MidColumnWrapper} from "@app/modules/crosswalk-editor/tabs/node-mappings/node-mappings.styles";
-import { cloneDeep } from 'lodash';
+import {cloneDeep} from 'lodash';
 
 export default function NodeMappings(props: {
   nodeSelections: CrosswalkConnectionNew[];
@@ -81,11 +81,9 @@ export default function NodeMappings(props: {
     for (let i = 0; i < props.nodeSelections.length; i += 1) {
       if (props?.nodeSelections[i]?.source) {
         sourceSelectionInit = props.nodeSelections[i].source.id;
-        setSourceInputValue(props.nodeSelections[i].source.id);
       }
       if (props?.nodeSelections[i]?.target) {
         targetSelectionInit = props.nodeSelections[i].target.id;
-        setTargetInputValue(props.nodeSelections[i].target.id);
       }
     }
     if (props?.nodeSelections[0]?.notes) {
@@ -95,7 +93,8 @@ export default function NodeMappings(props: {
       setPredicateValue(props.nodeSelections[0].predicate);
     }
     if (props?.nodeSelections[0]?.processing) {
-      setMappingOperationValue(props.nodeSelections[0].processing.id);
+      setMappingOperationSelection(props.nodeSelections[0].processing.id);
+      setMappingOperationFormatted(props.nodeSelections[0].processing);
     }
 
     if (!props?.isPatchMappingOperation) {
@@ -110,20 +109,9 @@ export default function NodeMappings(props: {
     setMappingNodes(props?.nodeSelections);
   }, [props]);
 
-  function selectSourceNode(nodeId: string) {
-    for (let i = 0; i < props.nodeSelections.length; i += 1) {
-      if (props?.nodeSelections[i]?.source.id === nodeId) {
-        sourceSelectionInit = props.nodeSelections[i].source.id;
-        setSourceInputValue(props.nodeSelections[i].source.id);
-      }
-    }
-  }
-
-  const [selectedSourceIndex, setSelectedSourceIndex] = useState<number>(0);
-  const [sourceInputValue, setSourceInputValue] = useState(sourceSelectionInit);
-  const [sourceOperationValues, setSourceOperationValues] = useState([] as any);
   const [targetOperationValue, setTargetOperationValue] = useState('');
-  const [mappingOperationValue, setMappingOperationValue] = useState('');
+  const [mappingOperationSelection, setMappingOperationSelection] = useState<string | undefined>(undefined);
+  const [mappingOperationFormatted, setMappingOperationFormatted] = useState([] as any);
   const [mappingFunctions, setMappingFunctions] = useState([] as any);
   const [predicateValue, setPredicateValue] = useState<string>(
     EXACT_MATCH_DROPDOWN_DEFAULT,
@@ -133,17 +121,12 @@ export default function NodeMappings(props: {
   const [filterOperation, setFilterOperation] = useState(
     filterOperationsSelectInit,
   );
-  const [filterOperationValue, setFilterOperationValue] = useState<string | undefined>('');
-
-  const [targetInputValue, setTargetInputValue] = useState('');
 
   const [visible, setVisible] = useState(props.modalOpen);
-  const [filterDetailsVisible, setFilterDetailsVisible] =
-    useState<boolean>(false);
+
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   const [mappingNodes, setMappingNodes] = useState<CrosswalkConnectionNew[] | undefined>(undefined);
-  const [selectedSourceNode, setSelectedSourceNode] = useState<CrosswalkConnectionNew | undefined>(undefined);
 
   const [notesValue, setNotesValue] = useState<string>('');
   const mappingPayloadInit: NodeMapping = {
@@ -152,7 +135,7 @@ export default function NodeMappings(props: {
     target: [],
   };
 
-  function generateMappingPayload() {
+  function generateSaveMappingPayload() {
     let mappings = mappingPayloadInit;
     if (mappingNodes) {
       mappings.source.push({
@@ -165,7 +148,6 @@ export default function NodeMappings(props: {
           id: mappingNodes[0].target.id,
           label: mappingNodes[0].target.name,
           uri: mappingNodes[0].target.uri
-
         }
       );
 
@@ -199,11 +181,8 @@ export default function NodeMappings(props: {
     mappings.predicate = predicateValue ? predicateValue : '0';
     mappings.notes = notesValue;
 
-    if (mappingOperationValue) {
-      mappings.processing = {
-        id: mappingOperationValue,
-        params: {additionalProp1: {}, additionalProp3: {}, additionalProp2: {}}
-      }
+    if (mappingOperationSelection) {
+      mappings.processing = mappingOperationFormatted;
     }
     return mappings;
   }
@@ -221,50 +200,23 @@ export default function NodeMappings(props: {
     return keys;
   }
 
-  function generateMappingOperationTextboxes(input: string) {
-    let mappingInputFields: any[] = [];
-    let ret = [];
-    let ret2 = [];
-    props.mappingFunctions
-      .filter((item: { uri: string; }) => {
-        return item.uri === input;
-      })
-      .map((match: any) => {
-        mappingInputFields.push(match);
-      });
-    if (mappingInputFields.length > 0) {
-      ret = mappingInputFields[0]['parameters'].map((item: { name: any; datatype: any; }) => {
-        return {name: item.name, datatype: item.datatype};
-      });
-    }
-    ret.forEach(() => {
-      ret2.push(
-        <TextInput
-          onChange={(value) => null}
-          visualPlaceholder="Operation value"
-        />,
-      );
-    });
-  }
-
   function save() {
     if (props.isPatchMappingOperation) {
       props.performMappingsModalAction(
         'save',
-        generateMappingPayload(),
+        generateSaveMappingPayload(),
         props.nodeSelections[0].id,
       );
     } else {
-      props.performMappingsModalAction('addMapping', generateMappingPayload());
+      props.performMappingsModalAction('addMapping', generateSaveMappingPayload());
     }
     setNotesValue('');
   }
 
 // CLEAR FIELDS WHEN MODAL OPENED
   useEffect(() => {
-    setSourceInputValue(sourceSelectionInit);
     setTargetOperationValue('');
-    setMappingOperationValue('');
+    setMappingOperationSelection(undefined);
     setFilterTarget(filterTargetSelectInit);
     setFilterOperation(filterOperationsSelectInit);
   }, [visible]);
@@ -275,26 +227,15 @@ export default function NodeMappings(props: {
       generatePropertiesDropdownItems(mappingNodes[0].source.properties);
       setValidationErrors(validateMapping(mappingNodes[0]));
     }
-    generateMappingOperationTextboxes(mappingOperationValue);
   }, [
     mappingNodes,
-    sourceOperationValues,
     targetOperationValue,
-    mappingOperationValue,
     filterTarget,
     filterOperation,
     predicateValue,
-    mappingOperationValue,
   ]);
 
-  function updateSourceOperationValue(value: string) {
-    const newValues = [...sourceOperationValues];
-    newValues[selectedSourceIndex] = value
-    setSourceOperationValues(newValues);
-  }
-
-  function accordionCallbackFunction(action: string, mappingId: any, operationValue: any, operationKey: any, originalValue: any) {
-    console.log('callback called', action, mappingId, operationValue, operationKey, originalValue);
+  function accordionCallbackFunction(action: string, mappingId: any, operationValue: any, operationName: any, mappingOperationKey: any) {
     if (mappingNodes) {
       if (action === 'moveNodeUp' && mappingNodes.length > 1) {
         let sourceNodesNew = [...mappingNodes];
@@ -305,7 +246,6 @@ export default function NodeMappings(props: {
             sourceNodesNew[i - 1] = second;
             sourceNodesNew[i] = first;
             setMappingNodes(sourceNodesNew);
-            break;
           }
         }
       } else if (action === 'moveNodeDown' && mappingNodes.length > 1) {
@@ -317,7 +257,6 @@ export default function NodeMappings(props: {
             sourceNodesNew[i] = second;
             sourceNodesNew[i + 1] = first;
             setMappingNodes(sourceNodesNew);
-            break;
           }
         }
       } else if (action === 'deleteSourceNode' && mappingNodes.length > 1) {
@@ -330,56 +269,133 @@ export default function NodeMappings(props: {
           return node.target.id !== mappingId;
         });
         setMappingNodes(newNodeSelections);
-      } else if (action === 'updateSourceOperation' || action === 'updateSourceOperationValue' || action === 'updateSourceOperationOriginalValues') {
+      } else {
         let mappingNodesCopy = cloneDeep(mappingNodes);
+
         let newNodeSelections = mappingNodesCopy.map(node => {
           if (node.source.id === mappingId) {
-
+            if (action === 'setMappingParameterDefaults') {
+              node.sourceProcessing = mappingOperationKey;
+            }
             if (action === 'updateSourceOperation') {
-              console.log('UPDATE SOURCE OPERATION');
-              const originalParams = getMappingFunctionParams(operationKey);
+              const originalParams = getMappingFunctionParams(operationName);
               let formattedParams: any = {};
               if (originalParams) {
-                console.log('has original params', originalParams);
                 originalParams.forEach((param: { name: any; defaultValue: any; }) => {
                   formattedParams[param.name] = param.defaultValue ? param.defaultValue : '';
                 });
               }
 
               let processing: any = {
-                id: operationKey,
+                id: operationName,
                 params: formattedParams,
               };
-              operationKey !== 'N/A' ? node.sourceProcessing = processing : node.sourceProcessing = undefined;
-            }
-
-            if (action === 'updateSourceOperationOriginalValues') {
-              console.log('updateSourceOperationOriginalValues', originalValue);
-              node.sourceProcessing = originalValue;
-              // @ts-ignore
-              //node.sourceProcessing.params[operationKey] = operationValue;
+              operationName !== 'N/A' ? node.sourceProcessing = processing : node.sourceProcessing = undefined;
             }
 
             if (action === 'updateSourceOperationValue') {
-              // @ts-ignore
-              console.log('UPDATE REQUEST', operationKey, operationValue, node.sourceProcessing);
-              node.sourceProcessing.params[operationKey] = operationValue;
+              if (node.sourceProcessing) {
+                // @ts-ignore
+                node.sourceProcessing.params[operationName] = operationValue;
+              } else {
+                const originalParams = getMappingFunctionParams(operationName);
+                let formattedParams: any = {};
+                if (originalParams) {
+                  originalParams.forEach((param: { name: any; defaultValue: any; }) => {
+                    formattedParams[param.name] = param.defaultValue ? param.defaultValue : '';
+                  });
+                }
+                formattedParams[operationName] = operationValue;
+                let processing: any = {
+                  id: mappingOperationKey,
+                  params: formattedParams,
+                };
+                operationName !== 'N/A' ? node.sourceProcessing = processing : node.sourceProcessing = undefined;
+              }
             }
           }
           return node
         });
-        console.log('new node selections', newNodeSelections);
         setMappingNodes(newNodeSelections);
       }
     }
   }
 
-  function getMappingFunctionParams(functionId: string) {
-    const functions = props.mappingFunctions.filter((item: any) => item.uri === functionId
+  // Used by source nodes
+  function getMappingFunctionParams(operationKey: string) {
+    const functions = props.mappingFunctions.filter((item: any) => item.uri === operationKey
     ).map((fnc: { parameters: any; }) => {
       return fnc?.parameters;
     });
     return functions[0];
+  }
+
+  function generateMappingFunctionDefaultParams(operationKey: string) {
+    const originalParams = props?.mappingFunctions.filter((fnc: { uri: string | undefined; }) => {
+      return fnc.uri === operationKey;
+    })[0].parameters;
+    let formattedParams: any = {};
+    if (originalParams) {
+      originalParams.map((param: { name: any; defaultValue: any; }) => {
+        formattedParams[param.name] = param?.defaultValue ? param?.defaultValue : '';
+      });
+    }
+    return formattedParams;
+  }
+
+  function updateMappingOperationSelection(operationKey: string) {
+    setMappingOperationSelection(operationKey);
+    if (operationKey && operationKey.length > 0 && operationKey !== 'N/A') {
+      const processing: any = {
+        id: operationKey,
+        params: generateMappingFunctionDefaultParams(operationKey),
+      };
+      setMappingOperationFormatted(processing);
+    }
+    else {
+      setMappingOperationFormatted(undefined);
+    }
+  }
+
+  function updateMappingOperationValue(operationKey: string, parameter: string, newValue: string) {
+    setMappingOperationSelection(operationKey);
+    let formattedParams = generateMappingFunctionDefaultParams(operationKey);
+    formattedParams[parameter] = newValue;
+    let processing: any = {
+      id: operationKey,
+      params: formattedParams,
+    };
+    setMappingOperationFormatted(processing);
+  }
+
+  function getMappingOperationValue(operationKey: string, parameterName: string) {
+    if (props?.nodeSelections[0]?.processing) {
+      return props?.nodeSelections[0]?.processing.params[parameterName];
+    }
+    else return '';
+  }
+
+  function generateMappingOperationFields(operationKey: string | undefined) {
+    let ret: JSX.Element[] = [];
+    if (operationKey && operationKey.length > 0 && operationKey !== 'N/A') {
+      const mappingFunctionWithParams = props?.mappingFunctions.filter((fnc: { uri: string | undefined; }) => {
+        return fnc.uri === operationKey;
+      });
+
+      mappingFunctionWithParams[0].parameters.forEach(parameter => {
+        if (operationKey && operationKey !== 'N/A') {
+          if (!parameter.defaultValue) {
+            ret.push(<div className='mt-2'><TextInput
+              labelText={parameter.name}
+              defaultValue={getMappingOperationValue(operationKey, parameter.name)}
+              onChange={(newValue) => updateMappingOperationValue(operationKey, parameter.name,newValue ? newValue.toString() : '')}
+              visualPlaceholder="Operation value"
+            /></div>);
+          }
+        }
+      });
+      return ret;
+    } else return '';
   }
 
   return (
@@ -402,61 +418,6 @@ export default function NodeMappings(props: {
                                       isSourceAccordion={true}
                                       isOneToManyMapping={props.isOneToManyMapping}>
                 </NodeListingAccordion>
-                {/*                                <span hidden={filterDetailsVisible}>
-                                <Button
-                                  icon={<IconPlus />}
-                                  style={{height: 'min-content'}}
-                                  onClick={() => setFilterDetailsVisible(true)}
-                                  variant="secondaryNoBorder"
-                                >
-                                    {'Add filter'}
-                                </Button>
-                                </span>
-
-                                <div hidden={!filterDetailsVisible}>
-                                    <Dropdown className='mt-2 node-info-dropdown'
-                                              labelText="Source filter"
-                                              visualPlaceholder="Filter target not selected"
-                                              value={filterTarget}
-                                              onChange={(newValue) => setFilterTarget(newValue)}
-                                    >
-                                        {generatePropertiesDropdownItems(props.selectedCrosswalk.source.properties).map((rt) => (
-                                          <DropdownItem key={rt.id} value={rt.name}>
-                                              {rt.name}
-                                          </DropdownItem>
-                                        ))}
-                                    </Dropdown>
-                                    <div>
-                                        <Dropdown className='mt-2 node-info-dropdown'
-                                                  visualPlaceholder="Filter function not selected"
-                                                  value={filterOperation}
-                                                  onChange={(newValue) => setFilterOperation(newValue)}
-                                        >
-                                            {props.mappingFilters.map((rt) => (
-                                              <DropdownItem key={rt.id} value={rt.name}>
-                                                  {rt.name}
-                                              </DropdownItem>
-                                            ))}
-                                        </Dropdown>
-                                    </div>
-                                    <TextInput
-                                      onChange={(value) => setSourceFilterValue('uri', value)}
-                                      visualPlaceholder="Value"
-                                    />
-                                </div>
-                                <br/>
-                                <div><Dropdown className='mt-2 node-info-dropdown'
-                                               labelText="Source operation"
-                                               visualPlaceholder="Operation not selected"
-                                               value={sourceOperationValue}
-                                               onChange={(newValue) => setSourceOperationValue(newValue)}
-                                >
-                                    {props?.mappingFunctions.map((rt) => (
-                                      <DropdownItem key={rt.uri} value={rt.name}>
-                                          {rt.name}
-                                      </DropdownItem>
-                                    ))}
-                                </Dropdown></div>*/}
               </div>
 
               {/* MID COLUMN */}
@@ -465,8 +426,8 @@ export default function NodeMappings(props: {
                   <div><Dropdown className='mt-2 node-info-dropdown'
                                  labelText="Mapping operation"
                                  visualPlaceholder="Operation not selected"
-                                 value={mappingOperationValue}
-                                 onChange={(newValue) => setMappingOperationValue(newValue)}
+                                 value={mappingOperationSelection ? mappingOperationSelection : props.nodeSelections[0]?.processing?.id}
+                                 onChange={(newValue) => updateMappingOperationSelection(newValue)}
                   >
                     {mappingFunctions?.map((rt) => (
                       <DropdownItem key={rt.uri} value={rt.uri}>
@@ -474,12 +435,8 @@ export default function NodeMappings(props: {
                       </DropdownItem>
                     ))}
                   </Dropdown></div>
-                  <div><TextInput
-                    className='mt-3'
-                    labelText={'Value'}
-                    onChange={(value) => setFilterOperationValue(value ? value.toString() : '')}
-                    visualPlaceholder="Operation value"
-                  /></div>
+                  {generateMappingOperationFields(mappingOperationSelection ? mappingOperationSelection : props.nodeSelections[0]?.processing?.id)}
+
                   <div>
                     <br/>
                     <Dropdown
@@ -487,7 +444,7 @@ export default function NodeMappings(props: {
                       labelText="Predicate"
                       visualPlaceholder="Exact match"
                       value={predicateValue}
-                      defaultValue={mappingNodes ? mappingNodes[0].predicate : ''}
+                      //defaultValue={mappingNodes ? mappingNodes[0].predicate : ''}
                       onChange={(newValue) => {
                         setPredicateValue(newValue)
                       }
@@ -503,7 +460,7 @@ export default function NodeMappings(props: {
                   </div>
                   <Textarea
                     onChange={(event) => setNotesValue(event.target.value)}
-                    labelText="Notes:"
+                    labelText="Notes"
                     visualPlaceholder="No notes set. Add free form notes here."
                     value={notesValue}
                   />
@@ -519,95 +476,7 @@ export default function NodeMappings(props: {
                                       isSourceAccordion={false}
                                       isOneToManyMapping={props.isOneToManyMapping}
                 ></NodeListingAccordion>
-                {/*                                <span hidden={filterDetailsVisible}>
-                                <Button
-                                  icon={<IconPlus />}
-                                  style={{height: 'min-content'}}
-                                  onClick={() => setFilterDetailsVisible(true)}
-                                  variant="secondaryNoBorder"
-                                >
-                                    {'Add filter'}
-                                </Button>
-                                </span>
-
-                                <div hidden={!filterDetailsVisible}>
-                                    <Dropdown className='mt-2 node-info-dropdown'
-                                              labelText="Source filter"
-                                              visualPlaceholder="Filter target not selected"
-                                              value={filterTarget}
-                                              onChange={(newValue) => setFilterTarget(newValue)}
-                                    >
-                                        {generatePropertiesDropdownItems(props.selectedCrosswalk.source.properties).map((rt) => (
-                                          <DropdownItem key={rt.id} value={rt.name}>
-                                              {rt.name}
-                                          </DropdownItem>
-                                        ))}
-                                    </Dropdown>
-                                    <div>
-                                        <Dropdown className='mt-2 node-info-dropdown'
-                                                  visualPlaceholder="Filter function not selected"
-                                                  value={filterOperation}
-                                                  onChange={(newValue) => setFilterOperation(newValue)}
-                                        >
-                                            {props.mappingFilters.map((rt) => (
-                                              <DropdownItem key={rt.id} value={rt.name}>
-                                                  {rt.name}
-                                              </DropdownItem>
-                                            ))}
-                                        </Dropdown>
-                                    </div>
-                                    <TextInput
-                                      onChange={(value) => setSourceFilterValue('uri', value)}
-                                      visualPlaceholder="Value"
-                                    />
-                                </div>
-                                <br/>
-                                <div><Dropdown className='mt-2 node-info-dropdown'
-                                               labelText="Source operation"
-                                               visualPlaceholder="Operation not selected"
-                                               value={sourceOperationValue}
-                                               onChange={(newValue) => setSourceOperationValue(newValue)}
-                                >
-                                    {props?.mappingFunctions.map((rt) => (
-                                      <DropdownItem key={rt.uri} value={rt.name}>
-                                          {rt.name}
-                                      </DropdownItem>
-                                    ))}
-                                </Dropdown></div>*/}
               </div>
-
-
-              {/*                <div className="col-4 bg-light-blue">
-                <div className="ps-2">
-                  <p>
-                    <span className="fw-bold">Target: </span>
-                    {sourceNodes ? sourceNodes[0].target.name : ''}
-                  </p>
-                  <p>
-                    <span className="fw-bold">Type: </span>
-                    {sourceNodes ? sourceNodes[0].target.properties.type : ''}
-                  </p>
-                  <p className="mb-1">
-                    <span className="fw-bold">Description: </span>
-                    {sourceNodes ? (sourceNodes[0].target.properties.description
-                      ? sourceNodes[0].target.properties.description
-                      : 'N/A') : ''}
-                  </p>
-                  <br/>
-                                                  <div><Dropdown className='mt-2 node-info-dropdown'
-                                               labelText="Target operation"
-                                               visualPlaceholder="Operation not selected"
-                                               value={targetOperationValue}
-                                               onChange={(newValue) => setTargetOperationValue(newValue)}
-                                >
-                                    {props?.mappingFunctions.map((rt) => (
-                                      <DropdownItem key={rt.uri} value={rt.name}>
-                                          {rt.name}
-                                      </DropdownItem>
-                                    ))}
-                                </Dropdown></div>
-                </div>
-              </div>*/}
             </div>
           </div>
         </ModalContent>

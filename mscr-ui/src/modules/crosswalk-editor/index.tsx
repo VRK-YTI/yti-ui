@@ -271,7 +271,7 @@ export default function CrosswalkEditor({
     if (isOneToManyMapping) {
       for (let i = 0; i < targetNodes.length; i +=1) {
         const mapping: CrosswalkConnectionNew = {
-          processing: undefined,
+          processing: originalMapping[0].processing,
           source: sourceNodes[0],
           target: targetNodes[i],
           id: patchPid,
@@ -293,7 +293,7 @@ export default function CrosswalkEditor({
     else {
       for (let i = 0; i < sourceNodes.length; i +=1) {
         const mapping: CrosswalkConnectionNew = {
-          processing: undefined,
+          processing: originalMapping[0].processing,
           source: sourceNodes[i],
           target: targetNodes[0],
           id: patchPid,

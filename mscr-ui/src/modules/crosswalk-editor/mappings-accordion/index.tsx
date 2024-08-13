@@ -36,7 +36,7 @@ const StyledTableCell = styled(TableCell)({
   padding: '0px 20px',
   justifyContent: 'center',
   flexDirection: 'column',
-  alignSelf: 'flex-start'
+  alignSelf: 'normal'
 });
 
 const StyledTableButtonCell = styled(TableCell)({
@@ -46,14 +46,15 @@ const StyledTableButtonCell = styled(TableCell)({
   padding: '0px 20px',
   justifyContent: 'right',
   flexDirection: 'row',
-  alignSelf: 'flex-start'
+  alignSelf: 'normal',
+  button: {maxHeight: '52px'}
 });
 
 const StyledButton = styled(Button)({
   display: 'flex',
   justifyContent: 'start',
+  alignSelf: 'normal',
 });
-
 
 const StyledTableRow = styled(TableRow)(({theme}) => ({
   '&:nth-of-type(odd)': {
