@@ -48,14 +48,26 @@ export interface CrosswalkConnectionNew {
     id: string;
     notes: string | undefined;
     predicate: string;
+    processing: any;
     isSelected: boolean;
     isDraft: boolean;
     sourceJsonPath: string | undefined;
     targetJsonPath: string | undefined;
     sourcePredicate: string | undefined;
-    sourceProcessing: string | undefined;
+    sourceProcessing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } };
     targetPredicate: string | undefined;
     targetProcessing: string | undefined;
+}
+
+export interface NodeListingRow {
+    name: string;
+    type: string;
+    description: string;
+    id: string;
+    notes: string | undefined;
+    isSelected: boolean;
+    sourceProcessingSelection?: string;
+    sourceProcessing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } };
 }
 
 export interface CrosswalkConnectionsNew {

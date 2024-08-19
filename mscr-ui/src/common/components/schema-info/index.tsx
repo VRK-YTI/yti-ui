@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import SchemaTree from '@app/common/components/schema-info/schema-tree';
 import NodeInfo from '@app/common/components/schema-info/schema-tree/node-info';
 import { RenderTree } from '@app/common/interfaces/crosswalk-connection.interface';
+import { cloneDeep } from 'lodash';
 import { generateTreeFromJson } from '@app/common/components/schema-info/schema-tree/schema-tree-renderer';
 import { useGetFrontendSchemaQuery } from '@app/common/components/schema/schema.slice';
 import { useTranslation } from 'next-i18next';
@@ -55,6 +56,9 @@ export default function SchemaInfo(props: {
   const [isTreeDataFetched, setTreeDataFetched] = useState<boolean>(false);
 
   const [showAttributeNames, setShowAttributeNames] = useState(true);
+  const [treeDataOriginal, setTreeDataOriginal] = useState<RenderTree[]>(
+    []
+  );
 
   useEffect(() => {
     if (getSchemaData?.content) {
@@ -64,6 +68,7 @@ export default function SchemaInfo(props: {
         generateTreeFromJson(getSchemaData);
       generatedTree.then((res) => {
         if (res) {
+          setTreeDataOriginal(res);
           // Expand tree when data is loaded
           setPartlyExpanded();
           setTreeData(res);
@@ -216,9 +221,9 @@ export default function SchemaInfo(props: {
             title={
               getSchemaData?.metadata.label
                 ? getLanguageVersion({
-                    data: getSchemaData.metadata.label,
-                    lang,
-                  })
+                  data: getSchemaData.metadata.label,
+                  lang,
+                })
                 : t('schema-tree.no-label')
             }
             placement="bottom-start"
@@ -226,9 +231,9 @@ export default function SchemaInfo(props: {
             <SchemaHeading variant="h2">
               {getSchemaData?.metadata.label
                 ? getLanguageVersion({
-                    data: getSchemaData.metadata.label,
-                    lang,
-                  })
+                  data: getSchemaData.metadata.label,
+                  lang,
+                })
                 : t('schema-tree.no-label')}
             </SchemaHeading>
           </Tooltip>
