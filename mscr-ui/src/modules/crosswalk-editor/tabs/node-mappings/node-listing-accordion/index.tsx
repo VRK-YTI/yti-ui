@@ -131,9 +131,9 @@ function Row(props: {
     setOpen(false);
   }
 
-  function setSourceOperationSelection(operationKey: string | undefined, mappingId: string) {
-    if (operationKey) {
-      props.callBackFunction('updateSourceOperation', mappingId, '', operationKey);
+  function setSourceOperationSelection(mappingOperationKey: string | undefined, mappingId: string) {
+    if (mappingOperationKey) {
+      props.callBackFunction('updateSourceOperation', mappingId, '', '', mappingOperationKey);
     }
   }
 
@@ -144,46 +144,47 @@ function Row(props: {
   }
 
   function generateSourceOperationFields(operationKey: string | undefined, mappingId: string) {
-    if (operationKey && operationKey.length > 0){
+    if (operationKey && operationKey.length > 0) {
       const inputFieldParams = props?.mappingFunctions.filter((fnc: { uri: string | undefined; }) => {
         return fnc.uri === operationKey;
       })[0].parameters;
 
       if (operationKey !== 'N/A') {
         const sourceOperationValues =
-          inputFieldParams.map(input => {
+          inputFieldParams.map(param => {
+
             // If function has a default value, it's hidden form UI.
-            if (!input.defaultValue) {
-              const originalValue = getMappingFunctionOriginalValues(operationKey, input.name);
+            if (!param.defaultValue) {
+              const originalValue = getMappingFunctionOriginalValues(operationKey, param.name);
               return (<div className='mt-2'><TextInput
-                labelText={input.name}
+                labelText={param.name}
                 value={originalValue}
-                onChange={(newValue) => updateSourceOperationValue(operationKey, mappingId, newValue ? newValue.toString() : '', input.name)}
+                status={props.row.sourceProcessing?.params[param.name]?.length > 0 ? 'default' : 'error'}
+                required={param.required}
+                onChange={(newValue) => updateSourceOperationValue(operationKey, mappingId, newValue ? newValue.toString() : '', param.name)}
                 visualPlaceholder="Operation value"
               /></div>)
             }
           });
         return sourceOperationValues;
       }
-    }
-    else return '';
+    } else return '';
   }
 
   function moveNode(moveUp: boolean) {
-    if (moveUp){
+    if (moveUp) {
       props.callBackFunction('moveNodeUp', props.row.id, props);
-    }
-    else {
+    } else {
       props.callBackFunction('moveNodeDown', props.row.id, props);
     }
   }
 
-  function getMappingFunctionOriginalValues(operationKey: string  | undefined, paramName: string) {
+  function getMappingFunctionOriginalValues(operationKey: string | undefined, paramName: string) {
     if (props.row.sourceProcessing && props.row.sourceProcessingSelection === operationKey) {
       // @ts-ignore
       return props.row.sourceProcessing.params[paramName];
     }
-  };
+  }
 
   return (
     <>
@@ -307,7 +308,7 @@ export default function NodeListingAccordion(props: any) {
   const [showAttributeNames, setShowAttributeNames] = useState<boolean>(true);
   const [mappingFunctions, setMappingFunctions] = useState<any>([]);
 
-  function generateAccordionNodes(){
+  function generateAccordionNodes() {
     let newNodes: NodeListingRow[] = [];
     if (props.isSourceAccordion) {
       // Source
