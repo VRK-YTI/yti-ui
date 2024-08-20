@@ -10,6 +10,7 @@ import {
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import { pathForModelType } from '@app/common/utils/api-utils';
 import { convertToPayload } from './utils';
+import { ExternalClassType } from '@app/common/interfaces/external-class.interface';
 
 interface ClassData {
   modelId: string;
@@ -221,6 +222,20 @@ export const classApi = createApi({
       }),
       invalidatesTags: ['Class'],
     }),
+    getExternalClass: builder.query<
+      ExternalClassType,
+      {
+        uri: string;
+      }
+    >({
+      query: (value) => ({
+        url: '/class/external',
+        params: {
+          uri: value.uri,
+        },
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -262,6 +277,7 @@ export const {
   useUpdateClassResrictionTargetMutation,
   useAddCodeListMutation,
   useRemoveCodeListMutation,
+  useGetExternalClassQuery,
   util: { getRunningQueriesThunk },
 } = classApi;
 
