@@ -42,6 +42,7 @@ import {
 import NewTerminology from '@app/modules/new-terminology';
 import { setTitle } from '@app/common/components/title/title.slice';
 import Link from 'next/link';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 export default function TerminologySearch() {
   const { t, i18n } = useTranslation();
@@ -65,57 +66,6 @@ export default function TerminologySearch() {
   const [showLoading, setShowLoading] = useState(true);
   const previousAlerts = useSelector(selectAlert());
 
-  const results: SearchResultData[] = useMemo(() => {
-    if (!data || !data.terminologies) {
-      return [];
-    }
-
-    return data.terminologies.map((terminology) => ({
-      id: terminology.id,
-      contributors: terminology.contributors.map((c) =>
-        getPrefLabel({ prefLabels: c.label, lang: i18n.language })
-      ),
-      description: terminology.description
-        ? getPrefLabel({
-            prefLabels: terminology.description,
-            lang: i18n.language,
-          })
-        : '',
-      icon: <IconRegisters />,
-      status: terminology.status,
-      partOf: terminology.informationDomains.map((d) =>
-        getPrefLabel({ prefLabels: d.label, lang: i18n.language })
-      ),
-      title: getPrefLabel({
-        prefLabels: terminology.label,
-        lang: i18n.language,
-      }),
-      titleLink: `terminology/${terminology.id}`,
-      type: translateTerminologyType(terminology.type ?? '', t),
-    }));
-  }, [data, t, i18n.language]);
-
-  const deepHits = useMemo(() => {
-    if (!data || !data.deepHits) {
-      return {};
-    }
-
-    const keys = Object.keys(data.deepHits);
-    const returnValue: {
-      [key: string]: { label: string; id: string; uri: string }[];
-    } = {};
-
-    keys.forEach((key) => {
-      returnValue[key] = data.deepHits[key][0].topHits.map((hit) => ({
-        label: getPrefLabel({ prefLabels: hit.label, lang: i18n.language }),
-        id: hit.id,
-        uri: `terminology/${key}/concept/${hit.id}`,
-      }));
-    });
-
-    return returnValue;
-  }, [data, i18n.language]);
-
   const organizations = useMemo(() => {
     if (!orgsData) {
       return [];
@@ -123,7 +73,7 @@ export default function TerminologySearch() {
 
     return orgsData.map((o) => ({
       id: o.id,
-      label: o.properties.prefLabel.value,
+      label: getLanguageVersion({ data: o.label, lang: i18n.language }),
     }));
   }, [orgsData]);
 
@@ -133,10 +83,62 @@ export default function TerminologySearch() {
     }
 
     return groupsData.map((g) => ({
-      id: g.id,
-      label: g.properties.prefLabel.value,
+      id: g.identifier,
+      label: getLanguageVersion({ data: g.label, lang: i18n.language }),
     }));
   }, [groupsData]);
+
+  const results: SearchResultData[] = useMemo(() => {
+    if (!data || !data.responseObjects) {
+      return [];
+    }
+
+    return data.responseObjects.map((terminology) => ({
+      id: terminology.prefix,
+      contributors: terminology.organizations.map(
+        (c) => organizations.find((o) => o.id === c)?.label ?? ''
+      ),
+      description: terminology.description
+        ? getPrefLabel({
+            prefLabels: terminology.description,
+            lang: i18n.language,
+          })
+        : '',
+      icon: <IconRegisters />,
+      status: terminology.status,
+      partOf: terminology.groups.map(
+        (d) => groups.find((g) => g.id === d)?.label ?? ''
+      ),
+      title: getPrefLabel({
+        prefLabels: terminology.label,
+        lang: i18n.language,
+      }),
+      titleLink: `terminology/${terminology.prefix}`,
+      type: translateTerminologyType(terminology.type, t),
+    }));
+  }, [data, t, i18n.language]);
+
+  const extra = useMemo(() => {
+    return (
+      data?.responseObjects.reduce((deepHitsResult, object) => {
+        const concepts = object.matchingConcepts.map((concept) => {
+          return {
+            label: getLanguageVersion({
+              data: concept.label,
+              lang: i18n.language,
+            }),
+            id: concept.identifier,
+            uri: concept.uri,
+          };
+        });
+        if (concepts.length > 0) {
+          deepHitsResult[object.prefix] = concepts;
+        }
+        return deepHitsResult;
+      }, {} as { [key: string]: { label: string; id: string; uri: string }[] }) ??
+      {}
+    );
+  }, [data, i18n.language]);
 
   useEffect(() => {
     dispatch(
@@ -264,7 +266,7 @@ export default function TerminologySearch() {
                     expander: {
                       buttonLabel: t('results-with-query-from-terminology'),
                       contentLabel: t('concepts'),
-                      deepHits,
+                      deepHits: extra,
                     },
                   }}
                 />

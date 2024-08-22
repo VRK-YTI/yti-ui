@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 import { TextEncoder, TextDecoder } from 'util';
 
 process.env.TERMINOLOGY_API_URL =
-  'http://terminology-api.invalid/terminology-api';
+  'http://terminology-api.invalid/terminology-api/v2';
 process.env.AUTH_PROXY_URL = 'http://auth-proxy.invalid';
 process.env.SECRET_COOKIE_PASSWORD = crypto.randomBytes(16).toString('hex');
 

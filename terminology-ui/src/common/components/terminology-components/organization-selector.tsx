@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { checkPermission } from '@app/common/utils/has-permission';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '../login/login.slice';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 export interface OrganizationSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
@@ -62,14 +63,18 @@ export default function OrganizationSelector({
             targetOrganizations: [org.id.toString()],
           })
         ) {
-          const orgName = org.properties.prefLabel.value;
+          const orgName = getLanguageVersion({
+            data: org.label,
+            lang: i18n.language,
+          });
 
           if (orgName) {
             return {
               name: orgName,
               labelText: orgName,
               uniqueItemId: org.id,
-              organizationId: org.type.graph.id,
+              // TODO
+              // organizationId: org.type.graph.id,
             } as MultiSelectData;
           }
         }
