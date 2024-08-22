@@ -69,8 +69,10 @@ export default function TypeSelector({ nodeId }: { nodeId?: string }) {
 
   const handleUseButtonClick = (dataType: string) => {
     if (nodeId && schemaId && schemaId !== '') {
+      console.log(nodeId);
+      console.log(schemaId);
       const trimmedId = nodeId?.substring(5);
-      const target = `${schemaId}#${trimmedId}`;
+      const target = `${schemaId}`;
       patchDataType({ schemaId, target, dataType });
     }
   };
