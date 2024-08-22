@@ -24,6 +24,7 @@ import InlineAlert from 'yti-common-ui/inline-alert';
 import { useGetRequestsQuery } from '@app/common/components/access-request/access-request.slice';
 import { MainTitle } from 'yti-common-ui/title-block';
 import { translateRole } from '@app/common/utils/translation-helpers';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 export default function OwnInformation() {
   const user = useSelector(selectLogin());
@@ -181,13 +182,12 @@ export default function OwnInformation() {
   }
 
   function getOrganizationName(id: string): string {
-    return (
-      getPropertyValue({
-        property: organizations
-          ?.filter((organization) => organization.id === id)
-          .map((organization) => organization.properties.prefLabel),
-        language: i18n.language,
-      }) ?? ''
-    );
+    const organization = organizations?.find((org) => org.id === id);
+    return organization
+      ? getLanguageVersion({
+          data: organization.label,
+          lang: i18n?.language ?? 'fi',
+        })
+      : '';
   }
 }

@@ -9,6 +9,7 @@ import {
 } from './terminology-components.styles';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface InformationDomainsSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
@@ -46,14 +47,17 @@ export default function InformationDomainsSelector({
 
   const infoDomains: MultiSelectData[] = informationDomains?.map(
     (infoDomain) => {
-      const domainName = infoDomain.properties.prefLabel.value;
+      const domainName = getLanguageVersion({
+        data: infoDomain.label,
+        lang: i18n.language,
+      });
 
       if (domainName) {
         return {
           name: domainName,
           labelText: domainName,
           uniqueItemId: infoDomain.id,
-          groupId: infoDomain.type.graph.id,
+          // groupId: infoDomain.type.graph.id,
         } as MultiSelectData;
       }
     }

@@ -19,8 +19,7 @@ export default withIronSessionApiRoute(
     const email = (req.query['fake.login.mail'] as string) ?? 'admin@localhost';
 
     try {
-      let fetchUrl: string =
-        process.env.TERMINOLOGY_API_URL + '/api/v1/frontend/authenticated-user';
+      let fetchUrl: string = process.env.TERMINOLOGY_API_URL + '/user';
       fetchUrl += '?fake.login.mail=' + encodeURIComponent(email);
 
       let authProxyHeaders = {};

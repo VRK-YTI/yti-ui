@@ -53,10 +53,10 @@ describe('terminologyId page', () => {
 
     const polledUrls = [
       '/vocabulary?graphId=1234',
-      '/conceptCounts?graphId=1234',
-      '/statusCounts?graphId=1234',
-      '/authenticated-user',
-      '/fakeableUsers',
+      '/concept-counts?graphId=1234',
+      '/status-counts?graphId=1234',
+      '/user',
+      '/fakeable-users',
     ];
 
     const foundUrls = polledUrls.filter((url) =>

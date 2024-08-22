@@ -1,4 +1,5 @@
 import { TFunction } from 'next-i18next';
+import { TerminologyType } from '../interfaces/interfaces-v2';
 
 export function translateStatus(status: string, t: TFunction) {
   switch (status) {
@@ -66,11 +67,14 @@ export function translateTermType(type: string, t: TFunction) {
   }
 }
 
-export function translateTerminologyType(type: string, t: TFunction) {
+export function translateTerminologyType(
+  type: TerminologyType | string,
+  t: TFunction
+) {
   switch (type) {
-    case 'TERMINOLOGICAL_VOCABULARY':
+    case TerminologyType.TERMINOLOGICAL_VOCABULARY:
       return t('terminology-type.terminologyical-vocabulary', { ns: 'common' });
-    case 'OTHER_VOCABULARY':
+    case TerminologyType.OTHER_VOCABULARY:
       return t('terminology-type.other-vocabulary', { ns: 'common' });
     default:
       return t('terminology-type.undefined', { ns: 'common' });

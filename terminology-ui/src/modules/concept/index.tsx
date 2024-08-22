@@ -84,7 +84,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
       return [];
     }
     return organizations
-      ?.filter((org) => org.references.parent)
+      ?.filter((org) => org.parentOrganization)
       .map((org) => org.id);
   }, [organizations, isLoading, isError]);
 

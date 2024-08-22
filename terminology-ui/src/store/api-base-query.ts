@@ -8,8 +8,8 @@ export const getTerminologyApiBaseQuery = (
 ) =>
   axiosBaseQuery({
     baseUrl: process.env.TERMINOLOGY_API_URL
-      ? `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend`
-      : '/terminology-api/api/v1/frontend',
+      ? `${process.env.TERMINOLOGY_API_URL}`
+      : '/terminology-api/v2',
 
     // prepareHeaders is used to take the JSESSIONID stored in session
     // and provide it as a cookie for API calls
