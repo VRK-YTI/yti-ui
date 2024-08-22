@@ -33,7 +33,7 @@ describe('axios base query', () => {
     };
 
     // any API call would be fine here
-    mock.onGet(/\/v1\/frontend\/vocabulary\?graphId=\d+/).reply((config) => {
+    mock.onGet(/\/vocabulary\?graphId=\d+/).reply((config) => {
       return [
         200,
         'JSESSIONID exists in headers: ' +

@@ -103,7 +103,7 @@ module.exports = () => {
           },
           {
             source: '/datamodel-api/:path*',
-            destination: 'http://localhost:9004/datamodel-api/:path*',
+            destination: 'https://localhost:9004/datamodel-api/:path*',
           },
           {
             source: '/terminology-api/:path*',
