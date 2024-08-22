@@ -3,5 +3,5 @@ export interface Organization {
   label: {
     [key: string]: string;
   };
-  parentId?: string;
+  parentOrganization?: string;
 }

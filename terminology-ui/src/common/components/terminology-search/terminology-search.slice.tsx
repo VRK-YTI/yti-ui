@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createApi } from '@reduxjs/toolkit/query/react';
-import {
-  GroupSearchResult,
-  OrganizationSearchResult,
-  TerminologySearchResult,
-} from '@app/common/interfaces/terminology.interface';
 import { UrlState } from '@app/common/utils/hooks/use-url-state';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
+import { Organization } from 'yti-common-ui/interfaces/organization.interface';
+import { Group } from 'yti-common-ui/interfaces/group.interface';
+import {
+  SearchResponse,
+  TerminogyResponseObject,
+} from '@app/common/interfaces/interfaces-v2';
 
 export const initialState = {};
 
@@ -22,15 +23,15 @@ export const terminologySearchApi = createApi({
   tagTypes: ['TerminologySearch'],
   endpoints: (builder) => ({
     getSearchResult: builder.query<
-      TerminologySearchResult,
+      SearchResponse<TerminogyResponseObject>,
       { urlState: UrlState; language: string }
     >({
       query: (value) => ({
-        url: '/searchTerminology',
-        method: 'POST',
-        data: {
+        url: '/frontend/search-terminologies',
+        method: 'GET',
+        params: {
           query: value.urlState.q,
-          statuses: value.urlState.status.map((s) => s.toUpperCase()),
+          status: value.urlState.status.map((s) => s.toUpperCase()),
           groups: value.urlState.domain,
           organizations: value.urlState.organization
             ? [value.urlState.organization]
@@ -44,18 +45,18 @@ export const terminologySearchApi = createApi({
       }),
       providesTags: ['TerminologySearch'],
     }),
-    getGroups: builder.query<GroupSearchResult[], string>({
+    getGroups: builder.query<Group[], string>({
       query: (value) => ({
-        url: `/v2/groups?language=${value}`,
+        url: `/frontend/service-categories?language=${value}`,
         method: 'GET',
       }),
     }),
     getOrganizations: builder.query<
-      OrganizationSearchResult[],
+      Organization[],
       { language: string; showChildOrganizations?: boolean }
     >({
       query: (value) => ({
-        url: `/v2/organizations?language=${
+        url: `/frontend/organizations?language=${
           value.language
         }&showChildOrganizations=${value.showChildOrganizations ?? false}`,
         method: 'GET',

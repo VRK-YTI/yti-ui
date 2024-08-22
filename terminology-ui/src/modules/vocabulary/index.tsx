@@ -147,7 +147,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
       return [];
     }
     return organizationsData
-      ?.filter((org) => org.references.parent)
+      ?.filter((org) => org.parentOrganization)
       .map((org) => org.id);
   }, [organizationsData, isOrganizationsLoading, organizationsError]);
 
