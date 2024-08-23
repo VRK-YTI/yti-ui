@@ -1,10 +1,8 @@
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import { useAddCollectionMutation } from '@app/common/components/modify/modify.slice';
-import PropertyValue from '@app/common/components/property-value';
 import Separator from 'yti-common-ui/separator';
 import { BadgeBar, MainTitle, SubTitle } from 'yti-common-ui/title-block';
-import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
-import { getProperty } from '@app/common/utils/get-property';
+import { useGetTerminologyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -37,16 +35,17 @@ import {
   useGetAuthenticatedUserQuery,
 } from '@app/common/components/login/login.slice';
 import { compareLocales } from '@app/common/utils/compare-locals';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 export default function EditCollection({
   terminologyId,
   collectionName,
   collectionInfo,
 }: EditCollectionProps) {
-  const { t } = useTranslation('collection');
+  const { t, i18n } = useTranslation('collection');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
-  const { data: terminology } = useGetVocabularyQuery({
+  const { data: terminology } = useGetTerminologyQuery({
     id: terminologyId,
   });
   const { data: collection } = useGetCollectionQuery(
@@ -74,10 +73,7 @@ export default function EditCollection({
   const [isCreating, setIsCreating] = useState(false);
 
   const languages =
-    terminology?.properties.language
-      ?.slice()
-      .sort((a, b) => compareLocales(a.value, b.value))
-      .map(({ value }) => value) ?? [];
+    terminology?.languages?.slice().sort((a, b) => compareLocales(a, b)) ?? [];
 
   const [formData, setFormData] = useState<EditCollectionFormDataType>(
     setInitialData(collection)
@@ -188,7 +184,10 @@ export default function EditCollection({
       <Breadcrumb>
         {router.query.terminologyId && (
           <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
-            <PropertyValue property={terminology?.properties.prefLabel} />
+            {getLanguageVersion({
+              data: terminology?.label,
+              lang: i18n.language,
+            })}
           </BreadcrumbLink>
         )}
         <BreadcrumbLink url="" current>
@@ -198,17 +197,19 @@ export default function EditCollection({
 
       <NewCollectionBlock $isSmall={isSmall}>
         <SubTitle>
-          <PropertyValue
-            property={getProperty(
-              'prefLabel',
-              terminology?.references.contributor
-            )}
-          />
+          {terminology?.organizations
+            .map((org) =>
+              getLanguageVersion({ data: org?.label, lang: i18n.language })
+            )
+            .join(', ')}
         </SubTitle>
         <MainTitle>{collectionName}</MainTitle>
         <BadgeBar>
           {t('heading')}
-          <PropertyValue property={terminology?.properties.prefLabel} />
+          {getLanguageVersion({
+            data: terminology?.label,
+            lang: i18n.language,
+          })}
         </BadgeBar>
         <PageHelpText>{t('new-collection-page-help')}</PageHelpText>
 

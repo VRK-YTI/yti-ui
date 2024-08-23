@@ -2,24 +2,24 @@ import { BasicBlock } from 'yti-common-ui/block';
 import { MultilingualPropertyBlock } from '@app/common/components/block';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
 import FormattedDate from 'yti-common-ui/formatted-date';
-import PropertyValue from '@app/common/components/property-value';
 import Separator from 'yti-common-ui/separator';
-import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
+import { useGetTerminologyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useTranslation } from 'next-i18next';
 import { ExpanderContent } from 'suomifi-ui-components';
 import { ExpanderConceptContent as ExpanderConceptContentType } from './concept-picker.types';
 import { compareLocales } from '@app/common/utils/compare-locals';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 export function ExpanderConceptContent({
   concept,
   terminologyId,
 }: ExpanderConceptContentType) {
-  const { t } = useTranslation('collection');
+  const { t, i18n } = useTranslation('collection');
   const { data } = useGetConceptQuery({
     terminologyId: terminologyId,
     conceptId: concept.id,
   });
-  const { data: terminologyData } = useGetVocabularyQuery({
+  const { data: terminologyData } = useGetTerminologyQuery({
     id: terminologyId,
   });
 
@@ -52,11 +52,10 @@ export function ExpanderConceptContent({
       <Separator isLarge />
 
       <BasicBlock title={t('admin-organization')}>
-        <PropertyValue
-          property={
-            terminologyData?.references.contributor?.[0].properties.prefLabel
-          }
-        />
+        {getLanguageVersion({
+          data: terminologyData?.label,
+          lang: i18n.language,
+        })}
       </BasicBlock>
 
       <BasicBlock title={t('last-modified')}>

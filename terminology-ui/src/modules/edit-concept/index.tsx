@@ -1,8 +1,7 @@
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import PropertyValue from '@app/common/components/property-value';
 import { MainTitle, SubTitle, BadgeBar } from 'yti-common-ui/title-block';
-import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
-import { getProperty } from '@app/common/utils/get-property';
+import { useGetTerminologyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import ConceptBasicInformation from './basic-information/concept-basic-information';
@@ -34,6 +33,7 @@ import { translateStatus } from '@app/common/utils/translation-helpers';
 import { v4 } from 'uuid';
 import { StatusChip } from 'yti-common-ui/status-chip';
 import { compareLocales } from '@app/common/utils/compare-locals';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -44,13 +44,13 @@ export default function EditConcept({
   terminologyId,
   conceptData,
 }: EditConceptProps) {
-  const { t } = useTranslation('concept');
+  const { t, i18n } = useTranslation('concept');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
   const [addConcept, addConceptStatus] = useAddConceptMutation();
   const [isCreating, setIsCreating] = useState(false);
   const user = useSelector(selectLogin());
-  const { data: terminology } = useGetVocabularyQuery({
+  const { data: terminology } = useGetTerminologyQuery({
     id: terminologyId,
   });
   const { data: authenticatedUser } = useGetAuthenticatedUserQuery();
@@ -58,10 +58,7 @@ export default function EditConcept({
     useGetAuthenticatedUserMutMutation();
 
   const [languages] = useState(
-    terminology?.properties.language
-      ?.slice()
-      .sort((a, b) => compareLocales(a.value, b.value))
-      .map(({ value }) => value) ?? []
+    terminology?.languages?.slice().sort((a, b) => compareLocales(a, b)) ?? []
   );
   const [preferredTerms] = useState<
     {
@@ -73,11 +70,7 @@ export default function EditConcept({
   const [postedData, setPostedData] =
     useState<ReturnType<typeof generateConcept>>();
   const [formData, setFormData] = useState<EditConceptType>(
-    generateFormData(
-      preferredTerms,
-      conceptData,
-      terminology?.properties.prefLabel
-    )
+    generateFormData(preferredTerms, conceptData, terminology?.label)
   );
   const [errors, setErrors] = useState<FormError>(validateForm(formData));
 
@@ -160,7 +153,10 @@ export default function EditConcept({
         <Breadcrumb>
           {router.query.terminologyId && (
             <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
-              <PropertyValue property={terminology?.properties.prefLabel} />
+              {getLanguageVersion({
+                data: terminology?.label,
+                lang: i18n.language,
+              })}
             </BreadcrumbLink>
           )}
           <BreadcrumbLink url="" current>
@@ -200,7 +196,10 @@ export default function EditConcept({
       <Breadcrumb>
         {router.query.terminologyId && (
           <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
-            <PropertyValue property={terminology?.properties.prefLabel} />
+            {getLanguageVersion({
+              data: terminology?.label,
+              lang: i18n.language,
+            })}
           </BreadcrumbLink>
         )}
         {!!preferredTerms?.length && (
@@ -212,19 +211,21 @@ export default function EditConcept({
 
       <NewConceptBlock variant="main" id="main" $isSmall={isSmall}>
         <SubTitle>
-          <PropertyValue
-            property={getProperty(
-              'prefLabel',
-              terminology?.references.contributor
-            )}
-          />
+          {terminology?.organizations
+            .map((org) =>
+              getLanguageVersion({ data: org?.label, lang: i18n.language })
+            )
+            .join(', ')}
         </SubTitle>
         <MainTitle>
           <PropertyValue property={preferredTerms} />
         </MainTitle>
         <BadgeBar>
           {t('heading')}
-          <PropertyValue property={terminology?.properties.prefLabel} />
+          {getLanguageVersion({
+            data: terminology?.label,
+            lang: i18n.language,
+          })}
           <StatusChip status={formData.basicInformation.status}>
             {translateStatus(formData.basicInformation.status, t)}
           </StatusChip>

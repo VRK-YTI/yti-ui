@@ -12,7 +12,7 @@ import {
   getRunningQueriesThunk as getConceptRunningQueriesThunk,
 } from '@app/common/components/concept/concept.slice';
 import {
-  getVocabulary,
+  getTerminology,
   getRunningQueriesThunk as getVocabularyRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
@@ -76,7 +76,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameters for page');
     }
 
-    store.dispatch(getVocabulary.initiate({ id: terminologyId }));
+    store.dispatch(getTerminology.initiate({ id: terminologyId }));
     store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
 
     await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));
@@ -84,8 +84,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     const vocabularyData = getStoreData({
       state: store.getState(),
-      reduxKey: 'vocabularyAPI',
-      functionKey: 'getVocabulary',
+      reduxKey: 'terminologyAPI',
+      functionKey: 'getTerminology',
     });
 
     const conceptData = getStoreData({

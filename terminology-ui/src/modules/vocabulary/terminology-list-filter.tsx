@@ -17,7 +17,7 @@ export interface TerminologyListFilterProps {
   onModalClose?: () => void;
   resultCount?: number;
   counts?: Counts;
-  languages?: Property[];
+  languages?: string[];
 }
 
 export function TerminologyListFilter({
@@ -47,10 +47,10 @@ export function TerminologyListFilter({
           languages={
             languages
               ?.slice()
-              ?.sort((a, b) => compareLocales(a.value, b.value))
+              ?.sort((a, b) => compareLocales(a, b))
               ?.map((lang) => ({
-                labelText: lang.value,
-                uniqueItemId: lang.value,
+                labelText: lang,
+                uniqueItemId: lang,
               })) ?? []
           }
         />
@@ -60,8 +60,8 @@ export function TerminologyListFilter({
         title={t('vocabulary-filter-show-only')}
         isModal={isModal}
         counts={{
-          concepts: counts?.counts.categories.Concept,
-          collections: counts?.counts.categories.Collection,
+          concepts: counts?.counts.categories?.Concept,
+          collections: counts?.counts.categories?.Collection,
         }}
       />
       {shouldRenderStatusFilter && (

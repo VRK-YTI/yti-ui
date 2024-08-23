@@ -30,14 +30,14 @@ import {
 } from './collection.styles';
 import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
-import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
-import { getProperty } from '@app/common/utils/get-property';
+import { useGetTerminologyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { SubTitle, MainTitle, BadgeBar } from 'yti-common-ui/title-block';
 import HasPermission from '@app/common/utils/has-permission';
 import Link from 'next/link';
 import RemovalModal from '@app/common/components/removal-modal';
 import { getBlockData } from './utils';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface CollectionProps {
   terminologyId: string;
@@ -53,7 +53,7 @@ export default function Collection({
   const dispatch = useStoreDispatch();
   const router = useRouter();
 
-  const { data: terminology, error: terminologyError } = useGetVocabularyQuery(
+  const { data: terminology, error: terminologyError } = useGetTerminologyQuery(
     { id: terminologyId },
     {
       skip: router.isFallback,
@@ -104,7 +104,10 @@ export default function Collection({
         <Breadcrumb>
           {!terminologyError && (
             <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-              <PropertyValue property={terminology?.properties.prefLabel} />
+              {getLanguageVersion({
+                data: terminology?.label,
+                lang: i18n.language,
+              })}
             </BreadcrumbLink>
           )}
           <BreadcrumbLink url={''} current>
@@ -145,7 +148,10 @@ export default function Collection({
       <Breadcrumb>
         {!terminologyError && (
           <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-            <PropertyValue property={terminology?.properties.prefLabel} />
+            {getLanguageVersion({
+              data: terminology?.label,
+              lang: i18n.language,
+            })}
           </BreadcrumbLink>
         )}
         <BreadcrumbLink
@@ -159,19 +165,21 @@ export default function Collection({
       <PageContent $breakpoint={breakpoint}>
         <MainContent id="main">
           <SubTitle>
-            <PropertyValue
-              property={getProperty(
-                'prefLabel',
-                terminology?.references.contributor
-              )}
-            />
+            {terminology?.organizations
+              .map((org) =>
+                getLanguageVersion({ data: org?.label, lang: i18n.language })
+              )
+              .join(', ')}
           </SubTitle>
           <MainTitle>
             <PropertyValue property={collection?.properties.prefLabel} />
           </MainTitle>
           <BadgeBar>
             {t('heading')}
-            <PropertyValue property={terminology?.properties.prefLabel} />
+            {getLanguageVersion({
+              data: terminology?.label,
+              lang: i18n.language,
+            })}
           </BadgeBar>
 
           <BasicBlock title="URI">{collection?.uri}</BasicBlock>
@@ -193,7 +201,7 @@ export default function Collection({
 
           {HasPermission({
             actions: ['EDIT_COLLECTION', 'DELETE_COLLECTION'],
-            targetOrganization: terminology?.references.contributor,
+            targetOrganization: terminology?.organizations,
           }) && (
             <>
               <BasicBlock
@@ -238,18 +246,16 @@ export default function Collection({
             id="organization"
           >
             <PropertyList $smBot={true}>
-              {terminology?.references.contributor
+              {terminology?.organizations
                 ?.filter(
-                  (c) =>
-                    c &&
-                    c.properties.prefLabel &&
-                    !childOrganizations?.includes(c.id)
+                  (o) => o && o.label && !childOrganizations?.includes(o.id)
                 )
-                .map((contributor) => (
-                  <li key={contributor.id}>
-                    <PropertyValue
-                      property={contributor?.properties.prefLabel}
-                    />
+                .map((organization) => (
+                  <li key={organization.id}>
+                    {getLanguageVersion({
+                      data: organization?.label,
+                      lang: i18n.language,
+                    })}
                   </li>
                 ))}
             </PropertyList>
