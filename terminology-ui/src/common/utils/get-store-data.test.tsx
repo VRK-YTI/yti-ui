@@ -1,3 +1,4 @@
+import { getTerminology } from '../components/vocabulary/vocabulary.slice';
 import { getStoreData } from './get-store-data';
 
 describe('page-head-utils', () => {
@@ -6,7 +7,7 @@ describe('page-head-utils', () => {
       state: {
         vocabularyAPI: {
           queries: {
-            getVocabulary: {
+            getTerminology: {
               data: {
                 test: '123',
               },
@@ -14,8 +15,8 @@ describe('page-head-utils', () => {
           },
         },
       },
-      reduxKey: 'vocabularyAPI',
-      functionKey: 'getVocabulary',
+      reduxKey: 'terminologyAPI',
+      functionKey: 'getTerminology',
     });
 
     expect(gotten).toStrictEqual({ test: '123' });
@@ -26,7 +27,7 @@ describe('page-head-utils', () => {
       state: {
         vocabularyAPI: {
           queries: {
-            getVocabulary: {
+            getTerminology: {
               data: {
                 test: '123',
               },
@@ -35,7 +36,7 @@ describe('page-head-utils', () => {
         },
       },
       reduxKey: 'conceptAPI',
-      functionKey: 'getVocabulary',
+      functionKey: 'getTerminology',
     });
 
     expect(gotten).toStrictEqual({});
@@ -46,7 +47,7 @@ describe('page-head-utils', () => {
       state: {
         vocabularyAPI: {
           queries: {
-            getVocabulary: {
+            getTerminology: {
               data: {
                 test: '123',
               },
@@ -54,7 +55,7 @@ describe('page-head-utils', () => {
           },
         },
       },
-      reduxKey: 'vocabularyAPI',
+      reduxKey: 'terminologyAPI',
       functionKey: 'getConcept',
     });
 

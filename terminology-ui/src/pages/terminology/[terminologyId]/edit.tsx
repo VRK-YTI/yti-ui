@@ -9,7 +9,7 @@ import {
   getRunningQueriesThunk as getTermSearchRunningQueriesThunk,
 } from '@app/common/components/terminology-search/terminology-search.slice';
 import {
-  getVocabulary,
+  getTerminology,
   getRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
@@ -61,7 +61,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameter for page');
     }
 
-    store.dispatch(getVocabulary.initiate({ id: terminologyId }));
+    store.dispatch(getTerminology.initiate({ id: terminologyId }));
     store.dispatch(
       getOrganizations.initiate({
         language: locale ?? 'fi',

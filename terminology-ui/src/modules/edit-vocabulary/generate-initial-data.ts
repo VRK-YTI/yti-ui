@@ -1,45 +1,45 @@
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import {
+  Terminology,
+  TerminologyType,
+} from '@app/common/interfaces/interfaces-v2';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
-import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
 import { LanguageBlockType } from 'yti-common-ui/form/language-selector';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 export default function generateInitialData(
   lang: string,
-  data?: VocabularyInfoDTO
+  data?: Terminology
 ): NewTerminologyInfo | undefined {
   if (!data) {
     return undefined;
   }
 
   const languages =
-    data.properties.language?.map((l) => {
-      const description =
-        data.properties.description?.find((d) => d.lang === l.value)?.value ??
-        '';
-      const title =
-        data.properties.prefLabel?.find((p) => p.lang === l.value)?.value ?? '';
+    data.languages?.map((l) => {
+      const description = '';
+      const title = '';
 
-      const labelText = l.value;
+      const labelText = l;
 
       return {
         title,
         description,
-        uniqueItemId: l.value,
+        uniqueItemId: l,
         selected: true,
         labelText,
       } as LanguageBlockType;
     }) ?? [];
 
   const infoDomains =
-    data.references.inGroup?.map((group) => {
-      const label = getPropertyValue({
-        property: group.properties.prefLabel,
-        language: lang,
+    data.groups?.map((group) => {
+      const label = getLanguageVersion({
+        data: group.label,
+        lang,
       });
 
       return {
         checked: false,
-        groupId: group.type.graph.id,
+        groupId: group.identifier,
         labelText: label,
         name: label,
         uniqueItemId: group.id,
@@ -47,14 +47,14 @@ export default function generateInitialData(
     }) ?? [];
 
   const contributors =
-    data.references.contributor?.map((org) => {
-      const label = getPropertyValue({
-        property: org.properties.prefLabel,
-        language: lang,
+    data.organizations?.map((org) => {
+      const label = getLanguageVersion({
+        data: org.label,
+        lang,
       });
 
       return {
-        organizationId: org.type.graph.id,
+        organizationId: org.id,
         labelText: label,
         name: label,
         uniqueItemId: org.id,
@@ -71,13 +71,12 @@ export default function generateInitialData(
     .filter((p) => p)[0];
 
   const obj: NewTerminologyInfo = {
-    contact: data.properties.contact?.[0].value ?? '',
+    contact: data.contact ?? '',
     languages: languages,
     infoDomains: infoDomains,
     prefix: [prefix ?? '', true],
-    status: data.properties.status?.[0].value ?? 'DRAFT',
-    type:
-      data.properties.terminologyType?.[0].value ?? 'TERMINOLOGICAL_VOCABULARY',
+    status: data.status ?? 'DRAFT',
+    type: data.type ?? TerminologyType.TERMINOLOGICAL_VOCABULARY,
     contributors: contributors,
   };
 

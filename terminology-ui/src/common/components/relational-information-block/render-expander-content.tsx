@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useGetConceptQuery } from '../concept/concept.slice';
-import { useGetVocabularyQuery } from '../vocabulary/vocabulary.slice';
+import { useGetTerminologyQuery } from '../vocabulary/vocabulary.slice';
 import { ExpanderContent } from 'suomifi-ui-components';
 import SaveSpinner from 'yti-common-ui/save-spinner';
 import { BasicBlock } from 'yti-common-ui/block';
@@ -28,7 +28,7 @@ function RenderExpanderContent({
     },
     { skip: !isOpen }
   );
-  const { data: terminology } = useGetVocabularyQuery(
+  const { data: terminology } = useGetTerminologyQuery(
     {
       id: terminologyId,
     },
@@ -60,14 +60,7 @@ function RenderExpanderContent({
 
       <Separator isLarge />
 
-      {terminology && (
-        <PropertyBlock
-          title={t('contributor')}
-          property={
-            terminology?.references.contributor?.[0].properties.prefLabel
-          }
-        />
-      )}
+      {terminology && <div>TODO contributor</div>}
 
       <BasicBlock title={t('modified-at')}>
         <FormattedDate date={concept?.lastModifiedDate} />,{' '}
