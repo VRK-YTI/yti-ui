@@ -1,7 +1,25 @@
+import { Group } from 'yti-common-ui/interfaces/group.interface';
+import { Organization } from 'yti-common-ui/interfaces/organization.interface';
 import { Status } from 'yti-common-ui/interfaces/status.interface';
 
+export interface Terminology {
+  uri: string;
+  label: LocalizedValue;
+  description: LocalizedValue;
+  prefix: string;
+  type: TerminologyType;
+  status: Status;
+  languages: string[];
+  contact: string;
+  groups: Group[];
+  organizations: Organization[];
+  created: string;
+  modified: string;
+  creator: { id: string; name: string };
+  modifier: { id: string; name: string };
+  origin: string;
+}
 /* build fails for empty interfaces
-export interface Terminology {}
 
 export interface TerminologyInfo {}
 

@@ -10,7 +10,7 @@ import Vocabulary from '@app/modules/vocabulary';
 import {
   getConceptResult,
   getRunningQueriesThunk,
-  getVocabulary,
+  getTerminology,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
 import {
@@ -21,9 +21,9 @@ import PageHead from 'yti-common-ui/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getStoreData } from '@app/common/utils/get-store-data';
 import {
-  getVocabularyCount,
-  getStatusCounts,
   getRunningQueriesThunk as countsGetRunningQueriesThunk,
+  getStatusCounts,
+  getVocabularyCount,
 } from '@app/common/components/counts/counts.slice';
 import { wrapper } from '@app/store';
 
@@ -97,7 +97,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       urlState.type = Array.isArray(query.type) ? query.type[0] : query.type;
     }
 
-    store.dispatch(getVocabulary.initiate({ id }));
+    store.dispatch(getTerminology.initiate({ id }));
     store.dispatch(
       getConceptResult.initiate({
         urlState: urlState,
@@ -113,8 +113,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     const vocabularyData = getStoreData({
       state: store.getState(),
-      reduxKey: 'vocabularyAPI',
-      functionKey: 'getVocabulary',
+      reduxKey: 'terminologyAPI',
+      functionKey: 'getTerminology',
     });
 
     const title = getPropertyValue({

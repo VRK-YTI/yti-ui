@@ -1,6 +1,5 @@
 import { Collection } from '@app/common/interfaces/collection.interface';
 import { Concept } from '@app/common/interfaces/concept.interface';
-import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
 import {
   translateRemovalModalConfirmation,
   translateRemovalModalDescription,
@@ -39,13 +38,14 @@ import {
   RemoveModalContent,
 } from './removal-modal.styles';
 import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
+import { Terminology } from '@app/common/interfaces/interfaces-v2';
 
 interface RemovalModalProps {
   nonDescriptive?: boolean;
   removalData:
     | {
         type: 'terminology';
-        data?: VocabularyInfoDTO;
+        data?: Terminology;
       }
     | {
         type: 'concept';
@@ -118,7 +118,7 @@ export default function RemovalModal({
   const handleVisibility = () => {
     if (
       removalData.type === 'terminology' &&
-      removalData.data?.properties.status?.[0].value === 'VALID'
+      removalData.data?.status === 'VALID'
     ) {
       setShowError(true);
       return;

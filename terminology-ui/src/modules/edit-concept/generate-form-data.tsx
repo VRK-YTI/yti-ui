@@ -5,6 +5,7 @@ import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import getDiagramValues from '@app/common/utils/get-diagram-values';
 import { v4 } from 'uuid';
 import { ConceptTermType, EditConceptType } from './new-concept.types';
+import { LocalizedValue } from '@app/common/interfaces/interfaces-v2';
 
 export default function generateFormData(
   preferredTerms: {
@@ -13,7 +14,7 @@ export default function generateFormData(
     regex: string;
   }[],
   conceptData?: Concept,
-  terminologyLabel?: Property[]
+  terminologyLabel?: LocalizedValue
 ): EditConceptType {
   if (!conceptData) {
     return {
@@ -145,10 +146,7 @@ export default function generateFormData(
                     })
                     .reduce((l) => l) ?? {},
                 terminologyId: broad.type.graph.id,
-                terminologyLabel:
-                  terminologyLabel
-                    ?.map((l) => ({ [l.lang]: l.value }))
-                    .reduce((l) => l) ?? {},
+                terminologyLabel: terminologyLabel ?? {},
               };
             }
           }) ?? [],
@@ -170,10 +168,7 @@ export default function generateFormData(
                     })
                     .reduce((l) => l) ?? {},
                 terminologyId: part.type.graph.id,
-                terminologyLabel:
-                  terminologyLabel
-                    ?.map((l) => ({ [l.lang]: l.value }))
-                    .reduce((l) => l) ?? {},
+                terminologyLabel: terminologyLabel ?? {},
               };
             }
           }) ?? [],
@@ -195,10 +190,7 @@ export default function generateFormData(
                     })
                     .reduce((l) => l) ?? {},
                 terminologyId: part.type.graph.id,
-                terminologyLabel:
-                  terminologyLabel
-                    ?.map((l) => ({ [l.lang]: l.value }))
-                    .reduce((l) => l) ?? {},
+                terminologyLabel: terminologyLabel ?? {},
               };
             }
           }) ?? [],
@@ -220,10 +212,7 @@ export default function generateFormData(
                     })
                     .reduce((l) => l) ?? {},
                 terminologyId: narrow.type.graph.id,
-                terminologyLabel:
-                  terminologyLabel
-                    ?.map((l) => ({ [l.lang]: l.value }))
-                    .reduce((l) => l) ?? {},
+                terminologyLabel: terminologyLabel ?? {},
               };
             }
           }) ?? [],
@@ -245,10 +234,7 @@ export default function generateFormData(
                     })
                     .reduce((l) => l) ?? {},
                 terminologyId: r.type.graph.id,
-                terminologyLabel:
-                  terminologyLabel
-                    ?.map((l) => ({ [l.lang]: l.value }))
-                    .reduce((l) => l) ?? {},
+                terminologyLabel: terminologyLabel ?? {},
               };
             }
           }) ?? [],

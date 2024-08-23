@@ -18,7 +18,6 @@ import {
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import PropertyValue from '@app/common/components/property-value';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import Separator from 'yti-common-ui/separator';
 import DetailsExpander from './details-expander';
@@ -32,7 +31,7 @@ import {
 import { useStoreDispatch } from '@app/store';
 import { useRouter } from 'next/router';
 import { setTitle } from '@app/common/components/title/title.slice';
-import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
+import { useGetTerminologyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
 import { getProperty } from '@app/common/utils/get-property';
 import { MainTitle, BadgeBar } from 'yti-common-ui/title-block';
@@ -44,6 +43,7 @@ import RemovalModal from '@app/common/components/removal-modal';
 import { getBlockData } from './utils';
 import { StatusChip } from 'yti-common-ui/status-chip';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -55,12 +55,14 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const { data: terminology, error: terminologyError } = useGetVocabularyQuery({
-    id: terminologyId,
-  });
+  const { data: terminology, error: terminologyError } = useGetTerminologyQuery(
+    {
+      id: terminologyId,
+    }
+  );
   const hasPermission = HasPermission({
     actions: ['EDIT_CONCEPT', 'DELETE_CONCEPT'],
-    targetOrganization: terminology?.references.contributor,
+    targetOrganization: terminology?.organizations,
   });
   const { data: concept, error: conceptError } = useGetConceptQuery({
     terminologyId,
@@ -95,9 +97,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
   const status =
     getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
-  const email = getPropertyValue({
-    property: terminology?.properties.contact,
-  }).trim();
+  const email = terminology?.contact?.trim() ?? '';
 
   useEffect(() => {
     if (concept) {
@@ -111,7 +111,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
         <Breadcrumb>
           {!terminologyError && (
             <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-              <PropertyValue property={terminology?.properties.prefLabel} />
+              {getLanguageVersion({
+                data: terminology?.label,
+                lang: i18n.language,
+              })}
             </BreadcrumbLink>
           )}
           <BreadcrumbLink url="" current>
@@ -152,7 +155,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
       <Breadcrumb>
         {!terminologyError && (
           <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-            <PropertyValue property={terminology?.properties.prefLabel} />
+            {getLanguageVersion({
+              data: terminology?.label,
+              lang: i18n.language,
+            })}
           </BreadcrumbLink>
         )}
         <BreadcrumbLink
@@ -168,7 +174,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           <MainTitle>{prefLabel}</MainTitle>
           <BadgeBar>
             {t('heading')}
-            <PropertyValue property={terminology?.properties.prefLabel} />
+            {getLanguageVersion({
+              data: terminology?.label,
+              lang: i18n.language,
+            })}
             <StatusChip status={status}>
               {translateStatus(status, t)}
             </StatusChip>
@@ -244,19 +253,12 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             id="organization"
           >
             <PropertyList $smBot={true}>
-              {terminology?.references.contributor
+              {terminology?.organizations
                 ?.filter(
-                  (c) =>
-                    c &&
-                    c.properties.prefLabel &&
-                    !childOrganizations?.includes(c.id)
+                  (o) => o && o.label && !childOrganizations?.includes(o.id)
                 )
-                .map((contributor) => (
-                  <li key={contributor.id}>
-                    <PropertyValue
-                      property={contributor?.properties.prefLabel}
-                    />
-                  </li>
+                .map((organization) => (
+                  <li key={organization.id}>{organization?.label}</li>
                 ))}
             </PropertyList>
           </BasicBlock>

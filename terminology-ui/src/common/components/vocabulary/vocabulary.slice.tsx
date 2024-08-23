@@ -3,12 +3,15 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { Collection } from '@app/common/interfaces/collection.interface';
 import {
   VocabulariesDTO,
-  VocabularyConcepts,
   VocabularyCopyInfo,
-  VocabularyInfoDTO,
 } from '@app/common/interfaces/vocabulary.interface';
 import { UrlState } from '@app/common/utils/hooks/use-url-state';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
+import {
+  ConceptResponseObject,
+  SearchResponse,
+  Terminology,
+} from '@app/common/interfaces/interfaces-v2';
 
 export const vocabularyInitialState = {};
 
@@ -18,10 +21,10 @@ export const vocabularySlice = createSlice({
   reducers: {},
 });
 
-export const vocabularyApi = createApi({
-  reducerPath: 'vocabularyAPI',
+export const terminologyApi = createApi({
+  reducerPath: 'terminologyApi',
   baseQuery: getTerminologyApiBaseQuery(),
-  tagTypes: ['Vocabulary'],
+  tagTypes: ['Terminology'],
   endpoints: (builder) => ({
     getCollections: builder.query<Collection[], string>({
       query: (terminologyId) => ({
@@ -30,13 +33,13 @@ export const vocabularyApi = createApi({
       }),
     }),
     getConceptResult: builder.query<
-      VocabularyConcepts,
+      SearchResponse<ConceptResponseObject>,
       { urlState: UrlState; id: string; language: string }
     >({
       query: (value) => ({
-        url: '/searchConcept',
-        method: 'POST',
-        data: {
+        url: '/frontend/search-concepts',
+        method: 'GET',
+        params: {
           highlight: true,
           pageFrom: Math.max(0, (value.urlState.page - 1) * 50),
           pageSize: 50,
@@ -48,13 +51,13 @@ export const vocabularyApi = createApi({
             ? value.language
             : 'fi',
           status: value.urlState.status.map((s) => s.toUpperCase()),
-          terminologyId: [value.id],
+          namespace: `https://iri.suomi.fi/terminology/${value.id}/`,
         },
       }),
     }),
-    getVocabulary: builder.query<VocabularyInfoDTO, { id: string }>({
+    getTerminology: builder.query<Terminology, { id: string }>({
       query: (value) => ({
-        url: `/vocabulary?graphId=${value.id}`,
+        url: `/terminology/${value.id}`,
         method: 'GET',
       }),
     }),
@@ -105,16 +108,16 @@ export const vocabularyApi = createApi({
 export const {
   useGetCollectionsQuery,
   useGetConceptResultQuery,
-  useGetVocabularyQuery,
+  useGetTerminologyQuery,
   usePostNewVocabularyMutation,
   usePostCreateVersionMutation,
   useDeleteVocabularyMutation,
   useGetIfNamespaceInUseMutation,
   useGetVocabulariesQuery,
   util: { getRunningQueriesThunk },
-} = vocabularyApi;
+} = terminologyApi;
 
 export default vocabularySlice.reducer;
 
-export const { getVocabulary, getCollections, getConceptResult } =
-  vocabularyApi.endpoints;
+export const { getTerminology, getCollections, getConceptResult } =
+  terminologyApi.endpoints;

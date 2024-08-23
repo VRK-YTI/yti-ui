@@ -7,7 +7,7 @@ import {
   setLogin,
   useGetAuthenticatedUserQuery,
 } from '../components/login/login.slice';
-import { Organization } from '../interfaces/organization.interface';
+import { Organization } from 'yti-common-ui/interfaces/organization.interface';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 
 const actions = [

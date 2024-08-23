@@ -10,7 +10,7 @@ import {
 import mockRouter from 'next-router-mock';
 import { v4 } from 'uuid';
 import { adminControlsSlice } from '../admin-controls/admin-controls.slice';
-import { vocabularyApi } from '../vocabulary/vocabulary.slice';
+import { terminologyApi } from '../vocabulary/vocabulary.slice';
 import { subscriptionApi } from '../subscription/subscription.slice';
 import { screen, waitFor } from '@testing-library/react';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
@@ -19,7 +19,7 @@ jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 const reducers = [
   adminControlsSlice,
-  vocabularyApi,
+  terminologyApi,
   loginApi,
   subscriptionApi,
   terminologySearchApi,
