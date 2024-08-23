@@ -2417,7 +2417,7 @@ export const extensiveDataReturned = generateFormData(
     },
     uri: 'uri.suomi.fi/terminology/sanasto/concept-1000',
   },
-  [{ lang: 'fi', value: 'keskeneräinen sanasto', regex: '(?s)^.*$)' }]
+  { fi: 'keskeneräinen sanasto' }
 );
 
 export const extensiveDataExpected = {

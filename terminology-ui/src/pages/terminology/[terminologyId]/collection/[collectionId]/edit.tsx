@@ -10,7 +10,7 @@ import PageHead from 'yti-common-ui/page-head';
 import { getStoreData } from '@app/common/utils/get-store-data';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import {
-  getVocabulary,
+  getTerminology,
   getRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
@@ -70,7 +70,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameter for page');
     }
 
-    store.dispatch(getVocabulary.initiate({ id: terminologyId }));
+    store.dispatch(getTerminology.initiate({ id: terminologyId }));
     store.dispatch(
       getCollection.initiate({
         collectionId: collectionId,

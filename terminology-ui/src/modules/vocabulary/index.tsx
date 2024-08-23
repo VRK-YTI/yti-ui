@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   useGetCollectionsQuery,
   useGetConceptResultQuery,
-  useGetVocabularyQuery,
+  useGetTerminologyQuery,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   default as SearchResults,
@@ -26,7 +26,6 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
-import PropertyValue from '@app/common/components/property-value';
 import { useGetVocabularyCountQuery } from '@app/common/components/counts/counts.slice';
 import { TerminologyListFilter } from './terminology-list-filter';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
@@ -52,6 +51,8 @@ import { useStoreDispatch } from '@app/store';
 import { setTitle } from '@app/common/components/title/title.slice';
 import { StatusChip } from 'yti-common-ui/status-chip';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { TerminologyType } from '@app/common/interfaces/interfaces-v2';
 
 const NewConceptModal = dynamic(
   () => import('@app/common/components/new-concept-modal')
@@ -84,7 +85,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
     urlState,
     language: i18n.language,
   });
-  const { data: info, error: infoError } = useGetVocabularyQuery({
+  const { data: info, error: infoError } = useGetTerminologyQuery({
     id,
   });
   const { data: counts } = useGetVocabularyCountQuery(id);
@@ -105,7 +106,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
       return [];
     }
 
-    return conceptsData.concepts.map((concept) => ({
+    return conceptsData.responseObjects.map((concept) => ({
       id: concept.id,
       description:
         getPrefLabel({
@@ -117,7 +118,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
         prefLabels: concept.label,
         lang: urlState.lang !== '' ? urlState.lang : i18n.language,
       }),
-      titleLink: `${id}/concept/${concept.id}`,
+      titleLink: `${id}/concept/${concept.identifier}`,
       type: t('vocabulary-info-concept'),
     }));
   }, [conceptsData, t, i18n.language, id, urlState.lang]);
@@ -169,14 +170,9 @@ export default function Vocabulary({ id }: VocabularyProps) {
 
   useEffect(() => {
     dispatch(
-      setTitle(
-        getPropertyValue({
-          property: info?.properties.prefLabel,
-          language: i18n.language,
-        })
-      )
+      setTitle(getLanguageVersion({ data: info?.label, lang: i18n.language }))
     );
-  }, [dispatch, info?.properties.prefLabel, i18n.language]);
+  }, [dispatch, info, i18n.language]);
 
   if (infoError) {
     return (
@@ -209,35 +205,31 @@ export default function Vocabulary({ id }: VocabularyProps) {
     <>
       <Breadcrumb>
         <BreadcrumbLink url={`/terminology/${id}`} current>
-          <PropertyValue property={info?.properties.prefLabel} />
+          {getLanguageVersion({ data: info?.label, lang: i18n.language })}
         </BreadcrumbLink>
       </Breadcrumb>
 
       <main id="main">
         <Title
-          title={getPropertyValue({
-            property: info?.properties.prefLabel,
-            language: i18n.language,
+          title={getLanguageVersion({
+            data: info?.label,
+            lang: i18n.language,
           })}
           extra={
             <>
               <TitleTypeAndStatusWrapper>
                 <TitleType>
                   {translateTerminologyType(
-                    info?.properties.terminologyType?.[0].value ??
-                      'TERMINOLOGICAL_VOCABULARY',
+                    info?.type ?? TerminologyType.TERMINOLOGICAL_VOCABULARY,
                     t
                   )}
                 </TitleType>{' '}
                 &middot;
                 <StatusChip
-                  status={info?.properties.status?.[0].value ?? 'DRAFT'}
+                  status={info?.status.toString() ?? 'DRAFT'}
                   id="status-chip"
                 >
-                  {translateStatus(
-                    info?.properties.status?.[0].value ?? 'DRAFT',
-                    t
-                  )}
+                  {translateStatus(info?.status ?? 'DRAFT', t)}
                 </StatusChip>
               </TitleTypeAndStatusWrapper>
               <InfoExpander
@@ -251,7 +243,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
           {!isSmall ? (
             <TerminologyListFilter
               counts={counts}
-              languages={info?.properties.language}
+              languages={info?.languages}
             />
           ) : (
             <Modal
@@ -267,7 +259,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                   onModalClose={() => setShowModal(false)}
                   resultCount={conceptsData?.totalHitCount}
                   counts={counts}
-                  languages={info?.properties.language}
+                  languages={info?.languages}
                 />
               </ModalContent>
             </Modal>
@@ -281,14 +273,12 @@ export default function Vocabulary({ id }: VocabularyProps) {
               </Heading>
               {HasPermission({
                 actions: 'CREATE_CONCEPT',
-                targetOrganization: info?.references.contributor,
+                targetOrganization: info?.organizations,
               }) && (
                 <>
                   <NewConceptModal
                     terminologyId={id}
-                    languages={
-                      info?.properties.language?.map(({ value }) => value) ?? []
-                    }
+                    languages={info?.languages ?? []}
                   />
                   <ConceptImportModal
                     refetch={refetchConcepts}

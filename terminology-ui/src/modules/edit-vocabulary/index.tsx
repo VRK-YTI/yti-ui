@@ -5,10 +5,9 @@ import {
   useGetAuthenticatedUserQuery,
 } from '@app/common/components/login/login.slice';
 import { useEditTerminologyMutation } from '@app/common/components/modify/modify.slice';
-import PropertyValue from '@app/common/components/property-value';
 import SaveSpinner from 'yti-common-ui/save-spinner';
 import Title from 'yti-common-ui/title';
-import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
+import { useGetTerminologyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -32,7 +31,6 @@ import {
   ButtonBlock,
 } from './edit-vocabulary.styles';
 import generateInitialData from './generate-initial-data';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import {
   TitleType,
   TitleTypeAndStatusWrapper,
@@ -42,6 +40,8 @@ import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
 import { setTitle } from '@app/common/components/title/title.slice';
 import { StatusChip } from 'yti-common-ui/status-chip';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { TerminologyType } from '@app/common/interfaces/interfaces-v2';
 
 interface EditVocabularyProps {
   terminologyId: string;
@@ -51,7 +51,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
   const { t, i18n } = useTranslation('admin');
   const router = useRouter();
   const dispatch = useStoreDispatch();
-  const { data: info, error: infoError } = useGetVocabularyQuery({
+  const { data: info, error: infoError } = useGetTerminologyQuery({
     id: terminologyId,
   });
   const user = useSelector(selectLogin());
@@ -77,14 +77,14 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
 
     const newData = generateNewTerminology({
       data: data,
-      code: info?.code,
-      createdBy: info?.createdBy,
-      createdDate: info?.createdDate,
-      id: info?.id,
+      code: info?.prefix,
+      createdBy: '',
+      createdDate: '',
+      id: info?.prefix,
       lastModifiedBy: `${user.firstName} ${user.lastName}`,
       terminologyId: terminologyId,
       uri: info?.uri,
-      origin: info?.properties.origin?.[0].value,
+      origin: '',
     });
 
     if (!newData) {
@@ -108,13 +108,13 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
   useEffect(() => {
     dispatch(
       setTitle(
-        getPropertyValue({
-          property: info?.properties.prefLabel,
-          language: i18n.language,
+        getLanguageVersion({
+          data: info?.label,
+          lang: i18n.language,
         })
       )
     );
-  }, [dispatch, info?.properties.prefLabel, i18n.language]);
+  }, [dispatch, info, i18n.language]);
 
   if (infoError || !info) {
     return (
@@ -132,33 +132,26 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
     <>
       <Breadcrumb>
         <BreadcrumbLink url={`/terminology/${terminologyId}`} current>
-          <PropertyValue property={info.properties.prefLabel} />
+          {getLanguageVersion({ data: info?.label, lang: i18n.language })}
         </BreadcrumbLink>
       </Breadcrumb>
 
       <Title
-        title={getPropertyValue({
-          property: info?.properties.prefLabel,
-          language: i18n.language,
+        title={getLanguageVersion({
+          data: info?.label,
+          lang: i18n.language,
         })}
         extra={
           <TitleTypeAndStatusWrapper>
             <TitleType>
               {translateTerminologyType(
-                info?.properties.terminologyType?.[0].value ??
-                  'TERMINOLOGICAL_VOCABULARY',
+                info?.type ?? TerminologyType.TERMINOLOGICAL_VOCABULARY,
                 t
               )}
             </TitleType>{' '}
             &middot;
-            <StatusChip
-              status={info?.properties.status?.[0].value ?? 'DRAFT'}
-              id="status-chip"
-            >
-              {translateStatus(
-                info?.properties.status?.[0].value ?? 'DRAFT',
-                t
-              )}
+            <StatusChip status={info?.status ?? 'DRAFT'} id="status-chip">
+              {translateStatus(info?.status ?? 'DRAFT', t)}
             </StatusChip>
           </TitleTypeAndStatusWrapper>
         }

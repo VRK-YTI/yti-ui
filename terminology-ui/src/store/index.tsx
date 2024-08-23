@@ -10,7 +10,7 @@ import {
   terminologySearchApi,
 } from '@app/common/components/terminology-search/terminology-search.slice';
 import {
-  vocabularyApi,
+  terminologyApi,
   vocabularySlice,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import { conceptApi } from '@app/common/components/concept/concept.slice';
@@ -38,7 +38,7 @@ const reducers = {
   [terminologySearchSlice.name]: terminologySearchSlice.reducer,
   [terminologySearchApi.reducerPath]: terminologySearchApi.reducer,
   [vocabularySlice.name]: vocabularySlice.reducer,
-  [vocabularyApi.reducerPath]: vocabularyApi.reducer,
+  [terminologyApi.reducerPath]: terminologyApi.reducer,
   [conceptApi.reducerPath]: conceptApi.reducer,
   [collectionApi.reducerPath]: collectionApi.reducer,
   [countsApi.reducerPath]: countsApi.reducer,
@@ -69,7 +69,7 @@ export const makeStore: MakeStore<any> = ({
     middleware: (getDefaultMiddleware) => [
       ...getDefaultMiddleware({ thunk: { extraArgument: context } }),
       terminologySearchApi.middleware,
-      vocabularyApi.middleware,
+      terminologyApi.middleware,
       conceptApi.middleware,
       collectionApi.middleware,
       countsApi.middleware,
