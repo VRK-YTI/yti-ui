@@ -1,3 +1,4 @@
+import { LocalizedListItem } from '../interfaces/interfaces-v2';
 import { Term } from '../interfaces/term.interface';
 import { Property } from '../interfaces/termed-data-types.interface';
 
@@ -40,17 +41,17 @@ export function compareLocales(
  * @returns
  */
 export function sortPropertyListByLanguage(
-  properties?: Property[]
-): Property[] {
+  properties?: LocalizedListItem[]
+): LocalizedListItem[] {
   // map properties by language
   const propertiesByLanguage =
     properties?.slice().reduce((result, property) => {
-      if (!result[property.lang]) {
-        result[property.lang] = [];
+      if (!result[property.language]) {
+        result[property.language] = [];
       }
-      result[property.lang].unshift(property);
+      result[property.language].unshift(property);
       return result;
-    }, {} as { [key: string]: Property[] }) ?? {};
+    }, {} as { [key: string]: LocalizedListItem[] }) ?? {};
 
   // sort by key (=language) and flat map
   return Object.keys(propertiesByLanguage)

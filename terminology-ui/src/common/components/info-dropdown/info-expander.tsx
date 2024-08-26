@@ -83,20 +83,12 @@ export default function InfoExpander({
       </ExpanderTitleButton>
       <ExpanderContent>
         <BasicBlock title={t('vocabulary-info-name')}>
-          <MultilingualBlock
-            data={Object.entries(data?.label)
-              .sort((a, b) => compareLocales(a[0], b[0]))
-              .map((l) => ({ lang: l[0], value: l[1] }))}
-          />
+          <MultilingualBlock data={data.label} />
         </BasicBlock>
 
         <BasicBlock title={t('vocabulary-info-description')}>
           {Object.keys(data.description).length > 0 ? (
-            <MultilingualBlock
-              data={Object.entries(data?.description)
-                .sort((a, b) => compareLocales(a[0], b[0]))
-                .map((l) => ({ lang: l[0], value: l[1] }))}
-            />
+            <MultilingualBlock data={data.description} />
           ) : (
             <></>
           )}

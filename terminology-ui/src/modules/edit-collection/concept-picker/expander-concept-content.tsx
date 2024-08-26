@@ -60,7 +60,7 @@ export function ExpanderConceptContent({
 
       <BasicBlock title={t('last-modified')}>
         <FormattedDate date={concept.modified} />
-        {data?.lastModifiedBy && `, ${data?.lastModifiedBy}`}
+        {/*data?.lastModifiedBy && `, ${data?.lastModifiedBy}`*/}
       </BasicBlock>
     </ExpanderContent>
   );

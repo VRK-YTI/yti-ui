@@ -49,6 +49,8 @@ function RenderExpanderContent({
 
   return (
     <ExpanderContent>
+      <></>
+      {/*TODO}
       <MultilingualPropertyBlock
         title={<h2>{t('preferred-terms')}</h2>}
         data={concept?.references.prefLabelXl?.[0].properties?.prefLabel}
@@ -66,6 +68,7 @@ function RenderExpanderContent({
         <FormattedDate date={concept?.lastModifiedDate} />,{' '}
         {concept?.lastModifiedBy}
       </BasicBlock>
+      {*/}
     </ExpanderContent>
   );
 }

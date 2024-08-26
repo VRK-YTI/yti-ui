@@ -15,25 +15,93 @@ export interface Terminology {
   organizations: Organization[];
   created: string;
   modified: string;
-  creator: { id: string; name: string };
-  modifier: { id: string; name: string };
+  creator: UserMeta;
+  modifier: UserMeta;
   origin: string;
 }
+export interface ConceptInfo {
+  identifier: string;
+  uri: string;
+  created: string;
+  modified: string;
+  creator: UserMeta;
+  modifier: UserMeta;
+  definition: LocalizedValue;
+  notes: LocalizedListItem[];
+  examples: LocalizedListItem[];
+  subjectArea: string;
+  status: Status;
+  sources: string[];
+  links: {
+    name: LocalizedValue;
+    uri: string;
+    description: LocalizedValue;
+  }[];
+  changeNote: string;
+  historyNote: string;
+  conceptClass: string;
+  editorialNotes: string[];
+  recommendedTerms: Term[];
+  synonyms: Term[];
+  notRecommendedTerms: Term[];
+  searchTerms: Term[];
+  broader: ConceptReferenceInfo[];
+  narrower: ConceptReferenceInfo[];
+  isPartOf: ConceptReferenceInfo[];
+  hasPart: ConceptReferenceInfo[];
+  related: ConceptReferenceInfo[];
+  broadMatch: ConceptReferenceInfo[];
+  narrowMatch: ConceptReferenceInfo[];
+  exactMatch: ConceptReferenceInfo[];
+  closeMatch: ConceptReferenceInfo[];
+  relatedMatch: ConceptReferenceInfo[];
+  memberOf: ConceptReferenceInfo[];
+}
+
+export interface Term {
+  language: string;
+  label?: string;
+  homographNumber: number;
+  status?: Status;
+  termInfo?: string;
+  scope?: string;
+  historyNote?: string;
+  changeNote?: string;
+  termStyle?: string;
+  termFamily?: string;
+  termConjugation?: string;
+  termEquivalency?: string;
+  wordClass?: string;
+  sources?: string[];
+  editorialNotes?: string[];
+}
+
+export interface ConceptReferenceInfo {
+  conceptURI: string;
+  prefix: string;
+  identifier: string;
+  label: LocalizedValue;
+}
+
+export interface ConceptCollectionInfo {
+  identifier: string;
+  prefix: string;
+  members: {
+    identifier: string;
+    label: LocalizedValue;
+  };
+}
+
 /* build fails for empty interfaces
 
 export interface TerminologyInfo {}
 
-export interface Concept {}
 
 export interface ConceptInfo {}
 
-export interface Term {}
 
 export interface ConceptCollection {}
 
-export interface ConceptCollectionInfo {}
-
-export interface ConceptReferenceInfo {}
 */
 
 export interface SearchRequest {
@@ -85,6 +153,16 @@ export interface SearchResponse<T extends ResponseObject> {
 
 export interface LocalizedValue {
   [key: string]: string;
+}
+
+export interface LocalizedListItem {
+  language: string;
+  value: string;
+}
+
+export interface UserMeta {
+  id: string;
+  name: string;
 }
 
 export enum TerminologyType {

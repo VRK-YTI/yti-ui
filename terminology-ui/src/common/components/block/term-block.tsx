@@ -1,12 +1,12 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
-import { Term } from '@app/common/interfaces/term.interface';
 import TermModal from '@app/common/components/term-modal';
 import MultilingualBlock, {
   MultilingualBlockItemMapper,
 } from './multilingual-block';
 import { TermWrapper } from './term-block.styles';
 import { translateStatus } from '@app/common/utils/translation-helpers';
+import { Term } from '@app/common/interfaces/interfaces-v2';
 
 export interface TermBlockProps {
   title: React.ReactNode;
@@ -27,15 +27,14 @@ export default function TermBlock({
     term: Term;
     type: string;
   }> = ({ term, type }) => ({
-    language: term.properties.prefLabel?.[0].lang ?? '',
+    language: term.language,
     content: (
       <TermWrapper>
-        <span lang={term.properties.prefLabel?.[0].lang}>
+        <span lang={term.language}>
           <TermModal data={{ term: term, type: type }} />
         </span>
         <span>
-          {type},{' '}
-          {translateStatus(term.properties.status?.[0].value ?? 'DRAFT', t)}
+          {type}, {translateStatus(term.status ?? 'DRAFT', t)}
         </span>
       </TermWrapper>
     ),
