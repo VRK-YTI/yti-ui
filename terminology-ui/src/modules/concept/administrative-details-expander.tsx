@@ -5,47 +5,28 @@ import {
   ExpanderTitleButton,
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
-import { PropertyBlock } from '@app/common/components/block';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { Concept } from '@app/common/interfaces/concept.interface';
+
 import { PropertyList } from './concept.styles';
+import { ConceptInfo } from '@app/common/interfaces/interfaces-v2';
 
-export function hasAdministrativeDetails(concept?: Concept, language?: string) {
-  const rest = { language, fallbackLanguage: 'fi' };
-
-  if (getPropertyValue({ property: concept?.properties.changeNote, ...rest })) {
-    return true;
-  }
-
-  if (
-    getPropertyValue({ property: concept?.properties.historyNote, ...rest })
-  ) {
-    return true;
-  }
-
-  if (
-    getPropertyValue({ property: concept?.properties.editorialNote, ...rest })
-  ) {
-    return true;
-  }
-
-  if (getPropertyValue({ property: concept?.properties.notation, ...rest })) {
-    return true;
-  }
-
-  return false;
+export function hasAdministrativeDetails(concept?: ConceptInfo) {
+  return (
+    concept?.changeNote ||
+    concept?.historyNote ||
+    concept?.editorialNotes.length
+  );
 }
 
 export interface AdministrativeDetailsExpanderProps {
-  concept?: Concept;
+  concept?: ConceptInfo;
 }
 
 export default function AdministrativeDetailsExpander({
   concept,
 }: AdministrativeDetailsExpanderProps) {
-  const { t, i18n } = useTranslation('concept');
+  const { t } = useTranslation('concept');
 
-  if (!hasAdministrativeDetails(concept, i18n.language)) {
+  if (!hasAdministrativeDetails(concept)) {
     return null;
   }
 
@@ -55,25 +36,27 @@ export default function AdministrativeDetailsExpander({
         {t('section-administrative-details')}
       </ExpanderTitleButton>
       <ExpanderContent>
-        <PropertyBlock
-          title={t('field-change-note')}
-          property={concept?.properties.changeNote}
-        />
-        <PropertyBlock
-          title={t('field-history-note')}
-          property={concept?.properties.historyNote}
-        />
-        <BasicBlock title={t('field-editorial-note')}>
-          <PropertyList>
-            {concept?.properties.editorialNote?.map((note) => (
-              <li key={note.value}>{note.value}</li>
-            ))}
-          </PropertyList>
-        </BasicBlock>
-        <PropertyBlock
-          title={t('field-notation')}
-          property={concept?.properties.notation}
-        />
+        {concept?.changeNote && (
+          <BasicBlock title={t('field-change-note')}>
+            {concept?.changeNote}
+          </BasicBlock>
+        )}
+
+        {concept?.historyNote && (
+          <BasicBlock title={t('field-history-note')}>
+            {concept?.historyNote}
+          </BasicBlock>
+        )}
+
+        {concept?.editorialNotes && concept?.editorialNotes?.length > 0 && (
+          <BasicBlock title={t('field-editorial-note')}>
+            <PropertyList>
+              {concept?.editorialNotes?.map((note, idx) => (
+                <li key={`note-${idx}`}>{note}</li>
+              ))}
+            </PropertyList>
+          </BasicBlock>
+        )}
       </ExpanderContent>
     </Expander>
   );

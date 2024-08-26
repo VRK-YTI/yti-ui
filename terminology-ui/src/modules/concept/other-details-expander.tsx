@@ -4,36 +4,23 @@ import {
   ExpanderContent,
   ExpanderTitleButton,
 } from 'suomifi-ui-components';
-import { PropertyBlock } from '@app/common/components/block';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { Concept } from '@app/common/interfaces/concept.interface';
+import { ConceptInfo } from '@app/common/interfaces/interfaces-v2';
+import { BasicBlock } from 'yti-common-ui/block';
 
-export function hasOtherDetails(concept?: Concept, language?: string) {
-  const rest = { language, fallbackLanguage: 'fi' };
-
-  if (
-    getPropertyValue({ property: concept?.properties.conceptClass, ...rest })
-  ) {
-    return true;
-  }
-
-  if (getPropertyValue({ property: concept?.properties.wordClass, ...rest })) {
-    return true;
-  }
-
-  return false;
+export function hasOtherDetails(concept?: ConceptInfo) {
+  concept?.conceptClass;
 }
 
 export interface OtherDetailsExpanderProps {
-  concept?: Concept;
+  concept?: ConceptInfo;
 }
 
 export default function OtherDetailsExpander({
   concept,
 }: OtherDetailsExpanderProps) {
-  const { t, i18n } = useTranslation('concept');
+  const { t } = useTranslation('concept');
 
-  if (!hasOtherDetails(concept, i18n.language)) {
+  if (!concept?.conceptClass) {
     return null;
   }
 
@@ -41,18 +28,11 @@ export default function OtherDetailsExpander({
     <Expander id="other-details-expander">
       <ExpanderTitleButton>{t('section-other-details')}</ExpanderTitleButton>
       <ExpanderContent>
-        {/* <MultilingualPropertyBlock
-          title="Aihealue"
-          data={concept?.properties.something}
-        /> */}
-        <PropertyBlock
-          title={t('field-concept-class')}
-          property={concept?.properties.conceptClass}
-        />
-        <PropertyBlock
-          title={t('field-word-class')}
-          property={concept?.properties.wordClass}
-        />
+        {concept?.conceptClass && (
+          <BasicBlock title={t('field-concept-class')}>
+            {concept?.conceptClass}
+          </BasicBlock>
+        )}
       </ExpanderContent>
     </Expander>
   );

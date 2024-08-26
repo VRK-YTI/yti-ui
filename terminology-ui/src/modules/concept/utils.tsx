@@ -1,5 +1,8 @@
-import { Concept } from '@app/common/interfaces/concept.interface';
-import { Term } from '@app/common/interfaces/term.interface';
+import {
+  ConceptInfo,
+  LocalizedValue,
+  Term,
+} from '@app/common/interfaces/interfaces-v2';
 import {
   compareLocales,
   sortPropertyListByLanguage,
@@ -13,8 +16,8 @@ const langOrder: { [key: string]: string } = {
 };
 
 const termTypeOrder: { [key: string]: string } = {
-  prefLabelXl: 'a',
-  altLabelXl: 'b',
+  recommendedTerm: 'a',
+  synonym: 'b',
 };
 
 /**
@@ -31,48 +34,49 @@ const termTypeOrder: { [key: string]: string } = {
  * @returns
  */
 function getCompareKey(term: Term, type: string, index: number) {
-  const prefLabel = term.properties.prefLabel?.[0];
-  const langKey = `${
-    langOrder[prefLabel?.lang ?? ''] ?? `x_${prefLabel?.lang}`
-  }`;
+  const langKey = `${langOrder[term.language ?? ''] ?? `x_${term.language}`}`;
   return `${langKey}_${termTypeOrder[type] ?? 'x'}_${index}`;
 }
 
-export function getBlockData(t: TFunction, concept?: Concept) {
+export function getBlockData(t: TFunction, concept?: ConceptInfo) {
   if (!concept) {
-    return { terms: [], definitions: [], notes: [], examples: [] };
+    return { terms: [], definitions: {}, notes: [], examples: [] };
   }
 
   const terms = [
-    ...(concept.references.prefLabelXl ?? []).map((term, idx) => ({
+    ...(concept.recommendedTerms ?? []).map((term, idx) => ({
       term,
       type: t('field-terms-preferred', { ns: 'concept' }),
-      compareKey: getCompareKey(term, 'prefLabelXl', idx),
+      compareKey: getCompareKey(term, 'recommendedTerm', idx),
     })),
-    ...(concept.references.altLabelXl ?? []).map((term, idx) => ({
+    ...(concept.synonyms ?? []).map((term, idx) => ({
       term,
       type: t('field-terms-alternative', { ns: 'concept' }),
-      compareKey: getCompareKey(term, 'altLabelXl', idx),
+      compareKey: getCompareKey(term, 'synonym', idx),
     })),
-    ...(concept.references.notRecommendedSynonym ?? []).map((term, idx) => ({
+    ...(concept.notRecommendedTerms ?? []).map((term, idx) => ({
       term,
       type: t('field-terms-non-recommended', { ns: 'concept' }),
       compareKey: getCompareKey(term, 'notRecommendedSynonym', idx),
     })),
-    ...(concept.references.hiddenTerm ?? []).map((term) => ({
+    ...(concept.searchTerms ?? []).map((term) => ({
       term,
       type: t('field-terms-hidden', { ns: 'concept' }),
-      compareKey: getCompareKey(term, 'hiddenTerm', 0),
+      compareKey: getCompareKey(term, 'searchTerm', 0),
     })),
   ].sort((t1, t2) => t1.compareKey.localeCompare(t2.compareKey));
 
   const definitions =
-    concept.properties.definition
+    Object.keys(concept.definition)
       ?.slice()
-      .sort((t1, t2) => compareLocales(t1, t2)) ?? [];
+      .sort((t1, t2) => compareLocales(t1, t2))
+      .reduce((result, lang) => {
+        result[lang] = concept.definition[lang];
+        return result;
+      }, {} as LocalizedValue) ?? {};
 
-  const notes = sortPropertyListByLanguage(concept.properties.note);
-  const examples = sortPropertyListByLanguage(concept.properties.example);
+  const notes = sortPropertyListByLanguage(concept.notes);
+  const examples = sortPropertyListByLanguage(concept.examples);
 
   return { terms, definitions, notes, examples };
 }

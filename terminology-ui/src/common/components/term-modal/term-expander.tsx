@@ -4,6 +4,7 @@ import {
   ExpanderTitleButton,
 } from 'suomifi-ui-components';
 import { PropertyList, TermHeading, TermText } from './term-modal.styles';
+import { isArray } from 'lodash';
 
 interface TermExpanderProps {
   title: string;
@@ -15,7 +16,9 @@ interface TermExpanderProps {
 }
 
 export default function TermExpander({ title, data }: TermExpanderProps) {
-  if (data.filter((d) => d.value).length < 1) {
+  if (
+    data.filter((d) => (isArray(d.value) ? d.value.length : d.value)).length < 1
+  ) {
     return null;
   }
 
