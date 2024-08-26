@@ -1,5 +1,6 @@
 import BasicBlock from './basic-block';
 import MultilingualBlock from './multilingual-block';
+import MultilingualBlockList from './multilingual-block-list';
 import {
   BasicBlockWrapper,
   BasicBlockExtraWrapper,
@@ -9,6 +10,7 @@ import {
 export {
   BasicBlock,
   MultilingualBlock,
+  MultilingualBlockList,
   BasicBlockWrapper,
   BasicBlockExtraWrapper,
   List,

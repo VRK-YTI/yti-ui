@@ -9,7 +9,12 @@ import {
   Text,
   VisuallyHidden,
 } from 'suomifi-ui-components';
-import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
+import {
+  BasicBlock,
+  BasicBlockExtraWrapper,
+  MultilingualBlock,
+  MultilingualBlockList,
+} from 'yti-common-ui/block';
 import {
   MultilingualPropertyBlock,
   PropertyBlock,
@@ -90,18 +95,17 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
       .map((org) => org.id);
   }, [organizations, isLoading, isError]);
 
-  const prefLabel = getPropertyValue({
-    property: getProperty('prefLabel', concept?.references.prefLabelXl),
-    language: i18n.language,
-  });
+  const recommendedTerm =
+    concept?.recommendedTerms.find((term) => term.language === i18n.language) ??
+    concept?.recommendedTerms[0];
 
-  const status =
-    getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
+  const prefLabel = recommendedTerm?.label ?? '';
+  const status = concept?.status || 'DRAFT';
   const email = terminology?.contact?.trim() ?? '';
 
   useEffect(() => {
     if (concept) {
-      dispatch(setTitle(prefLabel ?? ''));
+      dispatch(setTitle(prefLabel));
     }
   }, [concept, dispatch, prefLabel]);
 
@@ -182,35 +186,37 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
               {translateStatus(status, t)}
             </StatusChip>
           </BadgeBar>
-
           <BasicBlock title="URI">{concept?.uri}</BasicBlock>
 
           <TermBlock title={<h2>{t('field-terms-label')}</h2>} data={terms} />
 
-          <MultilingualPropertyBlock
-            title={<h2>{t('field-definition')}</h2>}
-            data={definitions}
-          />
+          {Object.keys(definitions).length > 0 && (
+            <BasicBlock title={t('field-definition')}>
+              <MultilingualBlock data={definitions} />
+            </BasicBlock>
+          )}
 
-          <PropertyBlock
-            title={t('field-subject-area')}
-            property={concept?.properties.subjectArea}
-          />
+          {concept?.subjectArea && (
+            <BasicBlock title={t('field-subject-area')}>
+              {concept?.subjectArea}
+            </BasicBlock>
+          )}
 
-          <MultilingualPropertyBlock
-            title={<h2>{t('field-note')}</h2>}
-            data={notes}
-          />
+          {notes && notes.length > 0 && (
+            <BasicBlock title={t('field-note')}>
+              <MultilingualBlockList data={concept?.notes} renderHtml />
+            </BasicBlock>
+          )}
 
-          <MultilingualPropertyBlock
-            title={<h2>{t('field-example')}</h2>}
-            data={examples}
-          />
+          {examples && examples.length > 0 && (
+            <BasicBlock title={t('field-example')}>
+              <MultilingualBlockList data={concept?.examples} renderHtml />
+            </BasicBlock>
+          )}
 
           <DetailsExpander concept={concept} />
 
           <Separator isLarge />
-
           {hasPermission && (
             <>
               <BasicBlock
@@ -233,7 +239,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                       <RemovalModal
                         nonDescriptive={true}
                         removalData={{ type: 'concept', data: concept }}
-                        targetId={concept?.id ?? ''}
+                        targetId={concept?.identifier ?? ''}
                         targetName={prefLabel}
                       />
                     </EditToolsBlock>
@@ -243,11 +249,9 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
               <Separator isLarge />
             </>
           )}
-
           <VisuallyHidden as="h2">
             {t('additional-technical-information', { ns: 'common' })}
           </VisuallyHidden>
-
           <BasicBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}
             id="organization"
@@ -258,24 +262,23 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                   (o) => o && o.label && !childOrganizations?.includes(o.id)
                 )
                 .map((organization) => (
-                  <li key={organization.id}>{organization?.label}</li>
+                  <li key={organization.id}>
+                    {organization?.label[i18n.language]}
+                  </li>
                 ))}
             </PropertyList>
           </BasicBlock>
-
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-            <FormattedDate date={concept?.createdDate} />
-            {concept?.createdBy && `, ${concept.createdBy}`}
+            <FormattedDate date={concept?.created} />
+            {concept?.creator.name && `, ${concept.creator.name}`}
           </BasicBlock>
           <BasicBlock
             title={t('vocabulary-info-modified-at', { ns: 'common' })}
           >
-            <FormattedDate date={concept?.lastModifiedDate} />
-            {concept?.lastModifiedBy && `, ${concept.lastModifiedBy}`}
+            <FormattedDate date={concept?.modified} />
+            {concept?.modifier.name && `, ${concept.modifier.name}`}
           </BasicBlock>
-
           <Separator isLarge />
-
           <BasicBlock
             extra={
               <ExternalLink

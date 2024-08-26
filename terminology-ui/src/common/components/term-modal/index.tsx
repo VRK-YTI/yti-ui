@@ -8,11 +8,7 @@ import {
   ModalFooter,
   ModalTitle,
 } from 'suomifi-ui-components';
-import { Term } from '@app/common/interfaces/term.interface';
-import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import { selectLogin } from '@app/common/components/login/login.slice';
-import PropertyValue from '@app/common/components/property-value';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import TermExpander from './term-expander';
 import {
   TermHeading,
@@ -26,9 +22,9 @@ import {
   translateStatus,
   translateTermConjugation,
   translateTermFamily,
-  translateTermStyle,
   translateWordClass,
 } from '@app/common/utils/translation-helpers';
+import { Term } from '@app/common/interfaces/interfaces-v2';
 
 interface TermModalProps {
   data?: { term: Term; type: string };
@@ -50,15 +46,7 @@ export default function TermModal({ data }: TermModalProps) {
         variant="secondaryNoBorder"
         onClick={() => setVisible(true)}
       >
-        {/*
-          Note: Preferencing upper solution instead of <PropertyValue />
-          because term should only have one prefLabel. If prefLabel is
-          in English and the language used is Finnish the button won't
-          be rendered. Same solution in <ModalTitle /> below.
-        */}
-        {data.term.properties.prefLabel?.[0].value ?? (
-          <PropertyValue property={data.term.properties.prefLabel} />
-        )}
+        {data.term.label}
       </TermModalButton>
       <Modal
         appElementId="__next"
@@ -67,62 +55,37 @@ export default function TermModal({ data }: TermModalProps) {
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
-          <ModalTitle>
-            {data.term.properties.prefLabel?.[0].value ?? (
-              <PropertyValue property={data.term.properties.prefLabel} />
-            )}
-          </ModalTitle>
-
+          <ModalTitle>{data.term.label}</ModalTitle>
           {renderInfo(t('term-modal-type'), data.type)}
           {renderInfoChip(
             t('term-modal-status'),
-            data.term.properties.status,
+            data.term.status ?? 'DRAFT',
             'DRAFT'
           )}
           {renderInfo(
             t('term-modal-homograph-number'),
-            data.term.properties.termHomographNumber?.[0].value
+            data.term.homographNumber
           )}
-          {renderInfo(
-            t('term-modal-info'),
-            data.term.properties.termInfo?.[0].value
-          )}
-          {renderInfo(
-            t('term-modal-scope'),
-            data.term.properties.scope?.[0].value
-          )}
-          {renderInfo(
-            t('term-modal-equivalency'),
-            data.term.properties.termEquivalency?.[0].value
-          )}
-          {renderInfo(
-            t('term-modal-source'),
-            data.term.properties.source?.map((source) => source.value)
-          )}
+          {renderInfo(t('term-modal-info'), data.term.termInfo)}
+          {renderInfo(t('term-modal-scope'), data.term.scope)}
+          {renderInfo(t('term-modal-equivalency'), data.term.termEquivalency)}
+          {renderInfo(t('term-modal-source'), data.term.sources)}
 
           <TermExpander
             title={t('term-modal-organizational-information')}
             data={[
               {
                 subtitle: t('term-modal-change-note'),
-                value: data.term.properties.changeNote?.[0].value,
+                value: data.term.changeNote,
               },
               {
                 subtitle: t('term-modal-history-note'),
-                value: data.term.properties.historyNote?.[0].value,
+                value: data.term.historyNote,
               },
               {
                 subtitle: t('term-modal-editorial-note'),
-                value: data.term.properties.editorialNote?.map(
-                  (note) => note.value
-                ),
+                value: data.term.editorialNotes,
                 checkCondition: !user.anonymous,
-              },
-              {
-                subtitle: t('term-modal-draft-note'),
-                value: data.term.properties.draftComment?.[0].value,
-                checkCondition:
-                  data.term.properties.status?.[0].value === 'DRAFT',
               },
             ]}
           />
@@ -131,31 +94,22 @@ export default function TermModal({ data }: TermModalProps) {
             data={[
               {
                 subtitle: t('term-modal-style'),
-                value: translateTermStyle(
-                  data.term.properties.termStyle?.[0].value ?? '',
-                  t
-                ),
+                value: data.term.termStyle,
               },
               {
                 subtitle: t('term-modal-family'),
-                value: translateTermFamily(
-                  data.term.properties.termFamily?.[0].value ?? '',
-                  t
-                ),
+                value: translateTermFamily(data.term.termFamily ?? '', t),
               },
               {
                 subtitle: t('term-modal-conjugation'),
                 value: translateTermConjugation(
-                  data.term.properties.termConjugation?.[0].value ?? '',
+                  data.term.termConjugation ?? '',
                   t
                 ),
               },
               {
                 subtitle: t('term-modal-word-class'),
-                value: translateWordClass(
-                  data.term.properties.wordClass?.[0].value ?? '',
-                  t
-                ),
+                value: translateWordClass(data.term.wordClass ?? '', t),
               },
             ]}
           />
@@ -173,7 +127,7 @@ export default function TermModal({ data }: TermModalProps) {
     </>
   );
 
-  function renderInfo(subtitle: string, value?: string | string[]) {
+  function renderInfo(subtitle: string, value?: string | number | string[]) {
     if (!value) {
       return null;
     }
@@ -194,11 +148,7 @@ export default function TermModal({ data }: TermModalProps) {
     );
   }
 
-  function renderInfoChip(
-    subtitle: string,
-    value?: Property[],
-    defaultValue = ''
-  ) {
+  function renderInfoChip(subtitle: string, value?: string, defaultValue = '') {
     if (!value) {
       return null;
     }
@@ -211,12 +161,9 @@ export default function TermModal({ data }: TermModalProps) {
         */}
         <TermModalChip
           aria-disabled={true}
-          $isValid={value[0].value === 'VALID' ? 'true' : undefined}
+          $isValid={value === 'VALID' ? 'true' : undefined}
         >
-          {translateStatus(
-            getPropertyValue({ property: value }) ?? defaultValue,
-            t
-          )}
+          {translateStatus(value ?? defaultValue, t)}
         </TermModalChip>
       </>
     );

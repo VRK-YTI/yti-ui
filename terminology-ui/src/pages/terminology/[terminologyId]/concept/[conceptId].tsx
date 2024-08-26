@@ -21,9 +21,9 @@ import {
 } from 'yti-common-ui/common-context-provider';
 import PageHead from 'yti-common-ui/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { getProperty } from '@app/common/utils/get-property';
 import { getStoreData } from '@app/common/utils/get-store-data';
 import { wrapper } from '@app/store';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface ConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -108,16 +108,15 @@ export const getServerSideProps = createCommonGetServerSideProps(
       language: locale,
     });
 
-    const conceptTitle = getPropertyValue({
-      property: getProperty('prefLabel', conceptData?.references.prefLabelXl),
-      language: locale,
+    const conceptTitle = getLanguageVersion({
+      data: conceptData.label,
+      lang: locale ?? 'fi',
     });
 
-    const conceptDescription = getPropertyValue({
-      property: conceptData?.properties.definition,
-      language: locale,
+    const conceptDescription = getLanguageVersion({
+      data: conceptData.definition,
+      lang: locale ?? 'fi',
     });
-
     return {
       props: {
         conceptDescription: conceptDescription,

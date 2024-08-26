@@ -1,5 +1,4 @@
 import { Collection } from '@app/common/interfaces/collection.interface';
-import { Concept } from '@app/common/interfaces/concept.interface';
 import {
   translateRemovalModalConfirmation,
   translateRemovalModalDescription,
@@ -38,7 +37,7 @@ import {
   RemoveModalContent,
 } from './removal-modal.styles';
 import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
-import { Terminology } from '@app/common/interfaces/interfaces-v2';
+import { Terminology, ConceptInfo } from '@app/common/interfaces/interfaces-v2';
 
 interface RemovalModalProps {
   nonDescriptive?: boolean;
@@ -49,7 +48,7 @@ interface RemovalModalProps {
       }
     | {
         type: 'concept';
-        data?: Concept;
+        data?: ConceptInfo;
       }
     | {
         type: 'collection';
@@ -82,13 +81,15 @@ export default function RemovalModal({
     }
 
     if (removalData.type === 'concept' && removalData.data) {
-      const data = generateConceptData(removalData.data);
+      /* TODO
+      const data = generateConceptData(removalData);
 
       if (data.length < 2) {
         return null;
       }
 
       deleteTarget(data);
+      */
     }
 
     if (removalData.type === 'collection' && removalData.data) {
@@ -110,7 +111,7 @@ export default function RemovalModal({
     }
 
     if (removalData.data) {
-      router.push(`/terminology/${removalData.data.type.graph.id}`);
+      router.push('/terminology/id'); // TODO ${removalData.data.type.graph.id}`);
       return;
     }
   };

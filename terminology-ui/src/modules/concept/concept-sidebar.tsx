@@ -1,40 +1,65 @@
-import { useTranslation } from 'next-i18next';
+import { i18n, useTranslation } from 'next-i18next';
 import React from 'react';
 import Separator from 'yti-common-ui/separator';
 import { Sidebar, SidebarHeader, SidebarSection } from 'yti-common-ui/sidebar';
-import { Concept } from '@app/common/interfaces/concept.interface';
-import getReferenceValues from './get-reference-values';
+import {
+  ConceptInfo,
+  ConceptReferenceInfo,
+} from '@app/common/interfaces/interfaces-v2';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 export interface ConceptSidebarProps {
-  concept?: Concept;
+  concept?: ConceptInfo;
+}
+
+function getConceptReferenceValues(references?: ConceptReferenceInfo[]) {
+  return getReferenceValues('concept', references);
+}
+
+function getCollectiontReferenceValues(references?: ConceptReferenceInfo[]) {
+  return getReferenceValues('collection', references);
+}
+
+function getReferenceValues(
+  type: 'concept' | 'collection',
+  references?: ConceptReferenceInfo[]
+) {
+  if (!references) {
+    return [];
+  }
+
+  return references.map((ref) => {
+    return {
+      id: ref.conceptURI,
+      href: `/terminology/${ref.prefix}/${type}/${ref.identifier}`,
+      value: getLanguageVersion({
+        data: ref.label,
+        lang: i18n?.language ?? 'fi',
+      }),
+    };
+  });
 }
 
 export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
   const { t, i18n } = useTranslation('concept');
 
-  const terminologyId = concept?.type.graph.id;
-
   const shouldRenderDivider1 =
     [
-      concept?.references.broader,
-      concept?.references.narrower,
-      concept?.references.related,
-      concept?.references.isPartOf,
-      concept?.references.hasPart,
-      concept?.references.relatedMatch,
-      concept?.references.exactMatch,
-      concept?.references.closeMatch,
+      concept?.broader,
+      concept?.narrower,
+      concept?.related,
+      concept?.isPartOf,
+      concept?.hasPart,
+      concept?.relatedMatch,
+      concept?.exactMatch,
+      concept?.closeMatch,
     ]
       .flat()
       .filter(Boolean).length > 0;
 
-  const shouldRenderDivider2 = false;
+  const shouldRenderDivider2 = (concept?.memberOf ?? []).length > 0;
 
-  const shouldRenderDivider3 =
-    [concept?.referrers.member].flat().filter(Boolean).length > 0;
-
-  const isEmpty =
-    !shouldRenderDivider1 && !shouldRenderDivider2 && !shouldRenderDivider3;
+  const isEmpty = !shouldRenderDivider1 && !shouldRenderDivider2;
 
   return (
     <Sidebar isEmpty={isEmpty}>
@@ -44,106 +69,59 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
 
       <SidebarSection
         heading={t('sidebar-section-heading-broader')}
-        items={getReferenceValues(
-          concept?.references.broader,
-          i18n.language,
-          terminologyId
-        )}
+        items={getConceptReferenceValues(concept?.broader)}
       />
 
       <SidebarSection
         heading={t('sidebar-section-heading-narrower')}
-        items={getReferenceValues(
-          concept?.references.narrower,
-          i18n.language,
-          terminologyId
-        )}
+        items={getConceptReferenceValues(concept?.narrower)}
       />
 
       <SidebarSection
         heading={t('sidebar-section-heading-related')}
-        items={getReferenceValues(
-          concept?.references.related,
-          i18n.language,
-          terminologyId
-        )}
+        items={getConceptReferenceValues(concept?.related)}
       />
 
       <SidebarSection
         heading={t('sidebar-section-heading-is-part-of')}
-        items={getReferenceValues(
-          concept?.references.isPartOf,
-          i18n.language,
-          terminologyId
-        )}
+        items={getConceptReferenceValues(concept?.isPartOf)}
       />
 
       <SidebarSection
         heading={t('sidebar-section-heading-has-part')}
-        items={getReferenceValues(
-          concept?.references.hasPart,
-          i18n.language,
-          terminologyId
-        )}
+        items={getConceptReferenceValues(concept?.hasPart)}
       />
 
       <SidebarSection
         heading={t('sidebar-section-heading-related-match')}
-        items={getReferenceValues(
-          concept?.references.relatedMatch,
-          i18n.language
-        )}
+        items={getConceptReferenceValues(concept?.relatedMatch)}
       />
 
       <SidebarSection
         heading={t('sidebar-section-heading-exact-match')}
-        items={getReferenceValues(
-          concept?.references.exactMatch,
-          i18n.language
-        )}
+        items={getConceptReferenceValues(concept?.exactMatch)}
       />
 
       <SidebarSection
         heading={t('sidebar-section-heading-close-match')}
-        items={getReferenceValues(
-          concept?.references.closeMatch,
-          i18n.language
-        )}
+        items={getConceptReferenceValues(concept?.closeMatch)}
       />
 
       <SidebarSection
         heading={t('sidebar-section-heading-broad-match')}
-        items={getReferenceValues(
-          concept?.references.broadMatch,
-          i18n.language
-        )}
+        items={getConceptReferenceValues(concept?.broadMatch)}
       />
 
       <SidebarSection
         heading={t('sidebar-section-heading-narrow-match')}
-        items={getReferenceValues(
-          concept?.references.narrowMatch,
-          i18n.language
-        )}
+        items={getConceptReferenceValues(concept?.narrowMatch)}
       />
+
       {shouldRenderDivider2 && <Separator />}
-
-      {/* <SidebarSection<ConceptLink>
-        header={t('sidebar-section-heading-in-other-terminologies')}
-        items={concept?.references.closeMatch}
-        linkPrefix={`/terminology/${terminologyId}/concept/`}
-        propertyAccessor={conceptLink => conceptLink?.properties?.prefLabel}
-      /> */}
-
-      {shouldRenderDivider3 && <Separator />}
 
       <SidebarSection
         heading={t('sidebar-section-heading-member')}
-        items={getReferenceValues(
-          concept?.referrers.member,
-          i18n.language,
-          terminologyId
-        )}
+        items={getCollectiontReferenceValues(concept?.memberOf)}
       />
     </Sidebar>
   );
