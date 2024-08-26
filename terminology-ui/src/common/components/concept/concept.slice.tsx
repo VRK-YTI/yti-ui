@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { Concept } from '@app/common/interfaces/concept.interface';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
+import { ConceptInfo } from '@app/common/interfaces/interfaces-v2';
 
 export const conceptApi = createApi({
   reducerPath: 'conceptAPI',
@@ -9,11 +9,11 @@ export const conceptApi = createApi({
   tagTypes: ['Concept'],
   endpoints: (builder) => ({
     getConcept: builder.query<
-      Concept,
+      ConceptInfo,
       { terminologyId: string; conceptId: string }
     >({
       query: ({ terminologyId, conceptId }) => ({
-        url: `/concept?graphId=${terminologyId}&conceptId=${conceptId}`,
+        url: `/concept/${terminologyId}/${conceptId}`,
         method: 'GET',
       }),
     }),
