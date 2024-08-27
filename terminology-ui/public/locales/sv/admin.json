@@ -158,6 +158,7 @@
     "incorrect-file-type_other": "Fel filtyp. Tillåtna filtyper är {{fileTypes}}.",
     "upload-error": "Laddning av filen gick fel. Försök igen."
   },
+  "finished": "Färdig",
   "from-terminology-manual": "från Ordlistor-verktygets bruksanvisningar.",
   "give-definition": "Ange definition",
   "has-part-concept": "Delbegrepp",
@@ -168,6 +169,7 @@
   "import-concepts": "Importera begrepp",
   "import-concepts-description-1": "Du kan lägga nya begrepp till en ordlista med en fil. Mer information om önskat filinnehåll kan du läsa ",
   "import-concepts-description-2": "Om du vill uppdatera ordlistas begrepp eller andra uppgifter med en fil, välj \"Uppdatera ordlistan med en fil\" på Ordlistans uppgifter och funktioner -vyn",
+  "import-concepts-in-progress": "Importering",
   "import-concepts-to-terminology": "Importera begreppen till ordlistan",
   "import-incorrect-excel-file-1": {
     "concept-import": "Filen uppfyller inte formateringskrav för en importerad fil. Var god och kolla filens specifikationer i bruksanvisningarna.",
