@@ -176,7 +176,8 @@ export default function InfoExpander({
                     />
 
                     <RemovalModal
-                      removalData={{ type: 'terminology', data }}
+                      dataType="terminology"
+                      status={data.status}
                       targetId={terminologyId}
                       targetName={getLanguageVersion({
                         data: data.label,
