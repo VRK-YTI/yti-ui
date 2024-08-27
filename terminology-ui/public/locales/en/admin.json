@@ -158,6 +158,7 @@
     "incorrect-file-type_other": "Incorrect file type. Allowed file typea are {{fileTypes}}.",
     "upload-error": "File upload failed. Try again."
   },
+  "finished": "Done",
   "from-terminology-manual": "Terminology manual.",
   "give-definition": "Give definition",
   "has-part-concept": "Has part concept",
@@ -168,6 +169,7 @@
   "import-concepts": "Import concepts",
   "import-concepts-description-1": "New concepts can imported with a file. Requirements for the contents of the file can be read from",
   "import-concepts-description-2": "If you want to update existing concept or other information of the terminology, choose 'Update terminology with a file' in 'Terminology information and action'.",
+  "import-concepts-in-progress": "Importing concepts",
   "import-concepts-to-terminology": "Import concepts to terminology",
   "import-incorrect-excel-file-1": {
     "concept-import": "File does not match the specifications of the concept import file. Check the specifications of the file in",
