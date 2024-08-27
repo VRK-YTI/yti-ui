@@ -258,7 +258,6 @@ export default function RemovalModal({
     }
 
     if (isSuccess()) {
-      console.info('success');
       return (
         <>
           <Button onClick={() => handleReturn()}>
