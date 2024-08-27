@@ -1,4 +1,3 @@
-import { Collection } from '@app/common/interfaces/collection.interface';
 import {
   translateRemovalModalConfirmation,
   translateRemovalModalDescription,
@@ -23,46 +22,34 @@ import {
 } from 'suomifi-ui-components';
 import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import { useDeleteTargetMutation } from '../remove/remove.slice';
 import SaveSpinner from 'yti-common-ui/save-spinner';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
-import { useDeleteVocabularyMutation } from '../vocabulary/vocabulary.slice';
-import {
-  generateCollectionData,
-  generateConceptData,
-} from './generate-removal-data';
 import {
   FooterBlock,
   RemoveModal,
   RemoveModalContent,
 } from './removal-modal.styles';
 import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
-import { Terminology, ConceptInfo } from '@app/common/interfaces/interfaces-v2';
+import { useDeleteConceptMutation } from '../concept/concept.slice';
+import { useDeleteCollectionMutation } from '../collection/collection.slice';
+import { useDeleteTerminologyMutation } from '../vocabulary/vocabulary.slice';
 
 interface RemovalModalProps {
   nonDescriptive?: boolean;
-  removalData:
-    | {
-        type: 'terminology';
-        data?: Terminology;
-      }
-    | {
-        type: 'concept';
-        data?: ConceptInfo;
-      }
-    | {
-        type: 'collection';
-        data?: Collection;
-      };
+  dataType: 'terminology' | 'concept' | 'collection';
+  status?: string;
+  targetPrefix?: string;
   targetId: string;
   targetName: string;
 }
 
 export default function RemovalModal({
   nonDescriptive,
-  removalData,
+  dataType,
+  status,
   targetId,
   targetName,
+  targetPrefix,
 }: RemovalModalProps) {
   const { t } = useTranslation('admin');
   const dispatch = useStoreDispatch();
@@ -70,57 +57,41 @@ export default function RemovalModal({
   const router = useRouter();
   const [visible, setVisible] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [deleteVocabulary, terminology] = useDeleteVocabularyMutation();
-  const [deleteTarget, target] = useDeleteTargetMutation();
+  const [deleteTerminology, terminology] = useDeleteTerminologyMutation();
+  const [deleteConcept, concept] = useDeleteConceptMutation();
+  const [deleteCollection, collection] = useDeleteCollectionMutation();
   const [getAuthenticatedUser, authenticatedUser] =
     useGetAuthenticatedUserMutMutation();
 
   const handleClick = () => {
-    if (removalData.type === 'terminology') {
-      deleteVocabulary(targetId);
+    if (dataType === 'terminology') {
+      deleteTerminology(targetId);
     }
 
-    if (removalData.type === 'concept' && removalData.data) {
-      /* TODO
-      const data = generateConceptData(removalData);
-
-      if (data.length < 2) {
-        return null;
-      }
-
-      deleteTarget(data);
-      */
+    if (dataType === 'concept' && targetPrefix) {
+      deleteConcept({ prefix: targetPrefix, conceptId: targetId });
     }
 
-    if (removalData.type === 'collection' && removalData.data) {
-      const data = generateCollectionData(removalData.data);
-
-      if (data.length < 1) {
-        return null;
-      }
-
-      deleteTarget(data);
+    if (dataType === 'collection' && targetPrefix) {
+      deleteCollection({ prefix: targetPrefix, collectionId: targetId });
     }
   };
 
   const handleReturn = () => {
-    if (removalData.type === 'terminology') {
+    if (dataType === 'terminology') {
       router.push('/');
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
       return;
     }
 
-    if (removalData.data) {
-      router.push('/terminology/id'); // TODO ${removalData.data.type.graph.id}`);
+    if (targetPrefix) {
+      router.push(`/terminology/${targetPrefix}`);
       return;
     }
   };
 
   const handleVisibility = () => {
-    if (
-      removalData.type === 'terminology' &&
-      removalData.data?.status === 'VALID'
-    ) {
+    if (dataType === 'terminology' && status === 'VALID') {
       setShowError(true);
       return;
     }
@@ -130,50 +101,54 @@ export default function RemovalModal({
   };
 
   const isUninitialized = () => {
-    return terminology.isUninitialized && target.isUninitialized;
+    return (
+      terminology.isUninitialized &&
+      concept.isUninitialized &&
+      collection.isUninitialized
+    );
   };
 
   const isLoading = () => {
-    return terminology.isLoading || target.isLoading;
+    return terminology.isLoading || concept.isLoading || collection.isLoading;
   };
 
   const isSuccess = () => {
-    return terminology.isSuccess || target.isSuccess;
+    return terminology.isSuccess || concept.isSuccess || collection.isSuccess;
   };
 
   const isError = () => {
-    return terminology.isError || target.isError;
+    return terminology.isError || concept.isError || collection.isError;
   };
 
   return (
     <>
       {!nonDescriptive ? (
         <BasicBlock
-          title={translateRemovalModalTitle(removalData.type, t)}
+          title={translateRemovalModalTitle(dataType, t)}
           extra={
             <BasicBlockExtraWrapper>
               <Button
                 variant="secondary"
                 icon={<IconRemove />}
-                id={`open-remove-${removalData.type}-modal`}
+                id={`open-remove-${dataType}-modal`}
                 onClick={() => handleVisibility()}
               >
-                {translateRemovalModalTitle(removalData.type, t)}
+                {translateRemovalModalTitle(dataType, t)}
               </Button>
             </BasicBlockExtraWrapper>
           }
         >
-          {translateRemovalModalDescription(removalData.type, t)}
+          {translateRemovalModalDescription(dataType, t)}
         </BasicBlock>
       ) : (
         <>
           <Button
             variant="secondary"
             icon={<IconRemove />}
-            id={`open-remove-${removalData.type}-modal`}
+            id={`open-remove-${dataType}-modal`}
             onClick={() => handleVisibility()}
           >
-            {translateRemovalModalTitle(removalData.type, t)}
+            {translateRemovalModalTitle(dataType, t)}
           </Button>
         </>
       )}
@@ -201,9 +176,7 @@ export default function RemovalModal({
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <RemoveModalContent>
-          <ModalTitle>
-            {translateRemovalModalTitle(removalData.type, t)}
-          </ModalTitle>
+          <ModalTitle>{translateRemovalModalTitle(dataType, t)}</ModalTitle>
           {renderConfirmation()}
           {renderProcessing()}
           {renderFinished()}
@@ -227,11 +200,11 @@ export default function RemovalModal({
       <>
         <Paragraph>
           <Text>
-            {translateRemovalModalConfirmation(removalData.type, targetName, t)}
+            {translateRemovalModalConfirmation(dataType, targetName, t)}
           </Text>
         </Paragraph>
         <Paragraph>
-          <Text>{translateRemovalModalWarning(removalData.type, t)}</Text>
+          <Text>{translateRemovalModalWarning(dataType, t)}</Text>
         </Paragraph>
       </>
     );
@@ -242,11 +215,7 @@ export default function RemovalModal({
       return null;
     }
 
-    return (
-      <SaveSpinner
-        text={translateRemovalModalProcessing(removalData.type, t)}
-      />
-    );
+    return <SaveSpinner text={translateRemovalModalProcessing(dataType, t)} />;
   }
 
   function renderFinished() {
@@ -254,9 +223,7 @@ export default function RemovalModal({
       return (
         <>
           <Paragraph>
-            <Text>
-              {translateRemovalModalRemoved(removalData.type, targetName, t)}
-            </Text>
+            <Text>{translateRemovalModalRemoved(dataType, targetName, t)}</Text>
           </Paragraph>
         </>
       );
@@ -265,7 +232,7 @@ export default function RemovalModal({
     if (isError()) {
       return (
         <InlineAlert status="error">
-          {translateRemovalModalError(removalData.type, t)}
+          {translateRemovalModalError(dataType, t)}
         </InlineAlert>
       );
     }
@@ -291,10 +258,11 @@ export default function RemovalModal({
     }
 
     if (isSuccess()) {
+      console.info('success');
       return (
         <>
           <Button onClick={() => handleReturn()}>
-            {removalData.type === 'terminology'
+            {dataType === 'terminology'
               ? t('return-to-front-page')
               : t('return-to-terminology-page')}
           </Button>

@@ -128,7 +128,7 @@ export default function TermModal({ data }: TermModalProps) {
   );
 
   function renderInfo(subtitle: string, value?: string | number | string[]) {
-    if (!value) {
+    if (!value || (Array.isArray(value) && value.length === 0)) {
       return null;
     }
 

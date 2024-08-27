@@ -192,7 +192,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
           {Object.keys(definitions).length > 0 && (
             <BasicBlock title={t('field-definition')}>
-              <MultilingualBlock data={definitions} />
+              <MultilingualBlock data={definitions} renderHtml={true} />
             </BasicBlock>
           )}
 
@@ -204,13 +204,13 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
           {notes && notes.length > 0 && (
             <BasicBlock title={t('field-note')}>
-              <MultilingualBlockList data={concept?.notes} renderHtml />
+              <MultilingualBlockList data={notes} renderHtml />
             </BasicBlock>
           )}
 
           {examples && examples.length > 0 && (
             <BasicBlock title={t('field-example')}>
-              <MultilingualBlockList data={concept?.examples} renderHtml />
+              <MultilingualBlockList data={examples} renderHtml />
             </BasicBlock>
           )}
 
@@ -238,9 +238,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
                       <RemovalModal
                         nonDescriptive={true}
-                        removalData={{ type: 'concept', data: concept }}
+                        dataType="concept"
                         targetId={concept?.identifier ?? ''}
                         targetName={prefLabel}
+                        targetPrefix={terminology?.prefix}
                       />
                     </EditToolsBlock>
                   </BasicBlockExtraWrapper>

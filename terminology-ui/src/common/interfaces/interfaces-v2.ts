@@ -84,12 +84,15 @@ export interface ConceptReferenceInfo {
 }
 
 export interface ConceptCollectionInfo {
+  uri: string;
   identifier: string;
-  prefix: string;
-  members: {
-    identifier: string;
-    label: LocalizedValue;
-  };
+  label: LocalizedValue;
+  description: LocalizedValue;
+  members: ConceptReferenceInfo[];
+  created: string;
+  modified: string;
+  creator: UserMeta;
+  modifier: UserMeta;
 }
 
 /* build fails for empty interfaces
