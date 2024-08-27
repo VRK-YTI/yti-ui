@@ -2,8 +2,8 @@ import {
   CrosswalkConnectionNew,
   NodeMapping,
 } from '@app/common/interfaces/crosswalk-connection.interface';
-import validateMapping from '@app/modules/crosswalk-editor/mapping-validator';
-import {Dropdown, IconPlus, Textarea, TextInput} from 'suomifi-ui-components';
+import GenerateValidationErrorBar from '@app/modules/crosswalk-editor/mapping-validator';
+import {Dropdown, IconPlus, InlineAlert, Textarea, TextInput} from 'suomifi-ui-components';
 import {DropdownItem} from 'suomifi-ui-components';
 import {useEffect, useState} from 'react';
 import {
@@ -16,6 +16,12 @@ import {
 import NodeListingAccordion from "@app/modules/crosswalk-editor/tabs/node-mappings/node-listing-accordion";
 import {MidColumnWrapper} from "@app/modules/crosswalk-editor/tabs/node-mappings/node-mappings.styles";
 import {cloneDeep} from 'lodash';
+
+interface mappingOperationValue {
+  operationId: string;
+  parameterId: string;
+  value: string;
+}
 
 export default function NodeMappings(props: {
   nodeSelections: CrosswalkConnectionNew[];
@@ -74,9 +80,6 @@ export default function NodeMappings(props: {
     },
   ];
 
-  const filterTargetSelectInit = '';
-  const filterOperationsSelectInit = '';
-
   useEffect(() => {
     for (let i = 0; i < props.nodeSelections.length; i += 1) {
       if (props?.nodeSelections[i]?.source) {
@@ -106,10 +109,13 @@ export default function NodeMappings(props: {
     }
 
     setVisible(props?.modalOpen);
+    setIsErrorBarVisible(true);
     setMappingNodes(props?.nodeSelections);
   }, [props]);
 
-  const [targetOperationValue, setTargetOperationValue] = useState('');
+  const [isMappingOperationValuesInit, setMappingOperationValuesInit] = useState<boolean>(false);
+  const [isErrorBarVisible, setIsErrorBarVisible] = useState<boolean>(true);
+  const [mappingOperationValues, setMappingOperationValues] = useState<mappingOperationValue[] | undefined>(undefined);
   const [mappingOperationSelection, setMappingOperationSelection] = useState<string | undefined>(undefined);
   const [mappingOperationFormatted, setMappingOperationFormatted] = useState([] as any);
   const [mappingFunctions, setMappingFunctions] = useState([] as any);
@@ -117,15 +123,9 @@ export default function NodeMappings(props: {
     EXACT_MATCH_DROPDOWN_DEFAULT,
   );
 
-  const [filterTarget, setFilterTarget] = useState(filterTargetSelectInit);
-  const [filterOperation, setFilterOperation] = useState(
-    filterOperationsSelectInit,
-  );
+  const [sourceOperationValueErrors, setOperationValueErrors] = useState<any[]>([] as any);
 
   const [visible, setVisible] = useState(props.modalOpen);
-
-  const [validationErrors, setValidationErrors] = useState<string[]>([]);
-
   const [mappingNodes, setMappingNodes] = useState<CrosswalkConnectionNew[] | undefined>(undefined);
 
   const [notesValue, setNotesValue] = useState<string>('');
@@ -215,25 +215,9 @@ export default function NodeMappings(props: {
 
 // CLEAR FIELDS WHEN MODAL OPENED
   useEffect(() => {
-    setTargetOperationValue('');
     setMappingOperationSelection(undefined);
-    setFilterTarget(filterTargetSelectInit);
-    setFilterOperation(filterOperationsSelectInit);
+    setOperationValueErrors([]);
   }, [visible]);
-
-// VALIDATE MAPPING
-  useEffect(() => {
-    if (mappingNodes) {
-      generatePropertiesDropdownItems(mappingNodes[0].source.properties);
-      setValidationErrors(validateMapping(mappingNodes[0]));
-    }
-  }, [
-    mappingNodes,
-    targetOperationValue,
-    filterTarget,
-    filterOperation,
-    predicateValue,
-  ]);
 
   function accordionCallbackFunction(action: string, mappingId: any, operationValue: any, operationName: any, mappingOperationKey: any) {
     if (mappingNodes) {
@@ -278,7 +262,7 @@ export default function NodeMappings(props: {
               node.sourceProcessing = mappingOperationKey;
             }
             if (action === 'updateSourceOperation') {
-              const originalParams = getMappingFunctionParams(operationName);
+              const originalParams = getMappingFunctionParams(mappingOperationKey);
               let formattedParams: any = {};
               if (originalParams) {
                 originalParams.forEach((param: { name: any; defaultValue: any; }) => {
@@ -287,13 +271,28 @@ export default function NodeMappings(props: {
               }
 
               let processing: any = {
-                id: operationName,
+                id: mappingOperationKey,
                 params: formattedParams,
               };
-              operationName !== 'N/A' ? node.sourceProcessing = processing : node.sourceProcessing = undefined;
+              mappingOperationKey !== 'N/A' ? node.sourceProcessing = processing : node.sourceProcessing = undefined;
+              const params = getMappingFunctionParams(mappingOperationKey);
+
+              if (params){
+                params.forEach(param => {
+                  updateValidationErrors('sourceOperation', mappingId, mappingOperationKey, param.name, param.defaultValue ? param.defaultValue : '');
+                });
+              }
+              else {
+                const filteredErrors = (sourceOperationValueErrors
+                  .filter(
+                    obj => obj.operationType !== 'sourceOperation'
+                  ));
+                setOperationValueErrors(filteredErrors);
+              }
             }
 
             if (action === 'updateSourceOperationValue') {
+              updateValidationErrors('sourceOperation', mappingId, mappingOperationKey, operationName, operationValue);
               if (node.sourceProcessing) {
                 // @ts-ignore
                 node.sourceProcessing.params[operationName] = operationValue;
@@ -301,7 +300,7 @@ export default function NodeMappings(props: {
                 const originalParams = getMappingFunctionParams(operationName);
                 let formattedParams: any = {};
                 if (originalParams) {
-                  originalParams.forEach((param: { name: any; defaultValue: any; }) => {
+                  originalParams.forEach((param: { name: string; defaultValue: string }) => {
                     formattedParams[param.name] = param.defaultValue ? param.defaultValue : '';
                   });
                 }
@@ -317,6 +316,45 @@ export default function NodeMappings(props: {
           return node
         });
         setMappingNodes(newNodeSelections);
+      }
+    }
+  }
+
+  function updateValidationErrors(operationType: string, mappingId: string, mappingOperationKey: string, operationName: string, operationValue: string) {
+    const originalParams = getMappingFunctionParams(mappingOperationKey);
+
+    if (originalParams.find(item => item.name === operationName && item.required === true)) {
+      const index = sourceOperationValueErrors
+        .findIndex(
+          obj => obj.operationType === operationType && obj.mappingId === mappingId && obj.mappingOperationKey === mappingOperationKey &&
+            obj.operationName === operationName
+        );
+
+      if (operationValue.length < 1) {
+
+        // has error, add it if it doesn't exist
+        if (index === -1) {
+          const error = {
+            operationType: operationType,
+            mappingId: mappingId,
+            mappingOperationKey: mappingOperationKey,
+            operationName: operationName
+          };
+          const test = [error, ...sourceOperationValueErrors];
+          setOperationValueErrors([error, ...sourceOperationValueErrors]);
+        }
+      } else {
+        // has no error, remove possible old one
+        const removalIndex = sourceOperationValueErrors
+          .findIndex(
+            obj => obj.mappingId === mappingId && obj.mappingOperationKey === mappingOperationKey &&
+              obj.operationName === operationName
+          );
+        if (index !== -1) {
+          let errorsTemp = [...sourceOperationValueErrors];
+          errorsTemp.splice(removalIndex, 1);
+          setOperationValueErrors(cloneDeep(errorsTemp));
+        }
       }
     }
   }
@@ -344,21 +382,52 @@ export default function NodeMappings(props: {
   }
 
   function updateMappingOperationSelection(operationKey: string) {
+    setMappingOperationValuesInit(false);
     setMappingOperationSelection(operationKey);
+    const filteredErrors = (sourceOperationValueErrors
+      .filter(
+        obj => obj.operationType !== 'mappingOperation'
+      ));
+    setOperationValueErrors(filteredErrors);
+
     if (operationKey && operationKey.length > 0 && operationKey !== 'N/A') {
       const processing: any = {
         id: operationKey,
         params: generateMappingFunctionDefaultParams(operationKey),
       };
       setMappingOperationFormatted(processing);
+    } else {
+      setMappingOperationFormatted(undefined);
+    }
+
+    const params = getMappingFunctionParams(operationKey);
+    if (params){
+      params.forEach(param => {
+        updateValidationErrors('mappingOperation', '', operationKey, param.name, param.defaultValue ? param.defaultValue : '');
+      });
     }
     else {
-      setMappingOperationFormatted(undefined);
     }
   }
 
   function updateMappingOperationValue(operationKey: string, parameter: string, newValue: string) {
     setMappingOperationSelection(operationKey);
+
+    if (mappingOperationValues) {
+      const newValues = mappingOperationValues.map(operation => {
+        if (operation.parameterId === parameter && operation.operationId === operationKey) {
+          operation.value = newValue;
+          operation.operationId = operationKey;
+        }
+        return operation;
+      });
+      setMappingOperationValues(newValues);
+    } else {
+      const operations: mappingOperationValue[] = [];
+      operations.push({operationId: operationKey, parameterId: parameter, value: newValue});
+      setMappingOperationValues(operations);
+    }
+
     let formattedParams = generateMappingFunctionDefaultParams(operationKey);
     formattedParams[parameter] = newValue;
     let processing: any = {
@@ -366,13 +435,26 @@ export default function NodeMappings(props: {
       params: formattedParams,
     };
     setMappingOperationFormatted(processing);
+    setMappingOperationValuesInit(true);
+    updateValidationErrors('mappingOperation', '', operationKey, parameter, newValue);
   }
 
   function getMappingOperationValue(operationKey: string, parameterName: string) {
     if (props?.nodeSelections[0]?.processing) {
       return props?.nodeSelections[0]?.processing.params[parameterName];
+    } else return '';
+  }
+
+  function isMappingOperationValueValid(parameterName: string) {
+
+    let ret = false;
+    if (mappingOperationValues) {
+      mappingOperationValues.filter(x => x.parameterId === parameterName).map(x => {
+          ret = x.value.length > 0;
+        }
+      );
+      return ret;
     }
-    else return '';
   }
 
   function generateMappingOperationFields(operationKey: string | undefined) {
@@ -385,11 +467,16 @@ export default function NodeMappings(props: {
       mappingFunctionWithParams[0].parameters.forEach(parameter => {
         if (operationKey && operationKey !== 'N/A') {
           if (!parameter.defaultValue) {
+            if (!isMappingOperationValuesInit) {
+              updateMappingOperationValue(operationKey, parameter.name, getMappingOperationValue(operationKey, parameter.name));
+            }
             ret.push(<div className='mt-2'><TextInput
               labelText={parameter.name}
               defaultValue={getMappingOperationValue(operationKey, parameter.name)}
-              onChange={(newValue) => updateMappingOperationValue(operationKey, parameter.name,newValue ? newValue.toString() : '')}
+              onChange={(newValue) => updateMappingOperationValue(operationKey, parameter.name, newValue ? newValue.toString() : '')}
               visualPlaceholder="Operation value"
+              status={isMappingOperationValueValid(parameter.name) ? 'default' : 'error'}
+              required={parameter.required}
             /></div>);
           }
         }
@@ -408,6 +495,11 @@ export default function NodeMappings(props: {
       >
         <ModalContent className="edit-mapping-modal-content">
           <ModalTitle>{props.isPatchMappingOperation ? 'Edit mapping' : 'Add mapping'}</ModalTitle>
+          {false && isErrorBarVisible &&
+              <GenerateValidationErrorBar hideErrorBarCallback={() => setIsErrorBarVisible(false)}
+                                          mappingNodes={mappingNodes}
+                                          mappingFunctions={props.mappingFunctions}></GenerateValidationErrorBar>
+          }
           <div className="col flex-column d-flex justify-content-between">
             <div className="row bg-white">
               {/* SOURCE OPERATIONS */}
@@ -481,7 +573,7 @@ export default function NodeMappings(props: {
           </div>
         </ModalContent>
         <ModalFooter>
-          <Button style={{height: 'min-content'}} onClick={() => save()}>
+          <Button disabled={sourceOperationValueErrors.length > 0} style={{height: 'min-content'}} onClick={() => save()}>
             {'Save'}
           </Button>
           <Button
