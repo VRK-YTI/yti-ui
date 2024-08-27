@@ -33,7 +33,6 @@ import {
 import LoadIndicator from 'yti-common-ui/load-indicator';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
-import getPrefLabel from '@app/common/utils/get-preflabel';
 import { translateTerminologyType } from '@app/common/utils/translation-helpers';
 import {
   Description,
@@ -98,19 +97,17 @@ export default function TerminologySearch() {
       contributors: terminology.organizations.map(
         (c) => organizations.find((o) => o.id === c)?.label ?? ''
       ),
-      description: terminology.description
-        ? getPrefLabel({
-            prefLabels: terminology.description,
-            lang: i18n.language,
-          })
-        : '',
+      description: getLanguageVersion({
+        data: terminology.description,
+        lang: i18n.language,
+      }),
       icon: <IconRegisters />,
       status: terminology.status,
       partOf: terminology.groups.map(
         (d) => groups.find((g) => g.id === d)?.label ?? ''
       ),
-      title: getPrefLabel({
-        prefLabels: terminology.label,
+      title: getLanguageVersion({
+        data: terminology.label,
         lang: i18n.language,
       }),
       titleLink: `terminology/${terminology.prefix}`,
@@ -128,7 +125,7 @@ export default function TerminologySearch() {
               lang: i18n.language,
             }),
             id: concept.identifier,
-            uri: concept.uri,
+            uri: `/terminology/${object.prefix}/concept/${concept.identifier}`,
           };
         });
         if (concepts.length > 0) {

@@ -8,17 +8,17 @@ import {
   Paragraph,
   Text,
   VisuallyHidden,
+  Link as SuomiLink,
 } from 'suomifi-ui-components';
-import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import {
-  MultilingualPropertyBlock,
-  ConceptListBlock,
-} from '@app/common/components/block';
+  BasicBlock,
+  BasicBlockExtraWrapper,
+  List,
+  MultilingualBlock,
+} from 'yti-common-ui/block';
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import PropertyValue from '@app/common/components/property-value';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import Separator from 'yti-common-ui/separator';
 import { useStoreDispatch } from '@app/store';
 import CollectionSidebar from './collection-sidebar';
@@ -35,7 +35,6 @@ import { SubTitle, MainTitle, BadgeBar } from 'yti-common-ui/title-block';
 import HasPermission from '@app/common/utils/has-permission';
 import Link from 'next/link';
 import RemovalModal from '@app/common/components/removal-modal';
-import { getBlockData } from './utils';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
@@ -83,14 +82,10 @@ export default function Collection({
       .map((org) => org.id);
   }, [organizations, isLoading, isError]);
 
-  const prefLabel = getPropertyValue({
-    property: collection?.properties.prefLabel,
-    language: i18n.language,
+  const prefLabel = getLanguageVersion({
+    data: collection?.label,
+    lang: i18n.language,
   });
-
-  const { prefLabels, definitions } = useMemo(() => {
-    return getBlockData(collection);
-  }, [collection]);
 
   useEffect(() => {
     if (collection) {
@@ -158,7 +153,7 @@ export default function Collection({
           url={`/terminology/${terminologyId}/collections/${collectionId}`}
           current
         >
-          <PropertyValue property={collection?.properties.prefLabel} />
+          {getLanguageVersion({ data: collection?.label, lang: i18n.language })}
         </BreadcrumbLink>
       </Breadcrumb>
 
@@ -172,7 +167,10 @@ export default function Collection({
               .join(', ')}
           </SubTitle>
           <MainTitle>
-            <PropertyValue property={collection?.properties.prefLabel} />
+            {getLanguageVersion({
+              data: collection?.label,
+              lang: i18n.language,
+            })}
           </MainTitle>
           <BadgeBar>
             {t('heading')}
@@ -184,18 +182,36 @@ export default function Collection({
 
           <BasicBlock title="URI">{collection?.uri}</BasicBlock>
 
-          <MultilingualPropertyBlock
-            title={t('field-name')}
-            data={prefLabels}
-          />
-          <MultilingualPropertyBlock
-            title={t('field-definition')}
-            data={definitions}
-          />
-          <ConceptListBlock
-            title={<h2>{t('field-member')}</h2>}
-            data={collection?.references.member}
-          />
+          <BasicBlock title={t('field-name')}>
+            <MultilingualBlock data={collection?.label ?? {}} />
+          </BasicBlock>
+
+          {collection?.description && (
+            <BasicBlock title={t('field-definition')}>
+              <MultilingualBlock data={collection?.description ?? {}} />
+            </BasicBlock>
+          )}
+
+          <BasicBlock title={<h2>{t('field-member')}</h2>}>
+            <List>
+              {collection?.members?.map((concept) => (
+                <li key={concept.identifier}>
+                  <Link
+                    href={`/terminology/${terminology?.prefix}/concept/${concept.identifier}`}
+                    passHref
+                    legacyBehavior
+                  >
+                    <SuomiLink href="">
+                      {getLanguageVersion({
+                        data: concept.label,
+                        lang: i18n.language,
+                      })}
+                    </SuomiLink>
+                  </Link>
+                </li>
+              ))}
+            </List>
+          </BasicBlock>
 
           <Separator />
 
@@ -221,11 +237,9 @@ export default function Collection({
 
                       <RemovalModal
                         nonDescriptive={true}
-                        removalData={{
-                          type: 'collection',
-                          data: collection,
-                        }}
-                        targetId={collection?.id ?? ''}
+                        dataType="collection"
+                        targetPrefix={terminology?.prefix}
+                        targetId={collection?.identifier ?? ''}
                         targetName={prefLabel}
                       />
                     </EditToolsBlock>
@@ -262,17 +276,22 @@ export default function Collection({
           </BasicBlock>
 
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-            <FormattedDate date={collection?.createdDate} />
-            {collection?.createdBy && `, ${collection.createdBy}`}
+            <FormattedDate date={collection?.created} />
+            {collection?.creator.name && `, ${collection.creator.name}`}
           </BasicBlock>
           <BasicBlock
             title={t('vocabulary-info-modified-at', { ns: 'common' })}
           >
-            <FormattedDate date={collection?.lastModifiedDate} />
-            {collection?.lastModifiedBy && `, ${collection.lastModifiedBy}`}
+            <FormattedDate date={collection?.modified} />
+            {collection?.modifier.name && `, ${collection.modifier.name}`}
           </BasicBlock>
         </MainContent>
-        {collection && <CollectionSidebar collection={collection} />}
+        {collection && (
+          <CollectionSidebar
+            collection={collection}
+            prefix={terminology?.prefix ?? ''}
+          />
+        )}
       </PageContent>
     </>
   );

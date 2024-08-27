@@ -8,6 +8,7 @@ import {
 import { UrlState } from '@app/common/utils/hooks/use-url-state';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
 import {
+  ConceptCollectionInfo,
   ConceptResponseObject,
   SearchResponse,
   Terminology,
@@ -26,9 +27,9 @@ export const terminologyApi = createApi({
   baseQuery: getTerminologyApiBaseQuery(),
   tagTypes: ['Terminology'],
   endpoints: (builder) => ({
-    getCollections: builder.query<Collection[], string>({
+    getCollections: builder.query<ConceptCollectionInfo[], string>({
       query: (terminologyId) => ({
-        url: `/collections?graphId=${terminologyId}`,
+        url: `/collection/${terminologyId}`,
         method: 'GET',
       }),
     }),
@@ -84,9 +85,9 @@ export const terminologyApi = createApi({
         },
       }),
     }),
-    deleteVocabulary: builder.mutation<null, string>({
-      query: (uuid) => ({
-        url: `/vocabulary?graphId=${uuid}`,
+    deleteTerminology: builder.mutation<null, string>({
+      query: (prefix) => ({
+        url: `/terminology/${prefix}`,
         method: 'DELETE',
       }),
     }),
@@ -111,7 +112,7 @@ export const {
   useGetTerminologyQuery,
   usePostNewVocabularyMutation,
   usePostCreateVersionMutation,
-  useDeleteVocabularyMutation,
+  useDeleteTerminologyMutation,
   useGetIfNamespaceInUseMutation,
   useGetVocabulariesQuery,
   util: { getRunningQueriesThunk },

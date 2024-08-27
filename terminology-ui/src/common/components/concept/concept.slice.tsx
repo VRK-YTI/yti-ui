@@ -17,6 +17,15 @@ export const conceptApi = createApi({
         method: 'GET',
       }),
     }),
+    deleteConcept: builder.mutation<
+      null,
+      { prefix: string; conceptId: string }
+    >({
+      query: (value) => ({
+        url: `/concept/${value.prefix}/${value.conceptId}`,
+        method: 'DELETE',
+      }),
+    }),
     searchConcept: builder.mutation<
       {
         concepts: Concepts[];
@@ -60,6 +69,7 @@ export const conceptApi = createApi({
 export const {
   useGetConceptQuery,
   useSearchConceptMutation,
+  useDeleteConceptMutation,
   util: { getRunningQueriesThunk },
 } = conceptApi;
 
