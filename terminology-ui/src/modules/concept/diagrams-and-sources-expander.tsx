@@ -30,7 +30,7 @@ export default function DiagramsAndSourcesExpander({
         {t('section-concept-diagrams-and-sources')}
       </ExpanderTitleButton>
       <ExpanderContent>
-        {concept?.links?.length && (
+        {concept?.links?.length > 0 && (
           <BasicBlock title={t('field-concept-diagrams')}>
             <PropertyList $smBot>
               {concept?.links?.map((link, idx) => {
