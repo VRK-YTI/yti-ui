@@ -1,29 +1,32 @@
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
-import { useAddCollectionMutation } from '@app/common/components/modify/modify.slice';
 import Separator from 'yti-common-ui/separator';
 import { BadgeBar, MainTitle, SubTitle } from 'yti-common-ui/title-block';
 import { useGetTerminologyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Button, Heading, InlineAlert } from 'suomifi-ui-components';
+import { Button, Heading, InlineAlert, TextInput } from 'suomifi-ui-components';
 import ConceptPicker from './concept-picker';
-import generateCollection from './generate-collection';
 import {
   ButtonBlock,
   DescriptionTextarea,
   FooterBlock,
-  NameTextInput,
+  CollectionTextInput,
   NewCollectionBlock,
   PageHelpText,
   TextBlockWrapper,
 } from './edit-collection.styles';
 import {
-  EditCollectionFormDataType,
+  CollectionFormData,
+  CollectionMember,
   EditCollectionProps,
 } from './edit-collection.types';
-import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
-import { Collection } from '@app/common/interfaces/collection.interface';
+import {
+  useAddCollectionMutation,
+  useCollectionExistsMutation,
+  useGetCollectionQuery,
+  useUpdateCollectionMutation,
+} from '@app/common/components/collection/collection.slice';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_INPUT_MAX, TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
@@ -36,6 +39,7 @@ import {
 } from '@app/common/components/login/login.slice';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { ConceptCollectionInfo } from '@app/common/interfaces/interfaces-v2';
 
 export default function EditCollection({
   terminologyId,
@@ -68,45 +72,46 @@ export default function EditCollection({
     useGetAuthenticatedUserMutMutation();
 
   const [addCollection, result] = useAddCollectionMutation();
-  const [newCollectionId, setNewCollectionId] = useState('');
+  const [updateCollection, updateResult] = useUpdateCollectionMutation();
+
   const [emptyError, setEmptyError] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
   const languages =
     terminology?.languages?.slice().sort((a, b) => compareLocales(a, b)) ?? [];
 
-  const [formData, setFormData] = useState<EditCollectionFormDataType>(
+  const [formData, setFormData] = useState<CollectionFormData>(
     setInitialData(collection)
   );
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
 
+  const [checkCollectionExists, exists] = useCollectionExistsMutation();
+
   useEffect(() => {
     if (result.isSuccess) {
       router.replace(
-        `/terminology/${terminologyId}/collection/${newCollectionId}`
+        `/terminology/${terminologyId}/collection/${formData.identifier}`
+      );
+    } else if (updateResult.isSuccess) {
+      router.replace(
+        `/terminology/${terminologyId}/collection/${collectionInfo?.collectionId}`
       );
     }
-  }, [result, router, terminologyId, newCollectionId]);
+  }, [result, updateResult, router, terminologyId]);
+
+  const setIdentifier = (value: string) => {
+    const data = formData;
+    Object.assign(data, { identifier: value });
+
+    setFormData(data);
+    enableConfirmation();
+  };
 
   const setName = (language: string, value: string) => {
     const data = formData;
-    if (data.name.some((n) => n.lang === language)) {
-      data.name = data.name.map((n) => {
-        if (n.lang === language) {
-          return {
-            lang: n.lang,
-            value: value,
-          };
-        }
-        return n;
-      });
-    } else {
-      data.name.push({
-        lang: language,
-        value: value,
-      });
-    }
+    Object.assign(data, { label: { ...data.label, [language]: value } });
+
     setFormData(data);
     enableConfirmation();
 
@@ -117,33 +122,17 @@ export default function EditCollection({
 
   const setDescription = (language: string, value: string) => {
     const data = formData;
-
-    if (data.definition.some((d) => d.lang === language)) {
-      data.definition = data.definition.map((d) => {
-        if (d.lang === language) {
-          return {
-            lang: d.lang,
-            value: value,
-          };
-        }
-        return d;
-      });
-    } else {
-      data.definition.push({
-        lang: language,
-        value: value,
-      });
-    }
+    Object.assign(data, {
+      description: { ...data.description, [language]: value },
+    });
 
     setFormData(data);
     enableConfirmation();
   };
 
-  const setFormConcepts = (
-    concepts: EditCollectionFormDataType['concepts']
-  ) => {
+  const setFormConcepts = (concepts: CollectionMember[]) => {
     const data = { ...formData };
-    data.concepts = concepts;
+    data.members = concepts;
     setFormData(data);
     enableConfirmation();
   };
@@ -151,21 +140,33 @@ export default function EditCollection({
   const handleClick = () => {
     getAuthenticatedMutUser();
 
-    if (formData.name.every((n) => !n.value)) {
+    const payload = Object.assign(
+      {},
+      {
+        ...formData,
+        members: formData.members.map((member) => member.identifier),
+      }
+    );
+
+    if (Object.keys(formData.label).every((n) => !formData.label[n])) {
       setEmptyError(true);
       return;
     }
-
     disableConfirmation();
     setIsCreating(true);
-    const data = generateCollection(
-      formData,
-      terminologyId,
-      `${authenticatedUser?.firstName} ${authenticatedUser?.lastName}`,
-      collectionInfo
-    );
-    setNewCollectionId(collectionInfo?.collectionId ?? data[0].id);
-    addCollection(data);
+
+    if (collectionInfo?.collectionId) {
+      updateCollection({
+        collectionId: collectionInfo.collectionId,
+        terminologyId,
+        payload: Object.assign(payload, { identifier: null }),
+      });
+    } else {
+      addCollection({
+        terminologyId,
+        payload,
+      });
+    }
   };
 
   const handleCancel = () => {
@@ -218,8 +219,26 @@ export default function EditCollection({
         <Heading variant="h3">{t('collection-basic-information')}</Heading>
 
         <TextBlockWrapper id="collection-text-info-block">
+          <CollectionTextInput
+            labelText={t('field-identifier')}
+            visualPlaceholder={t('enter-collection-identifier')}
+            defaultValue={collection?.identifier ?? ''}
+            disabled={!!collectionInfo}
+            onChange={(e) => setIdentifier(e?.toString() ?? '')}
+            status={exists.data ? 'error' : 'default'}
+            onBlur={() =>
+              checkCollectionExists({
+                terminologyId,
+                collectionId: formData.identifier,
+              })
+            }
+            statusText={exists.data ? t('prefix-taken', { ns: 'admin' }) : ''}
+            id="prefix-input"
+            maxLength={100}
+          />
+
           {languages.map((language) => (
-            <NameTextInput
+            <CollectionTextInput
               key={`name-input-${language}`}
               labelText={`${t('field-name')}, ${translateLanguage(
                 language,
@@ -228,9 +247,7 @@ export default function EditCollection({
               visualPlaceholder={t('enter-collection-name')}
               onBlur={(e) => setName(language, e.target.value.trim())}
               status={emptyError ? 'error' : 'default'}
-              defaultValue={
-                formData.name.find((n) => n.lang === language)?.value
-              }
+              defaultValue={formData.label[language]}
               maxLength={TEXT_INPUT_MAX}
               className="collection-name-input"
             />
@@ -246,9 +263,7 @@ export default function EditCollection({
               optionalText={t('optional', { ns: 'admin' })}
               visualPlaceholder={t('enter-collection-description')}
               onBlur={(e) => setDescription(language, e.target.value.trim())}
-              defaultValue={
-                formData.definition.find((n) => n.lang === language)?.value
-              }
+              defaultValue={formData.description[language]}
               maxLength={TEXT_AREA_MAX}
               className="collection-description-input"
             />
@@ -258,7 +273,7 @@ export default function EditCollection({
         <Separator isLarge />
 
         <ConceptPicker
-          concepts={formData.concepts}
+          concepts={formData.members}
           terminologyId={terminologyId}
           onChange={setFormConcepts}
         />
@@ -304,51 +319,27 @@ export default function EditCollection({
     </>
   );
 
-  function setInitialData(collection?: Collection) {
+  function setInitialData(collection?: ConceptCollectionInfo) {
     if (collection) {
       return {
-        name: collection.properties.prefLabel
-          ? collection.properties.prefLabel.map((l) => ({
-              lang: l.lang,
-              value: l.value.trim(),
-            }))
-          : [],
-        definition: collection.properties.definition
-          ? collection.properties.definition.map((d) => ({
-              lang: d.lang,
-              value: d.value.trim(),
-            }))
-          : [],
-        concepts: collection.references.member
-          ? collection.references.member.map((m) => {
-              const prefLabels = new Map();
-
-              m.references.prefLabelXl?.map((label) => {
-                prefLabels.set(
-                  label.properties.prefLabel?.[0].lang,
-                  label.properties.prefLabel?.[0].value
-                );
-              });
-
-              return {
-                id: m.id,
-                prefLabels: Object.fromEntries(prefLabels),
-              };
-            })
-          : [],
+        identifier: collection.identifier,
+        label: collection.label,
+        description: collection.description,
+        members: collection.members.map((member) => {
+          return {
+            uri: member.referenceURI,
+            identifier: member.identifier,
+            label: member.label,
+          };
+        }),
       };
     }
 
     return {
-      name: languages.map((language) => ({
-        lang: language,
-        value: '',
-      })),
-      definition: languages.map((language) => ({
-        lang: language,
-        value: '',
-      })),
-      concepts: [],
+      identifier: '',
+      label: {},
+      description: {},
+      members: [],
     };
   }
 }
