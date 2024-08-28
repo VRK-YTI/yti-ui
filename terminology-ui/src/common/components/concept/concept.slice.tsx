@@ -1,7 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
-import { ConceptInfo } from '@app/common/interfaces/interfaces-v2';
+import {
+  ConceptInfo,
+  ConceptResponseObject,
+  ConceptSearchRequest,
+  SearchResponse,
+} from '@app/common/interfaces/interfaces-v2';
 
 export const conceptApi = createApi({
   reducerPath: 'conceptAPI',
@@ -27,40 +32,13 @@ export const conceptApi = createApi({
       }),
     }),
     searchConcept: builder.mutation<
-      {
-        concepts: Concepts[];
-        resultStart: number;
-        totalHitCount: number;
-      },
-      {
-        terminologyId?: string;
-        query?: string;
-        notInTerminologyId?: string;
-        status?: string;
-        pageFrom?: number;
-        pageSize?: number;
-      }
+      SearchResponse<ConceptResponseObject>,
+      ConceptSearchRequest
     >({
-      query: (props) => ({
-        url: '/searchConcept',
-        method: 'POST',
-        data: {
-          highlight: true,
-          ...(props.notInTerminologyId && {
-            notInTerminologyId: [props.notInTerminologyId],
-          }),
-          pageFrom: props.pageFrom ?? 0,
-          pageSize: props.pageSize ?? 100,
-          ...(props.query && { query: props.query }),
-          sortDirection: 'ASC',
-          sortLanguage: 'fi',
-          ...(props.status && {
-            status: [props.status],
-          }),
-          ...(props.terminologyId && {
-            terminologyId: [props.terminologyId],
-          }),
-        },
+      query: (request) => ({
+        url: '/frontend/search-concepts',
+        method: 'GET',
+        params: request,
       }),
     }),
   }),

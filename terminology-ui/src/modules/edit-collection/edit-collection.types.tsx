@@ -1,3 +1,5 @@
+import { LocalizedValue } from '@app/common/interfaces/interfaces-v2';
+
 export interface EditCollectionProps {
   terminologyId: string;
   collectionName: string;
@@ -7,6 +9,19 @@ export interface EditCollectionProps {
     collectionCode: string;
     collectionUri: string;
   };
+}
+
+export interface CollectionMember {
+  uri: string;
+  identifier: string;
+  label: LocalizedValue;
+}
+
+export interface CollectionFormData {
+  identifier: string;
+  label: LocalizedValue;
+  description: LocalizedValue;
+  members: CollectionMember[];
 }
 
 export interface EditCollectionFormDataType {
@@ -19,10 +34,9 @@ export interface EditCollectionFormDataType {
     value: string;
   }[];
   concepts: {
-    id: string;
-    prefLabels: {
-      [key: string]: string;
-    };
+    uri: string;
+    identifier: string;
+    label: LocalizedValue;
   }[];
 }
 
