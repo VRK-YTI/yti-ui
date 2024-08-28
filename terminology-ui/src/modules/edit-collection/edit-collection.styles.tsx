@@ -22,7 +22,7 @@ export const TextBlockWrapper = styled(Block)`
   }
 `;
 
-export const NameTextInput = styled(TextInput)`
+export const CollectionTextInput = styled(TextInput)`
   max-width: 500px;
   width: 100%;
 `;

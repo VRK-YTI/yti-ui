@@ -21,6 +21,7 @@ import Layout from '@app/common/components/layout';
 import EditCollection from '@app/modules/edit-collection';
 import { SSRConfig } from 'next-i18next';
 import { wrapper } from '@app/store';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface CollectionEditPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -86,9 +87,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
       functionKey: 'getCollection',
     });
 
-    const collectionLabel = getPropertyValue({
-      property: collectionData?.properties?.prefLabel,
-      language: locale,
+    const collectionLabel = getLanguageVersion({
+      data: collectionData.label,
+      lang: locale ?? 'fi',
     });
 
     return {
@@ -97,8 +98,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
         terminologyId: terminologyId,
         collectionInfo: {
           collectionId: collectionId,
-          createdBy: collectionData.createdBy ?? null,
-          collectionCode: collectionData.code,
+          createdBy: collectionData.creator ?? null,
+          collectionCode: '',
           collectionUri: collectionData.uri,
         },
         requireAuthenticated: true,

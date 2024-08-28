@@ -5,6 +5,7 @@ import { Button, Chip } from 'suomifi-ui-components';
 import { EditCollectionFormDataType } from '../edit-collection.types';
 import { SelectedConceptBlock } from './concept-picker.styles';
 import PickerModal from './picker-modal';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface ConceptPickerProps {
   concepts: EditCollectionFormDataType['concepts'];
@@ -59,16 +60,16 @@ export default function ConceptPicker({
               <SelectedConceptBlock id="selected-concept-chips-block">
                 {concepts.map((concept) => (
                   <Chip
-                    key={`concept-${concept.id}`}
+                    key={`concept-${concept.identifier}`}
                     onClick={() =>
-                      onChange(concepts.filter((c) => c.id !== concept.id))
+                      onChange(concepts.filter((c) => c.uri !== concept.uri))
                     }
                     removable
                   >
-                    {concept.prefLabels[i18n.language] ??
-                      concept.prefLabels['fi'] ??
-                      concept.prefLabels[Object.keys(concept.prefLabels)[0]] ??
-                      ''}
+                    {getLanguageVersion({
+                      data: concept.label,
+                      lang: i18n.language,
+                    })}
                   </Chip>
                 ))}
               </SelectedConceptBlock>
