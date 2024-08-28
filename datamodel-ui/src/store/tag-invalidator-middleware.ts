@@ -61,7 +61,6 @@ tagInvalidatorMiddleware.startListening({
     return (
       mutationIsFulfilled(action) &&
       [
-        'createClass',
         'createResource',
         'renameClass',
         'renameResource',
@@ -79,6 +78,26 @@ tagInvalidatorMiddleware.startListening({
     );
     listenerApi.dispatch(
       searchInternalResourcesApi.util.invalidateTags([
+        { type: 'InternalResources', id: 'ALL' },
+      ])
+    );
+  },
+});
+
+// While creating node shape, new attributes and associations might be created as well, so they should be invalidated also.
+tagInvalidatorMiddleware.startListening({
+  predicate: (action) => {
+    return (
+      mutationIsFulfilled(action) &&
+      'createClass' === action.meta?.arg?.endpointName
+    );
+  },
+  effect: async (action, listenerApi) => {
+    listenerApi.dispatch(
+      searchInternalResourcesApi.util.invalidateTags([
+        { type: 'InternalResources', id: 'CLASS' },
+        { type: 'InternalResources', id: 'ATTRIBUTE' },
+        { type: 'InternalResources', id: 'ASSOCIATION' },
         { type: 'InternalResources', id: 'ALL' },
       ])
     );

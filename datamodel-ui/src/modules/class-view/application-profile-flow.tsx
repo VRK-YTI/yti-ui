@@ -5,7 +5,10 @@ import {
   InternalClass,
   InternalClassInfo,
 } from '@app/common/interfaces/internal-class.interface';
-import { getPrefixFromURI } from '@app/common/utils/get-value';
+import {
+  SUOMI_FI_NAMESPACE,
+  getPrefixFromURI,
+} from '@app/common/utils/get-value';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 
 export default function ApplicationProfileFlow({
@@ -96,6 +99,11 @@ export default function ApplicationProfileFlow({
             version: selectedTargetClass.targetClass.dataModelInfo.version,
             classId: selectedTargetClass.targetClass.identifier,
             isAppProfile: selectedTargetClass.isAppProfile ?? false,
+            externalId: !selectedTargetClass.targetClass.id.startsWith(
+              SUOMI_FI_NAMESPACE
+            )
+              ? selectedTargetClass.targetClass.id
+              : undefined,
           }}
           handleFollowUp={(value?: {
             associations: SimpleResource[];

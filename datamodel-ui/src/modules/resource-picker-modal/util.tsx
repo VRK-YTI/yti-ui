@@ -40,3 +40,35 @@ export function convertSimpleResourceToResultType(
     }),
   }));
 }
+
+export function convertExternalResourceToResultType(
+  resources: {
+    label: {
+      [key: string]: string;
+    };
+    description?: {
+      [key: string]: string;
+    };
+    uri: string;
+  }[],
+  lang: string
+): ResultType[] {
+  return resources.map((data) => {
+    return {
+      target: {
+        identifier: data.uri,
+        label: `${getLanguageVersion({
+          data: data.label,
+          lang: lang,
+        })}`,
+        linkLabel: data.uri,
+        link: data.uri,
+        note: `${getLanguageVersion({
+          data: data.description,
+          lang: lang,
+        })}`,
+        status: 'VALID',
+      },
+    };
+  });
+}
