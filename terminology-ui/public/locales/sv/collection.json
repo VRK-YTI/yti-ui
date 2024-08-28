@@ -18,9 +18,11 @@
     "prefLabel": "Namnet för begreppsurval måste anges åtminstone på ett språk."
   },
   "enter-collection-description": "Ange en beskrivning",
+  "enter-collection-identifier": "Ange en Identifierare",
   "enter-collection-name": "Ange ett namn",
   "enter-search-term": "Ange ett sökord",
   "field-definition": "Definition",
+  "field-identifier": "Identifierare",
   "field-member": "Begrepp, som hör till urvalet",
   "field-name": "Namn",
   "heading": "Begreppsurval",

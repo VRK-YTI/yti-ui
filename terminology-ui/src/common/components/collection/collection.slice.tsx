@@ -1,6 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
-import { ConceptCollectionInfo } from '@app/common/interfaces/interfaces-v2';
+import {
+  ConceptCollection,
+  ConceptCollectionInfo,
+} from '@app/common/interfaces/interfaces-v2';
+import { terminologyApi } from '../vocabulary/vocabulary.slice';
 
 export const collectionApi = createApi({
   reducerPath: 'collectionAPI',
@@ -22,6 +26,33 @@ export const collectionApi = createApi({
         method: 'GET',
       }),
     }),
+    addCollection: builder.mutation<
+      null,
+      {
+        terminologyId: string;
+        payload: ConceptCollection;
+      }
+    >({
+      query: (data) => ({
+        url: `/collection/${data.terminologyId}`,
+        method: 'POST',
+        data: data.payload,
+      }),
+    }),
+    updateCollection: builder.mutation<
+      null,
+      {
+        terminologyId: string;
+        collectionId: string;
+        payload: ConceptCollection;
+      }
+    >({
+      query: (data) => ({
+        url: `/collection/${data.terminologyId}/${data.collectionId}`,
+        method: 'PUT',
+        data: data.payload,
+      }),
+    }),
     deleteCollection: builder.mutation<
       null,
       { prefix: string; collectionId: string }
@@ -31,12 +62,24 @@ export const collectionApi = createApi({
         method: 'DELETE',
       }),
     }),
+    collectionExists: builder.mutation<
+      boolean,
+      { terminologyId: string; collectionId: string }
+    >({
+      query: (params) => ({
+        url: `/collection/${params.terminologyId}/${params.collectionId}/exists`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
 export const {
   useGetCollectionQuery,
   useGetCollectionsQuery,
+  useAddCollectionMutation,
+  useUpdateCollectionMutation,
+  useCollectionExistsMutation,
   useDeleteCollectionMutation,
   util: { getRunningQueriesThunk },
 } = collectionApi;

@@ -23,7 +23,10 @@ import {
   SearchInput,
   Text,
 } from 'suomifi-ui-components';
-import { EditCollectionFormDataType } from '../edit-collection.types';
+import {
+  CollectionMember,
+  EditCollectionFormDataType,
+} from '../edit-collection.types';
 import {
   FooterButton,
   ResultBlock,
@@ -35,6 +38,12 @@ import {
 import { PickerModalProps, SelectedConceptProps } from './concept-picker.types';
 import { ExpanderConceptContent } from './expander-concept-content';
 import { DetachedPagination } from 'yti-common-ui/pagination';
+import {
+  ConceptResponseObject,
+  SearchResponse,
+} from '@app/common/interfaces/interfaces-v2';
+import { getNamespace } from '@app/common/utils/namespace';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 export default function PickerModal({
   setVisible,
@@ -46,12 +55,13 @@ export default function PickerModal({
   const { isSmall } = useBreakpoints();
   const [searchConcept, result] = useSearchConceptMutation();
   const [selectedConcepts, setSelectedConcepts] =
-    useState<EditCollectionFormDataType['concepts']>(orgConcepts);
+    useState<CollectionMember[]>(orgConcepts);
   const [showSelected, setShowSelected] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [status, setStatus] = useState<string>('ALL-STATUSES');
   const [totalResults, setTotalResults] = useState(0);
-  const [searchResults, setSearchResults] = useState<Concepts[]>([]);
+  const [searchResults, setSearchResults] =
+    useState<SearchResponse<ConceptResponseObject>>();
   const [currPage, setCurrPage] = useState(1);
   const modalRef = createRef<HTMLDivElement>();
 
@@ -98,7 +108,10 @@ export default function PickerModal({
     setVisible(false);
   };
 
-  const handleCheckbox = (checkboxState: boolean, concept: Concepts) => {
+  const handleCheckbox = (
+    checkboxState: boolean,
+    concept: ConceptResponseObject
+  ) => {
     if (checkboxState) {
       let label = concept.label;
 
@@ -113,18 +126,21 @@ export default function PickerModal({
       setSelectedConcepts([
         ...selectedConcepts,
         {
-          id: concept.id,
-          prefLabels: label,
+          uri: concept.uri,
+          identifier: concept.identifier,
+          label,
         },
       ]);
     } else {
-      setSelectedConcepts(selectedConcepts.filter((c) => c.id !== concept.id));
+      setSelectedConcepts(
+        selectedConcepts.filter((c) => c.uri !== concept.uri)
+      );
     }
   };
 
-  const handleDeselect = (id: string) => {
+  const handleDeselect = (uri: string) => {
     const updatedConcepts = selectedConcepts.filter(
-      (concept) => concept.id !== id
+      (concept) => concept.uri !== uri
     );
     setSelectedConcepts(updatedConcepts);
 
@@ -139,25 +155,25 @@ export default function PickerModal({
 
   const handleSearch = () => {
     searchConcept({
-      terminologyId: terminologyId,
+      namespace: getNamespace(terminologyId),
       query: searchTerm,
-      status: status !== 'ALL-STATUSES' ? status : undefined,
+      status: status !== 'ALL-STATUSES' ? [status] : undefined,
       pageFrom: (currPage - 1) * 20,
       pageSize: 20,
     });
   };
 
   const handleClear = () => {
-    searchConcept({ terminologyId: terminologyId });
+    searchConcept({ namespace: getNamespace(terminologyId) });
     setSearchTerm('');
   };
 
   const handlePageChange = (num: number) => {
     setCurrPage(num);
     searchConcept({
-      terminologyId: terminologyId,
+      namespace: getNamespace(terminologyId),
       query: searchTerm,
-      status: status !== 'ALL-STATUSES' ? status : undefined,
+      status: status !== 'ALL-STATUSES' ? [status] : undefined,
       pageFrom: (num - 1) * 20,
       pageSize: 20,
     });
@@ -172,12 +188,12 @@ export default function PickerModal({
 
   useEffect(() => {
     if (result.isUninitialized) {
-      setSearchResults([]);
+      setSearchResults(undefined);
       setTotalResults(0);
     }
 
     if (result.isSuccess) {
-      setSearchResults(result.data.concepts);
+      setSearchResults(result.data);
       setTotalResults(result.data.totalHitCount);
     }
   }, [result, setTotalResults]);
@@ -259,7 +275,7 @@ export default function PickerModal({
               openAllText=""
               showToggleAllButton={false}
             >
-              {searchResults.map((concept) => {
+              {searchResults?.responseObjects.map((concept) => {
                 return (
                   <Expander key={`concept-${concept.id}`}>
                     <ExpanderTitle
@@ -274,31 +290,22 @@ export default function PickerModal({
                         hintText={`${translateStatus(
                           concept.status,
                           t
-                        )} \u00B7 ${
-                          concept.terminology.label[i18n.language] ??
-                          concept.terminology.label.fi ??
-                          concept.terminology.label[
-                            Object.keys(concept.terminology.label)[0]
-                          ] ??
-                          ''
-                        }`}
+                        )} \u00B7 TODO: terminology label`}
                         id={`checkbox-id-${concept.id}`}
                         onClick={(e) =>
                           handleCheckbox(e.checkboxState, concept)
                         }
                         defaultChecked={selectedConcepts
-                          .map((c) => c.id)
-                          .includes(concept.id)}
+                          .map((c) => c.uri)
+                          .includes(concept.uri)}
                         className="search-result-checkbox"
                         variant={isSmall ? 'large' : 'small'}
                       >
                         <SanitizedTextContent
-                          text={
-                            concept.label[i18n.language] ??
-                            concept.label.fi ??
-                            concept.label[Object.keys(concept.label)[0]] ??
-                            ''
-                          }
+                          text={getLanguageVersion({
+                            data: concept.label,
+                            lang: i18n.language,
+                          })}
                         />
                       </Checkbox>
                     </ExpanderTitle>
@@ -365,13 +372,10 @@ function SelectedConcepts({
           return (
             <Chip
               key={`selected-concept-${idx}`}
-              onClick={() => deselect(concept.id)}
+              onClick={() => deselect(concept.uri)}
               removable
             >
-              {concept.prefLabels[i18n.language] ??
-                concept.prefLabels.fi ??
-                concept.prefLabels[Object.keys(concept.prefLabels)[0]] ??
-                ''}
+              {getLanguageVersion({ data: concept.label, lang: i18n.language })}
             </Chip>
           );
         })}

@@ -77,9 +77,9 @@ export interface Term {
 }
 
 export interface ConceptReferenceInfo {
-  conceptURI: string;
-  prefix: string;
   identifier: string;
+  referenceURI: string;
+  prefix: string;
   label: LocalizedValue;
 }
 
@@ -95,6 +95,13 @@ export interface ConceptCollectionInfo {
   modifier: UserMeta;
 }
 
+export interface ConceptCollection {
+  identifier: string;
+  label: LocalizedValue;
+  description: LocalizedValue;
+  members: string[];
+}
+
 /* build fails for empty interfaces
 
 export interface TerminologyInfo {}
@@ -103,27 +110,26 @@ export interface TerminologyInfo {}
 export interface ConceptInfo {}
 
 
-export interface ConceptCollection {}
 
 */
 
 export interface SearchRequest {
-  query: string;
-  sortLang: string;
-  status: Status[];
-  pageSize: number;
-  pageFrom: number;
+  query?: string;
+  sortLang?: string;
+  status?: Status[] | string[];
+  pageSize?: number;
+  pageFrom?: number;
 }
 
 export interface TerminologySearchRequest extends SearchRequest {
-  searchconcepts: boolean;
+  searchConcepts: boolean;
   groups: string[];
   organizations: string[];
   languages: string[];
 }
 
 export interface ConceptSearchRequest extends SearchRequest {
-  namespace: string;
+  namespace?: string;
 }
 
 export interface ResponseObject {
@@ -131,6 +137,8 @@ export interface ResponseObject {
   id: string;
   label: LocalizedValue;
   status: Status;
+  created: string;
+  modified: string;
 }
 
 export interface TerminogyResponseObject extends ResponseObject {

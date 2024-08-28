@@ -18,9 +18,11 @@
     "prefLabel": "Käsitekokoelman nimi tulee olla määritettynä vähintään yhdellä kielellä."
   },
   "enter-collection-description": "Kirjoita kuvaus",
+  "enter-collection-identifier": "Kirjoita tunnus",
   "enter-collection-name": "Kirjoita nimi",
   "enter-search-term": "Kirjoita hakusana",
   "field-definition": "Kuvaus",
+  "field-identifier": "Tunnus",
   "field-member": "Valikoimaan kuuluvat käsitteet",
   "field-name": "Nimi",
   "heading": "Käsitekokoelma",
