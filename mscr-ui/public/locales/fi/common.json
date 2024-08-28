@@ -21,6 +21,7 @@
     "deprecate-schema": "",
     "edit-mappings": "",
     "edit-metadata": "",
+    "edit-schema": "",
     "finish-editing": "",
     "invalidate-crosswalk": "",
     "invalidate-schema": "",
@@ -38,6 +39,7 @@
   "change-language-selected-language": "",
   "choose-language": "",
   "class": "",
+  "clear-label": "",
   "clear-language-filter": "",
   "click-to-dismiss": "",
   "click-to-expand-sidebar": "",
@@ -230,9 +232,18 @@
   "no-languages-available": "",
   "no-subscribed-items": "",
   "node-info": {
+    "found-results": "",
+    "link-to-type-registry": "",
     "loading": "",
+    "make-longer-query": "",
+    "make-query-and-choose": "",
+    "no-results": "",
     "select-a-node": "",
-    "selected-node-info": ""
+    "selected-node-info": "",
+    "type-search": "",
+    "type-search-results-title": "",
+    "type-to-search": "",
+    "use-button": ""
   },
   "not-recommended-synonym": "",
   "notifications": {
@@ -248,9 +259,11 @@
     "crosswalk-published": "",
     "crosswalk-saved": "",
     "mappings-edit": "",
-    "mappings-finish": "",
+    "mappings-finish-editing": "",
     "schema-deleted": "",
     "schema-deprecated": "",
+    "schema-edit": "",
+    "schema-finish-editing": "",
     "schema-invalidated": "",
     "schema-published": "",
     "schema-saved": ""
@@ -322,6 +335,7 @@
     "no-match": ""
   },
   "search-by-keyword": "",
+  "search-label": "",
   "search-term": "",
   "select-at-least-one-service": "",
   "select-organization": "",

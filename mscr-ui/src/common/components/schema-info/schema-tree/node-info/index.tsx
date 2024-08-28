@@ -5,15 +5,20 @@ import Box from '@mui/material/Box';
 import { InfoIcon } from '@app/common/components/shared-icons';
 import { useTranslation } from 'next-i18next';
 import { DropdownWrapper } from '@app/common/components/schema-info/schema-info.styles';
+import TypeSelector from '@app/common/components/schema-info/schema-tree/node-info/type-selector';
+import { IconLinkExternal } from 'suomifi-icons';
 
 export default function NodeInfo(props: {
   treeData: RenderTree[];
   dataIsLoaded: boolean;
-  // performNodeInfoAction: any;
+  isNodeEditable?: boolean;
 }) {
   const { t } = useTranslation('common');
   const [selectedNode, setSelectedNode] = useState<RenderTree>();
+  const [nodeAttributes, setNodeAttributes] = useState<ConstantAttribute[]>([]);
+  const isLeafNode = selectedNode?.children.length === 0;
   const [dropDownList, setDropDownList] = useState<RenderTree[]>([]);
+  const [nodeTypeAttribute, setNodeTypeAttribute] = useState('');
 
   useEffect(() => {
     if (props.treeData && props.treeData.length > 0) {
@@ -34,21 +39,28 @@ export default function NodeInfo(props: {
     value: string | undefined;
   }
 
-  const nodeProperties: ConstantAttribute[] = [];
-  if (selectedNode && selectedNode.properties) {
-    for (const [key, value] of Object.entries(selectedNode.properties)) {
-      nodeProperties.push({
-        name: key,
-        value: typeof value === 'string' ? value.toString() : undefined,
-      });
+  useEffect(() => {
+    if (selectedNode && selectedNode.properties) {
+      const nodeProperties: ConstantAttribute[] = [];
+      for (const [key, value] of Object.entries(selectedNode.properties)) {
+        if (key === '@type' && isLeafNode && props.isNodeEditable) {
+          setNodeTypeAttribute(value as string);
+          continue;
+        }
+        nodeProperties.push({
+          name: key,
+          value: typeof value === 'string' ? value.toString() : undefined,
+        });
+      }
+      setNodeAttributes(nodeProperties);
     }
-  }
+  }, [isLeafNode, props.isNodeEditable, selectedNode]);
 
   function processHtmlLinks(input: string | undefined) {
-    if (input && input.startsWith('http://' || 'https://')) {
+    if (input && (input.startsWith('http://') || input.startsWith('https://'))) {
       return (
         <a href={input} target="_blank" rel="noreferrer">
-          {input}
+          {input} <IconLinkExternal />
         </a>
       );
     }
@@ -115,7 +127,7 @@ export default function NodeInfo(props: {
                 </>
               )}
 
-              {nodeProperties.map((attrib) => (
+              {nodeAttributes.map((attrib) => (
                 <div className="col-12" key={self.crypto.randomUUID()}>
                   <div className="">{processHtmlLinks(attrib.name)}:</div>
                   <div className="attribute-font">
@@ -123,6 +135,17 @@ export default function NodeInfo(props: {
                   </div>
                 </div>
               ))}
+              {props.isNodeEditable &&
+                isLeafNode &&
+                nodeTypeAttribute !== '' && (
+                  <div className="col-12" key={self.crypto.randomUUID()}>
+                    <div className="">@type:</div>
+                    <div className="attribute-font">
+                      {processHtmlLinks(nodeTypeAttribute)}
+                    </div>
+                    <TypeSelector nodeId={selectedNode?.id} />
+                  </div>
+                )}
             </div>
           </div>
         </Box>

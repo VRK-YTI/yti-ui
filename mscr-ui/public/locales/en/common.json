@@ -21,6 +21,7 @@
     "deprecate-schema": "Deprecate schema",
     "edit-mappings": "Edit mappings",
     "edit-metadata": "Edit metadata",
+    "edit-schema": "Edit schema",
     "finish-editing": "Finish editing",
     "invalidate-crosswalk": "Invalidate crosswalk",
     "invalidate-schema": "Invalidate schema",
@@ -38,6 +39,7 @@
   "change-language-selected-language": "Current language",
   "choose-language": "",
   "class": "",
+  "clear-label": "Clear",
   "clear-language-filter": "",
   "click-to-dismiss": "Click to dismiss",
   "click-to-expand-sidebar": "Click to expand sidebar",
@@ -230,9 +232,18 @@
   "no-languages-available": "",
   "no-subscribed-items": "",
   "node-info": {
+    "found-results": "Found {{hitCount}} results",
+    "link-to-type-registry": "Go to full description",
     "loading": "Loading...",
+    "make-longer-query": "Query needs to be at least two characters",
+    "make-query-and-choose": "Use the search to see type selection",
+    "no-results": "No results with the current query",
     "select-a-node": "Nothing to show just now. Select an entity to view information.",
-    "selected-node-info": "Selected node info"
+    "selected-node-info": "Selected node info",
+    "type-search": "Search for data types",
+    "type-search-results-title": "Type search results",
+    "type-to-search": "Type to search",
+    "use-button": "Use"
   },
   "not-recommended-synonym": "",
   "notifications": {
@@ -248,9 +259,11 @@
     "crosswalk-published": "Crosswalk published successfully",
     "crosswalk-saved": "Crosswalk metadata saved successfully",
     "mappings-edit": "Mapping controls enabled",
-    "mappings-finish": "Mapping controls disabled",
+    "mappings-finish-editing": "Mapping controls disabled",
     "schema-deleted": "Schema was removed",
     "schema-deprecated": "Schema deprecated",
+    "schema-edit": "Schema editing enabled",
+    "schema-finish-editing": "Schema editing disabled",
     "schema-invalidated": "Schema invalidated",
     "schema-published": "Schema published successfully",
     "schema-saved": "Schema metadata saved successfully"
@@ -322,6 +335,7 @@
     "no-match": "No results matching search"
   },
   "search-by-keyword": "",
+  "search-label": "Search",
   "search-term": "",
   "select-at-least-one-service": "",
   "select-organization": "",

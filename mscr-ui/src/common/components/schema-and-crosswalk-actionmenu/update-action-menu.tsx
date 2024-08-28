@@ -8,6 +8,7 @@ import { SchemaWithVersionInfo } from '@app/common/interfaces/schema.interface';
 import { CrosswalkWithVersionInfo } from '@app/common/interfaces/crosswalk.interface';
 import { Type } from '@app/common/interfaces/search.interface';
 import { useStoreDispatch } from '@app/store';
+import { Format } from '@app/common/interfaces/format.interface';
 
 export function updateActionMenu(
   dispatch: ReturnType<typeof useStoreDispatch>,
@@ -29,8 +30,10 @@ export function updateActionMenu(
   switch (contentData.state) {
     case State.Draft:
       dispatch(setMenuList(['deleteDraft', 'publish']));
-      // Todo: this doesn't need to be conditional when schema editing is implemented
-      if (contentType === Type.Crosswalk) {
+      if (
+        contentType === Type.Crosswalk ||
+        contentData.format === Format.Mscr
+      ) {
         dispatch(setMenuList(['editContent']));
       }
       break;

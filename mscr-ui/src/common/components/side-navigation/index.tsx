@@ -32,6 +32,7 @@ import {
   selectIsSideNavigationMinimized,
   setIsSideNavigationMinimized,
 } from '@app/common/components/navigation/navigation.slice';
+import { resetContentView } from '@app/common/components/content-view/content-view.slice';
 
 export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const { breakpoint } = useBreakpoints();
@@ -54,6 +55,14 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const handleClickMinimizeButton = () => {
     dispatch(setIsSideNavigationMinimized(!isSidebarMinimized));
     setFirstPageLoad(false);
+  };
+
+  const handleNavigate = (isPersonal?: boolean) => {
+    if (isPersonal) {
+      setOpenGroup([]);
+    }
+    setIsSearchActive(false);
+    dispatch(resetContentView());
   };
 
   const handleClickGroup = (groupId: string) => {
@@ -99,10 +108,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
               content={
                 <Link href={personalCrosswalksPath} passHref>
                   <RouterLink
-                    onClick={() => {
-                      setOpenGroup([]);
-                      setIsSearchActive(false);
-                    }}
+                    onClick={() => handleNavigate(true)}
                   >
                     {t('workspace.crosswalks')}
                   </RouterLink>
@@ -116,10 +122,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
               content={
                 <Link href={personalSchemasPath} passHref>
                   <RouterLink
-                    onClick={() => {
-                      setOpenGroup([]);
-                      setIsSearchActive(false);
-                    }}
+                    onClick={() => handleNavigate(true)}
                   >
                     {t('workspace.schemas')}
                   </RouterLink>
@@ -159,7 +162,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                 )}
                 content={
                   <Link href={'/' + group.id + '/crosswalks'} passHref>
-                    <RouterLink onClick={() => setIsSearchActive(false)}>
+                    <RouterLink onClick={() => handleNavigate()}>
                       {t('workspace.crosswalks')}
                     </RouterLink>
                   </Link>
@@ -171,7 +174,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                 selected={router.asPath.startsWith('/' + group.id + '/schemas')}
                 content={
                   <Link href={'/' + group.id + '/schemas'} passHref>
-                    <RouterLink onClick={() => setIsSearchActive(false)}>
+                    <RouterLink onClick={() => handleNavigate()}>
                       {t('workspace.schemas')}
                     </RouterLink>
                   </Link>
@@ -203,10 +206,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
           >
             <ActionMenuItem
               key="crosswalks"
-              onClick={() => {
-                setOpenGroup([]);
-                setIsSearchActive(false);
-              }}
+              onClick={() => handleNavigate(true)}
             >
               <Link href={personalCrosswalksPath} passHref>
                 {t('workspace.crosswalks')}
@@ -214,10 +214,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
             </ActionMenuItem>
             <ActionMenuItem
               key="schemas"
-              onClick={() => {
-                setOpenGroup([]);
-                setIsSearchActive(false);
-              }}
+              onClick={() => handleNavigate(true)}
             >
               <Link href={personalSchemasPath} passHref>
                 {t('workspace.schemas')}
@@ -238,7 +235,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                   <ActionMenuItem
                     key={`${group.id}-crosswalks`}
                     onClick={() => {
-                      setIsSearchActive(false);
+                      handleNavigate();
                       setOpenGroup([group.id]);
                     }}
                   >
@@ -249,7 +246,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
                   <ActionMenuItem
                     key={`${group.id}-schemas`}
                     onClick={() => {
-                      setIsSearchActive(false);
+                      handleNavigate();
                       setOpenGroup([group.id]);
                     }}
                   >

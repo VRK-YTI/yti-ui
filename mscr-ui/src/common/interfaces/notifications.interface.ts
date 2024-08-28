@@ -16,13 +16,12 @@ export type NotificationKeys =
   | 'CROSSWALK_DELETE'
   | 'SCHEMA_DELETE'
   | 'EDIT_MAPPINGS'
+  | 'EDIT_SCHEMA'
   | 'FINISH_EDITING_MAPPINGS'
+  | 'FINISH_EDITING_SCHEMA'
   | 'CROSSWALK_REVISION'
   | 'SCHEMA_REVISION'
   | 'CROSSWALK_ADD'
   | 'SCHEMA_ADD'
   | 'CROSSWALK_COPY'
   | 'SCHEMA_COPY';
-  // ToDo: Add more notifications, like these below:
-  // | 'MAPPING_ADD'
-  // | 'MAPPING_DELETE'

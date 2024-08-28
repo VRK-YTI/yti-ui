@@ -27,6 +27,7 @@ import { notificationsSlice } from '@app/common/components/notifications/notific
 import { actionmenuSlice } from '@app/common/components/actionmenu/actionmenu.slice';
 import { contentViewSlice } from '@app/common/components/content-view/content-view.slice';
 import { navigationSlice } from '@app/common/components/navigation/navigation.slice';
+import { dataTypeSlice } from '@app/common/components/data-type-registry-search/data-type-registry-search.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -58,6 +59,7 @@ export function makeStore(ctx: NextIronContext) {
       [actionmenuSlice.name]: actionmenuSlice.reducer,
       [contentViewSlice.name]: contentViewSlice.reducer,
       [navigationSlice.name]: navigationSlice.reducer,
+      [dataTypeSlice.name]: dataTypeSlice.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>

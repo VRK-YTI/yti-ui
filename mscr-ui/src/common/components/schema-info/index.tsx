@@ -36,6 +36,7 @@ export default function SchemaInfo(props: {
   caption: string;
   schemaUrn: string;
   isSingleTree?: boolean;
+  isNodeEditable?: boolean;
 }) {
   const { t } = useTranslation('common');
   const lang = useRouter().locale ?? '';
@@ -104,7 +105,7 @@ export default function SchemaInfo(props: {
       props.updateTreeNodeSelectionsOutput(selectedNodes, props.isSourceTree);
     }
     setSelectedTreeNodes(selectedNodes);
-  }, [treeSelectedArray]);
+  }, [treeSelectedArray, nodeIdToNodeDictionary]);
 
   const setPartlyExpanded = () => {
     const nodeIdsToExpand: string[] = [];
@@ -316,8 +317,8 @@ export default function SchemaInfo(props: {
         <NodeInfoWrapper className="col-5 px-0">
           <NodeInfo
             treeData={selectedTreeNodes}
-            // performNodeInfoAction={performNodeInfoAction}
             dataIsLoaded={isTreeDataFetched}
+            isNodeEditable={props.isNodeEditable}
           />
           <CheckboxWrapper>
             <Checkbox

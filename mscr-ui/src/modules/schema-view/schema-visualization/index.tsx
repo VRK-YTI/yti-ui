@@ -8,9 +8,11 @@ import {
 export default function SchemaVisualization({
   pid,
   format,
+  isNodeEditable
 }: {
   pid: string;
   format: Format;
+  isNodeEditable: boolean;
 }) {
   const { t } = useTranslation('common');
   const filterLabel = t('schema-tree.search-schema');
@@ -18,7 +20,12 @@ export default function SchemaVisualization({
     formatsAvailableForCrosswalkCreation.includes(format);
   if (visualizationAvailable) {
     return (
-      <SchemaInfo caption={filterLabel} schemaUrn={pid} isSingleTree={true} />
+      <SchemaInfo
+        caption={filterLabel}
+        schemaUrn={pid}
+        isSingleTree={true}
+        isNodeEditable={isNodeEditable}
+      />
     );
   } else {
     return (
