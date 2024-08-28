@@ -46,7 +46,6 @@ body {
   width: 1000px !important;
   .bg-light-blue {
     background: #d5e4f6 !important;
-    height: 460px;
   }
   .edit-mapping-modal-content {
     font-size: 0.9rem;
@@ -301,7 +300,7 @@ body {
   }
 
   // Accordion
-  .joint-listing-accordion-wrap {
+  .mapping-listing-accordion-wrap {
     thead {
       border-bottom: 3px solid #d8e3f4;
       outline: none;
@@ -348,10 +347,6 @@ body {
     width: 100%;
 
     td {
-      height: 52px;
-      display: flex;
-      padding: 0px 20px;
-
       button {
         min-width: 50px;
       }
@@ -379,10 +374,26 @@ body {
   }
 }
 
+.sidebar-animate-fadein {
+  animation: fadeInAnimation ease 1700ms;
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+}
+
+.sidebar-animate-fadeout {
+  animation: fadeOutAnimation ease 400ms;
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+}
+
 .w-0 {
   width: 0px;
 }
 
 .w-100 {
   width: 100%;
+}
+
+.fw-bold {
+  font-weight: bold;
 }

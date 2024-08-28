@@ -16,7 +16,7 @@ import LinkOffIcon from '@mui/icons-material/LinkOff';
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import {Button as Sbutton, SearchInput, Textarea, TextInput} from 'suomifi-ui-components';
+import {Button as Sbutton, DropdownItem, SearchInput, Textarea, TextInput} from 'suomifi-ui-components';
 import Button from '@mui/material/Button';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import CheckIcon from '@mui/icons-material/Check';
@@ -28,7 +28,33 @@ import {useEffect} from 'react';
 import {useTranslation} from 'next-i18next';
 import {SearchWrapper} from "@app/modules/crosswalk-editor/mappings-accordion/mappings-accordion.styles";
 
-const StyledTableCell = styled(TableCell)(({theme}) => ({}));
+
+const StyledTableCell = styled(TableCell)({
+  height: 'auto',
+  minHeight: '52px',
+  display: 'flex',
+  padding: '0px 20px',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  alignSelf: 'normal'
+});
+
+const StyledTableButtonCell = styled(TableCell)({
+  height: 'auto',
+  minHeight: '52px',
+  display: 'flex',
+  padding: '0px 20px',
+  justifyContent: 'right',
+  flexDirection: 'row',
+  alignSelf: 'normal',
+  button: {maxHeight: '52px'}
+});
+
+const StyledButton = styled(Button)({
+  display: 'flex',
+  justifyContent: 'start',
+  alignSelf: 'normal',
+});
 
 const StyledTableRow = styled(TableRow)(({theme}) => ({
   '&:nth-of-type(odd)': {
@@ -53,20 +79,22 @@ function Row(props: {
     <>
       <StyledTableRow className="accordion-row row">
         <StyledTableCell className="col-5">
-          <Button
-            className="px-3 py-0"
-            style={{textTransform: 'none'}}
-            title="Select linked node from source tree"
-            onClick={(e) => {
-              props.callBackFunction.performAccordionAction(
-                props.row,
-                'selectFromSourceTree',
-              );
-              e.stopPropagation();
-            }}
-          >
-            {props.showAttributeNames ? props.row.source[0].label : props.row.source[0].id}
-          </Button>
+          {props.row.source.map((oneLink) =>
+            <>          <StyledButton
+              className="px-3 py-0"
+              style={{textTransform: 'none'}}
+              title="Select linked node from source tree"
+              onClick={(e) => {
+                props.callBackFunction.performAccordionAction(
+                  props.row,
+                  props.row.source.length > 1 ? 'selectFromSourceTreeById' : 'selectFromSourceTreeByMapping',
+                  oneLink.id
+                );
+                e.stopPropagation();
+              }}
+            >{props.showAttributeNames ? oneLink.label : oneLink.id}</StyledButton><br/></>
+          )}
+
         </StyledTableCell>
 
         {/*                <StyledTableCell className='fw-bold' style={{width: '10%'}}>
@@ -77,20 +105,22 @@ function Row(props: {
                 </StyledTableCell>*/}
 
         <StyledTableCell className="col-4">
-          <Button
-            className="px-3 py-0"
-            style={{textTransform: 'none'}}
-            title="Select linked node from target tree"
-            onClick={(e) => {
-              props.callBackFunction.performAccordionAction(
-                props.row,
-                'selectFromTargetTree',
-              );
-              e.stopPropagation();
-            }}
-          >
-            <span>{props.showAttributeNames ? props.row.target[0].label : props.row.target[0].id}</span>
-          </Button>
+          {props.row.target.map((oneLink) =>
+            <>          <StyledButton
+              className="px-3 py-0"
+              style={{textTransform: 'none'}}
+              title="Select linked node from target tree"
+              onClick={(e) => {
+                props.callBackFunction.performAccordionAction(
+                  props.row,
+                  props.row.target.length > 1 ? 'selectFromTargetTreeById' : 'selectFromTargetTreeByMapping',
+                  oneLink.id
+                );
+                e.stopPropagation();
+              }}
+            >{props.showAttributeNames ? oneLink.label : oneLink.id}</StyledButton><br/></>
+          )}
+
         </StyledTableCell>
 
         <StyledTableCell className="col-1">
@@ -98,14 +128,14 @@ function Row(props: {
                         aria-label="expand row"
                         size="small"
                         onClick={(e) => {
-                            props.cbf.performAccordionAction(row, 'openJointDetails')
+                            props.cbf.performAccordionAction(row, 'openMappingDetails')
                         }}
                     >
                         {row.isSelected ? <EditRoundedIcon className='selection-active'/> : <EditRoundedIcon/>}
                     </IconButton>*/}
         </StyledTableCell>
 
-        <StyledTableCell className="col-2 fw-bold d-flex justify-content-end">
+        <StyledTableButtonCell className="col-2 fw-bold">
           <IconButton
             hidden={props.viewOnlyMode}
             aria-label="expand row"
@@ -117,7 +147,7 @@ function Row(props: {
           >
             {open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
           </IconButton>
-        </StyledTableCell>
+        </StyledTableButtonCell>
       </StyledTableRow>
 
       <StyledTableRow>
@@ -188,10 +218,25 @@ function Row(props: {
 }
 
 function filterMappings(nodeMappingsInput: NodeMapping[], value: string, showAttributeNames: boolean) {
-  return nodeMappingsInput.filter(item => {
-    const searchString = value.toLowerCase();
-    return (item.source[0].label.toLowerCase().includes(searchString) || item.target[0].label.toLowerCase().includes(searchString) || (item?.notes && item.notes.toLowerCase().includes(searchString)));
-  });
+  let results: NodeMapping[] = [];
+  const searchString = value.toLowerCase();
+  nodeMappingsInput.forEach(item => {
+      if (item?.notes && item.notes.toLowerCase().includes(searchString)) {
+        results.push(item);
+      }
+      item.source.forEach(src => {
+        if (src.label.toLowerCase().includes(searchString)) {
+          results.push(item);
+        }
+      });
+      item.target.forEach(src => {
+        if (src.label.toLowerCase().includes(searchString)) {
+          results.push(item);
+        }
+      });
+    }
+  );
+  return results;
 }
 
 export default function MappingsAccordion(props: any) {
@@ -265,8 +310,8 @@ export default function MappingsAccordion(props: any) {
                       <InfoIcon></InfoIcon>
                     </div>
                     <div>
-                    No elements have been mapped yet. Mappings will appear in
-                    this table.
+                      No elements have been mapped yet. Mappings will appear in
+                      this table.
                     </div>
                   </div>
                 </td>

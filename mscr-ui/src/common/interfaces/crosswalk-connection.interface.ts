@@ -48,14 +48,26 @@ export interface CrosswalkConnectionNew {
     id: string;
     notes: string | undefined;
     predicate: string;
+    processing: any;
     isSelected: boolean;
     isDraft: boolean;
     sourceJsonPath: string | undefined;
     targetJsonPath: string | undefined;
     sourcePredicate: string | undefined;
-    sourceProcessing: string | undefined;
+    sourceProcessing?: { id: string; params: any };
     targetPredicate: string | undefined;
     targetProcessing: string | undefined;
+}
+
+export interface NodeListingRow {
+    name: string;
+    type: string;
+    description: string;
+    id: string;
+    notes: string | undefined;
+    isSelected: boolean;
+    sourceProcessingSelection?: string;
+    sourceProcessing?: { id: string; params: any };
 }
 
 export interface CrosswalkConnectionsNew {
@@ -69,15 +81,15 @@ export interface NodeMapping {
     isPartOf?: string;
     id?: string;
     depends_on?: string[];
-    source: { processing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } }; id: string; label: string; uri: string }[];
+    source: { processing?: { id: string; params: any }; id: string; label: string; uri: string }[];
     sourceType?: string;
     sourceDescription?: string;
     predicate: string;
     filter?: { path: string; distinctValues: boolean; value: {}; operator: string };
-    target: { processing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } }; id: string; label: string; uri: string }[];
+    target: { processing?: { id: string; params: any }; id: string; label: string; uri: string }[];
     targetType?: string;
     targetDescription?: string;
-    processing?: { id: string; params: { additionalProp1: {}; additionalProp3: {}; additionalProp2: {} } };
+    processing?: { id: string; params: any };
     oneOf?: { filter: { path: string; distinctValues: boolean; value: {}; operator: string } }[];
     pid?: string;
     notes?: string;
