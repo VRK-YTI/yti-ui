@@ -3,11 +3,23 @@ import { Organization } from 'yti-common-ui/interfaces/organization.interface';
 import { Status } from 'yti-common-ui/interfaces/status.interface';
 
 export interface Terminology {
+  label: LocalizedValue;
+  description: LocalizedValue;
+  status: Status;
+  organizations: string[];
+  groups: string[];
+  contact: string;
+  prefix: string;
+  graphType: TerminologyType;
+  languages: string[];
+}
+
+export interface TerminologyInfo {
   uri: string;
   label: LocalizedValue;
   description: LocalizedValue;
   prefix: string;
-  type: TerminologyType;
+  graphType: TerminologyType;
   status: Status;
   languages: string[];
   contact: string;
@@ -19,6 +31,7 @@ export interface Terminology {
   modifier: UserMeta;
   origin: string;
 }
+
 export interface ConceptInfo {
   identifier: string;
   uri: string;
@@ -104,7 +117,7 @@ export interface ConceptCollection {
 
 /* build fails for empty interfaces
 
-export interface TerminologyInfo {}
+
 
 
 export interface ConceptInfo {}

@@ -19,7 +19,7 @@ export interface PrefixProps {
 }
 
 export default function Prefix({ update, userPosted, disabled }: PrefixProps) {
-  const URI = 'http://uri.suomi.fi/';
+  const URI = 'https://iri.suomi.fi/';
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [randomURL] = useState(v4().substring(0, 8));
