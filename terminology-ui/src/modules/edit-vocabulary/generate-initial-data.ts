@@ -1,23 +1,23 @@
 import {
-  Terminology,
+  TerminologyInfo,
   TerminologyType,
 } from '@app/common/interfaces/interfaces-v2';
-import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { LanguageBlockType } from 'yti-common-ui/form/language-selector';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { TerminologyForm } from '../new-terminology/info-manual';
 
 export default function generateInitialData(
   lang: string,
-  data?: Terminology
-): NewTerminologyInfo | undefined {
+  data?: TerminologyInfo
+): TerminologyForm | undefined {
   if (!data) {
     return undefined;
   }
 
   const languages =
     data.languages?.map((l) => {
-      const description = '';
-      const title = '';
+      const description = data.description[l];
+      const title = data.label[l];
 
       const labelText = l;
 
@@ -30,7 +30,7 @@ export default function generateInitialData(
       } as LanguageBlockType;
     }) ?? [];
 
-  const infoDomains =
+  const groups =
     data.groups?.map((group) => {
       const label = getLanguageVersion({
         data: group.label,
@@ -42,7 +42,7 @@ export default function generateInitialData(
         groupId: group.identifier,
         labelText: label,
         name: label,
-        uniqueItemId: group.id,
+        uniqueItemId: group.identifier,
       };
     }) ?? [];
 
@@ -70,14 +70,14 @@ export default function generateInitialData(
     })
     .filter((p) => p)[0];
 
-  const obj: NewTerminologyInfo = {
+  const obj: TerminologyForm = {
     contact: data.contact ?? '',
     languages: languages,
-    infoDomains: infoDomains,
+    groups: groups,
     prefix: [prefix ?? '', true],
     status: data.status ?? 'DRAFT',
-    type: data.type ?? TerminologyType.TERMINOLOGICAL_VOCABULARY,
-    contributors: contributors,
+    type: data.graphType ?? TerminologyType.TERMINOLOGICAL_VOCABULARY,
+    organizations: contributors,
   };
 
   return obj;

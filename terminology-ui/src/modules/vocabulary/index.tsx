@@ -218,7 +218,8 @@ export default function Vocabulary({ id }: VocabularyProps) {
               <TitleTypeAndStatusWrapper>
                 <TitleType>
                   {translateTerminologyType(
-                    info?.type ?? TerminologyType.TERMINOLOGICAL_VOCABULARY,
+                    info?.graphType ??
+                      TerminologyType.TERMINOLOGICAL_VOCABULARY,
                     t
                   )}
                 </TitleType>{' '}

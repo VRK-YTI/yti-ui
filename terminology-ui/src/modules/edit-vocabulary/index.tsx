@@ -7,7 +7,10 @@ import {
 import { useEditTerminologyMutation } from '@app/common/components/modify/modify.slice';
 import SaveSpinner from 'yti-common-ui/save-spinner';
 import Title from 'yti-common-ui/title';
-import { useGetTerminologyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
+import {
+  useGetTerminologyQuery,
+  useUpdateTerminologyMutation,
+} from '@app/common/components/vocabulary/vocabulary.slice';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -20,7 +23,7 @@ import {
   Paragraph,
   Text,
 } from 'suomifi-ui-components';
-import generateNewTerminology from '../new-terminology/generate-new-terminology';
+import generateTerminologyPayload from '../new-terminology/generate-new-terminology';
 import InfoManual from '../new-terminology/info-manual';
 import MissingInfoAlert from '../new-terminology/missing-info-alert';
 import { TallerSeparator } from '../new-terminology/new-terminology.styles';
@@ -59,7 +62,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
   const [isValid, setIsValid] = useState(true);
   const [userPosted, setUserPosted] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
-  const [editTerminology, result] = useEditTerminologyMutation();
+  const [updateTerminology, result] = useUpdateTerminologyMutation();
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
   const { data: authenticatedUser } = useGetAuthenticatedUserQuery();
@@ -75,23 +78,16 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
       return;
     }
 
-    const newData = generateNewTerminology({
-      data: data,
-      code: info?.prefix,
-      createdBy: '',
-      createdDate: '',
-      id: info?.prefix,
-      lastModifiedBy: `${user.firstName} ${user.lastName}`,
-      terminologyId: terminologyId,
-      uri: info?.uri,
-      origin: '',
-    });
+    const newData = generateTerminologyPayload({ data, update: true });
 
     if (!newData) {
       return;
     }
     setIsCreating(true);
-    editTerminology(newData);
+    updateTerminology({
+      prefix: terminologyId,
+      payload: newData,
+    });
   };
 
   const handleReturn = useCallback(() => {
@@ -145,7 +141,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
           <TitleTypeAndStatusWrapper>
             <TitleType>
               {translateTerminologyType(
-                info?.type ?? TerminologyType.TERMINOLOGICAL_VOCABULARY,
+                info?.graphType ?? TerminologyType.TERMINOLOGICAL_VOCABULARY,
                 t
               )}
             </TitleType>{' '}

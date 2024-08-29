@@ -49,8 +49,7 @@ export default function Prefix({
   maxLength,
   minLength,
 }: PrefixProps) {
-  const URI =
-    typeInUri === 'model' ? 'https://iri.suomi.fi' : 'http://uri.suomi.fi';
+  const namespace = 'https://iri.suomi.fi';
   const [initalPrefix] = useState(prefix);
   const [inputType, setInputType] = useState<'manual' | 'automatic'>(
     noAuto ? 'manual' : 'automatic'
@@ -144,7 +143,7 @@ export default function Prefix({
         <Label>{translations.uriPreview}</Label>
         <Paragraph>
           <Text smallScreen>
-            {URI}/{typeInUri}/{prefix}
+            {namespace}/{typeInUri}/{prefix}
             {prefix && '/'}
           </Text>
         </Paragraph>
