@@ -12,6 +12,7 @@ import {
   ConceptResponseObject,
   SearchResponse,
   Terminology,
+  TerminologyInfo,
 } from '@app/common/interfaces/interfaces-v2';
 
 export const vocabularyInitialState = {};
@@ -56,20 +57,30 @@ export const terminologyApi = createApi({
         },
       }),
     }),
-    getTerminology: builder.query<Terminology, { id: string }>({
+    getTerminology: builder.query<TerminologyInfo, { id: string }>({
       query: (value) => ({
         url: `/terminology/${value.id}`,
         method: 'GET',
       }),
     }),
-    postNewVocabulary: builder.mutation<
-      string,
-      { templateGraphID: string; prefix: string; newTerminology: object }
-    >({
-      query: ({ templateGraphID, prefix, newTerminology }) => ({
-        url: `/validatedVocabulary?templateGraphId=${templateGraphID}&prefix=${prefix}`,
+    createTerminology: builder.mutation<string, Terminology>({
+      query: (data) => ({
+        url: '/terminology',
         method: 'POST',
-        data: newTerminology,
+        data,
+      }),
+    }),
+    updateTerminology: builder.mutation<
+      null,
+      {
+        prefix: string;
+        payload: Terminology;
+      }
+    >({
+      query: (data) => ({
+        url: `/terminology/${data.prefix}`,
+        method: 'PUT',
+        data: data.payload,
       }),
     }),
     postCreateVersion: builder.mutation<
@@ -93,13 +104,7 @@ export const terminologyApi = createApi({
     }),
     getIfNamespaceInUse: builder.mutation<boolean, string>({
       query: (prefix) => ({
-        url: `/namespaceInUse?prefix=${prefix}`,
-        method: 'GET',
-      }),
-    }),
-    getVocabularies: builder.query<VocabulariesDTO[], null>({
-      query: () => ({
-        url: '/vocabularies',
+        url: `/terminology/${prefix}/exists`,
         method: 'GET',
       }),
     }),
@@ -110,11 +115,11 @@ export const {
   useGetCollectionsQuery,
   useGetConceptResultQuery,
   useGetTerminologyQuery,
-  usePostNewVocabularyMutation,
+  useCreateTerminologyMutation,
+  useUpdateTerminologyMutation,
   usePostCreateVersionMutation,
   useDeleteTerminologyMutation,
   useGetIfNamespaceInUseMutation,
-  useGetVocabulariesQuery,
   util: { getRunningQueriesThunk },
 } = terminologyApi;
 

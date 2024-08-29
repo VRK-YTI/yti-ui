@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Paragraph, Text } from 'suomifi-ui-components';
+import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
 import ContactInfo from '@app/common/components/terminology-components/contact-info';
 import InformationDomainsSelector from '@app/common/components/terminology-components/information-domains-selector';
 import { TallerSeparator } from './new-terminology.styles';
 import OrganizationSelector from '@app/common/components/terminology-components/organization-selector';
 import Prefix from 'yti-common-ui/form/prefix';
 import TypeSelector from '@app/common/components/terminology-components/type-selector';
-import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { useTranslation } from 'next-i18next';
-import { TerminologyDataInitialState } from './terminology-initial-state';
 import { UpdateTerminology } from './update-terminology.interface';
 import StatusSelector from './status-selector';
 import isEmail from 'validator/lib/isEmail';
@@ -17,14 +15,27 @@ import LanguageSelector, {
   LanguageBlockType,
 } from 'yti-common-ui/form/language-selector';
 import { useGetCodesQuery } from '@app/common/components/codelist/codelist.slice';
+import { TerminologyType } from '@app/common/interfaces/interfaces-v2';
+import { Status } from 'yti-common-ui/interfaces/status.interface';
+import { v4 } from 'uuid';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
-  setManualData: (object: NewTerminologyInfo) => void;
+  setManualData: (object: TerminologyForm) => void;
   userPosted: boolean;
-  initialData?: NewTerminologyInfo;
+  initialData?: TerminologyForm;
   onChange: () => void;
   disabled?: boolean;
+}
+
+export interface TerminologyForm {
+  contact: string;
+  languages: (LanguageBlockType & { selected: boolean })[];
+  organizations: MultiSelectData[];
+  prefix: [string, boolean];
+  groups: MultiSelectData[];
+  status?: Status;
+  type: TerminologyType;
 }
 
 export default function InfoManual({
@@ -36,8 +47,17 @@ export default function InfoManual({
   disabled,
 }: InfoManualProps) {
   const { t, i18n } = useTranslation('admin');
-  const [terminologyData, setTerminologyData] = useState<NewTerminologyInfo>(
-    initialData ? initialData : TerminologyDataInitialState
+  const [terminologyData, setTerminologyData] = useState<TerminologyForm>(
+    initialData
+      ? initialData
+      : {
+          groups: [],
+          organizations: [],
+          languages: [],
+          contact: '',
+          prefix: [v4().slice(0, 8), true],
+          type: TerminologyType.TERMINOLOGICAL_VOCABULARY,
+        }
   );
   const { data: languages } = useGetCodesQuery({
     registry: 'interoperabilityplatform',
@@ -217,29 +237,31 @@ export default function InfoManual({
         initialData={initialData}
       />
 
-      <Prefix
-        prefix={terminologyData.prefix[0]}
-        setPrefix={(value) =>
-          handleUpdate({
-            key: 'prefix',
-            data: [value, true],
-          })
-        }
-        inUseMutation={useGetIfNamespaceInUseMutation}
-        typeInUri={'terminology'}
-        error={false}
-        translations={{
-          automatic: t('automatic-prefix'),
-          errorInvalid: t('prefix-invalid'),
-          errorTaken: t('prefix-taken'),
-          hintText: t('prefix-hint'),
-          label: t('prefix'),
-          manual: t('manual-prefix'),
-          textInputHint: '',
-          textInputLabel: t('prefix'),
-          uriPreview: t('url-preview'),
-        }}
-      />
+      {!initialData && (
+        <Prefix
+          prefix={terminologyData.prefix[0]}
+          setPrefix={(value) =>
+            handleUpdate({
+              key: 'prefix',
+              data: [value, true],
+            })
+          }
+          inUseMutation={useGetIfNamespaceInUseMutation}
+          typeInUri={'terminology'}
+          error={false}
+          translations={{
+            automatic: t('automatic-prefix'),
+            errorInvalid: t('prefix-invalid'),
+            errorTaken: t('prefix-taken'),
+            hintText: t('prefix-hint'),
+            label: t('prefix'),
+            manual: t('manual-prefix'),
+            textInputHint: '',
+            textInputLabel: t('prefix'),
+            uriPreview: t('url-preview'),
+          }}
+        />
+      )}
 
       <TallerSeparator />
       <ContactInfo
