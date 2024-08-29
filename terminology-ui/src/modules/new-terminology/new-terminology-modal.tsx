@@ -3,8 +3,7 @@ import { usePostImportExcelMutation } from '@app/common/components/import/import
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import SaveSpinner from 'yti-common-ui/save-spinner';
 import { terminologySearchApi } from '@app/common/components/terminology-search/terminology-search.slice';
-import { usePostNewVocabularyMutation } from '@app/common/components/vocabulary/vocabulary.slice';
-import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
+import { useCreateTerminologyMutation } from '@app/common/components/vocabulary/vocabulary.slice';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import {
   translateFileUploadError,
@@ -24,8 +23,8 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import FileUpload from './file-upload';
-import generateNewTerminology from './generate-new-terminology';
-import InfoManual from './info-manual';
+import generateTerminologyPayload from './generate-new-terminology';
+import InfoManual, { TerminologyForm } from './info-manual';
 import MissingInfoAlert from './missing-info-alert';
 import { FooterBlock, ModalTitleAsH1 } from './new-terminology.styles';
 
@@ -53,10 +52,10 @@ export default function NewTerminologyModal({
   const [startFileUpload, setStartFileUpload] = useState(false);
   const [fileData, setFileData] = useState<File | null>();
   const [userPosted, setUserPosted] = useState(false);
-  const [manualData, setManualData] = useState<NewTerminologyInfo>();
+  const [manualData, setManualData] = useState<TerminologyForm>();
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [error, setError] = useState(false);
-  const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
+  const [createTerminology, newTerminology] = useCreateTerminologyMutation();
   const [postImportExcel, importExcel] = usePostImportExcelMutation();
 
   const handleClose = useCallback(() => {
@@ -71,22 +70,16 @@ export default function NewTerminologyModal({
   }, [setShowModal, disableConfirmation]);
 
   useEffect(() => {
-    if (newVocabulary.isSuccess) {
+    if (newTerminology.isSuccess) {
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
-
-      // API should return ID of new terminology but just in case if
-      // create is succesful and ID is missing then just close the modal
-      if (newVocabulary.data.length > 0) {
-        disableConfirmation();
-        router.push(`/terminology/${newVocabulary.data}`);
-      } else {
-        handleClose();
-      }
-    } else if (newVocabulary.isError) {
+      disableConfirmation();
+      handleClose();
+      router.push(`/terminology/${manualData?.prefix[0]}`);
+    } else if (newTerminology.isError) {
       setIsCreating(false);
       setError(true);
     }
-  }, [t, newVocabulary, dispatch, handleClose, router, disableConfirmation]);
+  }, [t, newTerminology, dispatch, handleClose, router, disableConfirmation]);
 
   const handleCloseRequest = () => {
     handleClose();
@@ -102,17 +95,10 @@ export default function NewTerminologyModal({
         return;
       }
 
-      const newTerminology = generateNewTerminology({ data: manualData });
-
-      if (!newTerminology) {
-        console.error('Main organization missing');
-        return;
-      }
+      const postData = generateTerminologyPayload({ data: manualData });
 
       setIsCreating(true);
-      const templateGraphID = newTerminology.type.graph.id;
-      const prefix = manualData.prefix[0];
-      postNewVocabulary({ templateGraphID, prefix, newTerminology });
+      createTerminology(postData);
     }
 
     if (inputType === 'file' && fileData) {
@@ -157,11 +143,11 @@ export default function NewTerminologyModal({
       {!(inputType === 'file' && userPosted) && (
         <ModalFooter id="new-terminology-modal-footer">
           {userPosted && manualData && <MissingInfoAlert data={manualData} />}
-          {newVocabulary.isError && (
+          {newTerminology.isError && (
             <InlineAlert status="error" role="alert" id="api-error-alert">
               {translateHttpError(
-                'status' in newVocabulary.error
-                  ? newVocabulary.error.status
+                'status' in newTerminology.error
+                  ? newTerminology.error.status
                   : 'GENERIC_ERROR',
                 t
               )}

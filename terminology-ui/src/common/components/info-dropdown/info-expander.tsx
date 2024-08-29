@@ -40,7 +40,7 @@ import isEmail from 'validator/lib/isEmail';
 import { useRouter } from 'next/router';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import {
-  Terminology,
+  TerminologyInfo,
   TerminologyType,
 } from '@app/common/interfaces/interfaces-v2';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
@@ -51,7 +51,7 @@ const Subscription = dynamic(
 const CopyTerminologyModal = dynamic(() => import('../copy-terminology-modal'));
 
 interface InfoExpanderProps {
-  data?: Terminology;
+  data?: TerminologyInfo;
   childOrganizations?: string[];
 }
 
@@ -124,7 +124,7 @@ export default function InfoExpander({
 
         <BasicBlock title={t('vocabulary-info-vocabulary-type')} id="type">
           {translateTerminologyType(
-            data.type ?? TerminologyType.TERMINOLOGICAL_VOCABULARY,
+            data.graphType ?? TerminologyType.TERMINOLOGICAL_VOCABULARY,
             t
           )}
         </BasicBlock>
@@ -167,8 +167,6 @@ export default function InfoExpander({
                     >
                       {t('edit-terminology', { ns: 'admin' })}
                     </Button>
-
-                    <UpdateWithFileModal />
 
                     <CopyTerminologyModal
                       terminologyId={terminologyId ?? ''}
