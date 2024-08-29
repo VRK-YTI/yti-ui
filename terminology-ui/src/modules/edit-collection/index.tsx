@@ -75,6 +75,8 @@ export default function EditCollection({
   const [updateCollection, updateResult] = useUpdateCollectionMutation();
 
   const [emptyError, setEmptyError] = useState(false);
+  const [invalidIdentifierError, setInvalidIdentifierError] = useState(false);
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [isCreating, setIsCreating] = useState(false);
 
   const languages =
@@ -99,6 +101,43 @@ export default function EditCollection({
       );
     }
   }, [result, updateResult, router, terminologyId]);
+
+  useEffect(() => {
+    if (exists.data) {
+      setInvalidIdentifierError(true);
+    } else {
+      setInvalidIdentifierError(false);
+    }
+  }, [exists]);
+
+  const isFormValid = (formData: CollectionFormData) => {
+    const isValidIdentifier = formData.identifier.match(
+      /^[a-zA-Z]([\w-]){1,98}$/
+    );
+    const isValidLabel = Object.keys(formData.label).every(
+      (n) => formData.label[n]
+    );
+
+    const messages: string[] = [];
+    if (!isValidLabel) {
+      setEmptyError(true);
+      messages.push(t('edit-collection-error.prefLabel'));
+    }
+
+    if (!isValidIdentifier) {
+      setInvalidIdentifierError(true);
+      messages.push(t('prefix-invalid', { ns: 'admin' }));
+    }
+
+    if (exists.data) {
+      setInvalidIdentifierError(true);
+      messages.push(t('prefix-taken', { ns: 'admin' }));
+    }
+
+    setErrorMessages(messages);
+
+    return isValidIdentifier && !exists.data && isValidLabel;
+  };
 
   const setIdentifier = (value: string) => {
     const data = formData;
@@ -139,6 +178,7 @@ export default function EditCollection({
 
   const handleClick = () => {
     getAuthenticatedMutUser();
+    setErrorMessages([]);
 
     const payload = Object.assign(
       {},
@@ -148,10 +188,10 @@ export default function EditCollection({
       }
     );
 
-    if (Object.keys(formData.label).every((n) => !formData.label[n])) {
-      setEmptyError(true);
+    if (!isFormValid(formData)) {
       return;
     }
+
     disableConfirmation();
     setIsCreating(true);
 
@@ -225,14 +265,16 @@ export default function EditCollection({
             defaultValue={collection?.identifier ?? ''}
             disabled={!!collectionInfo}
             onChange={(e) => setIdentifier(e?.toString() ?? '')}
-            status={exists.data ? 'error' : 'default'}
-            onBlur={() =>
+            status={invalidIdentifierError ? 'error' : 'default'}
+            onBlur={() => {
               checkCollectionExists({
                 terminologyId,
                 collectionId: formData.identifier,
-              })
+              });
+            }}
+            statusText={
+              invalidIdentifierError ? t('prefix-taken', { ns: 'admin' }) : ''
             }
-            statusText={exists.data ? t('prefix-taken', { ns: 'admin' }) : ''}
             id="prefix-input"
             maxLength={100}
           />
@@ -287,9 +329,9 @@ export default function EditCollection({
               {t('error-occurred_unauthenticated', { ns: 'alert' })}
             </InlineAlert>
           )}
-          {emptyError && (
+          {errorMessages.length > 0 && (
             <FormFooterAlert
-              alerts={[t('edit-collection-error.prefLabel')]}
+              alerts={errorMessages}
               labelText={t('missing-information', { ns: 'admin' })}
             />
           )}
