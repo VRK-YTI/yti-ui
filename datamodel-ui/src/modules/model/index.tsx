@@ -222,7 +222,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
   return (
     <div
       style={{
-        height: fullScreen ? '100vh' : 0,
+        height: fullScreen ? '100vh' : 'auto',
         flex: '1 1 auto',
       }}
     >

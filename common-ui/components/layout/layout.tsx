@@ -59,7 +59,7 @@ export default function Layout({
 
       <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
       {fullScreenElements ? (
-        <SiteContainer>
+        <SiteContainer $fullScreen={typeof fullScreenElements !== 'undefined'}>
           <SmartHeader
             user={user}
             fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
