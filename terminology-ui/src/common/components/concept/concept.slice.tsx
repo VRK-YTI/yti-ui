@@ -2,6 +2,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
 import {
+  Concept,
   ConceptInfo,
   ConceptResponseObject,
   ConceptSearchRequest,
@@ -20,6 +21,25 @@ export const conceptApi = createApi({
       query: ({ terminologyId, conceptId }) => ({
         url: `/concept/${terminologyId}/${conceptId}`,
         method: 'GET',
+      }),
+    }),
+    createConcept: builder.mutation<null, { prefix: string; concept: Concept }>(
+      {
+        query: (value) => ({
+          url: `/concept/${value.prefix}`,
+          method: 'POST',
+          data: value.concept,
+        }),
+      }
+    ),
+    updateConcept: builder.mutation<
+      null,
+      { prefix: string; conceptId: string; concept: Concept }
+    >({
+      query: (value) => ({
+        url: `/concept/${value.prefix}/${value.conceptId}`,
+        method: 'PUT',
+        data: value.concept,
       }),
     }),
     deleteConcept: builder.mutation<
@@ -41,11 +61,23 @@ export const conceptApi = createApi({
         params: request,
       }),
     }),
+    conceptExists: builder.mutation<
+      boolean,
+      { terminologyId: string; conceptId: string }
+    >({
+      query: (params) => ({
+        url: `/concept/${params.terminologyId}/${params.conceptId}/exists`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
 export const {
   useGetConceptQuery,
+  useCreateConceptMutation,
+  useUpdateConceptMutation,
+  useConceptExistsMutation,
   useSearchConceptMutation,
   useDeleteConceptMutation,
   util: { getRunningQueriesThunk },

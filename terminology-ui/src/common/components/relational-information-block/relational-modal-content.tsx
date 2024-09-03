@@ -1,4 +1,3 @@
-import { Concepts } from '@app/common/interfaces/concepts.interface';
 import useMountEffect from '@app/common/utils/hooks/use-mount-effect';
 import { RelationInfoType } from '@app/modules/edit-concept/new-concept.types';
 import { useTranslation } from 'next-i18next';
@@ -10,13 +9,18 @@ import { useSearchConceptMutation } from '../concept/concept.slice';
 import { RelationalModalBlock } from './relation-information-block.styles';
 import RenderConcepts from './render-concepts';
 import Search from './search';
+import { getNamespace } from '@app/common/utils/namespace';
+import {
+  ConceptResponseObject,
+  SearchResponse,
+} from '@app/common/interfaces/interfaces-v2';
 
 interface RelationModalContentProps {
   fromOther?: boolean;
-  chosen: Concepts[] | RelationInfoType[];
-  setChosen: (value: Concepts[] | RelationInfoType[]) => void;
-  searchResults: Concepts[];
-  setSearchResults: (value: Concepts[]) => void;
+  chosen: ConceptResponseObject[] | RelationInfoType[];
+  setChosen: (value: ConceptResponseObject[] | RelationInfoType[]) => void;
+  searchResults: ConceptResponseObject[];
+  setSearchResults: (value: ConceptResponseObject[]) => void;
   terminologyId: string;
   initialChosenConcepts: string[];
 }
@@ -46,6 +50,7 @@ export default function RelationModalContent({
   const [totalResults, setTotalResults] = useState(0);
   const [currPage, setCurrPage] = useState(1);
   const modalRef = createRef<HTMLDivElement>();
+  const pageSize = 20;
 
   const statuses: StatusesType[] = [
     {
@@ -81,12 +86,11 @@ export default function RelationModalContent({
   ];
 
   const handleSearch = () => {
+    const namespace = getNamespace(terminologyId);
     searchConcept({
-      ...(fromOther
-        ? { notInTerminologyId: terminologyId }
-        : { terminologyId: terminologyId }),
+      ...(fromOther ? { notInTerminologyId: namespace } : { namespace }),
       query: searchTerm,
-      status: status?.uniqueItemId,
+      ...(status?.uniqueItemId && { status: [status.uniqueItemId] }),
       pageFrom: (currPage - 1) * 20,
       pageSize: 20,
     });
@@ -101,10 +105,11 @@ export default function RelationModalContent({
       return;
     }
 
+    const namespace = getNamespace(terminologyId);
     searchConcept({
-      ...(fromOther
-        ? { notInTerminologyId: terminologyId }
-        : { terminologyId: terminologyId }),
+      ...(fromOther ? { notInTerminologyId: namespace } : { namespace }),
+      pageFrom: (currPage - 1) * pageSize,
+      pageSize,
     });
   };
 
@@ -115,9 +120,9 @@ export default function RelationModalContent({
         ? { notInTerminologyId: terminologyId }
         : { terminologyId: terminologyId }),
       query: searchTerm,
-      status: status?.uniqueItemId,
-      pageFrom: (num - 1) * 20,
-      pageSize: 20,
+      ...(status?.uniqueItemId && { status: [status.uniqueItemId] }),
+      pageFrom: (num - 1) * pageSize,
+      pageSize,
     });
     focusToTop();
   };
@@ -135,11 +140,11 @@ export default function RelationModalContent({
     }
 
     if (result.isSuccess) {
-      setSearchResults(result.data.concepts);
+      setSearchResults(result.data.responseObjects);
 
       const totalHits =
         !fromOther && typeof query.conceptId !== 'undefined'
-          ? result.data.concepts
+          ? result.data.responseObjects
               .map((c) => c.id)
               .includes(
                 Array.isArray(query.conceptId)
