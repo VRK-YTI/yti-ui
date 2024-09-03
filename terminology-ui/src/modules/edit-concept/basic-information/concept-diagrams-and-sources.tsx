@@ -20,6 +20,7 @@ interface ConceptDiagramsAndSourcesProps {
     sources: ListType[];
   };
   errors: FormError;
+  languages: string[];
 }
 
 export default function ConceptDiagramsAndSources({
@@ -27,6 +28,7 @@ export default function ConceptDiagramsAndSources({
   update,
   initialValues,
   errors,
+  languages,
 }: ConceptDiagramsAndSourcesProps) {
   const { t } = useTranslation('admin');
   const [sources, setSources] = useState<ListType[]>(
@@ -79,6 +81,7 @@ export default function ConceptDiagramsAndSources({
                 setDiagrams={setDiagrams}
                 handleRemove={handleRemove}
                 isError={errors.diagrams || errors.diagramsUri}
+                languages={languages}
               />
             </BasicBlockExtraWrapper>
           }

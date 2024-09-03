@@ -30,7 +30,7 @@ function getReferenceValues(
 
   return references.map((ref) => {
     return {
-      id: ref.conceptURI,
+      id: ref.referenceURI,
       href: `/terminology/${ref.prefix}/${type}/${ref.identifier}`,
       value: getLanguageVersion({
         data: ref.label,

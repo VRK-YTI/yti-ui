@@ -1,31 +1,26 @@
-import { ConceptLink } from '@app/common/interfaces/concept-link.interface';
-import { Concept } from '@app/common/interfaces/concept.interface';
-import { Term } from '@app/common/interfaces/term.interface';
-import { Property } from '@app/common/interfaces/termed-data-types.interface';
-import getDiagramValues from '@app/common/utils/get-diagram-values';
 import { v4 } from 'uuid';
 import { ConceptTermType, EditConceptType } from './new-concept.types';
-import { LocalizedValue } from '@app/common/interfaces/interfaces-v2';
+import {
+  ConceptInfo,
+  ConceptReferenceInfo,
+  LocalizedListItem,
+  LocalizedValue,
+  Term,
+} from '@app/common/interfaces/interfaces-v2';
 
 export default function generateFormData(
-  preferredTerms: {
-    lang: string;
-    value: string;
-    regex: string;
-  }[],
-  conceptData?: Concept,
-  terminologyLabel?: LocalizedValue
+  preferredTerms: LocalizedValue,
+  conceptData?: ConceptInfo
 ): EditConceptType {
   if (!conceptData) {
     return {
-      terms: preferredTerms.map((term) => ({
+      terms: Object.keys(preferredTerms).map((lang) => ({
         changeNote: '',
-        draftComment: '',
         editorialNote: [],
         historyNote: '',
-        id: '',
-        language: term.lang,
-        prefLabel: term.value,
+        id: v4(),
+        language: lang,
+        prefLabel: preferredTerms[lang],
         scope: '',
         source: [],
         status: 'DRAFT',
@@ -40,6 +35,7 @@ export default function generateFormData(
         wordClass: '',
       })),
       basicInformation: {
+        identifier: '',
         definition: {},
         example: [],
         status: 'DRAFT',
@@ -56,7 +52,6 @@ export default function generateFormData(
         },
         otherInfo: {
           conceptClass: '',
-          wordClass: '',
         },
         relationalInfo: {
           broaderConcept: [],
@@ -74,288 +69,89 @@ export default function generateFormData(
     };
   }
 
-  const definition = new Map();
-  conceptData.properties.definition?.map((d) => {
-    definition.set(d.lang, d.value);
-  }) ?? {};
-
   const retVal: EditConceptType = {
-    terms: [],
     basicInformation: {
-      definition: Object.fromEntries(definition),
+      identifier: conceptData.identifier,
+      definition: conceptData.definition,
+      example: conceptData.examples.map(mapListType),
+      status: conceptData.status,
+      subject: conceptData.subjectArea,
+      note: conceptData.notes.map(mapListType),
       diagramAndSource: {
-        diagrams:
-          conceptData.properties.externalLink?.map((l) => {
-            const dValues = getDiagramValues(l.value);
-            return {
-              description: dValues.description,
-              id: v4(),
-              name: dValues.name,
-              url: dValues.url,
-            };
-          }) ?? [],
-        sources:
-          conceptData.properties.source?.map((e) => ({
-            id: v4(),
-            lang: e.lang,
-            value: e.value,
-          })) ?? [],
+        diagrams: [],
+        sources: conceptData.sources.map(mapListType),
       },
-      example:
-        conceptData.properties.example?.map((e) => ({
-          id: v4(),
-          lang: e.lang,
-          value: e.value,
-        })) ?? [],
-      note:
-        conceptData.properties.note?.map((n) => ({
-          id: v4(),
-          lang: n.lang,
-          value: n.value,
-        })) ?? [],
       orgInfo: {
-        changeHistory: conceptData.properties.changeNote?.[0].value ?? '',
-        editorialNote:
-          conceptData.properties.editorialNote?.map((en) => ({
-            id: v4(),
-            lang: '',
-            value: en.value,
-          })) ?? [],
-        etymology: conceptData.properties.historyNote?.[0].value ?? '',
+        changeHistory: conceptData.changeNote,
+        editorialNote: conceptData.editorialNotes.map(mapListType),
+        etymology: conceptData.historyNote,
       },
       otherInfo: {
-        conceptClass: conceptData.properties.conceptClass?.[0]?.value ?? '',
-        wordClass: conceptData.properties.wordClass?.[0]?.value ?? '',
+        conceptClass: conceptData.conceptClass,
       },
       relationalInfo: {
-        broaderConcept:
-          conceptData.references.broader?.map((broad) => {
-            {
-              return {
-                id: broad.id,
-                label:
-                  broad.references.prefLabelXl
-                    ?.map((label) => {
-                      return (
-                        label.properties.prefLabel
-                          ?.map((l) => ({
-                            [l.lang]: l.value,
-                          }))
-                          .reduce((l) => l) ?? {}
-                      );
-                    })
-                    .reduce((l) => l) ?? {},
-                terminologyId: broad.type.graph.id,
-                terminologyLabel: terminologyLabel ?? {},
-              };
-            }
-          }) ?? [],
-        hasPartConcept:
-          conceptData.references.hasPart?.map((part) => {
-            {
-              return {
-                id: part.id,
-                label:
-                  part.references?.prefLabelXl
-                    ?.map((label) => {
-                      return (
-                        label.properties.prefLabel
-                          ?.map((l) => ({
-                            [l.lang]: l.value,
-                          }))
-                          .reduce((l) => l) ?? {}
-                      );
-                    })
-                    .reduce((l) => l) ?? {},
-                terminologyId: part.type.graph.id,
-                terminologyLabel: terminologyLabel ?? {},
-              };
-            }
-          }) ?? [],
-        isPartOfConcept:
-          conceptData.references?.isPartOf?.map((part) => {
-            {
-              return {
-                id: part.id,
-                label:
-                  part.references.prefLabelXl
-                    ?.map((label) => {
-                      return (
-                        label.properties.prefLabel
-                          ?.map((l) => ({
-                            [l.lang]: l.value,
-                          }))
-                          .reduce((l) => l) ?? {}
-                      );
-                    })
-                    .reduce((l) => l) ?? {},
-                terminologyId: part.type.graph.id,
-                terminologyLabel: terminologyLabel ?? {},
-              };
-            }
-          }) ?? [],
-        narrowerConcept:
-          conceptData.references?.narrower?.map((narrow) => {
-            {
-              return {
-                id: narrow.id,
-                label:
-                  narrow.references?.prefLabelXl
-                    ?.map((label) => {
-                      return (
-                        label.properties.prefLabel
-                          ?.map((l) => ({
-                            [l.lang]: l.value,
-                          }))
-                          .reduce((l) => l) ?? {}
-                      );
-                    })
-                    .reduce((l) => l) ?? {},
-                terminologyId: narrow.type.graph.id,
-                terminologyLabel: terminologyLabel ?? {},
-              };
-            }
-          }) ?? [],
-        relatedConcept:
-          conceptData.references.related?.map((r) => {
-            {
-              return {
-                id: r.id,
-                label:
-                  r.references?.prefLabelXl
-                    ?.map((label) => {
-                      return (
-                        label.properties.prefLabel
-                          ?.map((l) => ({
-                            [l.lang]: l.value,
-                          }))
-                          .reduce((l) => l) ?? {}
-                      );
-                    })
-                    .reduce((l) => l) ?? {},
-                terminologyId: r.type.graph.id,
-                terminologyLabel: terminologyLabel ?? {},
-              };
-            }
-          }) ?? [],
-        matchInOther: mapExternalConcept(conceptData.references.exactMatch),
-        relatedConceptInOther: mapExternalConcept(
-          conceptData.references.relatedMatch
-        ),
-        closeMatch: mapExternalConcept(conceptData.references.closeMatch),
-        broadInOther: mapExternalConcept(conceptData.references.broadMatch),
-        narrowInOther: mapExternalConcept(conceptData.references.narrowMatch),
+        broaderConcept: conceptData.broader.map(mapRelationInfo),
+        narrowerConcept: conceptData.narrower.map(mapRelationInfo),
+        relatedConcept: conceptData.related.map(mapRelationInfo),
+        isPartOfConcept: conceptData.isPartOf.map(mapRelationInfo),
+        hasPartConcept: conceptData.hasPart.map(mapRelationInfo),
+        relatedConceptInOther: conceptData.relatedMatch.map(mapRelationInfo),
+        matchInOther: conceptData.exactMatch.map(mapRelationInfo),
+        closeMatch: conceptData.closeMatch.map(mapRelationInfo),
+        broadInOther: conceptData.broadMatch.map(mapRelationInfo),
+        narrowInOther: conceptData.narrowMatch.map(mapRelationInfo),
       },
-      status: conceptData.properties.status?.[0].value ?? 'DRAFT',
-      subject: conceptData.properties.subjectArea?.[0].value ?? '',
     },
+    terms: [
+      ...conceptData.recommendedTerms.map((t) =>
+        mapTerm(t, 'recommended-term')
+      ),
+      ...conceptData.synonyms.map((t) => mapTerm(t, 'synonym')),
+      ...conceptData.notRecommendedTerms.map((t) =>
+        mapTerm(t, 'not-recommended-synonym')
+      ),
+      ...conceptData.searchTerms.map((t) => mapTerm(t, 'search-term')),
+    ],
   };
 
-  const termKeys = [
-    'altLabelXl',
-    'notRecommendedSynonym',
-    'prefLabelXl',
-    'searchTerm',
-  ];
+  return retVal;
+}
 
-  const terms = Object.keys(conceptData.references)
-    .filter((key) => termKeys.includes(key))
-    ?.map((key) =>
-      conceptData.references[key as keyof Concept['references']]?.map(
-        (reference) => {
-          const r = reference as Term;
-          let termType = '';
+const mapListType = (e: LocalizedListItem | string) => ({
+  id: v4(),
+  lang: typeof e === 'string' ? '' : e.language,
+  value: typeof e === 'string' ? e : e.value,
+});
 
-          switch (key) {
-            case 'altLabelXl': {
-              termType = 'synonym';
-              break;
-            }
-            case 'notRecommendedSynonym': {
-              termType = 'not-recommended-synonym';
-              break;
-            }
-            case 'prefLabelXl': {
-              termType = 'recommended-term';
-              break;
-            }
-            case 'searchTerm': {
-              termType = 'search-term';
-              break;
-            }
-          }
-
-          return {
-            changeNote: r.properties.changeNote?.[0].value ?? '',
-            draftComment: '',
-            editorialNote:
-              r.properties.editorialNote?.map((note) => ({
-                id: v4(),
-                lang: note.lang,
-                value: note.value,
-              })) ?? [],
-            historyNote: r.properties.historyNote?.[0].value ?? '',
-            id: r.id,
-            language: r.properties.prefLabel?.[0].lang ?? '',
-            prefLabel: r.properties.prefLabel?.[0].value ?? '',
-            scope: r.properties.scope?.[0].value ?? '',
-            source:
-              r.properties.source?.map((note) => ({
-                id: v4(),
-                lang: note.lang,
-                value: note.value,
-              })) ?? [],
-            status: r.properties.status?.[0].value ?? '',
-            termConjugation: r.properties.termConjugation?.[0].value ?? '',
-            termEquivalency: r.properties.termEquivalency?.[0].value ?? '',
-            termEquivalencyRelation:
-              r.properties.termEquivalencyRelation?.[0].value ?? '',
-            termFamily: r.properties.termFamily?.[0].value ?? '',
-            termHomographNumber:
-              r.properties.termHomographNumber?.[0].value ?? '',
-            termInfo: r.properties.termInfo?.[0].value ?? '',
-            termStyle: r.properties.termStyle?.[0].value ?? '',
-            termType: termType,
-            wordClass: r.properties.wordClass?.[0].value ?? '',
-          };
-        }
-      )
-    )
-    .flat()
-    .filter((term) => term) as ConceptTermType[];
-
+const mapTerm = (term: Term, type: string) => {
   return {
-    ...retVal,
-    terms: terms,
+    changeNote: term.changeNote,
+    editorialNote: term.editorialNotes?.map(mapListType),
+    historyNote: term.historyNote,
+    id: v4(),
+    language: term.language,
+    prefLabel: term.label,
+    scope: term.scope,
+    source: term.sources?.map(mapListType),
+    status: term.status,
+    termConjugation: term.termConjugation,
+    termEquivalency: term.termEquivalency,
+    termFamily: term.termFamily,
+    termHomographNumber: term.homographNumber
+      ? term.homographNumber + ''
+      : null,
+    termInfo: term.termInfo,
+    termStyle: term.termStyle,
+    termType: type,
+    wordClass: term.wordClass,
+  } as ConceptTermType;
+};
+
+const mapRelationInfo = (r: ConceptReferenceInfo) => {
+  return {
+    id: r.referenceURI,
+    label: r.label,
+    terminologyId: r.prefix,
+    terminologyLabel: r.terminologyLabel,
   };
-}
-
-function mapExternalConcept(conceptLinks: ConceptLink[] | undefined) {
-  if (!conceptLinks) {
-    return [];
-  }
-  return conceptLinks.map((link) => {
-    const terminologyLabels = link.properties.vocabularyLabel?.reduce(
-      (labels, label) => {
-        labels.set(label.lang, label.value);
-        return labels;
-      },
-      new Map()
-    );
-
-    const conceptLabels = link.properties.prefLabel?.reduce((labels, label) => {
-      labels.set(label.lang, label.value);
-      return labels;
-    }, new Map());
-
-    return {
-      id: link.id ?? '',
-      label: conceptLabels ? Object.fromEntries(conceptLabels) : {},
-      terminologyId: link.properties.targetGraph?.[0].value ?? '',
-      terminologyLabel: terminologyLabels
-        ? Object.fromEntries(terminologyLabels)
-        : {},
-      targetId: link.properties.targetId?.[0].value ?? '',
-    };
-  });
-}
+};

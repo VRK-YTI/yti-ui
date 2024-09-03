@@ -272,7 +272,6 @@ export default function InfoExpander({
           <FormattedDate date={data.created} />
           {data.creator.name && `, ${data.creator.name}`}
         </BasicBlock>
-        <div>TODO: origin</div>
         <BasicBlock title={t('vocabulary-info-modified-at')} id="modified-at">
           <FormattedDate date={data.modified} />
           {data.modifier.name && `, ${data.modifier.name}`}

@@ -7,12 +7,14 @@ import {
   FullwidthTextarea,
   ItemsList,
 } from './concept-diagrams-and-sources.styles';
+import { LocalizedValue } from '@app/common/interfaces/interfaces-v2';
 
 interface DiagramsProps {
   diagrams: DiagramType[];
   setDiagrams: (value: DiagramType[]) => void;
   handleRemove: (s?: ListType[], d?: DiagramType[]) => void;
   isError: boolean;
+  languages: string[];
 }
 
 export default function Diagrams({
@@ -20,6 +22,7 @@ export default function Diagrams({
   setDiagrams,
   handleRemove,
   isError,
+  languages,
 }: DiagramsProps) {
   const { t } = useTranslation('admin');
 
@@ -27,9 +30,15 @@ export default function Diagrams({
     setDiagrams([
       ...diagrams,
       {
-        name: '',
+        name: languages.reduce((names, l) => {
+          names[l] = '';
+          return names;
+        }, {} as LocalizedValue),
         url: '',
-        description: '',
+        description: languages.reduce((desc, l) => {
+          desc[l] = '';
+          return desc;
+        }, {} as LocalizedValue),
         id: v4(),
       },
     ]);
@@ -39,6 +48,23 @@ export default function Diagrams({
     handleRemove(
       undefined,
       diagrams.filter((d) => d.id !== id)
+    );
+  };
+
+  const handleLocalizedUpdate = (
+    id: string,
+    key: 'name' | 'description',
+    lang: string,
+    value: string
+  ) => {
+    setDiagrams(
+      diagrams.map((d) => {
+        if (d.id !== id) {
+          return d;
+        } else {
+          return { ...d, [key]: { ...d[key], [lang]: value } };
+        }
+      })
     );
   };
 
@@ -72,15 +98,6 @@ export default function Diagrams({
               </div>
 
               <TextInput
-                labelText={t('diagram-name')}
-                defaultValue={diagram.name}
-                onChange={(e) =>
-                  handleUpdate(diagram.id, 'name', e?.toString() ?? '')
-                }
-                status={isError && diagram.name === '' ? 'error' : 'default'}
-              />
-
-              <TextInput
                 labelText={t('diagram-url')}
                 defaultValue={diagram.url}
                 onChange={(e) =>
@@ -93,14 +110,41 @@ export default function Diagrams({
                 }
               />
 
-              <FullwidthTextarea
-                labelText={t('description')}
-                optionalText={t('optional')}
-                defaultValue={diagram.description}
-                onChange={(e) =>
-                  handleUpdate(diagram.id, 'description', e.target.value)
-                }
-              />
+              {languages.map((lang) => (
+                <TextInput
+                  key={`link-name-${lang}`}
+                  labelText={`${t('diagram-name')}, ${lang}`}
+                  defaultValue={diagram.name[lang]}
+                  onChange={(e) =>
+                    handleLocalizedUpdate(
+                      diagram.id,
+                      'name',
+                      lang,
+                      e?.toString() ?? ''
+                    )
+                  }
+                  status={
+                    isError && diagram.name[lang] === '' ? 'error' : 'default'
+                  }
+                />
+              ))}
+
+              {languages.map((lang) => (
+                <FullwidthTextarea
+                  key={`link-description-${lang}`}
+                  labelText={`${t('description')}, ${lang}`}
+                  optionalText={t('optional')}
+                  defaultValue={diagram.description[lang]}
+                  onChange={(e) =>
+                    handleLocalizedUpdate(
+                      diagram.id,
+                      'description',
+                      lang,
+                      e.target.value ?? ''
+                    )
+                  }
+                />
+              ))}
             </ColoredBlock>
           </li>
         ))}
