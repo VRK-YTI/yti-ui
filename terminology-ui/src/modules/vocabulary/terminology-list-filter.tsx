@@ -9,8 +9,7 @@ import Filter, {
 } from 'yti-common-ui/filter';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
 import { FilterTopPartBlock } from './vocabulary.styles';
-import { Property } from '@app/common/interfaces/termed-data-types.interface';
-import { compareLocales } from '@app/common/utils/compare-locals';
+import { compareLocales } from 'yti-common-ui/utils/compare-locales';
 
 export interface TerminologyListFilterProps {
   isModal?: boolean;

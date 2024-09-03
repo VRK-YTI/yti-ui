@@ -78,6 +78,7 @@
   "concept-class": "Käsitteen luokka",
   "concept-diagram-or-link": "Käsitekaavio tai muu linkki",
   "concept-diagrams-and-sources": "Käsitekaaviot ja lähteet",
+  "concept-identifier": "Tunnus",
   "concept-import": {
     "prefLabel-column-missing": "prefLabel kenttä puuttuu",
     "prefLabel-row-missing": "prefLabel pitää määrittää vähintään yhdellä kielellä",
@@ -125,6 +126,7 @@
     "diagramsUri": "Yhdellä tai useammalla käsitekaaviolla on virheellinen verkko-osoite",
     "editorialNote": "Vähintään yhdeltä ylläpitäjän muistiipanolta puuttuu selite",
     "example": "Vähintään yhdeltä käyttöesimerkiltä puuttuu selite",
+    "identifier": "Käsitteen tunnusta ei ole määritetty",
     "language": "Termin kieltä ei ole määritetty",
     "note": "Vähintään yhdeltä huomautukselta puuttuu selite",
     "prefLabel": "Termin nimeä ei ole määritetty",

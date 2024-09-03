@@ -35,7 +35,6 @@ import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import dynamic from 'next/dynamic';
 import ConceptImportModal from '@app/common/components/concept-import';
-import getPrefLabel from '@app/common/utils/get-preflabel';
 import {
   TitleType,
   TitleTypeAndStatusWrapper,
@@ -107,13 +106,13 @@ export default function Vocabulary({ id }: VocabularyProps) {
     return conceptsData.responseObjects.map((concept) => ({
       id: concept.id,
       description:
-        getPrefLabel({
-          prefLabels: concept.definition,
+        getLanguageVersion({
+          data: concept.definition,
           lang: urlState.lang !== '' ? urlState.lang : i18n.language,
         }) ?? '',
       status: concept.status,
-      title: getPrefLabel({
-        prefLabels: concept.label,
+      title: getLanguageVersion({
+        data: concept.label,
         lang: urlState.lang !== '' ? urlState.lang : i18n.language,
       }),
       titleLink: `${id}/concept/${concept.identifier}`,

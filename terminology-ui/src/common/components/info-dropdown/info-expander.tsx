@@ -34,16 +34,16 @@ import ConceptImportModal from '../concept-import';
 import { useGetConceptResultQuery } from '../vocabulary/vocabulary.slice';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
 import { useStoreDispatch } from '@app/store';
-import UpdateWithFileModal from '../update-with-file-modal';
 import StatusMassEdit from '../status-mass-edit';
 import isEmail from 'validator/lib/isEmail';
 import { useRouter } from 'next/router';
-import { compareLocales } from '@app/common/utils/compare-locals';
+
 import {
   TerminologyInfo,
   TerminologyType,
 } from '@app/common/interfaces/interfaces-v2';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { compareLocales } from 'yti-common-ui/utils/compare-locales';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')

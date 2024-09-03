@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { Button, IconPlus } from 'suomifi-ui-components';
 import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
-import { compareLocales } from '@app/common/utils/compare-locals';
+import { compareLocales } from 'yti-common-ui/utils/compare-locales';
 
 const NewConceptModalDynamic = dynamic(() => import('./new-concept-modal'));
 
