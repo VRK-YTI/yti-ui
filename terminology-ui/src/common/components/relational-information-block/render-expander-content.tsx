@@ -4,10 +4,11 @@ import { useGetConceptQuery } from '../concept/concept.slice';
 import { useGetTerminologyQuery } from '../vocabulary/vocabulary.slice';
 import { ExpanderContent } from 'suomifi-ui-components';
 import SaveSpinner from 'yti-common-ui/save-spinner';
-import { BasicBlock } from 'yti-common-ui/block';
-import { MultilingualPropertyBlock, PropertyBlock } from '../block';
+import { BasicBlock, MultilingualBlock } from 'yti-common-ui/block';
 import Separator from 'yti-common-ui/separator';
 import FormattedDate from 'yti-common-ui/formatted-date';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { LocalizedValue } from '@app/common/interfaces/interfaces-v2';
 
 interface RenderExpanderContentProps {
   terminologyId: string;
@@ -20,7 +21,7 @@ function RenderExpanderContent({
   conceptId,
   isOpen,
 }: RenderExpanderContentProps) {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
   const { data: concept, isLoading: conceptIsLoading } = useGetConceptQuery(
     {
       terminologyId: terminologyId,
@@ -49,26 +50,45 @@ function RenderExpanderContent({
 
   return (
     <ExpanderContent>
-      <></>
-      {/*TODO}
-      <MultilingualPropertyBlock
-        title={<h2>{t('preferred-terms')}</h2>}
-        data={concept?.references.prefLabelXl?.[0].properties?.prefLabel}
-      />
-      <MultilingualPropertyBlock
-        title={<h2>{t('definition')}</h2>}
-        data={concept?.properties.definition}
-      />
+      {concept && (
+        <>
+          <BasicBlock title={<h2>{t('preferred-terms')}</h2>}>
+            <MultilingualBlock
+              data={concept.recommendedTerms.reduce(
+                (label, term) => ({
+                  ...label,
+                  [label[term.language]]: term.label ?? '',
+                }),
+                {} as LocalizedValue
+              )}
+            />
+          </BasicBlock>
 
-      <Separator isLarge />
+          {Object.keys(concept.definition).length > 0 && (
+            <BasicBlock title={<h2>{t('definition')}</h2>}>
+              <MultilingualBlock data={concept.definition} />
+            </BasicBlock>
+          )}
 
-      {terminology && <div>TODO contributor</div>}
+          <Separator isLarge />
 
-      <BasicBlock title={t('modified-at')}>
-        <FormattedDate date={concept?.lastModifiedDate} />,{' '}
-        {concept?.lastModifiedBy}
-      </BasicBlock>
-      {*/}
+          <BasicBlock title={t('contributor')}>
+            {terminology?.organizations
+              .map((o) =>
+                getLanguageVersion({
+                  data: o.label,
+                  lang: i18n.language ?? 'fi',
+                })
+              )
+              .join(', ')}
+          </BasicBlock>
+
+          <BasicBlock title={t('modified-at')}>
+            <FormattedDate date={concept?.modified} />
+            {concept?.modifier?.name ? `, ${concept.modifier.name}` : ''}
+          </BasicBlock>
+        </>
+      )}
     </ExpanderContent>
   );
 }
