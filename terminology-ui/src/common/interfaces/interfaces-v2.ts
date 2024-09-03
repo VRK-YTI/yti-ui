@@ -32,9 +32,43 @@ export interface TerminologyInfo {
   origin: string;
 }
 
+export interface Concept {
+  identifier: string;
+  definition: LocalizedValue;
+  notes: LocalizedListItem[];
+  examples: LocalizedListItem[];
+  subjectArea: string;
+  status: Status;
+  sources: string[];
+  links: {
+    name: LocalizedValue;
+    uri: string;
+    description: LocalizedValue;
+  }[];
+  changeNote: string;
+  historyNote: string;
+  conceptClass: string;
+  editorialNotes: string[];
+  recommendedTerms: Term[];
+  synonyms: Term[];
+  notRecommendedTerms: Term[];
+  searchTerms: Term[];
+  broader: string[];
+  narrower: string[];
+  isPartOf: string[];
+  hasPart: string[];
+  related: string[];
+  broadMatch: string[];
+  narrowMatch: string[];
+  exactMatch: string[];
+  closeMatch: string[];
+  relatedMatch: string[];
+}
+
 export interface ConceptInfo {
   identifier: string;
   uri: string;
+  label: LocalizedValue;
   created: string;
   modified: string;
   creator: UserMeta;
@@ -94,6 +128,7 @@ export interface ConceptReferenceInfo {
   referenceURI: string;
   prefix: string;
   label: LocalizedValue;
+  terminologyLabel: LocalizedValue;
 }
 
 export interface ConceptCollectionInfo {
@@ -114,17 +149,6 @@ export interface ConceptCollection {
   description: LocalizedValue;
   members: string[];
 }
-
-/* build fails for empty interfaces
-
-
-
-
-export interface ConceptInfo {}
-
-
-
-*/
 
 export interface SearchRequest {
   query?: string;
@@ -164,6 +188,10 @@ export interface TerminogyResponseObject extends ResponseObject {
 }
 
 export interface ConceptResponseObject extends ResponseObject {
+  terminology: {
+    prefix: string;
+    label: LocalizedValue;
+  };
   definition: LocalizedValue;
   identifier: string;
 }

@@ -72,37 +72,37 @@ export default function TermForm({
   const termFamily = [
     {
       labelText: t('term-family.masculine', { ns: 'common' }),
-      uniqueItemId: 'masculine',
+      uniqueItemId: 'MASCULINE',
     },
     {
       labelText: t('term-family.neutral', { ns: 'common' }),
-      uniqueItemId: 'neutral',
+      uniqueItemId: 'NEUTRAL',
     },
     {
       labelText: t('term-family.feminine', { ns: 'common' }),
-      uniqueItemId: 'feminine',
+      uniqueItemId: 'FEMININE',
     },
   ];
 
   const termConjugation = [
     {
       labelText: t('term-conjugation.singular', { ns: 'common' }),
-      uniqueItemId: 'singular',
+      uniqueItemId: 'SINGULAR',
     },
     {
       labelText: t('term-conjugation.plural', { ns: 'common' }),
-      uniqueItemId: 'plural',
+      uniqueItemId: 'PLURAL',
     },
   ];
 
   const wordClasses = [
     {
       labelText: translateWordClass('adjective', t),
-      uniqueItemId: 'adjective',
+      uniqueItemId: 'ADJECTIVE',
     },
     {
       labelText: translateWordClass('verb', t),
-      uniqueItemId: 'verb',
+      uniqueItemId: 'VERB',
     },
   ];
 

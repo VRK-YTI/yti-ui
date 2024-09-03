@@ -1,5 +1,4 @@
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
-import PropertyValue from '@app/common/components/property-value';
 import { MainTitle, SubTitle, BadgeBar } from 'yti-common-ui/title-block';
 import { useGetTerminologyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useTranslation } from 'next-i18next';
@@ -10,14 +9,11 @@ import { NewConceptBlock, PageHelpText } from './new-concept.styles';
 import ConceptTermsBlock from './concept-terms-block';
 import { asString } from '@app/common/utils/hooks/use-url-state';
 import { useEffect, useState } from 'react';
-import generateConcept from './generate-concept';
-import { useAddConceptMutation } from '@app/common/components/modify/modify.slice';
 import {
   BasicInfo,
   EditConceptType,
   ConceptTermType,
 } from './new-concept.types';
-import { Concept } from '@app/common/interfaces/concept.interface';
 import generateFormData from './generate-form-data';
 import { useSelector } from 'react-redux';
 import {
@@ -34,10 +30,19 @@ import { v4 } from 'uuid';
 import { StatusChip } from 'yti-common-ui/status-chip';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import {
+  ConceptInfo,
+  LocalizedValue,
+} from '@app/common/interfaces/interfaces-v2';
+import generateConceptPayload from './generate-concept';
+import {
+  useCreateConceptMutation,
+  useUpdateConceptMutation,
+} from '@app/common/components/concept/concept.slice';
 
 interface EditConceptProps {
   terminologyId: string;
-  conceptData?: Concept;
+  conceptData?: ConceptInfo;
 }
 
 export default function EditConcept({
@@ -47,7 +52,8 @@ export default function EditConcept({
   const { t, i18n } = useTranslation('concept');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
-  const [addConcept, addConceptStatus] = useAddConceptMutation();
+  const [createConcept, createConceptStatus] = useCreateConceptMutation();
+  const [updateConcept, updateConceptStatus] = useUpdateConceptMutation();
   const [isCreating, setIsCreating] = useState(false);
   const user = useSelector(selectLogin());
   const { data: terminology } = useGetTerminologyQuery({
@@ -60,23 +66,19 @@ export default function EditConcept({
   const [languages] = useState(
     terminology?.languages?.slice().sort((a, b) => compareLocales(a, b)) ?? []
   );
-  const [preferredTerms] = useState<
-    {
-      lang: string;
-      regex: string;
-      value: string;
-    }[]
-  >(getPreferredTerms());
-  const [postedData, setPostedData] =
-    useState<ReturnType<typeof generateConcept>>();
+  const [preferredTerms] = useState<LocalizedValue>(getPreferredTerms());
   const [formData, setFormData] = useState<EditConceptType>(
-    generateFormData(preferredTerms, conceptData, terminology?.label)
+    generateFormData(preferredTerms, conceptData)
   );
   const [errors, setErrors] = useState<FormError>(validateForm(formData));
 
+  const isEdit = 'conceptId' in router.query;
+
   const { disableConfirmation, enableConfirmation } =
     useConfirmBeforeLeavingPage(
-      preferredTerms.length > 0 && !conceptData ? 'enabled' : 'disabled'
+      Object.keys(preferredTerms).length > 0 && !conceptData
+        ? 'enabled'
+        : 'disabled'
     );
 
   const handlePost = () => {
@@ -94,15 +96,21 @@ export default function EditConcept({
     }
 
     setIsCreating(true);
-    const concept = generateConcept({
+    const concept = generateConceptPayload({
       data: formData,
-      terminologyId: terminologyId,
-      initialValue: conceptData,
-      lastModifiedBy: `${user.firstName} ${user.lastName}`,
+      isEdit,
     });
 
-    setPostedData(concept);
-    addConcept(concept);
+    if (isEdit) {
+      updateConcept({
+        prefix: terminologyId,
+        conceptId: formData.basicInformation.identifier,
+        concept,
+      });
+    } else {
+      createConcept({ prefix: terminologyId, concept });
+    }
+
     disableConfirmation();
   };
 
@@ -125,14 +133,12 @@ export default function EditConcept({
   };
 
   useEffect(() => {
-    if (addConceptStatus.isSuccess && postedData) {
+    if (createConceptStatus.isSuccess || updateConceptStatus.isSuccess) {
       router.replace(
-        `/terminology/${terminologyId}/concept/${
-          postedData.save[postedData.save.length - 1].id
-        }`
+        `/terminology/${terminologyId}/concept/${formData.basicInformation.identifier}`
       );
     }
-  }, [addConceptStatus, postedData, terminologyId, router]);
+  }, [createConceptStatus, updateConceptStatus, terminologyId, router]);
 
   useEffect(() => {
     if (formData.terms.some((term) => term.id === '')) {
@@ -147,7 +153,7 @@ export default function EditConcept({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (preferredTerms.length < 1) {
+  if (Object.keys(preferredTerms).length < 1) {
     return (
       <>
         <Breadcrumb>
@@ -202,11 +208,10 @@ export default function EditConcept({
             })}
           </BreadcrumbLink>
         )}
-        {!!preferredTerms?.length && (
-          <BreadcrumbLink url="" current>
-            <PropertyValue property={preferredTerms} />
-          </BreadcrumbLink>
-        )}
+
+        <BreadcrumbLink url="" current>
+          {getLanguageVersion({ data: preferredTerms, lang: i18n.language })}
+        </BreadcrumbLink>
       </Breadcrumb>
 
       <NewConceptBlock variant="main" id="main" $isSmall={isSmall}>
@@ -218,7 +223,7 @@ export default function EditConcept({
             .join(', ')}
         </SubTitle>
         <MainTitle>
-          <PropertyValue property={preferredTerms} />
+          {getLanguageVersion({ data: preferredTerms, lang: i18n.language })}
         </MainTitle>
         <BadgeBar>
           {t('heading')}
@@ -244,6 +249,8 @@ export default function EditConcept({
           initialValues={formData.basicInformation}
           languages={languages}
           errors={errors}
+          terminologyId={terminologyId}
+          isEdit={isEdit}
         />
 
         <FormFooter
@@ -260,25 +267,10 @@ export default function EditConcept({
     </>
   );
 
-  function getPreferredTerms(): {
-    lang: string;
-    regex: string;
-    value: string;
-  }[] {
-    const temp = conceptData?.references?.prefLabelXl?.flatMap((label) =>
-      label.properties.prefLabel?.flatMap((l) => ({
-        lang: l.lang,
-        regex: '',
-        value: l.value,
-      }))
-    );
-
-    if (temp && !temp.some((t) => t === undefined)) {
-      return temp as ReturnType<typeof getPreferredTerms>;
-    }
-
-    return languages
-      .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
-      .filter(({ value }) => !!value.trim());
+  function getPreferredTerms(): LocalizedValue {
+    return languages.reduce((terms, lang) => {
+      terms[lang] = asString(router.query[lang]);
+      return terms;
+    }, {} as LocalizedValue);
   }
 }

@@ -147,7 +147,7 @@ export default function validateForm(data: EditConceptType): FormError {
   if (
     data.terms
       .map((t) => t.termConjugation)
-      .filter((c) => c && !['singular', 'plural'].includes(c)).length > 0
+      .filter((c) => c && !['SINGULAR', 'PLURAL'].includes(c)).length > 0
   ) {
     errors.termConjugation = true;
   }
