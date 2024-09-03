@@ -12,6 +12,7 @@ import {
   DescriptionInput,
 } from './language-selector.styles';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '../../utils/constants';
+import { compareLocales } from '../../utils/compare-locales';
 
 export interface LanguageBlockType {
   labelText: string;
@@ -92,6 +93,10 @@ export default function LanguageSelector(
     );
   };
 
+  const sortedItems = selectedItems
+    .slice()
+    .sort((a, b) => compareLocales(a.uniqueItemId, b.uniqueItemId));
+
   return (
     <>
       <MultiSelect
@@ -102,12 +107,12 @@ export default function LanguageSelector(
         visualPlaceholder={props.visualPlaceholder}
         $isWide={props.isWide}
         allowItemAddition={false}
-        selectedItems={selectedItems}
+        selectedItems={sortedItems}
         onItemSelectionsChange={(e) =>
           handleSelectedChange(e as (MultiSelectData & LanguageBlockType)[])
         }
         onRemoveAll={() => setSelectedItems([])}
-        defaultSelectedItems={selectedItems}
+        defaultSelectedItems={sortedItems}
         ariaChipActionLabel={props.ariaChipActionLabel ?? ''}
         ariaSelectedAmountText={props.ariaSelectedAmountText ?? ''}
         ariaOptionsAvailableText={props.ariaOptionsAvailableText ?? ''}
@@ -118,7 +123,7 @@ export default function LanguageSelector(
         id="language-selector"
       />
 
-      {selectedItems.map((item, idx) => (
+      {sortedItems.map((item, idx) => (
         <LanguageBlock
           padding="m"
           className="language-block"
