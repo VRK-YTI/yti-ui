@@ -37,7 +37,7 @@ import {
   useGetAuthenticatedUserMutMutation,
   useGetAuthenticatedUserQuery,
 } from '@app/common/components/login/login.slice';
-import { compareLocales } from '@app/common/utils/compare-locals';
+import { compareLocales } from 'yti-common-ui/utils/compare-locales';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 import { ConceptCollectionInfo } from '@app/common/interfaces/interfaces-v2';
 

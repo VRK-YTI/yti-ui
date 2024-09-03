@@ -3,11 +3,9 @@ import {
   LocalizedValue,
   Term,
 } from '@app/common/interfaces/interfaces-v2';
-import {
-  compareLocales,
-  sortPropertyListByLanguage,
-} from '@app/common/utils/compare-locals';
+import { sortPropertyListByLanguage } from '@app/common/utils/compare-locals';
 import { TFunction } from 'next-i18next';
+import { compareLocales } from 'yti-common-ui/utils/compare-locales';
 
 const langOrder: { [key: string]: string } = {
   fi: 'a',

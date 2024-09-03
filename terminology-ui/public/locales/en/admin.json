@@ -78,6 +78,7 @@
   "concept-class": "Concept class",
   "concept-diagram-or-link": "Concept diagram or other link",
   "concept-diagrams-and-sources": "Concept diagrams and sources",
+  "concept-identifier": "Identifier",
   "concept-import": {
     "prefLabel-column-missing": "prefLabel column is missing",
     "prefLabel-row-missing": "preflabel needs to be defined in at least 1 language",
@@ -125,6 +126,7 @@
     "diagramsUri": "One or more diagram's url is not in valid form",
     "editorialNote": "At least one editorial note is missing a descriptive text",
     "example": "At least one example is missing a descriptive text",
+    "identifier": "Concept's identifier is undefined",
     "language": "Term's language is undefined",
     "note": "At least one note is missing a descriptive text",
     "prefLabel": "Term's name is undefined",

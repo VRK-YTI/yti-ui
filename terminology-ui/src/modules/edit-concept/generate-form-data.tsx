@@ -78,7 +78,12 @@ export default function generateFormData(
       subject: conceptData.subjectArea,
       note: conceptData.notes.map(mapListType),
       diagramAndSource: {
-        diagrams: [],
+        diagrams: conceptData.links.map((link) => ({
+          id: v4(),
+          name: link.name,
+          description: link.description,
+          url: link.uri,
+        })),
         sources: conceptData.sources.map(mapListType),
       },
       orgInfo: {

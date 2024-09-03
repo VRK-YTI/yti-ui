@@ -28,7 +28,7 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { v4 } from 'uuid';
 import { StatusChip } from 'yti-common-ui/status-chip';
-import { compareLocales } from '@app/common/utils/compare-locals';
+import { compareLocales } from 'yti-common-ui/utils/compare-locales';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 import {
   ConceptInfo,

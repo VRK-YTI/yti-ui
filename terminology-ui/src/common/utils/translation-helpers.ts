@@ -158,6 +158,8 @@ export function translateEditConceptError(error: string, t: TFunction) {
       return t('edit-concept-error.diagramsUri', { ns: 'admin' });
     case 'termConjugation':
       return t('edit-concept-error.termConjugation', { ns: 'admin' });
+    case 'identifier':
+      return t('edit-concept-error.identifier', { ns: 'admin' });
     default:
       return t('edit-concept-error.default', { ns: 'admin' });
   }

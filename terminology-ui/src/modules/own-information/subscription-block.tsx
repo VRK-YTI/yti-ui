@@ -12,7 +12,7 @@ import { useToggleSubscriptionMutation } from '../../common/components/subscript
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { useEffect, useState } from 'react';
 import RemoveSubscription from '../../common/components/subscription/remove-subscription';
-import getPrefLabel from '../../common/utils/get-preflabel';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface SubscriptionBlockProps {
   subscriptions: Subscriptions;
@@ -94,8 +94,8 @@ export default function SubscriptionBlock({
                 >
                   <SuomiLink href="">
                     {resource.prefLabel
-                      ? getPrefLabel({
-                          prefLabels: resource.prefLabel,
+                      ? getLanguageVersion({
+                          data: resource.prefLabel,
                           lang: i18n.language,
                         })
                       : resource.uri}

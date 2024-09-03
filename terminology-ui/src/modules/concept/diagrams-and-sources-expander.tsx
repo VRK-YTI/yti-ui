@@ -64,7 +64,7 @@ export default function DiagramsAndSourcesExpander({
           </BasicBlock>
         )}
 
-        {concept?.sources.length && (
+        {concept?.sources.length > 0 && (
           <BasicBlock title={t('field-sources')}>
             <PropertyList>
               {concept?.sources?.map((source, idx) => (

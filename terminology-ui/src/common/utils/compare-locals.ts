@@ -1,3 +1,4 @@
+import { compareLocales } from 'yti-common-ui/utils/compare-locales';
 import { LocalizedListItem } from '../interfaces/interfaces-v2';
 import { Term } from '../interfaces/term.interface';
 import { Property } from '../interfaces/termed-data-types.interface';
@@ -8,7 +9,7 @@ export interface TermBlockType {
 }
 
 // Prioritizes Finnish and Swedish over other languages
-export function compareLocales(
+export function compareLocales_OLD(
   t1: Property | string,
   t2: Property | string
 ): number {
