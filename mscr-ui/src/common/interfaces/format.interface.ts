@@ -9,6 +9,8 @@ export enum Format {
   Shacl = 'SHACL',
   Mscr = 'MSCR',
   Rdfs = 'RDFS',
+  Enum = 'ENUM',
+  Sssom = 'SSSOM'
 }
 
 export enum FileExtensions {
@@ -29,12 +31,14 @@ export const formatsAvailableForCrosswalkCreation: Format[] = [
   Format.Shacl,
   Format.Owl,
   Format.Mscr,
+  Format.Enum,
 ];
 
 export const formatsAvailableForCrosswalkRegistration: Format[] = [
   Format.Xslt,
   Format.Csv,
   Format.Pdf,
+  Format.Sssom,
 ];
 
 export const formatsAvailableForSchemaRegistration: Format[] = [
@@ -45,7 +49,8 @@ export const formatsAvailableForSchemaRegistration: Format[] = [
   Format.Skosrdf,
   Format.Xsd,
   Format.Owl,
-  Format.Shacl
+  Format.Shacl,
+  Format.Enum,
 ];
 
 export const formatsAvailableForMscrCopy: Format[] = [
