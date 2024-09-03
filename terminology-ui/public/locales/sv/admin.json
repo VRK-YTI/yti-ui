@@ -78,6 +78,7 @@
   "concept-class": "Begreppets klass",
   "concept-diagram-or-link": "Begreppsdiagram eller en annan länke",
   "concept-diagrams-and-sources": "Begreppsdiagram och källor",
+  "concept-identifier": "Identifierare",
   "concept-import": {
     "prefLabel-column-missing": "prefLabel fältet har inte definierats",
     "prefLabel-row-missing": "prefLabel måste anges åtminstone på ett språk",
@@ -125,6 +126,7 @@
     "diagramsUri": "Ett eller flera begreppsdiagram har en felaktig webbadress",
     "editorialNote": "Beskrivning  fattas åtminstone från en administratörens anmärkning",
     "example": "Beskrivning fattas åtminstone från ett användningsexempel",
+    "identifier": "Begreppets identifierare har inte definierats",
     "language": "Termens språk har inte definierats",
     "note": "Beskrivning fattas åtminstone från en anmärkning",
     "prefLabel": "Termens namn har inte definierats",
