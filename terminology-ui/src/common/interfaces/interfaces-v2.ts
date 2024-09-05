@@ -167,6 +167,8 @@ export interface TerminologySearchRequest extends SearchRequest {
 
 export interface ConceptSearchRequest extends SearchRequest {
   namespace?: string;
+  excludeNamespace?: string;
+  extendTerminologies?: boolean;
 }
 
 export interface ResponseObject {

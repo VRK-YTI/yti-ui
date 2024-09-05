@@ -51,6 +51,7 @@ export default function RelationModalContent({
   const [currPage, setCurrPage] = useState(1);
   const modalRef = createRef<HTMLDivElement>();
   const pageSize = 20;
+  const namespace = getNamespace(terminologyId);
 
   const statuses: StatusesType[] = [
     {
@@ -86,13 +87,13 @@ export default function RelationModalContent({
   ];
 
   const handleSearch = () => {
-    const namespace = getNamespace(terminologyId);
     searchConcept({
-      ...(fromOther ? { notInTerminologyId: namespace } : { namespace }),
+      ...(fromOther ? { excludeNamespace: namespace } : { namespace }),
       query: searchTerm,
       ...(status?.uniqueItemId && { status: [status.uniqueItemId] }),
       pageFrom: (currPage - 1) * 20,
       pageSize: 20,
+      extendTerminologies: true,
     });
   };
 
@@ -105,24 +106,23 @@ export default function RelationModalContent({
       return;
     }
 
-    const namespace = getNamespace(terminologyId);
     searchConcept({
-      ...(fromOther ? { notInTerminologyId: namespace } : { namespace }),
+      ...(fromOther ? { excludeNamespace: namespace } : { namespace }),
       pageFrom: (currPage - 1) * pageSize,
       pageSize,
+      extendTerminologies: true,
     });
   };
 
   const handlePageChange = (num: number) => {
     setCurrPage(num);
     searchConcept({
-      ...(fromOther
-        ? { notInTerminologyId: terminologyId }
-        : { terminologyId: terminologyId }),
+      ...(fromOther ? { excludeNamespace: terminologyId } : { namespace }),
       query: searchTerm,
       ...(status?.uniqueItemId && { status: [status.uniqueItemId] }),
       pageFrom: (num - 1) * pageSize,
       pageSize,
+      extendTerminologies: true,
     });
     focusToTop();
   };

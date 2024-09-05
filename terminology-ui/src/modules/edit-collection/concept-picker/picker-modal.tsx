@@ -1,7 +1,6 @@
 import { useSearchConceptMutation } from '@app/common/components/concept/concept.slice';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
-import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
@@ -23,10 +22,7 @@ import {
   SearchInput,
   Text,
 } from 'suomifi-ui-components';
-import {
-  CollectionMember,
-  EditCollectionFormDataType,
-} from '../edit-collection.types';
+import { CollectionMember } from '../edit-collection.types';
 import {
   FooterButton,
   ResultBlock,
@@ -160,11 +156,15 @@ export default function PickerModal({
       status: status !== 'ALL-STATUSES' ? [status] : undefined,
       pageFrom: (currPage - 1) * 20,
       pageSize: 20,
+      extendTerminologies: true,
     });
   };
 
   const handleClear = () => {
-    searchConcept({ namespace: getNamespace(terminologyId) });
+    searchConcept({
+      namespace: getNamespace(terminologyId),
+      extendTerminologies: true,
+    });
     setSearchTerm('');
   };
 
@@ -176,6 +176,7 @@ export default function PickerModal({
       status: status !== 'ALL-STATUSES' ? [status] : undefined,
       pageFrom: (num - 1) * 20,
       pageSize: 20,
+      extendTerminologies: true,
     });
     focusToTop();
   };
@@ -290,7 +291,10 @@ export default function PickerModal({
                         hintText={`${translateStatus(
                           concept.status,
                           t
-                        )} \u00B7 TODO: terminology label`}
+                        )} \u00B7 ${getLanguageVersion({
+                          data: concept?.terminology?.label,
+                          lang: i18n.language,
+                        })}`}
                         id={`checkbox-id-${concept.id}`}
                         onClick={(e) =>
                           handleCheckbox(e.checkboxState, concept)
