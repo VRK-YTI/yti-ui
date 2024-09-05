@@ -1,4 +1,3 @@
-import { useTranslation } from 'next-i18next';
 import { BasicBlock } from 'yti-common-ui/block';
 import AdministrativeDetailsExpander, {
   hasAdministrativeDetails,
@@ -13,8 +12,6 @@ export interface DetailsExpanderProps {
 }
 
 export default function DetailsExpander({ concept }: DetailsExpanderProps) {
-  const { i18n } = useTranslation('concept');
-
   const noDiagramsAndSources =
     !concept?.links.length && !concept?.sources.length;
   const noAdministrativeDetails = !hasAdministrativeDetails(concept);

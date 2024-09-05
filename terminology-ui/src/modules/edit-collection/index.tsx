@@ -5,7 +5,7 @@ import { useGetTerminologyQuery } from '@app/common/components/vocabulary/vocabu
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Button, Heading, InlineAlert, TextInput } from 'suomifi-ui-components';
+import { Button, Heading, InlineAlert } from 'suomifi-ui-components';
 import ConceptPicker from './concept-picker';
 import {
   ButtonBlock,
@@ -40,6 +40,7 @@ import {
 import { compareLocales } from 'yti-common-ui/utils/compare-locales';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 import { ConceptCollectionInfo } from '@app/common/interfaces/interfaces-v2';
+import generateCollection from './generate-collection';
 
 export default function EditCollection({
   terminologyId,
@@ -100,7 +101,14 @@ export default function EditCollection({
         `/terminology/${terminologyId}/collection/${collectionInfo?.collectionId}`
       );
     }
-  }, [result, updateResult, router, terminologyId]);
+  }, [
+    result,
+    updateResult,
+    router,
+    terminologyId,
+    collectionInfo?.collectionId,
+    formData.identifier,
+  ]);
 
   useEffect(() => {
     if (exists.data) {
@@ -180,26 +188,21 @@ export default function EditCollection({
     getAuthenticatedMutUser();
     setErrorMessages([]);
 
-    const payload = Object.assign(
-      {},
-      {
-        ...formData,
-        members: formData.members.map((member) => member.identifier),
-      }
-    );
-
     if (!isFormValid(formData)) {
       return;
     }
 
+    const isEdit = !!collectionInfo?.collectionId;
+    const payload = generateCollection(formData, isEdit);
+    console.info('payload', payload);
     disableConfirmation();
     setIsCreating(true);
 
-    if (collectionInfo?.collectionId) {
+    if (isEdit) {
       updateCollection({
         collectionId: collectionInfo.collectionId,
         terminologyId,
-        payload: Object.assign(payload, { identifier: null }),
+        payload,
       });
     } else {
       addCollection({

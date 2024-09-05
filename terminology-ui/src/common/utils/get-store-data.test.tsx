@@ -1,4 +1,3 @@
-import { getTerminology } from '../components/vocabulary/vocabulary.slice';
 import { getStoreData } from './get-store-data';
 
 describe('page-head-utils', () => {

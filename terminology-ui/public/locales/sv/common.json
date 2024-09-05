@@ -155,6 +155,11 @@
     "plural": "pluralis",
     "singular": "singularis"
   },
+  "term-equivalency": {
+    "broader": ">",
+    "narrower": "<",
+    "close": "~"
+  },
   "term-family": {
     "feminine": "femininum",
     "masculine": "maskulinum",

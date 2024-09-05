@@ -8,7 +8,6 @@ import {
 } from 'yti-common-ui/common-context-provider';
 import PageHead from 'yti-common-ui/page-head';
 import { getStoreData } from '@app/common/utils/get-store-data';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import {
   getTerminology,
   getRunningQueriesThunk,

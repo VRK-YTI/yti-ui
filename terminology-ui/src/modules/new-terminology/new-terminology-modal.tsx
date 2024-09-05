@@ -79,7 +79,15 @@ export default function NewTerminologyModal({
       setIsCreating(false);
       setError(true);
     }
-  }, [t, newTerminology, dispatch, handleClose, router, disableConfirmation]);
+  }, [
+    t,
+    newTerminology,
+    dispatch,
+    handleClose,
+    router,
+    disableConfirmation,
+    manualData?.prefix,
+  ]);
 
   const handleCloseRequest = () => {
     handleClose();

@@ -1,5 +1,4 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
 import {
   Concept,

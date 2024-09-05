@@ -46,7 +46,7 @@ export default function RelationalInformationBlock({
   const [chosen, setChosen] = useState<
     ConceptResponseObject[] | RelationInfoType[]
   >(data[infoKey] ?? []);
-  const { t, i18n } = useTranslation('admin');
+  const { i18n } = useTranslation('admin');
   const router = useRouter();
   const terminologyId = Array.isArray(router.query.terminologyId)
     ? router.query.terminologyId[0]

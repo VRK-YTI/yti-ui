@@ -33,7 +33,6 @@ import NewConceptModal from '../new-concept-modal';
 import ConceptImportModal from '../concept-import';
 import { useGetConceptResultQuery } from '../vocabulary/vocabulary.slice';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
-import { useStoreDispatch } from '@app/store';
 import StatusMassEdit from '../status-mass-edit';
 import isEmail from 'validator/lib/isEmail';
 import { useRouter } from 'next/router';
@@ -69,8 +68,6 @@ export default function InfoExpander({
     urlState,
     language: i18n.language,
   });
-
-  const dispatch = useStoreDispatch();
 
   if (!data) {
     return null;

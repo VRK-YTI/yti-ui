@@ -94,6 +94,19 @@ export function translateTermFamily(termFamily: string, t: TFunction) {
   }
 }
 
+export function translateTermEquivalency(termEq: string, t: TFunction) {
+  switch (termEq) {
+    case 'BROADER':
+      return t('term-equivalency.broader', { ns: 'common' });
+    case 'NARROWER':
+      return t('term-equivalency.narrower', { ns: 'common' });
+    case 'CLOSE':
+      return t('term-equivalency.close', { ns: 'common' });
+    default:
+      return termEq;
+  }
+}
+
 export function translateTermConjugation(
   termConjugation: string,
   t: TFunction
