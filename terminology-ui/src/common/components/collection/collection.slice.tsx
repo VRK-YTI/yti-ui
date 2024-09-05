@@ -4,7 +4,6 @@ import {
   ConceptCollection,
   ConceptCollectionInfo,
 } from '@app/common/interfaces/interfaces-v2';
-import { terminologyApi } from '../vocabulary/vocabulary.slice';
 
 export const collectionApi = createApi({
   reducerPath: 'collectionAPI',

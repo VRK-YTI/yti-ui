@@ -155,6 +155,11 @@
     "plural": "plural",
     "singular": "singular"
   },
+  "term-equivalency": {
+    "broader": ">",
+    "narrower": "<",
+    "close": "~"
+  },
   "term-family": {
     "feminine": "feminine",
     "masculine": "masculine",

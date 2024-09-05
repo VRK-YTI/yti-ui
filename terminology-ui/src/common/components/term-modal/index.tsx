@@ -21,6 +21,7 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
   translateStatus,
   translateTermConjugation,
+  translateTermEquivalency,
   translateTermFamily,
   translateWordClass,
 } from '@app/common/utils/translation-helpers';
@@ -68,7 +69,10 @@ export default function TermModal({ data }: TermModalProps) {
           )}
           {renderInfo(t('term-modal-info'), data.term.termInfo)}
           {renderInfo(t('term-modal-scope'), data.term.scope)}
-          {renderInfo(t('term-modal-equivalency'), data.term.termEquivalency)}
+          {renderInfo(
+            t('term-modal-equivalency'),
+            translateTermEquivalency(data.term.termEquivalency ?? '', t)
+          )}
           {renderInfo(t('term-modal-source'), data.term.sources)}
 
           <TermExpander

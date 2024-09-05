@@ -41,7 +41,7 @@ function getReferenceValues(
 }
 
 export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
-  const { t, i18n } = useTranslation('concept');
+  const { t } = useTranslation('concept');
 
   const shouldRenderDivider1 =
     [

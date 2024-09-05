@@ -15,15 +15,10 @@ import {
   MultilingualBlock,
   MultilingualBlockList,
 } from 'yti-common-ui/block';
-import {
-  MultilingualPropertyBlock,
-  PropertyBlock,
-  TermBlock,
-} from '@app/common/components/block';
+import { TermBlock } from '@app/common/components/block';
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import Separator from 'yti-common-ui/separator';
 import DetailsExpander from './details-expander';
 import ConceptSidebar from './concept-sidebar';
@@ -38,7 +33,6 @@ import { useRouter } from 'next/router';
 import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetTerminologyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
-import { getProperty } from '@app/common/utils/get-property';
 import { MainTitle, BadgeBar } from 'yti-common-ui/title-block';
 import HasPermission from '@app/common/utils/has-permission';
 import Link from 'next/link';

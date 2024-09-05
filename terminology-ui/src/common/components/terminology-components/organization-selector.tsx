@@ -78,7 +78,7 @@ export default function OrganizationSelector({
         }
       })
       .filter((org) => org) as MultiSelectData[];
-  }, [organizations, isLoading, isError, user]);
+  }, [organizations, isLoading, isError, user, i18n.language]);
 
   useEffect(() => {
     if (adminOrgs?.length === 1 && selectedOrganizations.length === 0) {

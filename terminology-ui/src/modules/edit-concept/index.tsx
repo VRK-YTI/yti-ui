@@ -15,9 +15,7 @@ import {
   ConceptTermType,
 } from './new-concept.types';
 import generateFormData from './generate-form-data';
-import { useSelector } from 'react-redux';
 import {
-  selectLogin,
   useGetAuthenticatedUserMutMutation,
   useGetAuthenticatedUserQuery,
 } from '@app/common/components/login/login.slice';
@@ -55,7 +53,7 @@ export default function EditConcept({
   const [createConcept, createConceptStatus] = useCreateConceptMutation();
   const [updateConcept, updateConceptStatus] = useUpdateConceptMutation();
   const [isCreating, setIsCreating] = useState(false);
-  const user = useSelector(selectLogin());
+
   const { data: terminology } = useGetTerminologyQuery({
     id: terminologyId,
   });
@@ -138,7 +136,13 @@ export default function EditConcept({
         `/terminology/${terminologyId}/concept/${formData.basicInformation.identifier}`
       );
     }
-  }, [createConceptStatus, updateConceptStatus, terminologyId, router]);
+  }, [
+    createConceptStatus,
+    updateConceptStatus,
+    terminologyId,
+    router,
+    formData.basicInformation.identifier,
+  ]);
 
   useEffect(() => {
     if (formData.terms.some((term) => term.id === '')) {
