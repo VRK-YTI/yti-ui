@@ -9,7 +9,6 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { Resource } from '../../interfaces/subscription.interface';
-import getPrefLabel from '../../utils/get-preflabel';
 import IconButton from 'yti-common-ui/icon-button';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import {

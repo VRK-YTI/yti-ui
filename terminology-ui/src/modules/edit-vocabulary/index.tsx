@@ -1,10 +1,8 @@
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import {
-  selectLogin,
   useGetAuthenticatedUserMutMutation,
   useGetAuthenticatedUserQuery,
 } from '@app/common/components/login/login.slice';
-import { useEditTerminologyMutation } from '@app/common/components/modify/modify.slice';
 import SaveSpinner from 'yti-common-ui/save-spinner';
 import Title from 'yti-common-ui/title';
 import {
@@ -15,7 +13,6 @@ import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-b
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import {
   Button,
   Heading,
@@ -57,7 +54,6 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
   const { data: info, error: infoError } = useGetTerminologyQuery({
     id: terminologyId,
   });
-  const user = useSelector(selectLogin());
   const [data, setData] = useState(generateInitialData(i18n.language, info));
   const [isValid, setIsValid] = useState(true);
   const [userPosted, setUserPosted] = useState(false);

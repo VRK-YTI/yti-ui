@@ -10,10 +10,7 @@ import { RelationalModalBlock } from './relation-information-block.styles';
 import RenderConcepts from './render-concepts';
 import Search from './search';
 import { getNamespace } from '@app/common/utils/namespace';
-import {
-  ConceptResponseObject,
-  SearchResponse,
-} from '@app/common/interfaces/interfaces-v2';
+import { ConceptResponseObject } from '@app/common/interfaces/interfaces-v2';
 
 interface RelationModalContentProps {
   fromOther?: boolean;

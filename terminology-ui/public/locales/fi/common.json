@@ -155,6 +155,11 @@
     "plural": "monikko",
     "singular": "yksikkö"
   },
+  "term-equivalency": {
+    "broader": ">",
+    "narrower": "<",
+    "close": "~"
+  },
   "term-family": {
     "feminine": "feminiini",
     "masculine": "maskuliini",
