@@ -232,9 +232,12 @@ export default function RemovalModal({
     }
 
     if (isError()) {
-      //es-lint no-unsafe-optional-chaining
-      if (concept?.error) {
-        /*const data = concept.error.data as ApiError;
+      if (
+        concept.error &&
+        'data' in concept.error &&
+        concept.error.data !== undefined
+      ) {
+        const data = concept.error.data as ApiError;
         return (
           <InlineAlert status="error">
             {translateErrroMessage(data.message, t)}
@@ -250,7 +253,7 @@ export default function RemovalModal({
               </div>
             )}
           </InlineAlert>
-        );*/
+        );
       }
 
       return (
