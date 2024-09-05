@@ -1,4 +1,5 @@
 import {
+  translateErrroMessage,
   translateRemovalModalConfirmation,
   translateRemovalModalDescription,
   translateRemovalModalError,
@@ -21,6 +22,7 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
+import { ApiError } from 'yti-common-ui/interfaces/error.interface';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import SaveSpinner from 'yti-common-ui/save-spinner';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
@@ -230,6 +232,27 @@ export default function RemovalModal({
     }
 
     if (isError()) {
+      //es-lint no-unsafe-optional-chaining
+      if (concept?.error) {
+        /*const data = concept.error.data as ApiError;
+        return (
+          <InlineAlert status="error">
+            {translateErrroMessage(data.message, t)}
+            {data.details && (
+              <div>
+                {data.details?.split(',').map((d) => {
+                  return (
+                    <>
+                      {d} <br />
+                    </>
+                  );
+                })}
+              </div>
+            )}
+          </InlineAlert>
+        );*/
+      }
+
       return (
         <InlineAlert status="error">
           {translateRemovalModalError(dataType, t)}

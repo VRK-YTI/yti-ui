@@ -277,13 +277,13 @@ export default function Collection({
 
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
             <FormattedDate date={collection?.created} />
-            {collection?.creator.name && `, ${collection.creator.name}`}
+            {collection?.creator?.name && `, ${collection.creator.name}`}
           </BasicBlock>
           <BasicBlock
             title={t('vocabulary-info-modified-at', { ns: 'common' })}
           >
             <FormattedDate date={collection?.modified} />
-            {collection?.modifier.name && `, ${collection.modifier.name}`}
+            {collection?.modifier?.name && `, ${collection.modifier.name}`}
           </BasicBlock>
         </MainContent>
         {collection && (

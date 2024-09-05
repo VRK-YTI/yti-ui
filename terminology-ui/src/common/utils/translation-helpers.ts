@@ -81,22 +81,13 @@ export function translateTerminologyType(
   }
 }
 
-export function translateTermStyle(termStyle: string, t: TFunction) {
-  switch (termStyle) {
-    case 'spoken-form':
-      return t('term-style.spoken-form', { ns: 'common' });
-    default:
-      return termStyle;
-  }
-}
-
 export function translateTermFamily(termFamily: string, t: TFunction) {
   switch (termFamily) {
-    case 'masculine':
+    case 'MASCULINE':
       return t('term-family.masculine', { ns: 'common' });
-    case 'neutral':
+    case 'NEUTRAL':
       return t('term-family.neutral', { ns: 'common' });
-    case 'feminine':
+    case 'FEMININE':
       return t('term-family.feminine', { ns: 'common' });
     default:
       return termFamily;
@@ -108,9 +99,9 @@ export function translateTermConjugation(
   t: TFunction
 ) {
   switch (termConjugation) {
-    case 'singular':
+    case 'SINGULAR':
       return t('term-conjugation.singular', { ns: 'common' });
-    case 'plural':
+    case 'PLURAL':
       return t('term-conjugation.plural', { ns: 'common' });
     default:
       return termConjugation;
@@ -119,9 +110,9 @@ export function translateTermConjugation(
 
 export function translateWordClass(wordClass: string, t: TFunction) {
   switch (wordClass) {
-    case 'adjective':
+    case 'ADJECTIVE':
       return t('word-class.adjective', { ns: 'common' });
-    case 'verb':
+    case 'VERB':
       return t('word-class.verb', { ns: 'common' });
     default:
       return wordClass;
@@ -232,6 +223,15 @@ export function translateRemovalModalError(
       return t('error-occurred_remove-concept', { ns: 'alert' });
     case 'collection':
       return t('error-occurred_remove-collection', { ns: 'alert' });
+    default:
+      return t('error-occured', { ns: 'alert' });
+  }
+}
+
+export function translateErrroMessage(message: string, t: TFunction) {
+  switch (message) {
+    case 'resource-in-use':
+      return t('error-occured_resource-in-use', { ns: 'alert' });
     default:
       return t('error-occured', { ns: 'alert' });
   }

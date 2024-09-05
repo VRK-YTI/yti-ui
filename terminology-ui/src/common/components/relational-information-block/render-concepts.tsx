@@ -14,6 +14,7 @@ import RenderExpanderContent from './render-expander-content';
 import { useRouter } from 'next/router';
 import { RelationInfoType } from '@app/modules/edit-concept/new-concept.types';
 import { ConceptResponseObject } from '@app/common/interfaces/interfaces-v2';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface RenderConceptsProps {
   concepts?: ConceptResponseObject[];
@@ -82,10 +83,10 @@ export default function RenderConcepts({
                   toggleButtonAriaLabel={t('additional-information')}
                 >
                   <Checkbox
-                    hintText={`TODO: terminology label - ${translateStatus(
-                      concept.status ?? 'DRAFT',
-                      t
-                    )}`}
+                    hintText={`${getLanguageVersion({
+                      data: concept.terminology.label,
+                      lang: i18n.language,
+                    })} - ${translateStatus(concept.status ?? 'DRAFT', t)}`}
                     onClick={(e) => handleCheckbox(e, concept)}
                     checked={chosen.some((chose) => chose.id === concept.id)}
                     className="concept-checkbox"
@@ -118,7 +119,7 @@ export default function RenderConcepts({
 
                 <RenderExpanderContent
                   terminologyId={concept.terminology?.prefix}
-                  conceptId={concept.identifier}
+                  concept={concept}
                   isOpen={
                     (expandersOpen?.filter(
                       (c) => c[0] === concept.id

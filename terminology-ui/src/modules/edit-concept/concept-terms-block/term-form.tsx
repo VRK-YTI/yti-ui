@@ -84,6 +84,21 @@ export default function TermForm({
     },
   ];
 
+  const termEquivalency = [
+    {
+      labelText: '<',
+      uniqueItemId: 'NARROWER',
+    },
+    {
+      labelText: '>',
+      uniqueItemId: 'BROADER',
+    },
+    {
+      labelText: `${t('almost-the-same-as', { ns: 'admin' })} (~)`,
+      uniqueItemId: 'CLOSE',
+    },
+  ];
+
   const termConjugation = [
     {
       labelText: t('term-conjugation.singular', { ns: 'common' }),
@@ -254,24 +269,28 @@ export default function TermForm({
         maxLength={TEXT_AREA_MAX}
       />
 
-      <TermEquivalencyBlock>
-        <label>
-          {t('term-equivalency')}
-          <span> ({t('optional')})</span>
-        </label>
-        <span>{t('term-equivalency-description')}</span>
-        <Dropdown
-          labelText=""
-          labelMode="hidden"
-          defaultValue={term.termEquivalency}
-          onChange={(e) => handleUpdate({ key: 'termEquivalency', value: e })}
-        >
-          <DropdownItem value="undefined">{t('no-selection')}</DropdownItem>
-          <DropdownItem value="<">{'<'}</DropdownItem>
-          <DropdownItem value=">">{'>'}</DropdownItem>
-          <DropdownItem value="~">{t('almost-the-same-as')} (~)</DropdownItem>
-        </Dropdown>
-      </TermEquivalencyBlock>
+      <SingleSelect
+        ariaOptionsAvailableText={t('available-term-equivalencies') as string}
+        clearButtonLabel={t('clear-button-label')}
+        labelText={t('term-equivalency')}
+        optionalText={t('optional')}
+        hintText={t('term-equivalency-description')}
+        visualPlaceholder={t('choose-term-equivalency')}
+        itemAdditionHelpText={''}
+        items={termEquivalency}
+        defaultSelectedItem={
+          term.wordClass
+            ? termEquivalency.filter(
+                (ts) =>
+                  ts.uniqueItemId === term.termEquivalency ||
+                  ts.labelText === term.termEquivalency
+              )[0]
+            : undefined
+        }
+        onItemSelect={(e) => handleUpdate({ key: 'termEquivalency', value: e })}
+        id={`equivalency-picker_${term.id}`}
+        style={{ marginTop: '20px' }}
+      />
 
       <ListBlock
         update={handleUpdate}
