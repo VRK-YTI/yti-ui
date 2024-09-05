@@ -1,10 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { Collection } from '@app/common/interfaces/collection.interface';
-import {
-  VocabulariesDTO,
-  VocabularyCopyInfo,
-} from '@app/common/interfaces/vocabulary.interface';
+import { VocabularyCopyInfo } from '@app/common/interfaces/vocabulary.interface';
 import { UrlState } from '@app/common/utils/hooks/use-url-state';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
 import {

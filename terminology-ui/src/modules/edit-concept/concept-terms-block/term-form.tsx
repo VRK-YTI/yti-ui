@@ -11,7 +11,6 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
   Button,
-  Dropdown,
   DropdownItem,
   IconRemove,
   SingleSelect,
@@ -27,7 +26,6 @@ import {
   GrammaticalBlock,
   HomographTextInput,
   MediumHeading,
-  TermEquivalencyBlock,
   TermFormBottomBlock,
   TermFormRemoveButton,
   TermFormTopBlock,
@@ -112,11 +110,11 @@ export default function TermForm({
 
   const wordClasses = [
     {
-      labelText: translateWordClass('adjective', t),
+      labelText: translateWordClass('ADJECTIVE', t),
       uniqueItemId: 'ADJECTIVE',
     },
     {
-      labelText: translateWordClass('verb', t),
+      labelText: translateWordClass('VERB', t),
       uniqueItemId: 'VERB',
     },
   ];

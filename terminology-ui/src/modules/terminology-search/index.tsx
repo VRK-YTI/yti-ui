@@ -74,7 +74,7 @@ export default function TerminologySearch() {
       id: o.id,
       label: getLanguageVersion({ data: o.label, lang: i18n.language }),
     }));
-  }, [orgsData]);
+  }, [orgsData, i18n.language]);
 
   const groups = useMemo(() => {
     if (!groupsData) {
@@ -85,7 +85,7 @@ export default function TerminologySearch() {
       id: g.identifier,
       label: getLanguageVersion({ data: g.label, lang: i18n.language }),
     }));
-  }, [groupsData]);
+  }, [groupsData, i18n.language]);
 
   const results: SearchResultData[] = useMemo(() => {
     if (!data || !data.responseObjects) {
@@ -113,7 +113,7 @@ export default function TerminologySearch() {
       titleLink: `terminology/${terminology.prefix}`,
       type: translateTerminologyType(terminology.type, t),
     }));
-  }, [data, t, i18n.language]);
+  }, [data, t, i18n.language, organizations, groups]);
 
   const extra = useMemo(() => {
     return (

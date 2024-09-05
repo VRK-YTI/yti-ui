@@ -82,12 +82,16 @@ function mapTerms(terms: ConceptTermType[], type: string) {
           historyNote: term.historyNote,
           changeNote: term.changeNote,
           termStyle: term.termStyle,
-          termFamily: term.termFamily !== '' ? term.termFamily : undefined,
-          termConjugation:
-            term.termConjugation !== '' ? term.termConjugation : undefined,
-          termEquivalency:
-            term.termEquivalency !== '' ? term.termEquivalency : undefined,
-          wordClass: term.wordClass !== '' ? term.wordClass : undefined,
+          termFamily: term.termFamily
+            ? term.termFamily.toUpperCase()
+            : undefined,
+          termConjugation: term.termConjugation
+            ? term.termConjugation.toUpperCase()
+            : undefined,
+          termEquivalency: term.termEquivalency
+            ? term.termEquivalency.toUpperCase()
+            : undefined,
+          wordClass: term.wordClass ? term.wordClass.toUpperCase() : undefined,
           sources: term.source.map((s) => s.value),
           editorialNotes: term.editorialNote.map((e) => e.value),
         } as Term)

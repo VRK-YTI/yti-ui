@@ -20,12 +20,12 @@ import {
   getRunningQueriesThunk as getConceptRunningQueriesThunk,
 } from '@app/common/components/concept/concept.slice';
 import { getStoreData } from '@app/common/utils/get-store-data';
-import { Concept } from '@app/common/interfaces/concept.interface';
 import { wrapper } from '@app/store';
+import { ConceptInfo } from '@app/common/interfaces/interfaces-v2';
 
 interface NewConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
-  conceptData: Concept;
+  conceptData: ConceptInfo;
 }
 
 export default function EditConcept(props: NewConceptPageProps) {

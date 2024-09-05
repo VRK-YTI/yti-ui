@@ -62,7 +62,6 @@ export default function NewTermModal({
   const [isHomographic, setIsHomographic] = useState(false);
   const [termData, setTermData] = useState<ConceptTermType>({
     changeNote: '',
-    draftComment: '',
     editorialNote: [],
     historyNote: '',
     id: v4(),
@@ -84,11 +83,11 @@ export default function NewTermModal({
 
   const wordClasses = [
     {
-      labelText: translateWordClass('adjective', t),
+      labelText: translateWordClass('ADJECTIVE', t),
       uniqueItemId: 'adjective',
     },
     {
-      labelText: translateWordClass('verb', t),
+      labelText: translateWordClass('VERB', t),
       uniqueItemId: 'verb',
     },
   ];
