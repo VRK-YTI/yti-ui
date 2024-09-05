@@ -148,9 +148,7 @@ export default function RelationalInformationBlock({
                       {fromOther && ' - '}
                       {fromOther &&
                         getLanguageVersion({
-                          data: concept.terminologyLabel ?? {
-                            fi: 'TODO: terminology label',
-                          },
+                          data: concept.terminologyLabel,
                           lang: i18n.language,
                         })}
                     </Chip>
@@ -221,10 +219,6 @@ function ManageRelationalInfoModal({
         'terminology' in concept
           ? concept.terminology.label
           : concept.terminologyLabel,
-      targetId:
-        'targetId' in concept
-          ? (concept as RelationInfoType).targetId
-          : concept.id,
     }));
     setSelectedConcepts(choseWithoutHtml);
     handleClose();

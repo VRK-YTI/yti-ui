@@ -1,5 +1,9 @@
 import { ConceptTermType, EditConceptType } from './new-concept.types';
-import { Concept, Term } from '@app/common/interfaces/interfaces-v2';
+import {
+  Concept,
+  LocalizedValue,
+  Term,
+} from '@app/common/interfaces/interfaces-v2';
 
 interface generateConceptProps {
   data: EditConceptType;
@@ -12,9 +16,20 @@ export default function generateConceptPayload({
 }: generateConceptProps) {
   const basicInfo = data.basicInformation;
   const relations = basicInfo.relationalInfo;
+
+  const definition = Object.keys(basicInfo.definition).reduce(
+    (definition, lang) => {
+      if (basicInfo.definition[lang]) {
+        definition[lang] = basicInfo.definition[lang];
+      }
+      return definition;
+    },
+    {} as LocalizedValue
+  );
+
   return {
     ...(!isEdit && { identifier: basicInfo.identifier }),
-    definition: basicInfo.definition,
+    definition,
     notes: basicInfo.note.map((note) => ({
       language: note.lang,
       value: note.value,
