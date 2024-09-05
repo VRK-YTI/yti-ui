@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
@@ -36,11 +35,12 @@ import {
   NodeMapping
 } from '@app/common/interfaces/crosswalk-connection.interface';
 import {InfoIcon} from '@app/common/components/shared-icons';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'next-i18next';
 import {
   Button as SButton,
 } from 'suomifi-ui-components';
+import {highlightOperation} from "@app/modules/crosswalk-editor/mappings-accordion";
 
 import validateMapping from "@app/modules/crosswalk-editor/mapping-validator";
 
@@ -114,17 +114,29 @@ function Row(props: {
   row: NodeListingRow;
   mappingFunctions: any;
   showAttributeNames: boolean;
-  sourceOperationValues: Array<any>;
-  sourceProcessing: any;
   predicateOperationValues: [];
   index: number;
   callBackFunction: any;
   rowCount: number;
   isSourceAccordion: boolean;
   isOneToManyMapping: boolean;
-  alreadyInitialized: boolean;
+  highlightOperation: highlightOperation | undefined;
 }) {
-  const [open, setOpen] = React.useState(props.rowCount < 2 && props.index === 0);
+  // if only one node in accordion, open it or open highlighted node
+  const [open, setOpen] = useState(props.rowCount < 2 && props.index === 0 || isNodeHighlighted());
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const functionDropdownRef = useCallback(node => {
+    if (node !== null && isNodeHighlighted() && !isInitialized) {
+      //TODO: fix focus logic. if enabled, focus is jammed
+      //node.focus();
+      setIsInitialized(true);
+    }
+  }, []);
+
+  function isNodeHighlighted(){
+    return (props.highlightOperation && (props.highlightOperation?.nodeId === props.row.id))
+  }
 
   function deleteNodeFromMapping() {
     props.isSourceAccordion ? props.callBackFunction('deleteSourceNode', props.row.id) : props.callBackFunction('deleteTargetNode', props.row.id);
@@ -261,6 +273,7 @@ function Row(props: {
                   {props.isSourceAccordion &&
                       <><Dropdown className='mt-2 node-info-dropdown'
                                   labelText={"Source operation"}
+                                  ref={functionDropdownRef}
                                   visualPlaceholder="Operation not selected"
                                   defaultValue="Operation not selected"
                                   value={props.row?.sourceProcessing?.id}
@@ -302,7 +315,20 @@ function Row(props: {
   );
 }
 
-export default function NodeListingAccordion(props: any) {
+interface nodeListingAccordionProps {
+  nodes: any,
+  mappingFunctions: any,
+  predicateOperationValues: any,
+  accordionCallbackFunction: any,
+  isSourceAccordion: boolean,
+  isOneToManyMapping: boolean,
+  showAttributeNames: boolean,
+  highlightOperation: highlightOperation | undefined
+}
+
+//TODO: create interface for exact props attributes
+
+export default function NodeListingAccordion(props: nodeListingAccordionProps) {
   const {t} = useTranslation('common');
   const [nodeData, setNodeData] = useState<NodeListingRow[]>([]);
   const [showAttributeNames, setShowAttributeNames] = useState<boolean>(true);
@@ -394,12 +420,10 @@ export default function NodeListingAccordion(props: any) {
                     showAttributeNames={showAttributeNames}
                     mappingFunctions={mappingFunctions}
                     predicateOperationValues={props.predicateOperationValues}
-                    sourceOperationValues={props.sourceOperationValues}
-                    sourceProcessing={props.sourceProcessing}
                     rowCount={nodeData.length}
                     isSourceAccordion={props.isSourceAccordion}
                     isOneToManyMapping={props.isOneToManyMapping}
-                    alreadyInitialized={props.alreadyInitialized}
+                    highlightOperation={props.highlightOperation}
                   />
                 );
               })}

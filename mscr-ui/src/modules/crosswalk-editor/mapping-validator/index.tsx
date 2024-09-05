@@ -86,7 +86,7 @@ export function validateMappings(mappingNodes: CrosswalkConnectionNew[], mapping
   return errorMessages;
 }
 
-export default function GenerateValidationErrorBar(props: {
+export default function ValidationErrorBar(props: {
   mappingNodes: CrosswalkConnectionNew[] | undefined;
   mappingFunctions: any;
   hideErrorBarCallback: any;
