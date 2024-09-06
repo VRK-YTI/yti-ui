@@ -33,7 +33,7 @@ describe('axios base query', () => {
     };
 
     // any API call would be fine here
-    mock.onGet(/\/vocabulary\?graphId=\d+/).reply((config) => {
+    mock.onGet(/\/terminology\/\d+/).reply((config) => {
       return [
         200,
         'JSESSIONID exists in headers: ' +
@@ -58,7 +58,7 @@ describe('axios base query', () => {
       await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
       // get the result from the API call
-      const data = store.getState().vocabularyAPI.queries[
+      const data = store.getState().terminologyApi.queries[
         'getTerminology({"id":"42"})'
       ]?.data as string;
 

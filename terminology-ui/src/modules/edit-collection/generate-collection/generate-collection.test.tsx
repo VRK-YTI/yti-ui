@@ -28,6 +28,17 @@ describe('generate-collection', () => {
 
     const returned = generateCollection(data, false);
 
-    expect(returned).toStrictEqual([]);
+    expect(returned).toStrictEqual({
+      description: {
+        en: 'description',
+        fi: 'kuvaus',
+      },
+      identifier: 'collection-1',
+      label: {
+        en: 'new collection',
+        fi: 'uusi käsitekokoelma',
+      },
+      members: ['concept-1', 'concept-2'],
+    });
   });
 });

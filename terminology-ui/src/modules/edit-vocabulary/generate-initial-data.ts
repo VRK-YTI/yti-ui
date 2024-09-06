@@ -61,20 +61,11 @@ export default function generateInitialData(
       };
     }) ?? [];
 
-  const uriParts = data.uri.split('/');
-  const prefix = uriParts
-    .map((part, idx) => {
-      if (uriParts[idx - 1] === 'terminology') {
-        return part;
-      }
-    })
-    .filter((p) => p)[0];
-
   const obj: TerminologyForm = {
     contact: data.contact ?? '',
     languages: languages,
     groups: groups,
-    prefix: [prefix ?? '', true],
+    prefix: [data.prefix ?? '', true],
     status: data.status ?? 'DRAFT',
     type: data.graphType ?? TerminologyType.TERMINOLOGICAL_VOCABULARY,
     organizations: contributors,

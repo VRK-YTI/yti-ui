@@ -241,6 +241,7 @@ export const conceptWithOneTerm = {
   ],
 };
 
+/*
 export const conceptWithOneTermWithInitialData = {
   delete: [],
   save: [
@@ -1771,4 +1772,4 @@ export const removeTerm = {
       uri: 'http://uri.suomi.fi/terminology/212e3cf8/concept-1',
     },
   ],
-};
+};*/

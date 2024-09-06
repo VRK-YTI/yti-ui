@@ -19,7 +19,9 @@ describe('file-upload', () => {
       />
     );
 
-    expect(screen.getByText(/tr-percent-done/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/tr-import-concepts-in-progress/)
+    ).toBeInTheDocument();
   });
 
   it('should render try again', () => {

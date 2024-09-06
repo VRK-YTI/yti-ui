@@ -12,7 +12,6 @@ export interface ConceptTermType {
   status: string;
   termConjugation: string;
   termEquivalency: string;
-  termEquivalencyRelation: string;
   termFamily: string;
   termHomographNumber: string;
   termInfo: string;

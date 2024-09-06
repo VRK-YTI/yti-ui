@@ -72,7 +72,6 @@ export default function NewTermModal({
     status: 'DRAFT',
     termConjugation: '',
     termEquivalency: '',
-    termEquivalencyRelation: '',
     termFamily: '',
     termHomographNumber: '',
     termInfo: '',

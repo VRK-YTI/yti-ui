@@ -29,11 +29,11 @@ export interface TerminologyInfo {
   modified: string;
   creator: UserMeta;
   modifier: UserMeta;
-  origin: string;
+  origin?: string;
 }
 
 export interface Concept {
-  identifier: string;
+  identifier?: string;
   definition: LocalizedValue;
   notes: LocalizedListItem[];
   examples: LocalizedListItem[];
@@ -68,7 +68,7 @@ export interface Concept {
 export interface ConceptInfo {
   identifier: string;
   uri: string;
-  label: LocalizedValue;
+  label?: LocalizedValue;
   created: string;
   modified: string;
   creator: UserMeta;
@@ -108,7 +108,7 @@ export interface ConceptInfo {
 export interface Term {
   language: string;
   label?: string;
-  homographNumber: number;
+  homographNumber?: number;
   status?: Status;
   termInfo?: string;
   scope?: string;
@@ -216,7 +216,7 @@ export interface LocalizedListItem {
 
 export interface UserMeta {
   id: string;
-  name: string;
+  name?: string;
 }
 
 export enum TerminologyType {
