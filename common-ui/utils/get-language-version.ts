@@ -1,12 +1,12 @@
 interface getLanguageVersionProps {
   data?: { [key: string]: string };
-  lang: string;
+  lang?: string;
   appendLocale?: boolean;
 }
 
 export function getLanguageVersion({
   data,
-  lang,
+  lang = 'fi',
   appendLocale = false,
 }: getLanguageVersionProps) {
   if (!data) {

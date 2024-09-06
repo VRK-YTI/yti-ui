@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { VocabularyCopyInfo } from '@app/common/interfaces/vocabulary.interface';
 import { UrlState } from '@app/common/utils/hooks/use-url-state';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
 import {
@@ -79,8 +78,11 @@ export const terminologyApi = createApi({
         data: data.payload,
       }),
     }),
-    postCreateVersion: builder.mutation<
-      VocabularyCopyInfo,
+    createVersion: builder.mutation<
+      {
+        newGraphId: string;
+        uri: string;
+      },
       { graphId: string; newCode: string }
     >({
       query: ({ graphId, newCode }) => ({
@@ -113,7 +115,7 @@ export const {
   useGetTerminologyQuery,
   useCreateTerminologyMutation,
   useUpdateTerminologyMutation,
-  usePostCreateVersionMutation,
+  useCreateVersionMutation,
   useDeleteTerminologyMutation,
   useGetIfNamespaceInUseMutation,
   util: { getRunningQueriesThunk },

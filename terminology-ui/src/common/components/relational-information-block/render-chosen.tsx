@@ -1,9 +1,9 @@
 import { RelationInfoType } from '@app/modules/edit-concept/new-concept.types';
-import { useTranslation } from 'next-i18next';
+import { i18n } from 'next-i18next';
 import { Chip, Label } from 'suomifi-ui-components';
-import PropertyValue from '../property-value';
 import { ChipBlock } from './relation-information-block.styles';
 import { ConceptResponseObject } from '@app/common/interfaces/interfaces-v2';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface RenderChosenProps {
   chosen: ConceptResponseObject[] | RelationInfoType[];
@@ -18,7 +18,6 @@ export default function RenderChosen({
   setShowChosen,
   chipLabel,
 }: RenderChosenProps) {
-  const { t } = useTranslation('admin');
   const handleChipRemove = (
     chose: ConceptResponseObject | RelationInfoType
   ) => {
@@ -44,15 +43,10 @@ export default function RenderChosen({
               onClick={() => handleChipRemove(chose)}
               key={chose.id}
             >
-              <PropertyValue
-                property={Object.keys(chose.label).map((lang) => ({
-                  lang,
-                  value: chose.label[lang],
-                  regex: '',
-                }))}
-                stripHtml
-                fallback={t('concept-label-undefined', { ns: 'common' })}
-              />
+              {getLanguageVersion({
+                data: chose.label,
+                lang: i18n?.language,
+              })}
             </Chip>
           );
         })}

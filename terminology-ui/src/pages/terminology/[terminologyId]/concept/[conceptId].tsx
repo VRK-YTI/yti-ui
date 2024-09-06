@@ -20,7 +20,6 @@ import {
   CommonContextProvider,
 } from 'yti-common-ui/common-context-provider';
 import PageHead from 'yti-common-ui/page-head';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getStoreData } from '@app/common/utils/get-store-data';
 import { wrapper } from '@app/store';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
@@ -103,19 +102,19 @@ export const getServerSideProps = createCommonGetServerSideProps(
       };
     }
 
-    const vocabularyTitle = getPropertyValue({
-      property: vocabularyData?.properties?.prefLabel,
-      language: locale,
+    const vocabularyTitle = getLanguageVersion({
+      data: vocabularyData?.properties?.prefLabel,
+      lang: locale,
     });
 
     const conceptTitle = getLanguageVersion({
       data: conceptData.label,
-      lang: locale ?? 'fi',
+      lang: locale,
     });
 
     const conceptDescription = getLanguageVersion({
       data: conceptData.definition,
-      lang: locale ?? 'fi',
+      lang: locale,
     });
     return {
       props: {

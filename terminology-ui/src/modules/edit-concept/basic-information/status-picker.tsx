@@ -2,7 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { SingleSelect } from 'suomifi-ui-components';
 import { FormError } from '../validate-form';
-import { BasicInfoUpdate } from './concept-basic-information-types';
+import { BasicInfoUpdate } from './concept-basic-information';
 
 interface StatusPickerProps {
   initialValue: string;

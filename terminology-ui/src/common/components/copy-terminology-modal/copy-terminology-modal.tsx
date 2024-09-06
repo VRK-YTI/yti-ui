@@ -10,7 +10,7 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import { usePostCreateVersionMutation } from '../vocabulary/vocabulary.slice';
+import { useCreateVersionMutation } from '../vocabulary/vocabulary.slice';
 import { v4 } from 'uuid';
 import { useStoreDispatch } from '@app/store';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
@@ -44,7 +44,7 @@ export default function CopyTerminologyModal({
   const [userPosted, setUserPosted] = useState(false);
   const [newGraphId, setNewGraphId] = useState('');
   const [error, setError] = useState(false);
-  const [postCreateVersion, createVersion] = usePostCreateVersionMutation();
+  const [postCreateVersion, createVersion] = useCreateVersionMutation();
   const [newCode, setNewCode] = useState(randomURL);
   const router = useRouter();
 

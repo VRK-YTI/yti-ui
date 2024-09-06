@@ -6,7 +6,6 @@ import {
 } from 'suomifi-ui-components';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { useTranslation } from 'next-i18next';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { useEffect, useState } from 'react';
@@ -94,25 +93,10 @@ export default function RenderConcepts({
                     id={`concept-result-checkbox-${concept.id}`}
                   >
                     <SanitizedTextContent
-                      text={
-                        concept.label
-                          ? getPropertyValue({
-                              property: Object.keys(concept.label).map(
-                                (key) => {
-                                  const obj = {
-                                    lang: key,
-                                    value: concept.label[key],
-                                    regex: '',
-                                  };
-                                  return obj;
-                                }
-                              ),
-                              language: i18n.language,
-                            }) ??
-                            concept.label[i18n.language] ??
-                            concept.label.fi
-                          : t('concept-label-undefined', { ns: 'common' })
-                      }
+                      text={getLanguageVersion({
+                        data: concept.label,
+                        lang: i18n.language,
+                      })}
                     />
                   </Checkbox>
                 </ExpanderTitle>
