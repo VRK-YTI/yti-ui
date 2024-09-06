@@ -1,4 +1,3 @@
-import { terminologyApi } from '@app/common/components/vocabulary/vocabulary.slice';
 import generateFormData from './generate-form-data';
 
 export const emptyFormReturned = generateFormData({ fi: 'demo' });
