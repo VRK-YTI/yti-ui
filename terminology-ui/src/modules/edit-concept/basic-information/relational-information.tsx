@@ -2,13 +2,14 @@ import Separator from 'yti-common-ui/separator';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { ExpanderTitleButton } from 'suomifi-ui-components';
-import { BasicInfoUpdate } from './concept-basic-information-types';
+
 import {
   ConceptExpander,
   ExpanderContentFitted,
 } from './concept-basic-information.styles';
 import RelationalInformationBlock from '../../../common/components/relational-information-block';
 import { BasicInfo, RelationInfoType } from '../new-concept.types';
+import { BasicInfoUpdate } from './concept-basic-information';
 
 interface RelationalInformationProps {
   infoKey: string;

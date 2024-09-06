@@ -24,7 +24,6 @@ import { subscriptionApi } from '@app/common/components/subscription/subscriptio
 import { accessRequestApi } from '@app/common/components/access-request/access-request.slice';
 import { adminControlsSlice } from '@app/common/components/admin-controls/admin-controls.slice';
 import { importApi } from '@app/common/components/import/import.slice';
-import { modifyApi } from '@app/common/components/modify/modify.slice';
 import { NextApiRequest } from 'next';
 import { modifyStatusesApi } from '@app/common/components/modify-statuses/modify-statuses.slice';
 import { fakeableUsersApi } from '@app/common/components/fakeable-user/fakeable-user.slice';
@@ -49,7 +48,6 @@ const reducers = {
   [accessRequestApi.reducerPath]: accessRequestApi.reducer,
   [adminControlsSlice.name]: adminControlsSlice.reducer,
   [importApi.reducerPath]: importApi.reducer,
-  [modifyApi.reducerPath]: modifyApi.reducer,
   [modifyStatusesApi.reducerPath]: modifyStatusesApi.reducer,
   [fakeableUsersApi.reducerPath]: fakeableUsersApi.reducer,
   [codeListApi.reducerPath]: codeListApi.reducer,
@@ -74,7 +72,6 @@ export const makeStore: MakeStore<any> = ({
       subscriptionApi.middleware,
       accessRequestApi.middleware,
       importApi.middleware,
-      modifyApi.middleware,
       loginApi.middleware,
       modifyStatusesApi.middleware,
       fakeableUsersApi.middleware,

@@ -18,7 +18,6 @@ import {
   CommonContextProvider,
 } from 'yti-common-ui/common-context-provider';
 import PageHead from 'yti-common-ui/page-head';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getStoreData } from '@app/common/utils/get-store-data';
 import {
   getRunningQueriesThunk as countsGetRunningQueriesThunk,
@@ -26,6 +25,7 @@ import {
   getVocabularyCount,
 } from '@app/common/components/counts/counts.slice';
 import { wrapper } from '@app/store';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -117,14 +117,14 @@ export const getServerSideProps = createCommonGetServerSideProps(
       functionKey: 'getTerminology',
     });
 
-    const title = getPropertyValue({
-      property: vocabularyData?.properties?.prefLabel,
-      language: locale,
+    const title = getLanguageVersion({
+      data: vocabularyData?.properties?.prefLabel,
+      lang: locale ?? 'fi',
     });
 
-    const description = getPropertyValue({
-      property: vocabularyData?.properties?.description,
-      language: locale,
+    const description = getLanguageVersion({
+      data: vocabularyData?.properties?.description,
+      lang: locale ?? 'fi',
     });
 
     return {

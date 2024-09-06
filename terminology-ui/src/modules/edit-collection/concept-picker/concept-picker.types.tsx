@@ -1,4 +1,3 @@
-import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { EditCollectionFormDataType } from '../edit-collection.types';
 
 export interface PickerModalProps {
@@ -11,9 +10,4 @@ export interface PickerModalProps {
 export interface SelectedConceptProps {
   selectedConcepts: EditCollectionFormDataType['concepts'];
   deselect: (value: string) => void;
-}
-
-export interface ExpanderConceptContent {
-  concept: Concepts;
-  terminologyId: string;
 }
