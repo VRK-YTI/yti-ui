@@ -36,7 +36,7 @@ import {useEffect} from 'react';
 import {useTranslation} from 'next-i18next';
 import {
   EmptyBlock,
-  HorizontalLine,
+  HorizontalLineStart,
   HorizontalLineMidEnd,
   HorizontalLineMidStart,
   HorizontalLineTarget,
@@ -54,7 +54,7 @@ import {
   StyledTableActionsCell,
   StyledTableRow,
   TableCellPadder,
-  VerticalLine
+  VerticalLine, HorizontalLineTargetStart, HorizontalLineTargetEnd, HorizontalLineStartSecond, AccordionContainer
 } from '@app/modules/crosswalk-editor/mappings-accordion/mappings-accordion.styles';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import styled from 'styled-components';
@@ -100,23 +100,27 @@ function Row(props: {
                           e.stopPropagation();
                         }}
                       >{props.showAttributeNames ? mapping.label : mapping.id}</StyledButton>
-                      {mapping['processing']?.id &&
-                          <FunctionTooltipBox callBackFunction={props.callBackFunction}
-                                              isEditModeActive={props.isEditModeActive}
-                                              tooltipHeading={'source operation'} tooltipHoverText={'source operation'}
-                                              processingId={mapping.id} functionName={'sourceOperation'}
-                                              mappingFunctions={props.mappingFunctions}
-                                              row={props.row}></FunctionTooltipBox>
-                      }
-                      <HorizontalLine>
+
+                      <HorizontalLineStart>
                         <div></div>
-                      </HorizontalLine>
+                      </HorizontalLineStart>
                     </TableCellPadder>
                   </div>
                   <StyledArrowRightIcon></StyledArrowRightIcon>
-                  <HorizontalLine>
+                  <HorizontalLineStart>
                     <div></div>
-                  </HorizontalLine>
+                  </HorizontalLineStart>
+                  {mapping['processing']?.id &&
+                      <FunctionTooltipBox callBackFunction={props.callBackFunction}
+                                          isEditModeActive={props.isEditModeActive}
+                                          tooltipHeading={'source operation'} tooltipHoverText={'source operation'}
+                                          processingId={mapping.id} functionName={'sourceOperation'}
+                                          mappingFunctions={props.mappingFunctions}
+                                          row={props.row}></FunctionTooltipBox>
+                  }
+                  <HorizontalLineStartSecond>
+                    <div></div>
+                  </HorizontalLineStartSecond>
                   <div className='d-flex flex-column'>
                     {index === 0 && props.row.source.length > 1 && <EmptyBlock></EmptyBlock>}
                     {props.row.source.length > 1 && <VerticalLine>
@@ -158,15 +162,6 @@ function Row(props: {
               <div></div>
             </HorizontalLineMidEnd>
           </div>
-          {/*<IconButton
-                        aria-label="expand row"
-                        size="small"
-                        onClick={(e) => {
-                            props.cbf.performAccordionAction(row, 'openMappingDetails')
-                        }}
-                    >
-                        {row.isSelected ? <EditRoundedIcon className='selection-active'/> : <EditRoundedIcon/>}
-                    </IconButton>*/}
         </StyledTableCell>
 
         <StyledTableCell className="col-4">
@@ -183,14 +178,25 @@ function Row(props: {
                         {index === props.row.target.length - 1 && props.row.target.length > 1 &&
                             <EmptyBlock></EmptyBlock>}
                       </div>
-                      <HorizontalLineTarget>
-                        <div></div>
-                      </HorizontalLineTarget>
+                      {mapping['processing']?.id &&
+                          <><HorizontalLineTargetStart>
+                              <div></div>
+                          </HorizontalLineTargetStart><FunctionTooltipBox callBackFunction={props.callBackFunction}
+                                                                          isEditModeActive={props.isEditModeActive}
+                                                                          tooltipHeading={'target operation'}
+                                                                          tooltipHoverText={'target operation'}
+                                                                          processingId={mapping.id}
+                                                                          functionName={'targetOperation'}
+                                                                          mappingFunctions={props.mappingFunctions}
+                                                                          row={props.row}></FunctionTooltipBox><HorizontalLineTargetEnd>
+                              <div></div>
+                          </HorizontalLineTargetEnd></>
+                      }{!mapping['processing']?.id && <HorizontalLineTarget><div></div></HorizontalLineTarget>}
                       <StyledArrowRightIcon></StyledArrowRightIcon>
                       <StyledButton
                         className="px-3 py-0"
                         style={{textTransform: 'none'}}
-                        title="Select linked node from source tree"
+                        title="Select linked node from target tree"
                         onClick={(e) => {
                           props.callBackFunction.performAccordionAction(
                             props.row,
@@ -200,14 +206,6 @@ function Row(props: {
                           e.stopPropagation();
                         }}
                       >{props.showAttributeNames ? mapping.label : mapping.id}</StyledButton>
-                      {mapping['processing']?.id &&
-                          <FunctionTooltipBox callBackFunction={props.callBackFunction}
-                                              isEditModeActive={props.isEditModeActive}
-                                              tooltipHeading={'target operation'} tooltipHoverText={'target operation'}
-                                              processingId={mapping.id} functionName={'targetOperation'}
-                                              mappingFunctions={props.mappingFunctions}
-                                              row={props.row}></FunctionTooltipBox>
-                      }
                     </div>
                   </div>
                 </>)
@@ -353,7 +351,9 @@ export default function MappingsAccordion(props: any) {
   const nodeMappingsInput = props.nodeMappings;
   return (
     <>
-      <div className='d-flex justify-content-end'>
+
+  <div className='d-flex justify-content-between ps-1'>
+        <h2 className="mb-0">Mappings</h2>
         <SearchWrapper>
           <SearchInput
             labelText={''}
@@ -374,7 +374,7 @@ export default function MappingsAccordion(props: any) {
           />
         </SearchWrapper>
       </div>
-      <TableContainer component={Paper} className="gx-0">
+      <AccordionContainer component={Paper} className="gx-0">
         <Table aria-label="collapsible table w-100">
           <TableHead>
             <TableRow className="accordion-row row">
@@ -435,7 +435,7 @@ export default function MappingsAccordion(props: any) {
             </TableBody>
           )}
         </Table>
-      </TableContainer>
+      </AccordionContainer>
     </>
   );
 }

@@ -513,10 +513,6 @@ export default function CrosswalkEditor({
       </div>
       <div className="col-12 mt-4">
         <div className="d-flex justify-content-between">
-          <div>
-            <h2 className="mb-0">Mappings</h2>
-          </div>
-
           <div className="align-self-end pe-1">
             {/*                        // TODO: this can be shown when attribute qnames are available for accordion. Those are temporarily replaced with attribute ids.
                         <Checkbox

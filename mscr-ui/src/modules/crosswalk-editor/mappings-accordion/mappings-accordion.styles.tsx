@@ -3,6 +3,11 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import TableCell from '@mui/material/TableCell';
 import Button from '@mui/material/Button';
 import TableRow from '@mui/material/TableRow';
+import TableContainer from '@mui/material/TableContainer';
+
+export const AccordionContainer = styled(TableContainer)({
+  overflow: 'hidden'
+});
 
 export const SearchWrapper = styled.div`
   && .fi-search-input {
@@ -14,7 +19,7 @@ export const SearchWrapper = styled.div`
 
 export const StyledArrowRightIcon = styled(ArrowRightIcon)({
   color: '#d8e3f4',
-  margin: '6px -6px 6px -18px'
+  margin: '6px -6px 6px -8px'
 });
 
 
@@ -35,7 +40,7 @@ export const StyledTableTargetCell = styled(TableCell)({
   justifyContent: 'center',
   flexDirection: 'column',
   alignSelf: 'normal',
-  paddingLeft: '120px',
+  paddingLeft: '136px',
 });
 
 export const StyledTableActionsCell = styled(TableCell)({
@@ -137,7 +142,7 @@ export const IconSpacer = styled.div`
   width: 70px;
 `;
 
-export const HorizontalLine = styled.div`
+export const HorizontalLineStart = styled.div`
   width: 100%;
   display: flex;
   flex: 1;
@@ -151,6 +156,26 @@ export const HorizontalLine = styled.div`
     margin-left: -5px;
     margin-right: 5px;
   }
+  margin-right: -15px;
+  left: 15px;
+`;
+
+export const HorizontalLineStartSecond = styled.div`
+  width: 100%;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  flex-direction: column;
+  color: #fff;
+  font-size: 1.1rem;
+  div {
+    height: 2px;
+    background: #d8e3f4;
+    margin-left: -5px;
+    margin-right: 5px;
+  }
+  max-width: 20px;
+  min-width: 40px;
 `;
 
 export const HorizontalLineMidStart= styled.div`
@@ -160,7 +185,7 @@ export const HorizontalLineMidStart= styled.div`
   flex-direction: column;
   color: #fff;
   font-size: 1.1rem;
-  margin-right: -45px;
+  margin-right: -70px;
 
   div {
     height: 2px;
@@ -187,6 +212,7 @@ export const HorizontalLineMidEnd= styled.div`
 `;
 
 export const HorizontalLineTarget= styled.div`
+  margin-right: -8px;
   width: 100%;
   display: flex;
   flex: 1;
@@ -194,15 +220,52 @@ export const HorizontalLineTarget= styled.div`
   flex-direction: column;
   color: #fff;
   font-size: 1.1rem;
-  max-width: 40px;
   div {
     height: 2px;
     background: #d8e3f4;
     margin-left: -5px;
     margin-right: 5px;
   }
-  min-width: 100px;
+  max-width: 40px;
+  min-width: 115px;
 `;
+
+export const HorizontalLineTargetStart = styled.div`
+  width: 100%;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  flex-direction: column;
+  color: #fff;
+  font-size: 1.1rem;
+  div {
+    height: 2px;
+    background: #d8e3f4;
+    margin-left: -5px;
+    margin-right: 5px;
+  }
+  min-width: 50px;
+  margin-right: -13px;
+`;
+
+export const HorizontalLineTargetEnd = styled.div`
+  width: 100%;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  flex-direction: column;
+  color: #fff;
+  font-size: 1.1rem;
+  div {
+    height: 2px;
+    background: #d8e3f4;
+    margin-left: -5px;
+    margin-right: 5px;
+  }
+  min-width: 40px;
+  margin-right: -8px;
+`;
+
 
 
 export const VerticalLine = styled.div`

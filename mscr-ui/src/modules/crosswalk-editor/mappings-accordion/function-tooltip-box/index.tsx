@@ -7,6 +7,9 @@ import {
   IconCircleMid, IconLetterWrap, StooltipContainer,
 } from '@app/modules/crosswalk-editor/mappings-accordion/mappings-accordion.styles';
 import {Button as Sbutton, Heading, Text, Tooltip as Stooltip} from "suomifi-ui-components";
+import {
+  TooltipText
+} from "@app/modules/crosswalk-editor/mappings-accordion/function-tooltip-box/function-tooltip-box.styles";
 
 export default function FunctionTooltipBox(props: {
   row: NodeMapping;
@@ -39,7 +42,7 @@ export default function FunctionTooltipBox(props: {
     let functionParams: functionParam[] = [] as functionParam[];
     if (props.functionName === 'predicate') {
       return (<>
-        <div>{props.row.predicate}</div>
+        <TooltipText>{props.row.predicate}</TooltipText>
         <br/></>);
     } else if (props.functionName === 'mappingFunction') {
       const mappingFunction = props.mappingFunctions.filter(fnc => fnc.uri === props.processingId);
@@ -56,7 +59,7 @@ export default function FunctionTooltipBox(props: {
         node = props.row.target.filter(node => node.id === props.processingId);
       }
 
-      if (node.length > 0) {
+      if (props.mappingFunctions && node.length > 0) {
         const sourceOperation = props.mappingFunctions.filter(fnc => {
           return node && (fnc.uri === node[0]?.processing?.id);
         });
@@ -72,7 +75,7 @@ export default function FunctionTooltipBox(props: {
       }
       return (<><p>{functionName}</p><p>{functionDescription}</p>{functionParams.length > 0 ?
         <Heading variant="h5" as="h2">Parameters</Heading> : ''}{functionParams.map(param => <>
-        <div>{param.key}: {param.value}</div>
+        <TooltipText>{param.key}: {param.value}</TooltipText>
       </>)}<br/></>);
     } else return '';
   }
@@ -106,7 +109,7 @@ export default function FunctionTooltipBox(props: {
           <Heading variant="h5" as="h2">
             {props.tooltipHeading[0].toUpperCase() + props.tooltipHeading.slice(1)}
           </Heading>
-          {generateTexts()}
+          {tooltipOpen && generateTexts()}
           <Tooltip
             title={props.isEditModeActive ? 'Edit ' + props.tooltipHeading : 'Activate edit mode to edit ' + props.tooltipHeading}
             placement="bottom"
