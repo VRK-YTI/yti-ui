@@ -4,7 +4,7 @@ describe('page-head-utils', () => {
   it('should return correct object', () => {
     const gotten = getStoreData({
       state: {
-        vocabularyAPI: {
+        terminologyAPI: {
           queries: {
             getTerminology: {
               data: {
@@ -24,7 +24,7 @@ describe('page-head-utils', () => {
   it('should return empty object with incorrect redux key', () => {
     const gotten = getStoreData({
       state: {
-        vocabularyAPI: {
+        terminologyAPI: {
           queries: {
             getTerminology: {
               data: {
@@ -44,7 +44,7 @@ describe('page-head-utils', () => {
   it('should return empty object with incorrect function', () => {
     const gotten = getStoreData({
       state: {
-        vocabularyAPI: {
+        terminologyAPI: {
           queries: {
             getTerminology: {
               data: {
