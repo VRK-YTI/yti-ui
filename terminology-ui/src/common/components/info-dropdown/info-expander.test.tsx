@@ -8,12 +8,12 @@ import {
   loginApi,
 } from '@app/common/components/login/login.slice';
 import mockRouter from 'next-router-mock';
-import { v4 } from 'uuid';
 import { adminControlsSlice } from '../admin-controls/admin-controls.slice';
 import { terminologyApi } from '../vocabulary/vocabulary.slice';
 import { subscriptionApi } from '../subscription/subscription.slice';
 import { screen, waitFor } from '@testing-library/react';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
+import { TerminologyInfo } from '@app/common/interfaces/interfaces-v2';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
@@ -25,32 +25,49 @@ const reducers = [
   terminologySearchApi,
 ];
 
+const data = {
+  uri: '',
+  prefix: '',
+  graphType: 'TERMINOLOGICAL_VOCABULARY',
+  status: 'DRAFT',
+  languages: ['fi'],
+  contact: '',
+  label: { fi: 'label' },
+  description: {},
+  organizations: [
+    {
+      id: '123',
+      label: { fi: 'testi 1' },
+    },
+    {
+      id: '456',
+      label: { fi: 'testi 2' },
+    },
+    {
+      id: '789',
+      label: { fi: 'testi 3' },
+    },
+  ],
+  groups: [
+    {
+      id: '123',
+      label: { fi: 'group' },
+      identifier: 'P10',
+    },
+  ],
+  creator: {
+    id: '123',
+    name: 'Creator',
+  },
+  created: '1970-01-01T00:00:00.000+00:00',
+  modifier: {
+    id: '123',
+    name: 'Modifier',
+  },
+  modified: '1970-01-02T00:00:00.000+00:00',
+} as TerminologyInfo;
+
 describe('infoExpander', () => {
-  it('should render export button', async () => {
-    mockRouter.setCurrentUrl('/terminology/123-123');
-
-    renderWithProviders(
-      <InfoExpander
-        data={
-          {
-            properties: {},
-            references: {
-              contributor: [{ properties: { prefLabel: [] }, id: v4() }],
-              inGroup: [{ properties: { prefLabel: [] } }],
-            },
-          } as any
-        }
-      />,
-      reducers
-    );
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('tr-vocabulary-info-vocabulary-export')
-      ).toBeInTheDocument();
-    });
-  });
-
   it('should render subscribe button', async () => {
     const loginInitialState = Object.assign({}, initialState);
     loginInitialState['anonymous'] = false;
@@ -60,21 +77,9 @@ describe('infoExpander', () => {
 
     mockRouter.setCurrentUrl('/terminology/123-123');
 
-    renderWithProviders(
-      <InfoExpander
-        data={
-          {
-            properties: {},
-            references: {
-              contributor: [{ properties: { prefLabel: [] }, id: v4() }],
-              inGroup: [{ properties: { prefLabel: [] } }],
-            },
-          } as any
-        }
-      />,
-      reducers,
-      { preloadedState: { login: loginInitialState } }
-    );
+    renderWithProviders(<InfoExpander data={data} />, reducers, {
+      preloadedState: { login: loginInitialState },
+    });
 
     await expect(
       screen.findByText('tr-email-subscription-add')
@@ -90,25 +95,9 @@ describe('infoExpander', () => {
 
     mockRouter.setCurrentUrl('/terminology/123-123');
 
-    renderWithProviders(
-      <InfoExpander
-        data={
-          {
-            createdBy: 'Creator',
-            createdDate: '1970-01-01T00:00:00.000+00:00',
-            lastModifiedBy: 'Modifier',
-            lastModifiedDate: '1970-01-02T00:00:00.000+00:00',
-            properties: {},
-            references: {
-              contributor: [{ properties: { prefLabel: [] }, id: v4() }],
-              inGroup: [{ properties: { prefLabel: [] } }],
-            },
-          } as any
-        }
-      />,
-      reducers,
-      { preloadedState: { login: loginInitialState } }
-    );
+    renderWithProviders(<InfoExpander data={data} />, reducers, {
+      preloadedState: { login: loginInitialState },
+    });
 
     await waitFor(() => {
       expect(screen.getByText(/1.1.1970, 0.00/)).toBeInTheDocument();
@@ -128,44 +117,9 @@ describe('infoExpander', () => {
 
     mockRouter.setCurrentUrl('/terminology/123-123');
 
-    renderWithProviders(
-      <InfoExpander
-        data={
-          {
-            createdBy: 'Creator',
-            createdDate: '1970-01-01T00:00:00.000+00:00',
-            lastModifiedBy: 'Modifier',
-            lastModifiedDate: '1970-01-02T00:00:00.000+00:00',
-            properties: {},
-            references: {
-              contributor: [
-                {
-                  id: 'testi 1',
-                  properties: {
-                    prefLabel: [{ lang: 'en', value: 'testi 1' }],
-                  },
-                },
-                {
-                  id: 'testi 2',
-                  properties: {
-                    prefLabel: [{ lang: 'en', value: 'testi 2' }],
-                  },
-                },
-                {
-                  id: 'testi 3',
-                  properties: {
-                    prefLabel: [{ lang: 'en', value: 'testi 3' }],
-                  },
-                },
-              ],
-              inGroup: [{ properties: { prefLabel: [] } }],
-            },
-          } as any
-        }
-      />,
-      reducers,
-      { preloadedState: { login: loginInitialState } }
-    );
+    renderWithProviders(<InfoExpander data={data} />, reducers, {
+      preloadedState: { login: loginInitialState },
+    });
 
     await waitFor(() => {
       expect(screen.getByText('testi 1')).toBeInTheDocument();

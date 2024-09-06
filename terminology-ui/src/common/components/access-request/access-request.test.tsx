@@ -13,22 +13,8 @@ describe('access-request', () => {
 
   const organizations = [
     {
-      code: '',
       id: '123123-321321',
-      properties: {
-        prefLabel: {
-          lang: 'fi',
-          value: 'Test-org',
-          regex: '',
-        },
-      },
-      type: {
-        graph: {
-          id: '321321-321321',
-        },
-        id: 'Organization',
-      },
-      uri: '',
+      label: { fi: 'Test-org' },
     },
   ];
 

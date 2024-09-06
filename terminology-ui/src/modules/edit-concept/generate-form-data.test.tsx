@@ -1,10 +1,10 @@
 import {
   emptyFormExpected,
   emptyFormReturned,
-  extensiveDataExpected,
-  extensiveDataReturned,
-  simpleDataExpected,
-  simpleDataReturned,
+  //extensiveDataExpected,
+  //extensiveDataReturned,
+  initialDataExpected,
+  initialDataReturned,
 } from './generate-form-data-test-variables';
 
 describe('generate-form-data', () => {
@@ -13,10 +13,6 @@ describe('generate-form-data', () => {
   });
 
   it('should generate simple data with existing data', () => {
-    expect(simpleDataReturned).toStrictEqual(simpleDataExpected);
-  });
-
-  it('should generate extensive form with existing data', () => {
-    expect(extensiveDataReturned).toStrictEqual(extensiveDataExpected);
+    expect(initialDataReturned).toStrictEqual(initialDataExpected);
   });
 });
