@@ -1,8 +1,8 @@
 import { fireEvent, screen } from '@testing-library/react';
 import TermModal from '.';
 import { renderWithProviders } from '@app/tests/test-utils';
-import { Term } from '@app/common/interfaces/term.interface';
 import { initialState } from '@app/common/components/login/login.slice';
+import { Term } from '@app/common/interfaces/interfaces-v2';
 
 describe('term-modal', () => {
   let appRoot: HTMLDivElement | null = null;
@@ -35,7 +35,6 @@ describe('term-modal', () => {
     expect(screen.getByText('change note')).toBeInTheDocument();
     expect(screen.getByText('history note')).toBeInTheDocument();
     expect(screen.getByText('editorial note')).toBeInTheDocument();
-    expect(screen.getByText('draft comment')).toBeInTheDocument();
 
     fireEvent.click(screen.getByText('tr-term-modal-grammatic-information'));
 
@@ -46,11 +45,10 @@ describe('term-modal', () => {
   });
 
   it('should render parts of component', () => {
-    delete data.term.properties.changeNote;
-    delete data.term.properties.historyNote;
-    delete data.term.properties.editorialNote;
-    delete data.term.properties.draftComment;
-    delete data.term.properties.wordClass;
+    delete data.term.changeNote;
+    delete data.term.historyNote;
+    delete data.term.editorialNotes;
+    delete data.term.wordClass;
 
     renderWithProviders(<TermModal data={data} />, [], {
       preloadedState: { login: { ...initialState, anonymous: false } },
@@ -86,118 +84,21 @@ describe('term-modal', () => {
 
 const data = {
   term: {
-    properties: {
-      changeNote: [
-        {
-          lang: 'fi',
-          value: 'change note',
-          regex: '',
-        },
-      ],
-      draftComment: [
-        {
-          lang: 'fi',
-          value: 'draft comment',
-          regex: '',
-        },
-      ],
-      editorialNote: [
-        {
-          lang: 'fi',
-          value: 'editorial note',
-          regex: '',
-        },
-      ],
-      historyNote: [
-        {
-          lang: 'fi',
-          value: 'history note',
-          regex: '',
-        },
-      ],
-      prefLabel: [
-        {
-          lang: 'fi',
-          value: 'pref label',
-          regex: '',
-        },
-      ],
-      scope: [
-        {
-          lang: 'fi',
-          value: 'scope',
-          regex: '',
-        },
-      ],
-      source: [
-        {
-          lang: 'fi',
-          value: 'source 1',
-          regex: '',
-        },
-        {
-          lang: 'fi',
-          value: 'source 2',
-          regex: '',
-        },
-      ],
-      status: [
-        {
-          lang: '',
-          value: 'DRAFT',
-          regex: '',
-        },
-      ],
-      termConjugation: [
-        {
-          lang: 'fi',
-          value: 'term conjugation',
-          regex: '',
-        },
-      ],
-      termEquivalency: [
-        {
-          lang: 'fi',
-          value: 'term equivalency',
-          regex: '',
-        },
-      ],
-      termFamily: [
-        {
-          lang: 'fi',
-          value: 'term family',
-          regex: '',
-        },
-      ],
-      termHomographNumber: [
-        {
-          lang: 'fi',
-          value: '1',
-          regex: '',
-        },
-      ],
-      termInfo: [
-        {
-          lang: 'fi',
-          value: 'term info',
-          regex: '',
-        },
-      ],
-      termStyle: [
-        {
-          lang: 'fi',
-          value: 'term style',
-          regex: '',
-        },
-      ],
-      wordClass: [
-        {
-          lang: 'fi',
-          value: 'word class',
-          regex: '',
-        },
-      ],
-    },
+    language: 'fi',
+    changeNote: 'change note',
+    editorialNotes: ['editorial note'],
+    historyNote: 'history note',
+    label: 'pref label',
+    scope: 'scope',
+    sources: ['source 1', 'source 2'],
+    status: 'DRAFT',
+    termConjugation: 'term conjugation',
+    termEquivalency: 'term equivalency',
+    termFamily: 'term family',
+    homographNumber: 1,
+    termInfo: 'term info',
+    termStyle: 'term style',
+    wordClass: 'word class',
   } as Term,
   type: 'Preferred term',
 };

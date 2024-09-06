@@ -13,7 +13,6 @@ describe('term-form', () => {
         update={mockFn}
         term={{
           changeNote: '',
-          draftComment: '',
           editorialNote: [],
           historyNote: '',
           id: v4(),
@@ -24,7 +23,6 @@ describe('term-form', () => {
           status: 'DRAFT',
           termConjugation: '',
           termEquivalency: '',
-          termEquivalencyRelation: '',
           termFamily: '',
           termHomographNumber: '',
           termInfo: '',
@@ -49,7 +47,6 @@ describe('term-form', () => {
         update={mockFn}
         term={{
           changeNote: '',
-          draftComment: '',
           editorialNote: [],
           historyNote: '',
           id: v4(),
@@ -60,7 +57,6 @@ describe('term-form', () => {
           status: 'DRAFT',
           termConjugation: '',
           termEquivalency: '',
-          termEquivalencyRelation: '',
           termFamily: '',
           termHomographNumber: '',
           termInfo: '',
