@@ -140,8 +140,6 @@ export default function NodeMappings(props: {
   };
   const [highlightOperation, setHighlightOperation] = useState<highlightOperation | undefined>(undefined);
 
-  const predicateRef = useRef(null);
-
   function generateSaveMappingPayload() {
     let mappings = mappingPayloadInit;
     if (mappingNodes) {
@@ -154,19 +152,20 @@ export default function NodeMappings(props: {
       mappings.target.push({
           id: mappingNodes[0].target.id,
           label: mappingNodes[0].target.name,
-          uri: mappingNodes[0].target.uri
+          uri: mappingNodes[0].target.uri,
+          processing: mappingNodes[0].targetProcessing ? mappingNodes[0].targetProcessing : undefined
         }
       );
 
       if (props.isOneToManyMapping) {
-        // Merge targets into single  source for one to many mapping
+        // Merge targets into single source for one to many mapping
         for (let i = 0; i < props.nodeSelections.length; i += 1) {
           if (i < mappingNodes.length - 1 && (mappingNodes[i].source.id === mappingNodes[i + 1].source.id)) {
             mappings.target.push({
               id: mappingNodes[i + 1].target.id,
               label: mappingNodes[i + 1].target.name,
               uri: mappingNodes[i + 1].target.uri,
-              processing: mappingNodes[i + 1].sourceProcessing ? mappingNodes[i + 1].sourceProcessing : undefined
+              processing: mappingNodes[i + 1].targetProcessing ? mappingNodes[i + 1].targetProcessing : undefined
             });
           }
         }
@@ -230,7 +229,7 @@ export default function NodeMappings(props: {
     }
   }, [props]);
 
-  function accordionCallbackFunction(action: string, mappingId: any, operationValue: any, operationName: any, mappingOperationKey: any) {
+  function accordionCallbackFunction(isSourceNode: boolean, action: string, mappingId: any, operationValue: any, operationName: any, mappingOperationKey: any) {
     if (mappingNodes) {
       if (action === 'moveNodeUp' && mappingNodes.length > 1) {
         let sourceNodesNew = [...mappingNodes];
@@ -254,25 +253,24 @@ export default function NodeMappings(props: {
             setMappingNodes(sourceNodesNew);
           }
         }
-      } else if (action === 'deleteSourceNode' && mappingNodes.length > 1) {
+      } else if (action === 'deleteNode' && mappingNodes.length > 1) {
         let newNodeSelections = mappingNodes.filter(node => {
-          return node.source.id !== mappingId;
-        });
-        setMappingNodes(newNodeSelections);
-      } else if (action === 'deleteTargetNode' && mappingNodes.length > 1) {
-        let newNodeSelections = mappingNodes.filter(node => {
-          return node.target.id !== mappingId;
+          return isSourceNode ? (node.source.id !== mappingId) : (node.target.id !== mappingId);
         });
         setMappingNodes(newNodeSelections);
       } else {
         let mappingNodesCopy = cloneDeep(mappingNodes);
 
         let newNodeSelections = mappingNodesCopy.map(node => {
-          if (node.source.id === mappingId) {
+          if ((isSourceNode && (node.source.id === mappingId)) || (!isSourceNode && node.target.id === mappingId)) {
             if (action === 'setMappingParameterDefaults') {
-              node.sourceProcessing = mappingOperationKey;
+              if (isSourceNode){
+                node.sourceProcessing = mappingOperationKey;
+              } else {
+                node.targetProcessing = mappingOperationKey;
+              }
             }
-            if (action === 'updateSourceOperation') {
+            if (action === 'updateOperation') {
               const originalParams = getMappingFunctionParams(mappingOperationKey);
               let formattedParams: any = {};
               if (originalParams) {
@@ -285,12 +283,12 @@ export default function NodeMappings(props: {
                 id: mappingOperationKey,
                 params: formattedParams,
               };
-              mappingOperationKey !== 'N/A' ? node.sourceProcessing = processing : node.sourceProcessing = undefined;
+              mappingOperationKey !== 'N/A' ? (isSourceNode ? node.sourceProcessing = processing : node.targetProcessing = processing) : (isSourceNode ? node.sourceProcessing = undefined : node.targetProcessing = undefined);
               const params = getMappingFunctionParams(mappingOperationKey);
 
               if (params) {
                 params.forEach(param => {
-                  updateValidationErrors('sourceOperation', mappingId, mappingOperationKey, param.name, param.defaultValue ? param.defaultValue : '');
+                  updateValidationErrors(isSourceNode ? 'sourceOperation' : 'targetOperation', mappingId, mappingOperationKey, param.name, param.defaultValue ? param.defaultValue : '');
                 });
               } else {
                 const filteredErrors = (sourceOperationValueErrors
@@ -301,11 +299,16 @@ export default function NodeMappings(props: {
               }
             }
 
-            if (action === 'updateSourceOperationValue') {
-              updateValidationErrors('sourceOperation', mappingId, mappingOperationKey, operationName, operationValue);
-              if (node.sourceProcessing) {
-                // @ts-ignore
-                node.sourceProcessing.params[operationName] = operationValue;
+            if (action === 'updateOperationValue') {
+              updateValidationErrors(isSourceNode ? 'sourceOperation' : 'targetOperation', mappingId, mappingOperationKey, operationName, operationValue);
+              if ((isSourceNode && node.sourceProcessing) || (!isSourceNode && node.targetProcessing)) {
+                if (isSourceNode) {
+                  // @ts-ignore
+                  node.sourceProcessing.params[operationName] = operationValue;
+                } else {
+                  // @ts-ignore
+                  node.targetProcessing.params[operationName] = operationValue;
+                }
               } else {
                 const originalParams = getMappingFunctionParams(operationName);
                 let formattedParams: any = {};
@@ -319,7 +322,11 @@ export default function NodeMappings(props: {
                   id: mappingOperationKey,
                   params: formattedParams,
                 };
-                operationName !== 'N/A' ? node.sourceProcessing = processing : node.sourceProcessing = undefined;
+                if (isSourceNode) {
+                  operationName !== 'N/A' ? node.sourceProcessing = processing : node.sourceProcessing = undefined;
+                } else {
+                  operationName !== 'N/A' ? node.targetProcessing = processing : node.targetProcessing = undefined;
+                }
               }
             }
           }

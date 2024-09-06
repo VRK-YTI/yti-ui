@@ -287,7 +287,7 @@ export default function CrosswalkEditor({
           sourcePredicate: undefined,
           sourceProcessing: originalMapping.length > 0 ? originalMapping[0].source[i]?.processing : undefined,
           targetPredicate: undefined,
-          targetProcessing: undefined
+          targetProcessing: originalMapping.length > 0 ? originalMapping[0].target[i]?.processing : undefined,
         };
         mappingsToBeAdded.push(mapping);
       }
@@ -309,7 +309,7 @@ export default function CrosswalkEditor({
           sourcePredicate: undefined,
           sourceProcessing: originalMapping.length > 0 ? originalMapping[0].source[i]?.processing : undefined,
           targetPredicate: undefined,
-          targetProcessing: undefined
+          targetProcessing: originalMapping.length > 0 ? originalMapping[0].target[i]?.processing : undefined,
         };
         mappingsToBeAdded.push(mapping);
       }

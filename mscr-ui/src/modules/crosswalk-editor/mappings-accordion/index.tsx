@@ -201,14 +201,12 @@ function Row(props: {
                         }}
                       >{props.showAttributeNames ? mapping.label : mapping.id}</StyledButton>
                       {mapping['processing']?.id &&
-                          <Tooltip
-                              title={'Show target operation details'}
-                              placement="bottom"
-                          >
-                              <div className='d-flex flex-column justify-content-center'>
-                                  <IconCircle><FunctionIcon></FunctionIcon></IconCircle>
-                              </div>
-                          </Tooltip>
+                          <FunctionTooltipBox callBackFunction={props.callBackFunction}
+                                              isEditModeActive={props.isEditModeActive}
+                                              tooltipHeading={'target operation'} tooltipHoverText={'target operation'}
+                                              processingId={mapping.id} functionName={'targetOperation'}
+                                              mappingFunctions={props.mappingFunctions}
+                                              row={props.row}></FunctionTooltipBox>
                       }
                     </div>
                   </div>

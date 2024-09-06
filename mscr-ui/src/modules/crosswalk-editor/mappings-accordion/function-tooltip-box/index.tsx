@@ -7,9 +7,6 @@ import {
   IconCircleMid, IconLetterWrap, StooltipContainer,
 } from '@app/modules/crosswalk-editor/mappings-accordion/mappings-accordion.styles';
 import {Button as Sbutton, Heading, Text, Tooltip as Stooltip} from "suomifi-ui-components";
-import {
-  SubCaption
-} from "@app/modules/crosswalk-editor/mappings-accordion/function-tooltip-box/function-tooltip-box.styles";
 
 export default function FunctionTooltipBox(props: {
   row: NodeMapping;
@@ -37,7 +34,7 @@ export default function FunctionTooltipBox(props: {
 
   function generateTexts() {
 
-    let functionName = 'asd';
+    let functionName = '';
     let functionDescription = '';
     let functionParams: functionParam[] = [] as functionParam[];
     if (props.functionName === 'predicate') {
@@ -51,16 +48,20 @@ export default function FunctionTooltipBox(props: {
         functionDescription = mappingFunction[0].description;
       }
       return (<><p>{functionName}</p><p>{functionDescription}</p></>);
-    } else if (props.functionName === 'sourceOperation') {
+    } else if (props.functionName === 'sourceOperation' || 'targetOperation') {
+      let node: any[] | undefined = [];
+      if (props.functionName === 'sourceOperation') {
+        node = props.row.source.filter(node => node.id === props.processingId);
+      } else {
+        node = props.row.target.filter(node => node.id === props.processingId);
+      }
 
-      const source = props.row.source.filter(node => node.id === props.processingId);
-
-      if (source.length > 0) {
+      if (node.length > 0) {
         const sourceOperation = props.mappingFunctions.filter(fnc => {
-          return fnc.uri === source[0]?.processing?.id;
+          return node && (fnc.uri === node[0]?.processing?.id);
         });
-        if (source[0]?.processing?.params) {
-          for (const [key, value] of Object.entries(source[0]?.processing?.params)) {
+        if (node[0]?.processing?.params) {
+          for (const [key, value] of Object.entries(node[0]?.processing?.params)) {
             if (key !== 'input') {
               functionParams.push({key: key, value: value})
             }
