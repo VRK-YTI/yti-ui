@@ -1,7 +1,4 @@
 export function compareLocales(locale1: string, locale2: string): number {
-  // const t1Lang = typeof t1 === 'object' ? t1.lang.toLowerCase() : t1;
-  //const t2Lang = typeof t2 === 'object' ? t2.lang.toLowerCase() : t2;
-
   if (locale1 === 'fi' || locale2 === 'fi') {
     return locale1 === 'fi' ? -1 : 1;
   }
