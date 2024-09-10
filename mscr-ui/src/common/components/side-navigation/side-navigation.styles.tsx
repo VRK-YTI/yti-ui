@@ -58,7 +58,7 @@ export const MscrSideNavigation = styled(SideNavigation)`
     display: none;
   }
   nav {
-    position: fixed;
+    position: sticky;
     // Remove the height of the header banner
     height: calc(100vh - 1rem*60/18);
     width: 222px;
@@ -208,7 +208,7 @@ export const MinimizedNavigationWrapper = styled.nav`
   padding-bottom: ${(props) => props.theme.suomifi.spacing.s};
   padding-right: 4px;
   // Same stuff as with the expanded navigation
-  position: fixed;
+  position: sticky;
   height: calc(100vh - 1rem*60/18);
   width: 62px;
   overflow-y: auto;

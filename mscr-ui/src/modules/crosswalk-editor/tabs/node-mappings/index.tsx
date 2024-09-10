@@ -2,10 +2,10 @@ import {
   CrosswalkConnectionNew,
   NodeMapping,
 } from '@app/common/interfaces/crosswalk-connection.interface';
-import GenerateValidationErrorBar from '@app/modules/crosswalk-editor/mapping-validator';
+import ValidationErrorBar from '@app/modules/crosswalk-editor/mapping-validator';
 import {Dropdown, IconPlus, InlineAlert, Textarea, TextInput} from 'suomifi-ui-components';
 import {DropdownItem} from 'suomifi-ui-components';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {
   Button,
   Modal,
@@ -16,6 +16,8 @@ import {
 import NodeListingAccordion from "@app/modules/crosswalk-editor/tabs/node-mappings/node-listing-accordion";
 import {MidColumnWrapper} from "@app/modules/crosswalk-editor/tabs/node-mappings/node-mappings.styles";
 import {cloneDeep} from 'lodash';
+import {useRef} from 'react';
+import {highlightOperation} from "@app/modules/crosswalk-editor/mappings-accordion";
 
 interface mappingOperationValue {
   operationId: string;
@@ -31,6 +33,7 @@ export default function NodeMappings(props: {
   modalOpen: boolean;
   isPatchMappingOperation: boolean;
   isOneToManyMapping: boolean;
+  highlightOperation: highlightOperation | undefined;
 }) {
   const EXACT_MATCH_DROPDOWN_DEFAULT = 'http://www.w3.org/2004/02/skos/core#exactMatch';
 
@@ -111,6 +114,7 @@ export default function NodeMappings(props: {
     setVisible(props?.modalOpen);
     setIsErrorBarVisible(true);
     setMappingNodes(props?.nodeSelections);
+    setHighlightOperation(props.highlightOperation);
   }, [props]);
 
   const [isMappingOperationValuesInit, setMappingOperationValuesInit] = useState<boolean>(false);
@@ -134,6 +138,7 @@ export default function NodeMappings(props: {
     source: [],
     target: [],
   };
+  const [highlightOperation, setHighlightOperation] = useState<highlightOperation | undefined>(undefined);
 
   function generateSaveMappingPayload() {
     let mappings = mappingPayloadInit;
@@ -147,19 +152,20 @@ export default function NodeMappings(props: {
       mappings.target.push({
           id: mappingNodes[0].target.id,
           label: mappingNodes[0].target.name,
-          uri: mappingNodes[0].target.uri
+          uri: mappingNodes[0].target.uri,
+          processing: mappingNodes[0].targetProcessing ? mappingNodes[0].targetProcessing : undefined
         }
       );
 
       if (props.isOneToManyMapping) {
-        // Merge targets into single  source for one to many mapping
+        // Merge targets into single source for one to many mapping
         for (let i = 0; i < props.nodeSelections.length; i += 1) {
           if (i < mappingNodes.length - 1 && (mappingNodes[i].source.id === mappingNodes[i + 1].source.id)) {
             mappings.target.push({
               id: mappingNodes[i + 1].target.id,
               label: mappingNodes[i + 1].target.name,
               uri: mappingNodes[i + 1].target.uri,
-              processing: mappingNodes[i + 1].sourceProcessing ? mappingNodes[i + 1].sourceProcessing : undefined
+              processing: mappingNodes[i + 1].targetProcessing ? mappingNodes[i + 1].targetProcessing : undefined
             });
           }
         }
@@ -192,14 +198,6 @@ export default function NodeMappings(props: {
     props.performMappingsModalAction('closeModal', null, null);
   }
 
-  function generatePropertiesDropdownItems(input: any) {
-    let keys = [];
-    for (let key in input) {
-      keys.push({name: key});
-    }
-    return keys;
-  }
-
   function save() {
     if (props.isPatchMappingOperation) {
       props.performMappingsModalAction(
@@ -219,7 +217,19 @@ export default function NodeMappings(props: {
     setOperationValueErrors([]);
   }, [visible]);
 
-  function accordionCallbackFunction(action: string, mappingId: any, operationValue: any, operationName: any, mappingOperationKey: any) {
+  const onPredicateRefChange = useCallback(node => {
+    if (node !== null && props.highlightOperation && props.highlightOperation.operationId === 'predicate') {
+      node.focus();
+    }
+  }, [props]);
+
+  const onMappingFunctionRefChange = useCallback(node => {
+    if (node !== null && props.highlightOperation && props.highlightOperation.operationId === 'mappingFunction') {
+      node.focus();
+    }
+  }, [props]);
+
+  function accordionCallbackFunction(isSourceNode: boolean, action: string, mappingId: any, operationValue: any, operationName: any, mappingOperationKey: any) {
     if (mappingNodes) {
       if (action === 'moveNodeUp' && mappingNodes.length > 1) {
         let sourceNodesNew = [...mappingNodes];
@@ -243,25 +253,24 @@ export default function NodeMappings(props: {
             setMappingNodes(sourceNodesNew);
           }
         }
-      } else if (action === 'deleteSourceNode' && mappingNodes.length > 1) {
+      } else if (action === 'deleteNode' && mappingNodes.length > 1) {
         let newNodeSelections = mappingNodes.filter(node => {
-          return node.source.id !== mappingId;
-        });
-        setMappingNodes(newNodeSelections);
-      } else if (action === 'deleteTargetNode' && mappingNodes.length > 1) {
-        let newNodeSelections = mappingNodes.filter(node => {
-          return node.target.id !== mappingId;
+          return isSourceNode ? (node.source.id !== mappingId) : (node.target.id !== mappingId);
         });
         setMappingNodes(newNodeSelections);
       } else {
         let mappingNodesCopy = cloneDeep(mappingNodes);
 
         let newNodeSelections = mappingNodesCopy.map(node => {
-          if (node.source.id === mappingId) {
+          if ((isSourceNode && (node.source.id === mappingId)) || (!isSourceNode && node.target.id === mappingId)) {
             if (action === 'setMappingParameterDefaults') {
-              node.sourceProcessing = mappingOperationKey;
+              if (isSourceNode){
+                node.sourceProcessing = mappingOperationKey;
+              } else {
+                node.targetProcessing = mappingOperationKey;
+              }
             }
-            if (action === 'updateSourceOperation') {
+            if (action === 'updateOperation') {
               const originalParams = getMappingFunctionParams(mappingOperationKey);
               let formattedParams: any = {};
               if (originalParams) {
@@ -274,15 +283,14 @@ export default function NodeMappings(props: {
                 id: mappingOperationKey,
                 params: formattedParams,
               };
-              mappingOperationKey !== 'N/A' ? node.sourceProcessing = processing : node.sourceProcessing = undefined;
+              mappingOperationKey !== 'N/A' ? (isSourceNode ? node.sourceProcessing = processing : node.targetProcessing = processing) : (isSourceNode ? node.sourceProcessing = undefined : node.targetProcessing = undefined);
               const params = getMappingFunctionParams(mappingOperationKey);
 
-              if (params){
+              if (params) {
                 params.forEach(param => {
-                  updateValidationErrors('sourceOperation', mappingId, mappingOperationKey, param.name, param.defaultValue ? param.defaultValue : '');
+                  updateValidationErrors(isSourceNode ? 'sourceOperation' : 'targetOperation', mappingId, mappingOperationKey, param.name, param.defaultValue ? param.defaultValue : '');
                 });
-              }
-              else {
+              } else {
                 const filteredErrors = (sourceOperationValueErrors
                   .filter(
                     obj => obj.operationType !== 'sourceOperation'
@@ -291,11 +299,16 @@ export default function NodeMappings(props: {
               }
             }
 
-            if (action === 'updateSourceOperationValue') {
-              updateValidationErrors('sourceOperation', mappingId, mappingOperationKey, operationName, operationValue);
-              if (node.sourceProcessing) {
-                // @ts-ignore
-                node.sourceProcessing.params[operationName] = operationValue;
+            if (action === 'updateOperationValue') {
+              updateValidationErrors(isSourceNode ? 'sourceOperation' : 'targetOperation', mappingId, mappingOperationKey, operationName, operationValue);
+              if ((isSourceNode && node.sourceProcessing) || (!isSourceNode && node.targetProcessing)) {
+                if (isSourceNode) {
+                  // @ts-ignore
+                  node.sourceProcessing.params[operationName] = operationValue;
+                } else {
+                  // @ts-ignore
+                  node.targetProcessing.params[operationName] = operationValue;
+                }
               } else {
                 const originalParams = getMappingFunctionParams(operationName);
                 let formattedParams: any = {};
@@ -309,7 +322,11 @@ export default function NodeMappings(props: {
                   id: mappingOperationKey,
                   params: formattedParams,
                 };
-                operationName !== 'N/A' ? node.sourceProcessing = processing : node.sourceProcessing = undefined;
+                if (isSourceNode) {
+                  operationName !== 'N/A' ? node.sourceProcessing = processing : node.sourceProcessing = undefined;
+                } else {
+                  operationName !== 'N/A' ? node.targetProcessing = processing : node.targetProcessing = undefined;
+                }
               }
             }
           }
@@ -330,7 +347,7 @@ export default function NodeMappings(props: {
             obj.operationName === operationName
         );
 
-      if (operationValue.length < 1) {
+      if (operationValue && operationValue.length < 1) {
 
         // has error, add it if it doesn't exist
         if (index === -1) {
@@ -401,12 +418,11 @@ export default function NodeMappings(props: {
     }
 
     const params = getMappingFunctionParams(operationKey);
-    if (params){
+    if (params) {
       params.forEach(param => {
         updateValidationErrors('mappingOperation', '', operationKey, param.name, param.defaultValue ? param.defaultValue : '');
       });
-    }
-    else {
+    } else {
     }
   }
 
@@ -450,7 +466,9 @@ export default function NodeMappings(props: {
     let ret = false;
     if (mappingOperationValues) {
       mappingOperationValues.filter(x => x.parameterId === parameterName).map(x => {
-          ret = x.value.length > 0;
+          if (x.value) {
+            ret = x.value.length > 0;
+          }
         }
       );
       return ret;
@@ -496,9 +514,9 @@ export default function NodeMappings(props: {
         <ModalContent className="edit-mapping-modal-content">
           <ModalTitle>{props.isPatchMappingOperation ? 'Edit mapping' : 'Add mapping'}</ModalTitle>
           {false && isErrorBarVisible &&
-              <GenerateValidationErrorBar hideErrorBarCallback={() => setIsErrorBarVisible(false)}
-                                          mappingNodes={mappingNodes}
-                                          mappingFunctions={props.mappingFunctions}></GenerateValidationErrorBar>
+              <ValidationErrorBar hideErrorBarCallback={() => setIsErrorBarVisible(false)}
+                                  mappingNodes={mappingNodes}
+                                  mappingFunctions={props.mappingFunctions}></ValidationErrorBar>
           }
           <div className="col flex-column d-flex justify-content-between">
             <div className="row bg-white">
@@ -508,7 +526,8 @@ export default function NodeMappings(props: {
                                       predicateOperationValues={predicateValues}
                                       accordionCallbackFunction={accordionCallbackFunction}
                                       isSourceAccordion={true}
-                                      isOneToManyMapping={props.isOneToManyMapping}>
+                                      isOneToManyMapping={props.isOneToManyMapping}
+                                      highlightOperation={highlightOperation} showAttributeNames={false}>
                 </NodeListingAccordion>
               </div>
 
@@ -517,6 +536,7 @@ export default function NodeMappings(props: {
                 <MidColumnWrapper>
                   <div><Dropdown className='mt-2 node-info-dropdown'
                                  labelText="Mapping operation"
+                                 ref={onMappingFunctionRefChange}
                                  visualPlaceholder="Operation not selected"
                                  value={mappingOperationSelection ? mappingOperationSelection : props.nodeSelections[0]?.processing?.id}
                                  onChange={(newValue) => updateMappingOperationSelection(newValue)}
@@ -536,6 +556,8 @@ export default function NodeMappings(props: {
                       labelText="Predicate"
                       visualPlaceholder="Exact match"
                       value={predicateValue}
+                      ref={onPredicateRefChange}
+                      autoFocus
                       //defaultValue={mappingNodes ? mappingNodes[0].predicate : ''}
                       onChange={(newValue) => {
                         setPredicateValue(newValue)
@@ -567,13 +589,16 @@ export default function NodeMappings(props: {
                                       accordionCallbackFunction={accordionCallbackFunction}
                                       isSourceAccordion={false}
                                       isOneToManyMapping={props.isOneToManyMapping}
+                                      highlightOperation={highlightOperation}
+                                      showAttributeNames={false}
                 ></NodeListingAccordion>
               </div>
             </div>
           </div>
         </ModalContent>
         <ModalFooter>
-          <Button disabled={sourceOperationValueErrors.length > 0} style={{height: 'min-content'}} onClick={() => save()}>
+          <Button disabled={sourceOperationValueErrors.length > 0} style={{height: 'min-content'}}
+                  onClick={() => save()}>
             {'Save'}
           </Button>
           <Button

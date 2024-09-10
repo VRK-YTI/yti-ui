@@ -56,7 +56,7 @@ export interface CrosswalkConnectionNew {
     sourcePredicate: string | undefined;
     sourceProcessing?: { id: string; params: any };
     targetPredicate: string | undefined;
-    targetProcessing: string | undefined;
+    targetProcessing?: { id: string; params: any };
 }
 
 export interface NodeListingRow {
@@ -66,8 +66,8 @@ export interface NodeListingRow {
     id: string;
     notes: string | undefined;
     isSelected: boolean;
-    sourceProcessingSelection?: string;
-    sourceProcessing?: { id: string; params: any };
+    processingSelection?: string;
+    processing?: { id: string; params: any };
 }
 
 export interface CrosswalkConnectionsNew {

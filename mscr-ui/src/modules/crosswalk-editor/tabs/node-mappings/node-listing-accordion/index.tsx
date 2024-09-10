@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
@@ -36,11 +35,12 @@ import {
   NodeMapping
 } from '@app/common/interfaces/crosswalk-connection.interface';
 import {InfoIcon} from '@app/common/components/shared-icons';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'next-i18next';
 import {
   Button as SButton,
 } from 'suomifi-ui-components';
+import {highlightOperation} from "@app/modules/crosswalk-editor/mappings-accordion";
 
 import validateMapping from "@app/modules/crosswalk-editor/mapping-validator";
 
@@ -114,36 +114,49 @@ function Row(props: {
   row: NodeListingRow;
   mappingFunctions: any;
   showAttributeNames: boolean;
-  sourceOperationValues: Array<any>;
-  sourceProcessing: any;
   predicateOperationValues: [];
   index: number;
   callBackFunction: any;
   rowCount: number;
   isSourceAccordion: boolean;
   isOneToManyMapping: boolean;
-  alreadyInitialized: boolean;
+  highlightOperation: highlightOperation | undefined;
 }) {
-  const [open, setOpen] = React.useState(props.rowCount < 2 && props.index === 0);
+
+  // if only one node in accordion, open it or open highlighted node
+  const [open, setOpen] = useState(props.rowCount < 2 && props.index === 0 || isNodeHighlighted());
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const functionDropdownRef = useCallback(node => {
+    if (node !== null && isNodeHighlighted() && !isInitialized) {
+      //TODO: fix focus logic. if enabled, focus is jammed
+      //node.focus();
+      setIsInitialized(true);
+    }
+  }, []);
+
+  function isNodeHighlighted(){
+    return (props.highlightOperation && (props.highlightOperation?.nodeId === props.row.id))
+  }
 
   function deleteNodeFromMapping() {
-    props.isSourceAccordion ? props.callBackFunction('deleteSourceNode', props.row.id) : props.callBackFunction('deleteTargetNode', props.row.id);
+    props.callBackFunction(props.isSourceAccordion, 'deleteNode', props.row.id);
     setOpen(false);
   }
 
-  function setSourceOperationSelection(mappingOperationKey: string | undefined, mappingId: string) {
+  function setOperationSelection(mappingOperationKey: string | undefined, mappingId: string) {
     if (mappingOperationKey) {
-      props.callBackFunction('updateSourceOperation', mappingId, '', '', mappingOperationKey);
+        props.callBackFunction(props.isSourceAccordion, 'updateOperation', mappingId, '', '', mappingOperationKey);
     }
   }
 
-  function updateSourceOperationValue(mappingOperationKey: string | undefined, mappingId: string, newValue: string, inputName: string) {
+  function updateOperationValue(mappingOperationKey: string | undefined, mappingId: string, newValue: string, inputName: string) {
     if (inputName) {
-      props.callBackFunction('updateSourceOperationValue', mappingId, newValue, inputName, mappingOperationKey);
+        props.callBackFunction(props.isSourceAccordion, 'updateOperationValue', mappingId, newValue, inputName, mappingOperationKey);
     }
   }
 
-  function generateSourceOperationFields(operationKey: string | undefined, mappingId: string) {
+  function generateOperationFields(operationKey: string | undefined, mappingId: string) {
     if (operationKey && operationKey.length > 0) {
       const inputFieldParams = props?.mappingFunctions.filter((fnc: { uri: string | undefined; }) => {
         return fnc.uri === operationKey;
@@ -159,9 +172,9 @@ function Row(props: {
               return (<div className='mt-2'><TextInput
                 labelText={param.name}
                 value={originalValue}
-                status={props.row.sourceProcessing?.params[param.name]?.length > 0 ? 'default' : 'error'}
+                status={props.row.processing?.params[param.name]?.length > 0 ? 'default' : 'error'}
                 required={param.required}
-                onChange={(newValue) => updateSourceOperationValue(operationKey, mappingId, newValue ? newValue.toString() : '', param.name)}
+                onChange={(newValue) => updateOperationValue(operationKey, mappingId, newValue ? newValue.toString() : '', param.name)}
                 visualPlaceholder="Operation value"
               /></div>)
             }
@@ -173,16 +186,16 @@ function Row(props: {
 
   function moveNode(moveUp: boolean) {
     if (moveUp) {
-      props.callBackFunction('moveNodeUp', props.row.id, props);
+      props.callBackFunction(props.isSourceAccordion, 'moveNodeUp', props.row.id, props);
     } else {
-      props.callBackFunction('moveNodeDown', props.row.id, props);
+      props.callBackFunction(props.isSourceAccordion, 'moveNodeDown', props.row.id, props);
     }
   }
 
   function getMappingFunctionOriginalValues(operationKey: string | undefined, paramName: string) {
-    if (props.row.sourceProcessing && props.row.sourceProcessingSelection === operationKey) {
+    if (props.row.processing && props.row.processingSelection === operationKey) {
       // @ts-ignore
-      return props.row.sourceProcessing.params[paramName];
+      return props.row.processing.params[paramName];
     }
   }
 
@@ -257,14 +270,13 @@ function Row(props: {
                     <span className="fw-bold">Description: </span>
                     {props?.row?.description?.length > 0 ? props?.row?.description : 'N/A'}
                   </p>
-
-                  {props.isSourceAccordion &&
                       <><Dropdown className='mt-2 node-info-dropdown'
-                                  labelText={"Source operation"}
+                                  labelText={props.isSourceAccordion ? "Source operation" : "Target operation"}
+                                  ref={functionDropdownRef}
                                   visualPlaceholder="Operation not selected"
                                   defaultValue="Operation not selected"
-                                  value={props.row?.sourceProcessing?.id}
-                                  onChange={(newValue) => setSourceOperationSelection(newValue, props.row.id)}
+                                  value={props.row?.processing?.id}
+                                  onChange={(newValue) => setOperationSelection(newValue, props.row.id)}
                       >
                         {props?.mappingFunctions?.map((rt) => (
                           <DropdownItem key={rt.uri} value={rt.uri}>
@@ -276,8 +288,7 @@ function Row(props: {
 
                           <br/>
                       </>
-                  }
-                  {props.isSourceAccordion && generateSourceOperationFields(props.row?.sourceProcessing?.id, props.row.id)}
+                  {generateOperationFields(props.row?.processing?.id, props.row.id)}
                 </div>
                 <br/>
               </div>
@@ -302,7 +313,20 @@ function Row(props: {
   );
 }
 
-export default function NodeListingAccordion(props: any) {
+interface nodeListingAccordionProps {
+  nodes: any,
+  mappingFunctions: any,
+  predicateOperationValues: any,
+  accordionCallbackFunction: any,
+  isSourceAccordion: boolean,
+  isOneToManyMapping: boolean,
+  showAttributeNames: boolean,
+  highlightOperation: highlightOperation | undefined
+}
+
+//TODO: create interface for exact props attributes
+
+export default function NodeListingAccordion(props: nodeListingAccordionProps) {
   const {t} = useTranslation('common');
   const [nodeData, setNodeData] = useState<NodeListingRow[]>([]);
   const [showAttributeNames, setShowAttributeNames] = useState<boolean>(true);
@@ -315,8 +339,8 @@ export default function NodeListingAccordion(props: any) {
       if (props.isOneToManyMapping) {
         let newNode: NodeListingRow = {
           description: props.nodes[0].source.properties.description,
-          sourceProcessingSelection: props.nodes[0].sourceProcessing?.id ?? '',
-          sourceProcessing: props.nodes[0].sourceProcessing,
+          processingSelection: props.isSourceAccordion ? (props.nodes[0].sourceProcessing?.id ?? '') : (props.nodes[0].targetProcessing?.id ?? ''),
+          processing: props.isSourceAccordion ? (props.nodes[0].sourceProcessing) : (props.nodes[0].targetProcessing),
           type: props.nodes[0].source.properties.type,
           isSelected: false, notes: undefined, name: props.nodes[0].source.name, id: props.nodes[0].source.id
         }
@@ -325,8 +349,8 @@ export default function NodeListingAccordion(props: any) {
         props.nodes.forEach((node: CrosswalkConnectionNew) => {
           let newNode: NodeListingRow = {
             description: node?.source.properties.description,
-            sourceProcessingSelection: node?.sourceProcessing?.id ?? '',
-            sourceProcessing: node?.sourceProcessing,
+            processingSelection: props.isSourceAccordion ? (node?.sourceProcessing?.id ?? '') : (node?.targetProcessing?.id ?? ''),
+            processing: props.isSourceAccordion ? node?.sourceProcessing : node?.targetProcessing,
             type: node?.source.properties.type,
             isSelected: false, notes: undefined, name: node.source.name, id: node.source.id
           }
@@ -339,8 +363,8 @@ export default function NodeListingAccordion(props: any) {
         props.nodes.forEach((node: CrosswalkConnectionNew) => {
           let newNode: NodeListingRow = {
             description: node?.target.properties.description,
-            sourceProcessingSelection: node?.sourceProcessing?.id ?? '',
-            sourceProcessing: node?.sourceProcessing,
+            processingSelection: props.isSourceAccordion ? (node?.sourceProcessing?.id ?? '') : (node?.targetProcessing?.id ?? ''),
+            processing: props.isSourceAccordion ? node?.sourceProcessing : node?.targetProcessing,
             type: node?.target.properties.type,
             isSelected: false, notes: undefined, name: node.target.name, id: node.target.id
           }
@@ -349,10 +373,10 @@ export default function NodeListingAccordion(props: any) {
       } else {
         let newNode: NodeListingRow = {
           description: props.nodes[0].target.properties.description,
-          sourceProcessingSelection: props.nodes[0].sourceProcessing?.id ?? '',
-          sourceProcessing: props.nodes[0].sourceProcessing,
-          type: props.nodes[0].target.properties.type,
-          isSelected: false, notes: undefined, name: props.nodes[0].target.name, id: props.nodes[0].target.id
+          processingSelection: props.isSourceAccordion ? (props.nodes[0].sourceProcessing?.id ?? '') : (props.nodes[0].targetProcessing?.id ?? ''),
+          processing: props.isSourceAccordion ? (props.nodes[0].sourceProcessing) : (props.nodes[0].targetProcessing),
+          type: props.isSourceAccordion ? (props.nodes[0].source.properties.type) : (props.nodes[0].target.properties.type),
+          isSelected: false, notes: undefined, name: props.isSourceAccordion ? (props.nodes[0].target.name) : (props.nodes[0].source.name), id: props.isSourceAccordion ? (props.nodes[0].target.id) : (props.nodes[0].source.id)
         }
         newNodes.push(newNode);
       }
@@ -394,12 +418,10 @@ export default function NodeListingAccordion(props: any) {
                     showAttributeNames={showAttributeNames}
                     mappingFunctions={mappingFunctions}
                     predicateOperationValues={props.predicateOperationValues}
-                    sourceOperationValues={props.sourceOperationValues}
-                    sourceProcessing={props.sourceProcessing}
                     rowCount={nodeData.length}
                     isSourceAccordion={props.isSourceAccordion}
                     isOneToManyMapping={props.isOneToManyMapping}
-                    alreadyInitialized={props.alreadyInitialized}
+                    highlightOperation={props.highlightOperation}
                   />
                 );
               })}

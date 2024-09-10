@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
-import { useEffect, useState } from 'react';
-import { Button as Sbutton } from 'suomifi-ui-components';
-import MappingsAccordion from '@app/modules/crosswalk-editor/mappings-accordion';
+import {useEffect, useState} from 'react';
+import {Button as Sbutton} from 'suomifi-ui-components';
+import MappingsAccordion, {highlightOperation} from '@app/modules/crosswalk-editor/mappings-accordion';
 import {
   CrosswalkConnectionNew,
   RenderTree,
@@ -15,13 +15,15 @@ import {
   usePatchMappingMutation,
   useGetMappingsQuery,
 } from '@app/common/components/crosswalk/crosswalk.slice';
-import { useGetCrosswalkMappingFunctionsQuery } from '@app/common/components/crosswalk-functions/crosswalk-functions.slice';
+import {
+  useGetCrosswalkMappingFunctionsQuery
+} from '@app/common/components/crosswalk-functions/crosswalk-functions.slice';
 import SchemaInfo from '@app/common/components/schema-info';
-import { useTranslation } from 'next-i18next';
-import { CrosswalkWithVersionInfo } from '@app/common/interfaces/crosswalk.interface';
-import { useSelector } from 'react-redux';
-import { selectIsEditContentActive } from '@app/common/components/content-view/content-view.slice';
-import { State } from '@app/common/interfaces/state.interface';
+import {useTranslation} from 'next-i18next';
+import {CrosswalkWithVersionInfo} from '@app/common/interfaces/crosswalk.interface';
+import {useSelector} from 'react-redux';
+import {selectIsEditContentActive} from '@app/common/components/content-view/content-view.slice';
+import {State} from '@app/common/interfaces/state.interface';
 import Tooltip from '@mui/material/Tooltip';
 
 export default function CrosswalkEditor({
@@ -33,7 +35,7 @@ export default function CrosswalkEditor({
   crosswalkData: CrosswalkWithVersionInfo;
   hasEditPermission: boolean;
 }) {
-  const { t } = useTranslation('common');
+  const {t} = useTranslation('common');
   const isEditModeActive = useSelector(selectIsEditContentActive());
 
   const emptyTreeSelection: RenderTree = {
@@ -68,7 +70,7 @@ export default function CrosswalkEditor({
 
   const [nodeMappings, setNodeMappings] = useState<NodeMapping[]>([]);
 
-  const [linkingError, ] = useState<string>('');
+  const [linkingError,] = useState<string>('');
   const [isNodeMappingsModalOpen, setNodeMappingsModalOpen] =
     useState<boolean>(false);
 
@@ -83,19 +85,19 @@ export default function CrosswalkEditor({
     useState<boolean>(false);
   const [isPatchMappingOperation, setIsMappingPatchOperation] =
     useState<boolean>(false);
-  const [mappingToBeEdited, setMappingToBeEdited] = useState<
-    CrosswalkConnectionNew[] | undefined
-    >(undefined);
+  const [mappingToBeEdited, setMappingToBeEdited] = useState<CrosswalkConnectionNew[] | undefined>(undefined);
+  const [highlightOperation, setHighlightOperation] =
+    useState<highlightOperation | undefined>(undefined);
 
 
   const [putMapping, putMappingResponse] = usePutMappingMutation();
   const [deleteMapping, deleteMappingResponse] = useDeleteMappingMutation();
   const [patchMapping, patchMappingResponse] = usePatchMappingMutation();
 
-  const { data: mappingFunctions, /*isLoading: mappingFunctionsIsLoading*/ } =
+  const {data: mappingFunctions, /*isLoading: mappingFunctionsIsLoading*/} =
     useGetCrosswalkMappingFunctionsQuery('');
 
-  const { data: mappingFilters, /*isLoading: mappingFiltersIsLoading*/ } =
+  const {data: mappingFilters, /*isLoading: mappingFiltersIsLoading*/} =
     useGetCrosswalkMappingFunctionsQuery('FILTERS');
 
   useEffect(() => {
@@ -269,7 +271,7 @@ export default function CrosswalkEditor({
     setIsOneToManyMapping(isOneToManyMapping);
 
     if (isOneToManyMapping) {
-      for (let i = 0; i < targetNodes.length; i +=1) {
+      for (let i = 0; i < targetNodes.length; i += 1) {
         const mapping: CrosswalkConnectionNew = {
           processing: originalMapping[0].processing,
           source: sourceNodes[0],
@@ -285,13 +287,13 @@ export default function CrosswalkEditor({
           sourcePredicate: undefined,
           sourceProcessing: originalMapping.length > 0 ? originalMapping[0].source[i]?.processing : undefined,
           targetPredicate: undefined,
-          targetProcessing: undefined
+          targetProcessing: originalMapping.length > 0 ? originalMapping[0].target[i]?.processing : undefined,
         };
         mappingsToBeAdded.push(mapping);
-      };
-    }
-    else {
-      for (let i = 0; i < sourceNodes.length; i +=1) {
+      }
+      ;
+    } else {
+      for (let i = 0; i < sourceNodes.length; i += 1) {
         const mapping: CrosswalkConnectionNew = {
           processing: originalMapping[0].processing,
           source: sourceNodes[i],
@@ -307,10 +309,11 @@ export default function CrosswalkEditor({
           sourcePredicate: undefined,
           sourceProcessing: originalMapping.length > 0 ? originalMapping[0].source[i]?.processing : undefined,
           targetPredicate: undefined,
-          targetProcessing: undefined
+          targetProcessing: originalMapping.length > 0 ? originalMapping[0].target[i]?.processing : undefined,
         };
         mappingsToBeAdded.push(mapping);
-      };
+      }
+      ;
     }
     return mappingsToBeAdded;
   }
@@ -357,7 +360,8 @@ export default function CrosswalkEditor({
   const performCallbackFromAccordionAction = (
     mapping: NodeMapping,
     action: string,
-    nodeId?: string
+    nodeId?: string,
+    highlightOperationId?: string
   ) => {
     // TODO: implement add notes from accordion if needed?
     if (action === 'remove') {
@@ -378,11 +382,17 @@ export default function CrosswalkEditor({
         setTargetTreeSelection([nodeId]);
       }
       scrollToTop();
-    }
-    else if (action === 'selectFromTargetTreeByMapping') {
+    } else if (action === 'selectFromTargetTreeByMapping') {
       selectFromTreeByNodeMapping(mapping, false);
       scrollToTop();
     } else if (action === 'openMappingDetails') {
+      setIsMappingPatchOperation(true);
+      setPatchPid(mapping.pid ? mapping.pid : '');
+      selectFromTreeByNodeMapping(mapping, true);
+      selectFromTreeByNodeMapping(mapping, false);
+    } else if (action === 'highlightFunctionField') {
+      setHighlightOperation({operationId: highlightOperationId ? highlightOperationId : '', nodeId: nodeId});
+
       setIsMappingPatchOperation(true);
       setPatchPid(mapping.pid ? mapping.pid : '');
       selectFromTreeByNodeMapping(mapping, true);
@@ -422,7 +432,7 @@ export default function CrosswalkEditor({
     }
     if (action === 'addMapping') {
       setNodeMappingsModalOpen(false);
-      putMapping({ payload: mappingPayload, pid: crosswalkId });
+      putMapping({payload: mappingPayload, pid: crosswalkId});
       const sourceIds: string[] = [];
       const targetIds: string[] = [];
       mappingPayload.source.forEach((node: { id: string }) =>
@@ -437,7 +447,7 @@ export default function CrosswalkEditor({
     if (action === 'save') {
       setIsMappingPatchOperation(false);
       setNodeMappingsModalOpen(false);
-      patchMapping({ payload: mappingPayload, pid: patchPid });
+      patchMapping({payload: mappingPayload, pid: patchPid});
     }
   };
 
@@ -470,21 +480,21 @@ export default function CrosswalkEditor({
                 title={selectedSourceNodes.length > 1 && selectedTargetNodes.length > 1 ? 'Many to many node mappings are not supported' : !isEditModeActive ? 'Activate edit mode to enable mappings' : 'Map selected nodes'}
                 placement="bottom"
               >
-              <Sbutton
-                className="link-button"
-                disabled={
-                  selectedSourceNodes.length < 1 ||
-                  selectedTargetNodes.length < 1 ||
-                  crosswalkData.state === State.Published ||
-                  (selectedSourceNodes.length > 1 && selectedTargetNodes.length > 1) ||
-                  !isEditModeActive
-                }
-                onClick={() => {
-                  addMappingButtonClick();
-                }}
-              >
-                <LinkIcon></LinkIcon>
-              </Sbutton>
+                <Sbutton
+                  className="link-button"
+                  disabled={
+                    selectedSourceNodes.length < 1 ||
+                    selectedTargetNodes.length < 1 ||
+                    crosswalkData.state === State.Published ||
+                    (selectedSourceNodes.length > 1 && selectedTargetNodes.length > 1) ||
+                    !isEditModeActive
+                  }
+                  onClick={() => {
+                    addMappingButtonClick();
+                  }}
+                >
+                  <LinkIcon></LinkIcon>
+                </Sbutton>
               </Tooltip>
             )}
           </div>
@@ -503,10 +513,6 @@ export default function CrosswalkEditor({
       </div>
       <div className="col-12 mt-4">
         <div className="d-flex justify-content-between">
-          <div>
-            <h2 className="mb-0">Mappings</h2>
-          </div>
-
           <div className="align-self-end pe-1">
             {/*                        // TODO: this can be shown when attribute qnames are available for accordion. Those are temporarily replaced with attribute ids.
                         <Checkbox
@@ -520,18 +526,14 @@ export default function CrosswalkEditor({
         </div>
 
         <div className="joint-listing-accordion-wrap my-3">
-          <Box
-            className="mb-4"
-            sx={{ height: 640, flexGrow: 1, overflowY: 'auto' }}
-          >
-            <MappingsAccordion
-              nodeMappings={nodeMappings}
-              viewOnlyMode={false}
-              isEditModeActive={isEditModeActive && crosswalkData.state !== State.Published}
-              showAttributeNames={showAttributeNames}
-              performAccordionAction={performCallbackFromAccordionAction}
-            />
-          </Box>
+          <MappingsAccordion
+            nodeMappings={nodeMappings}
+            viewOnlyMode={false}
+            isEditModeActive={isEditModeActive && crosswalkData.state !== State.Published}
+            showAttributeNames={showAttributeNames}
+            mappingFunctions={mappingFunctions}
+            performAccordionAction={performCallbackFromAccordionAction}
+          />
         </div>
       </div>
       {mappingToBeEdited && (
@@ -545,6 +547,7 @@ export default function CrosswalkEditor({
           modalOpen={isNodeMappingsModalOpen}
           isPatchMappingOperation={isPatchMappingOperation}
           isOneToManyMapping={isOneToManyMapping}
+          highlightOperation={highlightOperation}
         />
       )}
     </div>

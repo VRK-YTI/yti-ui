@@ -348,7 +348,11 @@ body {
 
     td {
       button {
-        min-width: 50px;
+        min-height: 40px;
+        min-width: 40px;
+        border-radius: 4px;
+        line-height: 1.2rem;
+        padding: 0px 8px;
       }
     }
   }
