@@ -57,11 +57,6 @@ export function getBlockData(t: TFunction, concept?: ConceptInfo) {
       type: t('field-terms-non-recommended', { ns: 'concept' }),
       compareKey: getCompareKey(term, 'notRecommendedSynonym', idx),
     })),
-    ...(concept.searchTerms ?? []).map((term) => ({
-      term,
-      type: t('field-terms-hidden', { ns: 'concept' }),
-      compareKey: getCompareKey(term, 'searchTerm', 0),
-    })),
   ].sort((t1, t2) => t1.compareKey.localeCompare(t2.compareKey));
 
   const definitions =

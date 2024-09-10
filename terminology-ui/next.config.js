@@ -98,6 +98,9 @@ module.exports = (phase, { defaultConfig }) => {
     },
   };
 
+  const uuidRegexp =
+    '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
+
   if (process.env.REWRITE_PROFILE === 'local') {
     // if run locally in a development environment, the API may run either as a
     // container or as a process, but will always listen on the same port
@@ -107,6 +110,16 @@ module.exports = (phase, { defaultConfig }) => {
       // https://nextjs.org/docs/api-reference/next.config.js/rewrites
       async rewrites() {
         return [
+          {
+            source: `/terminology/:terminologyId(${uuidRegexp})`,
+            destination:
+              'http://localhost:9103/terminology-api/v2/resolve/v1?termedId=:terminologyId',
+          },
+          {
+            source: `/terminology/:terminologyId(${uuidRegexp})/concept/:conceptId(${uuidRegexp})`,
+            destination:
+              'http://localhost:9103/terminology-api/v2/resolve/v1?termedId=:conceptId',
+          },
           {
             source: '/terminology-api/:path*',
             destination: 'http://localhost:9103/terminology-api/:path*',
@@ -132,6 +145,16 @@ module.exports = (phase, { defaultConfig }) => {
       // https://nextjs.org/docs/api-reference/next.config.js/rewrites
       async rewrites() {
         return [
+          {
+            source: `/terminology/:terminologyId(${uuidRegexp})`,
+            destination:
+              'http://yti-terminology-api:9103/terminology-api/v2/resolve/v1?termedId=:terminologyId',
+          },
+          {
+            source: `/terminology/:terminologyId(${uuidRegexp})/concept/:conceptId(${uuidRegexp})`,
+            destination:
+              'http://yti-terminology-api:9103/terminology-api/v2/resolve/v1?termedId=:conceptId',
+          },
           {
             source: '/terminology-api/:path*',
             destination:
