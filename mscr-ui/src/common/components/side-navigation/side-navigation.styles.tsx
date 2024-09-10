@@ -301,6 +301,16 @@ export const PopoverNavigationMenu = styled(ActionMenu)`
     }
   }
 
+  // Make the whole menu button be the link
+  & .fi-action-menu-item {
+    padding: 0;
+    a  {
+      width: 90px;
+      height: 36px;
+      padding: 10px 0 0 15px;
+    }
+  }
+
   // Override link base styles
   & .fi-action-menu-item a {
     text-decoration: none;
