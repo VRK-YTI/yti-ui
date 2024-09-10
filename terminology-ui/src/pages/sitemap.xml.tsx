@@ -10,19 +10,10 @@ const Sitemap = () => {};
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const terminologiesData: SearchResponse<TerminogyResponseObject> =
     await fetch(
-      `${process.env.TERMINOLOGY_API_URL}/v2/frontend/search-terminologies`,
+      `${process.env.TERMINOLOGY_API_URL}/frontend/search-terminologies?pageSize=10000`,
       {
-        method: 'POST',
+        method: 'GET',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          query: '',
-          statuses: [],
-          groups: [],
-          searchConcepts: true,
-          prefLang: 'fi',
-          pageSize: 10000,
-          pageFrom: 0,
-        }),
       }
     ).then((data) => data.json());
 
@@ -37,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
         ?.map(
           (t) =>
             `<url>
-          <loc>${URI}/terminology/${t.id}</loc>
+          <loc>${URI}/terminology/${t.prefix}</loc>
         </url>`
         )
         .join('')}
