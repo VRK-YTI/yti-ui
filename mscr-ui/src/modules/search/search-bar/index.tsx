@@ -2,22 +2,17 @@ import { useTranslation } from 'next-i18next';
 import useUrlState, {
   initialUrlState,
 } from '@app/common/utils/hooks/use-url-state';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   SEARCH_FIELD_PATTERN,
   TEXT_INPUT_MAX,
 } from 'yti-common-ui/utils/constants';
-import { SearchContext } from '@app/common/components/search-context-provider';
 import { SearchInput } from 'suomifi-ui-components';
 
-export default function SearchBar({ placeholder, hideLabel }: { placeholder?: string, hideLabel?: Boolean }) {
+export default function SearchBar({ placeholder, hideLabel }: { placeholder?: string; hideLabel?: Boolean }) {
   const { t } = useTranslation('common');
-  const { isSearchActive, setIsSearchActive } = useContext(SearchContext);
   const { urlState, patchUrlState } = useUrlState();
-  const q = urlState.q;
-  const [searchInputValue, setSearchInputValue] = useState<string>(
-    isSearchActive ? q : ''
-  );
+  const [searchInputValue, setSearchInputValue] = useState<string>(urlState.q);
   const placeholderText = placeholder ?? t('search.bar.placeholder');
 
   const handleChange = (val: string) => {
@@ -25,16 +20,13 @@ export default function SearchBar({ placeholder, hideLabel }: { placeholder?: st
       setSearchInputValue(val ?? '');
     }
     if (val === '') {
-      setIsSearchActive(false);
       search();
     }
   };
 
   useEffect(() => {
-    if (isSearchActive) {
-      setSearchInputValue(q);
-    }
-  }, [q, setSearchInputValue, isSearchActive]);
+    setSearchInputValue(urlState.q);
+  }, [setSearchInputValue, urlState.q]);
 
   return (
     <>
@@ -46,13 +38,12 @@ export default function SearchBar({ placeholder, hideLabel }: { placeholder?: st
         value={searchInputValue ?? ''}
         onSearch={(value) => {
           if (typeof value === 'string') {
-            setIsSearchActive(true);
             search(value);
           }
         }}
         onChange={(value) => handleChange(value?.toString() ?? '')}
         maxLength={TEXT_INPUT_MAX}
-        labelMode={isSearchActive || hideLabel ? "hidden" : "visible"}
+        labelMode={urlState.q != '' || hideLabel ? 'hidden' : 'visible'}
         fullWidth={!hideLabel}
       />
     </>

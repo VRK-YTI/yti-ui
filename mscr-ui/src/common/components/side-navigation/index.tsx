@@ -25,7 +25,6 @@ import { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
 import getOrganizations from '@app/common/utils/get-organizations';
-import { SearchContext } from '@app/common/components/search-context-provider';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 import {
@@ -33,11 +32,12 @@ import {
   setIsSideNavigationMinimized,
 } from '@app/common/components/navigation/navigation.slice';
 import { resetContentView } from '@app/common/components/content-view/content-view.slice';
+import useUrlState from '@app/common/utils/hooks/use-url-state';
 
 export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
   const { breakpoint } = useBreakpoints();
   const { t } = useTranslation('common');
-  const { setIsSearchActive } = useContext(SearchContext);
+  const { resetUrlState } = useUrlState();
   const router = useRouter();
   const lang = router.locale ?? '';
   const dispatch = useStoreDispatch();
@@ -61,7 +61,7 @@ export default function SideNavigationPanel({ user }: { user?: MscrUser }) {
     if (isPersonal) {
       setOpenGroup([]);
     }
-    setIsSearchActive(false);
+    resetUrlState();
     dispatch(resetContentView());
   };
 
