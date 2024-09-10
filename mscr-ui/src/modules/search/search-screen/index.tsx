@@ -18,11 +18,9 @@ import { useTranslation } from 'next-i18next';
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
   const { t } = useTranslation('common');
-  const { setIsSearchActive } = useContext(SearchContext);
   const { data: mscrSearchResults } = useGetMscrSearchResultsQuery(urlState);
 
   const handleClose = useCallback(() => {
-    setIsSearchActive(false);
     patchUrlState({
       q: initialUrlState.q,
       type: initialUrlState.type,
@@ -32,7 +30,7 @@ export default function SearchScreen() {
       isReferenced: initialUrlState.isReferenced,
       page: initialUrlState.page,
     });
-  }, [patchUrlState, setIsSearchActive]);
+  }, [patchUrlState]);
 
   const closeOnEsc = useCallback(
     (event) => {
