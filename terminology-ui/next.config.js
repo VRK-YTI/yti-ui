@@ -148,12 +148,12 @@ module.exports = (phase, { defaultConfig }) => {
           {
             source: `/terminology/:terminologyId(${uuidRegexp})`,
             destination:
-              'http://yti-terminology-api:9103/terminology-api/v2/resolve/v1?termedId=:terminologyId',
+              'http://yti-terminology-api-v2:9107/terminology-api/v2/resolve/v1?termedId=:terminologyId',
           },
           {
             source: `/terminology/:terminologyId(${uuidRegexp})/concept/:conceptId(${uuidRegexp})`,
             destination:
-              'http://yti-terminology-api:9103/terminology-api/v2/resolve/v1?termedId=:conceptId',
+              'http://yti-terminology-api-v2:9107/terminology-api/v2/resolve/v1?termedId=:conceptId',
           },
           {
             source: '/terminology-api/:path*',
