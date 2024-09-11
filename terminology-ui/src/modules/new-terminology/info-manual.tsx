@@ -18,7 +18,6 @@ import { useGetCodesQuery } from '@app/common/components/codelist/codelist.slice
 import { MODEL_PREFIX_MAX } from 'yti-common-ui/utils/constants';
 import { TerminologyType } from '@app/common/interfaces/interfaces-v2';
 import { Status } from 'yti-common-ui/interfaces/status.interface';
-import { v4 } from 'uuid';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
@@ -56,7 +55,7 @@ export default function InfoManual({
           organizations: [],
           languages: [],
           contact: '',
-          prefix: [v4().slice(0, 8), true],
+          prefix: ['', true],
           type: TerminologyType.TERMINOLOGICAL_VOCABULARY,
         }
   );
@@ -94,6 +93,10 @@ export default function InfoManual({
             value.length < 1 ||
             value.some((v: LanguageBlockType) => !v.title))
         ) {
+          valid = false;
+        }
+
+        if (key && 'prefix' && (value[0] === '' || value[1] === false)) {
           valid = false;
         }
       });
