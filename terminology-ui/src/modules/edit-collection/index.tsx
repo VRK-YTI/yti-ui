@@ -194,7 +194,7 @@ export default function EditCollection({
 
     const isEdit = !!collectionInfo?.collectionId;
     const payload = generateCollection(formData, isEdit);
-    console.info('payload', payload);
+
     disableConfirmation();
     setIsCreating(true);
 
