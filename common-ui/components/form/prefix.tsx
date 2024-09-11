@@ -50,25 +50,8 @@ export default function Prefix({
   minLength,
 }: PrefixProps) {
   const namespace = 'https://iri.suomi.fi';
-  const [initalPrefix] = useState(prefix);
-  const [inputType, setInputType] = useState<'manual' | 'automatic'>(
-    noAuto ? 'manual' : 'automatic'
-  );
   const [prefixValid, setPrefixValid] = useState(true);
   const [validatePrefix, inUse] = inUseMutation();
-
-  const handleInputTypeChange = (e: typeof inputType) => {
-    setInputType(e);
-
-    if (e === 'automatic') {
-      setPrefix(initalPrefix);
-      setPrefixValid(true);
-      return;
-    }
-
-    setPrefix('');
-    setPrefixValid(false);
-  };
 
   const handleTextInput = (e: string) => {
     setPrefix(e);
@@ -85,59 +68,30 @@ export default function Prefix({
 
   return (
     <PrefixContainer id="prefix-container">
-      {!noAuto && (
-        <RadioButtonGroup
-          labelText={translations.label}
-          groupHintText={translations.hintText}
-          defaultValue="automatic"
-          name="prefix"
-          onChange={(e) => handleInputTypeChange(e as typeof inputType)}
-        >
-          <RadioButton
-            value="automatic"
-            id="prefix-input-automatic"
-            disabled={disabled}
-          >
-            {translations.automatic}
-          </RadioButton>
-          <RadioButton
-            value="manual"
-            id="prefix-input-manual"
-            disabled={disabled}
-          >
-            {translations.manual}
-          </RadioButton>
-        </RadioButtonGroup>
-      )}
-
-      {inputType === 'manual' && (
-        <div>
-          <TextInput
-            labelText={translations.textInputLabel}
-            hintText={noAuto ? translations.hintText : ''}
-            visualPlaceholder={translations.textInputHint}
-            onChange={(e) => handleTextInput(e?.toString().trim() ?? '')}
-            debounce={500}
-            maxLength={maxLength ?? TEXT_INPUT_MAX}
-            minLength={minLength ?? 0}
-            id="prefix-text-input"
-            status={
-              (prefix !== '' && (!prefixValid || inUse.data)) || error
-                ? 'error'
-                : 'default'
-            }
-            statusText={
-              (prefix !== '' &&
-                ((!prefixValid && translations.errorInvalid) ||
-                  (inUse.data === true && translations.errorTaken))) ||
-              ''
-            }
-            defaultValue={prefix}
-            disabled={disabled}
-            fullWidth={fullWidth}
-          />
-        </div>
-      )}
+      <TextInput
+        labelText={translations.textInputLabel}
+        hintText={noAuto ? translations.hintText : ''}
+        visualPlaceholder={translations.textInputHint}
+        onChange={(e) => handleTextInput(e?.toString().trim() ?? '')}
+        debounce={500}
+        maxLength={maxLength ?? TEXT_INPUT_MAX}
+        minLength={minLength ?? 0}
+        id="prefix-text-input"
+        status={
+          (prefix !== '' && (!prefixValid || inUse.data)) || error
+            ? 'error'
+            : 'default'
+        }
+        statusText={
+          (prefix !== '' &&
+            ((!prefixValid && translations.errorInvalid) ||
+              (inUse.data === true && translations.errorTaken))) ||
+          ''
+        }
+        defaultValue={prefix}
+        disabled={disabled}
+        fullWidth={fullWidth}
+      />
 
       <div>
         <Label>{translations.uriPreview}</Label>
