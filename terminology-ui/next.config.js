@@ -130,8 +130,7 @@ module.exports = (phase, { defaultConfig }) => {
           },
           {
             source: '/codelist-api/:path*',
-            destination:
-              'https://koodistot.test.yti.cloud.dvv.fi/codelist-api/:path*',
+            destination: 'http://localhost:9601/codelist-api/:path*',
           },
         ];
       },
