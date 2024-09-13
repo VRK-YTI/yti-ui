@@ -96,7 +96,7 @@ export default function InfoManual({
           valid = false;
         }
 
-        if (key && 'prefix' && (value[0] === '' || value[1] === false)) {
+        if (key === 'prefix' && (value[0] === '' || value[1] === false)) {
           valid = false;
         }
       });
