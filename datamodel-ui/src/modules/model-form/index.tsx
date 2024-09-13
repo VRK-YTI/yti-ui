@@ -345,12 +345,10 @@ export default function ModelForm({
           typeInUri={'model'}
           error={errorInPrefix()}
           translations={{
-            automatic: t('create-prefix-automatically'),
             errorInvalid: t('error-prefix-invalid'),
             errorTaken: t('error-prefix-taken'),
             hintText: t('prefix-input-hint-text'),
             label: t('prefix', { ns: 'common' }),
-            manual: t('input-prefix-manually'),
             textInputHint: t('input-prefix'),
             textInputLabel: t('prefix', { ns: 'common' }),
             uriPreview: t('uri-preview'),

@@ -21,8 +21,6 @@ interface PrefixProps {
   translations: {
     label: string;
     hintText: string;
-    automatic: string;
-    manual: string;
     textInputLabel: string;
     textInputHint: string;
     errorInvalid: string;

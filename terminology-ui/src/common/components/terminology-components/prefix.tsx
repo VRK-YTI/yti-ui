@@ -5,7 +5,6 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 import { useGetIfNamespaceInUseMutation } from '@app/common/components/vocabulary/vocabulary.slice';
 import { BlankFieldset, TextInputSmBot } from './terminology-components.styles';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
-import { v4 } from 'uuid';
 import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 
 export interface PrefixProps {
@@ -15,10 +14,9 @@ export interface PrefixProps {
 }
 
 export default function Prefix({ update, userPosted, disabled }: PrefixProps) {
-  const URI = 'https://iri.suomi.fi/';
+  const URI = 'https://iri.suomi.fi/terminology/';
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
-  const [randomURL] = useState(v4().substring(0, 8));
   const [prefix, setPrefix] = useState('');
   const [status, setStatus] = useState<'default' | 'error'>('default');
   const [prefixValid, setPrefixValid] = useState(true);
@@ -58,7 +56,9 @@ export default function Prefix({ update, userPosted, disabled }: PrefixProps) {
       setStatus('default');
     }
 
-    getIsInUse(e !== '' ? e : randomURL);
+    if (e !== '') {
+      getIsInUse(e);
+    }
 
     update({ key: 'prefix', data: [e, e !== ''] });
   };
