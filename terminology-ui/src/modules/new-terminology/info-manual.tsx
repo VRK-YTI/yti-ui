@@ -95,7 +95,7 @@ export default function InfoManual({
           valid = false;
         }
 
-        if (key && 'prefix' && (value[0] === '' || value[1] === false)) {
+        if (key === 'prefix' && (value[0] === '' || value[1] === false)) {
           valid = false;
         }
       });
@@ -253,12 +253,10 @@ export default function InfoManual({
           typeInUri={'terminology'}
           error={false}
           translations={{
-            automatic: t('automatic-prefix'),
             errorInvalid: t('prefix-invalid'),
             errorTaken: t('prefix-taken'),
             hintText: t('prefix-hint'),
             label: t('prefix'),
-            manual: t('manual-prefix'),
             textInputHint: '',
             textInputLabel: t('prefix'),
             uriPreview: t('url-preview'),
