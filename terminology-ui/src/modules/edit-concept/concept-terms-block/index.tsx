@@ -161,7 +161,7 @@ export default function ConceptTermsBlock({
       >
         {t('concept-preferred-terms-description')}
       </BasicBlock>
-      <p>srerger</p>
+
       <BasicBlock
         title={
           <MediumHeading variant="h3">

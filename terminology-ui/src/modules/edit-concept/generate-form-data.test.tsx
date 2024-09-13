@@ -1,8 +1,6 @@
 import {
   emptyFormExpected,
   emptyFormReturned,
-  //extensiveDataExpected,
-  //extensiveDataReturned,
   initialDataExpected,
   initialDataReturned,
 } from './generate-form-data-test-variables';
