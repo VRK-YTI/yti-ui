@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from 'yti-common-ui/theme';
 import {
@@ -15,9 +14,10 @@ import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 import generateFakeableUsers from 'yti-common-ui/utils/generate-impersonate';
 import SideNavigationPanel from '../side-navigation';
 import { MscrUser } from '@app/common/interfaces/mscr-user.interface';
-import { SearchContext } from '@app/common/components/search-context-provider';
 import SearchScreen from 'src/modules/search/search-screen';
 import ActionPanel from '@app/common/components/action-panel';
+import useUrlState, { initialUrlState } from '@app/common/utils/hooks/use-url-state';
+import { ReactNode } from 'react';
 
 export default function Layout({
   children,
@@ -26,64 +26,58 @@ export default function Layout({
   isActionMenu,
   alerts,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   user?: MscrUser;
   fakeableUsers?: FakeableUser[] | null;
   isActionMenu?: boolean;
-  alerts?: React.ReactNode;
-  fullScreenElements?: React.ReactNode;
+  alerts?: ReactNode;
+  fullScreenElements?: ReactNode;
 }) {
   const { t, i18n } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
-  const [isSearchActive, setIsSearchActive] = useState(false);
+  const { urlState } = useUrlState();
+  const showSearchScreen = urlState.q !== initialUrlState.q;
 
   return (
     <ThemeProvider theme={lightTheme}>
-      <SearchContext.Provider
-        value={{
-          isSearchActive,
-          setIsSearchActive,
-        }}
-      >
-        <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
-        <SiteContainer>
-          <SmartHeader
-            user={user}
-            fakeableUsers={generateFakeableUsers(
-              i18n.language,
-              fakeableUsers
-            )}
-          />
-          {user && !user.anonymous ? (
-            <FlexContainer>
-              <ContentContainer>
-                {alerts && alerts}
-                <MarginContainer
-                  $breakpoint={breakpoint}
-                  className={isSearchActive ? 'hidden' : ''}
-                >
-                  <ActionPanel isActionMenu={isActionMenu} />
-                  {isSearchActive && <SearchScreen/>}
-                  {children}
-                </MarginContainer>
-              </ContentContainer>
-              <SideNavigationPanel user={user}/>
-            </FlexContainer>
-          ) : (
-            <ContentContainer className={'w-100'}>
+      <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
+      <SiteContainer>
+        <SmartHeader
+          user={user}
+          fakeableUsers={generateFakeableUsers(
+            i18n.language,
+            fakeableUsers
+          )}
+        />
+        {user && !user.anonymous ? (
+          <FlexContainer>
+            <ContentContainer>
               {alerts && alerts}
               <MarginContainer
                 $breakpoint={breakpoint}
-                className={isSearchActive ? 'hidden' : ''}
+                className={showSearchScreen ? 'hidden' : ''}
               >
                 <ActionPanel isActionMenu={isActionMenu} />
-                {isSearchActive && <SearchScreen />}
+                {showSearchScreen && <SearchScreen/>}
                 {children}
               </MarginContainer>
             </ContentContainer>
-          )}
-        </SiteContainer>
-      </SearchContext.Provider>
+            <SideNavigationPanel user={user}/>
+          </FlexContainer>
+        ) : (
+          <ContentContainer className={'w-100'}>
+            {alerts && alerts}
+            <MarginContainer
+              $breakpoint={breakpoint}
+              className={showSearchScreen ? 'hidden' : ''}
+            >
+              <ActionPanel isActionMenu={isActionMenu} />
+              {showSearchScreen && <SearchScreen />}
+              {children}
+            </MarginContainer>
+          </ContentContainer>
+        )}
+      </SiteContainer>
     </ThemeProvider>
   );
 }

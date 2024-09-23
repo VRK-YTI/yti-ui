@@ -10,8 +10,6 @@ import { Schema } from '@app/common/interfaces/schema.interface';
 import router from 'next/router';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import Link from 'next/link';
-import { useContext } from 'react';
-import { SearchContext } from '@app/common/components/search-context-provider';
 import { useStoreDispatch } from '@app/store';
 import {
   setIsEditContentActive,
@@ -19,7 +17,6 @@ import {
 } from '@app/common/components/content-view/content-view.slice';
 
 export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
-  const { setIsSearchActive } = useContext(SearchContext);
   const lang = router.locale ?? '';
   const dispatch = useStoreDispatch();
 
@@ -55,7 +52,6 @@ export default function SearchResult({ hit }: { hit: MscrSearchResult }) {
   }
 
   const handleNavigate = () => {
-    setIsSearchActive(false);
     dispatch(setIsEditMetadataActive(false));
     dispatch(setIsEditContentActive(false));
   };

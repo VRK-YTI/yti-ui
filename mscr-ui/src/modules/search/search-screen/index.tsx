@@ -10,19 +10,16 @@ import useUrlState, {
   initialUrlState,
 } from '@app/common/utils/hooks/use-url-state';
 import { IconClose } from 'suomifi-icons';
-import { useCallback, useContext, useEffect } from 'react';
-import { SearchContext } from '@app/common/components/search-context-provider';
+import { useCallback, useEffect } from 'react';
 import SearchFilterSet from 'src/modules/search/search-filter-set';
 import { useTranslation } from 'next-i18next';
 
 export default function SearchScreen() {
   const { urlState, patchUrlState } = useUrlState();
   const { t } = useTranslation('common');
-  const { setIsSearchActive } = useContext(SearchContext);
   const { data: mscrSearchResults } = useGetMscrSearchResultsQuery(urlState);
 
   const handleClose = useCallback(() => {
-    setIsSearchActive(false);
     patchUrlState({
       q: initialUrlState.q,
       type: initialUrlState.type,
@@ -32,7 +29,7 @@ export default function SearchScreen() {
       isReferenced: initialUrlState.isReferenced,
       page: initialUrlState.page,
     });
-  }, [patchUrlState, setIsSearchActive]);
+  }, [patchUrlState]);
 
   const closeOnEsc = useCallback(
     (event) => {
