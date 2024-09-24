@@ -46,6 +46,7 @@ export interface MetadataFormType {
   contact: string;
   versionLabel: string;
   visibility: string;
+  namespace: string;
 }
 
 export const initialMetadataForm: MetadataFormType = {
@@ -54,4 +55,5 @@ export const initialMetadataForm: MetadataFormType = {
   contact: '',
   versionLabel: '',
   visibility: '',
+  namespace: '',
 };

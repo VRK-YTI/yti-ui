@@ -204,6 +204,7 @@
     "format": "Format",
     "modified": "Modified",
     "name": "Name",
+    "name-space-label": "Namespace",
     "not-available": "Not available",
     "owner": "Owner",
     "pid": "PID",
