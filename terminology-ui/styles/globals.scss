@@ -7,3 +7,9 @@ body {
   @include fi-text-body-text;
   background-color: $fi-color-depth-light3;
 }
+
+// Workaround for broken expanders on Chrome 129+ and Edge 129+
+// Will be fixed by upgrading to suomifi-ui-components 14.0.1
+.fi-expander_content {
+  animation: unset !important;
+}
