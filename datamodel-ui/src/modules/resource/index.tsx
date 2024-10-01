@@ -192,6 +192,7 @@ export default function ResourceView({
   };
 
   const handleFollowUp = (value?: UriData) => {
+    dispatch(resetSelected());
     dispatch(initializeResource(type, value, applicationProfile));
 
     setView(
