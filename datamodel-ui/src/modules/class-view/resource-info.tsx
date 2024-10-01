@@ -182,49 +182,45 @@ export default function ResourceInfo({
   function renderActions() {
     return (
       <>
-        {!disableEdit &&
-          hasPermission &&
-          (!applicationProfile || modelId === data.modelId) && (
-            <ActionMenu id="actions-menu" buttonText={t('actions')}>
-              {modelId === data.modelId ? (
-                <ActionMenuItem onClick={handleEdit}>
-                  {t('edit', { ns: 'admin' })}
-                </ActionMenuItem>
-              ) : (
-                <></>
-              )}
+        {!disableEdit && hasPermission && (
+          <ActionMenu id="actions-menu" buttonText={t('actions')}>
+            {modelId === data.modelId ? (
+              <ActionMenuItem onClick={handleEdit}>
+                {t('edit', { ns: 'admin' })}
+              </ActionMenuItem>
+            ) : (
+              <></>
+            )}
 
-              {!applicationProfile && attribute ? (
-                <ActionMenuItem onClick={() => setShowAddCodeListModal(true)}>
-                  {t('add-reference-data', { ns: 'admin' })}
-                </ActionMenuItem>
-              ) : (
-                <></>
-              )}
+            {!applicationProfile && attribute ? (
+              <ActionMenuItem onClick={() => setShowAddCodeListModal(true)}>
+                {t('add-reference-data', { ns: 'admin' })}
+              </ActionMenuItem>
+            ) : (
+              <></>
+            )}
 
-              {!data.fromShNode || !applicationProfile ? (
-                <RemoveReferenceModal
-                  modelId={modelId}
-                  classId={classId}
-                  uri={data.uri}
-                  name={getLanguageVersion({
-                    data: data.label,
-                    lang: displayLang ?? i18n.language,
-                    appendLocale: true,
-                  })}
-                  applicationProfile={applicationProfile}
-                  resourceType={
-                    attribute
-                      ? ResourceType.ATTRIBUTE
-                      : ResourceType.ASSOCIATION
-                  }
-                  currentTarget={targetInClassRestriction?.uri}
-                />
-              ) : (
-                <></>
-              )}
-            </ActionMenu>
-          )}
+            {!data.fromShNode || !applicationProfile ? (
+              <RemoveReferenceModal
+                modelId={modelId}
+                classId={classId}
+                uri={data.uri}
+                name={getLanguageVersion({
+                  data: data.label,
+                  lang: displayLang ?? i18n.language,
+                  appendLocale: true,
+                })}
+                applicationProfile={applicationProfile}
+                resourceType={
+                  attribute ? ResourceType.ATTRIBUTE : ResourceType.ASSOCIATION
+                }
+                currentTarget={targetInClassRestriction?.uri}
+              />
+            ) : (
+              <></>
+            )}
+          </ActionMenu>
+        )}
 
         <CodeListModal
           extendedView
