@@ -44,7 +44,6 @@ interface CommonViewProps {
   handleReturn: () => void;
   handleShowResource: (id: string, modelPrefix: string) => void;
   handleEdit: () => void;
-  handleRefetch: () => void;
   isPartOfCurrentModel: boolean;
   applicationProfile?: boolean;
   currentModelId?: string;
@@ -59,7 +58,6 @@ export default function ResourceInfo({
   handleReturn,
   handleShowResource,
   handleEdit,
-  handleRefetch,
   isPartOfCurrentModel,
   applicationProfile,
   currentModelId,
@@ -106,12 +104,6 @@ export default function ResourceInfo({
   useEffect(() => {
     setExternalActive(inUse);
   }, [inUse]);
-
-  useEffect(() => {
-    if (toggleResult.isSuccess) {
-      handleRefetch();
-    }
-  }, [toggleResult, handleRefetch]);
 
   return (
     <>
@@ -276,6 +268,7 @@ export default function ResourceInfo({
               modelId={modelId}
               data={data}
               inUse={inUse}
+              organizationIds={organizationIds}
             />
           </>
         )}

@@ -29,10 +29,17 @@ import { useRouter } from 'next/router';
 import { useStoreDispatch } from '@app/store';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { getSlugAsString } from '@app/common/utils/parse-slug';
+import { ParsedUrlQuery } from 'querystring';
 
 interface ModelProps {
   modelId: string;
   fullScreen?: boolean;
+}
+
+export function isDraftModel(query: ParsedUrlQuery) {
+  return (
+    Object.keys(query).includes('draft') || Object.keys(query).includes('new')
+  );
 }
 
 export default function Model({ modelId, fullScreen }: ModelProps) {
@@ -46,6 +53,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
   const { data: modelInfo } = useGetModelQuery({
     modelId: modelId,
     version: version,
+    draft: isDraftModel(router.query),
   });
 
   const organizationIds = useMemo(() => {
@@ -85,6 +93,10 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
             version={version}
             applicationProfile={modelInfo?.type === 'PROFILE'}
             organizationIds={organizationIds}
+            namespaces={[
+              ...modelInfo.internalNamespaces,
+              ...modelInfo.externalNamespaces,
+            ]}
           >
             <ModelTools
               modelId={modelId}
@@ -193,14 +205,24 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
   useEffect(() => {
     if (router.query.new) {
       dispatch(setNotification('MODEL_ADD'));
-      router.replace(`/model/${modelId}`, undefined, { shallow: true });
+      // preserve all query parameters except "new" and replace it with "draft"
+      const { ['new']: newKey, ...query } = router.query;
+      query['draft'] = newKey;
+      router.replace(
+        {
+          pathname: router.pathname,
+          query: query,
+        },
+        undefined,
+        { shallow: true }
+      );
     }
   }, [router, dispatch, modelId]);
 
   return (
     <div
       style={{
-        height: fullScreen ? '100vh' : 0,
+        height: fullScreen ? '100vh' : 'auto',
         flex: '1 1 auto',
       }}
     >
@@ -213,6 +235,10 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
           applicationProfile={modelInfo?.type === 'PROFILE'}
           organizationIds={organizationIds}
           drawer={<Drawer views={views} />}
+          namespaces={[
+            ...(modelInfo?.internalNamespaces ?? []),
+            ...(modelInfo?.externalNamespaces ?? []),
+          ]}
         >
           <ModelTools
             modelId={modelId}

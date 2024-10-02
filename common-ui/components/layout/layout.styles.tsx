@@ -15,7 +15,7 @@ export const MarginContainer = styled.div<{
 
 // main layout
 
-export const SiteContainer = styled.div`
+export const SiteContainer = styled.div<{ $fullScreen?: boolean }>`
   width: 100%;
   margin: auto;
   height: 100%;
@@ -23,6 +23,7 @@ export const SiteContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   min-height: 100vh;
+  height: ${(props) => (props.$fullScreen ? '100vh' : 'auto')};
 `;
 
 // header layout

@@ -9,6 +9,7 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Type } from '@app/common/interfaces/type.interface';
 import { inUseStatusList } from '@app/common/utils/status-list';
 import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
+import { PAGE_SIZE_LARGE } from 'yti-common-ui/utils/constants';
 
 export interface InternalResourcesSearchParams {
   query: string;
@@ -38,8 +39,7 @@ export function initialSearchData(
     status: inUseStatusList,
     groups: [],
     sortLang: sortLang,
-    pageSize: 50,
-    pageFrom: 0,
+    pageSize: PAGE_SIZE_LARGE,
     limitToDataModel: modelId,
     limitToModelType: limitToModelType ?? 'LIBRARY',
     fromAddedNamespaces: true,
@@ -54,7 +54,7 @@ function createUrl(obj: InternalResourcesSearchParams): string {
     : '/frontend/search-internal-resources';
 
   let baseQuery = `${basePath}?query=${obj.query}&pageSize=${
-    obj.pageSize ?? 50
+    obj.pageSize ?? PAGE_SIZE_LARGE
   }&pageFrom=${obj.pageFrom ?? 0}`;
 
   if (obj.sortLang) {

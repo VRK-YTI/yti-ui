@@ -139,6 +139,36 @@ export default function AttributeRestrictions({
       </div>
 
       <RestrictionWrapper>
+        <TextInput
+          labelText={`${t('minimum-count', { ns: 'common' })} (sh:minCount)`}
+          optionalText={t('optional')}
+          tooltipComponent={
+            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+              {t('tooltip.minimum-amount', { ns: 'common' })}
+            </Tooltip>
+          }
+          visualPlaceholder={t('input-value')}
+          defaultValue={data.minCount}
+          onChange={(e) => handleUpdate('minCount', e?.toString() ?? '')}
+          status={errors['minCount'] ? 'error' : 'default'}
+          maxLength={TEXT_INPUT_MAX}
+        />
+
+        <TextInput
+          labelText={`${t('maximum-count', { ns: 'common' })} (sh:maxCount)`}
+          optionalText={t('optional')}
+          tooltipComponent={
+            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
+              {t('tooltip.maximum-amount', { ns: 'common' })}
+            </Tooltip>
+          }
+          visualPlaceholder={t('input-value')}
+          defaultValue={data.maxCount}
+          onChange={(e) => handleUpdate('maxCount', e?.toString() ?? '')}
+          status={errors['maxCount'] ? 'error' : 'default'}
+          maxLength={TEXT_INPUT_MAX}
+        />
+
         <InlineListBlock
           addNewComponent={
             <CodeListModal
@@ -398,36 +428,6 @@ export default function AttributeRestrictions({
           defaultValue={data.maxLength}
           onChange={(e) => handleUpdate('maxLength', e?.toString() ?? '')}
           status={errors['maxLength'] ? 'error' : 'default'}
-          maxLength={TEXT_INPUT_MAX}
-        />
-
-        <TextInput
-          labelText={`${t('minimum-count', { ns: 'common' })} (sh:minCount)`}
-          optionalText={t('optional')}
-          tooltipComponent={
-            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
-              {t('tooltip.minimum-amount', { ns: 'common' })}
-            </Tooltip>
-          }
-          visualPlaceholder={t('input-value')}
-          defaultValue={data.minCount}
-          onChange={(e) => handleUpdate('minCount', e?.toString() ?? '')}
-          status={errors['minCount'] ? 'error' : 'default'}
-          maxLength={TEXT_INPUT_MAX}
-        />
-
-        <TextInput
-          labelText={`${t('maximum-count', { ns: 'common' })} (sh:maxCount)`}
-          optionalText={t('optional')}
-          tooltipComponent={
-            <Tooltip ariaCloseButtonLabelText="" ariaToggleButtonLabelText="">
-              {t('tooltip.maximum-amount', { ns: 'common' })}
-            </Tooltip>
-          }
-          visualPlaceholder={t('input-value')}
-          defaultValue={data.maxCount}
-          onChange={(e) => handleUpdate('maxCount', e?.toString() ?? '')}
-          status={errors['maxCount'] ? 'error' : 'default'}
           maxLength={TEXT_INPUT_MAX}
         />
 

@@ -70,6 +70,7 @@ export default function ResourceModal({
   );
   const [contentLanguage, setContentLanguage] = useState<string>();
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
+  const [totalHitCount, setTotalHitCount] = useState(0);
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>(
       initialSearchData(i18n.language, modelId, type)
@@ -133,6 +134,7 @@ export default function ResourceModal({
 
   useEffect(() => {
     if (result.isSuccess) {
+      setTotalHitCount(result.data.totalHitCount);
       setResultsFormatted(
         result.data.responseObjects
           .filter((r) => !hiddenResources?.includes(r.id))
@@ -178,7 +180,7 @@ export default function ResourceModal({
               applicationProfile
             )}
             result={{
-              totalHitCount: resultsFormatted.length,
+              totalHitCount: totalHitCount,
               items: resultsFormatted,
             }}
             selectedId={selectedId}
@@ -193,7 +195,7 @@ export default function ResourceModal({
 
         <ModalFooter>
           <Button
-            disabled={selectedId === ''}
+            disabled={applicationProfile ? false : selectedId === ''}
             onClick={() => handleSubmit()}
             id="use-selected-button"
           >

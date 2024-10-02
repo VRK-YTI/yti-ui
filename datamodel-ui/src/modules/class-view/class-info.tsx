@@ -401,6 +401,20 @@ export default function ClassInfo({
             )}
           </BasicBlock>
 
+          {applicationProfile ? (
+            <BasicBlock
+              title={t('api-path')}
+              tooltip={{
+                text: t('tooltip.api-path'),
+                ariaCloseButtonLabelText: '',
+                ariaToggleButtonLabelText: '',
+              }}
+            >
+              {data.apiPath ? data.apiPath : t('not-defined')}
+            </BasicBlock>
+          ) : (
+            <></>
+          )}
           <Separator />
 
           <BasicBlock
@@ -516,7 +530,9 @@ export default function ClassInfo({
                 handleFollowUp={handleFollowUp}
                 applicationProfile={applicationProfile}
                 limitToSelect={!applicationProfile}
-                hiddenResources={data.association?.map((assoc) => assoc.uri)}
+                hiddenResources={data.association
+                  ?.filter((assoc) => !assoc.range)
+                  .map((assoc) => assoc.uri)}
               />
             </div>
           ) : (

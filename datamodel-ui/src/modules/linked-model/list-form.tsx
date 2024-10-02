@@ -14,6 +14,10 @@ import {
   ModalTitle,
   Paragraph,
 } from 'suomifi-ui-components';
+import {
+  PAGE_SIZE_LARGE,
+  DEFAULT_START_PAGE,
+} from 'yti-common-ui/utils/constants';
 
 interface ListFormProps {
   initialData: {
@@ -47,42 +51,39 @@ export default function ListForm({
     useState<InternalResourcesSearchParams>({
       groups: [],
       pageFrom: 0,
-      pageSize: 50,
+      pageSize: PAGE_SIZE_LARGE,
       query: '',
       resourceTypes: [],
       sortLang: i18n.language,
-      status: ['SUGGESTED', 'VALID'],
+      status: ['SUGGESTED', 'VALID', 'DRAFT'],
     });
 
-  const { data: models } = useGetSearchModelsQuery(
-    {
-      lang: i18n.language,
-      urlState: {
-        domain: searchParams.groups ?? [],
-        lang: contentLanguage ?? i18n.language,
-        organization: '',
-        page: searchParams.pageFrom ?? 0,
-        q: searchParams.query,
-        status: searchParams.status ?? [],
-        type: '',
-        types:
-          applicationProfile && searchParams.limitToModelType
-            ? [searchParams.limitToModelType]
-            : ['LIBRARY'],
-      },
+  const { data: models } = useGetSearchModelsQuery({
+    lang: i18n.language,
+    urlState: {
+      domain: searchParams.groups ?? [],
+      lang: contentLanguage ?? i18n.language,
+      organization: '',
+      page: searchParams.pageFrom ?? DEFAULT_START_PAGE,
+      q: searchParams.query,
+      status: searchParams.status ?? [],
+      type: '',
+      types:
+        applicationProfile && searchParams.limitToModelType
+          ? [searchParams.limitToModelType]
+          : ['LIBRARY'],
     },
-    { skip: searchParams.query === '' }
-  );
+  });
 
   const resetToInit = () => {
     setSearchParams({
       groups: [],
-      pageFrom: 0,
-      pageSize: 50,
+      pageFrom: DEFAULT_START_PAGE,
+      pageSize: PAGE_SIZE_LARGE,
       query: '',
       resourceTypes: [],
       sortLang: i18n.language,
-      status: ['SUGGESTED', 'VALID'],
+      status: ['SUGGESTED', 'VALID', 'DRAFT'],
     });
     setSelected(initialData.internalNamespaces);
     setContentLanguage(i18n.language);

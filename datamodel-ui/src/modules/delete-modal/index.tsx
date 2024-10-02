@@ -23,6 +23,7 @@ import getApiError from '@app/common/utils/get-api-errors';
 
 interface DeleteModalProps {
   modelId: string;
+  modelVersion?: string;
   resourceId?: string;
   label: string;
   type: 'model' | 'class' | 'attribute' | 'association';
@@ -34,6 +35,7 @@ interface DeleteModalProps {
 
 export default function DeleteModal({
   modelId,
+  modelVersion,
   label,
   type,
   resourceId,
@@ -72,7 +74,7 @@ export default function DeleteModal({
   const handleDelete = () => {
     setUserPosted(true);
     if (type === 'model') {
-      deleteModel(modelId);
+      deleteModel({ modelId: modelId, version: modelVersion });
     } else if (type === 'class') {
       deleteClass({
         modelId: modelId,
@@ -129,7 +131,9 @@ export default function DeleteModal({
     return (
       <>
         <ModalTitle>{translateDeleteModalTitle(type, t)}</ModalTitle>
-        <Text>{translateDeleteModalDescription(type, t, label)}</Text>
+        <Text>
+          {translateDeleteModalDescription(type, t, label, modelVersion)}
+        </Text>
 
         <ButtonFooter>
           <Button

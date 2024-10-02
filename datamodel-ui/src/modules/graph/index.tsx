@@ -23,6 +23,7 @@ import {
   selectSavePosition,
   selectSelected,
   selectUpdateVisualization,
+  selectZoomToClass,
   setGraphHasChanges,
   setHighlighted,
   setResetPosition,
@@ -55,6 +56,11 @@ import {
   toggleShowAttributes,
 } from './utils/graph-utils';
 import { checkPermission } from '@app/common/utils/has-permission';
+import useCenterNode from '@app/common/components/model-tools/useCenterNode';
+import {
+  ExternalNamespace,
+  InternalNamespace,
+} from '@app/common/interfaces/model.interface';
 
 interface GraphProps {
   modelId: string;
@@ -63,6 +69,7 @@ interface GraphProps {
   organizationIds?: string[];
   drawer?: JSX.Element;
   children: JSX.Element | JSX.Element[];
+  namespaces?: (InternalNamespace | ExternalNamespace)[];
 }
 
 const GraphContent = ({
@@ -71,6 +78,7 @@ const GraphContent = ({
   applicationProfile,
   organizationIds,
   children,
+  namespaces,
 }: GraphProps) => {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
@@ -80,6 +88,7 @@ const GraphContent = ({
   const globalSelected = useSelector(selectSelected());
   const savePosition = useSelector(selectSavePosition());
   const resetPosition = useSelector(selectResetPosition());
+  const zoomToClass = useSelector(selectZoomToClass());
   const updateVisualization = useSelector(selectUpdateVisualization());
   const tools = useSelector(selectModelTools());
   const user = useSelector(selectLogin());
@@ -87,6 +96,7 @@ const GraphContent = ({
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [cleanUnusedCorners, setCleanUnusedCorners] = useState(false);
+  const { centerNode } = useCenterNode();
   const nodeTypes: NodeTypes = useMemo(
     () => ({
       classNode: ClassNode,
@@ -102,16 +112,11 @@ const GraphContent = ({
     }),
     []
   );
-  const { data, isFetching, isSuccess, refetch } = useGetVisualizationQuery({
+  const { data, isFetching, isSuccess } = useGetVisualizationQuery({
     modelid: modelId,
     version: version,
   });
   const [putPositions, result] = usePutPositionsMutation();
-
-  const refetchNodes = useCallback(() => {
-    refetch();
-    dispatch(setGraphHasChanges(false));
-  }, [refetch, dispatch]);
 
   const deleteNodeById = useCallback(
     (id: string) => {
@@ -126,7 +131,8 @@ const GraphContent = ({
       target: string,
       x: number,
       y: number,
-      referenceType: ReferenceType
+      referenceType: ReferenceType,
+      origin: string
     ) => {
       const { top, left } = reactFlowWrapper.current
         ? reactFlowWrapper.current.getBoundingClientRect()
@@ -142,6 +148,7 @@ const GraphContent = ({
         referenceType,
         source,
         target,
+        origin,
         deleteNodeById,
         setEdges,
         setNodes,
@@ -152,12 +159,33 @@ const GraphContent = ({
 
   const onEdgeClick = useCallback(
     (e, edge) => {
-      if (edge.data.identifier && globalSelected.id !== edge.data.identifier) {
+      const identifier = edge.data.identifier ?? edge.data.origin;
+      if (
+        identifier &&
+        globalSelected.id !== identifier &&
+        globalSelected.modelId + ':' + globalSelected.id !== identifier
+      ) {
+        let selectedModelId = modelId;
+        let selectedResourceId = identifier;
+        let externalResourceVersion;
+
+        const parts = identifier.split(':');
+        if (parts.length === 2) {
+          selectedModelId = parts[0];
+          selectedResourceId = parts[1];
+
+          const namespace = namespaces?.find(
+            (ns) => ns.prefix === selectedModelId
+          );
+          externalResourceVersion =
+            namespace?.namespace?.match(/\/(\d\.\d\.\d)\//);
+        }
         dispatch(
           setSelected(
-            edge.data.identifier,
+            selectedResourceId,
             edge.referenceType === 'PARENT_CLASS' ? 'classes' : 'associations',
-            modelId
+            selectedModelId,
+            externalResourceVersion ? externalResourceVersion[1] : undefined
           )
         );
         return;
@@ -168,7 +196,8 @@ const GraphContent = ({
         edge.target,
         e.clientX,
         e.clientY,
-        edge.referenceType
+        edge.referenceType,
+        edge.data.origin
       );
       dispatch(setGraphHasChanges(true));
     },
@@ -251,7 +280,6 @@ const GraphContent = ({
         modelId,
         deleteNodeById,
         applicationProfile,
-        refetchNodes,
         organizationIds
       ),
       ...(loopNodes ? loopNodes : []),
@@ -269,12 +297,17 @@ const GraphContent = ({
     dispatch,
     modelId,
     organizationIds,
-    refetchNodes,
     resetPosition,
     setEdges,
     setNodes,
     t,
   ]);
+
+  useEffect(() => {
+    if (zoomToClass) {
+      centerNode(zoomToClass);
+    }
+  }, [setNodePositions, zoomToClass, centerNode]);
 
   const nodeDragStop = useCallback(
     (_: React.MouseEvent, node: Node) => {
@@ -312,7 +345,6 @@ const GraphContent = ({
             modelId,
             deleteNodeById,
             applicationProfile,
-            refetchNodes,
             organizationIds
           ),
           ...(loopNodes ? loopNodes : []),
@@ -332,7 +364,6 @@ const GraphContent = ({
     dispatch,
     modelId,
     organizationIds,
-    refetchNodes,
     resetPosition,
     setEdges,
     setNodes,
@@ -414,12 +445,6 @@ const GraphContent = ({
   }, [cleanUnusedCorners, edges, nodes, setNodes]);
 
   useEffect(() => {
-    if (updateVisualization) {
-      refetchNodes();
-    }
-  }, [updateVisualization, refetchNodes, dispatch]);
-
-  useEffect(() => {
     if (resetPosition) {
       setNodePositions();
     }
@@ -428,6 +453,8 @@ const GraphContent = ({
   return (
     <FlowWrapper ref={reactFlowWrapper} $isSmall={isSmall}>
       <ModelFlow
+        snapToGrid
+        snapGrid={[10, 10]}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -446,10 +473,10 @@ const GraphContent = ({
         // for larger data models
         fitViewOptions={{
           maxZoom: 1.2,
-          minZoom: 1,
+          minZoom: 0.15,
         }}
         maxZoom={5}
-        minZoom={0.25}
+        minZoom={0.1}
       >
         <GraphNotification hasChanges={graphHasChanges} />
         {children}
@@ -466,6 +493,7 @@ export default function Graph({
   organizationIds,
   drawer,
   children,
+  namespaces,
 }: GraphProps) {
   return (
     <>
@@ -477,6 +505,7 @@ export default function Graph({
           version={version}
           applicationProfile={applicationProfile}
           organizationIds={organizationIds}
+          namespaces={namespaces}
         >
           {children}
         </GraphContent>

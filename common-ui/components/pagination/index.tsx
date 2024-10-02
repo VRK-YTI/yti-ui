@@ -17,6 +17,7 @@ export default function Pagination({ maxPages }: PaginationProps) {
     return null;
   }
 
+  // 50 is a hard coded value from front page. These are used for aria text.
   const firstShown = (urlState.page - 1) * 50 + 1;
   const lastShown = urlState.page * 50;
 

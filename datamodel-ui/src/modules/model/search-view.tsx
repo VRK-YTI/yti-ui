@@ -26,6 +26,7 @@ import StaticHeader from 'yti-common-ui/drawer/static-header';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import getConnectedElements from '../graph/utils/get-connected-elements';
 import useSetView from '@app/common/utils/hooks/use-set-view';
+import { PAGE_SIZE_SMALL } from 'yti-common-ui/utils/constants';
 
 export default function SearchView({
   modelId,
@@ -48,8 +49,8 @@ export default function SearchView({
   const { data } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
-    pageSize: 20,
-    pageFrom: (currentPage - 1) * 20,
+    pageSize: PAGE_SIZE_SMALL,
+    pageFrom: currentPage,
     resourceTypes: [],
     fromVersion: version,
   });

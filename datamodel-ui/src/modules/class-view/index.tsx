@@ -15,9 +15,9 @@ import { SearchInput, Text } from 'suomifi-ui-components';
 import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
 import {
-  DEFAULT_SUBCLASS_OF,
   classTypeToClassForm,
   internalClassToClassForm,
+  OWL_THING,
 } from './utils';
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
@@ -35,6 +35,7 @@ import {
   selectSelected,
   setHovered,
   setSelected,
+  setZoomToClass,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
 import ApplicationProfileFlow from './application-profile-flow';
@@ -43,6 +44,7 @@ import useSetView from '@app/common/utils/hooks/use-set-view';
 import useSetPage from '@app/common/utils/hooks/use-set-page';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 import ResourceError from '@app/common/components/resource-error';
+import { PAGE_SIZE_SMALL } from 'yti-common-ui/utils/constants';
 
 interface ClassViewProps {
   modelId: string;
@@ -89,8 +91,8 @@ export default function ClassView({
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
-    pageSize: 20,
-    pageFrom: (currentPage - 1) * 20,
+    pageSize: PAGE_SIZE_SMALL,
+    pageFrom: currentPage,
     resourceTypes: [ResourceType.CLASS],
     fromVersion: version,
   });
@@ -139,7 +141,8 @@ export default function ClassView({
         setClass({
           ...initialData,
           label: label,
-          subClassOf: [DEFAULT_SUBCLASS_OF],
+          targetClass: OWL_THING,
+          subClassOf: [OWL_THING],
         })
       );
       setView('classes', 'create');
@@ -201,6 +204,7 @@ export default function ClassView({
   const handleFollowUp = (classId: string) => {
     setView('classes', 'info', classId);
     dispatch(setSelected(classId, 'classes', modelId));
+    dispatch(setZoomToClass(classId));
   };
 
   const handleActive = (classId: string) => {

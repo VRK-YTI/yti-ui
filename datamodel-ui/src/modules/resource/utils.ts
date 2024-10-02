@@ -1,5 +1,4 @@
 import { ResourceFormType } from '@app/common/interfaces/resource-form.interface';
-import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Resource } from '@app/common/interfaces/resource.interface';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import { v4 } from 'uuid';

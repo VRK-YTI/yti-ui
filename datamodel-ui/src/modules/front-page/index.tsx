@@ -18,8 +18,10 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
   IconApplicationProfile,
   IconGrid,
+  Link,
   Modal,
   ModalContent,
+  Paragraph,
   SingleSelectData,
 } from 'suomifi-ui-components';
 import useUrlState, {
@@ -39,6 +41,7 @@ import ModelFormModal from '../model-form/model-form-modal';
 import { useGetLanguagesQuery } from '@app/common/components/code/code.slice';
 import { useGetCountQuery } from '@app/common/components/counts/counts.slice';
 import { inUseStatusList } from '@app/common/utils/status-list';
+import { PAGE_SIZE_LARGE } from 'yti-common-ui/utils/constants';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -166,7 +169,7 @@ export default function FrontPage() {
           appendLocale: true,
         }),
         titleLink: `/model/${object.prefix}${
-          object.version ? `?ver=${object.version}` : ''
+          object.version ? `?ver=${object.version}` : '?draft'
         }`,
         type: translateModelType(object.type, t),
       };
@@ -230,6 +233,14 @@ export default function FrontPage() {
           <TitleDescriptionWrapper $isSmall={isSmall}>
             <Description id="page-description">
               {t('service-description')}
+              <Paragraph style={{ marginTop: '10px' }}>
+                <Link
+                  target="_blank"
+                  href="https://tietomallit.beta.yti.cloud.dvv.fi"
+                >
+                  {t('service-description-old-version')}
+                </Link>
+              </Paragraph>
             </Description>
           </TitleDescriptionWrapper>
         }
@@ -303,7 +314,9 @@ export default function FrontPage() {
             }}
           />
           <Pagination
-            maxPages={Math.ceil((searchModels?.totalHitCount ?? 1) / 50)}
+            maxPages={Math.ceil(
+              (searchModels?.totalHitCount ?? 1) / PAGE_SIZE_LARGE
+            )}
           />
         </ResultAndStatsWrapper>
       </ResultAndFilterContainer>

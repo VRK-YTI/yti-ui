@@ -24,6 +24,8 @@ import { useSelector } from 'react-redux';
 import { getEnvParam } from '@app/common/components/uri-info';
 import { useStoreDispatch } from '@app/store';
 import UnsavedAlertModal from '../unsaved-alert-modal';
+import { useRouter } from 'next/router';
+import { isDraftModel } from '../model';
 
 export default function LinkedDataView({
   modelId,
@@ -48,9 +50,11 @@ export default function LinkedDataView({
   });
   const [headerHeight, setHeaderHeight] = useState(hasPermission ? 57 : 42);
   const [renderForm, setRenderForm] = useState(false);
+  const { query } = useRouter();
   const { data } = useGetModelQuery({
     modelId: modelId,
     version: version,
+    draft: isDraftModel(query),
   });
 
   const handleFormReturn = () => {

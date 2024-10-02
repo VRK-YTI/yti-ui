@@ -8,10 +8,16 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import ResourceList, { ResultType } from '@app/common/components/resource-list';
-import { useGetClassQuery } from '@app/common/components/class/class.slice';
+import {
+  useGetClassQuery,
+  useGetExternalClassQuery,
+} from '@app/common/components/class/class.slice';
 import WideModal from '@app/common/components/wide-modal';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
-import { convertSimpleResourceToResultType } from './util';
+import {
+  convertExternalResourceToResultType,
+  convertSimpleResourceToResultType,
+} from './util';
 
 interface ResourcePickerProps {
   visible: boolean;
@@ -20,6 +26,7 @@ interface ResourcePickerProps {
     classId: string;
     version?: string;
     isAppProfile: boolean;
+    externalId?: string;
   };
   handleFollowUp: (value?: {
     associations: SimpleResource[];
@@ -50,7 +57,19 @@ export default function ResourcePicker({
       version: selectedNodeShape.version,
     },
     {
-      skip: selectedNodeShape.modelId == '' || selectedNodeShape.classId === '',
+      skip:
+        selectedNodeShape.modelId == '' ||
+        selectedNodeShape.classId === '' ||
+        !!selectedNodeShape.externalId,
+    }
+  );
+
+  const { data: extData, isSuccess: isSuccessExt } = useGetExternalClassQuery(
+    {
+      uri: selectedNodeShape.externalId ?? '',
+    },
+    {
+      skip: !selectedNodeShape.externalId,
     }
   );
 
@@ -58,7 +77,7 @@ export default function ResourcePicker({
     associations: ResultType[];
     attributes: ResultType[];
   }>(() => {
-    if (isSuccess) {
+    if (isSuccess && classData) {
       return {
         associations: convertSimpleResourceToResultType(
           classData.association ?? [],
@@ -69,13 +88,24 @@ export default function ResourcePicker({
           i18n.language
         ),
       };
+    } else if (isSuccessExt && extData) {
+      return {
+        attributes: convertExternalResourceToResultType(
+          extData.attributes ?? [],
+          i18n.language
+        ),
+        associations: convertExternalResourceToResultType(
+          extData.associations ?? [],
+          i18n.language
+        ),
+      };
     }
 
     return {
       associations: [],
       attributes: [],
     };
-  }, [isSuccess, classData, i18n.language]);
+  }, [isSuccess, isSuccessExt, classData, extData, i18n.language]);
 
   const handleCheckboxClick = (
     id: string | string[],
@@ -105,7 +135,7 @@ export default function ResourcePicker({
   };
 
   const handleSubmit = () => {
-    if (!classData) {
+    if (!classData && !extData) {
       handleFollowUp({
         associations: [],
         attributes: [],
@@ -113,16 +143,43 @@ export default function ResourcePicker({
       return;
     }
 
-    handleFollowUp({
-      associations:
-        classData.association?.filter((a) =>
-          selected.associations.includes(a.identifier)
-        ) ?? [],
-      attributes:
-        classData.attribute?.filter((a) =>
-          selected.attributes.includes(a.identifier)
-        ) ?? [],
-    });
+    if (classData) {
+      handleFollowUp({
+        associations:
+          classData.association?.filter((a) =>
+            selected.associations.includes(a.identifier)
+          ) ?? [],
+        attributes:
+          classData.attribute?.filter((a) =>
+            selected.attributes.includes(a.identifier)
+          ) ?? [],
+      });
+    }
+
+    if (extData) {
+      handleFollowUp({
+        attributes:
+          extData.attributes
+            ?.filter((a) => selected.attributes.includes(a.uri))
+            .map((a) => {
+              return {
+                identifier: a.uri,
+                label: a.label,
+                uri: a.uri,
+              } as SimpleResource;
+            }) ?? [],
+        associations:
+          extData.associations
+            ?.filter((a) => selected.associations.includes(a.uri))
+            .map((a) => {
+              return {
+                identifier: a.uri,
+                label: a.label,
+                uri: a.uri,
+              } as SimpleResource;
+            }) ?? [],
+      });
+    }
   };
 
   useEffect(() => {
@@ -161,7 +218,10 @@ export default function ResourcePicker({
               <td colSpan={3}>
                 {t('attribute-count-title', {
                   ns: 'common',
-                  count: classData?.attribute?.length ?? 0,
+                  count:
+                    classData?.attribute?.length ??
+                    extData?.attributes?.length ??
+                    0,
                 })}
               </td>
             </tr>
@@ -184,7 +244,10 @@ export default function ResourcePicker({
               <td colSpan={4}>
                 {t('association-count-title', {
                   ns: 'common',
-                  count: classData?.association?.length ?? 0,
+                  count:
+                    classData?.association?.length ??
+                    extData?.associations?.length ??
+                    0,
                 })}
               </td>
             </tr>

@@ -8,11 +8,12 @@ import {
 } from '@app/common/interfaces/model.interface';
 import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
+import { ResourceReferencesResult } from '@app/common/interfaces/resource-reference.interface';
 
 export const modelApi = createApi({
   reducerPath: 'modelApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['Model'],
+  tagTypes: ['Model', 'Class', 'Resource', 'Subscription'],
   endpoints: (builder) => ({
     createModel: builder.mutation<string, NewModel>({
       query: (value) => ({
@@ -21,13 +22,17 @@ export const modelApi = createApi({
         data: value,
       }),
     }),
-    getModel: builder.query<ModelType, { modelId: string; version?: string }>({
+    getModel: builder.query<
+      ModelType,
+      { modelId: string; version?: string; draft?: boolean }
+    >({
       query: (value) => ({
-        url: `/model/${value.modelId}`,
+        url: `/model/${value.modelId}${value.draft ? '/draft' : ''}`,
         params: {
-          ...(value.version && {
-            version: value.version,
-          }),
+          ...(value.version &&
+            !value.draft && {
+              version: value.version,
+            }),
         },
         method: 'GET',
       }),
@@ -50,9 +55,14 @@ export const modelApi = createApi({
       }),
       invalidatesTags: ['Model'],
     }),
-    deleteModel: builder.mutation<string, string>({
+    deleteModel: builder.mutation<
+      string,
+      { modelId: string; version?: string }
+    >({
       query: (value) => ({
-        url: `/model/${value}`,
+        url: `/model/${value.modelId}${
+          value.version ? `?version=${value.version}` : ''
+        }`,
         method: 'DELETE',
       }),
     }),
@@ -105,6 +115,40 @@ export const modelApi = createApi({
         method: 'PUT',
       }),
     }),
+    getValidationErrors: builder.query<
+      ResourceReferencesResult,
+      { modelId: string }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/validate`,
+        method: 'GET',
+      }),
+
+      providesTags: ['Model', 'Class', 'Resource'],
+    }),
+    getSubscription: builder.query<string, { modelId: string }>({
+      query: (value) => ({
+        url: `/subscribe/${value.modelId}`,
+        method: 'GET',
+      }),
+      providesTags: ['Subscription'],
+    }),
+    subscribe: builder.mutation<string, { modelId: string }>({
+      query: (value) => ({
+        url: `/subscribe/${value.modelId}`,
+        method: 'POST',
+      }),
+    }),
+    unsubscribe: builder.mutation<string, { subscriptionArn: string }>({
+      query: (value) => ({
+        url: '/subscribe',
+        method: 'DELETE',
+        params: {
+          subscriptionArn: value.subscriptionArn,
+        },
+      }),
+      invalidatesTags: ['Subscription'],
+    }),
   }),
 });
 
@@ -116,6 +160,10 @@ export const {
   useCreateReleaseMutation,
   useGetPriorVersionsQuery,
   useUpdateVersionedModelMutation,
+  useGetValidationErrorsQuery,
+  useGetSubscriptionQuery,
+  useSubscribeMutation,
+  useUnsubscribeMutation,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
@@ -126,6 +174,7 @@ export const {
   deleteModel,
   createRelease,
   getPriorVersions,
+  getValidationErrors,
 } = modelApi.endpoints;
 
 // Slice setup below
@@ -200,6 +249,7 @@ const initialState = {
   addResourceRestrictionToClass: false,
   updateVisualization: false,
   updateClassData: false,
+  zoomToClass: undefined,
   tools: {
     fullScreen: false,
     resetPosition: false,
@@ -329,6 +379,12 @@ export const modelSlice = createSlice({
       return {
         ...state,
         updateClassData: action.payload,
+      };
+    },
+    setZoomToClass(state, action) {
+      return {
+        ...state,
+        zoomToClass: action.payload,
       };
     },
     setTools(state, action) {
@@ -501,6 +557,14 @@ export function setResetPosition(value: boolean): AppThunk {
 
 export function selectResetPosition() {
   return (state: AppState) => state.model.tools.resetPosition;
+}
+
+export function setZoomToClass(classId?: string): AppThunk {
+  return (dispatch) => dispatch(modelSlice.actions.setZoomToClass(classId));
+}
+
+export function selectZoomToClass() {
+  return (state: AppState) => state.model.zoomToClass;
 }
 
 export function setAddResourceRestrictionToClass(value: boolean): AppThunk {

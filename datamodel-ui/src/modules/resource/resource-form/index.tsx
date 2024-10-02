@@ -51,15 +51,20 @@ import { ResourceFormType } from '@app/common/interfaces/resource-form.interface
 import ResourceModal from '../resource-modal';
 import useSetView from '@app/common/utils/hooks/use-set-view';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
-import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
+import {
+  IDENTIFIER_MAX,
+  TEXT_AREA_MAX,
+  TEXT_INPUT_MAX,
+} from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import {
-  DEFAULT_ASSOCIATION_SUBPROPERTY,
-  DEFAULT_ATTRIBUTE_SUBPROPERTY,
+  OWL_TOP_OBJECT_PROPERTY,
+  OWL_TOP_DATA_PROPERTY,
 } from '@app/common/components/resource/utils';
 import PropertyToggle from './components/property-toggle';
 import { SUOMI_FI_NAMESPACE } from '@app/common/utils/get-value';
+import { isDraftModel } from '@app/modules/model';
 
 interface ResourceFormProps {
   modelId: string;
@@ -68,7 +73,6 @@ interface ResourceFormProps {
   isEdit?: boolean;
   currentModelId: string;
   applicationProfile?: boolean;
-  refetch?: () => void;
   handleReturn: () => void;
   handleFollowUp?: (identifier: string, type: ResourceType) => void;
 }
@@ -80,7 +84,6 @@ export default function ResourceForm({
   isEdit,
   currentModelId,
   applicationProfile,
-  refetch,
   handleReturn,
   handleFollowUp,
 }: ResourceFormProps) {
@@ -227,10 +230,9 @@ export default function ResourceForm({
       key === 'subResourceOf' &&
       data.subResourceOf &&
       data.subResourceOf.length === 1 &&
-      [
-        DEFAULT_ASSOCIATION_SUBPROPERTY.uri,
-        DEFAULT_ATTRIBUTE_SUBPROPERTY.uri,
-      ].includes(data.subResourceOf[0].uri)
+      [OWL_TOP_OBJECT_PROPERTY.uri, OWL_TOP_DATA_PROPERTY.uri].includes(
+        data.subResourceOf[0].uri
+      )
     ) {
       handleUpdate({
         ...data,
@@ -254,8 +256,8 @@ export default function ResourceForm({
     if (key === 'subResourceOf' && data.subResourceOf?.length === 1) {
       const defaultSubResourceOf =
         data.type === ResourceType.ASSOCIATION
-          ? DEFAULT_ASSOCIATION_SUBPROPERTY
-          : DEFAULT_ATTRIBUTE_SUBPROPERTY;
+          ? OWL_TOP_OBJECT_PROPERTY
+          : OWL_TOP_DATA_PROPERTY;
       handleUpdate({
         ...data,
         subResourceOf: [defaultSubResourceOf],
@@ -315,15 +317,15 @@ export default function ResourceForm({
         data.identifier
       );
 
-      if (isEdit && refetch) {
-        refetch();
-      }
-
-      router.replace(
-        `${modelId}/${
+      const query = {
+        ...(isDraftModel(router.query) && { draft: router.query.draft }),
+      };
+      router.replace({
+        pathname: `${modelId}/${
           data.type === ResourceType.ASSOCIATION ? 'association' : 'attribute'
-        }/${data.identifier}`
-      );
+        }/${data.identifier}`,
+        query: query,
+      });
       dispatch(setUpdateVisualization(true));
     }
 
@@ -350,7 +352,6 @@ export default function ResourceForm({
     router,
     modelId,
     data,
-    refetch,
     isEdit,
     setView,
   ]);
@@ -546,7 +547,7 @@ export default function ResourceForm({
               isSuccess && resourceAlreadyExists ? t('error-prefix-taken') : ''
             }
             id="prefix-input"
-            maxLength={32}
+            maxLength={IDENTIFIER_MAX}
           />
 
           <RangeAndDomain
@@ -598,8 +599,8 @@ export default function ResourceForm({
                   />
                 }
                 deleteDisabled={[
-                  DEFAULT_ASSOCIATION_SUBPROPERTY.uri,
-                  DEFAULT_ATTRIBUTE_SUBPROPERTY.uri,
+                  OWL_TOP_OBJECT_PROPERTY.uri,
+                  OWL_TOP_DATA_PROPERTY.uri,
                 ]}
                 handleRemoval={(id: string) =>
                   handleResourceRemove(id, 'subResourceOf')
@@ -662,27 +663,29 @@ export default function ResourceForm({
 
           {!applicationProfile && (
             <>
-              <PropertyToggle
-                label={`${translateCommonForm(
-                  'functional',
-                  data.type,
-                  t
-                )} (owl:FunctionalProperty)`}
-                tooltip={{
-                  text: translateCommonTooltips('functional', data.type, t),
-                  ariaCloseButtonLabelText: '',
-                  ariaToggleButtonLabelText: '',
-                }}
-                handleUpdate={(value) =>
-                  handleUpdate({
-                    ...data,
-                    functionalProperty: value ?? undefined,
-                  })
-                }
-                value={data.functionalProperty}
-                id="functional-property-toggle"
-                optionalText={t('optional')}
-              />
+              {data.type === ResourceType.ATTRIBUTE && (
+                <PropertyToggle
+                  label={`${translateCommonForm(
+                    'functional',
+                    data.type,
+                    t
+                  )} (owl:FunctionalProperty)`}
+                  tooltip={{
+                    text: translateCommonTooltips('functional', data.type, t),
+                    ariaCloseButtonLabelText: '',
+                    ariaToggleButtonLabelText: '',
+                  }}
+                  handleUpdate={(value) =>
+                    handleUpdate({
+                      ...data,
+                      functionalProperty: value ?? undefined,
+                    })
+                  }
+                  value={data.functionalProperty}
+                  id="functional-property-toggle"
+                  optionalText={t('optional')}
+                />
+              )}
               {data.type === ResourceType.ASSOCIATION && (
                 <>
                   <PropertyToggle

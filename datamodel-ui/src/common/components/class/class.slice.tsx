@@ -10,6 +10,7 @@ import {
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import { pathForModelType } from '@app/common/utils/api-utils';
 import { convertToPayload } from './utils';
+import { ExternalClassType } from '@app/common/interfaces/external-class.interface';
 
 interface ClassData {
   modelId: string;
@@ -183,6 +184,58 @@ export const classApi = createApi({
       }),
       invalidatesTags: ['Class'],
     }),
+    addCodeList: builder.mutation<
+      string,
+      {
+        prefix: string;
+        classIdentifier: string;
+        attributeUri: string;
+        codeLists: string[];
+      }
+    >({
+      query: (value) => ({
+        url: `/class/library/${value.prefix}/${value.classIdentifier}/codeList`,
+        data: {
+          attributeUri: value.attributeUri,
+          codeLists: value.codeLists,
+        },
+        method: 'PUT',
+      }),
+      invalidatesTags: ['Class'],
+    }),
+    removeCodeList: builder.mutation<
+      string,
+      {
+        prefix: string;
+        classIdentifier: string;
+        attributeUri: string;
+        codeList: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/class/library/${value.prefix}/${value.classIdentifier}/codeList`,
+        params: {
+          attributeUri: value.attributeUri,
+          codeListUri: value.codeList,
+        },
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Class'],
+    }),
+    getExternalClass: builder.query<
+      ExternalClassType,
+      {
+        uri: string;
+      }
+    >({
+      query: (value) => ({
+        url: '/class/external',
+        params: {
+          uri: value.uri,
+        },
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -222,6 +275,9 @@ export const {
   useDeletePropertyReferenceMutation,
   useRenameClassMutation,
   useUpdateClassResrictionTargetMutation,
+  useAddCodeListMutation,
+  useRemoveCodeListMutation,
+  useGetExternalClassQuery,
   util: { getRunningQueriesThunk },
 } = classApi;
 

@@ -181,6 +181,7 @@ export default function convertToEdges(
                   identifier: assoc.identifier,
                   params: getEdgeParams(firstCornerNodeId, assoc),
                   applicationProfile,
+                  origin: assoc.identifier,
                 });
               }
 
@@ -201,20 +202,23 @@ export default function convertToEdges(
         }
 
         if (reference.referenceTarget.startsWith('corner-')) {
+          const sourceIdentifier = [
+            'ATTRIBUTE_DOMAIN',
+            'PARENT_CLASS',
+          ].includes(reference.referenceType)
+            ? node.identifier
+            : reference.identifier;
+
           referenceLabels.push({
             targetId: getEndEdge(reference.referenceTarget),
-            identifier: ['ATTRIBUTE_DOMAIN', 'PARENT_CLASS'].includes(
-              reference.referenceType
-            )
-              ? node.identifier
-              : reference.identifier,
+            identifier: sourceIdentifier,
             label: label,
           });
 
           return createEdge({
             params: getEdgeParams(node.identifier, reference, true),
             isCorner: true,
-            origin: node.identifier,
+            origin: sourceIdentifier,
           });
         }
 
@@ -278,20 +282,23 @@ export default function convertToEdges(
             identifier: reference.identifier,
             params: getEdgeParams(firstCornerNodeId, reference),
             applicationProfile,
+            origin: node.identifier,
           });
         }
+
+        const edgeIdentifier = ['ATTRIBUTE_DOMAIN', 'PARENT_CLASS'].includes(
+          reference.referenceType
+        )
+          ? node.identifier
+          : reference.identifier;
 
         return createEdge({
           modelId: modelId,
           label: label,
-          identifier: ['ATTRIBUTE_DOMAIN', 'PARENT_CLASS'].includes(
-            reference.referenceType
-          )
-            ? node.identifier
-            : reference.identifier,
+          identifier: edgeIdentifier,
           params: getEdgeParams(node.identifier, reference),
           applicationProfile,
-          origin: node.identifier,
+          origin: edgeIdentifier,
         });
       }),
     ]);
@@ -309,13 +316,6 @@ export default function convertToEdges(
       return createEdge({
         params: getEdgeParams(nodeIdentifier, node, true),
         isCorner: true,
-        origin: node.origin,
-      });
-    }
-
-    if (node.referenceTarget.includes(':')) {
-      return createEdge({
-        params: getEdgeParams(nodeIdentifier, node),
         origin: node.origin,
       });
     }
@@ -339,6 +339,15 @@ export default function convertToEdges(
 
     if (index) {
       referenceLabels.splice(index, 1);
+    }
+
+    if (node.referenceTarget.includes(':')) {
+      return createEdge({
+        label: associationInfo.label,
+        identifier: associationInfo.identifier,
+        params: getEdgeParams(nodeIdentifier, node),
+        origin: node.origin,
+      });
     }
 
     return createEdge({

@@ -3,8 +3,8 @@ import { ClassType } from '@app/common/interfaces/class.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
 
-export const DEFAULT_SUBCLASS_OF = {
-  uri: 'owl:Thing',
+export const OWL_THING = {
+  uri: 'http://www.w3.org/2002/07/owl#Thing',
   label: { en: 'Thing' },
   curie: 'owl:Thing',
 };
@@ -27,6 +27,7 @@ export function internalClassToClassForm(
     subClassOf: [],
     ownAttributes: [],
     status: 'DRAFT',
+    apiPath: '',
   } as ClassFormType;
 
   if (applicationProfile) {
@@ -77,6 +78,7 @@ export function classTypeToClassForm(
           //Application profile specific properties
           targetClass: data.targetClass,
           node: data.targetNode,
+          apiPath: data.apiPath,
         }
       : {
           //Library specific properties
@@ -88,7 +90,7 @@ export function classTypeToClassForm(
               (soc) => soc.uri !== 'http://www.w3.org/2002/07/owl#Thing'
             ).length > 0
               ? data.subClassOf
-              : [DEFAULT_SUBCLASS_OF],
+              : [OWL_THING],
         }),
   };
 }

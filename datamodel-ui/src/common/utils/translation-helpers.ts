@@ -261,14 +261,21 @@ export function translateDeleteModalTitle(
 export function translateDeleteModalDescription(
   type: 'model' | 'class' | 'association' | 'attribute',
   t: TFunction,
-  targetName?: string
+  targetName?: string,
+  targetVersion?: string
 ) {
   switch (type) {
     case 'model':
-      return t('delete-modal.model-description', {
-        ns: 'admin',
-        targetName: targetName,
-      });
+      return !targetVersion
+        ? t('delete-modal.model-description', {
+            ns: 'admin',
+            targetName: targetName,
+          })
+        : t('delete-modal.model-description-version', {
+            ns: 'admin',
+            targetName: targetName,
+            targetVersion: targetVersion,
+          });
     case 'class':
       return t('delete-modal.class-description', {
         ns: 'admin',
@@ -546,6 +553,16 @@ export function translateNotification(
       return t('link-edited', { ns: 'admin' });
     case 'POSITION_SAVE':
       return t('position-saved', { ns: 'admin' });
+    case 'SUBSCRIPTION_ADD':
+      return t('email-subscriptions-on', { ns: 'common' });
+    case 'SUBSCRIPTION_DELETE':
+      return t('email-subscriptions-off', { ns: 'common' });
+    case 'REQUEST_ADD':
+      return t('access-request-sent', { ns: 'common' });
+    case 'CODE_LIST_ADDED':
+      return t('codelist-added', { ns: 'admin' });
+    case 'CODE_LIST_REMOVED':
+      return t('codelist-removed', { ns: 'admin' });
     default:
       return '';
   }
@@ -699,5 +716,18 @@ export function translateResultType(key: string, t: TFunction) {
       return t('associations', { ns: 'common' });
     default:
       return '';
+  }
+}
+
+export function translateValidationError(key: string, t: TFunction) {
+  switch (key) {
+    case 'missing-reference-to-library':
+      return t('release-missing-reference-to-library-title', { ns: 'admin' });
+    case 'missing-reference-to-library-info':
+      return t('release-missing-reference-to-library-info', { ns: 'admin' });
+    case 'references-not-exist':
+      return t('release-references-not-exist-title', { ns: 'admin' });
+    case 'references-not-exist-info':
+      return t('release-references-not-exist-info', { ns: 'admin' });
   }
 }

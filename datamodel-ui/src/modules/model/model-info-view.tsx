@@ -5,6 +5,9 @@ import {
   setDisplayGraphHasChanges,
   setHasChanges,
   useGetModelQuery,
+  useGetSubscriptionQuery,
+  useSubscribeMutation,
+  useUnsubscribeMutation,
 } from '@app/common/components/model/model.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -47,6 +50,8 @@ import PriorVersions from './prior-versions';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import UnsavedAlertModal from '../unsaved-alert-modal';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { isDraftModel } from '.';
 
 export default function ModelInfoView({
   organizationIds,
@@ -84,7 +89,16 @@ export default function ModelInfoView({
   const { data: modelInfo } = useGetModelQuery({
     modelId: modelId,
     version: version,
+    draft: isDraftModel(query),
   });
+
+  const [subscriptionData, setSubscriptionData] = useState<string>();
+  const { data: subscriptionArn } = useGetSubscriptionQuery(
+    { modelId },
+    { skip: user.anonymous }
+  );
+  const [subscribe, subscribeResult] = useSubscribeMutation();
+  const [unsubscribe] = useUnsubscribeMutation();
 
   useEffect(() => {
     if (modelInfo) {
@@ -160,6 +174,16 @@ export default function ModelInfoView({
     }
   }, [query.ver, version]);
 
+  useEffect(() => {
+    if (subscriptionArn) {
+      setSubscriptionData(subscriptionArn);
+    }
+
+    if (subscribeResult.data) {
+      setSubscriptionData(subscribeResult.data);
+    }
+  }, [subscribeResult, subscriptionArn]);
+
   if (!modelInfo) {
     return <DrawerContent />;
   }
@@ -176,6 +200,19 @@ export default function ModelInfoView({
       />
     );
   }
+
+  const handleSubscribe = () => {
+    subscribe({ modelId });
+    dispatch(setNotification('SUBSCRIPTION_ADD'));
+  };
+
+  const handleUnsubscribe = () => {
+    if (subscriptionData) {
+      unsubscribe({ subscriptionArn: subscriptionData });
+      setSubscriptionData(undefined);
+      dispatch(setNotification('SUBSCRIPTION_DELETE'));
+    }
+  };
 
   return (
     <>
@@ -196,7 +233,7 @@ export default function ModelInfoView({
             {hasPermission ? (
               version ? (
                 <ActionMenuItem
-                  onClick={() => router.push(`/model/${modelId}`)}
+                  onClick={() => router.push(`/model/${modelId}?draft`)}
                 >
                   {t('to-draft', { ns: 'admin' })}
                 </ActionMenuItem>
@@ -208,6 +245,13 @@ export default function ModelInfoView({
                   {t('create-release', { ns: 'admin' })}
                 </ActionMenuItem>
               )
+            ) : (
+              <></>
+            )}
+            {hasPermission && (user.superuser || !modelInfo.version) ? (
+              <ActionMenuItem onClick={() => handleModalChange('delete', true)}>
+                {t('remove', { ns: 'admin' })}
+              </ActionMenuItem>
             ) : (
               <></>
             )}
@@ -224,9 +268,13 @@ export default function ModelInfoView({
             </ActionMenuItem>
             {!user.anonymous ? (
               <ActionMenuItem
-                onClick={() => handleModalChange('getEmailNotification', true)}
+                onClick={() =>
+                  subscriptionData ? handleUnsubscribe() : handleSubscribe()
+                }
               >
-                {t('add-email-subscription')}
+                {subscriptionData
+                  ? t('remove-email-subscriptions')
+                  : t('add-email-subscription')}
               </ActionMenuItem>
             ) : (
               <></>
@@ -367,6 +415,7 @@ export default function ModelInfoView({
 
         <BasicBlock title={t('contributors')}>
           {modelInfo.organizations
+            .filter((org) => !org.parentOrganization)
             .map((org) =>
               getLanguageVersion({ data: org.label, lang: i18n.language })
             )
@@ -401,6 +450,7 @@ export default function ModelInfoView({
           visible={openModals.showAsFile}
           onClose={() => handleModalChange('showAsFile', false)}
           version={version}
+          applicationProfile={modelInfo?.type === 'PROFILE'}
         />
         {modelInfo && (
           <>
@@ -408,6 +458,7 @@ export default function ModelInfoView({
               <>
                 <DeleteModal
                   modelId={modelId}
+                  modelVersion={version}
                   label={getLanguageVersion({
                     data: modelInfo.label,
                     lang: i18n.language,
@@ -436,6 +487,7 @@ export default function ModelInfoView({
               visible={openModals.downloadAsFile}
               onClose={() => handleModalChange('downloadAsFile', false)}
               version={version}
+              applicationProfile={modelInfo.type === 'PROFILE'}
             />
           </>
         )}

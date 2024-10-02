@@ -37,4 +37,5 @@ export interface ClassType {
   targetNode?: UriData;
   uri: string;
   curie: string;
+  apiPath?: string;
 }

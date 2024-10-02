@@ -36,6 +36,7 @@ export const ClassNodeDiv = styled.div<{
     border-radius: 2px 2px 0px 0px;
     font-weight: 600;
     max-width: 100%;
+    height: 40px;
 
     padding: ${(props) => props.theme.suomifi.spacing.xxs};
 
