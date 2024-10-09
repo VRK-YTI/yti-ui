@@ -85,8 +85,8 @@ export function translateTermFamily(termFamily: string, t: TFunction) {
   switch (termFamily) {
     case 'MASCULINE':
       return t('term-family.masculine', { ns: 'common' });
-    case 'NEUTRAL':
-      return t('term-family.neutral', { ns: 'common' });
+    case 'NEUTER':
+      return t('term-family.neuter', { ns: 'common' });
     case 'FEMININE':
       return t('term-family.feminine', { ns: 'common' });
     default:

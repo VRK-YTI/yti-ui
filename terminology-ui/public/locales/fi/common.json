@@ -163,7 +163,7 @@
   "term-family": {
     "feminine": "feminiini",
     "masculine": "maskuliini",
-    "neutral": "neutri"
+    "neuter": "neutri"
   },
   "term-style": {
     "spoken-form": "puhekieli"
