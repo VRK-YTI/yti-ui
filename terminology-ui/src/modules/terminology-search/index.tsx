@@ -189,25 +189,12 @@ export default function TerminologySearch() {
         title={t('terminology-title')}
         noBreadcrumbs={true}
         extra={
-          <>
-            <TitleDescriptionWrapper $isSmall={isSmall}>
-              <Description id="page-description">
-                {t('terminology-search-info')}
-              </Description>
-              <NewTerminology />
-            </TitleDescriptionWrapper>
-            <Paragraph>
-              {t('move-to-former')}{' '}
-              <Link
-                href="https://sanastot.beta.yti.cloud.dvv.fi/"
-                passHref
-                legacyBehavior
-              >
-                <SuomiFiLink href="">{t('to-terminology-tool')}</SuomiFiLink>
-              </Link>
-              .
-            </Paragraph>
-          </>
+          <TitleDescriptionWrapper $isSmall={isSmall}>
+            <Description id="page-description">
+              {t('terminology-search-info')}
+            </Description>
+            <NewTerminology />
+          </TitleDescriptionWrapper>
         }
       />
 
