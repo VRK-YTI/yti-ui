@@ -73,8 +73,8 @@ export default function TermForm({
       uniqueItemId: 'MASCULINE',
     },
     {
-      labelText: t('term-family.neutral', { ns: 'common' }),
-      uniqueItemId: 'NEUTRAL',
+      labelText: t('term-family.neuter', { ns: 'common' }),
+      uniqueItemId: 'NEUTER',
     },
     {
       labelText: t('term-family.feminine', { ns: 'common' }),
