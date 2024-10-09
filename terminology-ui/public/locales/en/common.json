@@ -163,7 +163,7 @@
   "term-family": {
     "feminine": "feminine",
     "masculine": "masculine",
-    "neutral": "neutral"
+    "neuter": "neuter"
   },
   "term-style": {
     "spoken-form": "spoken form"

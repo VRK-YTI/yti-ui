@@ -374,8 +374,8 @@ export default function NewTermModal({
                 uniqueItemId: 'masculine',
               },
               {
-                labelText: t('term-family.neutral', { ns: 'common' }),
-                uniqueItemId: 'neutral',
+                labelText: t('term-family.neuter', { ns: 'common' }),
+                uniqueItemId: 'neuter',
               },
               {
                 labelText: t('term-family.feminine', { ns: 'common' }),

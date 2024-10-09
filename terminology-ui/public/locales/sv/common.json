@@ -163,7 +163,7 @@
   "term-family": {
     "feminine": "femininum",
     "masculine": "maskulinum",
-    "neutral": "neutrum"
+    "neuter": "neutrum"
   },
   "term-style": {
     "spoken-form": "talspråk"
