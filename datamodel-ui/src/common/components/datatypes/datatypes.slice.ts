@@ -10,9 +10,11 @@ export const datatypesApi = createApi({
   })),
   tagTypes: ['Datatypes'],
   endpoints: (builder) => ({
-    getDatatypes: builder.query<UriData[], void>({
-      query: () => ({
-        url: '/frontend/data-types',
+    getDatatypes: builder.query<UriData[], boolean>({
+      query: (applicationProfile) => ({
+        url: `/frontend/data-types${
+          applicationProfile ? '?applicationProfile=true' : ''
+        }`,
         method: 'GET',
       }),
     }),
