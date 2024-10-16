@@ -52,6 +52,7 @@ import { selectLogin } from '@app/common/components/login/login.slice';
 import UnsavedAlertModal from '../unsaved-alert-modal';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { isDraftModel } from '.';
+import CopyModal from '../create-copy-modal';
 
 export default function ModelInfoView({
   organizationIds,
@@ -79,6 +80,7 @@ export default function ModelInfoView({
     copyModel: false,
     getEmailNotification: false,
     delete: false,
+    copy: false,
   });
   const ref = useRef<HTMLDivElement>(null);
   const { setView } = useSetView();
@@ -245,6 +247,13 @@ export default function ModelInfoView({
                   {t('create-release', { ns: 'admin' })}
                 </ActionMenuItem>
               )
+            ) : (
+              <></>
+            )}
+            {hasPermission ? (
+              <ActionMenuItem onClick={() => handleModalChange('copy', true)}>
+                {t('create-copy', { ns: 'admin' })}
+              </ActionMenuItem>
             ) : (
               <></>
             )}
@@ -474,6 +483,12 @@ export default function ModelInfoView({
                     hide={() => handleModalChange('createRelease', false)}
                   />
                 )}
+                <CopyModal
+                  modelId={modelId}
+                  modelVersion={version}
+                  visible={openModals.copy}
+                  hide={() => handleModalChange('copy', false)}
+                />
               </>
             )}
 
