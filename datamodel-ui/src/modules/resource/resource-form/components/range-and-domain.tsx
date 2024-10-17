@@ -26,7 +26,7 @@ export default function RangeAndDomain({
 }) {
   const { t } = useTranslation('admin');
   const { data: dataTypesResult, isSuccess: isDataTypesSuccess } =
-    useGetDatatypesQuery(void null, {
+    useGetDatatypesQuery(applicationProfile ?? false, {
       skip: data.type !== ResourceType.ATTRIBUTE && applicationProfile,
     });
 
