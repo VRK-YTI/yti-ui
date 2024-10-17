@@ -149,6 +149,23 @@ export const modelApi = createApi({
       }),
       invalidatesTags: ['Subscription'],
     }),
+    copyModel: builder.mutation<
+      string,
+      {
+        modelId: string;
+        version?: string;
+        newPrefix: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/copy`,
+        params: {
+          version: value.version,
+          newPrefix: value.newPrefix,
+        },
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -164,6 +181,7 @@ export const {
   useGetSubscriptionQuery,
   useSubscribeMutation,
   useUnsubscribeMutation,
+  useCopyModelMutation,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
