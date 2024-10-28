@@ -40,8 +40,12 @@ export function convertToPayload(
     ...(applicationProfile &&
       !basedOnNodeShape && {
         properties: [
-          ...(data.association?.map((a) => a.uri) ?? []),
-          ...(data.attribute?.map((a) => a.uri) ?? []),
+          ...(data.association?.map((a) =>
+            a.versionIri ? a.versionIri + a.identifier : a.uri
+          ) ?? []),
+          ...(data.attribute?.map((a) =>
+            a.versionIri ? a.versionIri + a.identifier : a.uri
+          ) ?? []),
         ],
       }),
   };
