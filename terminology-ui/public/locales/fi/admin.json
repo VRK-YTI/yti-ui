@@ -81,11 +81,10 @@
   "concept-diagrams-and-sources": "Käsitekaaviot ja lähteet",
   "concept-identifier": "Tunnus",
   "concept-import": {
+    "column-missing-language": "Sarakkeen otsikosta puuttuu kielen koodiarvo",
+    "duplicate-key-value": "Sarakkeen nimi on jo käytössä",
     "prefLabel-column-missing": "prefLabel kenttä puuttuu",
     "prefLabel-row-missing": "prefLabel pitää määrittää vähintään yhdellä kielellä",
-    "property-missing-language-suffix": "Käsitteen tiedon avaimesta puuttuu kielen koodiarvo",
-    "status-column-missing": "Tila kenttä puuttuu",
-    "term-missing-language-suffix": "Termin avaimesta puuttuu kielen koodiarvo",
     "terminology-no-language": "Sanastossa ei ole annettua kieltä",
     "undefined-error": "Käsitteiden tuonnissa tapahtui virhe",
     "value-not-valid": "Arvo solussa on virheellinen"

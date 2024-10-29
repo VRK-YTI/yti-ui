@@ -204,22 +204,18 @@ export function translateHttpError(
 
 export function translateExcelParseError(message: string, t: TFunction) {
   switch (message) {
-    case 'terminology-no-language':
+    case 'terminology-missing-language':
       return t('concept-import.terminology-no-language', { ns: 'admin' });
-    case 'term-missing-language-suffix':
-      return t('concept-import.term-missing-language-suffix', { ns: 'admin' });
+    case 'column-missing-language':
+      return t('concept-import.column-missing-language', { ns: 'admin' });
     case 'value-not-valid':
       return t('concept-import.value-not-valid', { ns: 'admin' });
-    case 'property-missing-language-suffix':
-      return t('concept-import.property-missing-language-suffix', {
-        ns: 'admin',
-      });
-    case 'status-column-missing':
-      return t('concept-import.status-column-missing', { ns: 'admin' });
-    case 'prefLabel-column-missing':
+    case 'pref-label-column-missing':
       return t('concept-import.prefLabel-column-missing', { ns: 'admin' });
-    case 'prefLabel-row-missing':
+    case 'pref-label-row-missing':
       return t('concept-import.prefLabel-row-missing', { ns: 'admin' });
+    case 'duplicate-key-value':
+      return t('concept-import.duplicate-key-value', { ns: 'admin' });
     default:
       return t('concept-import.undefined-error', { ns: 'admin' });
   }
