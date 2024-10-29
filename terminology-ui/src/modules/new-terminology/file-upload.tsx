@@ -64,7 +64,7 @@ export default function FileUpload({
                   </>
                 ) : (
                   <>
-                    {translateExcelParseError(errorInfo.data.message, t)}
+                    {translateExcelParseError(errorInfo.data.key, t)}
                     <ExcelErrorDetailBlock errorInfo={errorInfo} />
                   </>
                 )}
