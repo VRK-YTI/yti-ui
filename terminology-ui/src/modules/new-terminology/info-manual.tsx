@@ -18,6 +18,7 @@ import { useGetCodesQuery } from '@app/common/components/codelist/codelist.slice
 import { MODEL_PREFIX_MAX } from 'yti-common-ui/utils/constants';
 import { TerminologyType } from '@app/common/interfaces/interfaces-v2';
 import { Status } from 'yti-common-ui/interfaces/status.interface';
+import { MODEL_PREFIX_MAX } from 'yti-common-ui/utils/constants';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
