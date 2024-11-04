@@ -239,7 +239,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       const resourceType = query.slug[1];
       resourceId = query.slug[2];
 
-      const modelType = model.type;
+      const modelType = model.graphType;
 
       if (resourceType === 'class') {
         store.dispatch(setView('classes', 'info'));

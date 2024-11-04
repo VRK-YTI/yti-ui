@@ -123,7 +123,7 @@ export default function ModelInfoView({
         prefix: modelInfo?.prefix ?? '',
         serviceCategories: getIsPartOfWithId(modelInfo, i18n.language) ?? [],
         status: modelInfo?.status ?? 'DRAFT',
-        type: modelInfo?.type ?? 'PROFILE',
+        type: modelInfo?.graphType ?? 'PROFILE',
         terminologies: modelInfo.terminologies ?? [],
         externalNamespaces: modelInfo.externalNamespaces ?? [],
         internalNamespaces: modelInfo.internalNamespaces ?? [],
@@ -459,7 +459,7 @@ export default function ModelInfoView({
           visible={openModals.showAsFile}
           onClose={() => handleModalChange('showAsFile', false)}
           version={version}
-          applicationProfile={modelInfo?.type === 'PROFILE'}
+          applicationProfile={modelInfo?.graphType === 'PROFILE'}
         />
         {modelInfo && (
           <>
@@ -502,7 +502,7 @@ export default function ModelInfoView({
               visible={openModals.downloadAsFile}
               onClose={() => handleModalChange('downloadAsFile', false)}
               version={version}
-              applicationProfile={modelInfo.type === 'PROFILE'}
+              applicationProfile={modelInfo.graphType === 'PROFILE'}
             />
           </>
         )}

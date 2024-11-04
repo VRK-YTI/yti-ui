@@ -92,7 +92,7 @@ export default function LinkedDataForm({
     updateModel({
       payload: payload,
       prefix: model.prefix,
-      isApplicationProfile: model.type === 'PROFILE',
+      isApplicationProfile: model.graphType === 'PROFILE',
     });
   };
 
