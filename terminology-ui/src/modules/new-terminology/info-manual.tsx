@@ -17,6 +17,7 @@ import LanguageSelector, {
 import { useGetCodesQuery } from '@app/common/components/codelist/codelist.slice';
 import { TerminologyType } from '@app/common/interfaces/interfaces-v2';
 import { Status } from 'yti-common-ui/interfaces/status.interface';
+import { MODEL_PREFIX_MAX } from 'yti-common-ui/utils/constants';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
@@ -261,6 +262,8 @@ export default function InfoManual({
             textInputLabel: t('prefix'),
             uriPreview: t('url-preview'),
           }}
+          minLength={2}
+          maxLength={MODEL_PREFIX_MAX}
         />
       )}
 
