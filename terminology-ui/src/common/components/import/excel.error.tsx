@@ -9,11 +9,10 @@ export interface ExcelError {
 
 export interface ExcelErrorDetails {
   message: string;
-  errorDetails?: {
-    sheet: string;
-    row: number;
-    column: string;
-  };
+  key: string;
+  sheet: string;
+  rowNumber: number;
+  column: string;
 }
 
 type ExcelErrorDetailBlockProps = {
@@ -25,25 +24,21 @@ export const ExcelErrorDetailBlock = ({
 }: ExcelErrorDetailBlockProps) => {
   const { t } = useTranslation('admin');
 
-  if (!errorInfo.data.errorDetails) {
+  if (!errorInfo.data) {
     return <></>;
   }
 
   return (
     <>
       <ul>
-        {errorInfo.data.errorDetails?.sheet && (
-          <li>{`${t('excel-sheet')}: ${
-            errorInfo.data.errorDetails?.sheet
-          }`}</li>
+        {errorInfo.data?.sheet && (
+          <li>{`${t('excel-sheet')}: ${errorInfo.data?.sheet}`}</li>
         )}
-        {errorInfo.data.errorDetails?.row != undefined && (
-          <li>{`${t('excel-row')}: ${errorInfo.data.errorDetails?.row}`}</li>
+        {errorInfo.data?.rowNumber != undefined && (
+          <li>{`${t('excel-row')}: ${errorInfo.data?.rowNumber}`}</li>
         )}
-        {errorInfo.data.errorDetails?.column && (
-          <li>{`${t('excel-column')}: ${
-            errorInfo.data.errorDetails?.column
-          }`}</li>
+        {errorInfo.data?.column && (
+          <li>{`${t('excel-column')}: ${errorInfo.data?.column}`}</li>
         )}
       </ul>
     </>
