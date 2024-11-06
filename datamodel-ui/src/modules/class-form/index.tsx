@@ -51,7 +51,10 @@ import {
 } from '@app/common/components/model/model.slice';
 import ResourcePicker from '../resource-picker-modal';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
-import { getPrefixFromURI } from '@app/common/utils/get-value';
+import {
+  getPrefixFromURI,
+  SUOMI_FI_NAMESPACE,
+} from '@app/common/utils/get-value';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import {
   IDENTIFIER_MAX,
@@ -629,6 +632,11 @@ export default function ClassForm({
                 classId: selectedTargetClass.identifier,
                 version: selectedTargetClass.version,
                 isAppProfile: false,
+                externalId: !selectedTargetClass.classInfo.uri.startsWith(
+                  SUOMI_FI_NAMESPACE
+                )
+                  ? selectedTargetClass.classInfo.uri
+                  : undefined,
               }}
               handleFollowUp={handleResourceUpdate}
             />
