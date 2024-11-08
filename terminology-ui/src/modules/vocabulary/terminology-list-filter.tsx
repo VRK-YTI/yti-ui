@@ -59,8 +59,8 @@ export function TerminologyListFilter({
         title={t('vocabulary-filter-show-only')}
         isModal={isModal}
         counts={{
-          concepts: counts?.counts.categories?.Concept,
-          collections: counts?.counts.categories?.Collection,
+          concepts: counts?.counts.types?.Concept,
+          collections: counts?.counts.types?.Collection,
         }}
       />
       {shouldRenderStatusFilter && (
