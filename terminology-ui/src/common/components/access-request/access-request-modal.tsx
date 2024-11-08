@@ -206,7 +206,7 @@ export default function AccessRequestModal({
   );
 
   function sendPost() {
-    let uri = `/request?organizationId=${chosenOrganization}`;
+    let uri = `/requests?organizationId=${chosenOrganization}`;
 
     Object.keys(services).map((key) => {
       if (services[key]) {
