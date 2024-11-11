@@ -194,7 +194,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       (!user ||
         !checkPermission({
           user: user,
-          actions: ['EDIT_DATA_MODEL'],
+          actions: ['EDIT_DATA_MODEL', 'VIEW'],
           targetOrganizations: model.organizations.map((org) => org.id),
         }))
     ) {
