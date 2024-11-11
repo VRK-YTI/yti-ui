@@ -1,7 +1,6 @@
 import { Status } from './status.interface';
 
 export interface Concept {
-  broader?: string[];
   definition: {
     [key: string]: string;
   };
@@ -11,8 +10,10 @@ export interface Concept {
   };
   modified: string;
   status: Status;
+  namespace: string;
   terminology: {
     id: string;
+    prefix: string;
     label: {
       [key: string]: string;
     };

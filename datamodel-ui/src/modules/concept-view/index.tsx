@@ -27,6 +27,7 @@ export default function ConceptView({
     return <>{data.conceptURI}</>;
   }
 
+  const terminologyURI = `https://iri.suomi.fi/terminology/${data.terminology.prefix}/`;
   return (
     <div style={{ marginTop: '5px' }}>
       <Expander>
@@ -71,10 +72,7 @@ export default function ConceptView({
           <Heading variant="h4">{t('terminology')}</Heading>
           <Paragraph>
             <ExternalLink
-              href={`${data.terminology.uri}${getEnvParam(
-                data.terminology.uri,
-                true
-              )}`}
+              href={`${terminologyURI}${getEnvParam(terminologyURI, true)}`}
               labelNewWindow={t('link-opens-new-window-external')}
             >
               {getLanguageVersion({
