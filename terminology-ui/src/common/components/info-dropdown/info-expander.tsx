@@ -85,7 +85,7 @@ export default function InfoExpander({
 
         <BasicBlock title={t('vocabulary-info-description')}>
           {Object.keys(data.description).length > 0 ? (
-            <MultilingualBlock data={data.description} />
+            <MultilingualBlock data={data.description} renderHtml={true} />
           ) : (
             <></>
           )}
