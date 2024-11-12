@@ -7,6 +7,6 @@ export interface ConceptType {
   status: Status;
   terminology: {
     label: { [key: string]: string };
-    uri: string;
+    prefix: string;
   };
 }

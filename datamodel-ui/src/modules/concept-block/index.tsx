@@ -199,7 +199,7 @@ export default function ConceptBlock({
                   {t('concept-counts', { count: data?.totalHitCount })}
                 </Text>
                 <SearchResultWrapper>
-                  {data.concepts.map((c, idx) => (
+                  {data.responseObjects.map((c, idx) => (
                     <div
                       key={`concept-result-${idx}`}
                       className={

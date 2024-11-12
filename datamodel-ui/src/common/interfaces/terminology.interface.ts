@@ -2,24 +2,10 @@ import { Status } from './status.interface';
 
 export interface Terminology {
   id: string;
-  code: string;
+  prefix: string;
   languages?: string[];
-  informationDomain: [
-    {
-      id: string;
-      label: {
-        [key: string]: string;
-      };
-    }
-  ];
-  contributors?: [
-    {
-      id: string;
-      label: {
-        [key: string]: string;
-      };
-    }
-  ];
+  groups: string[];
+  organizations: string[];
   status: Status;
   description?: {
     [key: string]: string;

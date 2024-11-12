@@ -17,6 +17,7 @@ import LanguageSelector, {
   LanguageBlockType,
 } from 'yti-common-ui/form/language-selector';
 import { useGetCodesQuery } from '@app/common/components/codelist/codelist.slice';
+import { MODEL_PREFIX_MAX } from 'yti-common-ui/utils/constants';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
@@ -229,16 +230,16 @@ export default function InfoManual({
         typeInUri={'terminology'}
         error={false}
         translations={{
-          automatic: t('automatic-prefix'),
           errorInvalid: t('prefix-invalid'),
           errorTaken: t('prefix-taken'),
           hintText: t('prefix-hint'),
           label: t('prefix'),
-          manual: t('manual-prefix'),
           textInputHint: '',
           textInputLabel: t('prefix'),
           uriPreview: t('url-preview'),
         }}
+        minLength={2}
+        maxLength={MODEL_PREFIX_MAX}
       />
 
       <TallerSeparator />
