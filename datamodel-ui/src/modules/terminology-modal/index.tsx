@@ -111,7 +111,7 @@ export default function TerminologyModal({
 
   useEffect(() => {
     if (results.isSuccess) {
-      setTerminologies(results.data.terminologies);
+      setTerminologies(results.data.responseObjects);
     }
   }, [results]);
 

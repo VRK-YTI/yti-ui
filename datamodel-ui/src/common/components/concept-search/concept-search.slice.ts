@@ -8,9 +8,10 @@ export const conceptSearchApi = createApi({
   endpoints: (builder) => ({
     getConcepts: builder.query<
       {
-        concepts: Concept[];
-        resultStart: number;
         totalHitCount: number;
+        pageSize: number;
+        pageFrom: number;
+        responseObjects: Concept[];
       },
       {
         keyword: string;
@@ -22,9 +23,9 @@ export const conceptSearchApi = createApi({
       }
     >({
       query: (data) => ({
-        url: '/v1/frontend/searchConcept',
-        method: 'POST',
-        data: {
+        url: '/frontend/search-concepts',
+        method: 'GET',
+        params: {
           highlight: data.highlight ?? true,
           pageFrom: data.pageFrom ? (data.pageFrom - 1) * 20 : 0,
           pageSize: 20,
@@ -32,8 +33,8 @@ export const conceptSearchApi = createApi({
           sortDirection: 'ASC',
           sortLanguage: data.lang ?? 'fi',
           status: [],
-          terminologyId: [],
-          terminologyUri: data.terminologies ?? [],
+          namespaces: data.terminologies ?? [],
+          extendTerminologies: true,
           options: {
             operationMode: 'NO_INCOMPLETE',
           },

@@ -27,7 +27,7 @@ export const libraryAttribute: ResourceFormType = {
     status: 'VALID',
     terminology: {
       label: { fi: 'term-fi', en: 'term-en', fr: 'term-fr' },
-      uri: 'term-uri',
+      prefix: 'term-uri',
     },
   },
   identifier: 'attr-identifier',
@@ -81,7 +81,7 @@ export const libraryAssociation: ResourceFormType = {
     status: 'VALID',
     terminology: {
       label: { fi: 'term-fi', en: 'term-en', fr: 'term-fr' },
-      uri: 'term-uri',
+      prefix: 'term-uri',
     },
   },
   identifier: 'assoc-identifier',
@@ -150,7 +150,7 @@ export const applicationProfileAttribute: ResourceFormType = {
     status: 'VALID',
     terminology: {
       label: { fi: 'term-fi', en: 'term-en', fr: 'term-fr' },
-      uri: 'term-uri',
+      prefix: 'term-uri',
     },
   },
   identifier: 'attr-identifier',
@@ -191,7 +191,7 @@ export const applicationProfileAssociation: ResourceFormType = {
     status: 'VALID',
     terminology: {
       label: { fi: 'term-fi', en: 'term-en', fr: 'term-fr' },
-      uri: 'term-uri',
+      prefix: 'term-uri',
     },
   },
   identifier: 'attr-identifier',

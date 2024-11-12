@@ -22,11 +22,11 @@ export const searchTerminologyApi = createApi({
       TerminologySearchParams
     >({
       query: (data) => ({
-        url: '/v1/frontend/searchTerminology',
-        method: 'POST',
-        data: {
+        url: '/frontend/search-terminologies',
+        method: 'GET',
+        params: {
           query: data.query,
-          groupNotations: data.groups,
+          groups: data.groups,
           pageFrom: data.pageFrom,
           pageSize: 10,
           hideHighlights: true,
