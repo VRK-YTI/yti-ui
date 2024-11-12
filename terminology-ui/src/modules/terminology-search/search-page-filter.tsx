@@ -12,6 +12,7 @@ import { FilterTopPartBlock } from './terminology-search.styles';
 import { Organization } from 'yti-common-ui/interfaces/organization.interface';
 import { Group } from 'yti-common-ui/interfaces/group.interface';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { compareLocales } from 'yti-common-ui/utils/compare-locales';
 
 export interface SearchPageFilterProps {
   isModal?: boolean;
@@ -60,10 +61,12 @@ export function SearchPageFilter({
           labelText={t('filter-by-language')}
           languages={
             counts && counts.counts.languages
-              ? Object.keys(counts?.counts.languages).map((key) => ({
-                  labelText: key,
-                  uniqueItemId: key,
-                }))
+              ? Object.keys(counts?.counts.languages)
+                  .sort(compareLocales)
+                  .map((key) => ({
+                    labelText: key,
+                    uniqueItemId: key,
+                  }))
               : []
           }
         />
