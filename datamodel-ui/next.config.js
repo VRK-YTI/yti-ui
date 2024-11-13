@@ -146,7 +146,7 @@ module.exports = () => {
           {
             source: '/terminology-api/:path*',
             destination:
-              'http://yti-terminology-api:9103/terminology-api/:path*',
+              'http://yti-terminology-api-v2:9107/terminology-api/:path*',
           },
           {
             source: '/codelist-api/:path*',
