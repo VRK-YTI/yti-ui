@@ -7,13 +7,16 @@ import { GetServerSideProps } from 'next';
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const Sitemap = () => {};
 
-export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const terminologiesData: SearchResponse<TerminogyResponseObject> =
     await fetch(
       `${process.env.TERMINOLOGY_API_URL}/frontend/search-terminologies?pageSize=10000`,
       {
         method: 'GET',
-        headers: { 'content-type': 'application/json' },
+        headers: {
+          'content-type': 'application/json',
+          host: req.headers['host'] ?? 'sanastot.suomi.fi',
+        },
       }
     ).then((data) => data.json());
 

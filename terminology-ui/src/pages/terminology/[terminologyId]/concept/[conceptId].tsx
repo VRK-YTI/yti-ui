@@ -23,6 +23,7 @@ import PageHead from 'yti-common-ui/page-head';
 import { getStoreData } from '@app/common/utils/get-store-data';
 import { wrapper } from '@app/store';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { Term } from '@app/common/interfaces/interfaces-v2';
 
 interface ConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -83,7 +84,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     const vocabularyData = getStoreData({
       state: store.getState(),
-      reduxKey: 'terminologyAPI',
+      reduxKey: 'terminologyApi',
       functionKey: 'getTerminology',
     });
 
@@ -103,14 +104,14 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     const vocabularyTitle = getLanguageVersion({
-      data: vocabularyData?.properties?.prefLabel,
+      data: vocabularyData?.label,
       lang: locale,
     });
 
-    const conceptTitle = getLanguageVersion({
-      data: conceptData.label,
-      lang: locale,
-    });
+    const recommendedTerm =
+      conceptData.recommendedTerms.find((t: Term) => t.language === locale) ??
+      conceptData.recommendedTerms[0];
+    const conceptTitle = recommendedTerm.label ?? '';
 
     const conceptDescription = getLanguageVersion({
       data: conceptData.definition,

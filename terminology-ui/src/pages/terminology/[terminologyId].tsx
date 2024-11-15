@@ -111,19 +111,19 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(store.dispatch(getRunningQueriesThunk()));
     await Promise.all(store.dispatch(countsGetRunningQueriesThunk()));
 
-    const vocabularyData = getStoreData({
+    const terminologyData = getStoreData({
       state: store.getState(),
-      reduxKey: 'terminologyAPI',
+      reduxKey: 'terminologyApi',
       functionKey: 'getTerminology',
     });
 
     const title = getLanguageVersion({
-      data: vocabularyData?.properties?.prefLabel,
+      data: terminologyData?.label,
       lang: locale ?? 'fi',
     });
 
     const description = getLanguageVersion({
-      data: vocabularyData?.properties?.description,
+      data: terminologyData?.description,
       lang: locale ?? 'fi',
     });
 
