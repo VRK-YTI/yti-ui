@@ -3,7 +3,7 @@ import { ExternalLink, Button, Text, IconRemove } from 'suomifi-ui-components';
 import { List, ListItem } from './inline-list.styles';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { UriData } from '@app/common/interfaces/uri.interface';
-import { getEnvParam } from '../uri-info';
+import { getEnvParam } from 'yti-common-ui/utils/link-utils';
 
 export interface InlineListProps {
   items?: UriData[];

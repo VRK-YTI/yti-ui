@@ -28,7 +28,7 @@ import { selectDisplayLang } from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 import { useGetAllCodesQuery } from '@app/common/components/code/code.slice';
 import UriList from '@app/common/components/uri-list';
-import UriInfo, { getEnvParam } from '@app/common/components/uri-info';
+import UriInfo from '@app/common/components/uri-info';
 import ClassModal from '../class-modal';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
 import { default as NextLink } from 'next/link';
@@ -37,6 +37,7 @@ import { getSlugAsString } from '@app/common/utils/parse-slug';
 import { useRouter } from 'next/router';
 import ResourceReferences from './resource-references';
 import { useState } from 'react';
+import { getEnvParam } from 'yti-common-ui/utils/link-utils';
 
 export default function CommonViewContent({
   modelId,
