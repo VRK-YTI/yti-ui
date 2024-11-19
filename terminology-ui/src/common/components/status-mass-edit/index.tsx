@@ -104,7 +104,7 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
     }
 
     modifyStatuses({
-      graphId: terminologyId,
+      prefix: terminologyId,
       oldStatus: chosenStartState,
       newStatus: chosenEndState.uniqueItemId,
       types: Object.keys(chosenTargetType)
