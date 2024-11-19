@@ -6,6 +6,7 @@ import {
 } from './sanitized-text-content.styles';
 import { polyfill } from 'interweave-ssr';
 import { Interweave, Node } from 'interweave';
+import { getEnvParam } from '../../utils/link-utils';
 
 interface SanitizedTextContentProps {
   text: string;
@@ -28,11 +29,7 @@ export default function SanitizedTextContent({
       if (internalTypes.includes(node.getAttribute('data-type') as string)) {
         const url = node.getAttribute('href') ?? '';
         return (
-          <Link
-            passHref
-            href={url?.includes('uri.suomi.fi') ? `${url}&env=env_v2` : url}
-            legacyBehavior
-          >
+          <Link passHref href={`${url}${getEnvParam(url)}`} legacyBehavior>
             <SuomiInternalLink href="">{children}</SuomiInternalLink>
           </Link>
         );

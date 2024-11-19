@@ -2,7 +2,7 @@ import { ExternalLink, Text } from 'suomifi-ui-components';
 import { UriData } from '@app/common/interfaces/uri.interface';
 import { UriListWrapper } from './uri-list.style';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { getEnvParam } from '../uri-info';
+import { getEnvParam } from 'yti-common-ui/utils/link-utils';
 import { useTranslation } from 'next-i18next';
 
 interface UriListProps {

@@ -1,4 +1,4 @@
-import { getEnvParam } from '@app/common/components/uri-info';
+import { getEnvParam } from 'yti-common-ui/utils/link-utils';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from '@app/common/utils/translation-helpers';
