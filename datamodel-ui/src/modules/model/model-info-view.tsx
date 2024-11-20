@@ -88,6 +88,10 @@ export default function ModelInfoView({
     actions: ['EDIT_DATA_MODEL'],
     targetOrganization: organizationIds,
   });
+  const hasAdminPermission = HasPermission({
+    actions: ['ADMIN_DATA_MODEL'],
+    targetOrganization: organizationIds,
+  });
   const { data: modelInfo } = useGetModelQuery({
     modelId: modelId,
     version: version,
@@ -257,7 +261,8 @@ export default function ModelInfoView({
             ) : (
               <></>
             )}
-            {hasPermission && (user.superuser || !modelInfo.version) ? (
+            {hasAdminPermission &&
+            (user.superuser || modelInfo.status !== 'VALID') ? (
               <ActionMenuItem onClick={() => handleModalChange('delete', true)}>
                 {t('remove', { ns: 'admin' })}
               </ActionMenuItem>
@@ -475,6 +480,7 @@ export default function ModelInfoView({
                   type="model"
                   visible={openModals.delete}
                   hide={() => handleModalChange('delete', false)}
+                  status={modelInfo.status}
                 />
                 {!version && (
                   <CreateReleaseModal

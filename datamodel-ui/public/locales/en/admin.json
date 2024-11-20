@@ -178,9 +178,11 @@
     "deleting-attribute": "Removing attribute",
     "deleting-class": "Removing class",
     "deleting-model": "Removing model",
+    "model-delete-disabled": "Cannot remove the model, because there are references to it.",
     "model-description": "Remove model {{targetName}}",
     "model-description-version": "Remove version {{targetVersion}} from model {{targetName}}?",
     "model-error": "An error occurrred while removing model {{targetName}}",
+    "model-in-use": "There are references to the model in following models which means, that these references remain without a target. Do you still want to delete the model?",
     "model-success": "Model {{targetName}} removed",
     "model-title": "Remove model"
   },
