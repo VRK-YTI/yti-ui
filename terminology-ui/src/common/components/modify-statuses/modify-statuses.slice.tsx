@@ -7,14 +7,16 @@ export const modifyStatusesApi = createApi({
   endpoints: (builder) => ({
     modifyStatuses: builder.mutation<
       null,
-      { graphId: string; oldStatus: string; newStatus: string; types: string[] }
+      { prefix: string; oldStatus: string; newStatus: string; types: string[] }
     >({
       query: (p) => ({
-        url: `/modifyStatuses?graphId=${p.graphId}&oldStatus=${
-          p.oldStatus
-        }&newStatus=${p.newStatus}&types=${p.types.join(',')}`,
+        url: `/concept/${p.prefix}/modify-statuses`,
         method: 'POST',
-        data: {},
+        params: {
+          oldStatus: p.oldStatus,
+          newStatus: p.newStatus,
+          types: p.types.join(','),
+        },
       }),
     }),
   }),
