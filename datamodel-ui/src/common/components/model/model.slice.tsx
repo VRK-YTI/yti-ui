@@ -166,6 +166,21 @@ export const modelApi = createApi({
         method: 'POST',
       }),
     }),
+    modelReferrers: builder.query<
+      string[],
+      {
+        modelId: string;
+        version?: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/referrers`,
+        params: {
+          version: value.version,
+        },
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -182,6 +197,7 @@ export const {
   useSubscribeMutation,
   useUnsubscribeMutation,
   useCopyModelMutation,
+  useModelReferrersQuery,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
