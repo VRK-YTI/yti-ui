@@ -179,7 +179,7 @@ export default function Documentation({
       updateModel({
         payload: payload,
         prefix: modelData.prefix,
-        isApplicationProfile: modelData.type === 'PROFILE',
+        isApplicationProfile: modelData.graphType === 'PROFILE',
       });
     } else {
       const payload = generatePayloadVersionedUpdate({

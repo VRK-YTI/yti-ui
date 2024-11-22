@@ -69,7 +69,7 @@ export default function ModelEditView({
     prefix: model.prefix ?? '',
     serviceCategories: getIsPartOfWithId(model, i18n.language) ?? [],
     status: model.status ?? 'DRAFT',
-    type: model.type ?? 'PROFILE',
+    type: model.graphType ?? 'PROFILE',
     terminologies: model.terminologies ?? [],
     codeLists: model.codeLists ?? [],
     documentation: model.documentation ?? {},

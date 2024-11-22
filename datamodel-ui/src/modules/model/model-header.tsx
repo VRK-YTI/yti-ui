@@ -68,7 +68,7 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
         </MainTitle>
         <BadgeBar larger={true} smBottom={true}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            {modelInfo?.type === 'PROFILE' ? (
+            {modelInfo?.graphType === 'PROFILE' ? (
               <IconApplicationProfile color="hsl(212, 63%, 49%)" />
             ) : (
               <IconGrid color="hsl(212, 63%, 49%)" />
