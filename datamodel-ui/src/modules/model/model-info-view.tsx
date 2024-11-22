@@ -53,6 +53,7 @@ import UnsavedAlertModal from '../unsaved-alert-modal';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { isDraftModel } from '.';
 import CopyModal from '../create-copy-modal';
+import CreateDraftModal from '../create-draft-modal';
 
 export default function ModelInfoView({
   organizationIds,
@@ -81,6 +82,7 @@ export default function ModelInfoView({
     getEmailNotification: false,
     delete: false,
     copy: false,
+    createDraft: false,
   });
   const ref = useRef<HTMLDivElement>(null);
   const { setView } = useSetView();
@@ -257,6 +259,15 @@ export default function ModelInfoView({
             {hasPermission ? (
               <ActionMenuItem onClick={() => handleModalChange('copy', true)}>
                 {t('create-copy', { ns: 'admin' })}
+              </ActionMenuItem>
+            ) : (
+              <></>
+            )}
+            {hasAdminPermission && version ? (
+              <ActionMenuItem
+                onClick={() => handleModalChange('createDraft', true)}
+              >
+                {t('create-draft-title', { ns: 'admin' })}
               </ActionMenuItem>
             ) : (
               <></>
@@ -495,6 +506,18 @@ export default function ModelInfoView({
                   visible={openModals.copy}
                   hide={() => handleModalChange('copy', false)}
                 />
+                {version && (
+                  <CreateDraftModal
+                    modelId={modelId}
+                    modelVersion={version}
+                    label={getLanguageVersion({
+                      data: modelInfo.label,
+                      lang: i18n.language,
+                    })}
+                    visible={openModals.createDraft}
+                    hide={() => handleModalChange('createDraft', false)}
+                  />
+                )}
               </>
             )}
 

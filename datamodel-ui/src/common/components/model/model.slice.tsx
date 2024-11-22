@@ -166,6 +166,22 @@ export const modelApi = createApi({
         method: 'POST',
       }),
     }),
+    createDraft: builder.mutation<
+      string,
+      {
+        modelId: string;
+        version: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/create-draft`,
+        params: {
+          version: value.version,
+        },
+        method: 'POST',
+      }),
+    }),
+
     modelReferrers: builder.query<
       string[],
       {
@@ -198,6 +214,7 @@ export const {
   useUnsubscribeMutation,
   useCopyModelMutation,
   useModelReferrersQuery,
+  useCreateDraftMutation,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
