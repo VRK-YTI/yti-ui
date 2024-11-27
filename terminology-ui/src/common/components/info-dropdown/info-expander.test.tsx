@@ -68,6 +68,12 @@ const data = {
 } as TerminologyInfo;
 
 describe('infoExpander', () => {
+  beforeEach(() => {
+    const appRoot = document.createElement('div');
+    appRoot.setAttribute('id', '__next');
+    document.body.appendChild(appRoot);
+  });
+
   it('should render subscribe button', async () => {
     const loginInitialState = Object.assign({}, initialState);
     loginInitialState['anonymous'] = false;
