@@ -6,7 +6,7 @@ import {
 } from '@app/common/utils/create-getserversideprops';
 import {
   getRunningQueriesThunk,
-  getVocabulary,
+  getTerminology,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
@@ -33,7 +33,7 @@ describe('axios base query', () => {
     };
 
     // any API call would be fine here
-    mock.onGet(/\/v1\/frontend\/vocabulary\?graphId=\d+/).reply((config) => {
+    mock.onGet(/\/terminology\/\d+/).reply((config) => {
       return [
         200,
         'JSESSIONID exists in headers: ' +
@@ -54,12 +54,12 @@ describe('axios base query', () => {
       req.session.save();
 
       // initiate API call
-      store.dispatch(getVocabulary.initiate({ id: vocabularyId }));
+      store.dispatch(getTerminology.initiate({ id: vocabularyId }));
       await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
       // get the result from the API call
-      const data = store.getState().vocabularyAPI.queries[
-        'getVocabulary({"id":"42"})'
+      const data = store.getState().terminologyApi.queries[
+        'getTerminology({"id":"42"})'
       ]?.data as string;
 
       return {

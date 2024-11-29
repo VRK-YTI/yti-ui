@@ -15,13 +15,12 @@ import {
   InfoExpanderWrapper,
   PropertyList,
 } from './info-expander.styles';
-import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
 import Separator from 'yti-common-ui/separator';
-import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import {
-  MultilingualPropertyBlock,
-  PropertyBlock,
-} from '@app/common/components/block';
+  BasicBlock,
+  BasicBlockExtraWrapper,
+  MultilingualBlock,
+} from 'yti-common-ui/block';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
@@ -30,29 +29,31 @@ import {
   translateLanguage,
   translateTerminologyType,
 } from '@app/common/utils/translation-helpers';
-import { getPropertyValue } from '../property-value/get-property-value';
-import PropertyValue from '../property-value';
 import RemovalModal from '../removal-modal';
 import NewConceptModal from '../new-concept-modal';
 import ConceptImportModal from '../concept-import';
 import { useGetConceptResultQuery } from '../vocabulary/vocabulary.slice';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
-import axios from 'axios';
-import { useStoreDispatch } from '@app/store';
-import { setAlert } from '../alert/alert.slice';
-import UpdateWithFileModal from '../update-with-file-modal';
 import StatusMassEdit from '../status-mass-edit';
 import isEmail from 'validator/lib/isEmail';
 import { useRouter } from 'next/router';
-import { compareLocales } from '@app/common/utils/compare-locals';
+
+import {
+  TerminologyInfo,
+  TerminologyType,
+} from '@app/common/interfaces/interfaces-v2';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { compareLocales } from 'yti-common-ui/utils/compare-locales';
+import { useState } from 'react';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
 );
 const CopyTerminologyModal = dynamic(() => import('../copy-terminology-modal'));
+const AsFileModal = dynamic(() => import('../as-file-modal'));
 
 interface InfoExpanderProps {
-  data?: VocabularyInfoDTO;
+  data?: TerminologyInfo;
   childOrganizations?: string[];
 }
 
@@ -62,63 +63,22 @@ export default function InfoExpander({
 }: InfoExpanderProps) {
   const { t, i18n } = useTranslation('common');
   const { urlState } = useUrlState();
+  const [showDownloadFileModal, setShowDownloadFileModal] = useState(false);
   const router = useRouter();
   const user = useSelector(selectLogin());
-  const terminologyId =
-    data?.type?.graph.id ?? data?.identifier?.type.graph?.id ?? '';
+  const terminologyId = data?.prefix ?? '';
   const { refetch: refetchConcepts } = useGetConceptResultQuery({
     id: terminologyId,
     urlState,
     language: i18n.language,
   });
 
-  const dispatch = useStoreDispatch();
-
   if (!data) {
     return null;
   }
 
-  const contact = getPropertyValue({
-    property: data.properties.contact,
-  }).trim();
-
-  const handleDownloadClick = async () => {
-    const result = await axios.get(
-      `/terminology-api/api/v1/export/${data.type.graph.id}?format=xlsx`,
-      { responseType: 'arraybuffer' }
-    );
-
-    if (result.status !== 200) {
-      dispatch(
-        setAlert(
-          [
-            {
-              note: result,
-              displayText: t('error-occured_download-excel', { ns: 'alert' }),
-            },
-          ],
-          []
-        )
-      );
-      return;
-    }
-
-    const url = window.URL.createObjectURL(new Blob([result.data]));
-    const fileName = result.headers['content-disposition']
-      .split('=')[1]
-      .endsWith('.xlsx')
-      ? result.headers['content-disposition'].split('=')[1].trim()
-      : `${getPropertyValue({
-          property: data.properties.prefLabel,
-          language: i18n.language,
-        })}_export.xlsx`;
-    const link = document.createElement('a');
-
-    link.href = url;
-    link.setAttribute('download', fileName);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+  const handleDownloadClick = () => {
+    setShowDownloadFileModal(true);
   };
 
   return (
@@ -127,16 +87,18 @@ export default function InfoExpander({
         {t('vocabulary-info-terminology')}
       </ExpanderTitleButton>
       <ExpanderContent>
-        <MultilingualPropertyBlock
-          title={t('vocabulary-info-name')}
-          data={data.properties.prefLabel}
-          id="preferred-label"
-        />
-        <MultilingualPropertyBlock
-          title={t('vocabulary-info-description')}
-          data={data.properties.description}
-          id="description"
-        />
+        <BasicBlock title={t('vocabulary-info-name')}>
+          <MultilingualBlock data={data.label} />
+        </BasicBlock>
+
+        <BasicBlock title={t('vocabulary-info-description')}>
+          {Object.keys(data.description).length > 0 ? (
+            <MultilingualBlock data={data.description} renderHtml={true} />
+          ) : (
+            <></>
+          )}
+        </BasicBlock>
+
         <BasicBlock title="URI" id="uri">
           {data.uri}
         </BasicBlock>
@@ -144,60 +106,54 @@ export default function InfoExpander({
           title={t('vocabulary-info-information-domain')}
           id="information-domains"
         >
-          {data.references.inGroup
-            ?.map((group) =>
-              getPropertyValue({
-                property: group.properties.prefLabel,
-                language: i18n.language,
-              })
+          {data.groups
+            .map((g) =>
+              getLanguageVersion({ data: g.label, lang: i18n.language })
             )
             .join(', ')}
         </BasicBlock>
 
-        <PropertyBlock
-          title={t('vocabulary-info-languages')}
-          property={data.properties.language
+        <BasicBlock title={t('vocabulary-info-languages')} id="languages">
+          {data.languages
             ?.slice()
-            .sort((a, b) => compareLocales(a.value, b.value))}
-          delimiter=", "
-          valueAccessor={({ value }) => {
-            // if no translation found for language, return only language code
-            const tr = translateLanguage(value, t);
-            if (tr === value) {
-              return value;
-            }
-            return `${tr} ${value.toUpperCase()}`;
-          }}
-          id="languages"
-        />
+            .sort((a, b) => compareLocales(a, b))
+            .map((lang) => {
+              const tr = translateLanguage(lang, t);
+              if (tr) {
+                return `${tr} ${lang.toUpperCase()}`;
+              }
+              return lang;
+            })
+            .join(', ')}
+        </BasicBlock>
+
         <BasicBlock title={t('vocabulary-info-vocabulary-type')} id="type">
           {translateTerminologyType(
-            data.properties?.terminologyType?.[0].value ??
-              'TERMINOLOGICAL_VOCABULARY',
+            data.graphType ?? TerminologyType.TERMINOLOGICAL_VOCABULARY,
             t
           )}
         </BasicBlock>
 
-        {contact && (
+        {data.contact && (
           <BasicBlock title={t('contact')}>
             <ExternalLink
               href={`mailto:${
-                isEmail(contact) ? contact : 'yhteentoimivuus@dvv.fi'
-              }?subject=${t('feedback-vocabulary')} - ${getPropertyValue({
-                property: data.properties.prefLabel,
-                language: i18n.language,
+                isEmail(data.contact) ? data.contact : 'yhteentoimivuus@dvv.fi'
+              }?subject=${t('feedback-vocabulary')} - ${getLanguageVersion({
+                data: data.label,
+                lang: i18n.language,
               })}`}
-              labelNewWindow={`${t('site-open-new-email')} ${contact}`}
+              labelNewWindow={`${t('site-open-new-email')} ${data.contact}`}
               style={{ fontSize: '16px' }}
             >
-              {contact}
+              {data.contact}
             </ExternalLink>
           </BasicBlock>
         )}
 
         {HasPermission({
           actions: 'EDIT_TERMINOLOGY',
-          targetOrganization: data.references.contributor,
+          targetOrganization: data.organizations,
         }) && (
           <>
             <Separator isLarge />
@@ -217,19 +173,18 @@ export default function InfoExpander({
                       {t('edit-terminology', { ns: 'admin' })}
                     </Button>
 
-                    <UpdateWithFileModal />
-
                     <CopyTerminologyModal
-                      terminologyId={terminologyId}
+                      terminologyId={terminologyId ?? ''}
                       noWrap
                     />
 
                     <RemovalModal
-                      removalData={{ type: 'terminology', data: data }}
+                      dataType="terminology"
+                      status={data.status}
                       targetId={terminologyId}
-                      targetName={getPropertyValue({
-                        property: data.properties.prefLabel,
-                        language: i18n.language,
+                      targetName={getLanguageVersion({
+                        data: data.label,
+                        lang: i18n.language,
                       })}
                       nonDescriptive
                     />
@@ -242,7 +197,7 @@ export default function InfoExpander({
 
         {HasPermission({
           actions: 'EDIT_TERMINOLOGY',
-          targetOrganization: data.references.contributor,
+          targetOrganization: data.organizations,
         }) && (
           <>
             <Separator isLarge />
@@ -253,10 +208,7 @@ export default function InfoExpander({
                   <ActionBlock>
                     <NewConceptModal
                       terminologyId={terminologyId}
-                      languages={
-                        data.properties.language?.map(({ value }) => value) ??
-                        []
-                      }
+                      languages={data.languages}
                     />
 
                     <ConceptImportModal
@@ -306,7 +258,15 @@ export default function InfoExpander({
           {t('vocabulary-info-vocabulary-export-description')}
         </BasicBlock>
 
-        <Separator isLarge />
+        <AsFileModal
+          prefix={terminologyId}
+          visible={showDownloadFileModal}
+          onClose={() => setShowDownloadFileModal(false)}
+          filename={getLanguageVersion({
+            data: data.label,
+            lang: i18n.language,
+          })}
+        />
 
         {!user.anonymous && (
           <>
@@ -333,35 +293,22 @@ export default function InfoExpander({
         </VisuallyHidden>
         <BasicBlock title={t('vocabulary-info-organization')} id="organization">
           <PropertyList>
-            {data.references.contributor
-              ?.filter(
-                (c) =>
-                  c &&
-                  c.properties.prefLabel &&
-                  !childOrganizations?.includes(c.id)
-              )
-              .map((contributor) => (
-                <li key={contributor.id}>
-                  <PropertyValue property={contributor?.properties.prefLabel} />
+            {data.organizations
+              .filter((org) => !childOrganizations?.includes(org.id))
+              .map((org) => (
+                <li key={org.id}>
+                  {getLanguageVersion({ data: org.label, lang: i18n.language })}
                 </li>
               ))}
           </PropertyList>
         </BasicBlock>
         <BasicBlock title={t('vocabulary-info-created-at')} id="created-at">
-          <FormattedDate date={data.createdDate} />
-          {data.createdBy && `, ${data.createdBy}`}
+          <FormattedDate date={data.created} />
+          {data.creator.name && `, ${data.creator.name}`}
         </BasicBlock>
-        {data.properties.origin && (
-          <BasicBlock
-            title={t('vocabulary-info-copied-from')}
-            id="copied-from-terminology"
-          >
-            {data.properties.origin[0].value}
-          </BasicBlock>
-        )}
         <BasicBlock title={t('vocabulary-info-modified-at')} id="modified-at">
-          <FormattedDate date={data.lastModifiedDate} />
-          {data.lastModifiedBy && `, ${data.lastModifiedBy}`}
+          <FormattedDate date={data.modified} />
+          {data.modifier.name && `, ${data.modifier.name}`}
         </BasicBlock>
       </ExpanderContent>
     </InfoExpanderWrapper>

@@ -155,10 +155,15 @@
     "plural": "plural",
     "singular": "singular"
   },
+  "term-equivalency": {
+    "broader": ">",
+    "narrower": "<",
+    "close": "~"
+  },
   "term-family": {
     "feminine": "feminine",
     "masculine": "masculine",
-    "neutral": "neutral"
+    "neuter": "neuter"
   },
   "term-style": {
     "spoken-form": "spoken form"
@@ -216,7 +221,7 @@
   "vocabulary-info-terminology": "Terminology information and actions",
   "vocabulary-info-vocabulary-button": "Download terminology",
   "vocabulary-info-vocabulary-export": "Download terminology as a file",
-  "vocabulary-info-vocabulary-export-description": "You can inspect glossary, concept selection, and concept information in Excel file formats.",
+  "vocabulary-info-vocabulary-export-description": "You can inspect glossary, concept collection, and concept information in different file formats.",
   "vocabulary-info-vocabulary-type": "Vocabulary type",
   "vocabulary-results-collections_one": "Collections {{count}} item with following filters",
   "vocabulary-results-collections_other": "Collections {{count}} items with following filters",

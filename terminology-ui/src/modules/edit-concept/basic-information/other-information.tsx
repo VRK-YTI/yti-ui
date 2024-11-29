@@ -13,7 +13,6 @@ interface OtherInformationProps {
   update: (object: BasicInfoUpdate) => void;
   initialValues?: {
     conceptClass: string;
-    wordClass: string;
   };
 }
 

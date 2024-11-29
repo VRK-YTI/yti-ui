@@ -1,6 +1,7 @@
+import { LocalizedValue } from '@app/common/interfaces/interfaces-v2';
+
 export interface ConceptTermType {
   changeNote: string;
-  draftComment: string;
   editorialNote: ListType[];
   historyNote: string;
   id: string;
@@ -11,7 +12,6 @@ export interface ConceptTermType {
   status: string;
   termConjugation: string;
   termEquivalency: string;
-  termEquivalencyRelation: string;
   termFamily: string;
   termHomographNumber: string;
   termInfo: string;
@@ -21,9 +21,8 @@ export interface ConceptTermType {
 }
 
 export interface BasicInfo {
-  definition: {
-    [key: string]: string;
-  };
+  identifier: string;
+  definition: LocalizedValue;
   example: ListType[];
   status: string;
   subject: string;
@@ -39,7 +38,6 @@ export interface BasicInfo {
   };
   otherInfo: {
     conceptClass: string;
-    wordClass: string;
   };
   relationalInfo: {
     broaderConcept: RelationInfoType[];
@@ -60,7 +58,6 @@ export interface RelationInfoType {
   label: { [key: string]: string };
   terminologyId: string;
   terminologyLabel: { [key: string]: string };
-  targetId?: string;
 }
 
 export interface ListType {
@@ -70,8 +67,8 @@ export interface ListType {
 }
 
 export interface DiagramType {
-  description: string;
-  name: string;
+  description: { [key: string]: string };
+  name: { [key: string]: string };
   url: string;
   id: string;
 }

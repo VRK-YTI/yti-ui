@@ -13,7 +13,7 @@ import {
   getRunningQueriesThunk as getCollectionRunningQueriesThunk,
 } from '@app/common/components/collection/collection.slice';
 import {
-  getVocabulary,
+  getTerminology,
   getRunningQueriesThunk as getVocabularyRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
@@ -21,9 +21,9 @@ import {
   CommonContextProvider,
 } from 'yti-common-ui/common-context-provider';
 import PageHead from 'yti-common-ui/page-head';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getStoreData } from '@app/common/utils/get-store-data';
 import { wrapper } from '@app/store';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface CollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -76,28 +76,23 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameters for page');
     }
 
-    store.dispatch(getVocabulary.initiate({ id: terminologyId }));
+    store.dispatch(getTerminology.initiate({ id: terminologyId }));
     store.dispatch(getCollection.initiate({ terminologyId, collectionId }));
     store.dispatch(getCollections.initiate(terminologyId));
 
     await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));
     await Promise.all(store.dispatch(getCollectionRunningQueriesThunk()));
 
-    const vocabularyData = getStoreData({
+    const terminologyData = getStoreData({
       state: store.getState(),
-      reduxKey: 'vocabularyAPI',
-      functionKey: 'getVocabulary',
+      reduxKey: 'terminologyAPI',
+      functionKey: 'getTerminology',
     });
 
     const collectionData = getStoreData({
       state: store.getState(),
       reduxKey: 'collectionAPI',
       functionKey: 'getCollection',
-    });
-
-    const vocabularyTitle = getPropertyValue({
-      property: vocabularyData?.properties?.prefLabel,
-      language: locale,
     });
 
     if (!collectionData) {
@@ -109,15 +104,16 @@ export const getServerSideProps = createCommonGetServerSideProps(
       };
     }
 
-    const collectionTitle = getPropertyValue({
-      property: collectionData?.properties.prefLabel,
-      language: locale,
-    });
-
     return {
       props: {
-        collectionTitle: collectionTitle,
-        vocabularyTitle: vocabularyTitle,
+        collectionTitle: getLanguageVersion({
+          data: collectionData.label,
+          lang: locale ?? 'fi',
+        }),
+        vocabularyTitle: getLanguageVersion({
+          data: terminologyData.label,
+          lang: locale ?? 'fi',
+        }),
       },
     };
   }

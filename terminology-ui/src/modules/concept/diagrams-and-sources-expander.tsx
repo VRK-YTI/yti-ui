@@ -6,46 +6,13 @@ import {
   ExternalLink,
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { Concept } from '@app/common/interfaces/concept.interface';
 import { PropertyList } from './concept.styles';
 import Link from 'next/link';
-import getDiagramValues from '@app/common/utils/get-diagram-values';
-
-export function hasDiagramsAndSources(concept?: Concept, language?: string) {
-  const rest = { language, fallbackLanguage: 'fi' };
-
-  if (getPropertyValue({ property: concept?.properties.source, ...rest })) {
-    return true;
-  }
-
-  if (
-    getPropertyValue({ property: concept?.properties.externalLink, ...rest })
-  ) {
-    return true;
-  }
-
-  return false;
-}
-
-function hasDiagrams(concept?: Concept, language?: string) {
-  if (
-    getPropertyValue({ property: concept?.properties.externalLink, language })
-  ) {
-    return true;
-  }
-  return false;
-}
-
-function hasSources(concept?: Concept, language?: string) {
-  if (getPropertyValue({ property: concept?.properties.source, language })) {
-    return true;
-  }
-  return false;
-}
+import { ConceptInfo } from '@app/common/interfaces/interfaces-v2';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 export interface DiagramsAndSourcesExpanderProps {
-  concept?: Concept;
+  concept?: ConceptInfo;
 }
 
 export default function DiagramsAndSourcesExpander({
@@ -53,7 +20,7 @@ export default function DiagramsAndSourcesExpander({
 }: DiagramsAndSourcesExpanderProps) {
   const { t, i18n } = useTranslation('concept');
 
-  if (!hasDiagramsAndSources(concept, i18n.language)) {
+  if (!concept?.links?.length && !concept?.sources?.length) {
     return null;
   }
 
@@ -63,26 +30,31 @@ export default function DiagramsAndSourcesExpander({
         {t('section-concept-diagrams-and-sources')}
       </ExpanderTitleButton>
       <ExpanderContent>
-        {hasDiagrams(concept, i18n.language) && (
+        {concept?.links?.length > 0 && (
           <BasicBlock title={t('field-concept-diagrams')}>
             <PropertyList $smBot>
-              {concept?.properties.externalLink?.map((l, idx) => {
-                const link = getDiagramValues(l.value);
+              {concept?.links?.map((link, idx) => {
                 return (
                   <li key={`diagrams-${idx}`}>
-                    <Link href={link.url} passHref legacyBehavior>
+                    <Link href={link.uri} passHref legacyBehavior>
                       <ExternalLink
                         href=""
                         labelNewWindow=""
                         style={{ fontSize: '16px' }}
                       >
-                        {link.name}
+                        {getLanguageVersion({
+                          data: link.name,
+                          lang: i18n.language,
+                        })}
                       </ExternalLink>
                     </Link>
-                    {link.description !== '' && (
+                    {Object.entries(link.description).length > 0 && (
                       <>
                         <br />
-                        {link.description}
+                        {getLanguageVersion({
+                          data: link.description,
+                          lang: i18n.language,
+                        })}
                       </>
                     )}
                   </li>
@@ -92,11 +64,11 @@ export default function DiagramsAndSourcesExpander({
           </BasicBlock>
         )}
 
-        {hasSources(concept, i18n.language) && (
+        {concept?.sources.length > 0 && (
           <BasicBlock title={t('field-sources')}>
             <PropertyList>
-              {concept?.properties.source?.map((source) => (
-                <li key={source.value}>{source.value}</li>
+              {concept?.sources?.map((source, idx) => (
+                <li key={`source-${idx}`}>{source}</li>
               ))}
             </PropertyList>
           </BasicBlock>

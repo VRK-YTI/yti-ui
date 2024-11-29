@@ -17,7 +17,7 @@ import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { Type } from '@app/common/interfaces/type.interface';
 import { Status as StatusType } from '@app/common/interfaces/status.interface';
 import { StatusChip } from 'yti-common-ui/status-chip';
-import { getEnvParam } from '../uri-info';
+import { getEnvParam } from 'yti-common-ui/utils/link-utils';
 
 export interface ResultType {
   target: {

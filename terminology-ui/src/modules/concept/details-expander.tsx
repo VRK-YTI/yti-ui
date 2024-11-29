@@ -1,30 +1,21 @@
-import { useTranslation } from 'next-i18next';
 import { BasicBlock } from 'yti-common-ui/block';
-import { Concept } from '@app/common/interfaces/concept.interface';
 import AdministrativeDetailsExpander, {
   hasAdministrativeDetails,
 } from './administrative-details-expander';
-import DiagramsAndSourcesExpander, {
-  hasDiagramsAndSources,
-} from './diagrams-and-sources-expander';
-import OtherDetailsExpander, {
-  hasOtherDetails,
-} from './other-details-expander';
+import DiagramsAndSourcesExpander from './diagrams-and-sources-expander';
 import { DetailsExpanderGroup } from './concept.styles';
+import { ConceptInfo } from '@app/common/interfaces/interfaces-v2';
+import OtherDetailsExpander from './other-details-expander';
 
 export interface DetailsExpanderProps {
-  concept?: Concept;
+  concept?: ConceptInfo;
 }
 
 export default function DetailsExpander({ concept }: DetailsExpanderProps) {
-  const { i18n } = useTranslation('concept');
-
-  const noDiagramsAndSources = !hasDiagramsAndSources(concept, i18n.language);
-  const noAdministrativeDetails = !hasAdministrativeDetails(
-    concept,
-    i18n.language
-  );
-  const noOtherDetails = !hasOtherDetails(concept, i18n.language);
+  const noDiagramsAndSources =
+    !concept?.links.length && !concept?.sources.length;
+  const noAdministrativeDetails = !hasAdministrativeDetails(concept);
+  const noOtherDetails = !concept?.conceptClass;
   if (noDiagramsAndSources && noAdministrativeDetails && noOtherDetails) {
     return null;
   }

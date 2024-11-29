@@ -2,11 +2,9 @@ import {
   ExcelError,
   ExcelErrorDetailBlock,
 } from '@app/common/components/import/excel.error';
-import { useGetImportStatusMutation } from '@app/common/components/import/import.slice';
 import { ImportResponse } from '@app/common/interfaces/import.interface';
 import { translateExcelParseError } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
 import {
   Button,
   ExternalLink,
@@ -16,10 +14,10 @@ import {
 } from 'suomifi-ui-components';
 import {
   ButtonBlock,
-  DownloadIndicator,
   FileUploadWrapper,
   SuccessIndicator,
 } from './new-terminology.styles';
+import SaveSpinner from 'yti-common-ui/save-spinner';
 
 interface FileUploadProps {
   importResponseData?: ImportResponse;
@@ -30,50 +28,20 @@ interface FileUploadProps {
 }
 
 export default function FileUpload({
-  importResponseData,
   importResponseStatus,
   handlePost,
   handleClose,
   errorInfo,
 }: FileUploadProps) {
   const { t } = useTranslation('admin');
-  const [fetchImportStatus, importStatus] = useGetImportStatusMutation();
-  const [getStatusRetries, setGetStatusRetries] = useState(0);
 
   const handleTryAgain = () => {
-    setGetStatusRetries(0);
     handlePost();
   };
 
-  useEffect(() => {
-    if (getStatusRetries > 9) {
-      return;
-    }
-
-    if (importStatus.isError) {
-      setGetStatusRetries(getStatusRetries + 1);
-    }
-
-    if (
-      (importResponseData?.jobtoken || importResponseData?.jobToken) &&
-      !importStatus.isLoading &&
-      importStatus.data?.status !== 'SUCCESS'
-    ) {
-      const timerId = setTimeout(() => {
-        if (importResponseData.jobtoken) {
-          fetchImportStatus(importResponseData.jobtoken);
-        }
-        if (importResponseData.jobToken) {
-          fetchImportStatus(importResponseData.jobToken);
-        }
-      }, 1000);
-      return () => clearTimeout(timerId);
-    }
-  }, [importResponseData, fetchImportStatus, importStatus, getStatusRetries]);
-
   return (
     <>
-      {importResponseStatus === 'rejected' || getStatusRetries > 3 ? (
+      {importResponseStatus === 'rejected' ? (
         <>
           <InlineAlert status="error" style={{ marginBottom: '25px' }}>
             {errorInfo ? (
@@ -96,7 +64,7 @@ export default function FileUpload({
                   </>
                 ) : (
                   <>
-                    {translateExcelParseError(errorInfo.data.message, t)}
+                    {translateExcelParseError(errorInfo.data.key, t)}
                     <ExcelErrorDetailBlock errorInfo={errorInfo} />
                   </>
                 )}
@@ -115,37 +83,19 @@ export default function FileUpload({
       ) : (
         <>
           <FileUploadWrapper>
-            {importStatus.data?.status.toLowerCase() === 'success' ? (
-              <>
-                <SuccessIndicator color="white" />
-                <Text variant="bold">{t('percent-done', { count: 100 })}</Text>
-              </>
-            ) : (
-              <>
-                <DownloadIndicator />
-                <Text variant="bold">
-                  {t('percent-done', {
-                    count:
-                      importStatus.data?.processingProgress !== undefined &&
-                      importStatus.data?.processingTotal !== undefined &&
-                      importStatus.data?.processingTotal !== 0
-                        ? Math.floor(
-                            (importStatus.data?.processingProgress /
-                              importStatus.data?.processingTotal) *
-                              100
-                          )
-                        : 0,
-                  })}
-                </Text>
-              </>
-            )}
+            <>
+              {importResponseStatus !== 'fulfilled' ? (
+                <SaveSpinner text={t('import-concepts-in-progress')} />
+              ) : (
+                <>
+                  <SuccessIndicator color="white" />
+                  <Text variant="bold">{t('finished')}</Text>
+                </>
+              )}
+            </>
           </FileUploadWrapper>
           <Button
-            disabled={
-              importStatus.data?.status.toLowerCase() === 'success'
-                ? false
-                : true
-            }
+            disabled={importResponseStatus !== 'fulfilled'}
             onClick={() => handleClose()}
           >
             {t('close')}

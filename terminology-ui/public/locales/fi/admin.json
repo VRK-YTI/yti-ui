@@ -58,6 +58,7 @@
   "changing-statuses": "Muutetaan tilatietoja",
   "choose-orgs": "Valitse sisällöntuottajat",
   "choose-term-conjugation": "Valitse termin luku",
+  "choose-term-equivalency": "Valitse termin vastaavuus",
   "choose-term-family": "Valitse termin suku",
   "choose-term-word-class": "Valitse termin sanaluokka",
   "choose-type": "Valitse tyyppi",
@@ -78,12 +79,12 @@
   "concept-class": "Käsitteen luokka",
   "concept-diagram-or-link": "Käsitekaavio tai muu linkki",
   "concept-diagrams-and-sources": "Käsitekaaviot ja lähteet",
+  "concept-identifier": "Tunnus",
   "concept-import": {
+    "column-missing-language": "Sarakkeen otsikosta puuttuu kielen koodiarvo",
+    "duplicate-key-value": "Sarakkeen nimi on jo käytössä",
     "prefLabel-column-missing": "prefLabel kenttä puuttuu",
     "prefLabel-row-missing": "prefLabel pitää määrittää vähintään yhdellä kielellä",
-    "property-missing-language-suffix": "Käsitteen tiedon avaimesta puuttuu kielen koodiarvo",
-    "status-column-missing": "Tila kenttä puuttuu",
-    "term-missing-language-suffix": "Termin avaimesta puuttuu kielen koodiarvo",
     "terminology-no-language": "Sanastossa ei ole annettua kieltä",
     "undefined-error": "Käsitteiden tuonnissa tapahtui virhe",
     "value-not-valid": "Arvo solussa on virheellinen"
@@ -125,6 +126,7 @@
     "diagramsUri": "Yhdellä tai useammalla käsitekaaviolla on virheellinen verkko-osoite",
     "editorialNote": "Vähintään yhdeltä ylläpitäjän muistiipanolta puuttuu selite",
     "example": "Vähintään yhdeltä käyttöesimerkiltä puuttuu selite",
+    "identifier": "Käsitteen tunnusta ei ole määritetty",
     "language": "Termin kieltä ei ole määritetty",
     "note": "Vähintään yhdeltä huomautukselta puuttuu selite",
     "prefLabel": "Termin nimeä ei ole määritetty",
@@ -158,6 +160,7 @@
     "incorrect-file-type_other": "Väärä tiedostotyyppi. Sallitut tiedostotyypit on {{fileTypes}}.",
     "upload-error": "Tiedoston lataus ei onnistunut. Kokeile uudelleen."
   },
+  "finished": "Valmis",
   "from-terminology-manual": "Sanastot-työkalun käyttöohjeista.",
   "give-definition": "Kirjoita määritelmä",
   "has-part-concept": "Koostumussuhteinen alakäsite",
@@ -168,6 +171,7 @@
   "import-concepts": "Tuo käsitteitä",
   "import-concepts-description-1": "Voit tuoda sanastoon uusia käsitteitä tiedostolla. Lisätietoja vaaditusta tiedoston sisällöstä voit lukea",
   "import-concepts-description-2": "Mikäli haluat päivittää sanastossa olevia käsitteita tai muita sanaston tietoja, valitse 'Päivitä sanasto tiedostolla' -toiminto 'Sanaston tiedot ja toiminnot' -näkymästä.",
+  "import-concepts-in-progress": "Tuodaan käsitteitä",
   "import-concepts-to-terminology": "Tuo käsitteitä sanastoon",
   "import-incorrect-excel-file-1": {
     "concept-import": "Tiedosto ei vastaa käsitteiden tuontiin tarkoitetun tiedoston määrityksiä. Tarkista tiedoston määritykset",

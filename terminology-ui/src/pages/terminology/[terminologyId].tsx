@@ -10,7 +10,7 @@ import Vocabulary from '@app/modules/vocabulary';
 import {
   getConceptResult,
   getRunningQueriesThunk,
-  getVocabulary,
+  getTerminology,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
 import {
@@ -18,14 +18,14 @@ import {
   CommonContextProvider,
 } from 'yti-common-ui/common-context-provider';
 import PageHead from 'yti-common-ui/page-head';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getStoreData } from '@app/common/utils/get-store-data';
 import {
-  getVocabularyCount,
-  getStatusCounts,
   getRunningQueriesThunk as countsGetRunningQueriesThunk,
+  getStatusCounts,
+  getVocabularyCount,
 } from '@app/common/components/counts/counts.slice';
 import { wrapper } from '@app/store';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -97,7 +97,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       urlState.type = Array.isArray(query.type) ? query.type[0] : query.type;
     }
 
-    store.dispatch(getVocabulary.initiate({ id }));
+    store.dispatch(getTerminology.initiate({ id }));
     store.dispatch(
       getConceptResult.initiate({
         urlState: urlState,
@@ -111,20 +111,20 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(store.dispatch(getRunningQueriesThunk()));
     await Promise.all(store.dispatch(countsGetRunningQueriesThunk()));
 
-    const vocabularyData = getStoreData({
+    const terminologyData = getStoreData({
       state: store.getState(),
-      reduxKey: 'vocabularyAPI',
-      functionKey: 'getVocabulary',
+      reduxKey: 'terminologyApi',
+      functionKey: 'getTerminology',
     });
 
-    const title = getPropertyValue({
-      property: vocabularyData?.properties?.prefLabel,
-      language: locale,
+    const title = getLanguageVersion({
+      data: terminologyData?.label,
+      lang: locale ?? 'fi',
     });
 
-    const description = getPropertyValue({
-      property: vocabularyData?.properties?.description,
-      language: locale,
+    const description = getLanguageVersion({
+      data: terminologyData?.description,
+      lang: locale ?? 'fi',
     });
 
     return {

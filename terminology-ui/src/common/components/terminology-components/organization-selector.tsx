@@ -7,16 +7,17 @@ import {
   MultiselectSmBot,
 } from './terminology-components.styles';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
-import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { useEffect, useMemo, useState } from 'react';
 import { checkPermission } from '@app/common/utils/has-permission';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '../login/login.slice';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { TerminologyForm } from '@app/modules/new-terminology/info-manual';
 
 export interface OrganizationSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
   userPosted: boolean;
-  initialData?: NewTerminologyInfo;
+  initialData?: TerminologyForm;
   disabled?: boolean;
 }
 
@@ -41,9 +42,9 @@ export default function OrganizationSelector({
     MultiSelectData[]
   >(
     initialData
-      ? initialData.contributors.map((contributor) => ({
-          labelText: contributor.labelText,
-          uniqueItemId: contributor.uniqueItemId,
+      ? initialData.organizations.map((organization) => ({
+          labelText: organization.labelText,
+          uniqueItemId: organization.uniqueItemId,
         }))
       : []
   );
@@ -62,31 +63,33 @@ export default function OrganizationSelector({
             targetOrganizations: [org.id.toString()],
           })
         ) {
-          const orgName = org.properties.prefLabel.value;
+          const orgName = getLanguageVersion({
+            data: org.label,
+            lang: i18n.language,
+          });
 
           if (orgName) {
             return {
               name: orgName,
               labelText: orgName,
               uniqueItemId: org.id,
-              organizationId: org.type.graph.id,
             } as MultiSelectData;
           }
         }
       })
       .filter((org) => org) as MultiSelectData[];
-  }, [organizations, isLoading, isError, user]);
+  }, [organizations, isLoading, isError, user, i18n.language]);
 
   useEffect(() => {
     if (adminOrgs?.length === 1 && selectedOrganizations.length === 0) {
       setSelectedOrganizations(adminOrgs);
-      update({ key: 'contributors', data: adminOrgs });
+      update({ key: 'organizations', data: adminOrgs });
     }
   }, [adminOrgs, update, selectedOrganizations]);
 
   const handleSelectOrganizations = (value: MultiSelectData[]) => {
     setSelectedOrganizations(value);
-    update({ key: 'contributors', data: value });
+    update({ key: 'organizations', data: value });
   };
 
   return (

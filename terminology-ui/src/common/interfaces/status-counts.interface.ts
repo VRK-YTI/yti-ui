@@ -1,8 +1,6 @@
 export interface StatusCounts {
-  counts: {
-    concepts: StatusCountsObjects;
-    terms: StatusCountsObjects;
-  };
+  concepts: StatusCountsObjects;
+  terms: StatusCountsObjects;
 }
 
 export interface StatusCountsObjects {

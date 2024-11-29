@@ -14,5 +14,6 @@
   "error-occurred_remove-concept": "Käsitteen poistamisessa ilmeni ongelma",
   "error-occurred_remove-terminology": "Sanaston poistamisessa ilmeni ongelma",
   "error-occurred_session": "Istunnossa ilmeni ongelma, kokeile kirjautua uudelleen",
-  "error-occurred_unauthenticated": "Kirjautumistietojen varmistuksessa ilmeni ongelma. Kirjaudu palveluun uudestaan."
+  "error-occurred_unauthenticated": "Kirjautumistietojen varmistuksessa ilmeni ongelma. Kirjaudu palveluun uudestaan.",
+  "error-occured_resource-in-use": "Resurssia ei voi poistaa koska siihen on viittauksia."
 }

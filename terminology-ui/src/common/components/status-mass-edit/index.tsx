@@ -104,7 +104,7 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
     }
 
     modifyStatuses({
-      graphId: terminologyId,
+      prefix: terminologyId,
       oldStatus: chosenStartState,
       newStatus: chosenEndState.uniqueItemId,
       types: Object.keys(chosenTargetType)
@@ -155,8 +155,7 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
                 {
                   labelText: t('draft', {
                     count: statusCounts
-                      ? statusCounts.counts.concepts.DRAFT +
-                        statusCounts.counts.terms.DRAFT
+                      ? statusCounts.concepts.DRAFT + statusCounts.terms.DRAFT
                       : 0,
                   }),
                   uniqueItemId: 'DRAFT',
@@ -164,8 +163,7 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
                 {
                   labelText: t('valid', {
                     count: statusCounts
-                      ? statusCounts.counts.concepts.VALID +
-                        statusCounts.counts.terms.VALID
+                      ? statusCounts.concepts.VALID + statusCounts.terms.VALID
                       : 0,
                   }),
                   uniqueItemId: 'VALID',
@@ -173,8 +171,8 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
                 {
                   labelText: t('superseded', {
                     count: statusCounts
-                      ? statusCounts.counts.concepts.SUPERSEDED +
-                        statusCounts.counts.terms.SUPERSEDED
+                      ? statusCounts.concepts.SUPERSEDED +
+                        statusCounts.terms.SUPERSEDED
                       : 0,
                   }),
                   uniqueItemId: 'SUPERSEDED',
@@ -182,8 +180,8 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
                 {
                   labelText: t('retired', {
                     count: statusCounts
-                      ? statusCounts.counts.concepts.RETIRED +
-                        statusCounts.counts.terms.RETIRED
+                      ? statusCounts.concepts.RETIRED +
+                        statusCounts.terms.RETIRED
                       : 0,
                   }),
                   uniqueItemId: 'RETIRED',
@@ -201,7 +199,7 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
                 >
                   {t('concepts', {
                     count: statusCounts
-                      ? statusCounts.counts.concepts[
+                      ? statusCounts.concepts[
                           chosenStartState as keyof StatusCountsObjects
                         ]
                       : 0,
@@ -214,7 +212,7 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
                 >
                   {t('terms', {
                     count: statusCounts
-                      ? statusCounts.counts.terms[
+                      ? statusCounts.terms[
                           chosenStartState as keyof StatusCountsObjects
                         ]
                       : 0,

@@ -1,6 +1,5 @@
 export interface ConceptTermType {
   changeNote: string; // Muutoshistoria
-  draftComment: string; // Ei käytössä
   editorialNote: ItemType[];
   historyNote: string;
   id: string;
@@ -11,7 +10,6 @@ export interface ConceptTermType {
   status: string;
   termConjugation: string; // Termin luku
   termEquivalency: string; // Termin vastaavuus
-  termEquivalencyRelation: string; // Termi, johon vastaavuus liittyy | Ei käytössä
   termFamily: string;
   termHomographNumber: string;
   termInfo: string; // Termin lisätieto

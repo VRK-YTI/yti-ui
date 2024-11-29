@@ -1,9 +1,5 @@
 import { useTranslation } from 'next-i18next';
 import { Counts } from '@app/common/interfaces/counts.interface';
-import {
-  GroupSearchResult,
-  OrganizationSearchResult,
-} from '@app/common/interfaces/terminology.interface';
 import Separator from 'yti-common-ui/separator';
 import Filter, {
   KeywordFilter,
@@ -13,13 +9,17 @@ import Filter, {
   InformationDomainFilter,
 } from 'yti-common-ui/filter';
 import { FilterTopPartBlock } from './terminology-search.styles';
+import { Organization } from 'yti-common-ui/interfaces/organization.interface';
+import { Group } from 'yti-common-ui/interfaces/group.interface';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { compareLocales } from 'yti-common-ui/utils/compare-locales';
 
 export interface SearchPageFilterProps {
   isModal?: boolean;
   onModalClose?: () => void;
   resultCount?: number;
-  organizations?: OrganizationSearchResult[];
-  groups?: GroupSearchResult[];
+  organizations?: Organization[];
+  groups?: Group[];
   counts?: Counts;
 }
 
@@ -31,7 +31,7 @@ export function SearchPageFilter({
   groups,
   counts,
 }: SearchPageFilterProps) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
 
   return (
     <Filter
@@ -49,7 +49,10 @@ export function SearchPageFilter({
           visualPlaceholder={t('terminology-search-filter-pick-organization')}
           organizations={
             organizations?.map((org) => ({
-              labelText: org.properties.prefLabel.value,
+              labelText: getLanguageVersion({
+                data: org.label,
+                lang: i18n.language,
+              }),
               uniqueItemId: org.id,
             })) ?? []
           }
@@ -58,10 +61,12 @@ export function SearchPageFilter({
           labelText={t('filter-by-language')}
           languages={
             counts && counts.counts.languages
-              ? Object.keys(counts?.counts.languages).map((key) => ({
-                  labelText: key,
-                  uniqueItemId: key,
-                }))
+              ? Object.keys(counts?.counts.languages)
+                  .sort(compareLocales)
+                  .map((key) => ({
+                    labelText: key,
+                    uniqueItemId: key,
+                  }))
               : []
           }
         />
@@ -82,8 +87,11 @@ export function SearchPageFilter({
         title={t('terminology-search-filter-show-by-information-domain')}
         domains={
           groups?.map((group) => ({
-            id: group.id,
-            name: group.properties.prefLabel.value,
+            id: group.identifier,
+            name: getLanguageVersion({
+              data: group.label,
+              lang: i18n.language,
+            }),
           })) ?? []
         }
         isModal={isModal}

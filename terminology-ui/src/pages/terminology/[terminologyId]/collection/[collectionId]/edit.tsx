@@ -8,9 +8,8 @@ import {
 } from 'yti-common-ui/common-context-provider';
 import PageHead from 'yti-common-ui/page-head';
 import { getStoreData } from '@app/common/utils/get-store-data';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import {
-  getVocabulary,
+  getTerminology,
   getRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
@@ -21,6 +20,7 @@ import Layout from '@app/common/components/layout';
 import EditCollection from '@app/modules/edit-collection';
 import { SSRConfig } from 'next-i18next';
 import { wrapper } from '@app/store';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface CollectionEditPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -70,7 +70,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameter for page');
     }
 
-    store.dispatch(getVocabulary.initiate({ id: terminologyId }));
+    store.dispatch(getTerminology.initiate({ id: terminologyId }));
     store.dispatch(
       getCollection.initiate({
         collectionId: collectionId,
@@ -86,9 +86,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
       functionKey: 'getCollection',
     });
 
-    const collectionLabel = getPropertyValue({
-      property: collectionData?.properties?.prefLabel,
-      language: locale,
+    const collectionLabel = getLanguageVersion({
+      data: collectionData.label,
+      lang: locale ?? 'fi',
     });
 
     return {
@@ -97,8 +97,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
         terminologyId: terminologyId,
         collectionInfo: {
           collectionId: collectionId,
-          createdBy: collectionData.createdBy ?? null,
-          collectionCode: collectionData.code,
+          createdBy: collectionData.creator ?? null,
+          collectionCode: '',
           collectionUri: collectionData.uri,
         },
         requireAuthenticated: true,

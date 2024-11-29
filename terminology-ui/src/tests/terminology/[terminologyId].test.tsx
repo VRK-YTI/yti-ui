@@ -12,13 +12,13 @@ describe('terminologyId page', () => {
 
     mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
     mock
-      .onGet(/\/v1\/frontend\/vocabulary\?graphId=\d+/)
+      .onGet(/\/v2\/terminology\/\d+/)
       .reply((config) => [200, 'response from vocabulary']);
     mock
-      .onGet(/.*\/v1\/frontend\/collections\?graphId=\d+/)
+      .onGet(/.*\/v2\/collections\?graphId=\d+/)
       .reply((config) => [200, 'response from collections']);
     mock
-      .onPost(/.*\/v1\/frontend\/searchConcept$/, {
+      .onGet(/.*\/v2\/frontend\/search-concept$/, {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         asymmetricMatch: (actual: any) => {
           // these checks ensure that the API request was made with the
@@ -49,34 +49,36 @@ describe('terminologyId page', () => {
 
     expect((results as any).props).toBeDefined(); // eslint-disable-line @typescript-eslint/no-explicit-any
 
-    expect(mock.history.get).toHaveLength(5);
+    expect(mock.history.get).toHaveLength(6);
 
     const polledUrls = [
-      '/vocabulary?graphId=1234',
-      '/conceptCounts?graphId=1234',
-      '/statusCounts?graphId=1234',
-      '/authenticated-user',
-      '/fakeableUsers',
+      '/terminology/1234',
+      '/frontend/search-concepts',
+      '/concept-counts?prefix=1234',
+      '/status-counts?prefix=1234',
+      '/user',
+      '/fakeable-users',
     ];
 
     const foundUrls = polledUrls.filter((url) =>
       mock.history.get.some((x) => x.url?.endsWith(url))
     );
 
-    expect(foundUrls).toHaveLength(5);
+    expect(foundUrls).toHaveLength(6);
 
-    expect(mock.history.post).toHaveLength(1);
-    expect(mock.history.post[0]?.data).toStrictEqual(
-      JSON.stringify({
-        highlight: true,
-        pageFrom: 0,
-        pageSize: 50,
-        query: 'test',
-        sortDirection: 'ASC',
-        sortLanguage: 'en',
-        status: ['DRAFT'],
-        terminologyId: ['1234'],
-      })
-    );
+    const searchParams = mock.history.get
+      .filter((h) => h.url?.endsWith('/frontend/search-concepts'))
+      .map((get) => get.params)[0];
+
+    expect(searchParams).toStrictEqual({
+      highlight: true,
+      pageFrom: 0,
+      pageSize: 50,
+      query: 'test',
+      sortDirection: 'ASC',
+      sortLanguage: 'en',
+      status: ['DRAFT'],
+      namespace: 'https://iri.suomi.fi/terminology/1234/',
+    });
   });
 });

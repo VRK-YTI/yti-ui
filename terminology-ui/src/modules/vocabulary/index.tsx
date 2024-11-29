@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   useGetCollectionsQuery,
   useGetConceptResultQuery,
-  useGetVocabularyQuery,
+  useGetTerminologyQuery,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   default as SearchResults,
@@ -26,7 +26,6 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
-import PropertyValue from '@app/common/components/property-value';
 import { useGetVocabularyCountQuery } from '@app/common/components/counts/counts.slice';
 import { TerminologyListFilter } from './terminology-list-filter';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
@@ -36,9 +35,6 @@ import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import dynamic from 'next/dynamic';
 import ConceptImportModal from '@app/common/components/concept-import';
-import getPrefLabel from '@app/common/utils/get-preflabel';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import {
   TitleType,
   TitleTypeAndStatusWrapper,
@@ -52,6 +48,8 @@ import { useStoreDispatch } from '@app/store';
 import { setTitle } from '@app/common/components/title/title.slice';
 import { StatusChip } from 'yti-common-ui/status-chip';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { TerminologyType } from '@app/common/interfaces/interfaces-v2';
 
 const NewConceptModal = dynamic(
   () => import('@app/common/components/new-concept-modal')
@@ -84,7 +82,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
     urlState,
     language: i18n.language,
   });
-  const { data: info, error: infoError } = useGetVocabularyQuery({
+  const { data: info, error: infoError } = useGetTerminologyQuery({
     id,
   });
   const { data: counts } = useGetVocabularyCountQuery(id);
@@ -105,19 +103,19 @@ export default function Vocabulary({ id }: VocabularyProps) {
       return [];
     }
 
-    return conceptsData.concepts.map((concept) => ({
+    return conceptsData.responseObjects.map((concept) => ({
       id: concept.id,
       description:
-        getPrefLabel({
-          prefLabels: concept.definition,
+        getLanguageVersion({
+          data: concept.definition,
           lang: urlState.lang !== '' ? urlState.lang : i18n.language,
         }) ?? '',
       status: concept.status,
-      title: getPrefLabel({
-        prefLabels: concept.label,
+      title: getLanguageVersion({
+        data: concept.label,
         lang: urlState.lang !== '' ? urlState.lang : i18n.language,
       }),
-      titleLink: `${id}/concept/${concept.id}`,
+      titleLink: `${id}/concept/${concept.identifier}`,
       type: t('vocabulary-info-concept'),
     }));
   }, [conceptsData, t, i18n.language, id, urlState.lang]);
@@ -128,16 +126,16 @@ export default function Vocabulary({ id }: VocabularyProps) {
     }
 
     return collectionsData.map((collection) => ({
-      id: collection.id,
-      description: getPropertyValue({
-        property: collection.properties.definition,
-        language: urlState.lang !== '' ? urlState.lang : i18n.language,
+      id: collection.identifier,
+      description: getLanguageVersion({
+        data: collection.description,
+        lang: urlState.lang !== '' ? urlState.lang : i18n.language,
       }),
-      title: getPropertyValue({
-        property: collection.properties.prefLabel,
-        language: urlState.lang !== '' ? urlState.lang : i18n.language,
+      title: getLanguageVersion({
+        data: collection.label,
+        lang: urlState.lang !== '' ? urlState.lang : i18n.language,
       }),
-      titleLink: `${id}/collection/${collection.id}`,
+      titleLink: `${id}/collection/${collection.identifier}`,
       type: t('vocabulary-info-collection'),
     }));
   }, [collectionsData, t, id, urlState.lang, i18n.language]);
@@ -147,7 +145,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
       return [];
     }
     return organizationsData
-      ?.filter((org) => org.references.parent)
+      ?.filter((org) => org.parentOrganization)
       .map((org) => org.id);
   }, [organizationsData, isOrganizationsLoading, organizationsError]);
 
@@ -169,14 +167,9 @@ export default function Vocabulary({ id }: VocabularyProps) {
 
   useEffect(() => {
     dispatch(
-      setTitle(
-        getPropertyValue({
-          property: info?.properties.prefLabel,
-          language: i18n.language,
-        })
-      )
+      setTitle(getLanguageVersion({ data: info?.label, lang: i18n.language }))
     );
-  }, [dispatch, info?.properties.prefLabel, i18n.language]);
+  }, [dispatch, info, i18n.language]);
 
   if (infoError) {
     return (
@@ -209,35 +202,32 @@ export default function Vocabulary({ id }: VocabularyProps) {
     <>
       <Breadcrumb>
         <BreadcrumbLink url={`/terminology/${id}`} current>
-          <PropertyValue property={info?.properties.prefLabel} />
+          {getLanguageVersion({ data: info?.label, lang: i18n.language })}
         </BreadcrumbLink>
       </Breadcrumb>
 
       <main id="main">
         <Title
-          title={getPropertyValue({
-            property: info?.properties.prefLabel,
-            language: i18n.language,
+          title={getLanguageVersion({
+            data: info?.label,
+            lang: i18n.language,
           })}
           extra={
             <>
               <TitleTypeAndStatusWrapper>
                 <TitleType>
                   {translateTerminologyType(
-                    info?.properties.terminologyType?.[0].value ??
-                      'TERMINOLOGICAL_VOCABULARY',
+                    info?.graphType ??
+                      TerminologyType.TERMINOLOGICAL_VOCABULARY,
                     t
                   )}
                 </TitleType>{' '}
                 &middot;
                 <StatusChip
-                  status={info?.properties.status?.[0].value ?? 'DRAFT'}
+                  status={info?.status.toString() ?? 'DRAFT'}
                   id="status-chip"
                 >
-                  {translateStatus(
-                    info?.properties.status?.[0].value ?? 'DRAFT',
-                    t
-                  )}
+                  {translateStatus(info?.status ?? 'DRAFT', t)}
                 </StatusChip>
               </TitleTypeAndStatusWrapper>
               <InfoExpander
@@ -251,7 +241,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
           {!isSmall ? (
             <TerminologyListFilter
               counts={counts}
-              languages={info?.properties.language}
+              languages={info?.languages}
             />
           ) : (
             <Modal
@@ -267,7 +257,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                   onModalClose={() => setShowModal(false)}
                   resultCount={conceptsData?.totalHitCount}
                   counts={counts}
-                  languages={info?.properties.language}
+                  languages={info?.languages}
                 />
               </ModalContent>
             </Modal>
@@ -281,14 +271,12 @@ export default function Vocabulary({ id }: VocabularyProps) {
               </Heading>
               {HasPermission({
                 actions: 'CREATE_CONCEPT',
-                targetOrganization: info?.references.contributor,
+                targetOrganization: info?.organizations,
               }) && (
                 <>
                   <NewConceptModal
                     terminologyId={id}
-                    languages={
-                      info?.properties.language?.map(({ value }) => value) ?? []
-                    }
+                    languages={info?.languages ?? []}
                   />
                   <ConceptImportModal
                     refetch={refetchConcepts}
@@ -355,46 +343,38 @@ export default function Vocabulary({ id }: VocabularyProps) {
     }
 
     if (collectionsData) {
+      const regexp = urlState.q ? new RegExp(urlState.q, 'gi') : undefined;
+
       const collectionMembers: { [key: string]: string }[] =
         collectionsData.map((collection) => {
           const memberLabels =
-            collection.references.member?.map((m) => {
-              const labels: Property[] =
-                m.references.prefLabelXl
-                  ?.flatMap((label) => label.properties.prefLabel ?? [])
-                  .filter((val) => val) ?? [];
-
-              if (labels) {
-                return Object.assign(
-                  {},
-                  labels.reduce(
-                    (obj, item) => ({
-                      ...obj,
-                      [item.lang]: urlState.q
-                        ? item.value.replaceAll(
-                            urlState.q,
-                            `<b>${urlState.q}</b>`
-                          )
-                        : item.value,
-                    }),
-                    {}
-                  )
-                );
-              }
-
-              return [];
+            collection.members?.map((m) => {
+              return Object.assign(
+                {},
+                Object.entries(m.label).reduce(
+                  (obj, item) => ({
+                    ...obj,
+                    [item[0]]: regexp
+                      ? item[1].replaceAll(regexp, `<b>${urlState.q}</b>`)
+                      : item[1],
+                  }),
+                  {}
+                )
+              );
             }) ?? [];
 
           const membersWithCorrectLabels = memberLabels.map((label) =>
-            getPrefLabel({
-              prefLabels: label,
+            getLanguageVersion({
+              data: label,
               lang: urlState.lang !== '' ? urlState.lang : i18n.language,
             })
           );
 
           if (urlState.q !== '') {
             const matchingMembers = membersWithCorrectLabels
-              .filter((value) => value.includes(urlState.q))
+              .filter((value) =>
+                value.toLowerCase().includes(urlState.q.toLowerCase())
+              )
               .slice(0, 5);
 
             if (
@@ -404,35 +384,36 @@ export default function Vocabulary({ id }: VocabularyProps) {
               const diff =
                 membersWithCorrectLabels.length - matchingMembers.length;
               return {
-                [collection.id]: `${matchingMembers.join(', ')} + ${diff} ${t(
-                  'vocabulary-results-more'
-                )}`,
+                [collection.identifier]: `${matchingMembers.join(
+                  ', '
+                )} + ${diff} ${t('vocabulary-results-more')}`,
               };
             }
 
-            return { [collection.id]: matchingMembers.join(', ') };
+            return { [collection.identifier]: matchingMembers.join(', ') };
           }
 
           return {
-            [collection.id]: membersWithCorrectLabels.slice(0, 5).join(', '),
+            [collection.identifier]: membersWithCorrectLabels
+              .slice(0, 5)
+              .join(', '),
           };
         });
 
       const collectionsExtra = Object.assign({}, ...collectionMembers);
 
-      const filteredCollections =
-        urlState.q !== ''
-          ? collections.filter((collection) => {
-              if (
-                collection.title.includes(urlState.q) ||
-                collectionsExtra[collection.id] ||
-                collectionsExtra[collection.id] !== ''
-              ) {
-                return true;
-              }
-              return false;
-            })
-          : collections;
+      const filteredCollections = regexp
+        ? collections.filter((collection) => {
+            if (
+              collection.title.match(regexp) ||
+              collectionsExtra[collection.id] ||
+              collectionsExtra[collection.id] !== ''
+            ) {
+              return true;
+            }
+            return false;
+          })
+        : collections;
 
       return (
         <>

@@ -10,13 +10,13 @@ export const countsApi = createApi({
   endpoints: (builder) => ({
     getCounts: builder.query<Counts, null>({
       query: () => ({
-        url: '/counts?vocabularies=true',
+        url: '/frontend/counts',
         method: 'GET',
       }),
     }),
     getVocabularyCount: builder.query<Counts, string>({
       query: (value) => ({
-        url: `/conceptCounts?graphId=${value}`,
+        url: `/frontend/concept-counts?prefix=${value}`,
         method: 'GET',
         headers: {
           'content-type': 'application/json',
@@ -25,7 +25,7 @@ export const countsApi = createApi({
     }),
     getStatusCounts: builder.query<StatusCounts, string>({
       query: (value) => ({
-        url: `/statusCounts?graphId=${value}`,
+        url: `/frontend/status-counts?prefix=${value}`,
         method: 'GET',
       }),
     }),

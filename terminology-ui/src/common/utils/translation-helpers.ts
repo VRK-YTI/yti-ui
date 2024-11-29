@@ -1,4 +1,5 @@
 import { TFunction } from 'next-i18next';
+import { TerminologyType } from '../interfaces/interfaces-v2';
 
 export function translateStatus(status: string, t: TFunction) {
   switch (status) {
@@ -66,36 +67,43 @@ export function translateTermType(type: string, t: TFunction) {
   }
 }
 
-export function translateTerminologyType(type: string, t: TFunction) {
+export function translateTerminologyType(
+  type: TerminologyType | string,
+  t: TFunction
+) {
   switch (type) {
-    case 'TERMINOLOGICAL_VOCABULARY':
+    case TerminologyType.TERMINOLOGICAL_VOCABULARY:
       return t('terminology-type.terminologyical-vocabulary', { ns: 'common' });
-    case 'OTHER_VOCABULARY':
+    case TerminologyType.OTHER_VOCABULARY:
       return t('terminology-type.other-vocabulary', { ns: 'common' });
     default:
       return t('terminology-type.undefined', { ns: 'common' });
   }
 }
 
-export function translateTermStyle(termStyle: string, t: TFunction) {
-  switch (termStyle) {
-    case 'spoken-form':
-      return t('term-style.spoken-form', { ns: 'common' });
-    default:
-      return termStyle;
-  }
-}
-
 export function translateTermFamily(termFamily: string, t: TFunction) {
   switch (termFamily) {
-    case 'masculine':
+    case 'MASCULINE':
       return t('term-family.masculine', { ns: 'common' });
-    case 'neutral':
-      return t('term-family.neutral', { ns: 'common' });
-    case 'feminine':
+    case 'NEUTER':
+      return t('term-family.neuter', { ns: 'common' });
+    case 'FEMININE':
       return t('term-family.feminine', { ns: 'common' });
     default:
       return termFamily;
+  }
+}
+
+export function translateTermEquivalency(termEq: string, t: TFunction) {
+  switch (termEq) {
+    case 'BROADER':
+      return t('term-equivalency.broader', { ns: 'common' });
+    case 'NARROWER':
+      return t('term-equivalency.narrower', { ns: 'common' });
+    case 'CLOSE':
+      return t('term-equivalency.close', { ns: 'common' });
+    default:
+      return termEq;
   }
 }
 
@@ -104,9 +112,9 @@ export function translateTermConjugation(
   t: TFunction
 ) {
   switch (termConjugation) {
-    case 'singular':
+    case 'SINGULAR':
       return t('term-conjugation.singular', { ns: 'common' });
-    case 'plural':
+    case 'PLURAL':
       return t('term-conjugation.plural', { ns: 'common' });
     default:
       return termConjugation;
@@ -115,9 +123,9 @@ export function translateTermConjugation(
 
 export function translateWordClass(wordClass: string, t: TFunction) {
   switch (wordClass) {
-    case 'adjective':
+    case 'ADJECTIVE':
       return t('word-class.adjective', { ns: 'common' });
-    case 'verb':
+    case 'VERB':
       return t('word-class.verb', { ns: 'common' });
     default:
       return wordClass;
@@ -154,6 +162,8 @@ export function translateEditConceptError(error: string, t: TFunction) {
       return t('edit-concept-error.diagramsUri', { ns: 'admin' });
     case 'termConjugation':
       return t('edit-concept-error.termConjugation', { ns: 'admin' });
+    case 'identifier':
+      return t('edit-concept-error.identifier', { ns: 'admin' });
     default:
       return t('edit-concept-error.default', { ns: 'admin' });
   }
@@ -194,22 +204,18 @@ export function translateHttpError(
 
 export function translateExcelParseError(message: string, t: TFunction) {
   switch (message) {
-    case 'terminology-no-language':
+    case 'terminology-missing-language':
       return t('concept-import.terminology-no-language', { ns: 'admin' });
-    case 'term-missing-language-suffix':
-      return t('concept-import.term-missing-language-suffix', { ns: 'admin' });
+    case 'column-missing-language':
+      return t('concept-import.column-missing-language', { ns: 'admin' });
     case 'value-not-valid':
       return t('concept-import.value-not-valid', { ns: 'admin' });
-    case 'property-missing-language-suffix':
-      return t('concept-import.property-missing-language-suffix', {
-        ns: 'admin',
-      });
-    case 'status-column-missing':
-      return t('concept-import.status-column-missing', { ns: 'admin' });
-    case 'prefLabel-column-missing':
+    case 'pref-label-column-missing':
       return t('concept-import.prefLabel-column-missing', { ns: 'admin' });
-    case 'prefLabel-row-missing':
+    case 'pref-label-row-missing':
       return t('concept-import.prefLabel-row-missing', { ns: 'admin' });
+    case 'duplicate-key-value':
+      return t('concept-import.duplicate-key-value', { ns: 'admin' });
     default:
       return t('concept-import.undefined-error', { ns: 'admin' });
   }
@@ -226,6 +232,15 @@ export function translateRemovalModalError(
       return t('error-occurred_remove-concept', { ns: 'alert' });
     case 'collection':
       return t('error-occurred_remove-collection', { ns: 'alert' });
+    default:
+      return t('error-occured', { ns: 'alert' });
+  }
+}
+
+export function translateErrroMessage(message: string, t: TFunction) {
+  switch (message) {
+    case 'resource-in-use':
+      return t('error-occured_resource-in-use', { ns: 'alert' });
     default:
       return t('error-occured', { ns: 'alert' });
   }

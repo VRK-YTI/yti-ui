@@ -311,22 +311,11 @@ export default function ModelInfoView({
 
       <DrawerContent height={headerHeight}>
         <BasicBlock title={t('name')}>
-          <MultilingualBlock
-            data={Object.entries(modelInfo.label)
-              .sort((a, b) => compareLocales(a[0], b[0]))
-              .map((l) => ({ lang: l[0], value: l[1] }))}
-          />
+          <MultilingualBlock data={modelInfo.label} />
         </BasicBlock>
         <BasicBlock title={t('description')}>
           {Object.keys(modelInfo.description).length > 0 ? (
-            <MultilingualBlock
-              data={Object.entries(modelInfo.description)
-                .sort((a, b) => compareLocales(a[0], b[0]))
-                .map((d) => ({
-                  lang: d[0],
-                  value: <SanitizedTextContent text={d[1]} />,
-                }))}
-            />
+            <MultilingualBlock renderHtml={true} data={modelInfo.description} />
           ) : (
             t('not-added')
           )}

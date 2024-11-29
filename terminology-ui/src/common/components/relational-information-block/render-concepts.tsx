@@ -6,20 +6,19 @@ import {
 } from 'suomifi-ui-components';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { useTranslation } from 'next-i18next';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import getPrefLabel from '@app/common/utils/get-preflabel';
-import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { useEffect, useState } from 'react';
 import RenderExpanderContent from './render-expander-content';
 import { useRouter } from 'next/router';
 import { RelationInfoType } from '@app/modules/edit-concept/new-concept.types';
+import { ConceptResponseObject } from '@app/common/interfaces/interfaces-v2';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface RenderConceptsProps {
-  concepts?: Concepts[];
-  chosen: Concepts[] | RelationInfoType[];
-  setChosen: (value: Concepts[] | RelationInfoType[]) => void;
+  concepts?: ConceptResponseObject[];
+  chosen: ConceptResponseObject[] | RelationInfoType[];
+  setChosen: (value: ConceptResponseObject[] | RelationInfoType[]) => void;
 }
 
 export default function RenderConcepts({
@@ -40,23 +39,15 @@ export default function RenderConcepts({
 
   const handleCheckbox = (
     e: { checkboxState: boolean },
-    concept: Concepts | RelationInfoType
+    concept: ConceptResponseObject
   ) => {
     if (e.checkboxState) {
-      setChosen(
-        'terminology' in concept
-          ? [...(chosen as Concepts[]), concept]
-          : [...(chosen as RelationInfoType[]), concept]
-      );
+      setChosen([...(chosen as ConceptResponseObject[]), concept]);
     } else {
       setChosen(
-        'terminology' in chosen
-          ? (chosen as Concepts[]).filter((chose) => chose.id !== concept.id)
-          : (chosen as RelationInfoType[]).filter((chose) =>
-              chose.targetId
-                ? chose.targetId !== concept.id
-                : chose.id !== concept.id
-            )
+        (chosen as ConceptResponseObject[]).filter(
+          (chose) => chose.id !== concept.id
+        )
       );
     }
   };
@@ -91,47 +82,28 @@ export default function RenderConcepts({
                   toggleButtonAriaLabel={t('additional-information')}
                 >
                   <Checkbox
-                    hintText={`${getPrefLabel({
-                      prefLabels: concept.terminology.label,
+                    hintText={`${getLanguageVersion({
+                      data: concept.terminology.label,
                       lang: i18n.language,
                     })} - ${translateStatus(concept.status ?? 'DRAFT', t)}`}
                     onClick={(e) => handleCheckbox(e, concept)}
-                    checked={chosen.some((chose) =>
-                      'targetId' in chose
-                        ? (chose as RelationInfoType).targetId === concept.id
-                        : chose.id === concept.id
-                    )}
+                    checked={chosen.some((chose) => chose.id === concept.id)}
                     className="concept-checkbox"
                     variant={isSmall ? 'large' : 'small'}
                     id={`concept-result-checkbox-${concept.id}`}
                   >
                     <SanitizedTextContent
-                      text={
-                        concept.label
-                          ? getPropertyValue({
-                              property: Object.keys(concept.label).map(
-                                (key) => {
-                                  const obj = {
-                                    lang: key,
-                                    value: concept.label[key],
-                                    regex: '',
-                                  };
-                                  return obj;
-                                }
-                              ),
-                              language: i18n.language,
-                            }) ??
-                            concept.label[i18n.language] ??
-                            concept.label.fi
-                          : t('concept-label-undefined', { ns: 'common' })
-                      }
+                      text={getLanguageVersion({
+                        data: concept.label,
+                        lang: i18n.language,
+                      })}
                     />
                   </Checkbox>
                 </ExpanderTitle>
 
                 <RenderExpanderContent
-                  terminologyId={concept.terminology.id}
-                  conceptId={concept.id}
+                  terminologyId={concept.terminology?.prefix}
+                  concept={concept}
                   isOpen={
                     (expandersOpen?.filter(
                       (c) => c[0] === concept.id
