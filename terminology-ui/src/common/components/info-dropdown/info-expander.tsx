@@ -5,6 +5,7 @@ import {
   ExpanderContent,
   ExpanderTitleButton,
   ExternalLink,
+  IconDownload,
   IconEdit,
   IconPlus,
   VisuallyHidden,
@@ -43,11 +44,13 @@ import {
 } from '@app/common/interfaces/interfaces-v2';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 import { compareLocales } from 'yti-common-ui/utils/compare-locales';
+import { useState } from 'react';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
 );
 const CopyTerminologyModal = dynamic(() => import('../copy-terminology-modal'));
+const AsFileModal = dynamic(() => import('../as-file-modal'));
 
 interface InfoExpanderProps {
   data?: TerminologyInfo;
@@ -60,6 +63,7 @@ export default function InfoExpander({
 }: InfoExpanderProps) {
   const { t, i18n } = useTranslation('common');
   const { urlState } = useUrlState();
+  const [showDownloadFileModal, setShowDownloadFileModal] = useState(false);
   const router = useRouter();
   const user = useSelector(selectLogin());
   const terminologyId = data?.prefix ?? '';
@@ -72,6 +76,10 @@ export default function InfoExpander({
   if (!data) {
     return null;
   }
+
+  const handleDownloadClick = () => {
+    setShowDownloadFileModal(true);
+  };
 
   return (
     <InfoExpanderWrapper id="info-expander">
@@ -230,6 +238,35 @@ export default function InfoExpander({
         )}
 
         <Separator isLarge />
+
+        <BasicBlock
+          title={t('vocabulary-info-vocabulary-export')}
+          extra={
+            <BasicBlockExtraWrapper>
+              <Button
+                icon={<IconDownload />}
+                variant="secondary"
+                onClick={() => handleDownloadClick()}
+                id="export-terminology-button"
+              >
+                {t('vocabulary-info-vocabulary-button')}
+              </Button>
+            </BasicBlockExtraWrapper>
+          }
+          id="export-terminology-block"
+        >
+          {t('vocabulary-info-vocabulary-export-description')}
+        </BasicBlock>
+
+        <AsFileModal
+          prefix={terminologyId}
+          visible={showDownloadFileModal}
+          onClose={() => setShowDownloadFileModal(false)}
+          filename={getLanguageVersion({
+            data: data.label,
+            lang: i18n.language,
+          })}
+        />
 
         {!user.anonymous && (
           <>
