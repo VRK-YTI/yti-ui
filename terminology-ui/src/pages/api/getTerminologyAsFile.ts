@@ -55,7 +55,7 @@ export default withIronSessionApiRoute(
     const apiUrl =
       process.env.AWS_ENV === 'local'
         ? process.env.TERMINOLOGY_API_URL
-        : `${process.env.AUTH_PROXY_URL}/terminolgoy-api`;
+        : `${process.env.AUTH_PROXY_URL}/terminolgoy-api/v2`;
 
     const { status, data: response } = await axios.get(
       `${apiUrl}/export/${prefix}`,
