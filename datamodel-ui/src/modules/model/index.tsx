@@ -91,7 +91,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
           <Graph
             modelId={modelId}
             version={version}
-            applicationProfile={modelInfo?.type === 'PROFILE'}
+            applicationProfile={modelInfo?.graphType === 'PROFILE'}
             organizationIds={organizationIds}
             namespaces={[
               ...modelInfo.internalNamespaces,
@@ -100,7 +100,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
           >
             <ModelTools
               modelId={modelId}
-              applicationProfile={modelInfo?.type === 'PROFILE'}
+              applicationProfile={modelInfo?.graphType === 'PROFILE'}
               organisations={organizationIds}
             />
           </Graph>
@@ -120,7 +120,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
           <LinkedDataView
             modelId={modelId}
             version={version}
-            isApplicationProfile={modelInfo?.type === 'PROFILE'}
+            isApplicationProfile={modelInfo?.graphType === 'PROFILE'}
             organizationIds={organizationIds}
           />
         ),
@@ -130,7 +130,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         icon: <IconWindow />,
         buttonLabel: translateDrawerButton(
           'classes',
-          modelInfo?.type === 'PROFILE',
+          modelInfo?.graphType === 'PROFILE',
           t
         ),
         component: (
@@ -138,7 +138,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
             modelId={modelId}
             version={version}
             languages={languages}
-            applicationProfile={modelInfo?.type === 'PROFILE'}
+            applicationProfile={modelInfo?.graphType === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
             organizationIds={organizationIds}
           />
@@ -149,7 +149,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         icon: <IconRows />,
         buttonLabel: translateDrawerButton(
           'attributes',
-          modelInfo?.type === 'PROFILE',
+          modelInfo?.graphType === 'PROFILE',
           t
         ),
         buttonLabelSm: t('attributes-abbreviation'),
@@ -159,7 +159,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
             version={version}
             type={ResourceType.ATTRIBUTE}
             languages={languages}
-            applicationProfile={modelInfo?.type === 'PROFILE'}
+            applicationProfile={modelInfo?.graphType === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
             organizationIds={organizationIds}
           />
@@ -170,7 +170,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         icon: <IconSwapVertical />,
         buttonLabel: translateDrawerButton(
           'associations',
-          modelInfo?.type === 'PROFILE',
+          modelInfo?.graphType === 'PROFILE',
           t
         ),
         buttonLabelSm: t('associations-abbreviation'),
@@ -180,7 +180,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
             version={version}
             type={ResourceType.ASSOCIATION}
             languages={languages}
-            applicationProfile={modelInfo?.type === 'PROFILE'}
+            applicationProfile={modelInfo?.graphType === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
             organizationIds={organizationIds}
           />
@@ -226,13 +226,13 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         flex: '1 1 auto',
       }}
     >
-      <Notification applicationProfile={modelInfo?.type === 'PROFILE'} />
+      <Notification applicationProfile={modelInfo?.graphType === 'PROFILE'} />
 
       <ContentWrapper>
         <Graph
           modelId={modelId}
           version={version}
-          applicationProfile={modelInfo?.type === 'PROFILE'}
+          applicationProfile={modelInfo?.graphType === 'PROFILE'}
           organizationIds={organizationIds}
           drawer={<Drawer views={views} />}
           namespaces={[
@@ -242,7 +242,7 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
         >
           <ModelTools
             modelId={modelId}
-            applicationProfile={modelInfo?.type === 'PROFILE'}
+            applicationProfile={modelInfo?.graphType === 'PROFILE'}
             organisations={organizationIds}
           />
         </Graph>

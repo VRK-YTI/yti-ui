@@ -1,7 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { Concept } from '@app/common/interfaces/concept.interface';
-import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
+import {
+  Concept,
+  ConceptInfo,
+  ConceptResponseObject,
+  ConceptSearchRequest,
+  SearchResponse,
+} from '@app/common/interfaces/interfaces-v2';
 
 export const conceptApi = createApi({
   reducerPath: 'conceptAPI',
@@ -9,49 +14,59 @@ export const conceptApi = createApi({
   tagTypes: ['Concept'],
   endpoints: (builder) => ({
     getConcept: builder.query<
-      Concept,
+      ConceptInfo,
       { terminologyId: string; conceptId: string }
     >({
       query: ({ terminologyId, conceptId }) => ({
-        url: `/concept?graphId=${terminologyId}&conceptId=${conceptId}`,
+        url: `/concept/${terminologyId}/${conceptId}`,
         method: 'GET',
       }),
     }),
-    searchConcept: builder.mutation<
+    createConcept: builder.mutation<null, { prefix: string; concept: Concept }>(
       {
-        concepts: Concepts[];
-        resultStart: number;
-        totalHitCount: number;
-      },
-      {
-        terminologyId?: string;
-        query?: string;
-        notInTerminologyId?: string;
-        status?: string;
-        pageFrom?: number;
-        pageSize?: number;
+        query: (value) => ({
+          url: `/concept/${value.prefix}`,
+          method: 'POST',
+          data: value.concept,
+        }),
       }
+    ),
+    updateConcept: builder.mutation<
+      null,
+      { prefix: string; conceptId: string; concept: Concept }
     >({
-      query: (props) => ({
-        url: '/searchConcept',
-        method: 'POST',
-        data: {
-          highlight: true,
-          ...(props.notInTerminologyId && {
-            notInTerminologyId: [props.notInTerminologyId],
-          }),
-          pageFrom: props.pageFrom ?? 0,
-          pageSize: props.pageSize ?? 100,
-          ...(props.query && { query: props.query }),
-          sortDirection: 'ASC',
-          sortLanguage: 'fi',
-          ...(props.status && {
-            status: [props.status],
-          }),
-          ...(props.terminologyId && {
-            terminologyId: [props.terminologyId],
-          }),
-        },
+      query: (value) => ({
+        url: `/concept/${value.prefix}/${value.conceptId}`,
+        method: 'PUT',
+        data: value.concept,
+      }),
+    }),
+    deleteConcept: builder.mutation<
+      null,
+      { prefix: string; conceptId: string }
+    >({
+      query: (value) => ({
+        url: `/concept/${value.prefix}/${value.conceptId}`,
+        method: 'DELETE',
+      }),
+    }),
+    searchConcept: builder.mutation<
+      SearchResponse<ConceptResponseObject>,
+      ConceptSearchRequest
+    >({
+      query: (request) => ({
+        url: '/frontend/search-concepts',
+        method: 'GET',
+        params: request,
+      }),
+    }),
+    conceptExists: builder.mutation<
+      boolean,
+      { terminologyId: string; conceptId: string }
+    >({
+      query: (params) => ({
+        url: `/concept/${params.terminologyId}/${params.conceptId}/exists`,
+        method: 'GET',
       }),
     }),
   }),
@@ -59,7 +74,11 @@ export const conceptApi = createApi({
 
 export const {
   useGetConceptQuery,
+  useCreateConceptMutation,
+  useUpdateConceptMutation,
+  useConceptExistsMutation,
   useSearchConceptMutation,
+  useDeleteConceptMutation,
   util: { getRunningQueriesThunk },
 } = conceptApi;
 

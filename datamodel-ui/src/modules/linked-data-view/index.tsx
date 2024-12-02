@@ -21,7 +21,7 @@ import {
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { HeaderRow } from '@app/common/components/header';
 import { useSelector } from 'react-redux';
-import { getEnvParam } from '@app/common/components/uri-info';
+import { getEnvParam } from 'yti-common-ui/utils/link-utils';
 import { useStoreDispatch } from '@app/store';
 import UnsavedAlertModal from '../unsaved-alert-modal';
 import { useRouter } from 'next/router';

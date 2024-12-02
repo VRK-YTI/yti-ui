@@ -27,6 +27,7 @@ export const EmptyFormError = {
   diagramsUri: false,
   termConjugation: false,
   total: false,
+  identifier: false,
 };
 
 export default function validateForm(data: EditConceptType): FormError {
@@ -42,7 +43,12 @@ export default function validateForm(data: EditConceptType): FormError {
     diagramsUri: false,
     termConjugation: false,
     total: false,
+    identifier: false,
   };
+
+  if (!data.basicInformation.identifier) {
+    errors.identifier = true;
+  }
 
   // If any term has a name that is empty or undefined
   if (
@@ -115,7 +121,7 @@ export default function validateForm(data: EditConceptType): FormError {
     data.basicInformation.diagramAndSource.diagrams.filter(
       (diagram) =>
         !diagram.name ||
-        diagram.name === '' ||
+        Object.entries(diagram.name).some((e) => e[1] === '') ||
         !diagram.url ||
         diagram.url === ''
     ).length > 0
@@ -147,7 +153,7 @@ export default function validateForm(data: EditConceptType): FormError {
   if (
     data.terms
       .map((t) => t.termConjugation)
-      .filter((c) => c && !['singular', 'plural'].includes(c)).length > 0
+      .filter((c) => c && !['SINGULAR', 'PLURAL'].includes(c)).length > 0
   ) {
     errors.termConjugation = true;
   }

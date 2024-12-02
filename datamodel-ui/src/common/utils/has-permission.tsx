@@ -25,6 +25,7 @@ const actions = [
   'CREATE_ATTRIBUTE',
   'EDIT_ATTRIBUTE',
   'DELETE_ATTRIBUTE',
+  'VIEW',
 ] as const;
 
 export type Actions = (typeof actions)[number];
@@ -104,6 +105,14 @@ export function checkPermission({
   if (
     rolesInOrganizations.includes('ADMIN') &&
     rolesInTargetOrganizations?.includes('ADMIN')
+  ) {
+    return true;
+  }
+
+  // View access for members
+  if (
+    rolesInTargetOrganizations?.includes('MEMBER') &&
+    actions.includes('VIEW')
   ) {
     return true;
   }

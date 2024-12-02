@@ -8,12 +8,13 @@ import {
   MultiselectSmBot,
 } from './terminology-components.styles';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
-import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { TerminologyForm } from '@app/modules/new-terminology/info-manual';
 
 interface InformationDomainsSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
   userPosted: boolean;
-  initialData?: NewTerminologyInfo;
+  initialData?: TerminologyForm;
   disabled?: boolean;
 }
 
@@ -30,10 +31,10 @@ export default function InformationDomainsSelector({
     MultiSelectData[]
   >(
     initialData
-      ? initialData.infoDomains.map((domain) => ({
-          labelText: domain.labelText,
-          uniqueItemId: domain.uniqueItemId,
-          chipText: domain.labelText,
+      ? initialData.groups.map((group) => ({
+          labelText: group.labelText,
+          uniqueItemId: group.uniqueItemId,
+          chipText: group.labelText,
           disabled: false,
         }))
       : []
@@ -41,19 +42,21 @@ export default function InformationDomainsSelector({
 
   const handleChange = (e: MultiSelectData[]) => {
     setSelectedInfoDomains(e);
-    update({ key: 'infoDomains', data: e });
+    update({ key: 'groups', data: e });
   };
 
   const infoDomains: MultiSelectData[] = informationDomains?.map(
     (infoDomain) => {
-      const domainName = infoDomain.properties.prefLabel.value;
+      const domainName = getLanguageVersion({
+        data: infoDomain.label,
+        lang: i18n.language,
+      });
 
       if (domainName) {
         return {
           name: domainName,
           labelText: domainName,
-          uniqueItemId: infoDomain.id,
-          groupId: infoDomain.type.graph.id,
+          uniqueItemId: infoDomain.identifier,
         } as MultiSelectData;
       }
     }

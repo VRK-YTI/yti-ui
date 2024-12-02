@@ -155,10 +155,15 @@
     "plural": "monikko",
     "singular": "yksikkö"
   },
+  "term-equivalency": {
+    "broader": ">",
+    "narrower": "<",
+    "close": "~"
+  },
   "term-family": {
     "feminine": "feminiini",
     "masculine": "maskuliini",
-    "neutral": "neutri"
+    "neuter": "neutri"
   },
   "term-style": {
     "spoken-form": "puhekieli"
@@ -216,7 +221,7 @@
   "vocabulary-info-terminology": "Sanaston tiedot ja toiminnot",
   "vocabulary-info-vocabulary-button": "Tallenna sanasto",
   "vocabulary-info-vocabulary-export": "Tallenna sanasto tiedostona",
-  "vocabulary-info-vocabulary-export-description": "Voit tarkastella sanaston, käsitevalikoiman ja käsitteen, sekä termien tietoja Excel-tiedostomuodoissa.",
+  "vocabulary-info-vocabulary-export-description": "Voit tarkastella sanaston, käsitekokoelman ja käsitteen, sekä termien tietoja eri tiedostomuodoissa.",
   "vocabulary-info-vocabulary-type": "Sanastotyyppi",
   "vocabulary-results-collections_one": "Käsitekokoelmia {{count}} kpl seuraavilla rajauksilla",
   "vocabulary-results-collections_other": "Käsitekokoelmia {{count}} kpl seuraavilla rajauksilla",

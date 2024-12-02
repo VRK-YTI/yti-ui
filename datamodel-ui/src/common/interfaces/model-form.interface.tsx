@@ -20,7 +20,7 @@ export interface ModelFormType {
   prefix: string;
   serviceCategories: MultiSelectData[];
   status: Status;
-  type: ModelType['type'];
+  type: ModelType['graphType'];
   terminologies: ModelTerminology[];
   codeLists: ModelCodeList[];
   documentation?: { [key: string]: string };

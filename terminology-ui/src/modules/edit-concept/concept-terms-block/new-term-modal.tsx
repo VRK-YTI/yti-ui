@@ -62,7 +62,6 @@ export default function NewTermModal({
   const [isHomographic, setIsHomographic] = useState(false);
   const [termData, setTermData] = useState<ConceptTermType>({
     changeNote: '',
-    draftComment: '',
     editorialNote: [],
     historyNote: '',
     id: v4(),
@@ -73,7 +72,6 @@ export default function NewTermModal({
     status: 'DRAFT',
     termConjugation: '',
     termEquivalency: '',
-    termEquivalencyRelation: '',
     termFamily: '',
     termHomographNumber: '',
     termInfo: '',
@@ -84,11 +82,11 @@ export default function NewTermModal({
 
   const wordClasses = [
     {
-      labelText: translateWordClass('adjective', t),
+      labelText: translateWordClass('ADJECTIVE', t),
       uniqueItemId: 'adjective',
     },
     {
-      labelText: translateWordClass('verb', t),
+      labelText: translateWordClass('VERB', t),
       uniqueItemId: 'verb',
     },
   ];
@@ -376,8 +374,8 @@ export default function NewTermModal({
                 uniqueItemId: 'masculine',
               },
               {
-                labelText: t('term-family.neutral', { ns: 'common' }),
-                uniqueItemId: 'neutral',
+                labelText: t('term-family.neuter', { ns: 'common' }),
+                uniqueItemId: 'neuter',
               },
               {
                 labelText: t('term-family.feminine', { ns: 'common' }),

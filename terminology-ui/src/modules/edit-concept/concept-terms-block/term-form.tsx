@@ -11,7 +11,6 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
   Button,
-  Dropdown,
   DropdownItem,
   IconRemove,
   SingleSelect,
@@ -27,7 +26,6 @@ import {
   GrammaticalBlock,
   HomographTextInput,
   MediumHeading,
-  TermEquivalencyBlock,
   TermFormBottomBlock,
   TermFormRemoveButton,
   TermFormTopBlock,
@@ -72,37 +70,52 @@ export default function TermForm({
   const termFamily = [
     {
       labelText: t('term-family.masculine', { ns: 'common' }),
-      uniqueItemId: 'masculine',
+      uniqueItemId: 'MASCULINE',
     },
     {
-      labelText: t('term-family.neutral', { ns: 'common' }),
-      uniqueItemId: 'neutral',
+      labelText: t('term-family.neuter', { ns: 'common' }),
+      uniqueItemId: 'NEUTER',
     },
     {
       labelText: t('term-family.feminine', { ns: 'common' }),
-      uniqueItemId: 'feminine',
+      uniqueItemId: 'FEMININE',
+    },
+  ];
+
+  const termEquivalency = [
+    {
+      labelText: '<',
+      uniqueItemId: 'NARROWER',
+    },
+    {
+      labelText: '>',
+      uniqueItemId: 'BROADER',
+    },
+    {
+      labelText: `${t('almost-the-same-as', { ns: 'admin' })} (~)`,
+      uniqueItemId: 'CLOSE',
     },
   ];
 
   const termConjugation = [
     {
       labelText: t('term-conjugation.singular', { ns: 'common' }),
-      uniqueItemId: 'singular',
+      uniqueItemId: 'SINGULAR',
     },
     {
       labelText: t('term-conjugation.plural', { ns: 'common' }),
-      uniqueItemId: 'plural',
+      uniqueItemId: 'PLURAL',
     },
   ];
 
   const wordClasses = [
     {
-      labelText: translateWordClass('adjective', t),
-      uniqueItemId: 'adjective',
+      labelText: translateWordClass('ADJECTIVE', t),
+      uniqueItemId: 'ADJECTIVE',
     },
     {
-      labelText: translateWordClass('verb', t),
-      uniqueItemId: 'verb',
+      labelText: translateWordClass('VERB', t),
+      uniqueItemId: 'VERB',
     },
   ];
 
@@ -254,24 +267,28 @@ export default function TermForm({
         maxLength={TEXT_AREA_MAX}
       />
 
-      <TermEquivalencyBlock>
-        <label>
-          {t('term-equivalency')}
-          <span> ({t('optional')})</span>
-        </label>
-        <span>{t('term-equivalency-description')}</span>
-        <Dropdown
-          labelText=""
-          labelMode="hidden"
-          defaultValue={term.termEquivalency}
-          onChange={(e) => handleUpdate({ key: 'termEquivalency', value: e })}
-        >
-          <DropdownItem value="undefined">{t('no-selection')}</DropdownItem>
-          <DropdownItem value="<">{'<'}</DropdownItem>
-          <DropdownItem value=">">{'>'}</DropdownItem>
-          <DropdownItem value="~">{t('almost-the-same-as')} (~)</DropdownItem>
-        </Dropdown>
-      </TermEquivalencyBlock>
+      <SingleSelect
+        ariaOptionsAvailableText={t('available-term-equivalencies') as string}
+        clearButtonLabel={t('clear-button-label')}
+        labelText={t('term-equivalency')}
+        optionalText={t('optional')}
+        hintText={t('term-equivalency-description')}
+        visualPlaceholder={t('choose-term-equivalency')}
+        itemAdditionHelpText={''}
+        items={termEquivalency}
+        defaultSelectedItem={
+          term.wordClass
+            ? termEquivalency.filter(
+                (ts) =>
+                  ts.uniqueItemId === term.termEquivalency ||
+                  ts.labelText === term.termEquivalency
+              )[0]
+            : undefined
+        }
+        onItemSelect={(e) => handleUpdate({ key: 'termEquivalency', value: e })}
+        id={`equivalency-picker_${term.id}`}
+        style={{ marginTop: '20px' }}
+      />
 
       <ListBlock
         update={handleUpdate}

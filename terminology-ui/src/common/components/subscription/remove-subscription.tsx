@@ -9,7 +9,6 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { Resource } from '../../interfaces/subscription.interface';
-import getPrefLabel from '../../utils/get-preflabel';
 import IconButton from 'yti-common-ui/icon-button';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
@@ -17,6 +16,7 @@ import {
   RemoveModalContent,
   RemoveModalUl,
 } from './subscription.styles';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 interface RemoveSubscriptionProps {
   resources?: Resource[];
@@ -45,7 +45,7 @@ export default function RemoveSubscription({
 
     setUnsubscribedItem(
       resource.prefLabel
-        ? getPrefLabel({ prefLabels: resource.prefLabel, lang: i18n.language })
+        ? getLanguageVersion({ data: resource.prefLabel, lang: i18n.language })
         : resource.uri
     );
     setVisible(false);
@@ -65,8 +65,8 @@ export default function RemoveSubscription({
       .join(',');
     setUnsubscribedItem(
       resources[0].prefLabel
-        ? getPrefLabel({
-            prefLabels: resources[0].prefLabel,
+        ? getLanguageVersion({
+            data: resources[0].prefLabel,
             lang: i18n.language,
           })
         : resources[0].uri
@@ -125,8 +125,8 @@ export default function RemoveSubscription({
                 <li key={`resource-${idx}`}>
                   <Text smallScreen className="to-be-removed-subscription">
                     {resource.prefLabel
-                      ? getPrefLabel({
-                          prefLabels: resource.prefLabel,
+                      ? getLanguageVersion({
+                          data: resource.prefLabel,
                           lang: i18n.language,
                         })
                       : resource.uri}
@@ -139,8 +139,8 @@ export default function RemoveSubscription({
             <Paragraph>
               <Text smallScreen>
                 {resource.prefLabel
-                  ? getPrefLabel({
-                      prefLabels: resource.prefLabel,
+                  ? getLanguageVersion({
+                      data: resource.prefLabel,
                       lang: i18n.language,
                     })
                   : resource.uri}

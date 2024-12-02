@@ -1,6 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { Collection } from '@app/common/interfaces/collection.interface';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
+import {
+  ConceptCollection,
+  ConceptCollectionInfo,
+} from '@app/common/interfaces/interfaces-v2';
 
 export const collectionApi = createApi({
   reducerPath: 'collectionAPI',
@@ -8,17 +11,62 @@ export const collectionApi = createApi({
   tagTypes: ['Collection'],
   endpoints: (builder) => ({
     getCollection: builder.query<
-      Collection,
+      ConceptCollectionInfo,
       { terminologyId: string; collectionId: string }
     >({
       query: ({ terminologyId, collectionId }) => ({
-        url: `/collection?graphId=${terminologyId}&collectionId=${collectionId}`,
+        url: `/collection/${terminologyId}/${collectionId}`,
         method: 'GET',
       }),
     }),
-    getCollections: builder.query<Collection[], string>({
+    getCollections: builder.query<ConceptCollectionInfo[], string>({
       query: (terminologyId) => ({
-        url: `/collections?graphId=${terminologyId}`,
+        url: `/collection/${terminologyId}`,
+        method: 'GET',
+      }),
+    }),
+    addCollection: builder.mutation<
+      null,
+      {
+        terminologyId: string;
+        payload: ConceptCollection;
+      }
+    >({
+      query: (data) => ({
+        url: `/collection/${data.terminologyId}`,
+        method: 'POST',
+        data: data.payload,
+      }),
+    }),
+    updateCollection: builder.mutation<
+      null,
+      {
+        terminologyId: string;
+        collectionId: string;
+        payload: ConceptCollection;
+      }
+    >({
+      query: (data) => ({
+        url: `/collection/${data.terminologyId}/${data.collectionId}`,
+        method: 'PUT',
+        data: data.payload,
+      }),
+    }),
+    deleteCollection: builder.mutation<
+      null,
+      { prefix: string; collectionId: string }
+    >({
+      query: (value) => ({
+        url: `/collection/${value.prefix}/${value.collectionId}`,
+        method: 'DELETE',
+      }),
+    }),
+    collectionExists: builder.mutation<
+      boolean,
+      { terminologyId: string; collectionId: string }
+    >({
+      query: (params) => ({
+        url: `/collection/${params.terminologyId}/${params.collectionId}/exists`,
         method: 'GET',
       }),
     }),
@@ -28,6 +76,10 @@ export const collectionApi = createApi({
 export const {
   useGetCollectionQuery,
   useGetCollectionsQuery,
+  useAddCollectionMutation,
+  useUpdateCollectionMutation,
+  useCollectionExistsMutation,
+  useDeleteCollectionMutation,
   util: { getRunningQueriesThunk },
 } = collectionApi;
 

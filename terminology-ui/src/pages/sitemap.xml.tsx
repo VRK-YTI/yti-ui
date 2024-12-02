@@ -1,26 +1,24 @@
-import { TerminologySearchResult } from '@app/common/interfaces/terminology.interface';
+import {
+  SearchResponse,
+  TerminogyResponseObject,
+} from '@app/common/interfaces/interfaces-v2';
 import { GetServerSideProps } from 'next';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const Sitemap = () => {};
 
-export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const terminologiesData: TerminologySearchResult = await fetch(
-    `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend/searchTerminology`,
-    {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        query: '',
-        statuses: [],
-        groups: [],
-        searchConcepts: true,
-        prefLang: 'fi',
-        pageSize: 10000,
-        pageFrom: 0,
-      }),
-    }
-  ).then((data) => data.json());
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const terminologiesData: SearchResponse<TerminogyResponseObject> =
+    await fetch(
+      `${process.env.TERMINOLOGY_API_URL}/frontend/search-terminologies?pageSize=10000`,
+      {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          host: req.headers['host'] ?? 'sanastot.suomi.fi',
+        },
+      }
+    ).then((data) => data.json());
 
   const URI = 'https://sanastot.suomi.fi';
 
@@ -29,11 +27,11 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
       <url>
         <loc>${URI}</loc>
       </url>
-      ${terminologiesData.terminologies
+      ${terminologiesData.responseObjects
         ?.map(
           (t) =>
             `<url>
-          <loc>${URI}/terminology/${t.id}</loc>
+          <loc>${URI}/terminology/${t.prefix}</loc>
         </url>`
         )
         .join('')}

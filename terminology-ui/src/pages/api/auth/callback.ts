@@ -36,10 +36,9 @@ export default withIronSessionApiRoute(
       const proxyUrl = process.env.AUTH_PROXY_URL ?? 'http://yti-auth-proxy';
       const apiBase =
         process.env.TERMINOLOGY_API_URL ??
-        'http://yti-terminology-api:9103/terminology-api';
+        'http://yti-terminology-api:9103/terminology-api/v2';
       const apiPath = new URL(apiBase).pathname;
-      const fetchUrl =
-        proxyUrl + apiPath + '/api/v1/frontend/authenticated-user';
+      const fetchUrl = proxyUrl + apiPath + '/user';
 
       // Shibboleth configuration requires X-Forwarded-For to allow access with
       // the _shibsession cookie. Otherwise the "consistentAddress" setting will

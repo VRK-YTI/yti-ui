@@ -2,7 +2,6 @@ import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { useStoreDispatch } from '../../../store';
-import { OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { setAlert } from '../alert/alert.slice';
 import {
   useGetRequestsQuery,
@@ -15,13 +14,14 @@ import {
 } from './access-request.styles';
 import { AccessRequestModalProps } from './access-request-modal';
 import { IconMessage } from 'suomifi-ui-components';
+import { Organization } from 'yti-common-ui/interfaces/organization.interface';
 
 const AccessRequestModal = dynamic<AccessRequestModalProps>(() =>
   import('./access-request-modal').then((module) => module.default)
 );
 
 interface AccessRequestProps {
-  organizations?: OrganizationSearchResult[];
+  organizations?: Organization[];
 }
 
 export default function AccessRequest({ organizations }: AccessRequestProps) {

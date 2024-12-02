@@ -39,8 +39,7 @@ export default function Prefix({
   maxLength,
   minLength,
 }: PrefixProps) {
-  const URI =
-    typeInUri === 'model' ? 'https://iri.suomi.fi' : 'http://uri.suomi.fi';
+  const namespace = 'https://iri.suomi.fi';
   const [prefixValid, setPrefixValid] = useState(true);
   const [prefixInternal, setPrefixInternal] = useState(prefix);
 
@@ -98,8 +97,8 @@ export default function Prefix({
         <Label>{translations.uriPreview}</Label>
         <Paragraph>
           <Text smallScreen>
-            {URI}/{typeInUri}/{prefixInternal}
-            {prefixInternal && '/'}
+            {namespace}/{typeInUri}/{prefix}
+            {prefix && '/'}
           </Text>
         </Paragraph>
       </div>

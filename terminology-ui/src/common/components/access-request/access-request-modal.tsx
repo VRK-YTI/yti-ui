@@ -1,5 +1,4 @@
-import { OrganizationSearchResult } from '@app/common/interfaces/terminology.interface';
-import { useTranslation } from 'next-i18next';
+import { i18n, useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -21,11 +20,13 @@ import {
   ModalContentBlock,
   ModalTitleH1,
 } from './access-request.styles';
+import { Organization } from 'yti-common-ui/interfaces/organization.interface';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 
 export interface AccessRequestModalProps {
   visible: boolean;
   handleClose: () => void;
-  organizations?: OrganizationSearchResult[];
+  organizations?: Organization[];
   requests?: AccessRequest[];
   postRequest: (value: string) => void;
 }
@@ -127,7 +128,10 @@ export default function AccessRequestModal({
                   value={organization.id}
                   key={`dropdown-item-${idx}`}
                 >
-                  {organization.properties.prefLabel.value}
+                  {getLanguageVersion({
+                    data: organization.label,
+                    lang: i18n?.language ?? 'fi',
+                  })}
                 </DropdownItem>
               );
             })}
@@ -202,7 +206,7 @@ export default function AccessRequestModal({
   );
 
   function sendPost() {
-    let uri = `/request?organizationId=${chosenOrganization}`;
+    let uri = `/requests?organizationId=${chosenOrganization}`;
 
     Object.keys(services).map((key) => {
       if (services[key]) {

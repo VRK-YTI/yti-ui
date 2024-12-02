@@ -53,6 +53,7 @@ import UnsavedAlertModal from '../unsaved-alert-modal';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { isDraftModel } from '.';
 import CopyModal from '../create-copy-modal';
+import CreateDraftModal from '../create-draft-modal';
 
 export default function ModelInfoView({
   organizationIds,
@@ -81,11 +82,16 @@ export default function ModelInfoView({
     getEmailNotification: false,
     delete: false,
     copy: false,
+    createDraft: false,
   });
   const ref = useRef<HTMLDivElement>(null);
   const { setView } = useSetView();
   const hasPermission = HasPermission({
     actions: ['EDIT_DATA_MODEL'],
+    targetOrganization: organizationIds,
+  });
+  const hasAdminPermission = HasPermission({
+    actions: ['ADMIN_DATA_MODEL'],
     targetOrganization: organizationIds,
   });
   const { data: modelInfo } = useGetModelQuery({
@@ -123,7 +129,7 @@ export default function ModelInfoView({
         prefix: modelInfo?.prefix ?? '',
         serviceCategories: getIsPartOfWithId(modelInfo, i18n.language) ?? [],
         status: modelInfo?.status ?? 'DRAFT',
-        type: modelInfo?.type ?? 'PROFILE',
+        type: modelInfo?.graphType ?? 'PROFILE',
         terminologies: modelInfo.terminologies ?? [],
         externalNamespaces: modelInfo.externalNamespaces ?? [],
         internalNamespaces: modelInfo.internalNamespaces ?? [],
@@ -257,7 +263,17 @@ export default function ModelInfoView({
             ) : (
               <></>
             )}
-            {hasPermission && (user.superuser || !modelInfo.version) ? (
+            {hasAdminPermission && version ? (
+              <ActionMenuItem
+                onClick={() => handleModalChange('createDraft', true)}
+              >
+                {t('create-draft-title', { ns: 'admin' })}
+              </ActionMenuItem>
+            ) : (
+              <></>
+            )}
+            {hasAdminPermission &&
+            (user.superuser || modelInfo.status !== 'VALID') ? (
               <ActionMenuItem onClick={() => handleModalChange('delete', true)}>
                 {t('remove', { ns: 'admin' })}
               </ActionMenuItem>
@@ -295,22 +311,11 @@ export default function ModelInfoView({
 
       <DrawerContent height={headerHeight}>
         <BasicBlock title={t('name')}>
-          <MultilingualBlock
-            data={Object.entries(modelInfo.label)
-              .sort((a, b) => compareLocales(a[0], b[0]))
-              .map((l) => ({ lang: l[0], value: l[1] }))}
-          />
+          <MultilingualBlock data={modelInfo.label} />
         </BasicBlock>
         <BasicBlock title={t('description')}>
           {Object.keys(modelInfo.description).length > 0 ? (
-            <MultilingualBlock
-              data={Object.entries(modelInfo.description)
-                .sort((a, b) => compareLocales(a[0], b[0]))
-                .map((d) => ({
-                  lang: d[0],
-                  value: <SanitizedTextContent text={d[1]} />,
-                }))}
-            />
+            <MultilingualBlock renderHtml={true} data={modelInfo.description} />
           ) : (
             t('not-added')
           )}
@@ -459,7 +464,7 @@ export default function ModelInfoView({
           visible={openModals.showAsFile}
           onClose={() => handleModalChange('showAsFile', false)}
           version={version}
-          applicationProfile={modelInfo?.type === 'PROFILE'}
+          applicationProfile={modelInfo?.graphType === 'PROFILE'}
         />
         {modelInfo && (
           <>
@@ -475,6 +480,7 @@ export default function ModelInfoView({
                   type="model"
                   visible={openModals.delete}
                   hide={() => handleModalChange('delete', false)}
+                  status={modelInfo.status}
                 />
                 {!version && (
                   <CreateReleaseModal
@@ -489,6 +495,18 @@ export default function ModelInfoView({
                   visible={openModals.copy}
                   hide={() => handleModalChange('copy', false)}
                 />
+                {version && (
+                  <CreateDraftModal
+                    modelId={modelId}
+                    modelVersion={version}
+                    label={getLanguageVersion({
+                      data: modelInfo.label,
+                      lang: i18n.language,
+                    })}
+                    visible={openModals.createDraft}
+                    hide={() => handleModalChange('createDraft', false)}
+                  />
+                )}
               </>
             )}
 
@@ -502,7 +520,7 @@ export default function ModelInfoView({
               visible={openModals.downloadAsFile}
               onClose={() => handleModalChange('downloadAsFile', false)}
               version={version}
-              applicationProfile={modelInfo.type === 'PROFILE'}
+              applicationProfile={modelInfo.graphType === 'PROFILE'}
             />
           </>
         )}

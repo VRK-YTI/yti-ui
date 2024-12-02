@@ -18,9 +18,11 @@
     "prefLabel": "Collection name must be defined in at least one of the available languages."
   },
   "enter-collection-description": "Enter a definition",
+  "enter-collection-identifier": "Enter an identifier",
   "enter-collection-name": "Enter a name",
   "enter-search-term": "Enter search term",
   "field-definition": "Definition",
+  "field-identifier": "Identifier",
   "field-member": "Concepts in the collection",
   "field-name": "Name",
   "heading": "Collection",

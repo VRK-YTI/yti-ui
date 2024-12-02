@@ -10,7 +10,7 @@ import {
   terminologySearchApi,
 } from '@app/common/components/terminology-search/terminology-search.slice';
 import {
-  vocabularyApi,
+  terminologyApi,
   vocabularySlice,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import { conceptApi } from '@app/common/components/concept/concept.slice';
@@ -24,8 +24,6 @@ import { subscriptionApi } from '@app/common/components/subscription/subscriptio
 import { accessRequestApi } from '@app/common/components/access-request/access-request.slice';
 import { adminControlsSlice } from '@app/common/components/admin-controls/admin-controls.slice';
 import { importApi } from '@app/common/components/import/import.slice';
-import { modifyApi } from '@app/common/components/modify/modify.slice';
-import { removeApi } from '@app/common/components/remove/remove.slice';
 import { NextApiRequest } from 'next';
 import { modifyStatusesApi } from '@app/common/components/modify-statuses/modify-statuses.slice';
 import { fakeableUsersApi } from '@app/common/components/fakeable-user/fakeable-user.slice';
@@ -38,7 +36,7 @@ const reducers = {
   [terminologySearchSlice.name]: terminologySearchSlice.reducer,
   [terminologySearchApi.reducerPath]: terminologySearchApi.reducer,
   [vocabularySlice.name]: vocabularySlice.reducer,
-  [vocabularyApi.reducerPath]: vocabularyApi.reducer,
+  [terminologyApi.reducerPath]: terminologyApi.reducer,
   [conceptApi.reducerPath]: conceptApi.reducer,
   [collectionApi.reducerPath]: collectionApi.reducer,
   [countsApi.reducerPath]: countsApi.reducer,
@@ -50,8 +48,6 @@ const reducers = {
   [accessRequestApi.reducerPath]: accessRequestApi.reducer,
   [adminControlsSlice.name]: adminControlsSlice.reducer,
   [importApi.reducerPath]: importApi.reducer,
-  [modifyApi.reducerPath]: modifyApi.reducer,
-  [removeApi.reducerPath]: removeApi.reducer,
   [modifyStatusesApi.reducerPath]: modifyStatusesApi.reducer,
   [fakeableUsersApi.reducerPath]: fakeableUsersApi.reducer,
   [codeListApi.reducerPath]: codeListApi.reducer,
@@ -69,15 +65,13 @@ export const makeStore: MakeStore<any> = ({
     middleware: (getDefaultMiddleware) => [
       ...getDefaultMiddleware({ thunk: { extraArgument: context } }),
       terminologySearchApi.middleware,
-      vocabularyApi.middleware,
+      terminologyApi.middleware,
       conceptApi.middleware,
       collectionApi.middleware,
       countsApi.middleware,
       subscriptionApi.middleware,
       accessRequestApi.middleware,
       importApi.middleware,
-      modifyApi.middleware,
-      removeApi.middleware,
       loginApi.middleware,
       modifyStatusesApi.middleware,
       fakeableUsersApi.middleware,

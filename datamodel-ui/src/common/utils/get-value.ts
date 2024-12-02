@@ -54,7 +54,7 @@ export function getType(data?: ModelType): Type {
     return 'PROFILE';
   }
 
-  return data.type;
+  return data.graphType;
 }
 
 export function getStatus(data?: ModelType): Status {

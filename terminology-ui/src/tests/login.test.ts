@@ -78,9 +78,7 @@ describe('api endpoint - login', () => {
 
     // callback will call authenticated-user for user details
     mock
-      .onGet(
-        'http://auth-proxy.invalid/terminology-api/api/v1/frontend/authenticated-user'
-      )
+      .onGet('http://auth-proxy.invalid/terminology-api/v2/user')
       .reply(200, fakeUser, {
         'set-cookie': ['JSESSIONID=foo'],
       });

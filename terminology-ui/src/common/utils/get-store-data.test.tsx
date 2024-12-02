@@ -4,9 +4,9 @@ describe('page-head-utils', () => {
   it('should return correct object', () => {
     const gotten = getStoreData({
       state: {
-        vocabularyAPI: {
+        terminologyAPI: {
           queries: {
-            getVocabulary: {
+            getTerminology: {
               data: {
                 test: '123',
               },
@@ -14,8 +14,8 @@ describe('page-head-utils', () => {
           },
         },
       },
-      reduxKey: 'vocabularyAPI',
-      functionKey: 'getVocabulary',
+      reduxKey: 'terminologyAPI',
+      functionKey: 'getTerminology',
     });
 
     expect(gotten).toStrictEqual({ test: '123' });
@@ -24,9 +24,9 @@ describe('page-head-utils', () => {
   it('should return empty object with incorrect redux key', () => {
     const gotten = getStoreData({
       state: {
-        vocabularyAPI: {
+        terminologyAPI: {
           queries: {
-            getVocabulary: {
+            getTerminology: {
               data: {
                 test: '123',
               },
@@ -35,7 +35,7 @@ describe('page-head-utils', () => {
         },
       },
       reduxKey: 'conceptAPI',
-      functionKey: 'getVocabulary',
+      functionKey: 'getTerminology',
     });
 
     expect(gotten).toStrictEqual({});
@@ -44,9 +44,9 @@ describe('page-head-utils', () => {
   it('should return empty object with incorrect function', () => {
     const gotten = getStoreData({
       state: {
-        vocabularyAPI: {
+        terminologyAPI: {
           queries: {
-            getVocabulary: {
+            getTerminology: {
               data: {
                 test: '123',
               },
@@ -54,7 +54,7 @@ describe('page-head-utils', () => {
           },
         },
       },
-      reduxKey: 'vocabularyAPI',
+      reduxKey: 'terminologyAPI',
       functionKey: 'getConcept',
     });
 

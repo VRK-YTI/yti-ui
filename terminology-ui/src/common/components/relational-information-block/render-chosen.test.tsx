@@ -1,6 +1,7 @@
 import { renderWithProviders } from '@app/tests/test-utils';
 import { fireEvent, screen } from '@testing-library/react';
 import RenderChosen from './render-chosen';
+import { ConceptResponseObject } from '@app/common/interfaces/interfaces-v2';
 
 describe('render-chosen', () => {
   it('should render component', () => {
@@ -60,40 +61,33 @@ describe('render-chosen', () => {
     expect(setShowChosenMock).toHaveBeenCalledTimes(1);
   });
 });
-
 const chosen = [
   {
-    altLabel: {},
-    definition: {},
-    id: '1',
-    label: {
-      fi: 'chosen1',
-    },
-    modified: '',
-    status: '',
-    terminology: {
-      id: '',
-      label: {},
-      status: 'VALID',
-      uri: '',
-    },
     uri: '',
+    id: '1',
+    label: { fi: 'chosen1' },
+    status: 'DRAFT',
+    created: '',
+    modified: '',
+    terminology: {
+      prefix: '',
+      label: {},
+    },
+    definition: {},
+    identifier: '',
   },
   {
-    altLabel: {},
-    definition: {},
-    id: '2',
-    label: {
-      fi: 'chosen2',
-    },
-    modified: '',
-    status: '',
-    terminology: {
-      id: '',
-      label: {},
-      status: 'VALID',
-      uri: '',
-    },
     uri: '',
+    id: '2',
+    label: { fi: 'chosen2' },
+    status: 'DRAFT',
+    created: '',
+    modified: '',
+    terminology: {
+      prefix: '',
+      label: {},
+    },
+    definition: {},
+    identifier: '',
   },
-];
+] as ConceptResponseObject[];

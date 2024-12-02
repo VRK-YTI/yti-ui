@@ -1,11 +1,11 @@
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
-import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import isEmail from 'validator/lib/isEmail';
+import { TerminologyForm } from './info-manual';
 
 interface MissingInfoAlertProps {
-  data: NewTerminologyInfo;
+  data: TerminologyForm;
 }
 
 export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
@@ -38,8 +38,8 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
     if (
       data.languages.length === 0 ||
       data.languages.some((l) => !l.title) ||
-      data.contributors.length === 0 ||
-      data.infoDomains.length === 0 ||
+      data.organizations.length === 0 ||
+      data.groups.length === 0 ||
       !data.prefix[0] ||
       data.prefix[1] === false ||
       (Object.keys(data).includes('status') && !data.status) ||
@@ -71,14 +71,14 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
   }
 
   function renderOrganizationAlerts(): string {
-    if (data.contributors.length === 0) {
+    if (data.organizations.length === 0) {
       return t('alert-org-undefined');
     }
     return '';
   }
 
   function renderInformationDomainAlerts(): string {
-    if (data.infoDomains.length === 0) {
+    if (data.groups.length === 0) {
       return t('alert-information-domain-undefined');
     }
 

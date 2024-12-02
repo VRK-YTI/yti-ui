@@ -1,5 +1,6 @@
 import { useDeleteClassMutation } from '@app/common/components/class/class.slice';
 import { useDeleteModelMutation } from '@app/common/components/model/model.slice';
+import { useModelReferrersQuery } from '@app/common/components/model/model.slice';
 import { useDeleteResourceMutation } from '@app/common/components/resource/resource.slice';
 import {
   translateDeleteModalDescription,
@@ -20,6 +21,7 @@ import {
 } from './../as-file-modal/as-file-modal.styles';
 import SaveSpinner from 'yti-common-ui/save-spinner';
 import getApiError from '@app/common/utils/get-api-errors';
+import { Status } from '@app/common/interfaces/status.interface';
 
 interface DeleteModalProps {
   modelId: string;
@@ -31,6 +33,7 @@ interface DeleteModalProps {
   visible: boolean;
   hide: () => void;
   applicationProfile?: boolean;
+  status?: Status;
 }
 
 export default function DeleteModal({
@@ -43,6 +46,7 @@ export default function DeleteModal({
   visible,
   hide,
   applicationProfile,
+  status,
 }: DeleteModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -50,6 +54,14 @@ export default function DeleteModal({
   const [deleteModel, deleteModelResult] = useDeleteModelMutation();
   const [deleteClass, deleteClassResult] = useDeleteClassMutation();
   const [deleteResource, deleteResourceResult] = useDeleteResourceMutation();
+  const { data: modelReferrers, isLoading: modelReferrersLoading } =
+    useModelReferrersQuery(
+      {
+        modelId: modelId,
+        version: modelVersion,
+      },
+      { skip: type !== 'model' || !visible }
+    );
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [userPosted, setUserPosted] = useState(false);
@@ -128,16 +140,44 @@ export default function DeleteModal({
   };
 
   const renderConfirm = () => {
+    if (modelReferrersLoading) {
+      return <></>;
+    }
+
+    let deleteDisabled = false;
+
+    if (
+      type === 'model' &&
+      ['RETIRED', 'SUPERSEDED'].includes(status ?? '') &&
+      (modelReferrers ?? []).length > 0
+    ) {
+      deleteDisabled = true;
+    }
+
     return (
       <>
         <ModalTitle>{translateDeleteModalTitle(type, t)}</ModalTitle>
-        <Text>
-          {translateDeleteModalDescription(type, t, label, modelVersion)}
-        </Text>
+
+        {type === 'model' && modelReferrers && modelReferrers?.length > 0 ? (
+          <Text>
+            {deleteDisabled
+              ? t('delete-modal.model-delete-disabled')
+              : t('delete-modal.model-in-use')}
+            <ul style={{ marginTop: '5px' }}>
+              {modelReferrers.map((referrer) => (
+                <li key={referrer}>{referrer}</li>
+              ))}
+            </ul>
+          </Text>
+        ) : (
+          <Text>
+            {translateDeleteModalDescription(type, t, label, modelVersion)}
+          </Text>
+        )}
 
         <ButtonFooter>
           <Button
-            disabled={userPosted}
+            disabled={userPosted || deleteDisabled}
             onClick={() => handleDelete()}
             id="delete-button"
           >

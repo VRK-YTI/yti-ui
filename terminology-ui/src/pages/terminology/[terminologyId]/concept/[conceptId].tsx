@@ -12,7 +12,7 @@ import {
   getRunningQueriesThunk as getConceptRunningQueriesThunk,
 } from '@app/common/components/concept/concept.slice';
 import {
-  getVocabulary,
+  getTerminology,
   getRunningQueriesThunk as getVocabularyRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
@@ -20,10 +20,10 @@ import {
   CommonContextProvider,
 } from 'yti-common-ui/common-context-provider';
 import PageHead from 'yti-common-ui/page-head';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { getProperty } from '@app/common/utils/get-property';
 import { getStoreData } from '@app/common/utils/get-store-data';
 import { wrapper } from '@app/store';
+import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import { Term } from '@app/common/interfaces/interfaces-v2';
 
 interface ConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -76,7 +76,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameters for page');
     }
 
-    store.dispatch(getVocabulary.initiate({ id: terminologyId }));
+    store.dispatch(getTerminology.initiate({ id: terminologyId }));
     store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
 
     await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));
@@ -84,8 +84,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     const vocabularyData = getStoreData({
       state: store.getState(),
-      reduxKey: 'vocabularyAPI',
-      functionKey: 'getVocabulary',
+      reduxKey: 'terminologyApi',
+      functionKey: 'getTerminology',
     });
 
     const conceptData = getStoreData({
@@ -103,21 +103,20 @@ export const getServerSideProps = createCommonGetServerSideProps(
       };
     }
 
-    const vocabularyTitle = getPropertyValue({
-      property: vocabularyData?.properties?.prefLabel,
-      language: locale,
+    const vocabularyTitle = getLanguageVersion({
+      data: vocabularyData?.label,
+      lang: locale,
     });
 
-    const conceptTitle = getPropertyValue({
-      property: getProperty('prefLabel', conceptData?.references.prefLabelXl),
-      language: locale,
-    });
+    const recommendedTerm =
+      conceptData.recommendedTerms.find((t: Term) => t.language === locale) ??
+      conceptData.recommendedTerms[0];
+    const conceptTitle = recommendedTerm.label ?? '';
 
-    const conceptDescription = getPropertyValue({
-      property: conceptData?.properties.definition,
-      language: locale,
+    const conceptDescription = getLanguageVersion({
+      data: conceptData.definition,
+      lang: locale,
     });
-
     return {
       props: {
         conceptDescription: conceptDescription,

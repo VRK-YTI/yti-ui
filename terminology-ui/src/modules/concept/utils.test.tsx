@@ -1,3 +1,4 @@
+import { ConceptInfo } from '@app/common/interfaces/interfaces-v2';
 import { getBlockData } from './utils';
 
 describe('order concept data', () => {
@@ -8,10 +9,8 @@ describe('order concept data', () => {
       jest.fn((x) => x),
       concept
     );
-    const termLabels = data.terms.map(
-      (t) => t.term.properties.prefLabel?.[0].value
-    );
-    const defintions = data.definitions.map((def) => def.value);
+    const termLabels = data.terms.map((t) => t.term.label);
+    const defintions = Object.values(data.definitions);
     const notes = data.notes.map((note) => note.value);
 
     const expectedTermOrder = [
@@ -42,139 +41,88 @@ describe('order concept data', () => {
 });
 
 const concept = {
-  id: '123',
-  properties: {
-    definition: [
-      {
-        lang: 'sv',
-        value: 'swedish definition',
-      },
-      {
-        lang: 'fi',
-        value: 'finnish definition',
-      },
-    ],
-    note: [
-      {
-        lang: 'fi',
-        value: 'first note',
-      },
-      {
-        lang: 'fi',
-        value: 'newer note',
-      },
-      {
-        lang: 'fi',
-        value: 'newest note',
-      },
-    ],
+  identifier: 'concept-1',
+  uri: '',
+  created: '',
+  modified: '',
+  creator: {
+    id: '',
+    name: '',
   },
-  referrers: {},
-  references: {
-    altLabelXl: [
-      {
-        properties: {
-          prefLabel: [
-            {
-              lang: 'fi',
-              value: 'zzz finnish synonym',
-              regex: '(?s)^.*$',
-            },
-          ],
-        },
-      },
-      {
-        properties: {
-          prefLabel: [
-            {
-              lang: 'fi',
-              value: 'aaa finnish synonym',
-              regex: '(?s)^.*$',
-            },
-          ],
-        },
-      },
-      {
-        properties: {
-          prefLabel: [
-            {
-              lang: 'sv',
-              value: 'swedish synonym',
-              regex: '(?s)^.*$',
-            },
-          ],
-        },
-      },
-    ],
-    prefLabelXl: [
-      {
-        properties: {
-          prefLabel: [
-            {
-              lang: 'fi',
-              value: 'finnish pref term',
-              regex: '(?s)^.*$',
-            },
-          ],
-        },
-      },
-      {
-        properties: {
-          prefLabel: [
-            {
-              lang: 'de',
-              value: 'german pref term',
-              regex: '(?s)^.*$',
-            },
-          ],
-        },
-      },
-      {
-        properties: {
-          prefLabel: [
-            {
-              lang: 'sv',
-              value: 'swedish pref term',
-              regex: '(?s)^.*$',
-            },
-          ],
-        },
-      },
-    ],
-    notRecommendedSynonym: [
-      {
-        properties: {
-          prefLabel: [
-            {
-              lang: 'fi',
-              value: 'bbb finnish not recommended',
-              regex: '(?s)^.*$',
-            },
-          ],
-        },
-      },
-      {
-        properties: {
-          prefLabel: [
-            {
-              lang: 'fi',
-              value: 'zzz finnish not recommended',
-              regex: '(?s)^.*$',
-            },
-          ],
-        },
-      },
-      {
-        properties: {
-          prefLabel: [
-            {
-              lang: 'fi',
-              value: 'aaa finnish not recommended',
-              regex: '(?s)^.*$',
-            },
-          ],
-        },
-      },
-    ],
+  modifier: {
+    id: '',
+    name: '',
   },
-};
+  definition: {
+    fi: 'finnish definition',
+    sv: 'swedish definition',
+  },
+  notes: [
+    { language: 'fi', value: 'first note' },
+    { language: 'fi', value: 'newer note' },
+    { language: 'fi', value: 'newest note' },
+  ],
+  examples: [],
+  subjectArea: '',
+  status: 'DRAFT',
+  sources: [],
+  links: [],
+  changeNote: '',
+  historyNote: '',
+  conceptClass: '',
+  editorialNotes: [],
+  recommendedTerms: [
+    {
+      language: 'fi',
+      label: 'finnish pref term',
+    },
+    {
+      language: 'de',
+      label: 'german pref term',
+    },
+    {
+      language: 'sv',
+      label: 'swedish pref term',
+    },
+  ],
+  synonyms: [
+    {
+      language: 'fi',
+      label: 'zzz finnish synonym',
+    },
+    {
+      language: 'fi',
+      label: 'aaa finnish synonym',
+    },
+    {
+      language: 'sv',
+      label: 'swedish synonym',
+    },
+  ],
+  notRecommendedTerms: [
+    {
+      language: 'fi',
+      label: 'bbb finnish not recommended',
+    },
+    {
+      language: 'fi',
+      label: 'zzz finnish not recommended',
+    },
+    {
+      language: 'fi',
+      label: 'aaa finnish not recommended',
+    },
+  ],
+  searchTerms: [],
+  broader: [],
+  narrower: [],
+  isPartOf: [],
+  hasPart: [],
+  related: [],
+  broadMatch: [],
+  narrowMatch: [],
+  exactMatch: [],
+  closeMatch: [],
+  relatedMatch: [],
+  memberOf: [],
+} as ConceptInfo;

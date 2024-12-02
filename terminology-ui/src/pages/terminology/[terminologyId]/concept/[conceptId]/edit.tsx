@@ -12,7 +12,7 @@ import PageHead from 'yti-common-ui/page-head';
 import { default as EditConceptModule } from '@app/modules/edit-concept';
 import { useRouter } from 'next/router';
 import {
-  getVocabulary,
+  getTerminology,
   getRunningQueriesThunk as getVocabularyRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
@@ -20,12 +20,12 @@ import {
   getRunningQueriesThunk as getConceptRunningQueriesThunk,
 } from '@app/common/components/concept/concept.slice';
 import { getStoreData } from '@app/common/utils/get-store-data';
-import { Concept } from '@app/common/interfaces/concept.interface';
 import { wrapper } from '@app/store';
+import { ConceptInfo } from '@app/common/interfaces/interfaces-v2';
 
 interface NewConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
-  conceptData: Concept;
+  conceptData: ConceptInfo;
 }
 
 export default function EditConcept(props: NewConceptPageProps) {
@@ -71,7 +71,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameters for page');
     }
 
-    store.dispatch(getVocabulary.initiate({ id: terminologyId }));
+    store.dispatch(getTerminology.initiate({ id: terminologyId }));
     store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
 
     await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));

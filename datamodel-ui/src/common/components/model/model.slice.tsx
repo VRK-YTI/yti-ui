@@ -166,6 +166,37 @@ export const modelApi = createApi({
         method: 'POST',
       }),
     }),
+    createDraft: builder.mutation<
+      string,
+      {
+        modelId: string;
+        version: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/create-draft`,
+        params: {
+          version: value.version,
+        },
+        method: 'POST',
+      }),
+    }),
+
+    modelReferrers: builder.query<
+      string[],
+      {
+        modelId: string;
+        version?: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/model/${value.modelId}/referrers`,
+        params: {
+          version: value.version,
+        },
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -182,6 +213,8 @@ export const {
   useSubscribeMutation,
   useUnsubscribeMutation,
   useCopyModelMutation,
+  useModelReferrersQuery,
+  useCreateDraftMutation,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
