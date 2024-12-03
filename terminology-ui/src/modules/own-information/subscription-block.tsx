@@ -87,11 +87,7 @@ export default function SubscriptionBlock({
           {subscriptions?.resources.map((resource, idx) => {
             return (
               <SubscriptionsListItem key={`subscription-list-item-${idx}`}>
-                <Link
-                  passHref
-                  href={`/terminology-api/api/v1/resolve?uri=${resource.uri}`}
-                  legacyBehavior
-                >
+                <Link passHref href={resource.uri} legacyBehavior>
                   <SuomiLink href="">
                     {resource.prefLabel
                       ? getLanguageVersion({
