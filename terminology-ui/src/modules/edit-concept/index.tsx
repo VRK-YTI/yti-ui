@@ -157,7 +157,7 @@ export default function EditConcept({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (Object.keys(preferredTerms).length < 1) {
+  if (!conceptData && Object.keys(preferredTerms).length < 1) {
     return (
       <>
         <Breadcrumb>
@@ -273,7 +273,10 @@ export default function EditConcept({
 
   function getPreferredTerms(): LocalizedValue {
     return languages.reduce((terms, lang) => {
-      terms[lang] = asString(router.query[lang]);
+      const termLabel = asString(router.query[lang]);
+      if (termLabel) {
+        terms[lang] = termLabel;
+      }
       return terms;
     }, {} as LocalizedValue);
   }
