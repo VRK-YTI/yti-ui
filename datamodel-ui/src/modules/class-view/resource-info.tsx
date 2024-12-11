@@ -267,6 +267,7 @@ export default function ResourceInfo({
             simpleResourceCodeLists={data.codeLists}
             disableEdit={disableEdit}
             handleRemoveCodeList={handleShowRemoveCodeListModal}
+            organizationIds={resourceData.contributor?.map((c) => c.id)}
           />
         )}
         {!data.modelId && (
