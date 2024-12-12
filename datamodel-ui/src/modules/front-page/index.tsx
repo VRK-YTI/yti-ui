@@ -233,14 +233,6 @@ export default function FrontPage() {
           <TitleDescriptionWrapper $isSmall={isSmall}>
             <Description id="page-description">
               {t('service-description')}
-              <Paragraph style={{ marginTop: '10px' }}>
-                <Link
-                  target="_blank"
-                  href="https://tietomallit.beta.yti.cloud.dvv.fi"
-                >
-                  {t('service-description-old-version')}
-                </Link>
-              </Paragraph>
             </Description>
           </TitleDescriptionWrapper>
         }
