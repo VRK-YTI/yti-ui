@@ -233,6 +233,17 @@ export default function FrontPage() {
           <TitleDescriptionWrapper $isSmall={isSmall}>
             <Description id="page-description">
               {t('service-description')}
+              {i18n.language === 'fi' && (
+                <Paragraph style={{ marginTop: '10px' }}>
+                  {t('service-description-for-developers')}
+                  <Link
+                    target="_blank"
+                    href="https://kehittajille.suomi.fi/palvelut/yhteentoimivuus"
+                  >
+                    {t('service-description-for-developers-link')}
+                  </Link>
+                </Paragraph>
+              )}
             </Description>
           </TitleDescriptionWrapper>
         }
