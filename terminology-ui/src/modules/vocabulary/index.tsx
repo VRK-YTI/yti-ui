@@ -434,7 +434,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
               },
             }}
           />
-          <Pagination maxPages={filteredCollections.length / 50} />
+          <Pagination maxPages={Math.ceil(filteredCollections.length / 50)} />
         </>
       );
     }
