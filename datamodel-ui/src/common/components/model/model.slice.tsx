@@ -65,6 +65,7 @@ export const modelApi = createApi({
         }`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Model'],
     }),
     createRelease: builder.mutation<
       string,
