@@ -11,14 +11,14 @@ import SearchResults, {
   SearchResultData,
 } from 'yti-common-ui/search-results/search-results';
 import { useMemo, useState } from 'react';
-import { useTranslation } from 'next-i18next';
+import { Trans, useTranslation } from 'next-i18next';
 import { useGetSearchModelsQuery } from '@app/common/components/search-models/search-models.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
+  ExternalLink,
   IconApplicationProfile,
   IconGrid,
-  Link,
   Modal,
   ModalContent,
   Paragraph,
@@ -232,14 +232,22 @@ export default function FrontPage() {
         extra={
           <TitleDescriptionWrapper $isSmall={isSmall}>
             <Description id="page-description">
-              {t('service-description')}
-              <Paragraph style={{ marginTop: '10px' }}>
-                <Link
-                  target="_blank"
-                  href="https://tietomallit.beta.yti.cloud.dvv.fi"
-                >
-                  {t('service-description-old-version')}
-                </Link>
+              <Paragraph mb="m">{t('service-description')}</Paragraph>
+              <Paragraph>
+                <Trans
+                  i18nKey="service-description-suomifi-dev"
+                  t={t}
+                  components={[
+                    <ExternalLink
+                      key="link1"
+                      ml="xxs"
+                      href={t('service-description-suomifi-dev-link')}
+                      labelNewWindow={t('link-opens-new-window-external')}
+                    >
+                      {t('service-description-suomifi-dev-title')}
+                    </ExternalLink>,
+                  ]}
+                />
               </Paragraph>
             </Description>
           </TitleDescriptionWrapper>
