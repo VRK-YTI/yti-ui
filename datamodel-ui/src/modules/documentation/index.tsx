@@ -68,6 +68,8 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 import { isDraftModel } from '../model';
 import { useRouter } from 'next/router';
 
+const DOCUMENTATION_TEXT_AREA_MAX = 50000;
+
 export default function Documentation({
   modelId,
   version,
@@ -643,7 +645,7 @@ export default function Documentation({
               }
               onKeyDown={(e) => e.key === 'Enter' && handleEnterClick(e)}
               id="documentation-textarea"
-              maxLength={TEXT_AREA_MAX}
+              maxLength={DOCUMENTATION_TEXT_AREA_MAX}
             />
           </div>
 
