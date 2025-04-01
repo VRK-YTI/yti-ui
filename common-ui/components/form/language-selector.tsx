@@ -14,8 +14,6 @@ import {
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '../../utils/constants';
 import { compareLocales } from '../../utils/compare-locales';
 
-const DOCUMENTATION_TEXT_AREA_MAX = 50000;
-
 export interface LanguageBlockType {
   labelText: string;
   uniqueItemId: string;
@@ -159,7 +157,7 @@ export default function LanguageSelector(
             }
             defaultValue={item.description}
             id={`description-input-${item.uniqueItemId}`}
-            maxLength={DOCUMENTATION_TEXT_AREA_MAX}
+            maxLength={TEXT_INPUT_MAX}
           />
         </LanguageBlock>
       ))}
