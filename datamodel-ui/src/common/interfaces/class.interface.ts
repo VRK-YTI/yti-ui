@@ -38,4 +38,5 @@ export interface ClassType {
   uri: string;
   curie: string;
   apiPath?: string;
+  removedProperties?: string[];
 }

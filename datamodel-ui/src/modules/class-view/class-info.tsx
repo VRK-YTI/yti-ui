@@ -59,6 +59,7 @@ import {
 import UnsavedAlertModal from '../unsaved-alert-modal';
 import ResourceReferences from '../common-view-content/resource-references';
 import { SimpleResource } from '@app/common/interfaces/simple-resource.interface';
+import RemoveReferenceModal from './remove-reference-modal';
 
 interface ClassInfoProps {
   data?: ClassType;
@@ -535,6 +536,28 @@ export default function ClassInfo({
                   .map((assoc) => assoc.uri)}
               />
             </div>
+          ) : (
+            <></>
+          )}
+
+          {hasPermission &&
+          data.removedProperties &&
+          data.removedProperties.length > 0 ? (
+            <BasicBlock title={t('removed-resources', { ns: 'admin' })}>
+              {data.removedProperties.map((prop) => (
+                <div key={prop}>
+                  <RemoveReferenceModal
+                    modelId={modelId}
+                    classId={data.identifier}
+                    uri={prop}
+                    name={prop}
+                    applicationProfile={applicationProfile}
+                    iconButton={true}
+                  />
+                  {prop}
+                </div>
+              ))}
+            </BasicBlock>
           ) : (
             <></>
           )}
