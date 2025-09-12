@@ -11,7 +11,6 @@ import {
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { useCreateVersionMutation } from '../vocabulary/vocabulary.slice';
-import { v4 } from 'uuid';
 import { useStoreDispatch } from '@app/store';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
 import Prefix from '../terminology-components/prefix';
@@ -40,20 +39,26 @@ export default function CopyTerminologyModal({
   const { t } = useTranslation('admin');
   const dispatch = useStoreDispatch();
   const { isSmall } = useBreakpoints();
-  const [randomURL] = useState(v4().substring(0, 8));
   const [userPosted, setUserPosted] = useState(false);
-  const [newGraphId, setNewGraphId] = useState('');
   const [error, setError] = useState(false);
   const [postCreateVersion, createVersion] = useCreateVersionMutation();
-  const [newCode, setNewCode] = useState(randomURL);
+  const [newTerminologyId, setNewTerminologyId] = useState('');
   const router = useRouter();
 
   const handleUpdate = ({ key, data }: UpdateTerminology) => {
     if (key === 'prefix') {
-      setNewCode((data as [string, boolean])[0]);
+      setNewTerminologyId((data as [string, boolean])[0]);
       //second value is isValid
       setError(!(data as [string, boolean])[1]);
     }
+  };
+
+  const handleFinish = () => {
+    handleClose();
+    router.push({
+      pathname: '/terminology/[tId]',
+      query: { tId: newTerminologyId },
+    });
   };
 
   const handleClose = useCallback(() => {
@@ -64,48 +69,104 @@ export default function CopyTerminologyModal({
   useEffect(() => {
     if (createVersion.isSuccess) {
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
-      dispatch(
-        setAlert(
-          [
-            {
-              note: {
-                status: 0,
-                data: '',
-              },
-              displayText: t('new-terminology-created'),
-            },
-          ],
-          []
-        )
-      );
-
-      if (newGraphId) {
-        // Using this version of push() params instead of something like this:
-        // router.push(`/terminology/${newGraphId}`);
-        // Expander on the page wouldn't be closed by default so this
-        // version is used to force page refresh.
-        router.push({
-          pathname: '/terminology/[tId]',
-          query: { tId: newGraphId },
-        });
-        setVisible(false);
-      }
     }
-  }, [createVersion, newGraphId, dispatch, handleClose, router, t, setVisible]);
+  }, [
+    createVersion,
+    dispatch,
+    newTerminologyId,
+    handleClose,
+    router,
+    t,
+    setVisible,
+  ]);
 
   const handlePost = () => {
-    setUserPosted(true);
-    if (!newCode || error) {
-      return;
+    if (!newTerminologyId) {
+      setError(true);
+    } else if (!error) {
+      setUserPosted(true);
+      postCreateVersion({ prefix: terminologyId, newPrefix: newTerminologyId });
     }
-
-    const graphId = terminologyId;
-    postCreateVersion({ graphId, newCode })
-      .unwrap()
-      .then((data) => {
-        setNewGraphId(data.newGraphId);
-      });
   };
+
+  function renderProcess() {
+    return (
+      <>
+        <ModalContent>
+          <ModalTitle>{t('copy-as-base')}</ModalTitle>
+
+          {createVersion.isLoading && (
+            <SaveSpinner text={t('copying-terminology')} />
+          )}
+          {createVersion.isError && (
+            <InlineAlert status="error">
+              {t('error-occured', { ns: 'alert' })}
+            </InlineAlert>
+          )}
+          {createVersion.isSuccess && (
+            <DescriptionParagraph>
+              <Text>{t('done')}</Text>
+            </DescriptionParagraph>
+          )}
+        </ModalContent>
+
+        <ModalFooter>
+          <FooterBlock>
+            <Button
+              onClick={() =>
+                createVersion.isSuccess ? handleFinish() : handleClose()
+              }
+              disabled={createVersion.isLoading}
+            >
+              {t('close')}
+            </Button>
+          </FooterBlock>
+        </ModalFooter>
+      </>
+    );
+  }
+
+  function renderModal() {
+    return (
+      <>
+        <ModalContent>
+          <ModalTitle>{t('copy-as-base')}</ModalTitle>
+          <DescriptionParagraph>
+            <Text>{t('copy-as-base-description')}</Text>
+          </DescriptionParagraph>
+          <Prefix
+            update={handleUpdate}
+            userPosted={false}
+            disabled={unauthenticatedUser}
+          />
+        </ModalContent>
+
+        <ModalFooter>
+          {unauthenticatedUser && (
+            <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+              {t('error-occurred_unauthenticated', { ns: 'alert' })}
+            </InlineAlert>
+          )}
+          {error && newTerminologyId === '' && (
+            <InlineAlert status="warning">
+              {t('alert-prefix-undefined')}
+            </InlineAlert>
+          )}
+          <FooterBlock>
+            <Button
+              onClick={() => handlePost()}
+              disabled={createVersion.isLoading || unauthenticatedUser}
+            >
+              {t('save')}
+            </Button>
+            <Button variant="secondary" onClick={() => handleClose()}>
+              {t('cancel-variant')}
+            </Button>
+          </FooterBlock>
+        </ModalFooter>
+      </>
+    );
+  }
 
   return (
     <Modal
@@ -114,44 +175,7 @@ export default function CopyTerminologyModal({
       onEscKeyDown={() => handleClose()}
       variant={!isSmall ? 'default' : 'smallScreen'}
     >
-      <ModalContent>
-        <ModalTitle>{t('copy-as-base')}</ModalTitle>
-        <DescriptionParagraph>
-          <Text>{t('copy-as-base-description')}</Text>
-        </DescriptionParagraph>
-        <Prefix
-          update={handleUpdate}
-          userPosted={userPosted}
-          disabled={unauthenticatedUser}
-        />
-      </ModalContent>
-
-      <ModalFooter>
-        {unauthenticatedUser && (
-          <InlineAlert status="error" role="alert" id="unauthenticated-alert">
-            {t('error-occurred_unauthenticated', { ns: 'alert' })}
-          </InlineAlert>
-        )}
-        {userPosted && newCode === '' && (
-          <InlineAlert status="warning">
-            {t('alert-prefix-undefined')}
-          </InlineAlert>
-        )}
-        <FooterBlock>
-          <Button
-            onClick={() => handlePost()}
-            disabled={createVersion.isLoading || unauthenticatedUser}
-          >
-            {t('save')}
-          </Button>
-          <Button variant="secondary" onClick={() => handleClose()}>
-            {t('cancel-variant')}
-          </Button>
-          {createVersion.isLoading && (
-            <SaveSpinner text={t('copying-terminology')} />
-          )}
-        </FooterBlock>
-      </ModalFooter>
+      {!userPosted ? renderModal() : renderProcess()}
     </Modal>
   );
 }

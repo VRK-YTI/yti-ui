@@ -79,18 +79,14 @@ export const terminologyApi = createApi({
       }),
     }),
     createVersion: builder.mutation<
-      {
-        newGraphId: string;
-        uri: string;
-      },
-      { graphId: string; newCode: string }
+      string,
+      { prefix: string; newPrefix: string }
     >({
-      query: ({ graphId, newCode }) => ({
-        url: '/createVersion',
+      query: ({ prefix, newPrefix }) => ({
+        url: `/terminology/${prefix}/createVersion`,
         method: 'POST',
-        data: {
-          graphId: graphId,
-          newCode: newCode,
+        params: {
+          newPrefix,
         },
       }),
     }),
