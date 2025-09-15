@@ -11,6 +11,7 @@ import {
   ModalTitle,
   InlineAlert,
   ActionMenuItem,
+  IconRemove,
 } from 'suomifi-ui-components';
 import { useTranslation } from 'next-i18next';
 import getApiError from '@app/common/utils/get-api-errors';
@@ -21,12 +22,13 @@ import { useStoreDispatch } from '@app/store';
 
 interface RemoveReferenceModalProps {
   name: string;
-  resourceType: ResourceType;
+  resourceType?: ResourceType;
   modelId: string;
   classId: string;
   uri: string;
   applicationProfile?: boolean;
   currentTarget?: string;
+  iconButton?: boolean;
 }
 
 export default function RemoveReferenceModal({
@@ -37,6 +39,7 @@ export default function RemoveReferenceModal({
   uri,
   applicationProfile,
   currentTarget,
+  iconButton: iconButton,
 }: RemoveReferenceModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -70,9 +73,18 @@ export default function RemoveReferenceModal({
 
   return (
     <>
-      <ActionMenuItem onClick={() => setShowModal(true)}>
-        {t('remove-reference', { ns: 'admin' })}
-      </ActionMenuItem>
+      {iconButton ? (
+        <Button
+          variant="secondaryNoBorder"
+          icon={<IconRemove />}
+          onClick={() => setShowModal(true)}
+        />
+      ) : (
+        <ActionMenuItem onClick={() => setShowModal(true)}>
+          {t('remove-reference', { ns: 'admin' })}
+        </ActionMenuItem>
+      )}
+
       <NarrowModal
         appElementId="__next"
         visible={showModal}

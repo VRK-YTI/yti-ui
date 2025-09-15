@@ -468,7 +468,7 @@ export function translateDrawerButton(
 }
 
 export function translateDeleteReferenceModalDescription(
-  type: ResourceType,
+  type: ResourceType | undefined,
   name: string,
   t: TFunction
 ) {
@@ -484,7 +484,10 @@ export function translateDeleteReferenceModalDescription(
         name: name,
       });
     default:
-      return '';
+      return t('remove-reference-description-resource', {
+        ns: 'admin',
+        name: name,
+      });
   }
 }
 

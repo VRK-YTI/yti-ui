@@ -157,7 +157,7 @@ export default function LanguageSelector(
             }
             defaultValue={item.description}
             id={`description-input-${item.uniqueItemId}`}
-            maxLength={TEXT_INPUT_MAX}
+            maxLength={TEXT_AREA_MAX}
           />
         </LanguageBlock>
       ))}

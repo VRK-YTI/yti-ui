@@ -292,6 +292,8 @@
   "remove-reference": "Remove reference",
   "remove-reference-description-association": "Do you want to remove the reference to the association restriction {{name}} from this class?",
   "remove-reference-description-attribute": "Do you want to remove the reference to the attribute restriction {{name}} from this class?",
+  "remove-reference-description-resource": "Do you want to remove the reference to the resource {{name}} from this class?",
+  "removed-resources": "Removed resources",
   "rename": "Modify identifier",
   "rename-resource": "Modify resource's identifier",
   "rename-resource-description": "All references to this resource will be updated automatically.",

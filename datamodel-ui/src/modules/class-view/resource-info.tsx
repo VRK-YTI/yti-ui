@@ -204,7 +204,9 @@ export default function ResourceInfo({
               <RemoveReferenceModal
                 modelId={modelId}
                 classId={classId}
-                uri={data.uri}
+                uri={
+                  data.versionIri ? data.versionIri + data.identifier : data.uri
+                }
                 name={getLanguageVersion({
                   data: data.label,
                   lang: displayLang ?? i18n.language,

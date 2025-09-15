@@ -18,7 +18,7 @@ export function convertSimpleResourceToResultType(
         lang: lang,
       })} ${res.range ? `(${res.range.curie})` : ''}`,
       linkLabel: res.curie,
-      link: res.versionIri ?? res.uri,
+      link: res.versionIri ? res.versionIri + res.identifier : res.uri,
       note: getLanguageVersion({
         data: res.note,
         lang: lang,

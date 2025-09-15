@@ -292,6 +292,8 @@
   "remove-reference": "Poista viittaus",
   "remove-reference-description-association": "Haluatko poistaa viittauksen assosiaatiorajoitteeseen {{name}} tästä luokasta?",
   "remove-reference-description-attribute": "Haluatko poistaa viittauksen attribuuttirajoitteeseen {{name}} tästä luokasta?",
+  "remove-reference-description-resource": "Haluatko poistaa viittauksen resurssiin {{name}} tästä tietomallista?",
+  "removed-resources": "Poistetut resurssit",
   "rename": "Muuta tunnusta",
   "rename-resource": "Muuta resurssin tunnusta",
   "rename-resource-description": "Viittaukset tähän resurssiin päivittyvät automaattisesti.",
