@@ -85,7 +85,7 @@ export default withIronSessionApiRoute(
       res.setHeader('Content-Type', mimeType);
       res.setHeader(
         'Content-Disposition',
-        `attachment; filename="${filename}"`
+        `attachment; filename="${encodeURIComponent(filename)}"`
       );
     }
     res.status(status);
