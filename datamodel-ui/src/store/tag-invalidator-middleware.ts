@@ -45,7 +45,7 @@ tagInvalidatorMiddleware.startListening({
   predicate: (action) => {
     return (
       mutationIsFulfilled(action) &&
-      ['createClass', 'updateClass'].some((name) =>
+      ['createClass', 'updateClass', 'changeNamespaceVersion'].some((name) =>
         action.meta?.arg?.endpointName.includes(name)
       )
     );

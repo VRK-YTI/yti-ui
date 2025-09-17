@@ -7,13 +7,27 @@ export const namespacesApi = createApi({
     ...headers,
     accept: 'application/json',
   })),
-  tagTypes: ['Namespaces'],
+  tagTypes: ['Namespaces', 'Model'],
   endpoints: (builder) => ({
     getNamespaces: builder.query<string[], void>({
       query: () => ({
         url: '/frontend/namespaces',
         method: 'GET',
       }),
+    }),
+    changeNamespaceVersion: builder.mutation<
+      void,
+      { prefix: string; newVersion: string; referenceURI: string }
+    >({
+      query: ({ prefix, newVersion, referenceURI }) => ({
+        url: `/model/${prefix}/change-reference-version`,
+        method: 'PUT',
+        params: {
+          ...(newVersion && { newVersion }),
+          referenceURI,
+        },
+      }),
+      invalidatesTags: ['Model'],
     }),
   }),
 });
@@ -22,5 +36,6 @@ export const { getNamespaces } = namespacesApi.endpoints;
 
 export const {
   useGetNamespacesQuery,
+  useChangeNamespaceVersionMutation,
   util: { getRunningQueriesThunk },
 } = namespacesApi;
