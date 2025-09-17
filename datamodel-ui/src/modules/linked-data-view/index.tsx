@@ -26,6 +26,8 @@ import { useStoreDispatch } from '@app/store';
 import UnsavedAlertModal from '../unsaved-alert-modal';
 import { useRouter } from 'next/router';
 import { isDraftModel } from '../model';
+import DatamodelReferenceActions from './datamodel-reference-actions';
+import { compareLabels } from '@app/common/utils/utils';
 
 export default function LinkedDataView({
   modelId,
@@ -112,27 +114,30 @@ export default function LinkedDataView({
         <BasicBlock title={t('linked-terminologies')}>
           {data && data.terminologies.length > 0 ? (
             <LinkedWrapper>
-              {data.terminologies.map((terminology, idx) => {
-                const label = getLanguageVersion({
-                  data: terminology.label,
-                  lang: i18n.language,
-                  appendLocale: true,
-                });
+              {data.terminologies
+                .slice()
+                .sort((a, b) => compareLabels(a, b, i18n.language))
+                .map((terminology, idx) => {
+                  const label = getLanguageVersion({
+                    data: terminology.label,
+                    lang: i18n.language,
+                    appendLocale: true,
+                  });
 
-                return (
-                  <LinkedItem key={`linked-terminology-${idx}`}>
-                    <ExternalLink
-                      labelNewWindow={t('link-opens-new-window-external')}
-                      href={`${terminology.uri}${getEnvParam(
-                        terminology.uri,
-                        true
-                      )}`}
-                    >
-                      {label !== '' ? label : terminology.uri}
-                    </ExternalLink>
-                  </LinkedItem>
-                );
-              })}
+                  return (
+                    <LinkedItem key={`linked-terminology-${idx}`}>
+                      <ExternalLink
+                        labelNewWindow={t('link-opens-new-window-external')}
+                        href={`${terminology.uri}${getEnvParam(
+                          terminology.uri,
+                          true
+                        )}`}
+                      >
+                        {label !== '' ? label : terminology.uri}
+                      </ExternalLink>
+                    </LinkedItem>
+                  );
+                })}
             </LinkedWrapper>
           ) : (
             <>{t('no-linked-terminologies')}</>
@@ -143,24 +148,30 @@ export default function LinkedDataView({
           <BasicBlock title={t('linked-codelists')}>
             {data && data.codeLists.length > 0 ? (
               <LinkedWrapper>
-                {data.codeLists.map((codeList, idx) => {
-                  const label = getLanguageVersion({
-                    data: codeList.prefLabel,
-                    lang: i18n.language,
-                    appendLocale: true,
-                  });
+                {data.codeLists
+                  .slice()
+                  .sort((a, b) => compareLabels(a, b, i18n.language))
+                  .map((codeList, idx) => {
+                    const label = getLanguageVersion({
+                      data: codeList.prefLabel,
+                      lang: i18n.language,
+                      appendLocale: true,
+                    });
 
-                  return (
-                    <LinkedItem key={`linked-codeList-${idx}`}>
-                      <ExternalLink
-                        labelNewWindow={t('link-opens-new-window-external')}
-                        href={`${codeList.id}${getEnvParam(codeList.id, true)}`}
-                      >
-                        {label !== '' ? label : codeList.id}
-                      </ExternalLink>
-                    </LinkedItem>
-                  );
-                })}
+                    return (
+                      <LinkedItem key={`linked-codeList-${idx}`}>
+                        <ExternalLink
+                          labelNewWindow={t('link-opens-new-window-external')}
+                          href={`${codeList.id}${getEnvParam(
+                            codeList.id,
+                            true
+                          )}`}
+                        >
+                          {label !== '' ? label : codeList.id}
+                        </ExternalLink>
+                      </LinkedItem>
+                    );
+                  })}
               </LinkedWrapper>
             ) : (
               <>{t('no-linked-codelists')}</>
@@ -175,32 +186,39 @@ export default function LinkedDataView({
           (data.internalNamespaces.length > 0 ||
             data.externalNamespaces.length > 0) ? (
             <LinkedWrapper>
-              {data.internalNamespaces.map((namespace, idx) => {
-                return (
-                  <LinkedItem key={`linked-terminology-${idx}`}>
-                    <LinkExtraInfo>
-                      <ExternalLink
-                        labelNewWindow={t('link-opens-new-window-external')}
-                        href={`${namespace.namespace}${getEnvParam(
-                          namespace.namespace
-                        )}`}
-                      >
-                        {getLanguageVersion({
-                          data: namespace.name,
-                          lang: displayLang ?? i18n.language,
-                          appendLocale: true,
-                        })}
-                      </ExternalLink>
-                      <div>
-                        {t('linked-datamodel-prefix', {
-                          prefix: namespace.prefix,
-                        })}
-                      </div>
-                      <div>{namespace.namespace}</div>
-                    </LinkExtraInfo>
-                  </LinkedItem>
-                );
-              })}
+              {data.internalNamespaces
+                .slice()
+                .sort((a, b) => compareLabels(a, b, i18n.language))
+                .map((namespace, idx) => {
+                  return (
+                    <LinkedItem key={`linked-terminology-${idx}`}>
+                      <LinkExtraInfo>
+                        <ExternalLink
+                          labelNewWindow={t('link-opens-new-window-external')}
+                          href={`${namespace.namespace}${getEnvParam(
+                            namespace.namespace
+                          )}`}
+                        >
+                          {getLanguageVersion({
+                            data: namespace.name,
+                            lang: displayLang ?? i18n.language,
+                            appendLocale: true,
+                          })}
+                        </ExternalLink>
+                        <div>
+                          {t('linked-datamodel-prefix', {
+                            prefix: namespace.prefix,
+                          })}
+                        </div>
+                        <div>{namespace.namespace}</div>
+                      </LinkExtraInfo>
+                      <DatamodelReferenceActions
+                        prefix={modelId}
+                        namespace={namespace}
+                      />
+                    </LinkedItem>
+                  );
+                })}
               {data.externalNamespaces.map((namespace, idx) => {
                 return (
                   <LinkedItem key={`linked-ext-terminology-${idx}`}>

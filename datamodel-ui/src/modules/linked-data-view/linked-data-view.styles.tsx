@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const LinkedWrapper = styled.ul`
-  padding-left: 22px;
+  padding-left: 10px;
   margin: 0;
 
   li:not(:last-child) {
@@ -14,6 +14,8 @@ export const LinkedWrapper = styled.ul`
 `;
 
 export const LinkedItem = styled.li`
+  display: flex;
+  justify-content: space-between;
   a {
     font-size: 16px;
   }
