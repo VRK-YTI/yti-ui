@@ -212,10 +212,14 @@ export default function LinkedDataView({
                         </div>
                         <div>{namespace.namespace}</div>
                       </LinkExtraInfo>
-                      <DatamodelReferenceActions
-                        prefix={modelId}
-                        namespace={namespace}
-                      />
+                      {hasPermission && !version ? (
+                        <DatamodelReferenceActions
+                          prefix={modelId}
+                          namespace={namespace}
+                        />
+                      ) : (
+                        <></>
+                      )}
                     </LinkedItem>
                   );
                 })}
