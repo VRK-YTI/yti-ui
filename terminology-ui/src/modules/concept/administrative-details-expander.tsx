@@ -8,6 +8,7 @@ import { BasicBlock } from 'yti-common-ui/block';
 
 import { PropertyList } from './concept.styles';
 import { ConceptInfo } from '@app/common/interfaces/interfaces-v2';
+import SanitizedTextContent from 'yti-common-ui/components/sanitized-text-content';
 
 export function hasAdministrativeDetails(concept?: ConceptInfo) {
   return (
@@ -38,13 +39,13 @@ export default function AdministrativeDetailsExpander({
       <ExpanderContent>
         {concept?.changeNote && (
           <BasicBlock title={t('field-change-note')}>
-            {concept?.changeNote}
+            <SanitizedTextContent text={concept?.changeNote} />
           </BasicBlock>
         )}
 
         {concept?.historyNote && (
           <BasicBlock title={t('field-history-note')}>
-            {concept?.historyNote}
+            <SanitizedTextContent text={concept?.historyNote} />
           </BasicBlock>
         )}
 
@@ -52,7 +53,9 @@ export default function AdministrativeDetailsExpander({
           <BasicBlock title={t('field-editorial-note')}>
             <PropertyList>
               {concept?.editorialNotes?.map((note, idx) => (
-                <li key={`note-${idx}`}>{note}</li>
+                <li key={`note-${idx}`}>
+                  <SanitizedTextContent text={note} />
+                </li>
               ))}
             </PropertyList>
           </BasicBlock>
