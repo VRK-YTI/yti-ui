@@ -46,7 +46,12 @@ export default function validateForm(data: EditConceptType): FormError {
     identifier: false,
   };
 
-  if (!data.basicInformation.identifier) {
+  // Id identifier is missing or of wrong length
+  if (
+    !data.basicInformation.identifier ||
+    data.basicInformation.identifier.length < 2 ||
+    data.basicInformation.identifier.length > 32
+  ) {
     errors.identifier = true;
   }
 

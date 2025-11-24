@@ -14,7 +14,11 @@ import { useState } from 'react';
 import { BasicInfo, ListType } from '../new-concept.types';
 import ListBlock from '../list-block';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
-import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
+import {
+  MODEL_PREFIX_MAX,
+  TEXT_AREA_MAX,
+  TEXT_INPUT_MAX,
+} from 'yti-common-ui/utils/constants';
 import { FormError } from '../validate-form';
 import StatusPicker from './status-picker';
 import { TextInput } from 'suomifi-ui-components';
@@ -45,7 +49,7 @@ export default function ConceptBasicInformation({
 }: ConceptBasicInformationProps) {
   const { t } = useTranslation('admin');
   const [basicInfo, setBasicInfo] = useState<BasicInfo>(initialValues);
-  const [conceptExists, exitst] = useConceptExistsMutation();
+  const [conceptExists, exists] = useConceptExistsMutation();
 
   const handleBasicInfoUpdate = ({ key, lang, value }: BasicInfoUpdate) => {
     if (key === 'definition' && lang && typeof value === 'string') {
@@ -74,14 +78,22 @@ export default function ConceptBasicInformation({
         labelText={t('concept-identifier')}
         disabled={isEdit}
         defaultValue={basicInfo.identifier}
+        maxLength={MODEL_PREFIX_MAX}
+        characterLimit={MODEL_PREFIX_MAX}
+        ariaCharactersRemainingText={(amount) =>
+          `${amount} ${t('character-counter-remaining')}`
+        }
+        ariaCharactersExceededText={(amount) =>
+          `${amount} ${t('character-counter-over-limit')}`
+        }
         onBlur={() =>
           conceptExists({
             terminologyId,
             conceptId: basicInfo.identifier,
           })
         }
-        status={exitst.data ? 'error' : 'default'}
-        statusText={exitst.data ? t('prefix-taken') : ''}
+        status={exists.data ? 'error' : 'default'}
+        statusText={exists.data ? t('prefix-taken') : ''}
         onChange={(e) =>
           handleBasicInfoUpdate({
             key: 'identifier',
@@ -180,6 +192,13 @@ export default function ConceptBasicInformation({
         }
         defaultValue={basicInfo.definition[lang] ?? ''}
         maxLength={TEXT_AREA_MAX}
+        characterLimit={TEXT_AREA_MAX}
+        ariaCharactersRemainingText={(amount) =>
+          `${amount} ${t('character-counter-remaining')}`
+        }
+        ariaCharactersExceededText={(amount) =>
+          `${amount} ${t('character-counter-over-limit')}`
+        }
         className="definition-input"
       />
     );
@@ -199,6 +218,13 @@ export default function ConceptBasicInformation({
         }
         defaultValue={basicInfo.subject}
         maxLength={TEXT_INPUT_MAX}
+        characterLimit={TEXT_INPUT_MAX}
+        ariaCharactersRemainingText={(amount) =>
+          `${amount} ${t('character-counter-remaining')}`
+        }
+        ariaCharactersExceededText={(amount) =>
+          `${amount} ${t('character-counter-over-limit')}`
+        }
         id="subject-input"
       />
     );
