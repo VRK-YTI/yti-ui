@@ -126,7 +126,7 @@
     "diagramsUri": "One or more diagram's url is not in valid form",
     "editorialNote": "At least one editorial note is missing a descriptive text",
     "example": "At least one example is missing a descriptive text",
-    "identifier": "Concept's identifier is undefined",
+    "identifier": "Concept's identifier is undefined or does not match the required format",
     "language": "Term's language is undefined",
     "note": "At least one note is missing a descriptive text",
     "prefLabel": "Term's name is undefined",

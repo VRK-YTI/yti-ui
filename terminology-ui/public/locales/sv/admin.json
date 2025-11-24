@@ -126,7 +126,7 @@
     "diagramsUri": "Ett eller flera begreppsdiagram har en felaktig webbadress",
     "editorialNote": "Beskrivning  fattas åtminstone från en administratörens anmärkning",
     "example": "Beskrivning fattas åtminstone från ett användningsexempel",
-    "identifier": "Begreppets identifierare har inte definierats",
+    "identifier": "Begreppets identifierare har inte definierats eller är i ett felaktigt format",
     "language": "Termens språk har inte definierats",
     "note": "Beskrivning fattas åtminstone från en anmärkning",
     "prefLabel": "Termens namn har inte definierats",
