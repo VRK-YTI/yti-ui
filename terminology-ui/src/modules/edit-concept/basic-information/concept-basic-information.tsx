@@ -4,6 +4,7 @@ import {
   WiderTextarea,
   H2Sm,
   SubjectTextInput,
+  IdentifierTextInput,
 } from './concept-basic-information.styles';
 import ConceptDiagramsAndSources from './concept-diagrams-and-sources';
 import OtherInformation from './other-information';
@@ -74,18 +75,13 @@ export default function ConceptBasicInformation({
       <Separator isLarge />
       <H2Sm variant="h2">{t('concept-basic-information')}</H2Sm>
 
-      <TextInput
+      <IdentifierTextInput
         labelText={t('concept-identifier')}
         disabled={isEdit}
+        fullWidth
         defaultValue={basicInfo.identifier}
         maxLength={MODEL_PREFIX_MAX}
-        characterLimit={MODEL_PREFIX_MAX}
-        ariaCharactersRemainingText={(amount) =>
-          `${amount} ${t('character-counter-remaining')}`
-        }
-        ariaCharactersExceededText={(amount) =>
-          `${amount} ${t('character-counter-over-limit')}`
-        }
+        hintText={t('term-prefix-input-hint-text')}
         onBlur={() =>
           conceptExists({
             terminologyId,

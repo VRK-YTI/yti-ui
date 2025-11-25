@@ -329,6 +329,7 @@
   "term-name-label": "Termens namn",
   "term-name-placeholder": "Ange termens namn",
   "term-new-type": "Termens nya typ",
+  "term-prefix-input-hint-text": "Unikt prefix som inte kan ändras i efterhand. Prefixet måste börja med en liten bokstav och vara 2-32 tecken långt. Tillåtna tecken är a-z, 0-9, \"_\" och \"-\".",
   "term-scope-hint-text": "Användningsområde, som termen används på.",
   "term-scope-label": "Användningsområde",
   "term-scope-placeholder": "Ange ett användningsområde",
