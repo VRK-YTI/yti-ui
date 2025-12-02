@@ -329,7 +329,7 @@
   "term-name-label": "Term name",
   "term-name-placeholder": "Give term name",
   "term-new-type": "New type of term",
-  "term-prefix-input-hint-text": "Unique prefix for Data Model that can not be changed afterwards. Prefix must start with a lowercase letter and be 2-32 characters long. Valid characters are a-z, 0-9, \"_\" and \"-\".",
+  "term-prefix-input-hint-text": "Unique prefix for term that can not be changed afterwards. Prefix must start with a lowercase letter and be 2-32 characters long. Valid characters are a-z, 0-9, \"_\" and \"-\".",
   "term-scope-hint-text": "Scope or domain where term is in use.",
   "term-scope-label": "Scope",
   "term-scope-placeholder": "Give scope",

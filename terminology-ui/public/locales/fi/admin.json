@@ -329,7 +329,7 @@
   "term-name-label": "Termin nimi",
   "term-name-placeholder": "Kirjoita termin nimi",
   "term-new-type": "Termin uusi tyyppi",
-  "term-prefix-input-hint-text": "Tietomallin yksilöivä tunnus, jota ei voi muuttaa tietomallin luonnin jälkeen. Tunnuksen tulee alkaa pienellä kirjaimella ja sen pitää olla 2-32 merkkiä pitkä. Sallitut merkit ovat a-z, 0-9, \"_\" ja \"-\".",
+  "term-prefix-input-hint-text": "Termin yksilöivä tunnus, jota ei voi muuttaa termin luonnin jälkeen. Tunnuksen tulee alkaa pienellä kirjaimella ja sen pitää olla 2-32 merkkiä pitkä. Sallitut merkit ovat a-z, 0-9, \"_\" ja \"-\".",
   "term-scope-hint-text": "Ala, jossa termi on käytössä.",
   "term-scope-label": "Käyttöala",
   "term-scope-placeholder": "Kirjoita alan nimi",
