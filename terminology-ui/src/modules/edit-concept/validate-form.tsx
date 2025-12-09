@@ -1,3 +1,4 @@
+import { isValidIdentifier } from 'yti-common-ui/utils/validation-utils';
 import { EditConceptType } from './new-concept.types';
 
 export interface FormError {
@@ -46,7 +47,8 @@ export default function validateForm(data: EditConceptType): FormError {
     identifier: false,
   };
 
-  if (!data.basicInformation.identifier) {
+  // Id identifier is missing or of wrong length
+  if (!isValidIdentifier(data.basicInformation.identifier)) {
     errors.identifier = true;
   }
 

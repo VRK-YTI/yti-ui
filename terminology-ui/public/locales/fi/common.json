@@ -9,6 +9,8 @@
   "cancel": "",
   "card-organizations": "sisällöntuottajaa",
   "change-language-selected-language": "Vaihda kieli, valittu kieli: {{selectedLanguage}}",
+  "character-counter-remaining": "merkkiä jäljellä",
+  "character-counter-over-limit": "merkkiä liikaa",
   "choose-language": "Valitse kieli",
   "clear-language-filter": "Tyhjennä kielivalinta",
   "close": "Sulje",

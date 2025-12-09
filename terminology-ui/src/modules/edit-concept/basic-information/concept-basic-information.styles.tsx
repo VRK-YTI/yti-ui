@@ -39,6 +39,12 @@ export const SubjectTextInput = styled(TextInput)`
   margin-top: ${(props) => props.theme.suomifi.spacing.m};
 `;
 
+export const IdentifierTextInput = styled(TextInput)`
+  & .fi-text-input_input-element-container {
+    max-width: 290px;
+  }
+`;
+
 export const WideTextarea = styled(Textarea)`
   width: 438px;
 `;
