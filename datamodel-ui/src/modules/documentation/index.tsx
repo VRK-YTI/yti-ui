@@ -58,7 +58,6 @@ import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-b
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
-import { TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import Image from 'next/image';
 import { IconBold, IconItalics, IconQuotes } from 'suomifi-icons';
@@ -67,6 +66,8 @@ import UnsavedAlertModal from '../unsaved-alert-modal';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { isDraftModel } from '../model';
 import { useRouter } from 'next/router';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
+import getApiError from '@app/common/utils/get-api-errors';
 
 const DOCUMENTATION_TEXT_AREA_MAX = 50000;
 
@@ -96,6 +97,7 @@ export default function Documentation({
   const displayGraphHasChanges = useSelector(selectDisplayGraphHasChanges());
   const graphHasChanges = useSelector(selectGraphHasChanges());
   const [headerHeight, setHeaderHeight] = useState(hasPermission ? 57 : 42);
+  const [userPosted, setUserPosted] = useState(false);
   const [value, setValue] = useState<{ [key: string]: string }>({});
   const [isEdit, setIsEdit] = useState(false);
   const [updateSelectionPosition, setUpdateSelectionPosition] = useState<{
@@ -167,6 +169,10 @@ export default function Documentation({
   const handleSubmit = () => {
     disableConfirmation();
     dispatch(setHasChanges(false));
+
+    if (!userPosted) {
+      setUserPosted(true);
+    }
 
     if (!modelData) {
       return;
@@ -313,7 +319,7 @@ export default function Documentation({
         align:
           listStart === '-'
             ? 3
-            : 3 + getLastValue(rows[currRowNmb - 1]).toString()?.length ?? 0,
+            : 3 + getLastValue(rows[currRowNmb - 1]).toString()?.length,
       });
     }
   };
@@ -327,11 +333,25 @@ export default function Documentation({
     setIsEdit(true);
   };
 
+  const getErrors = () => {
+    const errorMsgs: string[] = [];
+
+    if (result.isError) {
+      errorMsgs.push(...getApiError(result.error));
+    }
+
+    if (versionedResult.isError) {
+      errorMsgs.push(...getApiError(versionedResult.error));
+    }
+
+    return errorMsgs;
+  };
+
   useEffect(() => {
     if (ref.current) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref]);
+  }, [ref, result, versionedResult]);
 
   useEffect(() => {
     if (modelData) {
@@ -358,6 +378,7 @@ export default function Documentation({
   useEffect(() => {
     if (result.isSuccess || versionedResult.isSuccess) {
       setIsEdit(false);
+      setUserPosted(false);
       disableConfirmation();
       dispatch(setNotification('DOCUMENTATION_EDIT'));
     }
@@ -432,7 +453,8 @@ export default function Documentation({
                       : 'submit-button'
                   }
                 >
-                  {result.isLoading || versionedResult.isLoading ? (
+                  {userPosted &&
+                  (result.isLoading || versionedResult.isLoading) ? (
                     <div role="alert">
                       <StyledSpinner
                         variant="small"
@@ -462,6 +484,14 @@ export default function Documentation({
               </Button>
             ))}
         </HeaderRow>
+        <div aria-live="polite">
+          {userPosted && (result.isError || versionedResult.isError) && (
+            <FormFooterAlert
+              labelText={t('unexpected-error-title')}
+              alerts={getErrors()}
+            />
+          )}
+        </div>
       </StaticHeader>
 
       <UnsavedAlertModal
