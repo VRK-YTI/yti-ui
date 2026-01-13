@@ -205,6 +205,7 @@ export default function Documentation({
 
   const handleCancel = () => {
     setIsEdit(false);
+    setUserPosted(false);
     setValue(
       modelData?.documentation
         ? Object.keys(modelData.documentation).length > 0
@@ -351,7 +352,7 @@ export default function Documentation({
     if (ref.current) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, result, versionedResult]);
+  }, [ref, result, versionedResult, userPosted]);
 
   useEffect(() => {
     if (modelData) {
