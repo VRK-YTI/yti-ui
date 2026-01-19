@@ -29,12 +29,8 @@ import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 import { useGetAllCodesQuery } from '@app/common/components/code/code.slice';
 import UriList from '@app/common/components/uri-list';
 import UriInfo from '@app/common/components/uri-info';
-import ClassModal from '../class-modal';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
-import { default as NextLink } from 'next/link';
 import { UriData } from '@app/common/interfaces/uri.interface';
-import { getSlugAsString } from '@app/common/utils/parse-slug';
-import { useRouter } from 'next/router';
 import ResourceReferences from './resource-references';
 import { useState } from 'react';
 import { getEnvParam } from 'yti-common-ui/utils/link-utils';
@@ -45,10 +41,7 @@ export default function CommonViewContent({
   data,
   displayLabel,
   applicationProfile,
-  disableAssocTarget = false,
   renderActions,
-  handleChangeTarget,
-  targetInClassRestriction,
   organizationIds,
   simpleResourceCodeLists,
   disableEdit,
@@ -81,7 +74,7 @@ export default function CommonViewContent({
         !applicationProfile || !data.codeLists || data.codeLists.length === 0,
     }
   );
-  const router = useRouter();
+
   const [showReferences, setShowReferences] = useState(false);
 
   function getCodeListLabel(uri: string) {
@@ -453,37 +446,20 @@ export default function CommonViewContent({
         )}
 
         {data.type === ResourceType.ASSOCIATION && (
-          <>
-            <BasicBlock
-              title={t('associations-source', { ns: 'admin' })}
-              tooltip={{
-                text: t('tooltip.associations-source'),
-                ariaToggleButtonLabelText: '',
-                ariaCloseButtonLabelText: '',
-              }}
-            >
-              <UriInfo
-                uri={data.domain}
-                lang={displayLang}
-                notDefinedText={t('no-source-class')}
-              />
-            </BasicBlock>
-
-            <BasicBlock
-              title={t('associations-target', { ns: 'admin' })}
-              tooltip={{
-                text: t('tooltip.associations-target'),
-                ariaToggleButtonLabelText: '',
-                ariaCloseButtonLabelText: '',
-              }}
-            >
-              <UriInfo
-                uri={data.range}
-                lang={displayLang}
-                notDefinedText={t('no-target-class')}
-              />
-            </BasicBlock>
-          </>
+          <BasicBlock
+            title={t('associations-source', { ns: 'admin' })}
+            tooltip={{
+              text: t('tooltip.associations-source'),
+              ariaToggleButtonLabelText: '',
+              ariaCloseButtonLabelText: '',
+            }}
+          >
+            <UriInfo
+              uri={data.domain}
+              lang={displayLang}
+              notDefinedText={t('no-source-class')}
+            />
+          </BasicBlock>
         )}
 
         <BasicBlock
@@ -590,60 +566,6 @@ export default function CommonViewContent({
         data.type === ResourceType.ASSOCIATION && (
           <>
             {renderActions()}
-            <Separator />
-          </>
-        )}
-
-      {!disableAssocTarget &&
-        !applicationProfile &&
-        data.type === ResourceType.ASSOCIATION &&
-        handleChangeTarget && (
-          <>
-            <BasicBlock
-              title={t('association-target-in-this-class', { ns: 'admin' })}
-              largeGap
-              extra={
-                !disableEdit && (
-                  <div
-                    style={{
-                      width: 'max-content',
-                    }}
-                  >
-                    <ClassModal
-                      modalButtonLabel={t('choose-association-target', {
-                        ns: 'admin',
-                      })}
-                      mode="select"
-                      handleFollowUp={handleChangeTarget}
-                      modelId={getSlugAsString(router.query.slug) ?? modelId}
-                      applicationProfile={applicationProfile}
-                    />
-                  </div>
-                )
-              }
-            >
-              {targetInClassRestriction ? (
-                <NextLink
-                  href={`${targetInClassRestriction.uri}${getEnvParam(
-                    targetInClassRestriction.uri,
-                    true
-                  )}`}
-                  passHref
-                  legacyBehavior
-                >
-                  <Link href="">
-                    {getLanguageVersion({
-                      data: targetInClassRestriction.label,
-                      lang: displayLang ?? i18n.language,
-                      appendLocale: true,
-                    })}
-                    <br />({targetInClassRestriction.curie})
-                  </Link>
-                </NextLink>
-              ) : (
-                t('not-defined')
-              )}
-            </BasicBlock>
             <Separator />
           </>
         )}
