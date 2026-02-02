@@ -196,7 +196,6 @@ export default function ResourceInfo({
                 })}
                 onClose={() => {
                   setDeleteVisible(false);
-                  refetchResourceList();
                   handleReturn();
                 }}
                 visible={deleteVisible}
