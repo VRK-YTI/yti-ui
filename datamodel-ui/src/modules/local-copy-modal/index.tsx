@@ -23,6 +23,7 @@ import { ResourceType } from '../../common/interfaces/resource-type.interface';
 import { translateLocalCopyModal } from '../../common/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { isValidIdentifier } from 'yti-common-ui/utils/validation-utils';
 
 interface LocalCopyModalProps {
   visible: boolean;
@@ -49,6 +50,7 @@ export default function LocalCopyModal({
   const [error, setError] = useState(false);
   const [newIdentifier, setNewIdentifier] = useState('');
   const [userPosted, setUserPosted] = useState(false);
+  const [identifierValid, setIdentifierValid] = useState(true);
 
   const [makeLocalCopy, makeLocalCopyResult] =
     useMakeLocalCopyPropertyShapeMutation();
@@ -59,19 +61,22 @@ export default function LocalCopyModal({
   );
 
   const handleChange = (value: string) => {
-    setNewIdentifier(value);
+    const trimmedValue = value.trim();
+    setNewIdentifier(trimmedValue);
     setError(false);
+    setIdentifierValid(isValidIdentifier(trimmedValue));
   };
 
   const handleClose = () => {
     setError(false);
     setUserPosted(false);
     setNewIdentifier('');
+    setIdentifierValid(true);
     hide();
   };
 
   const handleCreate = () => {
-    if (newIdentifier === '') {
+    if (newIdentifier === '' || !identifierValid) {
       return;
     }
 
@@ -116,9 +121,18 @@ export default function LocalCopyModal({
           onChange={(e) => handleChange(e?.toString() ?? '')}
           debounce={300}
           id="prefix-input"
-          status={isSuccess && resourceAlreadyExists ? 'error' : 'default'}
+          status={
+            newIdentifier !== '' &&
+            (!identifierValid || (isSuccess && resourceAlreadyExists))
+              ? 'error'
+              : 'default'
+          }
           statusText={
-            isSuccess && resourceAlreadyExists ? t('error-prefix-taken') : ''
+            newIdentifier !== '' && !identifierValid
+              ? t('error-prefix-invalid')
+              : isSuccess && resourceAlreadyExists
+              ? t('error-prefix-taken')
+              : ''
           }
         />
         {makeLocalCopyResult.error && error && (
@@ -128,7 +142,7 @@ export default function LocalCopyModal({
         )}
         <ButtonFooter>
           <Button
-            disabled={userPosted}
+            disabled={userPosted || newIdentifier === '' || !identifierValid}
             onClick={handleCreate}
             id="create-copy-button"
           >
