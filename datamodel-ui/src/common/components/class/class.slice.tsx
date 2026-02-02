@@ -8,6 +8,7 @@ import {
   initialClassForm,
 } from '@app/common/interfaces/class-form.interface';
 import { InternalClassInfo } from '@app/common/interfaces/internal-class.interface';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { pathForModelType } from '@app/common/utils/api-utils';
 import { convertToPayload } from './utils';
 import { ExternalClassType } from '@app/common/interfaces/external-class.interface';
@@ -83,7 +84,12 @@ export const classApi = createApi({
     }),
     deleteClass: builder.mutation<
       string,
-      { modelId: string; classId: string; applicationProfile?: boolean }
+      {
+        modelId: string;
+        classId: string;
+        applicationProfile?: boolean;
+        type: ResourceType.CLASS;
+      }
     >({
       query: (value) => ({
         url: `/class/${pathForModelType(value.applicationProfile)}${

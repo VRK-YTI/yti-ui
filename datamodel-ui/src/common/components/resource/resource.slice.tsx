@@ -76,7 +76,12 @@ export const resourceApi = createApi({
     }),
     deleteResource: builder.mutation<
       string,
-      { modelId: string; resourceId: string; applicationProfile?: boolean }
+      {
+        modelId: string;
+        resourceId: string;
+        applicationProfile?: boolean;
+        type: ResourceType;
+      }
     >({
       query: (value) => ({
         url: `/resource/${pathForModelType(value.applicationProfile)}${
@@ -84,6 +89,7 @@ export const resourceApi = createApi({
         }/${value.resourceId}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Resource'],
     }),
     getResourceExists: builder.query<
       boolean,
