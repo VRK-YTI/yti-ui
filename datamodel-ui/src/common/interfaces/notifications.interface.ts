@@ -20,4 +20,5 @@ export type NotificationKeys =
   | 'SUBSCRIPTION_DELETE'
   | 'REQUEST_ADD'
   | 'CODE_LIST_ADDED'
-  | 'CODE_LIST_REMOVED';
+  | 'CODE_LIST_REMOVED'
+  | 'LOCAL_COPY_ADD';

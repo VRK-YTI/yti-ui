@@ -175,6 +175,25 @@ export function translateCommonForm(
   }
 }
 
+export function translateLocalCopyModal(
+  t: TFunction,
+  type: ResourceType,
+  part: string
+) {
+  switch (part) {
+    case 'label':
+      return type === ResourceType.ASSOCIATION
+        ? t('association-restriction-identifier', { ns: 'admin' })
+        : t('attribute-restriction-identifier', { ns: 'admin' });
+    case 'placeholder':
+      return type === ResourceType.ASSOCIATION
+        ? t('input-association-restriction-identifier', { ns: 'admin' })
+        : t('input-attribute-restriction-identifier', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
 export function translateCommonTooltips(
   tooltip: string,
   type: ResourceType,
@@ -566,6 +585,8 @@ export function translateNotification(
       return t('codelist-added', { ns: 'admin' });
     case 'CODE_LIST_REMOVED':
       return t('codelist-removed', { ns: 'admin' });
+    case 'LOCAL_COPY_ADD':
+      return t('local-copy-added', { ns: 'admin' });
     default:
       return '';
   }

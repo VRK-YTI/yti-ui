@@ -347,6 +347,7 @@ export default function ResourceView({
         handleEdit={handleEdit}
         handleReturn={handleReturn}
         handleShowResource={handleShowResource}
+        refetchResourceList={refetch}
         isPartOfCurrentModel={globalSelected.modelId === modelId}
         applicationProfile={applicationProfile}
         currentModelId={

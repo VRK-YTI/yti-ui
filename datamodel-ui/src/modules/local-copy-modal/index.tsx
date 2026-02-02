@@ -19,6 +19,10 @@ import {
 } from '@app/common/components/resource/resource.slice';
 import getApiError from '@app/common/utils/get-api-errors';
 import SaveSpinner from 'yti-common-ui/save-spinner';
+import { ResourceType } from '../../common/interfaces/resource-type.interface';
+import { translateLocalCopyModal } from '../../common/utils/translation-helpers';
+import { useStoreDispatch } from '@app/store';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
 
 interface LocalCopyModalProps {
   visible: boolean;
@@ -27,6 +31,7 @@ interface LocalCopyModalProps {
   sourceModelId: string;
   sourceIdentifier: string;
   handleReturn: (id: string, modelPrefix: string) => void;
+  resourceType: ResourceType;
 }
 
 export default function LocalCopyModal({
@@ -35,10 +40,12 @@ export default function LocalCopyModal({
   targetModelId,
   sourceModelId,
   sourceIdentifier,
+  resourceType,
   handleReturn,
 }: LocalCopyModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
+  const dispatch = useStoreDispatch();
   const [error, setError] = useState(false);
   const [newIdentifier, setNewIdentifier] = useState('');
   const [userPosted, setUserPosted] = useState(false);
@@ -80,12 +87,14 @@ export default function LocalCopyModal({
   useEffect(() => {
     if (makeLocalCopyResult.isSuccess) {
       handleClose();
+      dispatch(setNotification('LOCAL_COPY_ADD'));
       handleReturn(newIdentifier, targetModelId);
     } else if (makeLocalCopyResult.isError) {
       setError(true);
       setUserPosted(false);
     }
-  }, [makeLocalCopyResult]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [makeLocalCopyResult, dispatch]);
 
   return (
     <NarrowModal
@@ -98,8 +107,12 @@ export default function LocalCopyModal({
         <ModalTitle>{t('create-local-copy')}</ModalTitle>
         <Text>{t('create-local-copy-description')}</Text>
         <TextInput
-          labelText={t('attribute-restriction-identifier')}
-          visualPlaceholder={t('input-attribute-restriction-identifier')}
+          labelText={translateLocalCopyModal(t, resourceType, 'label')}
+          visualPlaceholder={translateLocalCopyModal(
+            t,
+            resourceType,
+            'placeholder'
+          )}
           onChange={(e) => handleChange(e?.toString() ?? '')}
           debounce={300}
           id="prefix-input"
