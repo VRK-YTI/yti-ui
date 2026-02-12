@@ -142,7 +142,12 @@ export default function LocalCopyModal({
         )}
         <ButtonFooter>
           <Button
-            disabled={userPosted || newIdentifier === '' || !identifierValid}
+            disabled={
+              userPosted ||
+              newIdentifier === '' ||
+              !identifierValid ||
+              resourceAlreadyExists
+            }
             onClick={handleCreate}
             id="create-copy-button"
           >
