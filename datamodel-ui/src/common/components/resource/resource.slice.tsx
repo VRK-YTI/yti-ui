@@ -32,7 +32,12 @@ export const resourceApi = createApi({
     ...headers,
     accept: 'application/json',
   })),
-  tagTypes: ['Resource'],
+  tagTypes: [
+    'Resource',
+    'ResourceExists',
+    'ResourceActive',
+    'ResourceReferences',
+  ],
   endpoints: (builder) => ({
     updateResource: builder.mutation<null, ResourceData>({
       query: (value) => ({
@@ -42,7 +47,10 @@ export const resourceApi = createApi({
         method: 'PUT',
         data: convertToPayload(value.data, true, value.applicationProfile),
       }),
-      invalidatesTags: ['Resource'],
+      // Invalidate only the specific resource being updated
+      invalidatesTags: (_result, _error, args) => [
+        { type: 'Resource', id: `${args.modelId}/${args.data.identifier}` },
+      ],
     }),
     createResource: builder.mutation<null, ResourceData>({
       query: (value) => ({
@@ -52,7 +60,6 @@ export const resourceApi = createApi({
         method: 'POST',
         data: convertToPayload(value.data, false, value.applicationProfile),
       }),
-      invalidatesTags: ['Resource'],
     }),
     getResource: builder.query<
       Resource,
@@ -72,7 +79,9 @@ export const resourceApi = createApi({
         },
         method: 'GET',
       }),
-      providesTags: ['Resource'],
+      providesTags: (_result, _error, args) => [
+        { type: 'Resource', id: `${args.modelId}/${args.resourceIdentifier}` },
+      ],
     }),
     deleteResource: builder.mutation<
       string,
@@ -89,7 +98,6 @@ export const resourceApi = createApi({
         }/${value.resourceId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Resource'],
     }),
     getResourceExists: builder.query<
       boolean,
@@ -102,7 +110,9 @@ export const resourceApi = createApi({
         url: `/resource/${props.prefix}/${props.identifier}/exists`,
         method: 'GET',
       }),
-      providesTags: ['Resource'],
+      providesTags: (_result, _error, args) => [
+        { type: 'ResourceExists', id: `${args.prefix}/${args.identifier}` },
+      ],
     }),
     getResourceActive: builder.query<
       boolean,
@@ -115,7 +125,9 @@ export const resourceApi = createApi({
         },
         method: 'GET',
       }),
-      providesTags: ['Resource'],
+      providesTags: (_result, _error, args) => [
+        { type: 'ResourceActive', id: `${args.prefix}/${args.uri}` },
+      ],
     }),
     togglePropertyShape: builder.mutation<
       string,
@@ -125,7 +137,9 @@ export const resourceApi = createApi({
         url: `/class/toggle-deactivate/${props.modelId}?propertyUri=${props.uri}`,
         method: 'PUT',
       }),
-      invalidatesTags: ['Resource'],
+      invalidatesTags: (_result, _error, args) => [
+        { type: 'ResourceActive', id: `${args.modelId}/${args.uri}` },
+      ],
     }),
     makeLocalCopyPropertyShape: builder.mutation<
       null,
@@ -140,7 +154,6 @@ export const resourceApi = createApi({
         url: `/resource/profile/${value.modelid}/${value.resourceId}/copy?targetPrefix=${value.targetPrefix}&newIdentifier=${value.newIdentifier}`,
         method: 'POST',
       }),
-      invalidatesTags: ['Resource'],
     }),
     renameResource: builder.mutation<
       string,
@@ -157,7 +170,12 @@ export const resourceApi = createApi({
         },
         method: 'POST',
       }),
-      invalidatesTags: ['Resource'],
+      invalidatesTags: (_result, _error, args) => [
+        { type: 'Resource', id: `${args.prefix}/${args.identifier}` },
+        { type: 'Resource', id: `${args.prefix}/${args.newIdentifier}` },
+        { type: 'ResourceExists', id: `${args.prefix}/${args.identifier}` },
+        { type: 'ResourceExists', id: `${args.prefix}/${args.newIdentifier}` },
+      ],
     }),
     getResourceReferences: builder.query<
       ResourceReferencesResult,
@@ -170,7 +188,9 @@ export const resourceApi = createApi({
         },
         method: 'GET',
       }),
-      providesTags: ['Resource'],
+      providesTags: (_result, _error, args) => [
+        { type: 'ResourceReferences', id: args.uri },
+      ],
     }),
   }),
 });
