@@ -106,7 +106,7 @@ describe('alert', () => {
     );
 
     expect(screen.getByText('tr-error-alert')).toBeInTheDocument();
-    userEvent.click(screen.getByRole('button'));
+    await userEvent.click(screen.getByRole('button'));
     expect(setAlertVisibility).toHaveBeenCalledTimes(1);
     expect(setAlertVisibility).toHaveBeenCalledWith(alerts, 'Error 1');
   });

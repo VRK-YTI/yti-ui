@@ -19,14 +19,18 @@ function createPrepareHeaders(
   ) => RawAxiosRequestHeaders
 ) {
   return ({ extra: ctx }: { extra: unknown }) => {
-    // Cast to SSRContext - on client side, ctx.req will be undefined
-    const ssrCtx = ctx as SSRContext;
+    // Cast to SSRContext. The context may be:
+    // - SSR: Next.js context with req/res from getServerSideProps
+    // - Browser: empty object {} (client-side navigation)
+    // - Tests: undefined (store created without context)
+    // We use optional chaining throughout to handle all cases safely.
+    const ssrCtx = ctx as SSRContext | undefined;
     const cookies: { [key: string]: string } = {};
 
     let session_id: string | null = null;
 
     // Extract JSESSIONID from session if available
-    if (ssrCtx.req?.session) {
+    if (ssrCtx?.req?.session) {
       session_id = ssrCtx.req.session.cookies?.['JSESSIONID'] ?? null;
 
       // assign JSESSIONID to cookie
@@ -38,7 +42,7 @@ function createPrepareHeaders(
     // Additionally, if the browser provided us with _shibsession_..., pass
     // it to the request as well. This helps with cases where JSESSIONID
     // isn't enough for the spring API.
-    if (ssrCtx.req?.cookies) {
+    if (ssrCtx?.req?.cookies) {
       const shibCookies = Object.keys(ssrCtx.req.cookies).filter((x) =>
         x.startsWith('_shibsession')
       );
@@ -57,7 +61,7 @@ function createPrepareHeaders(
 
     // X-Forwarded-For needs to match client requests or Shibboleth will
     // invalidate the session
-    if (ssrCtx.req?.headers?.['x-forwarded-for'] !== undefined) {
+    if (ssrCtx?.req?.headers?.['x-forwarded-for'] !== undefined) {
       const hdr = Array.isArray(ssrCtx.req.headers['x-forwarded-for'])
         ? ssrCtx.req.headers['x-forwarded-for'][0]
         : ssrCtx.req.headers['x-forwarded-for'];
@@ -66,7 +70,7 @@ function createPrepareHeaders(
 
     // Host needs to match client requests or Shibboleth will
     // invalidate the session
-    if (ssrCtx.req?.headers?.['host'] !== undefined) {
+    if (ssrCtx?.req?.headers?.['host'] !== undefined) {
       const hdr = Array.isArray(ssrCtx.req.headers['host'])
         ? ssrCtx.req.headers['host'][0]
         : ssrCtx.req.headers['host'];
