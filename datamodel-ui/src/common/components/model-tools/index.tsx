@@ -119,6 +119,7 @@ export default function ModelTools({
             <Button
               id="graph-tools_zoom-in"
               icon={<IconPlus />}
+              aria-label={t('graph-tools.zoom-in')}
               onClick={() =>
                 setViewport({
                   x: transform[0],
@@ -132,6 +133,7 @@ export default function ModelTools({
             <Button
               id="graph-tools_zoom-out"
               icon={<IconMinus />}
+              aria-label={t('graph-tools.zoom-out')}
               onClick={() =>
                 setViewport({
                   x: transform[0],
@@ -145,6 +147,7 @@ export default function ModelTools({
             <Button
               id="graph-tools_fullscreen"
               icon={<IconFullscreen />}
+              aria-label={t('graph-tools.fullscreen')}
               onClick={() => {
                 dispatch(setModelTools('fullScreen', !tools.fullScreen));
               }}
@@ -154,6 +157,7 @@ export default function ModelTools({
             <Button
               id="graph-tools_reset-positions"
               icon={<IconSwapRounded />}
+              aria-label={t('graph-tools.reset-positions')}
               onClick={() => handleResetPosition()}
               onMouseEnter={(ref) => setRef(ref.currentTarget)}
               onMouseLeave={() => setRef(null)}
@@ -161,6 +165,7 @@ export default function ModelTools({
             <Button
               id="graph-tools_zoom-to"
               icon={<IconMapMyLocation />}
+              aria-label={t('graph-tools.zoom-to')}
               onClick={() => centerNode()}
               onMouseEnter={(ref) => setRef(ref.currentTarget)}
               onMouseLeave={() => setRef(null)}
@@ -172,6 +177,7 @@ export default function ModelTools({
               <Button
                 id="graph-tools_save-positions"
                 icon={<IconSave />}
+                aria-label={t('graph-tools.save-positions')}
                 onClick={() => dispatch(setSavePosition(true))}
                 onMouseEnter={(ref) => setRef(ref.currentTarget)}
                 onMouseLeave={() => setRef(null)}
@@ -179,6 +185,11 @@ export default function ModelTools({
             )}
             <Button
               icon={tooltipOpen ? <IconChevronRight /> : <IconChevronLeft />}
+              aria-label={
+                tooltipOpen
+                  ? t('graph-tools.close-settings')
+                  : t('graph-tools.open-settings')
+              }
               variant="secondary"
               onClick={() => setTooltipOpen(!tooltipOpen)}
             />

@@ -5,7 +5,7 @@ import {
   User,
   UserProps,
 } from 'yti-common-ui/interfaces/user.interface';
-import withSession from './session';
+import { getSession, RequestWithSession } from './session';
 import { AppStore, wrapper } from '@app/store';
 import { ParsedUrlQuery } from 'querystring';
 import { SSRConfig } from 'next-i18next';
@@ -42,94 +42,94 @@ export function createCommonGetServerSideProps<
   T extends { [key: string]: unknown } = { [key: string]: unknown }
 >(handler?: localHandler<T>): CreateCommonGetServerSidePropsResult<T> {
   return wrapper.getServerSideProps((store) => {
-    return withSession(
-      async ({ req, res, resolvedUrl, params, query, locale }) => {
-        const results = await handler?.({
-          req,
-          res,
-          resolvedUrl,
-          params,
-          query,
-          locale,
-          store,
-        });
+    return async (context: GetServerSidePropsContext) => {
+      const { req, res, resolvedUrl, params, query, locale } = context;
 
-        await store.dispatch(getAuthenticatedUser.initiate());
-        const user: User = getStoreData({
-          state: store.getState(),
-          reduxKey: 'loginApi',
-          functionKey: 'getAuthenticatedUser',
-        });
+      // Initialize session and attach to req for api-base-query access
+      const session = await getSession(req, res);
+      (req as RequestWithSession).session = session;
 
-        if (!user || user.anonymous) {
-          store.dispatch(setLogin(anonymousUser));
-        } else {
-          store.dispatch(
-            setLogin(user ? user : req.session.user ?? anonymousUser)
-          );
-        }
+      const results = await handler?.({
+        req,
+        res,
+        resolvedUrl,
+        params,
+        query,
+        locale,
+        store,
+      });
 
-        if (process.env.ENV_TYPE !== 'production') {
-          await store.dispatch(getFakeableUsers.initiate());
-        }
+      await store.dispatch(getAuthenticatedUser.initiate());
+      const user: User = getStoreData({
+        state: store.getState(),
+        reduxKey: 'loginApi',
+        functionKey: 'getAuthenticatedUser',
+      });
 
-        const fakeableUsers: FakeableUser[] = getStoreData({
-          state: store.getState(),
-          reduxKey: 'fakeableUsers',
-          functionKey: 'getFakeableUsers',
-        });
-
-        store.dispatch(
-          setAdminControls(process.env.ADMIN_CONTROLS_DISABLED === 'true')
-        );
-
-        const userAgent = req.headers['user-agent'] ?? '';
-
-        const resultsProps = results
-          ? typeof results.props === 'object'
-            ? results.props
-            : {}
-          : {};
-
-        const redirectProp =
-          results?.props &&
-          (results.props as Record<string, boolean>).requireAuthenticated &&
-          user.anonymous
-            ? {
-                permanent: false,
-                destination: '/',
-              }
-            : undefined;
-
-        return {
-          ...results,
-          redirect: redirectProp,
-          props: {
-            ...resultsProps,
-            ...(await serverSideTranslations(locale ?? 'fi', [
-              'admin',
-              'alert',
-              'collection',
-              'common',
-              'concept',
-              'own-information',
-            ])),
-            isSSRMobile: Boolean(
-              userAgent.match(
-                /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
-              )
-            ),
-            isMatomoEnabled: process.env.MATOMO_ENABLED === 'true',
-            matomoUrl: process.env.MATOMO_URL ?? null,
-            matomoSiteId: process.env.MATOMO_SITE_ID ?? null,
-            user: user ?? null,
-            fakeableUsers:
-              !fakeableUsers || isEqual(fakeableUsers, {})
-                ? null
-                : fakeableUsers,
-          },
-        };
+      if (!user || user.anonymous) {
+        store.dispatch(setLogin(anonymousUser));
+      } else {
+        store.dispatch(setLogin(user ? user : session.user ?? anonymousUser));
       }
-    );
+
+      if (process.env.ENV_TYPE !== 'production') {
+        await store.dispatch(getFakeableUsers.initiate());
+      }
+
+      const fakeableUsers: FakeableUser[] = getStoreData({
+        state: store.getState(),
+        reduxKey: 'fakeableUsers',
+        functionKey: 'getFakeableUsers',
+      });
+
+      store.dispatch(
+        setAdminControls(process.env.ADMIN_CONTROLS_DISABLED === 'true')
+      );
+
+      const userAgent = req.headers['user-agent'] ?? '';
+
+      const resultsProps = results
+        ? typeof results.props === 'object'
+          ? results.props
+          : {}
+        : {};
+
+      const redirectProp =
+        results?.props &&
+        (results.props as Record<string, boolean>).requireAuthenticated &&
+        user.anonymous
+          ? {
+              permanent: false,
+              destination: '/',
+            }
+          : undefined;
+
+      return {
+        ...results,
+        redirect: redirectProp,
+        props: {
+          ...resultsProps,
+          ...(await serverSideTranslations(locale ?? 'fi', [
+            'admin',
+            'alert',
+            'collection',
+            'common',
+            'concept',
+            'own-information',
+          ])),
+          isSSRMobile: Boolean(
+            userAgent.match(
+              /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
+            )
+          ),
+          isMatomoEnabled: process.env.MATOMO_ENABLED === 'true',
+          matomoUrl: process.env.MATOMO_URL ?? null,
+          matomoSiteId: process.env.MATOMO_SITE_ID ?? null,
+          user: user ?? null,
+          fakeableUsers:
+            !fakeableUsers || isEqual(fakeableUsers, {}) ? null : fakeableUsers,
+        },
+      };
+    };
   }) as CreateCommonGetServerSidePropsResult<T>;
 }

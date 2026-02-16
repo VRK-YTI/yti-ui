@@ -5,7 +5,7 @@ import mockRouter from 'next-router-mock';
 import singletonRouter from 'next/router';
 
 jest.useFakeTimers();
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/router', () => require('next-router-mock'));
 
 describe('matomo', () => {
   beforeEach(() => {

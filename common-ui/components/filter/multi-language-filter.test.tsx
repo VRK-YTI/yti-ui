@@ -3,7 +3,7 @@ import MultiLanguageFilter from './multi-language-filter';
 import { themeProvider } from '../../utils/test-utils';
 import mockRouter from 'next-router-mock';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/router', () => require('next-router-mock'));
 
 describe('language-filter', () => {
   it('should render component', () => {

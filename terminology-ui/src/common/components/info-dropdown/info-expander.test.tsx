@@ -15,7 +15,7 @@ import { screen, waitFor } from '@testing-library/react';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
 import { TerminologyInfo } from '@app/common/interfaces/interfaces-v2';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/router', () => require('next-router-mock'));
 
 const reducers = [
   adminControlsSlice,

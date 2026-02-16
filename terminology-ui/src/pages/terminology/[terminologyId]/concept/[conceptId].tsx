@@ -1,5 +1,5 @@
 import { SSRConfig, useTranslation } from 'next-i18next';
-import { useRouter } from 'next/dist/client/router';
+import { useRouter } from 'next/router';
 import React from 'react';
 import Layout from '@app/common/components/layout';
 import {

@@ -1,24 +1,15 @@
-// this file is a wrapper with defaults to be used in both API routes and `getServerSideProps` functions
-import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
-import { withIronSessionSsr } from 'iron-session/next';
-import { userCookieOptions } from './user-cookie-options';
-import { User } from 'yti-common-ui/interfaces/user.interface';
+import { GetServerSidePropsContext } from 'next';
+import { getIronSession, IronSession } from 'iron-session';
+import { sessionOptions, SessionData } from './user-cookie-options';
 
-function withSession<
-  P extends { [key: string]: unknown } = { [key: string]: unknown }
->(
-  handler: (
-    context: GetServerSidePropsContext
-  ) => GetServerSidePropsResult<P> | Promise<GetServerSidePropsResult<P>>
-) {
-  return withIronSessionSsr(handler, userCookieOptions);
+export async function getSession(
+  req: GetServerSidePropsContext['req'],
+  res: GetServerSidePropsContext['res']
+): Promise<IronSession<SessionData>> {
+  return getIronSession<SessionData>(req, res, sessionOptions);
 }
 
-export default withSession;
-
-declare module 'iron-session' {
-  interface IronSessionData {
-    user?: User;
-    cookies?: { [value: string]: string };
-  }
-}
+// Type for request with session attached (used for SSR cookie forwarding)
+export type RequestWithSession = GetServerSidePropsContext['req'] & {
+  session: IronSession<SessionData>;
+};

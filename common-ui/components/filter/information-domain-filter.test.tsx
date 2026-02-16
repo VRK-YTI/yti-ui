@@ -3,7 +3,7 @@ import { themeProvider } from '../../utils/test-utils';
 import InformationDomainFilter from './information-domain-filter';
 import mockRouter from 'next-router-mock';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/router', () => require('next-router-mock'));
 
 describe('informationDomainFilter', () => {
   it('should render component', () => {

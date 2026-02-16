@@ -121,8 +121,10 @@
   "graph": "",
   "graph-settings": "",
   "graph-tools": {
+    "close-settings": "",
     "download-picture": "",
     "fullscreen": "",
+    "open-settings": "",
     "reset-positions": "",
     "save-positions": "",
     "zoom-in": "",

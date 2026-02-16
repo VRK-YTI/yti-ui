@@ -244,9 +244,11 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
               <Separator isLarge />
             </>
           )}
-          <VisuallyHidden as="h2">
-            {t('additional-technical-information', { ns: 'common' })}
-          </VisuallyHidden>
+          <h2>
+            <VisuallyHidden>
+              {t('additional-technical-information', { ns: 'common' })}
+            </VisuallyHidden>
+          </h2>
           <BasicBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}
             id="organization"

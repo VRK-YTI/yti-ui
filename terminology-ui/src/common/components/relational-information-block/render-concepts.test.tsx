@@ -3,7 +3,7 @@ import RenderConcepts from './render-concepts';
 import { renderWithProviders } from '@app/tests/test-utils';
 import mockRouter from 'next-router-mock';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/router', () => require('next-router-mock'));
 
 describe('render-concepts', () => {
   it('should render component', () => {

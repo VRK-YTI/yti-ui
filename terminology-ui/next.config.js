@@ -12,9 +12,6 @@ module.exports = (phase, { defaultConfig }) => {
   }
 
   let config = {
-    experimental: {
-      scrollRestoration: true,
-    },
     compiler: {
       styledComponents: true,
     },
@@ -33,6 +30,8 @@ module.exports = (phase, { defaultConfig }) => {
         },
       ];
     },
+    // TODO: [Next.js 15 Migration] publicRuntimeConfig is deprecated.
+    // Migrate to env: { NEXT_PUBLIC_VERSION_INFO: versionInfo }
     publicRuntimeConfig: {
       versionInfo,
     },

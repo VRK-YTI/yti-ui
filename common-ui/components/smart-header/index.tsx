@@ -94,7 +94,7 @@ export default function SmartHeader({
         <NavigationContainer $breakpoint="small">
           <MobileNavigation
             handleLoginModalClick={handleLoginModalClick}
-            isLoggedIn={!user?.anonymous ?? false}
+            isLoggedIn={!(user?.anonymous ?? true)}
             fakeableUsers={fakeableUsers}
             hideSv={hideSv}
           />
@@ -109,7 +109,7 @@ export default function SmartHeader({
         <Block variant="nav">
           <NavigationContainer $breakpoint={breakpoint}>
             <MarginContainer $breakpoint={breakpoint}>
-              <DesktopNavigation isLoggedIn={!user?.anonymous ?? false} />
+              <DesktopNavigation isLoggedIn={!(user?.anonymous ?? true)} />
             </MarginContainer>
           </NavigationContainer>
         </Block>

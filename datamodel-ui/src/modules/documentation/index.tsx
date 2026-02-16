@@ -577,6 +577,7 @@ export default function Documentation({
                   onClick={() => handleButtonClick('bold')}
                   id="bold-button"
                   icon={<IconBold />}
+                  aria-label={translateDocumentationTooltip('bold-button', t)}
                   onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
                   onMouseLeave={() => setHoverRef(null)}
                 />
@@ -585,6 +586,7 @@ export default function Documentation({
                   onClick={() => handleButtonClick('italic')}
                   id="italic-button"
                   icon={<IconItalics />}
+                  aria-label={translateDocumentationTooltip('italic-button', t)}
                   onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
                   onMouseLeave={() => setHoverRef(null)}
                 />
@@ -593,6 +595,7 @@ export default function Documentation({
                   onClick={() => handleButtonClick('quote')}
                   id="quote-button"
                   icon={<IconQuotes />}
+                  aria-label={translateDocumentationTooltip('quote-button', t)}
                   onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
                   onMouseLeave={() => setHoverRef(null)}
                 />
@@ -601,6 +604,10 @@ export default function Documentation({
                   onClick={() => handleButtonClick('listBulleted')}
                   id="list-bulleted-button"
                   icon={<IconListBulleted />}
+                  aria-label={translateDocumentationTooltip(
+                    'list-bulleted-button',
+                    t
+                  )}
                   onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
                   onMouseLeave={() => setHoverRef(null)}
                 />
@@ -609,6 +616,10 @@ export default function Documentation({
                   onClick={() => handleButtonClick('listNumbered')}
                   id="list-numbered-button"
                   icon={<IconListNumbered />}
+                  aria-label={translateDocumentationTooltip(
+                    'list-numbered-button',
+                    t
+                  )}
                   onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
                   onMouseLeave={() => setHoverRef(null)}
                 />
@@ -617,6 +628,7 @@ export default function Documentation({
                   onClick={() => handleButtonClick('link')}
                   id="link-button"
                   icon={<IconAttachment />}
+                  aria-label={translateDocumentationTooltip('link-button', t)}
                   onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
                   onMouseLeave={() => setHoverRef(null)}
                 />
@@ -625,6 +637,7 @@ export default function Documentation({
                   onClick={() => handleButtonClick('image')}
                   id="image-button"
                   icon={<IconImage />}
+                  aria-label={translateDocumentationTooltip('image-button', t)}
                   onMouseEnter={(ref) => setHoverRef(ref.currentTarget)}
                   onMouseLeave={() => setHoverRef(null)}
                 />
