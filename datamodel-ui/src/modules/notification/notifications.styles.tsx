@@ -17,11 +17,10 @@ const fadeOut = keyframes`
   }
 `;
 
-export const NotificationWrapper = styled.div<{ $visible?: boolean }>`
+export const NotificationWrapper = styled.div`
   position: fixed;
   top: 20px;
   left: 50%;
   transform: translate(-50%, 0);
-
   animation: ${fadeOut} 5s linear;
 `;

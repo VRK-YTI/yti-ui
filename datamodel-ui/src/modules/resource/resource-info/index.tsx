@@ -43,6 +43,7 @@ interface CommonViewProps {
   modelId: string;
   handleReturn: () => void;
   handleShowResource: (id: string, modelPrefix: string) => void;
+  refetchResourceList: () => void;
   handleEdit: () => void;
   isPartOfCurrentModel: boolean;
   applicationProfile?: boolean;
@@ -57,6 +58,7 @@ export default function ResourceInfo({
   modelId,
   handleReturn,
   handleShowResource,
+  refetchResourceList,
   handleEdit,
   isPartOfCurrentModel,
   applicationProfile,
@@ -99,6 +101,12 @@ export default function ResourceInfo({
     }
 
     handleEdit();
+  };
+
+  const handleLocalCopySuccess = (id: string, modelPrefix: string) => {
+    setExternalEdit(false);
+    refetchResourceList();
+    handleShowResource(id, modelPrefix);
   };
 
   useEffect(() => {
@@ -175,7 +183,8 @@ export default function ResourceInfo({
                 targetModelId={currentModelId ?? ''}
                 sourceModelId={modelId}
                 sourceIdentifier={data.identifier}
-                handleReturn={handleShowResource}
+                handleReturn={handleLocalCopySuccess}
+                resourceType={data.type}
               />
               <DeleteModal
                 modelId={modelId}
@@ -185,7 +194,11 @@ export default function ResourceInfo({
                   data: data.label,
                   lang: i18n.language,
                 })}
-                onClose={handleReturn}
+                onClose={() => {
+                  setDeleteVisible(false);
+                  refetchResourceList();
+                  handleReturn();
+                }}
                 visible={deleteVisible}
                 hide={() => setDeleteVisible(false)}
               />
@@ -259,6 +272,10 @@ export default function ResourceInfo({
                   type={data.type}
                   applicationProfile={applicationProfile}
                   external
+                  currentModelId={currentModelId}
+                  sourceModelId={modelId}
+                  sourceIdentifier={data.identifier}
+                  handleReturn={handleLocalCopySuccess}
                 />
               </>
             )}
