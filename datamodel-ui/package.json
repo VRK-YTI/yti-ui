@@ -33,6 +33,7 @@
     "react-redux": "^8.0.2",
     "reactflow": "^11.8.3",
     "redux-devtools-extension": "^2.13.9",
+    "sass": "^1.69.5",
     "remark-gfm": "^3.0.1",
     "styled-components": "^6.1.0",
     "suomifi-design-tokens": "^6.1.0",
