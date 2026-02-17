@@ -1,6 +1,6 @@
 module.exports = {
   // next lint (eslint)
-  '**/*.{js,jsx,ts,tsx}': (filenames) => [
+  'src/**/*.{js,jsx,ts,tsx}': (filenames) => [
     `next lint --file ${filenames.join(' --file ')}`,
   ],
 

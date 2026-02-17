@@ -1,5 +1,4 @@
 const { i18n } = require('./next-i18next.config');
-const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 const fs = require('fs');
 
 module.exports = (phase, { defaultConfig }) => {
@@ -30,10 +29,8 @@ module.exports = (phase, { defaultConfig }) => {
         },
       ];
     },
-    // TODO: [Next.js 15 Migration] publicRuntimeConfig is deprecated.
-    // Migrate to env: { NEXT_PUBLIC_VERSION_INFO: versionInfo }
-    publicRuntimeConfig: {
-      versionInfo,
+    env: {
+      NEXT_PUBLIC_VERSION_INFO: versionInfo,
     },
     async headers() {
       const isProd = process.env.NODE_ENV === 'production';
