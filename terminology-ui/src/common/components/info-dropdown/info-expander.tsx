@@ -288,11 +288,9 @@ export default function InfoExpander({
           </>
         )}
 
-        <h3>
-          <VisuallyHidden>
-            {t('additional-technical-information', { ns: 'common' })}
-          </VisuallyHidden>
-        </h3>
+        <VisuallyHidden asProp="h3">
+          {t('additional-technical-information', { ns: 'common' })}
+        </VisuallyHidden>
         <BasicBlock title={t('vocabulary-info-organization')} id="organization">
           <PropertyList>
             {data.organizations

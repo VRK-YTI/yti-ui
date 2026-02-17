@@ -251,11 +251,9 @@ export default function Collection({
             </>
           )}
 
-          <h2>
-            <VisuallyHidden>
-              {t('additional-technical-information', { ns: 'common' })}
-            </VisuallyHidden>
-          </h2>
+          <VisuallyHidden asProp="h2">
+            {t('additional-technical-information', { ns: 'common' })}
+          </VisuallyHidden>
 
           <BasicBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}
