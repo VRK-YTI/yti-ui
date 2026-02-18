@@ -24,7 +24,10 @@ import ConceptView from '../concept-view';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import HasPermission from '@app/common/utils/has-permission';
 import { useSelector } from 'react-redux';
-import { selectDisplayLang } from '@app/common/components/model/model.slice';
+import {
+  selectCurrentViewName,
+  selectDisplayLang,
+} from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 import { useGetAllCodesQuery } from '@app/common/components/code/code.slice';
 import UriList from '@app/common/components/uri-list';
@@ -82,6 +85,8 @@ export default function CommonViewContent({
     }
   );
   const router = useRouter();
+  const currentView = useSelector(selectCurrentViewName());
+  const isClassesView = currentView === 'classes';
   const [showReferences, setShowReferences] = useState(false);
 
   function getCodeListLabel(uri: string) {
@@ -452,7 +457,7 @@ export default function CommonViewContent({
           </>
         )}
 
-        {data.type === ResourceType.ASSOCIATION && (
+        {!isClassesView && data.type === ResourceType.ASSOCIATION && (
           <>
             <BasicBlock
               title={t('associations-source', { ns: 'admin' })}
