@@ -100,11 +100,9 @@ export default function ResultCardTypedExpander({
             </ExpanderContentTitle>
             <div style={{ display: 'flex', gap: '15px' }}>
               {values.map((hit) => (
-                <Link key={hit.id} href={hit.uri} passHref legacyBehavior>
-                  <SuomiFiLink href="">
-                    <SanitizedTextContent text={hit.label} />
-                  </SuomiFiLink>
-                </Link>
+                <SuomiFiLink asProp={Link} key={hit.id} href={hit.uri}>
+                  <SanitizedTextContent text={hit.label} />
+                </SuomiFiLink>
               ))}
             </div>
           </div>

@@ -6,9 +6,6 @@ module.exports = () => {
       styledComponents: true,
     },
     reactStrictMode: true,
-    eslint: {
-      dirs: ['src'],
-    },
     images: {
       remotePatterns: [
         {

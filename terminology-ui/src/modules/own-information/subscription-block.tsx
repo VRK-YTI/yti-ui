@@ -87,16 +87,14 @@ export default function SubscriptionBlock({
           {subscriptions?.resources.map((resource, idx) => {
             return (
               <SubscriptionsListItem key={`subscription-list-item-${idx}`}>
-                <Link passHref href={resource.uri} legacyBehavior>
-                  <SuomiLink href="">
-                    {resource.prefLabel
-                      ? getLanguageVersion({
-                          data: resource.prefLabel,
-                          lang: i18n.language,
-                        })
-                      : resource.uri}
-                  </SuomiLink>
-                </Link>
+                <SuomiLink asProp={Link} href={resource.uri}>
+                  {resource.prefLabel
+                    ? getLanguageVersion({
+                        data: resource.prefLabel,
+                        lang: i18n.language,
+                      })
+                    : resource.uri}
+                </SuomiLink>
                 <RemoveSubscription
                   resource={resource}
                   toggleSubscription={toggleSubscription}

@@ -62,17 +62,15 @@ export default function ResultCard({
             : `${contributors.length} ${t('card-organizations')}`}
         </OrganizationParagraph>
       )}
-      <Link passHref href={titleLink} legacyBehavior>
-        <TitleLink href="">
-          {icon && icon}
-          <Title variant="h2" id="card-title-link">
-            <SanitizedTextContent text={title} />
-            <VisuallyHidden>
-              {contributors?.join(', ') ?? t('no-contributors')}
-            </VisuallyHidden>
-          </Title>
-        </TitleLink>
-      </Link>
+      <TitleLink asProp={Link} href={titleLink}>
+        {icon && icon}
+        <Title variant="h2" id="card-title-link">
+          <SanitizedTextContent text={title} />
+          <VisuallyHidden>
+            {contributors?.join(', ') ?? t('no-contributors')}
+          </VisuallyHidden>
+        </Title>
+      </TitleLink>
       <Subtitle id="card-subtitle">
         <span>{type}</span>
         {identifier && (

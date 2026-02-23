@@ -36,18 +36,17 @@ export default function DiagramsAndSourcesExpander({
               {concept?.links?.map((link, idx) => {
                 return (
                   <li key={`diagrams-${idx}`}>
-                    <Link href={link.uri} passHref legacyBehavior>
-                      <ExternalLink
-                        href=""
-                        labelNewWindow=""
-                        style={{ fontSize: '16px' }}
-                      >
-                        {getLanguageVersion({
-                          data: link.name,
-                          lang: i18n.language,
-                        })}
-                      </ExternalLink>
-                    </Link>
+                    <ExternalLink
+                      asProp={Link}
+                      href={link.uri}
+                      labelNewWindow=""
+                      style={{ fontSize: '16px' }}
+                    >
+                      {getLanguageVersion({
+                        data: link.name,
+                        lang: i18n.language,
+                      })}
+                    </ExternalLink>
                     {Object.entries(link.description).length > 0 && (
                       <>
                         <br />
