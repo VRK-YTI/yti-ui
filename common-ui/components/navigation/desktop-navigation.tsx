@@ -40,17 +40,20 @@ export default function DesktopNavigation({
         id="top-navigation-front-page"
         className="top-navigation-li"
       >
-        <Link href="/" passHref legacyBehavior>
-          <SuomiFiLink className="main" href="">
-            {t('site-frontpage')}
-          </SuomiFiLink>
-        </Link>
+        <SuomiFiLink asProp={Link} className="main" href="/">
+          {t('site-frontpage')}
+        </SuomiFiLink>
       </NavigationItem>
       <NavigationItem
         id="top-navigation-services"
         className="top-navigation-li"
       >
-        <SuomiFiLink className="main" href="" onClick={handleDropdown}>
+        <SuomiFiLink
+          asProp={Link}
+          className="main"
+          href=""
+          onClick={handleDropdown}
+        >
           {t('site-tools')}
           {open ? (
             <IconChevronUp color={theme.suomifi.colors.highlightBase} />
@@ -64,18 +67,22 @@ export default function DesktopNavigation({
               <NavigationDropdownList>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
                   <SuomiFiLink
+                    asProp={Link}
                     href={`https://sanastot.suomi.fi/${router.locale ?? 'fi'}`}
                   >
                     {t('terminology-title')}
                   </SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink href="https://koodistot.suomi.fi/">
+                  <SuomiFiLink asProp={Link} href="https://koodistot.suomi.fi/">
                     {t('codelist-title')}
                   </SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink href="https://tietomallit.suomi.fi/">
+                  <SuomiFiLink
+                    asProp={Link}
+                    href="https://tietomallit.suomi.fi/"
+                  >
                     {t('datamodel-title')}
                   </SuomiFiLink>
                 </NavigationDropdownItem>
@@ -89,11 +96,9 @@ export default function DesktopNavigation({
         className="top-navigation-li"
         $active={router.pathname === '/site-information'}
       >
-        <Link href="/site-information" passHref legacyBehavior>
-          <SuomiFiLink className="main" href="">
-            {t('site-information')}
-          </SuomiFiLink>
-        </Link>
+        <SuomiFiLink asProp={Link} className="main" href="/site-information">
+          {t('site-information')}
+        </SuomiFiLink>
       </NavigationItem>
       {isLoggedIn && (
         <NavigationItem
@@ -101,11 +106,9 @@ export default function DesktopNavigation({
           id="top-navigation-own-information"
           className="top-navigation-li"
         >
-          <Link href="/own-information" passHref legacyBehavior>
-            <SuomiFiLink className="main" href="">
-              {t('own-information')}
-            </SuomiFiLink>
-          </Link>
+          <SuomiFiLink asProp={Link} className="main" href="/own-information">
+            {t('own-information')}
+          </SuomiFiLink>
         </NavigationItem>
       )}
     </NavigationWrapper>

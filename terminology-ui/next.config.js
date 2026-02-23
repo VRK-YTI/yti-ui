@@ -16,9 +16,6 @@ module.exports = (phase, { defaultConfig }) => {
     },
     reactStrictMode: true,
     i18n,
-    eslint: {
-      dirs: ['src'],
-    },
     transpilePackages: ['common-ui'],
     async redirects() {
       return [
