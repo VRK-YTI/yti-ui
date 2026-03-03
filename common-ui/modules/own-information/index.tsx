@@ -161,7 +161,7 @@ export default function OwnInformation({
           extra={
             <BasicBlockExtraWrapper>
               <ToggleButton
-                checked={subscriptions?.subscriptionType === 'DAILY' ?? false}
+                checked={subscriptions?.subscriptionType === 'DAILY'}
                 onClick={() => handleToggleClick()}
               >
                 {t('email-subscriptions')}

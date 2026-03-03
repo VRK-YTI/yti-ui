@@ -49,7 +49,7 @@ interface ResourceListProps {
   id: string;
   type?: 'single' | 'multiple' | 'multiple-without-global' | 'display';
   selected?: string | string[];
-  extraHeader?: React.ReactFragment;
+  extraHeader?: React.ReactNode;
   handleClick: (value: string | string[]) => void;
   serviceCategories?: ServiceCategory[];
 }

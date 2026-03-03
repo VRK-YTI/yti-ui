@@ -1,27 +1,30 @@
-import { userCookieOptions } from '@app/common/utils/user-cookie-options';
-import { withIronSessionApiRoute } from 'iron-session/next';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { getIronSession } from 'iron-session';
+import {
+  sessionOptions,
+  SessionData,
+} from '@app/common/utils/user-cookie-options';
 
-export default withIronSessionApiRoute(
-  async function logout(req, res) {
-    const target = (req.query['target'] as string) ?? '/';
+export default async function logout(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const session = await getIronSession<SessionData>(req, res, sessionOptions);
+  const target = (req.query['target'] as string) ?? '/';
 
-    // invalidate:
-    // * JSESSIONID
-    // * all Shibboleth session cookies
-    res.setHeader('Set-Cookie', [
-      'JSESSIONID=deleted; path=/datamodel-api; expires=Thu, 01 Jan 1970 00:00:00 GMT',
-      ...Object.entries(req.cookies)
-        .filter(([k, _]) => k.startsWith('_shibsession_'))
-        .map(
-          ([k, _]) =>
-            `${k}=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
-        ),
-    ]);
+  // invalidate:
+  // * JSESSIONID
+  // * all Shibboleth session cookies
+  res.setHeader('Set-Cookie', [
+    'JSESSIONID=deleted; path=/datamodel-api; expires=Thu, 01 Jan 1970 00:00:00 GMT',
+    ...Object.entries(req.cookies)
+      .filter(([k, _]) => k.startsWith('_shibsession_'))
+      .map(
+        ([k, _]) =>
+          `${k}=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+      ),
+  ]);
 
-    req.session.destroy();
-    res.redirect(target);
-  },
-  {
-    ...userCookieOptions,
-  }
-);
+  session.destroy();
+  res.redirect(target);
+}

@@ -4,7 +4,7 @@ import { lightTheme } from '../theme';
 import SearchResults, { SearchResultData } from './search-results';
 import mockRouter from 'next-router-mock';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/router', () => require('next-router-mock'));
 
 describe('search-results', () => {
   it('should render component', async () => {

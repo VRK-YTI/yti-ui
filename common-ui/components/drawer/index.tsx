@@ -3,6 +3,7 @@ import {
   useEffect,
   useState,
   MouseEvent as ReactMouseEvent,
+  ReactElement,
   ReactNode,
 } from 'react';
 import { IconChevronLeft, IconChevronRight } from 'suomifi-ui-components';
@@ -17,10 +18,10 @@ import {
 import ScrollableButtonMenu from './scrollable-button-menu';
 
 interface SideNavigationProps {
-  buttons: React.ReactFragment;
+  buttons: ReactNode;
   smallButtons: {
     id: string;
-    icon: ReactNode;
+    icon: ReactElement;
     label: string;
     onClick: () => void;
   }[];
@@ -29,7 +30,7 @@ interface SideNavigationProps {
   initialOpen?: boolean;
   navDisabled?: boolean;
   openButtonExtraFunc?: () => void;
-  children: React.ReactFragment;
+  children: ReactNode;
 }
 
 export default function Drawer({

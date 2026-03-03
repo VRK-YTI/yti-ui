@@ -45,7 +45,7 @@ interface MultiColumnSearchProps {
   noDataModelPicker?: boolean;
   noDraftStatus?: boolean;
   multiSelect?: boolean;
-  extra?: React.ReactFragment;
+  extra?: React.ReactNode;
   modelId: string;
 }
 
@@ -362,7 +362,7 @@ export default function MultiColumnSearch({
             labelText={t('content-language')}
             defaultValue={
               languages.find(
-                (lang) => lang.uniqueItemId === i18n.language ?? 'fi'
+                (lang) => lang.uniqueItemId === (i18n.language || 'fi')
               )?.uniqueItemId ?? 'fi'
             }
             onChange={setContentLanguage}

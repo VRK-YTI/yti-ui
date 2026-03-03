@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import {
   Button,
@@ -49,7 +49,7 @@ export default function ScrollableButtonMenu({
 }: {
   buttons: {
     id: string;
-    icon: ReactNode;
+    icon: ReactElement;
     label: string;
     onClick: () => void;
   }[];
@@ -119,6 +119,7 @@ export default function ScrollableButtonMenu({
         variant="secondaryNoBorder"
         icon={<IconChevronLeft />}
         onClick={() => handleChevronClick(-1)}
+        aria-label="Previous"
       />
       <ScrollableButtons>
         {buttons.map((button, idx) => (
@@ -127,7 +128,9 @@ export default function ScrollableButtonMenu({
             key={button.id}
             icon={button.icon}
             onClick={() => handleClick(button.id)}
-            ref={(e) => (e !== null ? (bRef.current[idx] = e) : undefined)}
+            ref={(e) => {
+              if (e !== null) bRef.current[idx] = e;
+            }}
             variant="secondaryNoBorder"
             className={currentRef?.id === button.id ? 'current-view' : ''}
           >
@@ -139,6 +142,7 @@ export default function ScrollableButtonMenu({
         variant="secondaryNoBorder"
         icon={<IconChevronRight />}
         onClick={() => handleChevronClick(1)}
+        aria-label="Next"
       />
     </ButtonContainer>
   );

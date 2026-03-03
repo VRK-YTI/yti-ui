@@ -52,3 +52,5 @@ node_modules
 */next-env.d.ts
 
 */public/locales/**/*_old.json
+# next-agents-md
+.next-docs/

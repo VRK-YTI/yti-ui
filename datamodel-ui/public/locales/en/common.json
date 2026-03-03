@@ -121,8 +121,10 @@
   "graph": "Graph",
   "graph-settings": "Graph settings",
   "graph-tools": {
+    "close-settings": "Close settings",
     "download-picture": "Download picture",
     "fullscreen": "Fullscreen",
+    "open-settings": "Open settings",
     "reset-positions": "Reset positions",
     "save-positions": "Save positions",
     "zoom-in": "Zoom in",

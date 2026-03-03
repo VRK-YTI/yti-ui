@@ -77,6 +77,7 @@ export default function RemoveReferenceModal({
         <Button
           variant="secondaryNoBorder"
           icon={<IconRemove />}
+          aria-label={t('remove-reference', { ns: 'admin' })}
           onClick={() => setShowModal(true)}
         />
       ) : (

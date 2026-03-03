@@ -25,19 +25,25 @@ export const themeProvider = ({ children }: TestUtilsProps) => (
   <ThemeProvider theme={lightTheme}>{children}</ThemeProvider>
 );
 
-// mock context for makeStore()
+// Mock context for makeStore()
+// Note: We use 'as unknown as NextIronContext' because node-mocks-http types
+// don't perfectly match Next.js types, but they're functionally equivalent for testing
 export const getMockContext = (options?: {
   reqOptions?: RequestOptions;
   query?: ParsedUrlQuery;
   resolvedUrl?: string;
   locale?: string;
-}): NextIronContext => ({
-  req: httpMocks.createRequest(options?.reqOptions),
-  res: httpMocks.createResponse(),
-  query: options?.query ?? {},
-  resolvedUrl: options?.resolvedUrl ?? '',
-  locale: options?.locale ?? 'en',
-});
+}): NextIronContext => {
+  const mockReq = httpMocks.createRequest(options?.reqOptions);
+  const mockRes = httpMocks.createResponse();
+  return {
+    req: { ...mockReq, cookies: {} },
+    res: mockRes,
+    query: options?.query ?? {},
+    resolvedUrl: options?.resolvedUrl ?? '',
+    locale: options?.locale ?? 'en',
+  } as unknown as NextIronContext;
+};
 
 export type ApiRequest = NextApiRequest & ReturnType<typeof createRequest>;
 export type ApiResponse = NextApiResponse & ReturnType<typeof createResponse>;

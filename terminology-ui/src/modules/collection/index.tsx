@@ -251,7 +251,7 @@ export default function Collection({
             </>
           )}
 
-          <VisuallyHidden as="h2">
+          <VisuallyHidden asProp="h2">
             {t('additional-technical-information', { ns: 'common' })}
           </VisuallyHidden>
 

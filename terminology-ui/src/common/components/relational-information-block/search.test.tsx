@@ -54,7 +54,10 @@ describe('other-information', () => {
     fireEvent.change(screen.getByRole('searchbox'), {
       target: { value: 'test123' },
     });
-    fireEvent.click(screen.queryAllByText('tr-search')[1]);
+    // There are multiple search buttons (SearchInput has one, and there's a standalone one)
+    // Get all buttons with name 'tr-search' and use the second one (the standalone button)
+    const searchButtons = screen.getAllByRole('button', { name: 'tr-search' });
+    fireEvent.click(searchButtons[1]);
 
     expect(setSearchTermMockFn).toHaveBeenCalledTimes(2);
     expect(handleSearchMockFn).toHaveBeenCalledTimes(1);

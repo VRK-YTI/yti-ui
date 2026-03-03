@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactElement, ReactNode, useEffect, useState } from 'react';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { default as CommonDrawer } from 'yti-common-ui/drawer';
 import { DrawerButton } from 'yti-common-ui/drawer/drawer.styles';
@@ -28,10 +28,10 @@ export type ViewType = {
     | 'attributes'
     | 'associations'
     | 'documentation';
-  icon: ReactNode;
+  icon: ReactElement;
   buttonLabel: string;
   buttonLabelSm?: string;
-  component?: React.ReactFragment;
+  component?: ReactNode;
 };
 
 interface SideNavigationProps {

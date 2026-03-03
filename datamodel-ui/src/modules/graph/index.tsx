@@ -9,6 +9,7 @@ import {
   ReactFlowProvider,
   useReactFlow,
   Node,
+  Edge,
 } from 'reactflow';
 import {
   useGetVisualizationQuery,
@@ -46,6 +47,7 @@ import getConnectedElements, {
   getClassConnectedElements,
 } from './utils/get-connected-elements';
 import handleCornerNodeDelete from './utils/handle-corner-node-delete';
+import { EdgeDataType } from '@app/common/interfaces/graph.interface';
 import { ReferenceType } from '@app/common/interfaces/visualization.interface';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import GraphNotification from './graph-notification';
@@ -158,8 +160,15 @@ const GraphContent = ({
   );
 
   const onEdgeClick = useCallback(
-    (e, edge) => {
-      const identifier = edge.data.identifier ?? edge.data.origin;
+    (e: React.MouseEvent, edge: Edge<EdgeDataType>) => {
+      // All edges are created by createEdge() which always provides data
+      const { data } = edge;
+      if (!data) {
+        console.error('Edge missing data - this should never happen', edge.id);
+        return;
+      }
+
+      const identifier = data.identifier ?? data.origin;
       if (
         identifier &&
         globalSelected.id !== identifier &&
@@ -183,7 +192,7 @@ const GraphContent = ({
         dispatch(
           setSelected(
             selectedResourceId,
-            edge.referenceType === 'PARENT_CLASS' ? 'classes' : 'associations',
+            data.referenceType === 'PARENT_CLASS' ? 'classes' : 'associations',
             selectedModelId,
             externalResourceVersion ? externalResourceVersion[1] : undefined
           )
@@ -196,8 +205,8 @@ const GraphContent = ({
         edge.target,
         e.clientX,
         e.clientY,
-        edge.referenceType,
-        edge.data.origin
+        data.referenceType ?? 'ASSOCIATION',
+        data.origin ?? ''
       );
       dispatch(setGraphHasChanges(true));
     },
@@ -205,7 +214,7 @@ const GraphContent = ({
   );
 
   const onNodeMouseEnter = useCallback(
-    (e, node) => {
+    (_e: React.MouseEvent, node: Node) => {
       if (node.type !== 'cornerNode' && !tools.showClassHighlights) {
         return;
       }
@@ -238,7 +247,7 @@ const GraphContent = ({
   }, [dispatch, globalSelected, edges, nodes]);
 
   const onEdgeMouseEnter = useCallback(
-    (e, edge) => {
+    (_e: React.MouseEvent, edge: Edge) => {
       dispatch(setHighlighted(getConnectedElements(edge, nodes, edges)));
     },
     [dispatch, edges, nodes]

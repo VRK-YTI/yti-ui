@@ -9,8 +9,8 @@ interface CreateEdgeProps {
     sourceHandle: string;
     target: string;
     targetHandle: string;
-    referenceType?: ReferenceType;
   };
+  referenceType?: ReferenceType;
   applicationProfile?: boolean;
   identifier?: string;
   isCorner?: boolean;
@@ -22,6 +22,7 @@ interface CreateEdgeProps {
 
 export default function createEdge({
   params,
+  referenceType,
   applicationProfile,
   identifier,
   isCorner,
@@ -33,7 +34,7 @@ export default function createEdge({
   return {
     ...params,
     type: 'generalEdge',
-    markerEnd: getMarkerEnd(isCorner, params.referenceType),
+    markerEnd: getMarkerEnd(isCorner, referenceType),
     data: {
       ...(modelId ? { modelId: modelId } : {}),
       ...(label ? { label: label } : {}),
@@ -41,8 +42,9 @@ export default function createEdge({
       ...(offsetSource ? { offsetSource: offsetSource } : {}),
       ...(applicationProfile ? { applicationProfile: true } : {}),
       ...(origin ? { origin: origin } : {}),
+      ...(referenceType ? { referenceType: referenceType } : {}),
     },
-    ...getAdditionalStyles(params.referenceType),
+    ...getAdditionalStyles(referenceType),
   };
 }
 

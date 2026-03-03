@@ -54,6 +54,7 @@ export default function DownloadPicture({
     <Button
       id="graph-tools_download-picture"
       icon={<IconDownload />}
+      aria-label="Download picture"
       onClick={() => handleClick()}
       onMouseEnter={(ref) => setRef(ref.currentTarget)}
       onMouseLeave={() => setRef(null)}

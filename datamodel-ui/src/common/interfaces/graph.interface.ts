@@ -1,4 +1,5 @@
 import { ResourceType } from './resource-type.interface';
+import { ReferenceType } from './visualization.interface';
 
 export interface ClassNodeDataType {
   applicationProfile?: boolean;
@@ -40,4 +41,11 @@ export interface EdgeDataType {
   offsetSource?: number;
   offsetTarget?: number;
   origin?: string;
+  /**
+   * Type of reference this edge represents.
+   * Refactored to be part of edge.data rather than spread at the edge root level,
+   * following React Flow's recommended pattern for custom edge properties.
+   * See: https://reactflow.dev/learn/advanced-use/typescript
+   */
+  referenceType?: ReferenceType;
 }

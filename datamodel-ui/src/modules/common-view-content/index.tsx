@@ -63,7 +63,7 @@ export default function CommonViewContent({
   displayLabel?: boolean;
   applicationProfile?: boolean;
   disableAssocTarget?: boolean;
-  renderActions?: () => void;
+  renderActions?: () => React.ReactNode;
   handleChangeTarget?: (value?: InternalClassInfo) => void;
   targetInClassRestriction?: UriData;
   organizationIds?: string[];
