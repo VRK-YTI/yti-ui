@@ -58,6 +58,7 @@ interface ResourceInfoProps {
   disableEdit?: boolean;
   targetInClassRestriction?: UriData;
   disableAssocTarget?: boolean;
+  hasAssociationsWithDomainOrRange?: boolean;
 }
 
 export default function ResourceInfo({
@@ -71,6 +72,7 @@ export default function ResourceInfo({
   disableEdit,
   targetInClassRestriction,
   disableAssocTarget,
+  hasAssociationsWithDomainOrRange,
 }: ResourceInfoProps) {
   const { t, i18n } = useTranslation('common');
   const displayLang = useSelector(selectDisplayLang());
@@ -270,6 +272,7 @@ export default function ResourceInfo({
             disableEdit={disableEdit}
             handleRemoveCodeList={handleShowRemoveCodeListModal}
             organizationIds={resourceData.contributor?.map((c) => c.id)}
+            modelUsesDomainRange={hasAssociationsWithDomainOrRange}
           />
         )}
         {!data.modelId && (

@@ -50,6 +50,7 @@ interface CommonViewProps {
   currentModelId?: string;
   disableEdit?: boolean;
   organizationIds?: string[];
+  hasAssociationsWithDomainOrRange?: boolean;
 }
 
 export default function ResourceInfo({
@@ -65,6 +66,7 @@ export default function ResourceInfo({
   currentModelId,
   disableEdit,
   organizationIds,
+  hasAssociationsWithDomainOrRange,
 }: CommonViewProps) {
   const { t, i18n } = useTranslation('common');
   const displayLang = useSelector(selectDisplayLang());
@@ -286,6 +288,7 @@ export default function ResourceInfo({
               data={data}
               inUse={inUse}
               organizationIds={organizationIds}
+              modelUsesDomainRange={hasAssociationsWithDomainOrRange}
             />
           </>
         )}

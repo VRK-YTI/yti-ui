@@ -18,11 +18,13 @@ export default function RangeAndDomain({
   data,
   modelId,
   handleUpdate,
+  modelUsesDomainRange,
 }: {
   applicationProfile?: boolean;
   data: ResourceFormType;
   modelId: string;
   handleUpdate: (value: ResourceFormType) => void;
+  modelUsesDomainRange?: boolean;
 }) {
   const { t } = useTranslation('admin');
   const { data: dataTypesResult, isSuccess: isDataTypesSuccess } =
@@ -96,7 +98,7 @@ export default function RangeAndDomain({
     });
   };
 
-  if (applicationProfile && data.type === ResourceType.ASSOCIATION) {
+  if (data.type === ResourceType.ASSOCIATION && !modelUsesDomainRange) {
     return <></>;
   }
 

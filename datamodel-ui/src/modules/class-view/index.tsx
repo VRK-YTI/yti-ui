@@ -53,6 +53,7 @@ interface ClassViewProps {
   terminologies: string[];
   applicationProfile?: boolean;
   organizationIds?: string[];
+  hasAssociationsWithDomainOrRange?: boolean;
 }
 
 export default function ClassView({
@@ -62,6 +63,7 @@ export default function ClassView({
   terminologies,
   applicationProfile,
   organizationIds,
+  hasAssociationsWithDomainOrRange,
 }: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
   const ref = useRef<HTMLDivElement>(null);
@@ -365,6 +367,7 @@ export default function ClassView({
         disableEdit={version ? true : false}
         handleShowClass={handleShowClass}
         organizationIds={organizationIds}
+        hasAssociationsWithDomainOrRange={hasAssociationsWithDomainOrRange}
       />
     );
   }
