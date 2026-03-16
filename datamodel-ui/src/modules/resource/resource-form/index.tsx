@@ -75,6 +75,7 @@ interface ResourceFormProps {
   applicationProfile?: boolean;
   handleReturn: () => void;
   handleFollowUp?: (identifier: string, type: ResourceType) => void;
+  hasAssociationsWithDomainOrRange?: boolean;
 }
 
 export default function ResourceForm({
@@ -86,6 +87,7 @@ export default function ResourceForm({
   applicationProfile,
   handleReturn,
   handleFollowUp,
+  hasAssociationsWithDomainOrRange,
 }: ResourceFormProps) {
   const { t } = useTranslation('admin');
   const { enableConfirmation, disableConfirmation } =
@@ -555,6 +557,7 @@ export default function ResourceForm({
             modelId={modelId}
             data={data}
             handleUpdate={handleUpdate}
+            modelUsesDomainRange={hasAssociationsWithDomainOrRange}
           />
 
           {!applicationProfile && (

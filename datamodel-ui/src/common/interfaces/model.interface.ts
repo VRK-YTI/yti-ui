@@ -33,6 +33,7 @@ export interface ModelType {
   };
   version?: string;
   versionIri?: string;
+  hasAssociationsWithDomainOrRange: boolean;
 }
 
 export interface InternalNamespace {

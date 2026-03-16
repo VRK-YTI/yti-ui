@@ -24,10 +24,7 @@ import ConceptView from '../concept-view';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import HasPermission from '@app/common/utils/has-permission';
 import { useSelector } from 'react-redux';
-import {
-  selectCurrentViewName,
-  selectDisplayLang,
-} from '@app/common/components/model/model.slice';
+import { selectDisplayLang } from '@app/common/components/model/model.slice';
 import { ADMIN_EMAIL } from '@app/common/utils/get-value';
 import { useGetAllCodesQuery } from '@app/common/components/code/code.slice';
 import UriList from '@app/common/components/uri-list';
@@ -56,6 +53,7 @@ export default function CommonViewContent({
   simpleResourceCodeLists,
   disableEdit,
   handleRemoveCodeList,
+  modelUsesDomainRange,
 }: {
   modelId: string;
   inUse?: boolean;
@@ -70,6 +68,7 @@ export default function CommonViewContent({
   simpleResourceCodeLists?: string[];
   disableEdit?: boolean;
   handleRemoveCodeList?: (value: string) => void;
+  modelUsesDomainRange?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
@@ -85,8 +84,6 @@ export default function CommonViewContent({
     }
   );
   const router = useRouter();
-  const currentView = useSelector(selectCurrentViewName());
-  const isClassesView = currentView === 'classes';
   const [showReferences, setShowReferences] = useState(false);
 
   function getCodeListLabel(uri: string) {
@@ -457,7 +454,7 @@ export default function CommonViewContent({
           </>
         )}
 
-        {!isClassesView && data.type === ResourceType.ASSOCIATION && (
+        {modelUsesDomainRange && data.type === ResourceType.ASSOCIATION && (
           <>
             <BasicBlock
               title={t('associations-source', { ns: 'admin' })}

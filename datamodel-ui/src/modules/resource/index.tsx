@@ -55,6 +55,7 @@ interface ResourceViewProps {
   terminologies: string[];
   applicationProfile?: boolean;
   organizationIds?: string[];
+  hasAssociationsWithDomainOrRange?: boolean;
 }
 
 export default function ResourceView({
@@ -65,6 +66,7 @@ export default function ResourceView({
   terminologies,
   applicationProfile,
   organizationIds,
+  hasAssociationsWithDomainOrRange,
 }: ResourceViewProps) {
   const { t, i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
@@ -355,6 +357,7 @@ export default function ResourceView({
         }
         disableEdit={version ? true : false}
         organizationIds={organizationIds}
+        hasAssociationsWithDomainOrRange={hasAssociationsWithDomainOrRange}
       />
     );
   }
@@ -373,6 +376,7 @@ export default function ResourceView({
         currentModelId={modelId}
         isEdit={view.edit}
         handleReturn={view.edit ? handleFormReturn : handleReturn}
+        hasAssociationsWithDomainOrRange={hasAssociationsWithDomainOrRange}
       />
     );
   }
