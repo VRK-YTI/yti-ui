@@ -72,6 +72,7 @@ interface ClassInfoProps {
   handleShowClass: (classId: string) => void;
   disableEdit?: boolean;
   organizationIds?: string[];
+  hasAssociationsWithDomainOrRange?: boolean;
 }
 
 export default function ClassInfo({
@@ -85,6 +86,7 @@ export default function ClassInfo({
   handleShowClass,
   disableEdit,
   organizationIds,
+  hasAssociationsWithDomainOrRange,
 }: ClassInfoProps) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
@@ -501,6 +503,9 @@ export default function ClassInfo({
                       applicationProfile={applicationProfile}
                       disableEdit={disableEdit}
                       targetInClassRestriction={assoc.range}
+                      hasAssociationsWithDomainOrRange={
+                        hasAssociationsWithDomainOrRange
+                      }
                     />
                   ))}
               </ExpanderGroup>

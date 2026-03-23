@@ -3,6 +3,7 @@ import { Label, Paragraph, Text } from 'suomifi-ui-components';
 import { TEXT_INPUT_MAX } from '../../utils/constants';
 import { PrefixContainer, TextInput } from './prefix.styles';
 import { UseMutation } from '@reduxjs/toolkit/dist/query/react/buildHooks';
+import { isValidIdentifier } from '../../utils/validation-utils';
 
 interface PrefixProps {
   prefix: string;
@@ -46,9 +47,7 @@ export default function Prefix({
   const [validatePrefix, inUse] = inUseMutation();
 
   const handleTextInput = (e: string) => {
-    const regex = new RegExp('^[a-z][a-z0-9-_]+$');
-
-    if (e.match(regex) && e.length >= minLength && e.length <= maxLength) {
+    if (isValidIdentifier(e)) {
       setPrefixInternal(e);
       setPrefixValid(true);
       setPrefix(e, true);

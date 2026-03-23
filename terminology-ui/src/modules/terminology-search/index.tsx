@@ -13,14 +13,14 @@ import SearchResults, {
   SearchResultData,
 } from 'yti-common-ui/search-results/search-results';
 import Pagination from 'yti-common-ui/pagination';
-import { useTranslation } from 'next-i18next';
+import { Trans, useTranslation } from 'next-i18next';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
+  ExternalLink,
   IconRegisters,
   Modal,
   ModalContent,
   Paragraph,
-  Link as SuomiFiLink,
 } from 'suomifi-ui-components';
 import { useEffect, useMemo, useState } from 'react';
 import { useGetCountsQuery } from '@app/common/components/counts/counts.slice';
@@ -190,7 +190,23 @@ export default function TerminologySearch() {
         extra={
           <TitleDescriptionWrapper $isSmall={isSmall}>
             <Description id="page-description">
-              {t('terminology-search-info')}
+              <Paragraph mb="m">{t('terminology-search-info')}</Paragraph>
+              <Paragraph>
+                <Trans
+                  i18nKey="service-description-suomifi-dev"
+                  t={t}
+                  components={[
+                    <ExternalLink
+                      key="link1"
+                      ml="xxs"
+                      href={t('service-description-suomifi-dev-link')}
+                      labelNewWindow={t('link-opens-new-window-external')}
+                    >
+                      {t('service-description-suomifi-dev-title')}
+                    </ExternalLink>,
+                  ]}
+                />
+              </Paragraph>
             </Description>
             <NewTerminology />
           </TitleDescriptionWrapper>

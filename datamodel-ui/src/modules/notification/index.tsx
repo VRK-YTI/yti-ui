@@ -31,18 +31,14 @@ export default function Notification({
     }
   }, [showToast, activeNotification]);
 
-  if (!activeNotification || Object.keys(activeNotification).length < 1) {
-    return <></>;
-  }
-
   return (
     <NotificationWrapper
       onAnimationEnd={() => {
         setShowToast(false);
         dispatch(clearNotification());
       }}
-      $visible={showToast}
       key={Object.keys(activeNotification)[0]}
+      role="status"
     >
       {showToast && (
         <Toast>

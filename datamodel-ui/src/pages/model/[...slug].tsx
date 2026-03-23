@@ -247,7 +247,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
           getClass.initiate({
             modelId: modelId,
             classId: resourceId,
-            applicationProfile: modelType === 'PROFILE' ?? false,
+            applicationProfile: modelType === 'PROFILE',
             version,
           })
         );

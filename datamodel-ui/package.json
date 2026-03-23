@@ -22,8 +22,8 @@
     "axios": "^1.4.0",
     "html-to-image": "^1.11.11",
     "i18next": "^23.7.6",
-    "iron-session": "^6.3.1",
-    "next": "^13.5.9",
+    "iron-session": "^8.0.0",
+    "next": "^14.2.0",
     "next-i18next": "^15.0.0",
     "next-redux-wrapper": "^9.0.0-rc.2",
     "react": "^18.2.0",
@@ -33,11 +33,12 @@
     "react-redux": "^8.0.2",
     "reactflow": "^11.8.3",
     "redux-devtools-extension": "^2.13.9",
+    "sass": "^1.69.5",
     "remark-gfm": "^3.0.1",
     "styled-components": "^6.1.0",
-    "suomifi-design-tokens": "^6.0.0",
-    "suomifi-icons": "^7.0.0",
-    "suomifi-ui-components": "^13.0.0",
+    "suomifi-design-tokens": "^6.1.0",
+    "suomifi-icons": "^7.7.0",
+    "suomifi-ui-components": "^17.0.0",
     "swr": "^2.2.4",
     "uuid": "^9.0.0",
     "validator": "^13.9.0",
@@ -52,7 +53,7 @@
     "@types/jest": "^29.5.8",
     "@types/lodash": "^4.14.182",
     "@types/node": "^16.11.6",
-    "@types/react": "17.0.30",
+    "@types/react": "^18.2.0",
     "@types/react-modal": "^3.13.1",
     "@types/styled-components": "^5.1.25",
     "@types/uuid": "^8.3.4",
@@ -61,7 +62,7 @@
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "axios-mock-adapter": "^1.21.1",
     "eslint": "^8.16.0",
-    "eslint-config-next": "^14.0.1",
+    "eslint-config-next": "^14.2.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "^26.4.6",
@@ -74,7 +75,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-junit": "^14.0.1",
     "lint-staged": "^13.0.3",
-    "next-router-mock": "^0.7.4",
+    "next-router-mock": "^1.0.0",
     "node-mocks-http": "^1.11.0",
     "prettier": "^2.6.2",
     "react-test-renderer": "^18.2.0",
@@ -82,6 +83,6 @@
     "typescript": "^5.2.2"
   },
   "engines": {
-    "node": ">=18.16.0 <21.0.0"
+    "node": ">=18.17.0"
   }
 }

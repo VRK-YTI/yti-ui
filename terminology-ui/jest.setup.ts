@@ -22,7 +22,7 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-// Workaround for session.save()
-//https://stackoverflow.com/a/68468204
-global.TextEncoder = TextEncoder;
-(global as any).TextDecoder = TextDecoder;
+// TextEncoder/TextDecoder are not available in JSDOM by default
+// https://stackoverflow.com/a/68468204
+global.TextEncoder = TextEncoder as typeof global.TextEncoder;
+global.TextDecoder = TextDecoder as typeof global.TextDecoder;

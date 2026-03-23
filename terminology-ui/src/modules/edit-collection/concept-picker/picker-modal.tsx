@@ -12,6 +12,7 @@ import {
   DropdownItem,
   Expander,
   ExpanderTitle,
+  Heading,
   IconArrowLeft,
   IconArrowRight,
   IconRemove,
@@ -370,7 +371,9 @@ function SelectedConcepts({
 
   return (
     <>
-      <Text as="h3">{t('selected-concepts')}</Text>
+      <Heading variant="h3" as="h3">
+        {t('selected-concepts')}
+      </Heading>
       <SelectedConceptBlock id="selected-concepts-block">
         {selectedConcepts.map((concept, idx) => {
           return (

@@ -66,11 +66,14 @@ tagInvalidatorMiddleware.startListening({
         'renameResource',
         'updateClass',
         'updateResource',
+        'deleteResource',
+        'deleteClass',
       ].some((name) => action.meta?.arg?.endpointName.includes(name))
     );
   },
   effect: async (action, listenerApi) => {
-    const id = action.meta?.arg?.originalArgs?.data.type ?? 'CLASS';
+    const args = action.meta?.arg?.originalArgs;
+    const id = args?.data?.type ?? args?.type ?? 'CLASS';
     listenerApi.dispatch(
       searchInternalResourcesApi.util.invalidateTags([
         { type: 'InternalResources', id },

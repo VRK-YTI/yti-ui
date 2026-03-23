@@ -3,7 +3,7 @@ import useUrlState, { initialUrlState, isInitial } from './index';
 import mockRouter from 'next-router-mock';
 import singletonRouter from 'next/router';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/router', () => require('next-router-mock'));
 
 describe('useUrlState', () => {
   it('no query parameters is same as initial state', () => {

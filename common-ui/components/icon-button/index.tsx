@@ -1,9 +1,10 @@
-import React, { ReactNode } from 'react';
+import React, { ReactElement } from 'react';
 import { ButtonProps } from 'suomifi-ui-components';
 import { StyledButton } from './icon-button.styles';
 
-export interface IconButtonProps extends ButtonProps {
-  icon: ReactNode;
+export interface IconButtonProps
+  extends Omit<ButtonProps, 'children' | 'icon'> {
+  icon: ReactElement;
   color?: string;
 }
 

@@ -244,7 +244,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
               <Separator isLarge />
             </>
           )}
-          <VisuallyHidden as="h2">
+          <VisuallyHidden asProp="h2">
             {t('additional-technical-information', { ns: 'common' })}
           </VisuallyHidden>
           <BasicBlock

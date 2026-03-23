@@ -141,6 +141,9 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
             applicationProfile={modelInfo?.graphType === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
             organizationIds={organizationIds}
+            hasAssociationsWithDomainOrRange={
+              modelInfo?.hasAssociationsWithDomainOrRange ?? false
+            }
           />
         ),
       },
@@ -183,6 +186,9 @@ export default function Model({ modelId, fullScreen }: ModelProps) {
             applicationProfile={modelInfo?.graphType === 'PROFILE'}
             terminologies={modelInfo?.terminologies.map((t) => t.uri) ?? []}
             organizationIds={organizationIds}
+            hasAssociationsWithDomainOrRange={
+              modelInfo?.hasAssociationsWithDomainOrRange ?? false
+            }
           />
         ),
       },

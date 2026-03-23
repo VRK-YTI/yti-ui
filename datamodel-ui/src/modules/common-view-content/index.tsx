@@ -53,6 +53,7 @@ export default function CommonViewContent({
   simpleResourceCodeLists,
   disableEdit,
   handleRemoveCodeList,
+  modelUsesDomainRange,
 }: {
   modelId: string;
   inUse?: boolean;
@@ -60,13 +61,14 @@ export default function CommonViewContent({
   displayLabel?: boolean;
   applicationProfile?: boolean;
   disableAssocTarget?: boolean;
-  renderActions?: () => void;
+  renderActions?: () => React.ReactNode;
   handleChangeTarget?: (value?: InternalClassInfo) => void;
   targetInClassRestriction?: UriData;
   organizationIds?: string[];
   simpleResourceCodeLists?: string[];
   disableEdit?: boolean;
   handleRemoveCodeList?: (value: string) => void;
+  modelUsesDomainRange?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({
@@ -452,7 +454,7 @@ export default function CommonViewContent({
           </>
         )}
 
-        {data.type === ResourceType.ASSOCIATION && (
+        {modelUsesDomainRange && data.type === ResourceType.ASSOCIATION && (
           <>
             <BasicBlock
               title={t('associations-source', { ns: 'admin' })}

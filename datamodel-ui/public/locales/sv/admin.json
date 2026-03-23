@@ -41,6 +41,7 @@
   "association-name": "",
   "association-restriction-added": "",
   "association-restriction-edited": "",
+  "association-restriction-identifier": "",
   "association-restriction-name": "",
   "association-target-in-this-class": "",
   "associations-source": "",
@@ -91,6 +92,7 @@
   "codelist": "",
   "codelist-contents": "",
   "codelist-delete-warning": "",
+  "local-copy-added": "",
   "commentable-version": "",
   "common-form": {
     "add-equivalent-association": "",
@@ -224,6 +226,7 @@
   "information-domains-all": "",
   "information-domains-available": "",
   "information-domains-hint-text": "",
+  "input-association-restriction-identifier": "",
   "input-attribute-restriction-identifier": "",
   "input-class-identifier": "",
   "input-data-model-name": "",

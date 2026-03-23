@@ -121,8 +121,10 @@
   "graph": "Kaavio",
   "graph-settings": "Kaavion asetukset",
   "graph-tools": {
+    "close-settings": "Sulje asetukset",
     "download-picture": "Lataa kuvana",
     "fullscreen": "Koko näyttö",
+    "open-settings": "Avaa asetukset",
     "reset-positions": "Palauta sijainnit",
     "save-positions": "Tallenna sijainnit",
     "zoom-in": "Lähennä",

@@ -1,7 +1,10 @@
 import { useDeleteClassMutation } from '@app/common/components/class/class.slice';
-import { useDeleteModelMutation } from '@app/common/components/model/model.slice';
-import { useModelReferrersQuery } from '@app/common/components/model/model.slice';
+import {
+  useDeleteModelMutation,
+  useModelReferrersQuery,
+} from '@app/common/components/model/model.slice';
 import { useDeleteResourceMutation } from '@app/common/components/resource/resource.slice';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import {
   translateDeleteModalDescription,
   translateDeleteModalError,
@@ -92,14 +95,20 @@ export default function DeleteModal({
         modelId: modelId,
         classId: resourceId ?? '',
         applicationProfile,
+        type: ResourceType.CLASS,
       });
     } else {
       deleteResource({
         modelId: modelId,
         resourceId: resourceId ?? '',
         applicationProfile,
+        type:
+          type === 'association'
+            ? ResourceType.ASSOCIATION
+            : ResourceType.ATTRIBUTE,
       });
     }
+    onClose && onClose();
   };
 
   useEffect(() => {

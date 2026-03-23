@@ -131,7 +131,7 @@ export default function ClassModal({
     handleClose();
     handleFollowUp(
       target,
-      searchParams.limitToModelType === 'PROFILE' ?? undefined
+      searchParams.limitToModelType === 'PROFILE' ? true : undefined
     );
   };
 

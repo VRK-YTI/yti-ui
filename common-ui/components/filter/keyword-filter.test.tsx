@@ -3,7 +3,7 @@ import { themeProvider } from '../../utils/test-utils';
 import mockRouter from 'next-router-mock';
 import KeywordFilter from './keyword-filter';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/router', () => require('next-router-mock'));
 
 describe('keyword-filter', () => {
   it('should render component', () => {

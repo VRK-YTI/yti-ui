@@ -115,6 +115,7 @@ export const modelApi = createApi({
         data: value.payload,
         method: 'PUT',
       }),
+      invalidatesTags: ['Model'],
     }),
     getValidationErrors: builder.query<
       ResourceReferencesResult,

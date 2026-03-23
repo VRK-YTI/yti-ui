@@ -3,7 +3,7 @@ import { renderWithProviders } from '@app/tests/test-utils';
 import RelationalInformationBlock from '.';
 import mockRouter from 'next-router-mock';
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock('next/router', () => require('next-router-mock'));
 
 describe('relational-information-block', () => {
   let appRoot: HTMLDivElement | null = null;

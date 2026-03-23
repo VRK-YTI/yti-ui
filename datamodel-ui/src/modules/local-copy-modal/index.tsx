@@ -19,6 +19,11 @@ import {
 } from '@app/common/components/resource/resource.slice';
 import getApiError from '@app/common/utils/get-api-errors';
 import SaveSpinner from 'yti-common-ui/save-spinner';
+import { ResourceType } from '../../common/interfaces/resource-type.interface';
+import { translateLocalCopyModal } from '../../common/utils/translation-helpers';
+import { useStoreDispatch } from '@app/store';
+import { setNotification } from '@app/common/components/notifications/notifications.slice';
+import { isValidIdentifier } from 'yti-common-ui/utils/validation-utils';
 
 interface LocalCopyModalProps {
   visible: boolean;
@@ -27,6 +32,7 @@ interface LocalCopyModalProps {
   sourceModelId: string;
   sourceIdentifier: string;
   handleReturn: (id: string, modelPrefix: string) => void;
+  resourceType: ResourceType;
 }
 
 export default function LocalCopyModal({
@@ -35,13 +41,16 @@ export default function LocalCopyModal({
   targetModelId,
   sourceModelId,
   sourceIdentifier,
+  resourceType,
   handleReturn,
 }: LocalCopyModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
+  const dispatch = useStoreDispatch();
   const [error, setError] = useState(false);
   const [newIdentifier, setNewIdentifier] = useState('');
   const [userPosted, setUserPosted] = useState(false);
+  const [identifierValid, setIdentifierValid] = useState(true);
 
   const [makeLocalCopy, makeLocalCopyResult] =
     useMakeLocalCopyPropertyShapeMutation();
@@ -52,19 +61,22 @@ export default function LocalCopyModal({
   );
 
   const handleChange = (value: string) => {
-    setNewIdentifier(value);
+    const trimmedValue = value.trim();
+    setNewIdentifier(trimmedValue);
     setError(false);
+    setIdentifierValid(isValidIdentifier(trimmedValue));
   };
 
   const handleClose = () => {
     setError(false);
     setUserPosted(false);
     setNewIdentifier('');
+    setIdentifierValid(true);
     hide();
   };
 
   const handleCreate = () => {
-    if (newIdentifier === '') {
+    if (newIdentifier === '' || !identifierValid) {
       return;
     }
 
@@ -80,12 +92,14 @@ export default function LocalCopyModal({
   useEffect(() => {
     if (makeLocalCopyResult.isSuccess) {
       handleClose();
+      dispatch(setNotification('LOCAL_COPY_ADD'));
       handleReturn(newIdentifier, targetModelId);
     } else if (makeLocalCopyResult.isError) {
       setError(true);
       setUserPosted(false);
     }
-  }, [makeLocalCopyResult]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [makeLocalCopyResult, dispatch]);
 
   return (
     <NarrowModal
@@ -98,14 +112,27 @@ export default function LocalCopyModal({
         <ModalTitle>{t('create-local-copy')}</ModalTitle>
         <Text>{t('create-local-copy-description')}</Text>
         <TextInput
-          labelText={t('attribute-restriction-identifier')}
-          visualPlaceholder={t('input-attribute-restriction-identifier')}
+          labelText={translateLocalCopyModal(t, resourceType, 'label')}
+          visualPlaceholder={translateLocalCopyModal(
+            t,
+            resourceType,
+            'placeholder'
+          )}
           onChange={(e) => handleChange(e?.toString() ?? '')}
           debounce={300}
           id="prefix-input"
-          status={isSuccess && resourceAlreadyExists ? 'error' : 'default'}
+          status={
+            newIdentifier !== '' &&
+            (!identifierValid || (isSuccess && resourceAlreadyExists))
+              ? 'error'
+              : 'default'
+          }
           statusText={
-            isSuccess && resourceAlreadyExists ? t('error-prefix-taken') : ''
+            newIdentifier !== '' && !identifierValid
+              ? t('error-prefix-invalid')
+              : isSuccess && resourceAlreadyExists
+              ? t('error-prefix-taken')
+              : ''
           }
         />
         {makeLocalCopyResult.error && error && (
@@ -115,7 +142,12 @@ export default function LocalCopyModal({
         )}
         <ButtonFooter>
           <Button
-            disabled={userPosted}
+            disabled={
+              userPosted ||
+              newIdentifier === '' ||
+              !identifierValid ||
+              resourceAlreadyExists
+            }
             onClick={handleCreate}
             id="create-copy-button"
           >
