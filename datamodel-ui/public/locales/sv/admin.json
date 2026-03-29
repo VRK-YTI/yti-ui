@@ -211,6 +211,11 @@
   "error-prefix-invalid": "",
   "error-prefix-taken": "",
   "error-unauthenticated": "",
+  "error": {
+    "not-class-or-doesnt-exist": "",
+    "not-node-shape-or-doesnt-exist": "",
+    "resource-not-found": ""
+  },
   "file-added": "",
   "following-external-ns-miss-name": "",
   "graph-has-unsaved-changes": "",

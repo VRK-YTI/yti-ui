@@ -17,6 +17,7 @@ import { FormErrors, validateForm } from './validate-form';
 import { useInitialModelForm } from '@app/common/utils/hooks/use-initial-model-form';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
+  translateApiError,
   translateLanguage,
   translateModelFormErrors,
 } from '@app/common/utils/translation-helpers';
@@ -177,7 +178,7 @@ export default function ModelFormModal() {
       ?.map(([key, _]) => translateModelFormErrors(key, t));
 
     if (result.isError) {
-      const errorMessage = getApiError(result.error);
+      const errorMessage = translateApiError(result.error, t);
       return [...langsWithError, ...otherErrors, ...errorMessage];
     }
 

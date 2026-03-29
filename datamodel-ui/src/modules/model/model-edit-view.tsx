@@ -11,6 +11,7 @@ import {
 } from '@app/common/utils/get-value';
 import getApiError from '@app/common/utils/get-api-errors';
 import {
+  translateApiError,
   translateLanguage,
   translateModelFormErrors,
 } from '@app/common/utils/translation-helpers';
@@ -230,12 +231,12 @@ export default function ModelEditView({
       ?.map(([key, _]) => translateModelFormErrors(key, t));
 
     if (result.isError) {
-      const errorMessage = getApiError(result.error);
+      const errorMessage = translateApiError(result.error, t);
       return [...langsWithError, ...otherErrors, ...errorMessage];
     }
 
     if (versionedResult.isError) {
-      const errorMessage = getApiError(versionedResult.error);
+      const errorMessage = translateApiError(versionedResult.error, t);
       return [...langsWithError, ...otherErrors, ...errorMessage];
     }
 

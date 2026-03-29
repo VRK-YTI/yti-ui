@@ -14,6 +14,7 @@ import {
   translateCommonFormErrors,
   translatePageTitle,
   translateCommonTooltips,
+  translateApiError,
 } from '@app/common/utils/translation-helpers';
 import ConceptBlock from '@app/modules/concept-block';
 import { useStoreDispatch } from '@app/store';
@@ -842,12 +843,12 @@ export default function ResourceForm({
     }
 
     if (updateResult.error) {
-      const catchedError = getApiError(updateResult.error);
+      const catchedError = translateApiError(updateResult.error, t);
       return [...translatedErrors, ...catchedError];
     }
 
     if (createResult.error) {
-      const catchedError = getApiError(createResult.error);
+      const catchedError = translateApiError(createResult.error, t);
       return [...translatedErrors, ...catchedError];
     }
     return translatedErrors;

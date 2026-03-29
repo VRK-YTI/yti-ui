@@ -2,6 +2,12 @@ import { TFunction } from 'next-i18next';
 import { ResourceType } from '../interfaces/resource-type.interface';
 import { Type } from '../interfaces/type.interface';
 import { NotificationKeys } from '../interfaces/notifications.interface';
+import {
+  AxiosBaseQueryError,
+  AxiosQueryErrorFields,
+} from 'yti-common-ui/interfaces/axios-base-query.interface';
+import { SerializedError } from '@reduxjs/toolkit';
+import getApiError from './get-api-errors';
 
 export function translateModelType(type: Type, t: TFunction) {
   switch (type) {
@@ -74,6 +80,26 @@ export function translateClassFormErrors(error: string, t: TFunction) {
     default:
       return t('class-missing-general', { ns: 'admin' });
   }
+}
+
+export function translateApiError(
+  axiosError: AxiosBaseQueryError | SerializedError,
+  t: TFunction
+): string[] {
+  const error = (axiosError as AxiosQueryErrorFields).data;
+
+  if (error.details) {
+    return error.details.map((detail) =>
+      t('error.' + detail.message, { ns: 'admin', field: detail.field })
+    );
+  } else if (error.messageParameters) {
+    return [
+      t('error.' + error.message, { ns: 'admin', ...error.messageParameters }),
+    ];
+  }
+
+  // fallback to original error handler
+  return getApiError(axiosError);
 }
 
 export function translateStatus(status: string, t: TFunction) {
