@@ -24,6 +24,7 @@
   "field-definition": "Definition",
   "field-identifier": "Identifier",
   "field-member": "Concepts in the collection",
+  "no-collection-members": "No concepts have been added to the collection",
   "field-name": "Name",
   "heading": "Collection",
   "last-modified": "Last modified",

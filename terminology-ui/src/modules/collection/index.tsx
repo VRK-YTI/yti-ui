@@ -193,24 +193,32 @@ export default function Collection({
           )}
 
           <BasicBlock title={<h2>{t('field-member')}</h2>}>
-            <List>
-              {collection?.members?.map((concept) => (
-                <li key={concept.identifier}>
-                  <Link
-                    href={`/terminology/${terminology?.prefix}/concept/${concept.identifier}`}
-                    passHref
-                    legacyBehavior
-                  >
-                    <SuomiLink href="">
-                      {getLanguageVersion({
-                        data: concept.label,
-                        lang: i18n.language,
-                      })}
-                    </SuomiLink>
-                  </Link>
-                </li>
-              ))}
-            </List>
+            {!!collection && collection?.members?.length > 0 ? (
+              <List>
+                {collection?.members?.map((concept) => (
+                  <li key={concept.identifier}>
+                    <Link
+                      href={`/terminology/${terminology?.prefix}/concept/${concept.identifier}`}
+                      passHref
+                      legacyBehavior
+                    >
+                      <SuomiLink href="">
+                        {getLanguageVersion({
+                          data: concept.label,
+                          lang: i18n.language,
+                        })}
+                      </SuomiLink>
+                    </Link>
+                  </li>
+                ))}
+              </List>
+            ) : (
+              <Paragraph>
+                <Text smallScreen>
+                  <i>{t('no-collection-members')}</i>
+                </Text>
+              </Paragraph>
+            )}
           </BasicBlock>
 
           <Separator />
