@@ -24,6 +24,7 @@
   "field-definition": "Kuvaus",
   "field-identifier": "Tunnus",
   "field-member": "Valikoimaan kuuluvat käsitteet",
+  "no-collection-members": "Käsitekokoelmaan ei ole lisätty käsitteitä",
   "field-name": "Nimi",
   "heading": "Käsitekokoelma",
   "last-modified": "Viimeksi muokattu",
