@@ -12,6 +12,31 @@ interface SanitizedTextContentProps {
   text: string;
 }
 
+function getValidHref(href: string | null) {
+  const trimmedHref = href?.trim();
+
+  if (!trimmedHref) {
+    return undefined;
+  }
+
+  if (trimmedHref.startsWith('/')) {
+    return trimmedHref;
+  }
+
+  try {
+    const url = new URL(trimmedHref);
+    const allowedProtocols = ['http:', 'https:', 'mailto:'];
+
+    if (allowedProtocols.includes(url.protocol)) {
+      return trimmedHref;
+    }
+  } catch {
+    return undefined;
+  }
+
+  return undefined;
+}
+
 export default function SanitizedTextContent({
   text,
 }: SanitizedTextContentProps) {
@@ -22,20 +47,22 @@ export default function SanitizedTextContent({
   polyfill();
 
   function transform(node: HTMLElement, children: Node[]): React.ReactNode {
-    if (
-      node.tagName === 'a' &&
-      !node.getAttribute('href')?.includes('script')
-    ) {
+    if (node.tagName === 'a') {
+      const href = getValidHref(node.getAttribute('href'));
+
+      if (!href) {
+        return <>{children}</>;
+      }
+
       if (internalTypes.includes(node.getAttribute('data-type') as string)) {
-        const url = node.getAttribute('href') ?? '';
         return (
-          <Link passHref href={`${url}${getEnvParam(url)}`} legacyBehavior>
+          <Link passHref href={`${href}${getEnvParam(href)}`} legacyBehavior>
             <SuomiInternalLink href="">{children}</SuomiInternalLink>
           </Link>
         );
       } else {
         return (
-          <Link passHref href={node.getAttribute('href') ?? ''} legacyBehavior>
+          <Link passHref href={href} legacyBehavior>
             <SuomiExternalLink
               href=""
               labelNewWindow={`${t(
