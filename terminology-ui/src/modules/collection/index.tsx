@@ -188,7 +188,10 @@ export default function Collection({
 
           {Object.keys(collection?.description ?? {}).length > 0 && (
             <BasicBlock title={t('field-definition')}>
-              <MultilingualBlock data={collection?.description ?? {}} />
+              <MultilingualBlock
+                data={collection?.description ?? {}}
+                renderHtml
+              />
             </BasicBlock>
           )}
 
