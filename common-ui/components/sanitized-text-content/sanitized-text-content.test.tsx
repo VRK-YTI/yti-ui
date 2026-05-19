@@ -98,9 +98,48 @@ describe('sanitized-text-content', () => {
     );
 
     expect(screen.getByText(/This is a/)).toBeInTheDocument();
-    expect(screen.getByText('test')).toBeInTheDocument();
-    expect(screen.queryByText('test')).not.toHaveAttribute('href');
-    expect(screen.queryByText('test')).not.toHaveClass('fi-link--external');
+    expect(screen.getByText(/test/)).toBeInTheDocument();
+    expect(screen.queryByText(/test/)).not.toHaveAttribute('href');
+    expect(screen.queryByText(/test/)).not.toHaveClass('fi-link--external');
     expect(screen.getByText(/with javascript/)).toBeInTheDocument();
+  });
+
+  it('should render invalid links as plain text', () => {
+    const missingHrefLink = '<a>missing href</a>';
+    const emptyHrefLink = '<a href="">empty href</a>';
+    const whitespaceHrefLink = '<a href="   ">whitespace href</a>';
+    const malformedHrefLink = '<a href="not-a-url">malformed href</a>';
+    const unsafeHrefLink = '<a href="javascript:alert(1)">unsafe href</a>';
+
+    render(
+      <SanitizedTextContent
+        text={`This is a ${missingHrefLink}, ${emptyHrefLink}, ${whitespaceHrefLink}, ${malformedHrefLink}, and ${unsafeHrefLink} with invalid links`}
+      />
+    );
+
+    expect(screen.getByText(/missing href/)).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: /missing href/ })
+    ).not.toBeInTheDocument();
+
+    expect(screen.getByText(/empty href/)).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: /empty href/ })
+    ).not.toBeInTheDocument();
+
+    expect(screen.getByText(/whitespace href/)).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: /whitespace href/ })
+    ).not.toBeInTheDocument();
+
+    expect(screen.getByText(/malformed href/)).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: /malformed href/ })
+    ).not.toBeInTheDocument();
+
+    expect(screen.getByText(/unsafe href/)).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: /unsafe href/ })
+    ).not.toBeInTheDocument();
   });
 });
