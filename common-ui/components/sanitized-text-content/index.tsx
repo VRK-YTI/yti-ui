@@ -51,7 +51,15 @@ export default function SanitizedTextContent({
       const href = getValidHref(node.getAttribute('href'));
 
       if (!href) {
-        return <>{children}</>;
+        const rawHref = node.getAttribute('href');
+        const hrefAttr = rawHref !== null ? ` href="${rawHref}"` : '';
+        return (
+          <>
+            {`<a${hrefAttr}>`}
+            {children}
+            {'</a>'}
+          </>
+        );
       }
 
       if (internalTypes.includes(node.getAttribute('data-type') as string)) {

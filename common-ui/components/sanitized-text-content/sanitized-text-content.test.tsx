@@ -91,7 +91,7 @@ describe('sanitized-text-content', () => {
   });
 
   it('should sanitize uri', () => {
-    render(
+    const { container } = render(
       <ThemeProvider theme={lightTheme}>
         <SanitizedTextContent text="This is a <a href='javascript:alert('Not a valid uri')' data-type='external'>test</a> with javascript" />
       </ThemeProvider>
@@ -102,16 +102,17 @@ describe('sanitized-text-content', () => {
     expect(screen.queryByText(/test/)).not.toHaveAttribute('href');
     expect(screen.queryByText(/test/)).not.toHaveClass('fi-link--external');
     expect(screen.getByText(/with javascript/)).toBeInTheDocument();
+    expect(container).toHaveTextContent(/<a[^>]*>test<\/a>/);
   });
 
-  it('should render invalid links as plain text', () => {
+  it('should render invalid links as broken markup', () => {
     const missingHrefLink = '<a>missing href</a>';
     const emptyHrefLink = '<a href="">empty href</a>';
     const whitespaceHrefLink = '<a href="   ">whitespace href</a>';
     const malformedHrefLink = '<a href="not-a-url">malformed href</a>';
     const unsafeHrefLink = '<a href="javascript:alert(1)">unsafe href</a>';
 
-    render(
+    const { container } = render(
       <SanitizedTextContent
         text={`This is a ${missingHrefLink}, ${emptyHrefLink}, ${whitespaceHrefLink}, ${malformedHrefLink}, and ${unsafeHrefLink} with invalid links`}
       />
@@ -121,25 +122,32 @@ describe('sanitized-text-content', () => {
     expect(
       screen.queryByRole('link', { name: /missing href/ })
     ).not.toBeInTheDocument();
+    expect(container).toHaveTextContent(/<a>missing href<\/a>/);
 
     expect(screen.getByText(/empty href/)).toBeInTheDocument();
     expect(
       screen.queryByRole('link', { name: /empty href/ })
     ).not.toBeInTheDocument();
+    expect(container).toHaveTextContent(/<a href="">empty href<\/a>/);
 
     expect(screen.getByText(/whitespace href/)).toBeInTheDocument();
     expect(
       screen.queryByRole('link', { name: /whitespace href/ })
     ).not.toBeInTheDocument();
+    expect(container).toHaveTextContent(/<a href=" ">whitespace href<\/a>/);
 
     expect(screen.getByText(/malformed href/)).toBeInTheDocument();
     expect(
       screen.queryByRole('link', { name: /malformed href/ })
     ).not.toBeInTheDocument();
+    expect(container).toHaveTextContent(
+      /<a href="not-a-url">malformed href<\/a>/
+    );
 
     expect(screen.getByText(/unsafe href/)).toBeInTheDocument();
     expect(
       screen.queryByRole('link', { name: /unsafe href/ })
     ).not.toBeInTheDocument();
+    expect(container).toHaveTextContent(/<a[^>]*>unsafe href<\/a>/);
   });
 });
