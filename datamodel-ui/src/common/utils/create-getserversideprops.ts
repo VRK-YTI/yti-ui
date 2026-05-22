@@ -127,7 +127,13 @@ export function createCommonGetServerSideProps<
             )
           ),
           isMatomoEnabled: process.env.MATOMO_ENABLED === 'true',
-          matomoUrl: process.env.MATOMO_URL ?? null,
+          matomoUrl:
+            process.env.MATOMO_URL === undefined ||
+            process.env.MATOMO_URL === ''
+              ? null
+              : process.env.MATOMO_URL.split(' ').length > 1
+              ? process.env.MATOMO_URL.split(' ')
+              : process.env.MATOMO_URL,
           matomoSiteId: process.env.MATOMO_SITE_ID ?? null,
           user: user ?? null,
           fakeableUsers:
