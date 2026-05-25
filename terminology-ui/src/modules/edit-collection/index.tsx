@@ -42,6 +42,8 @@ import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
 import { ConceptCollectionInfo } from '@app/common/interfaces/interfaces-v2';
 import generateCollection from './generate-collection';
 
+type IdentifierError = 'missing' | 'invalid' | 'taken' | null;
+
 export default function EditCollection({
   terminologyId,
   collectionName,
@@ -76,7 +78,7 @@ export default function EditCollection({
   const [updateCollection, updateResult] = useUpdateCollectionMutation();
 
   const [emptyError, setEmptyError] = useState(false);
-  const [invalidIdentifierError, setInvalidIdentifierError] = useState(false);
+  const [identifierError, setIdentifierError] = useState<IdentifierError>(null);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -90,6 +92,29 @@ export default function EditCollection({
     useConfirmBeforeLeavingPage('disabled');
 
   const [checkCollectionExists, exists] = useCollectionExistsMutation();
+
+  function getIdentifierValidationError(value: string): IdentifierError {
+    if (!value) {
+      return 'missing';
+    }
+    if (!/^[a-zA-Z]([\w-]){1,98}$/.test(value)) {
+      return 'invalid';
+    }
+    return null;
+  }
+
+  function getIdentifierErrorMessage(error = identifierError): string {
+    switch (error) {
+      case 'missing':
+        return t('alert-prefix-undefined', { ns: 'admin' });
+      case 'invalid':
+        return t('prefix-invalid', { ns: 'admin' });
+      case 'taken':
+        return t('prefix-taken', { ns: 'admin' });
+      default:
+        return '';
+    }
+  }
 
   useEffect(() => {
     if (result.isSuccess) {
@@ -112,18 +137,18 @@ export default function EditCollection({
 
   useEffect(() => {
     if (exists.data) {
-      setInvalidIdentifierError(true);
-    } else {
-      setInvalidIdentifierError(false);
+      setIdentifierError('taken');
+    } else if (identifierError === 'taken') {
+      setIdentifierError(null);
     }
-  }, [exists]);
+  }, [exists.data, identifierError]);
 
   const isFormValid = (formData: CollectionFormData) => {
-    const isValidIdentifier = formData.identifier.match(
-      /^[a-zA-Z]([\w-]){1,98}$/
+    const currentIdentifierError = getIdentifierValidationError(
+      formData.identifier
     );
-    const isValidLabel = Object.keys(formData.label).every(
-      (n) => formData.label[n]
+    const isValidLabel = Object.values(formData.label).some(
+      (label) => label.trim() !== ''
     );
 
     const messages: string[] = [];
@@ -132,19 +157,19 @@ export default function EditCollection({
       messages.push(t('edit-collection-error.prefLabel'));
     }
 
-    if (!isValidIdentifier) {
-      setInvalidIdentifierError(true);
-      messages.push(t('prefix-invalid', { ns: 'admin' }));
-    }
-
-    if (exists.data) {
-      setInvalidIdentifierError(true);
-      messages.push(t('prefix-taken', { ns: 'admin' }));
+    if (currentIdentifierError) {
+      setIdentifierError(currentIdentifierError);
+      messages.push(getIdentifierErrorMessage(currentIdentifierError));
+    } else if (exists.data) {
+      setIdentifierError('taken');
+      messages.push(getIdentifierErrorMessage('taken'));
+    } else {
+      setIdentifierError(null);
     }
 
     setErrorMessages(messages);
 
-    return isValidIdentifier && !exists.data && isValidLabel;
+    return !currentIdentifierError && !exists.data && isValidLabel;
   };
 
   const setIdentifier = (value: string) => {
@@ -153,6 +178,10 @@ export default function EditCollection({
 
     setFormData(data);
     enableConfirmation();
+
+    if (identifierError) {
+      setIdentifierError(getIdentifierValidationError(value));
+    }
   };
 
   const setName = (language: string, value: string) => {
@@ -268,16 +297,23 @@ export default function EditCollection({
             defaultValue={collection?.identifier ?? ''}
             disabled={!!collectionInfo}
             onChange={(e) => setIdentifier(e?.toString() ?? '')}
-            status={invalidIdentifierError ? 'error' : 'default'}
+            status={identifierError ? 'error' : 'default'}
             onBlur={() => {
+              const currentIdentifierError = getIdentifierValidationError(
+                formData.identifier
+              );
+
+              if (currentIdentifierError) {
+                setIdentifierError(currentIdentifierError);
+                return;
+              }
+
               checkCollectionExists({
                 terminologyId,
                 collectionId: formData.identifier,
               });
             }}
-            statusText={
-              invalidIdentifierError ? t('prefix-taken', { ns: 'admin' }) : ''
-            }
+            statusText={getIdentifierErrorMessage()}
             id="prefix-input"
             maxLength={100}
           />
@@ -292,6 +328,9 @@ export default function EditCollection({
               visualPlaceholder={t('enter-collection-name')}
               onBlur={(e) => setName(language, e.target.value.trim())}
               status={emptyError ? 'error' : 'default'}
+              statusText={
+                emptyError ? t('edit-collection-error.prefLabel') : ''
+              }
               defaultValue={formData.label[language]}
               maxLength={TEXT_INPUT_MAX}
               className="collection-name-input"
@@ -335,7 +374,7 @@ export default function EditCollection({
           {errorMessages.length > 0 && (
             <FormFooterAlert
               alerts={errorMessages}
-              labelText={t('missing-information', { ns: 'admin' })}
+              labelText={t('invalid-information', { ns: 'admin' })}
             />
           )}
           <ButtonBlock>

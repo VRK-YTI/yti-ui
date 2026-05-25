@@ -202,6 +202,7 @@
   "match-in-other-chip-label": "Chosen matching concepts in other vocabularies",
   "match-in-other-description": "Exact copy of this concept in different terminology.",
   "missing-information": "Missing information",
+  "invalid-information": "Invalid information",
   "modified-at": "Modified at",
   "narrow-match-in-other": "Narrower concept in other vocabulary",
   "narrow-match-in-other-add": "Add new narrower concept",

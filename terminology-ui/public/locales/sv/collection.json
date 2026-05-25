@@ -24,6 +24,7 @@
   "field-definition": "Definition",
   "field-identifier": "Identifierare",
   "field-member": "Begrepp, som hör till urvalet",
+  "no-collection-members": "Inga begrepp har lagts till i begreppsurvalet",
   "field-name": "Namn",
   "heading": "Begreppsurval",
   "last-modified": "Redigerad",
