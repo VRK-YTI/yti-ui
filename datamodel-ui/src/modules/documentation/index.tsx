@@ -10,6 +10,9 @@ import {
   IconImage,
   Text,
   Tooltip,
+  IconBold,
+  IconItalics,
+  IconQuotes,
 } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
@@ -60,7 +63,6 @@ import { useSelector } from 'react-redux';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import Image from 'next/image';
-import { IconBold, IconItalics, IconQuotes } from 'suomifi-icons';
 import HasPermission from '@app/common/utils/has-permission';
 import UnsavedAlertModal from '../unsaved-alert-modal';
 import { useBreakpoints } from 'yti-common-ui/media-query';

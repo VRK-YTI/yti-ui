@@ -9,7 +9,6 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { Resource } from '../../interfaces/subscription.interface';
-import IconButton from 'yti-common-ui/icon-button';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
   RemoveModal,
@@ -89,8 +88,9 @@ export default function RemoveSubscription({
       )}
 
       {resource && (
-        <IconButton
+        <Button
           variant="secondary"
+          aria-label={t('subscription-remove-email-notifications')}
           icon={<IconAlertOff />}
           color="currentColor"
           onClick={() => setVisible(true)}
