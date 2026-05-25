@@ -1,5 +1,6 @@
 const { i18n } = require('./next-i18next.config');
 const fs = require('fs');
+const path = require('path');
 
 module.exports = (phase, { defaultConfig }) => {
   let versionInfo;
@@ -11,6 +12,9 @@ module.exports = (phase, { defaultConfig }) => {
   }
 
   let config = {
+    turbopack: {
+      root: path.join(__dirname, '..'),
+    },
     compiler: {
       styledComponents: true,
     },
