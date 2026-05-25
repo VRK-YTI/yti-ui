@@ -1,7 +1,11 @@
 const { i18n } = require('./next-i18next.config');
+const path = require('path');
 
 module.exports = () => {
   let config = {
+    turbopack: {
+      root: path.join(__dirname, '..'),
+    },
     compiler: {
       styledComponents: true,
     },
