@@ -4,7 +4,7 @@ import { selectHighlighted } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
 import { Handle, Position } from 'reactflow';
 import { CornerNodeWrapper } from './node.styles';
-import { IconClose } from 'suomifi-icons';
+import { IconClose } from 'suomifi-ui-components';
 import { CornerNodeDataType } from '@app/common/interfaces/graph.interface';
 
 export default function CornerNode({
