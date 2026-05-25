@@ -12,7 +12,7 @@ protected so you can't corrupt its analytics accidentally.
 ```env
 # Matomo settings
 MATOMO_ENABLED=true
-MATOMO_URL=https://suomi.matomo.cloud
+MATOMO_URL=https://matomo.cloud.dvv.fi
 MATOMO_SITE_ID=<id>
 ```
 
