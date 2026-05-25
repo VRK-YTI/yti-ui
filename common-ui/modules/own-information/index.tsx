@@ -18,7 +18,7 @@ import { User } from '../../interfaces/user.interface';
 import { Organization } from '../../interfaces/organization.interface';
 import { Request } from '../../interfaces/request.interface';
 import { Subscriptions } from '../../interfaces/subscription.interface';
-import { useEffect } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { translateRole } from '../../utils/translation-helpers';
 
 interface OwnInformationProps {
@@ -34,11 +34,11 @@ interface OwnInformationProps {
   };
   renderPermissionModal: (props: {
     organizations?: Organization[];
-  }) => JSX.Element;
+  }) => ReactElement;
   renderSubscriptionModal: (props: {
     resourceIds: string[];
     singular?: boolean;
-  }) => JSX.Element;
+  }) => ReactElement;
   refetchSubscriptions: () => void;
   toggleSubscriptions: (value: 'DAILY' | 'DISABLED') => void;
   getLanguageVersion: (value: {

@@ -1,9 +1,9 @@
-import React from 'react';
+import { ReactElement } from 'react';
 import { MainTitleWrapper } from './title-block.styles';
 import useTitleRef from '../../utils/hooks/use-title-ref';
 
 export interface MainTitleProps {
-  children?: JSX.Element | string;
+  children?: ReactElement | string;
 }
 
 export default function MainTitle({ children }: MainTitleProps) {

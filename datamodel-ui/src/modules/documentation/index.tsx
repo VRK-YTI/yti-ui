@@ -1,5 +1,5 @@
 import { KeyboardEvent, createRef, useEffect, useRef, useState } from 'react';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
   Button,
@@ -527,7 +527,15 @@ export default function Documentation({
             remarkPlugins={[remarkGfm]}
             unwrapDisallowed={false}
             components={{
-              img: (props) => imgProps(props),
+              img: (props) =>
+                imgProps({
+                  src: props.node?.properties?.src
+                    ? String(props.node.properties.src)
+                    : undefined,
+                  alt: props.node?.properties?.alt
+                    ? String(props.node.properties.alt)
+                    : undefined,
+                }),
             }}
           >
             {getLanguageVersion({
@@ -705,7 +713,15 @@ export default function Documentation({
               remarkPlugins={[remarkGfm]}
               unwrapDisallowed={false}
               components={{
-                img: (props) => imgProps(props),
+                img: (props) =>
+                  imgProps({
+                    src: props.node?.properties?.src
+                      ? String(props.node.properties.src)
+                      : undefined,
+                    alt: props.node?.properties?.alt
+                      ? String(props.node.properties.alt)
+                      : undefined,
+                  }),
               }}
             >
               {value[currentLanguage]}
