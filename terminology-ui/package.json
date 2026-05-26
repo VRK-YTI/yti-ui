@@ -27,7 +27,7 @@
     "interweave-ssr": "^2.0.0",
     "iron-session": "^8.0.4",
     "lodash": "^4.17.21",
-    "next": "16.2.4",
+    "next": "16.2.6",
     "next-i18next": "^15.0.0",
     "next-redux-wrapper": "^9.0.0-rc.2",
     "react": "18.3.1",
