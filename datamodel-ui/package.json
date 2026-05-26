@@ -23,7 +23,7 @@
     "html-to-image": "^1.11.11",
     "i18next": "^23.7.6",
     "iron-session": "^8.0.0",
-    "next": "16.2.4",
+    "next": "16.2.6",
     "next-i18next": "^15.0.0",
     "next-redux-wrapper": "^9.0.0-rc.2",
     "react": "18.3.1",
