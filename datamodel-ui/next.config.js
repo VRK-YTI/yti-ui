@@ -1,14 +1,16 @@
 const { i18n } = require('./next-i18next.config');
+const path = require('path');
 
 module.exports = () => {
   let config = {
+    output: 'standalone',
+    turbopack: {
+      root: path.join(__dirname, '..'),
+    },
     compiler: {
       styledComponents: true,
     },
     reactStrictMode: true,
-    eslint: {
-      dirs: ['src'],
-    },
     images: {
       remotePatterns: [
         {

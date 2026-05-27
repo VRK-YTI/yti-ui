@@ -12,9 +12,6 @@ import Footer from '../footer';
 import SmartHeader from '../smart-header';
 import { useBreakpoints } from '../media-query';
 import SkipLink from '../skip-link';
-import getConfig from 'next/config';
-// TODO: [Next.js 15 Migration] publicRuntimeConfig is deprecated.
-// Migrate to environment variables: process.env.NEXT_PUBLIC_VERSION_INFO
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 import generateFakeableUsers from '../../utils/generate-impersonate';
 import { User } from '../../interfaces/user.interface';
@@ -44,7 +41,6 @@ export default function Layout({
 }) {
   const { t, i18n } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
-  const { publicRuntimeConfig } = getConfig();
 
   if (headerHidden) {
     return (
@@ -96,7 +92,7 @@ export default function Layout({
               <Footer
                 t={t}
                 feedbackSubject={feedbackSubject}
-                versionInfo={publicRuntimeConfig?.versionInfo}
+                versionInfo={process.env.NEXT_PUBLIC_VERSION_INFO}
               />
             </MarginContainer>
           </FooterContainer>

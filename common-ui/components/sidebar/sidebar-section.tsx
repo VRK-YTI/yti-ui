@@ -28,9 +28,9 @@ export default function SidebarSection({
       <SidebarLinkList aria-labelledby={`${items[0].id}-header`}>
         {items.map((item) => (
           <SidebarLinkListItem key={item.id}>
-            <Link href={item.href} passHref legacyBehavior>
-              <SuomiLink href="">{item.value}</SuomiLink>
-            </Link>
+            <SuomiLink asProp={Link} href={item.href}>
+              {item.value}
+            </SuomiLink>
           </SidebarLinkListItem>
         ))}
       </SidebarLinkList>

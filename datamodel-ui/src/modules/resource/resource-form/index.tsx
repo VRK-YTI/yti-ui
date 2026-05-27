@@ -20,13 +20,13 @@ import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { IconArrowLeft } from 'suomifi-icons';
 import {
   Button,
   Text,
   TextInput,
   Textarea,
   Tooltip,
+  IconArrowLeft,
 } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';

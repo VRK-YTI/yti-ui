@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, ReactElement } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { SWRConfig } from 'swr';
 import { lightTheme } from 'yti-common-ui/layout/theme';
@@ -99,7 +99,7 @@ export function renderWithProviders(
     ...renderOptions
   }: ExtendedRenderOptions = {}
 ) {
-  function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
+  function Wrapper({ children }: PropsWithChildren<{}>): ReactElement {
     return (
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>{children}</ThemeProvider>

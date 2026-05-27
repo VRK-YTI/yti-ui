@@ -1,6 +1,6 @@
 const { i18n } = require('./next-i18next.config');
-const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 const fs = require('fs');
+const path = require('path');
 
 module.exports = (phase, { defaultConfig }) => {
   let versionInfo;
@@ -12,14 +12,15 @@ module.exports = (phase, { defaultConfig }) => {
   }
 
   let config = {
+    output: 'standalone',
+    turbopack: {
+      root: path.join(__dirname, '..'),
+    },
     compiler: {
       styledComponents: true,
     },
     reactStrictMode: true,
     i18n,
-    eslint: {
-      dirs: ['src'],
-    },
     transpilePackages: ['common-ui'],
     async redirects() {
       return [
@@ -30,10 +31,8 @@ module.exports = (phase, { defaultConfig }) => {
         },
       ];
     },
-    // TODO: [Next.js 15 Migration] publicRuntimeConfig is deprecated.
-    // Migrate to env: { NEXT_PUBLIC_VERSION_INFO: versionInfo }
-    publicRuntimeConfig: {
-      versionInfo,
+    env: {
+      NEXT_PUBLIC_VERSION_INFO: versionInfo,
     },
     async headers() {
       const isProd = process.env.NODE_ENV === 'production';

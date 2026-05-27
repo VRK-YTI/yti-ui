@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { FlowWrapper, ModelFlow } from './graph.styles';
 import 'reactflow/dist/style.css';
 import {
@@ -69,8 +76,8 @@ interface GraphProps {
   version?: string;
   applicationProfile?: boolean;
   organizationIds?: string[];
-  drawer?: JSX.Element;
-  children: JSX.Element | JSX.Element[];
+  drawer?: ReactElement;
+  children: ReactElement | ReactElement[];
   namespaces?: (InternalNamespace | ExternalNamespace)[];
 }
 

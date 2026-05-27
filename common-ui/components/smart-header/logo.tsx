@@ -10,16 +10,14 @@ export default function Logo() {
 
   return (
     <LogoWrapper>
-      <Link href="/" passHref legacyBehavior={true}>
-        <SuomiLink href="" aria-label={t('navigate-to-homepage')}>
-          <Image
-            src="/logo.svg"
-            width="186"
-            height="32"
-            alt={t('interoperability-logo-title')}
-          />
-        </SuomiLink>
-      </Link>
+      <SuomiLink asProp={Link} href="" aria-label={t('navigate-to-homepage')}>
+        <Image
+          src="/logo.svg"
+          width="186"
+          height="32"
+          alt={t('interoperability-logo-title')}
+        />
+      </SuomiLink>
     </LogoWrapper>
   );
 }

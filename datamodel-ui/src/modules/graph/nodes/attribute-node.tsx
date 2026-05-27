@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import { Resource } from './node.styles';
-import { IconRows } from 'suomifi-icons';
+import { IconRows } from 'suomifi-ui-components';
 import { useSelector } from 'react-redux';
 import {
   selectModelTools,
