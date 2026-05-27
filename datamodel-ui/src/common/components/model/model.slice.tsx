@@ -494,7 +494,9 @@ export function setSelected(
 
 export function resetSelected(): AppThunk {
   return (dispatch) =>
-    dispatch(modelSlice.actions.setSelected({ id: '', type: '' }));
+    dispatch(
+      modelSlice.actions.setSelected({ id: '', type: '', modelId: null })
+    );
 }
 
 export function selectHovered() {

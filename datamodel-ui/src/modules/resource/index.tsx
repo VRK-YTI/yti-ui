@@ -108,7 +108,8 @@ export default function ResourceView({
     {
       skip:
         !['associations', 'attributes'].includes(globalSelected.type) ||
-        !globalSelected.id,
+        !globalSelected.id ||
+        globalSelected.modelId !== modelId,
     }
   );
 
@@ -369,7 +370,7 @@ export default function ResourceView({
 
     return (
       <ResourceForm
-        modelId={globalSelected.modelId ?? modelId}
+        modelId={view.create ? modelId : globalSelected.modelId ?? modelId}
         languages={languages}
         terminologies={terminologies}
         applicationProfile={applicationProfile}
