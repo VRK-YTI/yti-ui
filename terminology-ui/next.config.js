@@ -12,6 +12,7 @@ module.exports = (phase, { defaultConfig }) => {
   }
 
   let config = {
+    output: 'standalone',
     turbopack: {
       root: path.join(__dirname, '..'),
     },
