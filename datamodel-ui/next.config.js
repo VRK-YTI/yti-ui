@@ -3,6 +3,7 @@ const path = require('path');
 
 module.exports = () => {
   let config = {
+    output: 'standalone',
     turbopack: {
       root: path.join(__dirname, '..'),
     },
