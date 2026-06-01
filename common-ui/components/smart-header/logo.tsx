@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link as SuomiLink } from 'suomifi-ui-components';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,7 +9,7 @@ export default function Logo() {
 
   return (
     <LogoWrapper>
-      <SuomiLink asProp={Link} href="" aria-label={t('navigate-to-homepage')}>
+      <SuomiLink asProp={Link} href="/" aria-label={t('navigate-to-homepage')}>
         <Image
           src="/logo.svg"
           width="186"
