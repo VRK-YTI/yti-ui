@@ -18,7 +18,6 @@
     "lint-staged": "lint-staged"
   },
   "dependencies": {
-    "@fontsource/source-sans-pro": "^4.5.9",
     "@reduxjs/toolkit": "1.9.5",
     "axios": "^1.4.0",
     "dayjs": "^1.11.7",
