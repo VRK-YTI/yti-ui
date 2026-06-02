@@ -83,11 +83,11 @@ export default function NewTermModal({
   const wordClasses = [
     {
       labelText: translateWordClass('ADJECTIVE', t),
-      uniqueItemId: 'adjective',
+      uniqueItemId: 'ADJECTIVE',
     },
     {
       labelText: translateWordClass('VERB', t),
-      uniqueItemId: 'verb',
+      uniqueItemId: 'VERB',
     },
   ];
 
