@@ -290,9 +290,11 @@ export default function NewTermModal({
             onChange={(e) => handleUpdate({ key: 'termEquivalency', value: e })}
           >
             <DropdownItem value="undefined">{t('no-selection')}</DropdownItem>
-            <DropdownItem value="<">{'<'}</DropdownItem>
-            <DropdownItem value=">">{'>'}</DropdownItem>
-            <DropdownItem value="~">{t('almost-the-same-as')} (~)</DropdownItem>
+            <DropdownItem value="NARROWER">{'<'}</DropdownItem>
+            <DropdownItem value="BROADER">{'>'}</DropdownItem>
+            <DropdownItem value="CLOSE">
+              {t('almost-the-same-as')} (~)
+            </DropdownItem>
           </Dropdown>
         </TermEquivalencyBlock>
 
