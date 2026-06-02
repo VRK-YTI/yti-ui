@@ -88,9 +88,7 @@ function mapTerms(terms: ConceptTermType[], type: string) {
           termConjugation: term.termConjugation
             ? term.termConjugation.toUpperCase()
             : undefined,
-          termEquivalency: term.termEquivalency
-            ? term.termEquivalency.toUpperCase()
-            : undefined,
+          termEquivalency: term.termEquivalency,
           wordClass: term.wordClass ? term.wordClass.toUpperCase() : undefined,
           sources: term.source.map((s) => s.value),
           editorialNotes: term.editorialNote.map((e) => e.value),

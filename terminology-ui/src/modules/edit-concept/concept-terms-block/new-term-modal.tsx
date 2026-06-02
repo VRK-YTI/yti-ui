@@ -371,15 +371,15 @@ export default function NewTermModal({
             items={[
               {
                 labelText: t('term-family.masculine', { ns: 'common' }),
-                uniqueItemId: 'masculine',
+                uniqueItemId: 'MASCULINE',
               },
               {
                 labelText: t('term-family.neuter', { ns: 'common' }),
-                uniqueItemId: 'neuter',
+                uniqueItemId: 'NEUTER',
               },
               {
                 labelText: t('term-family.feminine', { ns: 'common' }),
-                uniqueItemId: 'feminine',
+                uniqueItemId: 'FEMININE',
               },
             ]}
             onItemSelectionChange={(e) =>
@@ -399,11 +399,11 @@ export default function NewTermModal({
             items={[
               {
                 labelText: t('term-conjugation.singular', { ns: 'common' }),
-                uniqueItemId: 'singular',
+                uniqueItemId: 'SINGULAR',
               },
               {
                 labelText: t('term-conjugation.plural', { ns: 'common' }),
-                uniqueItemId: 'plural',
+                uniqueItemId: 'PLURAL',
               },
             ]}
             onItemSelectionChange={(e) =>
