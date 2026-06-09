@@ -15,23 +15,22 @@ export default function BreadcrumbLink({
 }: BreadcrumbLinkProps) {
   if (current) {
     return (
-      <SuomiFiBreadcrumbLink current={current}>
+      <SuomiFiBreadcrumbLink asProp={Link} current={current}>
         {children}
       </SuomiFiBreadcrumbLink>
     );
   }
 
   return (
-    <Link href={url} passHref legacyBehavior>
-      <div>
-        <SuomiFiBreadcrumbLink
-          href="/"
-          current={current}
-          className="breadcrumb-link"
-        >
-          {children}
-        </SuomiFiBreadcrumbLink>
-      </div>
-    </Link>
+    <div>
+      <SuomiFiBreadcrumbLink
+        asProp={Link}
+        href={url}
+        current={current}
+        className="breadcrumb-link"
+      >
+        {children}
+      </SuomiFiBreadcrumbLink>
+    </div>
   );
 }

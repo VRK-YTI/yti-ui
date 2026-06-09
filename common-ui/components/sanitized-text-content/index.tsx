@@ -64,22 +64,19 @@ export default function SanitizedTextContent({
 
       if (internalTypes.includes(node.getAttribute('data-type') as string)) {
         return (
-          <Link passHref href={`${href}${getEnvParam(href)}`} legacyBehavior>
-            <SuomiInternalLink href="">{children}</SuomiInternalLink>
-          </Link>
+          <SuomiInternalLink asProp={Link} href={`${href}${getEnvParam(href)}`}>{children}</SuomiInternalLink>
         );
       } else {
         return (
-          <Link passHref href={href} legacyBehavior>
-            <SuomiExternalLink
-              href=""
-              labelNewWindow={`${t(
-                'link-opens-new-window-external'
-              )} ${children}`}
-            >
-              {children}
-            </SuomiExternalLink>
-          </Link>
+          <SuomiExternalLink
+            asProp={Link}
+            href={href}
+            labelNewWindow={`${t(
+              'link-opens-new-window-external'
+            )} ${children}`}
+          >
+            {children}
+          </SuomiExternalLink>
         );
       }
     }

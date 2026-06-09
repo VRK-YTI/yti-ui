@@ -171,6 +171,11 @@ export default function Vocabulary({ id }: VocabularyProps) {
     );
   }, [dispatch, info, i18n.language]);
 
+  const canCreateConcept = HasPermission({
+    actions: 'CREATE_CONCEPT',
+    targetOrganization: info?.organizations,
+  });
+
   if (infoError) {
     return (
       <>
@@ -269,10 +274,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                   ? t('vocabulary-concepts')
                   : t('vocabulary-collections')}
               </Heading>
-              {HasPermission({
-                actions: 'CREATE_CONCEPT',
-                targetOrganization: info?.organizations,
-              }) && (
+              {canCreateConcept && (
                 <>
                   <NewConceptModal
                     terminologyId={id}

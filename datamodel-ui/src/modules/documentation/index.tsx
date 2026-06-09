@@ -1,5 +1,5 @@
 import { KeyboardEvent, createRef, useEffect, useRef, useState } from 'react';
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
   Button,
@@ -10,6 +10,9 @@ import {
   IconImage,
   Text,
   Tooltip,
+  IconBold,
+  IconItalics,
+  IconQuotes,
 } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
@@ -60,7 +63,6 @@ import { useSelector } from 'react-redux';
 import { setNotification } from '@app/common/components/notifications/notifications.slice';
 import { HeaderRow, StyledSpinner } from '@app/common/components/header';
 import Image from 'next/image';
-import { IconBold, IconItalics, IconQuotes } from 'suomifi-icons';
 import HasPermission from '@app/common/utils/has-permission';
 import UnsavedAlertModal from '../unsaved-alert-modal';
 import { useBreakpoints } from 'yti-common-ui/media-query';
@@ -525,7 +527,15 @@ export default function Documentation({
             remarkPlugins={[remarkGfm]}
             unwrapDisallowed={false}
             components={{
-              img: (props) => imgProps(props),
+              img: (props) =>
+                imgProps({
+                  src: props.node?.properties?.src
+                    ? String(props.node.properties.src)
+                    : undefined,
+                  alt: props.node?.properties?.alt
+                    ? String(props.node.properties.alt)
+                    : undefined,
+                }),
             }}
           >
             {getLanguageVersion({
@@ -703,7 +713,15 @@ export default function Documentation({
               remarkPlugins={[remarkGfm]}
               unwrapDisallowed={false}
               components={{
-                img: (props) => imgProps(props),
+                img: (props) =>
+                  imgProps({
+                    src: props.node?.properties?.src
+                      ? String(props.node.properties.src)
+                      : undefined,
+                    alt: props.node?.properties?.alt
+                      ? String(props.node.properties.alt)
+                      : undefined,
+                  }),
               }}
             >
               {value[currentLanguage]}

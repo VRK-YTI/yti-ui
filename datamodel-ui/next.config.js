@@ -1,14 +1,17 @@
+/* eslint-disable quotes */
 const { i18n } = require('./next-i18next.config');
+const path = require('path');
 
 module.exports = () => {
   let config = {
+    output: 'standalone',
+    turbopack: {
+      root: path.join(__dirname, '..'),
+    },
     compiler: {
       styledComponents: true,
     },
     reactStrictMode: true,
-    eslint: {
-      dirs: ['src'],
-    },
     images: {
       remotePatterns: [
         {
@@ -24,26 +27,27 @@ module.exports = () => {
     async headers() {
       const isProd = process.env.NODE_ENV === 'production';
       const matomoUrl = process.env.MATOMO_URL ?? '';
+      const dsUrl = ' https://designsystem.suomi.fi/';
 
       const ProductionContentSecurityPolicy = [
         "base-uri 'self';",
         "default-src 'self';",
-        "font-src 'self';",
+        `font-src 'self' ${dsUrl};`,
         "img-src 'self' data:;",
         `script-src 'self' 'unsafe-inline' ${matomoUrl};`,
         `connect-src 'self' ${matomoUrl};`,
-        "style-src 'self' 'unsafe-inline' data:;",
+        `style-src 'self' 'unsafe-inline' data: ${dsUrl};`,
         "frame-src 'self';",
       ];
 
       const ContentSecurityPolicy = [
         "base-uri 'self';",
         "default-src 'self';",
-        "font-src 'self';",
+        `font-src 'self' ${dsUrl};`,
         "img-src 'self' 'unsafe-eval' 'unsafe-inline' data:;",
         `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${matomoUrl};`,
         `connect-src 'self' ${matomoUrl};`,
-        "style-src 'self' 'unsafe-inline' data:;",
+        `style-src 'self' 'unsafe-inline' data: ${dsUrl};`,
         "frame-src 'self';",
       ];
 
