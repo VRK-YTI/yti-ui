@@ -84,10 +84,13 @@ export default async function getModelAsFile(
       headers: headers,
       responseType: 'stream',
       decompress: false,
+      validateStatus: () => true,
     }
   );
 
-  if (isRaw === 'true') {
+  if (status !== 200) {
+    // do nothing for 404 or errors, just pass through
+  } else if (isRaw === 'true') {
     res.setHeader('Content-Type', 'text/plain; charset=UTF-8');
   } else {
     res.setHeader('Content-Type', mimeType);
@@ -96,6 +99,7 @@ export default async function getModelAsFile(
       `attachment; filename="${encodeURIComponent(filename)}"`
     );
   }
+
   res.status(status);
   response.pipe(res);
 }
