@@ -277,7 +277,7 @@ export default function TermForm({
         itemAdditionHelpText={''}
         items={termEquivalency}
         defaultSelectedItem={
-          term.wordClass
+          term.termEquivalency
             ? termEquivalency.filter(
                 (ts) =>
                   ts.uniqueItemId === term.termEquivalency ||
@@ -394,10 +394,7 @@ export default function TermForm({
                   (ts) =>
                     ts.uniqueItemId === term.termConjugation ||
                     ts.labelText === term.termConjugation
-                )[0] ?? {
-                  uniqueItemId: term.termConjugation,
-                  labelText: term.termConjugation,
-                }
+                )[0]
               : undefined
           }
           onItemSelect={(e) =>
