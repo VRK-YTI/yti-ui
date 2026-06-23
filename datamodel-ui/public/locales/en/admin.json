@@ -213,6 +213,11 @@
   "error-prefix-invalid": "Allowed characters for prefix are a-z, 0-9, underscore and dash. Prefix must start with a letter.",
   "error-prefix-taken": "Prefix in use",
   "error-unauthenticated": "An error occured with login information verification. Please login to the service again.",
+  "error": {
+    "not-class-or-doesnt-exist": "{{field}}: Resource is not a library class or it does not exist.",
+    "not-node-shape-or-doesnt-exist": "{{field}}:  Resource is not an application profile class or it does not exist.",
+    "resource-not-found": "Resource {{uri}} not found."
+  },
   "file-added": "",
   "following-external-ns-miss-name": "Following external namespaces are missing a name: {{data}}",
   "graph-has-unsaved-changes": "Graph has unsaved changes",

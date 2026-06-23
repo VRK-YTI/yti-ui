@@ -15,6 +15,7 @@ import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { ClassFormErrors, validateClassForm } from './utils';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
+  translateApiError,
   translateClassFormErrors,
   translatePageTitle,
 } from '@app/common/utils/translation-helpers';
@@ -43,7 +44,6 @@ import {
 } from '@app/common/interfaces/internal-class.interface';
 import { BasicBlock } from 'yti-common-ui/block';
 import ResourceInfo from '../class-view/resource-info';
-import getApiError from '@app/common/utils/get-api-errors';
 import useConfirmBeforeLeavingPage from 'yti-common-ui/utils/hooks/use-confirm-before-leaving-page';
 import {
   selectHasChanges,
@@ -899,10 +899,10 @@ export default function ClassForm({
     }
 
     if (updateResult.error) {
-      const catchedError = getApiError(updateResult.error);
+      const catchedError = translateApiError(updateResult.error, t);
       return [...translatedErrors, ...catchedError];
     } else if (createResult.error) {
-      const catchedError = getApiError(createResult.error);
+      const catchedError = translateApiError(createResult.error, t);
       return [...translatedErrors, ...catchedError];
     }
     return translatedErrors;

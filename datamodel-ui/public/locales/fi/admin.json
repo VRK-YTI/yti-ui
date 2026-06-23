@@ -213,6 +213,11 @@
   "error-prefix-invalid": "Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva. Etuliitteen tulee alkaa kirjaimella.",
   "error-prefix-taken": "Tunnus on käytössä",
   "error-unauthenticated": "Kirjautumistietojen varmistuksessa ilmeni ongelma. Kirjaudu palveluun uudestaan.",
+  "error": {
+    "not-class-or-doesnt-exist": "{{field}}: Valittu resurssi ei ole ydintietomallin luokka tai sitä ei ole olemassa.",
+    "not-node-shape-or-doesnt-exist": "{{field}}: Valittu resurssi ei ole soveltamisprofiilin luokka tai sitä ei ole olemassa.",
+    "resource-not-found": "Resurssia {{uri}} ei löydy."
+  },
   "file-added": "",
   "following-external-ns-miss-name": "Seuraavilta ulkoisilta tietomalleilta puuttuu nimi: {{data}}",
   "graph-has-unsaved-changes": "Kaavion muutoksia ei ole tallennettu",

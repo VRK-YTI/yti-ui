@@ -43,6 +43,8 @@ export type AxiosQueryErrorFields = {
       rejectedValue: string;
       message: string;
     }[];
+    messageParameters?: { [key: string]: string };
+    message: string;
   };
 };
 
