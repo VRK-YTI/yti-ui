@@ -76,8 +76,9 @@ export const StaticHeaderWrapper = styled.div`
 `;
 
 export const LanguagePickerWrapper = styled.div`
-  margin-top: -35px;
-  margin-right: 10px;
+  align-self: flex-start;
+  margin-top: 20px;
+  margin-right: 0px;
   padding-right: 3px;
 
   .fi-dropdown {
