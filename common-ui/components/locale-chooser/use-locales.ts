@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { setLocaleCookie } from '../../utils/locale-cookie';
 
 export type Locale = 'fi' | 'sv' | 'en';
 
@@ -35,7 +36,10 @@ export default function useLocales(hideSv?: boolean): UseLocalesResult {
       locale,
       label,
       isCurrent: currentLocale === locale,
-      use: () => router.push(router.asPath, router.asPath, { locale }),
+      use: () => {
+        setLocaleCookie(locale);
+        router.push(router.asPath, router.asPath, { locale });
+      },
     })),
     currentLocale: locales.filter(
       ({ locale }) => locale === currentLocale
