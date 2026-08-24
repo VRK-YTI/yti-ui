@@ -23,7 +23,6 @@ import {
 } from '../components/fakeable-users/fakeable-users.slice';
 import { FakeableUser } from '../interfaces/fakeable-user.interface';
 import { isEqual } from 'lodash';
-import { getLocaleCookie } from 'yti-common-ui/utils/locale-cookie';
 
 export interface LocalHandlerParams extends GetServerSidePropsContext {
   store: AppStore;
@@ -49,26 +48,6 @@ export function createCommonGetServerSideProps<
   return wrapper.getServerSideProps((store) => {
     return async (context: GetServerSidePropsContext) => {
       const { req, res, resolvedUrl, params, query, locale } = context;
-
-      const locales = context.locales ?? ['fi', 'en'];
-      const defaultLocale = context.defaultLocale ?? 'fi';
-      const preferred = getLocaleCookie(req.cookies, locales);
-
-      // Override unprefixed URLs with user's preferred locale. A URL
-      // with a non-default locale (/en/...) is always preferred.
-      if (preferred && locale === defaultLocale && preferred !== locale) {
-        const path = resolvedUrl.replace(
-          new RegExp(`^/(${locales.join('|')})(?=/|$)`),
-          ''
-        );
-
-        return {
-          redirect: {
-            permanent: false,
-            destination: `/${preferred}${path || ''}`,
-          },
-        };
-      }
 
       // Initialize session and attach to req for api-base-query access
       const session = await getSession(req, res);

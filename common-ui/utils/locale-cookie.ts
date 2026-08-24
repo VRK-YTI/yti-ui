@@ -15,11 +15,3 @@ export function setLocaleCookie(locale: string): void {
     `${LOCALE_COOKIE}=${locale}; path=/; max-age=${ONE_YEAR}` +
     `; samesite=lax${secure}`;
 }
-
-export function getLocaleCookie(
-  cookies: Partial<Record<string, string>> | undefined,
-  allowed: readonly string[]
-): string | undefined {
-  const value = cookies?.[LOCALE_COOKIE];
-  return value && allowed.includes(value) ? value : undefined;
-}

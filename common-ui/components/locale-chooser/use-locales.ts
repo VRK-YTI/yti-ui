@@ -15,7 +15,8 @@ export interface UseLocalesResult {
 
 export default function useLocales(hideSv?: boolean): UseLocalesResult {
   const router = useRouter();
-  const currentLocale = router.locale?.toLowerCase() ?? 'fi';
+  const routerLocale = router.locale?.toLowerCase() ?? 'fi';
+  const currentLocale = routerLocale === 'default' ? 'fi' : routerLocale;
 
   if (!['fi', 'sv', 'en'].includes(currentLocale)) {
     console.warn(`Unsupported locale: ${currentLocale}`);
@@ -38,7 +39,11 @@ export default function useLocales(hideSv?: boolean): UseLocalesResult {
       isCurrent: currentLocale === locale,
       use: () => {
         setLocaleCookie(locale);
-        router.push(router.asPath, router.asPath, { locale });
+        router.push(
+          { pathname: router.pathname, query: router.query },
+          router.asPath,
+          { locale }
+        );
       },
     })),
     currentLocale: locales.filter(
