@@ -16,7 +16,10 @@ export default function CollectionSidebar({
   prefix,
 }: CollectionSidebarProps) {
   const { t, i18n } = useTranslation('collection');
-  const { data: collections } = useGetCollectionsQuery(prefix);
+  const { data: collections } = useGetCollectionsQuery({
+    terminologyId: prefix,
+    sortLang: i18n.language,
+  });
   const otherCollections = collections
     ?.filter((other) => other.identifier !== collection.identifier)
     .map((c) => ({

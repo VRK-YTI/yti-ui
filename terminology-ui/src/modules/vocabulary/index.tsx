@@ -71,7 +71,10 @@ export default function Vocabulary({ id }: VocabularyProps) {
     isFetching: isFetchingCollections,
     isUninitialized: isUninitializedCollections,
     refetch: refetchCollections,
-  } = useGetCollectionsQuery(id, { skip: urlState.type !== 'collection' });
+  } = useGetCollectionsQuery(
+    { terminologyId: id, sortLang: urlState.lang || i18n.language },
+    { skip: urlState.type !== 'collection' }
+  );
   const {
     data: conceptsData,
     error: conceptsError,
