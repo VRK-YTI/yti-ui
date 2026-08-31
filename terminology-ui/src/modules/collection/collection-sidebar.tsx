@@ -5,6 +5,7 @@ import Separator from 'yti-common-ui/separator';
 import { Sidebar, SidebarHeader, SidebarSection } from 'yti-common-ui/sidebar';
 import { ConceptCollectionInfo } from '@app/common/interfaces/interfaces-v2';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import useUrlState from 'yti-common-ui/utils/hooks/use-url-state';
 
 export interface CollectionSidebarProps {
   collection: ConceptCollectionInfo;
@@ -16,9 +17,10 @@ export default function CollectionSidebar({
   prefix,
 }: CollectionSidebarProps) {
   const { t, i18n } = useTranslation('collection');
+  const { urlState } = useUrlState();
   const { data: collections } = useGetCollectionsQuery({
     terminologyId: prefix,
-    sortLang: i18n.language,
+    sortLang: urlState.lang,
   });
   const otherCollections = collections
     ?.filter((other) => other.identifier !== collection.identifier)
@@ -27,7 +29,7 @@ export default function CollectionSidebar({
       href: `/terminology/${prefix}/collection/${c.identifier}`,
       value: getLanguageVersion({
         data: c.label,
-        lang: i18n.language,
+        lang: urlState.lang || i18n.language,
       }),
     }));
 
