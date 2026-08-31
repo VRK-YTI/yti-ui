@@ -24,6 +24,7 @@ import PageHead from 'yti-common-ui/page-head';
 import { getStoreData } from '@app/common/utils/get-store-data';
 import { wrapper } from '@app/store';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
+import useUrlState from 'yti-common-ui/utils/hooks/use-url-state';
 
 interface CollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -65,6 +66,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Missing parameters for page');
     }
 
+    const { urlState } = useUrlState();
+
     const terminologyId = Array.isArray(params.terminologyId)
       ? params.terminologyId[0]
       : params.terminologyId;
@@ -78,7 +81,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     store.dispatch(getTerminology.initiate({ id: terminologyId }));
     store.dispatch(getCollection.initiate({ terminologyId, collectionId }));
-    store.dispatch(getCollections.initiate(terminologyId));
+    store.dispatch(
+      getCollections.initiate({ terminologyId, sortLang: urlState.lang })
+    );
 
     await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));
     await Promise.all(store.dispatch(getCollectionRunningQueriesThunk()));
