@@ -33,6 +33,7 @@
   "card-information-domains": "Information domain",
   "card-organizations": "organizations",
   "change-language-selected-language": "User interface language, selected language: {{selectedLanguage}}",
+  "change-ui-language-visible-label": "User interface language",
   "choose-language": "Choose a language",
   "class": "Class",
   "class-contact": "Give feedback on the class",

@@ -33,6 +33,7 @@
   "card-information-domains": "Tietoalueet",
   "card-organizations": "sisällöntuottajaa",
   "change-language-selected-language": "Käyttöliittymän kieli, valittu kieli: {{selectedLanguage}}",
+  "change-ui-language-visible-label": "Käyttöliittymän kieli",
   "choose-language": "Valitse kieli",
   "class": "Luokka",
   "class-contact": "Anna palautetta luokasta",

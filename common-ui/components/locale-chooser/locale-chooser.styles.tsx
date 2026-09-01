@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Label } from 'suomifi-ui-components';
 
 export const DesktopLocaleChooserWrapper = styled.div<{ $noFlex?: boolean }>`
   ${(props) =>
@@ -7,6 +8,12 @@ export const DesktopLocaleChooserWrapper = styled.div<{ $noFlex?: boolean }>`
   flex-grow: 1;
   `}
   flex-shrink: 0;
+  margin-right: 10px;
+`;
+
+export const LanguageMenuLabel = styled(Label)`
+  margin-top: -1px;
+  margin-bottom: 7px;
 `;
 
 export const MobileMenuLanguageSection = styled.ul`

@@ -85,6 +85,7 @@ export default function ModelPage(props: IndexPageProps) {
         fullScreenElements={<ModelHeader modelInfo={data} />}
         headerHidden={fullScreen}
         langPickerHidden={false}
+        showLanguageMenuLabel={true}
       >
         <PageHead
           baseUrl="https://tietomallit.suomi.fi"
