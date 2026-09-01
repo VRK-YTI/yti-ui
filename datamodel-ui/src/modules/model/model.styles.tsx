@@ -77,9 +77,8 @@ export const StaticHeaderWrapper = styled.div`
 
 export const LanguagePickerWrapper = styled.div`
   align-self: flex-start;
-  margin-top: 20px;
-  margin-right: 0px;
-  padding-right: 3px;
+  margin-top: 19px;
+  margin-right: 0;
 
   .fi-dropdown {
     width: min-content;
@@ -89,10 +88,6 @@ export const LanguagePickerWrapper = styled.div`
     min-width: max-content !important;
     word-break: keep-all !important;
     white-space: nowrap !important;
-  }
-
-  .fi-label {
-    display: none;
   }
 `;
 
