@@ -27,6 +27,7 @@ export default function Layout({
   headerHidden,
   langPickerHidden,
   hideSv,
+  showLanguageMenuLabel,
 }: {
   children: React.ReactNode;
   feedbackSubject?: string;
@@ -38,6 +39,7 @@ export default function Layout({
   headerHidden?: boolean;
   langPickerHidden?: boolean;
   hideSv?: boolean;
+  showLanguageMenuLabel: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
@@ -64,6 +66,7 @@ export default function Layout({
             fullScreenElements={fullScreenElements}
             langPickerHidden={langPickerHidden}
             hideSv={hideSv}
+            showLanguageMenuLabel={showLanguageMenuLabel}
           />
 
           <ContentContainer
