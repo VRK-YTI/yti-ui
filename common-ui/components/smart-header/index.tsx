@@ -30,12 +30,14 @@ export default function SmartHeader({
   fullScreenElements,
   langPickerHidden,
   hideSv,
+  showLanguageMenuLabel,
 }: {
   user?: User;
   fakeableUsers?: FakeableUser[];
   fullScreenElements?: React.ReactNode;
   langPickerHidden?: boolean;
   hideSv?: boolean;
+  showLanguageMenuLabel?: boolean;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -180,6 +182,7 @@ export default function SmartHeader({
         <DesktopLocaleChooser
           noFlex={typeof fullScreenElements !== 'undefined'}
           hideSv={hideSv}
+          showLanguageMenuLabel={showLanguageMenuLabel}
         />
       );
     }

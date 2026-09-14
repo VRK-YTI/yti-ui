@@ -68,7 +68,7 @@ interface IndexPageProps extends CommonContextState {
 export default function ModelPage(props: IndexPageProps) {
   wrapper.useHydration(props);
 
-  const { query, asPath } = useRouter();
+  const { query, asPath, locale } = useRouter();
   const version = getSlugAsString(query.ver);
   const { data } = useGetModelQuery({
     modelId: props.modelId,
@@ -84,13 +84,14 @@ export default function ModelPage(props: IndexPageProps) {
         fakeableUsers={props.fakeableUsers}
         fullScreenElements={<ModelHeader modelInfo={data} />}
         headerHidden={fullScreen}
-        langPickerHidden={true}
+        langPickerHidden={false}
+        showLanguageMenuLabel={true}
       >
         <PageHead
           baseUrl="https://tietomallit.suomi.fi"
           title={props.title ?? ''}
           description={props.description ?? ''}
-          path={asPath}
+          path={`/${locale}${asPath}`}
         />
 
         <Model modelId={props.modelId} fullScreen={fullScreen} />
@@ -317,7 +318,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       return {
         redirect: {
           permanent: false,
-          destination: `/model/${modelId}${
+          destination: `/${locale}/model/${modelId}${
             query.slug[1] ? `/${query.slug[1]}` : ''
           }${resourceId ? `/${resourceId}` : ''}?ver=${model.version}`,
         },

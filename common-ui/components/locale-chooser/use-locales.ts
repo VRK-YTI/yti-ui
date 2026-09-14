@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { setLocaleCookie } from '../../utils/locale-cookie';
 
 export type Locale = 'fi' | 'sv' | 'en';
 
@@ -14,7 +15,8 @@ export interface UseLocalesResult {
 
 export default function useLocales(hideSv?: boolean): UseLocalesResult {
   const router = useRouter();
-  const currentLocale = router.locale?.toLowerCase() ?? 'fi';
+  const routerLocale = router.locale?.toLowerCase() ?? 'fi';
+  const currentLocale = routerLocale === 'default' ? 'fi' : routerLocale;
 
   if (!['fi', 'sv', 'en'].includes(currentLocale)) {
     console.warn(`Unsupported locale: ${currentLocale}`);
@@ -35,7 +37,14 @@ export default function useLocales(hideSv?: boolean): UseLocalesResult {
       locale,
       label,
       isCurrent: currentLocale === locale,
-      use: () => router.push(router.asPath, router.asPath, { locale }),
+      use: () => {
+        setLocaleCookie(locale);
+        router.push(
+          { pathname: router.pathname, query: router.query },
+          router.asPath,
+          { locale }
+        );
+      },
     })),
     currentLocale: locales.filter(
       ({ locale }) => locale === currentLocale

@@ -94,7 +94,7 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
       {!isSmall && (
         <LanguagePickerWrapper>
           <Dropdown
-            labelText=""
+            labelText={t('content-language')}
             value={displayLang}
             onChange={(e) => handleDisplayLangChange(e)}
           >

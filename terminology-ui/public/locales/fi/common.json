@@ -8,7 +8,7 @@
   "breadcrumb": "Murupolku",
   "cancel": "",
   "card-organizations": "sisällöntuottajaa",
-  "change-language-selected-language": "Vaihda kieli, valittu kieli: {{selectedLanguage}}",
+  "change-language-selected-language": "Käyttöliittymän kieli, valittu kieli: {{selectedLanguage}}",
   "character-counter-remaining": "merkkiä jäljellä",
   "character-counter-over-limit": "merkkiä liikaa",
   "choose-language": "Valitse kieli",

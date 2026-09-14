@@ -8,7 +8,7 @@
   "breadcrumb": "Breadcrumb",
   "cancel": "",
   "card-organizations": "organizations",
-  "change-language-selected-language": "Change langugage, selected language: {{selectedLanguage}}",
+  "change-language-selected-language": "User interface language, selected language: {{selectedLanguage}}",
   "character-counter-remaining": "characters remaining",
   "character-counter-over-limit": "characters too many",
   "choose-language": "Choose a language",

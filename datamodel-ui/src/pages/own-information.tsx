@@ -4,13 +4,13 @@ import {
   CommonContextProvider,
   CommonContextState,
 } from 'yti-common-ui/common-context-provider';
-import Layout from 'yti-common-ui/layout/layout';
 import PageHead from 'yti-common-ui/page-head';
 import { getOrganizations } from '@app/common/components/organizations/organizations.slice';
 import { getSubscriptions } from '@app/common/components/subscription/subscription.slice';
 import { getRequests } from '@app/common/components/requests/requests.slice';
 import OwnInformation from '@app/modules/own-information';
 import { wrapper } from '@app/store';
+import Layout from '../common/components/layout';
 
 interface OwnInformationPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
