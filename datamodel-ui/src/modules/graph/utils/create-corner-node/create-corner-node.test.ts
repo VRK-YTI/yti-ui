@@ -11,6 +11,7 @@ describe('create-corner-node', () => {
           y: 250,
         },
         referenceTarget: 'target-1',
+        referenceType: 'ASSOCIATION',
       },
       handleNodeDeleteMock
     );

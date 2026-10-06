@@ -1,3 +1,4 @@
+import { TFunction } from 'next-i18next';
 import convertToEdges from '.';
 import {
   expectedLibraryEdges,
@@ -11,7 +12,7 @@ describe('convert-to-edges', () => {
     const returned = convertToEdges(
       [],
       [],
-      (key: string) => key,
+      ((key: string) => key) as TFunction,
       'modelId',
       (value: string) => value,
       false
@@ -24,7 +25,7 @@ describe('convert-to-edges', () => {
     const returned = convertToEdges(
       libraryData.nodes,
       libraryData.hiddenNodes,
-      (key: string) => key,
+      ((key: string) => key) as TFunction,
       'modelId',
       (value: string) => value,
       false
@@ -36,7 +37,7 @@ describe('convert-to-edges', () => {
     const returned = convertToEdges(
       profileData.nodes,
       profileData.hiddenNodes,
-      (key: string) => key,
+      ((key: string) => key) as TFunction,
       'modelId',
       (value: string) => value,
       true
