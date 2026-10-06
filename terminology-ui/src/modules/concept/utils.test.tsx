@@ -1,14 +1,12 @@
 import { ConceptInfo } from '@app/common/interfaces/interfaces-v2';
 import { getBlockData } from './utils';
+import { TFunction } from 'next-i18next';
 
 describe('order concept data', () => {
   it('should order terms', () => {
     const x = '';
 
-    const data = getBlockData(
-      jest.fn((x) => x),
-      concept
-    );
+    const data = getBlockData(((x) => x) as TFunction, concept);
     const termLabels = data.terms.map((t) => t.term.label);
     const defintions = Object.values(data.definitions);
     const notes = data.notes.map((note) => note.value);
