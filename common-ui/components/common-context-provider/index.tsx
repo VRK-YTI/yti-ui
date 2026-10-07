@@ -6,7 +6,7 @@ import { User } from '../../interfaces/user.interface';
 export interface CommonContextState {
   isSSRMobile: boolean;
   isMatomoEnabled: boolean;
-  matomoUrl: string | null;
+  matomoUrl: string | string[] | null;
   matomoSiteId: string | null;
   user: User | null;
   fakeableUsers: FakeableUser[] | null;
