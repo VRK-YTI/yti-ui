@@ -2,6 +2,7 @@ import { fireEvent, screen } from '@testing-library/react';
 import RenderConcepts from './render-concepts';
 import { renderWithProviders } from '@app/tests/test-utils';
 import mockRouter from 'next-router-mock';
+import { ConceptResponseObject } from '@app/common/interfaces/interfaces-v2';
 
 jest.mock('next/router', () => require('next-router-mock'));
 
@@ -38,23 +39,20 @@ describe('render-concepts', () => {
   });
 });
 
-const concepts = [
+const concepts: ConceptResponseObject[] = [
   {
     id: '1',
     label: {
       fi: 'label1',
     },
     status: 'VALID',
+    identifier: '123-456-789',
+    created: '',
     terminology: {
-      id: '123-456-789',
+      prefix: 'prefix1',
       label: {
         fi: 'terminology1',
       },
-      status: 'VALID',
-      uri: '',
-    },
-    altLabel: {
-      fi: '',
     },
     definition: {
       fi: '',
@@ -68,16 +66,13 @@ const concepts = [
       fi: 'label2',
     },
     status: 'VALID',
+    identifier: '123-456-788',
+    created: '',
     terminology: {
-      id: '123-456-789',
+      prefix: 'prefix2',
       label: {
         fi: 'terminology1',
       },
-      status: 'VALID',
-      uri: '',
-    },
-    altLabel: {
-      fi: '',
     },
     definition: {
       fi: '',
