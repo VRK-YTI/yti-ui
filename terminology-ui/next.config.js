@@ -1,6 +1,7 @@
+/* eslint-disable quotes */
 const { i18n } = require('./next-i18next.config');
-const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 const fs = require('fs');
+const path = require('path');
 
 module.exports = (phase, { defaultConfig }) => {
   let versionInfo;
@@ -12,14 +13,15 @@ module.exports = (phase, { defaultConfig }) => {
   }
 
   let config = {
+    output: 'standalone',
+    turbopack: {
+      root: path.join(__dirname, '..'),
+    },
     compiler: {
       styledComponents: true,
     },
     reactStrictMode: true,
     i18n,
-    eslint: {
-      dirs: ['src'],
-    },
     transpilePackages: ['common-ui'],
     async redirects() {
       return [
@@ -30,34 +32,33 @@ module.exports = (phase, { defaultConfig }) => {
         },
       ];
     },
-    // TODO: [Next.js 15 Migration] publicRuntimeConfig is deprecated.
-    // Migrate to env: { NEXT_PUBLIC_VERSION_INFO: versionInfo }
-    publicRuntimeConfig: {
-      versionInfo,
+    env: {
+      NEXT_PUBLIC_VERSION_INFO: versionInfo,
     },
     async headers() {
       const isProd = process.env.NODE_ENV === 'production';
       const matomoUrl = process.env.MATOMO_URL ?? '';
+      const dsUrl = ' https://designsystem.suomi.fi/';
 
       const ProductionContentSecurityPolicy = [
         "base-uri 'self';",
         "default-src 'self';",
-        "font-src 'self';",
+        `font-src 'self' ${dsUrl};`,
         "img-src 'self' data:;",
         `script-src 'self' 'unsafe-inline' ${matomoUrl};`,
         `connect-src 'self' ${matomoUrl};`,
-        "style-src 'self' 'unsafe-inline' data:;",
+        `style-src 'self' 'unsafe-inline' data: ${dsUrl};`,
         "frame-src 'self';",
       ];
 
       const ContentSecurityPolicy = [
         "base-uri 'self';",
         "default-src 'self';",
-        "font-src 'self';",
+        `font-src 'self' ${dsUrl};`,
         "img-src 'self' 'unsafe-eval' 'unsafe-inline' data:;",
         `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${matomoUrl};`,
         `connect-src 'self' ${matomoUrl};`,
-        "style-src 'self' 'unsafe-inline' data:;",
+        `style-src 'self' 'unsafe-inline' data: ${dsUrl};`,
         "frame-src 'self';",
       ];
 

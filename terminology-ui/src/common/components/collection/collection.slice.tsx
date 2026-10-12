@@ -19,10 +19,14 @@ export const collectionApi = createApi({
         method: 'GET',
       }),
     }),
-    getCollections: builder.query<ConceptCollectionInfo[], string>({
-      query: (terminologyId) => ({
+    getCollections: builder.query<
+      ConceptCollectionInfo[],
+      { terminologyId: string; sortLang?: string }
+    >({
+      query: ({ terminologyId, sortLang }) => ({
         url: `/collection/${terminologyId}`,
         method: 'GET',
+        params: sortLang ? { sortLang } : undefined,
       }),
     }),
     addCollection: builder.mutation<

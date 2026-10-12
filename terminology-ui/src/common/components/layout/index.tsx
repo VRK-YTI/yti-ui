@@ -13,6 +13,7 @@ interface LayoutProps {
   fakeableUsers?: FakeableUser[] | null;
   feedbackSubject?: string;
   children: React.ReactNode;
+  showLanguageMenuLabel?: boolean;
 }
 
 export default function Layout({
@@ -20,6 +21,7 @@ export default function Layout({
   fakeableUsers,
   feedbackSubject,
   children,
+  showLanguageMenuLabel = false,
 }: LayoutProps): React.ReactElement {
   const dispatch = useStoreDispatch();
   const alerts = useSelector(selectAlert());
@@ -35,6 +37,7 @@ export default function Layout({
       feedbackSubject={feedbackSubject}
       matomo={<Matomo />}
       alerts={<Alerts alerts={alerts} setAlertVisibility={setVisibility} />}
+      showLanguageMenuLabel={showLanguageMenuLabel}
     >
       {children}
     </CommonLayout>

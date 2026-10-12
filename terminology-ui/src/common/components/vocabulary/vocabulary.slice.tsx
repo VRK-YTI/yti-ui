@@ -23,10 +23,14 @@ export const terminologyApi = createApi({
   baseQuery: getTerminologyApiBaseQuery(),
   tagTypes: ['Terminology'],
   endpoints: (builder) => ({
-    getCollections: builder.query<ConceptCollectionInfo[], string>({
-      query: (terminologyId) => ({
+    getCollections: builder.query<
+      ConceptCollectionInfo[],
+      { terminologyId: string; sortLang?: string }
+    >({
+      query: ({ terminologyId, sortLang }) => ({
         url: `/collection/${terminologyId}`,
         method: 'GET',
+        params: sortLang ? { sortLang } : undefined,
       }),
     }),
     getConceptResult: builder.query<

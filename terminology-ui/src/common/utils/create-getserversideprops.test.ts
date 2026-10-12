@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import httpMocks from 'node-mocks-http';
 import {
   createCommonGetServerSideProps,
@@ -27,15 +27,21 @@ describe('createCommonGetServersideProps', () => {
 
     const results = await getServerSideProps(ctx);
 
-    expect(results.props).toBeDefined();
+    expect(results).toHaveProperty('props');
 
     // serverSideTranslations() should have added this
-    expect(results.props._nextI18Next).toBeDefined();
-    expect(results.props._nextI18Next).toBeTruthy();
+    expect(
+      'props' in results &&
+        '_nextI18Next' in results.props &&
+        results.props._nextI18Next
+    ).toBeTruthy();
 
     // locally provided function should be able to add props
-    expect(results.props.local_test_prop).toBeDefined();
-    expect(results.props.local_test_prop).toBe('local_test_value');
+    expect(
+      'props' in results &&
+        'local_test_prop' in results.props &&
+        results.props.local_test_prop === 'local_test_value'
+    ).toBeTruthy();
   });
 
   it('should set isSSRMobile = true when used on a mobile device', async () => {
@@ -56,10 +62,11 @@ describe('createCommonGetServersideProps', () => {
 
     const results = await getServerSideProps(ctx);
 
-    expect(results.props).toBeDefined();
-
-    expect(results.props?.isSSRMobile).toBeDefined();
-    expect(results.props?.isSSRMobile).toBeTruthy();
+    expect(
+      'props' in results &&
+        'isSSRMobile' in results.props &&
+        results.props.isSSRMobile === true
+    ).toBeTruthy();
   });
 
   it('should set isSSRMobile = false when used on a desktop device', async () => {
@@ -80,9 +87,10 @@ describe('createCommonGetServersideProps', () => {
 
     const results = await getServerSideProps(ctx);
 
-    expect(results.props).toBeDefined();
-
-    expect(results.props?.isSSRMobile).toBeDefined();
-    expect(results.props?.isSSRMobile).toBeFalsy();
+    expect(
+      'props' in results &&
+        'isSSRMobile' in results.props &&
+        results.props.isSSRMobile === false
+    ).toBeTruthy();
   });
 });

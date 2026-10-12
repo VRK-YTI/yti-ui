@@ -5,9 +5,6 @@ import { appWithTranslation, useTranslation } from 'next-i18next';
 import axios from 'axios';
 import React from 'react';
 import { wrapper } from '@app/store';
-import '@fontsource/source-sans-pro/300.css';
-import '@fontsource/source-sans-pro/400.css';
-import '@fontsource/source-sans-pro/600.css';
 import { VisuallyHidden } from 'suomifi-ui-components';
 import { Provider } from 'react-redux';
 

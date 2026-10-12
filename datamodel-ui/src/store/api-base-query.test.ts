@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import httpMocks from 'node-mocks-http';
 import {
   createCommonGetServerSideProps,
@@ -10,6 +10,7 @@ import {
   getServiceCategories,
   getRunningQueriesThunk,
 } from '@app/common/components/service-categories/service-categories.slice';
+import { RequestWithSession } from '@app/common/utils/session';
 
 describe('axios base query', () => {
   const mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
@@ -49,8 +50,8 @@ describe('axios base query', () => {
       // store JSESSIONID in session so we can check later it's propagated to
       // the API request as a cookie
       const cookies: { [key: string]: string } = { JSESSIONID: 'foo' };
-      req.session.cookies = cookies;
-      req.session.save();
+      (req as RequestWithSession).session.cookies = cookies;
+      (req as RequestWithSession).session.save();
 
       // initiate API call
       store.dispatch(getServiceCategories.initiate('fi'));
@@ -70,7 +71,10 @@ describe('axios base query', () => {
 
     const results = await getServerSideProps(ctx);
 
-    // if the API call was made with the proper cookie, it should return this:
-    expect(results.props.data).toBe('JSESSIONID exists in headers: yes');
+    expect(
+      'props' in results &&
+        'data' in results.props &&
+        results.props.data === 'JSESSIONID exists in headers: yes'
+    ).toBeTruthy();
   });
 });

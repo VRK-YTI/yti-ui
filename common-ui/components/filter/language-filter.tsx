@@ -24,12 +24,13 @@ export default function LanguageFilter({
         labelText={labelText}
         visualPlaceholder={t('choose-language')}
         itemAdditionHelpText={''}
-        defaultSelectedItem={languages.find(
-          (lang) => lang.uniqueItemId === urlState.lang
-        )}
-        onItemSelect={(lang) =>
+        selectedItem={
+          languages.find((lang) => lang.uniqueItemId === urlState.lang) ??
+          undefined
+        }
+        onItemSelectionChange={(selectedItem) =>
           patchUrlState({
-            lang: lang ? lang : '',
+            lang: selectedItem?.uniqueItemId ?? undefined,
             page: initialUrlState.page,
           })
         }

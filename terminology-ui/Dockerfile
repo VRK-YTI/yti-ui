@@ -11,7 +11,7 @@ COPY common-ui ./common-ui
 COPY package.json package-lock.json ./
 
 # Run ci in root to generate node_modules in needed folders
-RUN npm ci
+RUN npm ci --no-audit --no-fund
 
 #
 # BUILD STAGE
@@ -81,16 +81,14 @@ RUN apk add curl
 # the application.
 RUN apk add libcap && setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
 
-COPY --from=builder /app/terminology-ui/next.config.js ./
-COPY --from=builder /app/terminology-ui/next-i18next.config.js ./
-COPY --from=builder /app/terminology-ui/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/terminology-ui/.next ./.next
-COPY --from=builder /app/terminology-ui/node_modules /app/node_modules ./node_modules/
-COPY --from=builder /app/terminology-ui/package.json ./package.json
-COPY --from=builder /app/terminology-ui/junit.xml ./
-COPY --from=builder /app/terminology-ui/coverage ./coverage
-COPY --from=builder /app/terminology-ui/.env ./
-COPY --from=builder /app/common-ui ../common-ui
+COPY --from=builder --chown=nextjs:nodejs /app/terminology-ui/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/terminology-ui/.next/static ./terminology-ui/.next/static
+
+COPY --from=builder /app/terminology-ui/next-i18next.config.js ./terminology-ui
+COPY --from=builder /app/terminology-ui/public ./terminology-ui/public
+COPY --from=builder /app/terminology-ui/junit.xml ./terminology-ui
+COPY --from=builder /app/terminology-ui/coverage ./terminology-ui/coverage
+COPY --from=builder /app/terminology-ui/.env ./terminology-ui
 
 USER nextjs
 
@@ -101,4 +99,6 @@ EXPOSE 80
 # https://nextjs.org/telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["npm", "start", "--", "--port", "80"]
+ENV PORT 80
+
+CMD ["node", "terminology-ui/server.js"]

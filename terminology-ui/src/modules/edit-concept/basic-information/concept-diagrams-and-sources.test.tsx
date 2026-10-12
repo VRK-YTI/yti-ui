@@ -20,6 +20,7 @@ describe('concept-diagrams-and-sources', () => {
         infoKey="diagramsAndSources"
         update={mockFn}
         errors={EmptyFormError}
+        languages={['en']}
       />,
       { wrapper: themeProvider }
     );

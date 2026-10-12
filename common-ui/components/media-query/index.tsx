@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
-import { useMediaQuery } from 'usehooks-ts';
+import { useContext, useSyncExternalStore } from 'react';
 import { CommonContext } from '../common-context-provider';
 
 export const mediaQueries = {
@@ -27,32 +26,26 @@ export interface UseBreakpointsResult {
   breakpoint: Breakpoint;
 }
 
+function useMediaQuery(query: string, serverSnapshot = false): boolean {
+  return useSyncExternalStore(
+    (callback) => {
+      const mql = window.matchMedia(query);
+      mql.addEventListener('change', callback);
+      return () => mql.removeEventListener('change', callback);
+    },
+    () => window.matchMedia(query).matches,
+    () => serverSnapshot
+  );
+}
+
 export function useBreakpoints(): UseBreakpointsResult {
   const { isSSRMobile } = useContext(CommonContext);
-  const [matchSmall, setMatchSmall] = useState<boolean>(false);
-  const [matchMedium, setMatchMedium] = useState<boolean>(false);
-  const [matchLarge, setMatchLarge] = useState<boolean>(true);
 
-  const s = useMediaQuery(mediaQueries.s);
-  const m = useMediaQuery(mediaQueries.m);
-  const l = useMediaQuery(mediaQueries.l);
-
-  useEffect(() => {
-    setMatchSmall(s);
-    setMatchMedium(m);
-    setMatchLarge(l);
-  }, [s, m, l]);
-
-  const isSmall = global['matchMedia'] ? matchSmall : isSSRMobile;
-  const isMedium = global['matchMedia'] ? matchMedium : false;
-  const isLarge = global['matchMedia'] ? matchLarge : !isSSRMobile;
+  const isSmall = useMediaQuery(mediaQueries.s, isSSRMobile);
+  const isMedium = useMediaQuery(mediaQueries.m, false);
+  const isLarge = useMediaQuery(mediaQueries.l, !isSSRMobile);
 
   const breakpoint = isSmall ? 'small' : isMedium ? 'medium' : 'large';
 
-  return {
-    isSmall,
-    isMedium,
-    isLarge,
-    breakpoint,
-  };
+  return { isSmall, isMedium, isLarge, breakpoint };
 }

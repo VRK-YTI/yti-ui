@@ -1,4 +1,5 @@
 @import '~suomifi-design-tokens/dist/tokens';
+@import url('https://designsystem.suomi.fi/fonts/source-sans-3.css');
 
 html,
 body {
@@ -14,10 +15,4 @@ body {
   .fi-portal {
     z-index: 2;
   }
-}
-
-// Workaround for broken expanders on Chrome 129+ and Edge 129+
-// Will be fixed by upgrading to suomifi-ui-components 14.0.1
-.fi-expander_content {
-  animation: unset !important;
 }

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { translateStatus } from '../../utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
@@ -19,7 +19,7 @@ import { StatusChip } from '../status-chip/status-chip.styles';
 interface ResultCardProps {
   contributors?: string[];
   description?: string;
-  extra?: JSX.Element | string;
+  extra?: ReactElement | string;
   icon?: ReactNode;
   noChip?: boolean;
   noDescriptionText: string;
@@ -62,17 +62,15 @@ export default function ResultCard({
             : `${contributors.length} ${t('card-organizations')}`}
         </OrganizationParagraph>
       )}
-      <Link passHref href={titleLink} legacyBehavior>
-        <TitleLink href="">
-          {icon && icon}
-          <Title variant="h2" id="card-title-link">
-            <SanitizedTextContent text={title} />
-            <VisuallyHidden>
-              {contributors?.join(', ') ?? t('no-contributors')}
-            </VisuallyHidden>
-          </Title>
-        </TitleLink>
-      </Link>
+      <TitleLink asProp={Link} href={titleLink}>
+        {icon && icon}
+        <Title variant="h2" id="card-title-link">
+          <SanitizedTextContent text={title} />
+          <VisuallyHidden>
+            {contributors?.join(', ') ?? t('no-contributors')}
+          </VisuallyHidden>
+        </Title>
+      </TitleLink>
       <Subtitle id="card-subtitle">
         <span>{type}</span>
         {identifier && (

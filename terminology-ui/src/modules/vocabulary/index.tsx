@@ -71,7 +71,10 @@ export default function Vocabulary({ id }: VocabularyProps) {
     isFetching: isFetchingCollections,
     isUninitialized: isUninitializedCollections,
     refetch: refetchCollections,
-  } = useGetCollectionsQuery(id, { skip: urlState.type !== 'collection' });
+  } = useGetCollectionsQuery(
+    { terminologyId: id, sortLang: urlState.lang || i18n.language },
+    { skip: urlState.type !== 'collection' }
+  );
   const {
     data: conceptsData,
     error: conceptsError,
@@ -171,6 +174,11 @@ export default function Vocabulary({ id }: VocabularyProps) {
     );
   }, [dispatch, info, i18n.language]);
 
+  const canCreateConcept = HasPermission({
+    actions: 'CREATE_CONCEPT',
+    targetOrganization: info?.organizations,
+  });
+
   if (infoError) {
     return (
       <>
@@ -269,10 +277,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                   ? t('vocabulary-concepts')
                   : t('vocabulary-collections')}
               </Heading>
-              {HasPermission({
-                actions: 'CREATE_CONCEPT',
-                targetOrganization: info?.organizations,
-              }) && (
+              {canCreateConcept && (
                 <>
                   <NewConceptModal
                     terminologyId={id}

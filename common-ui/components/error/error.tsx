@@ -31,9 +31,9 @@ export default function Error({ errorCode }: ErrorProps) {
               </Text>
             </Paragraph>
             <Paragraph>
-              <Link href="/" passHref>
-                <HomePageLink href="">Siirry etusivulle</HomePageLink>
-              </Link>
+              <HomePageLink asProp={Link} href="/">
+                Siirry etusivulle
+              </HomePageLink>
             </Paragraph>
           </div>
           <div>
@@ -48,9 +48,9 @@ export default function Error({ errorCode }: ErrorProps) {
               </Text>
             </Paragraph>
             <Paragraph>
-              <Link href="/" passHref>
-                <HomePageLink href="">Gå till startsidan</HomePageLink>
-              </Link>
+              <HomePageLink asProp={Link} href="/">
+                Gå till startsidan
+              </HomePageLink>
             </Paragraph>
           </div>
           <div>
@@ -63,9 +63,9 @@ export default function Error({ errorCode }: ErrorProps) {
               </Text>
             </Paragraph>
             <Paragraph>
-              <Link href="/" passHref>
-                <HomePageLink href="">Go to the home page</HomePageLink>
-              </Link>
+              <HomePageLink asProp={Link} href="/">
+                Go to the home page
+              </HomePageLink>
             </Paragraph>
           </div>
         </TextBlock>
@@ -86,9 +86,9 @@ export default function Error({ errorCode }: ErrorProps) {
             </Text>
           </Paragraph>
           <Paragraph>
-            <Link href="/" passHref>
-              <HomePageLink href="">Siirry etusivulle</HomePageLink>
-            </Link>
+            <HomePageLink asProp={Link} href="/">
+              Siirry etusivulle
+            </HomePageLink>
           </Paragraph>
         </div>
         <div>
@@ -100,9 +100,9 @@ export default function Error({ errorCode }: ErrorProps) {
             </Text>
           </Paragraph>
           <Paragraph>
-            <Link href="/" passHref>
-              <HomePageLink href="">Gå till startsidan</HomePageLink>
-            </Link>
+            <HomePageLink asProp={Link} href="/">
+              Gå till startsidan
+            </HomePageLink>
           </Paragraph>
         </div>
         <div>
@@ -114,9 +114,9 @@ export default function Error({ errorCode }: ErrorProps) {
             </Text>
           </Paragraph>
           <Paragraph>
-            <Link href="/" passHref>
-              <HomePageLink href="">Go to the home page</HomePageLink>
-            </Link>
+            <HomePageLink asProp={Link} href="/">
+              Go to the home page
+            </HomePageLink>
           </Paragraph>
         </div>
       </TextBlock>

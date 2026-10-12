@@ -1,5 +1,4 @@
-import React, { useRef } from 'react';
-import { useOnClickOutside } from 'usehooks-ts';
+import React, { useEffect, useRef } from 'react';
 
 export interface ClickOutsideListenerProps {
   children?: React.ReactNode;
@@ -10,8 +9,21 @@ export default function ClickOutsideListener({
   children,
   onClickOutside,
 }: ClickOutsideListenerProps) {
-  const ref = useRef(null);
-  useOnClickOutside(ref, onClickOutside);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handler(event: MouseEvent | TouchEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        onClickOutside();
+      }
+    }
+    document.addEventListener('mousedown', handler);
+    document.addEventListener('touchstart', handler);
+    return () => {
+      document.removeEventListener('mousedown', handler);
+      document.removeEventListener('touchstart', handler);
+    };
+  }, [onClickOutside]);
 
   return <div ref={ref}>{children}</div>;
 }

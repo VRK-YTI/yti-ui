@@ -34,13 +34,18 @@ export default function OrganizationFilter({
         ariaOptionsAvailableText={
           'terminology-search-filter-organizations-available'
         }
-        onItemSelect={(uniqueItemId) =>
+        itemAdditionHelpText=""
+        selectedItem={
+          organizations.find(
+            (org) => org.uniqueItemId === urlState.organization
+          ) ?? undefined
+        }
+        onItemSelectionChange={(selectedItem) =>
           patchUrlState({
-            organization: uniqueItemId ?? undefined,
+            organization: selectedItem?.uniqueItemId ?? undefined,
             page: initialUrlState.page,
           })
         }
-        itemAdditionHelpText=""
         id="filter-organization-selector"
       />
     </DropdownWrapper>

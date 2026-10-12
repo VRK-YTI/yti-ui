@@ -83,11 +83,11 @@ export default function NewTermModal({
   const wordClasses = [
     {
       labelText: translateWordClass('ADJECTIVE', t),
-      uniqueItemId: 'adjective',
+      uniqueItemId: 'ADJECTIVE',
     },
     {
       labelText: translateWordClass('VERB', t),
-      uniqueItemId: 'verb',
+      uniqueItemId: 'VERB',
     },
   ];
 
@@ -290,9 +290,11 @@ export default function NewTermModal({
             onChange={(e) => handleUpdate({ key: 'termEquivalency', value: e })}
           >
             <DropdownItem value="undefined">{t('no-selection')}</DropdownItem>
-            <DropdownItem value="<">{'<'}</DropdownItem>
-            <DropdownItem value=">">{'>'}</DropdownItem>
-            <DropdownItem value="~">{t('almost-the-same-as')} (~)</DropdownItem>
+            <DropdownItem value="NARROWER">{'<'}</DropdownItem>
+            <DropdownItem value="BROADER">{'>'}</DropdownItem>
+            <DropdownItem value="CLOSE">
+              {t('almost-the-same-as')} (~)
+            </DropdownItem>
           </Dropdown>
         </TermEquivalencyBlock>
 
@@ -371,15 +373,15 @@ export default function NewTermModal({
             items={[
               {
                 labelText: t('term-family.masculine', { ns: 'common' }),
-                uniqueItemId: 'masculine',
+                uniqueItemId: 'MASCULINE',
               },
               {
                 labelText: t('term-family.neuter', { ns: 'common' }),
-                uniqueItemId: 'neuter',
+                uniqueItemId: 'NEUTER',
               },
               {
                 labelText: t('term-family.feminine', { ns: 'common' }),
-                uniqueItemId: 'feminine',
+                uniqueItemId: 'FEMININE',
               },
             ]}
             onItemSelectionChange={(e) =>
@@ -399,11 +401,11 @@ export default function NewTermModal({
             items={[
               {
                 labelText: t('term-conjugation.singular', { ns: 'common' }),
-                uniqueItemId: 'singular',
+                uniqueItemId: 'SINGULAR',
               },
               {
                 labelText: t('term-conjugation.plural', { ns: 'common' }),
-                uniqueItemId: 'plural',
+                uniqueItemId: 'PLURAL',
               },
             ]}
             onItemSelectionChange={(e) =>

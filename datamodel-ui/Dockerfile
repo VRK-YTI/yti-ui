@@ -10,7 +10,7 @@ COPY datamodel-ui/package.json ./datamodel-ui/
 COPY common-ui ./common-ui
 COPY package.json package-lock.json ./
 
-RUN npm ci
+RUN npm ci --no-audit --no-fund
 
 #
 # BUILD STAGE
@@ -68,14 +68,13 @@ RUN apk add curl bash
 # the application.
 RUN apk add libcap && setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
 
-COPY --from=builder /app/datamodel-ui/next.config.js ./
-COPY --from=builder /app/datamodel-ui/next-i18next.config.js ./
-COPY --from=builder /app/datamodel-ui/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/datamodel-ui/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/datamodel-ui/.next/static ./datamodel-ui/.next/static
+
+COPY --from=builder /app/datamodel-ui/next-i18next.config.js ./datamodel-ui
+COPY --from=builder /app/datamodel-ui/public ./datamodel-ui/public
 COPY --from=builder --chown=nextjs:nodejs /app/datamodel-ui/.next ./.next
-COPY --from=builder /app/datamodel-ui/node_modules /app/node_modules ./node_modules/
-COPY --from=builder /app/datamodel-ui/package.json ./package.json
-COPY --from=builder /app/datamodel-ui/.env ./
-COPY --from=builder /app/common-ui ../common-ui
+COPY --from=builder /app/datamodel-ui/.env ./datamodel-ui
 
 # COPY --from=builder /app/datamodel-ui/junit.xml ./
 # COPY --from=builder /app/datamodel-ui/coverage ./coverage
@@ -89,4 +88,6 @@ EXPOSE 80
 # https://nextjs.org/telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["npm", "start", "--", "--port", "80"]
+ENV PORT 80
+
+CMD ["node", "datamodel-ui/server.js"]
