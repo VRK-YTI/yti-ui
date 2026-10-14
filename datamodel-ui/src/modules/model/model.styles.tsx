@@ -78,7 +78,7 @@ export const StaticHeaderWrapper = styled.div`
 export const LanguagePickerWrapper = styled.div`
   align-self: flex-start;
   margin-top: 19px;
-  margin-right: 0;
+  margin-right: 3px;
 
   .fi-dropdown {
     width: min-content;
