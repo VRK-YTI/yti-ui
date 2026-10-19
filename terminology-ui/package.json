@@ -38,7 +38,7 @@
     "styled-components": "^6.4.2",
     "styled-jsx": "^5.0.2",
     "suomifi-design-tokens": "^7.0.0",
-    "suomifi-ui-components": "^18.0.0",
+    "suomifi-ui-components": "^19.0.0",
     "swr": "^2.2.4",
     "uuid": "^9.0.0",
     "validator": "^13.9.0",

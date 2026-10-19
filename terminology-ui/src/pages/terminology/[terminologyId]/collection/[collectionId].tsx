@@ -24,7 +24,6 @@ import PageHead from 'yti-common-ui/page-head';
 import { getStoreData } from '@app/common/utils/get-store-data';
 import { wrapper } from '@app/store';
 import { getLanguageVersion } from 'yti-common-ui/utils/get-language-version';
-import useUrlState from 'yti-common-ui/utils/hooks/use-url-state';
 
 interface CollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -61,12 +60,10 @@ export default function CollectionPage(props: CollectionPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ store, params, locale }: LocalHandlerParams) => {
+  async ({ store, params, query, locale }: LocalHandlerParams) => {
     if (!params) {
       throw new Error('Missing parameters for page');
     }
-
-    const { urlState } = useUrlState();
 
     const terminologyId = Array.isArray(params.terminologyId)
       ? params.terminologyId[0]
@@ -79,11 +76,13 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameters for page');
     }
 
+    const sortLang = Array.isArray(query.lang)
+      ? query.lang[0]
+      : query.lang ?? '';
+
     store.dispatch(getTerminology.initiate({ id: terminologyId }));
     store.dispatch(getCollection.initiate({ terminologyId, collectionId }));
-    store.dispatch(
-      getCollections.initiate({ terminologyId, sortLang: urlState.lang })
-    );
+    store.dispatch(getCollections.initiate({ terminologyId, sortLang }));
 
     await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));
     await Promise.all(store.dispatch(getCollectionRunningQueriesThunk()));
