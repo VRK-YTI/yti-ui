@@ -12,11 +12,12 @@ export const collectionApi = createApi({
   endpoints: (builder) => ({
     getCollection: builder.query<
       ConceptCollectionInfo,
-      { terminologyId: string; collectionId: string }
+      { terminologyId: string; collectionId: string; sortLang?: string }
     >({
-      query: ({ terminologyId, collectionId }) => ({
+      query: ({ terminologyId, collectionId, sortLang }) => ({
         url: `/collection/${terminologyId}/${collectionId}`,
         method: 'GET',
+        params: sortLang ? { sortLang } : undefined,
       }),
     }),
     getCollections: builder.query<

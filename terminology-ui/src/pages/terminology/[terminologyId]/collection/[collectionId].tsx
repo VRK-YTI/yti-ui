@@ -81,7 +81,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
       : query.lang ?? '';
 
     store.dispatch(getTerminology.initiate({ id: terminologyId }));
-    store.dispatch(getCollection.initiate({ terminologyId, collectionId }));
+    store.dispatch(
+      getCollection.initiate({ terminologyId, collectionId, sortLang: locale })
+    );
     store.dispatch(getCollections.initiate({ terminologyId, sortLang }));
 
     await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));
