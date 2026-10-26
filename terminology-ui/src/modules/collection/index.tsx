@@ -59,7 +59,7 @@ export default function Collection({
     }
   );
   const { data: collection, error: collectionError } = useGetCollectionQuery(
-    { terminologyId, collectionId },
+    { terminologyId, collectionId, sortLang: i18n.language },
     {
       skip: router.isFallback,
     }
