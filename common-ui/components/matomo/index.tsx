@@ -24,7 +24,7 @@ function matomo(...args: string[]): void {
 }
 
 export interface MatomoProps {
-  url: string;
+  url: string | string[];
   siteId: string;
 }
 
@@ -33,12 +33,22 @@ export function MatomoTracking({ url, siteId }: MatomoProps) {
   const [previousPath, setPreviousPath] = useState(router.asPath.split('?')[0]);
 
   useEffect(() => {
+    const mainUrl = (Array.isArray(url)) ? url[0] : url;
+    const additionalUrls = (Array.isArray(url) && url.length > 1) ? url.slice(1) : [];
+
     matomo('disableCookies');
     matomo('trackPageView');
     matomo('enableLinkTracking');
-    matomo('setTrackerUrl', `${url}/matomo.php`);
+    matomo('setTrackerUrl', `${mainUrl}/matomo.php`);
     matomo('setSiteId', siteId);
     matomo('enableJSErrorTracking');
+
+    // also send to these servers
+    // https://developer.matomo.org/guides/tracking-javascript-guide#multiple-matomo-trackers
+    additionalUrls.forEach((additionalUrl) => {
+      matomo('addTracker', `${additionalUrl}/matomo.php`, siteId);
+    });
+
   }, [siteId, url]);
 
   useEffect(() => {
@@ -75,7 +85,7 @@ export function MatomoTracking({ url, siteId }: MatomoProps) {
       router.events.off('routeChangeComplete', onRouteChangeComplete);
   }, [router.events, previousPath]);
 
-  return <Script src={`${url}/matomo.js`} />;
+  return <Script src={`${(Array.isArray(url)) ? url[0] : url}/matomo.js`} />;
 }
 
 const WithEnv = () => {
