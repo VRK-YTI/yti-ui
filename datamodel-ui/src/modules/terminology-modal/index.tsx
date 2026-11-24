@@ -272,7 +272,7 @@ export default function TerminologyModal({
                 <Checkbox
                   checked={selected.map((s) => s.uri).includes(result.uri)}
                   onClick={() => handleCheckboxClick(result.uri)}
-                  onKeyPress={(e) => {
+                  onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       handleCheckboxClick(result.uri);
                     }
