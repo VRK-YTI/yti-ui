@@ -30,6 +30,7 @@ export const searchTerminologyApi = createApi({
           pageFrom: data.pageFrom,
           pageSize: 10,
           hideHighlights: true,
+          sortLang: data.sortLang,
         },
       }),
     }),

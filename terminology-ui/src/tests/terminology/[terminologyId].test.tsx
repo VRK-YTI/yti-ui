@@ -76,7 +76,7 @@ describe('terminologyId page', () => {
       pageSize: 50,
       query: 'test',
       sortDirection: 'ASC',
-      sortLanguage: 'en',
+      sortLang: 'en',
       status: ['DRAFT'],
       namespace: 'https://iri.suomi.fi/terminology/1234/',
     });

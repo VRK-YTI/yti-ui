@@ -31,7 +31,7 @@ export const conceptSearchApi = createApi({
           pageSize: 20,
           query: data.keyword,
           sortDirection: 'ASC',
-          sortLanguage: data.lang ?? 'fi',
+          sortLang: data.lang ?? 'fi',
           status: [],
           namespaces: data.terminologies ?? [],
           extendTerminologies: true,

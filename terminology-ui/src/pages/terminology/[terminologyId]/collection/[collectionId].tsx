@@ -76,9 +76,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameters for page');
     }
 
-    const sortLang = Array.isArray(query.lang)
-      ? query.lang[0]
-      : query.lang ?? '';
+    const sortLang =
+      (Array.isArray(query.lang) ? query.lang[0] : query.lang) || locale;
 
     store.dispatch(getTerminology.initiate({ id: terminologyId }));
     store.dispatch(

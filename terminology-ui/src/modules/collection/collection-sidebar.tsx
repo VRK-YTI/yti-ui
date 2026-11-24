@@ -20,7 +20,7 @@ export default function CollectionSidebar({
   const { urlState } = useUrlState();
   const { data: collections } = useGetCollectionsQuery({
     terminologyId: prefix,
-    sortLang: urlState.lang,
+    sortLang: urlState.lang || i18n.language,
   });
   const otherCollections = collections
     ?.filter((other) => other.identifier !== collection.identifier)
