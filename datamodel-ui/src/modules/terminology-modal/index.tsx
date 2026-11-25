@@ -106,7 +106,7 @@ export default function TerminologyModal({
       setSearchParams(obj);
     }
 
-    searchTerminologies(obj ?? searchParams);
+    searchTerminologies({ ...(obj ?? searchParams), sortLang: i18n.language });
   };
 
   useEffect(() => {

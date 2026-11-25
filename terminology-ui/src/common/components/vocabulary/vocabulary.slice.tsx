@@ -46,11 +46,7 @@ export const terminologyApi = createApi({
           pageSize: 50,
           query: value.urlState.q,
           sortDirection: 'ASC',
-          sortLanguage: value.urlState.lang
-            ? value.urlState.lang
-            : value.language
-            ? value.language
-            : 'fi',
+          sortLang: value.urlState.lang || value.language || 'fi',
           status: value.urlState.status.map((s) => s.toUpperCase()),
           namespace: `https://iri.suomi.fi/terminology/${value.id}/`,
         },
