@@ -200,18 +200,15 @@ export default function Collection({
               <List>
                 {collection?.members?.map((concept) => (
                   <li key={concept.identifier}>
-                    <Link
+                    <SuomiLink
                       href={`/terminology/${terminology?.prefix}/concept/${concept.identifier}`}
-                      passHref
-                      legacyBehavior
+                      asProp={Link}
                     >
-                      <SuomiLink href="">
-                        {getLanguageVersion({
-                          data: concept.label,
-                          lang: i18n.language,
-                        })}
-                      </SuomiLink>
-                    </Link>
+                      {getLanguageVersion({
+                        data: concept.label,
+                        lang: i18n.language,
+                      })}
+                    </SuomiLink>
                   </li>
                 ))}
               </List>
