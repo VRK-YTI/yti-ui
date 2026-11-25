@@ -90,16 +90,14 @@ export default function AsFileModal({
         </div>
 
         <ButtonFooter>
-          <Link
+          <SuomiLink
+            asProp={Link}
+            target="_blank"
             href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&raw=true${versionParam}&language=${language}`}
-            passHref
-            legacyBehavior
             download
           >
-            <SuomiLink target="_blank" href="">
-              <Button id="show-button">{t('show')}</Button>
-            </SuomiLink>
-          </Link>
+            <Button id="show-button">{t('show')}</Button>
+          </SuomiLink>
           <Button
             variant="secondary"
             onClick={() => handleClose()}
@@ -133,15 +131,12 @@ export default function AsFileModal({
         </div>
 
         <ButtonFooter>
-          <Link
+          <SuomiLink
             href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&filename=${filename}${versionParam}&language=${language}`}
-            passHref
-            legacyBehavior
+            asProp={Link}
           >
-            <SuomiLink href="">
-              <Button id="download-button">{t('download')}</Button>
-            </SuomiLink>
-          </Link>
+            <Button id="download-button">{t('download')}</Button>
+          </SuomiLink>
           <Button
             variant="secondary"
             onClick={() => handleClose()}

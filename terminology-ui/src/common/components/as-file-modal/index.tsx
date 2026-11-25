@@ -72,17 +72,14 @@ export default function AsFileModal({
           </div>
 
           <ButtonFooter>
-            <Link
+            <SuomiLink
               href={`/api/getTerminologyAsFile?prefix=${prefix}&fileType=${chosenFileType}&filename=${filename}`}
-              passHref
-              legacyBehavior
+              asProp={Link}
             >
-              <SuomiLink href="">
-                <Button id="download-button" onClick={handleClose}>
-                  {t('vocabulary-info-vocabulary-button')}
-                </Button>
-              </SuomiLink>
-            </Link>
+              <Button id="download-button" onClick={handleClose}>
+                {t('vocabulary-info-vocabulary-button')}
+              </Button>
+            </SuomiLink>
             <Button
               variant="secondary"
               onClick={() => handleClose()}

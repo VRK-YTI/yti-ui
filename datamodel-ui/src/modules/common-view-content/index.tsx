@@ -625,23 +625,20 @@ export default function CommonViewContent({
               }
             >
               {targetInClassRestriction ? (
-                <NextLink
+                <Link
                   href={`${targetInClassRestriction.uri}${getEnvParam(
                     targetInClassRestriction.uri,
                     true
                   )}`}
-                  passHref
-                  legacyBehavior
+                  asProp={NextLink}
                 >
-                  <Link href="">
-                    {getLanguageVersion({
-                      data: targetInClassRestriction.label,
-                      lang: displayLang ?? i18n.language,
-                      appendLocale: true,
-                    })}
-                    <br />({targetInClassRestriction.curie})
-                  </Link>
-                </NextLink>
+                  {getLanguageVersion({
+                    data: targetInClassRestriction.label,
+                    lang: displayLang ?? i18n.language,
+                    appendLocale: true,
+                  })}
+                  <br />({targetInClassRestriction.curie})
+                </Link>
               ) : (
                 t('not-defined')
               )}
