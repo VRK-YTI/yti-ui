@@ -74,6 +74,7 @@ export default function ConceptBlock({
         selectedOption?.uniqueItemId === 'linked' ? terminologies : [],
       highlight: false,
       pageFrom: currentPage,
+      lang: i18n.language,
     },
     {
       skip: !hasTerminologies, // no need to fetch if we're not listing concepts
