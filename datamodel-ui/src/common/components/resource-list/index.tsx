@@ -133,7 +133,7 @@ export default function ResourceList({
         return (
           <Checkbox
             onClick={() => handleClick(id)}
-            onKeyPress={(e) => e.key === 'Enter' && handleClick(id)}
+            onKeyDown={(e) => e.key === 'Enter' && handleClick(id)}
             checked={checkChecked(id)}
             id={`select-multiple-checkbox-${id}`}
           />

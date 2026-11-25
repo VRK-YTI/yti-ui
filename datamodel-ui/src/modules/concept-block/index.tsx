@@ -229,7 +229,7 @@ export default function ConceptBlock({
                             terminology: c.terminology,
                           })
                         }
-                        onKeyPress={(e) =>
+                        onKeyDown={(e) =>
                           e.key === 'Enter' &&
                           handleRadioButtonClick({
                             label: c.label,

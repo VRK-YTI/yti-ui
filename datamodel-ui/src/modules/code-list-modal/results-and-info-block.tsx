@@ -86,7 +86,7 @@ export default function ResultsAndInfoBlock({
                           ]
                     )
                   }
-                  onKeyPress={(e) => {
+                  onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       setSelected(
                         selected.map((s) => s.id).includes(code.uri)

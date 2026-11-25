@@ -43,7 +43,7 @@ export default function Search({
          * This component has both onSearch and onKeyPressDownCapture intentionally.
          *
          * onSearch does not call handleSearch() when text value is empty so
-         * onKeyPressCapture handles these situations
+         * onKeyDownCapture handles these situations
          */}
         <SearchInput
           labelText={t('search-term')}
@@ -51,7 +51,7 @@ export default function Search({
           searchButtonLabel={t('search')}
           onChange={(value) => setSearchTerm(value as string)}
           value={searchTerm}
-          onKeyPressCapture={(e) => {
+          onKeyDownCapture={(e) => {
             const inputValue = e.target as HTMLInputElement;
             if (inputValue.value === '' && e.key === 'Enter') {
               handleSearch();
